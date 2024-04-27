@@ -1,0 +1,44 @@
+site_name: Compose Menu (Dropdown)
+repo_url: https://github.com/composablehorizons/compose-menu/
+site_url: https://composablehorizons.github.io/compose-menu/
+theme:
+  name: material
+  font:
+    text: Open Sans
+  features:
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: en
+  palette:
+    - scheme: default
+      primary: white
+      accent: red
+
+plugins:
+  - social
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/composables-co
+    - icon: fontawesome/brands/twitter
+      link: https://x.com/alexstyl
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+copyright: |
+  <a href="https://github.com/composablehorizons"><img  src="composables.svg"></a>
