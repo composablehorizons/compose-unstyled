@@ -12,7 +12,7 @@ plugins {
 
 val publishGroupId = "com.composables.ui"
 val publishArtifactId = "menu"
-val publishVersion = "0.0.2"
+val publishVersion = "1.0.0"
 val githubUrl = "github.com/composablehorizons/compose-menu"
 
 kotlin {

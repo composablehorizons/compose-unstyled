@@ -9,11 +9,13 @@ Comes with built-in Keyboard management and animation support. Supports Compose 
 
 ## Installation
 
-Ensure you have `mavenCentral()` to your `dependencyResolutionManagement{}` block, then include the dependency:
-
 ```kotlin title="build.gradle.kts"
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation("com.composables.ui:menu:0.0.2")
+    implementation("com.composables.ui:menu:1.0.0")
 }
 ```
  

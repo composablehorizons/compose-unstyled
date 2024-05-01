@@ -26,9 +26,9 @@ plugins:
 
 extra:
   social:
-    - icon: fontawesome/brands/github-alt
-      link: https://github.com/composables-co
-    - icon: fontawesome/brands/twitter
+    - icon: fontawesome/brands/github
+      link: https://github.com/composablehorizons/
+    - icon: fontawesome/brands/x-twitter
       link: https://x.com/alexstyl
 
 markdown_extensions:
