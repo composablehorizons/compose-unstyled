@@ -4,7 +4,8 @@ site_url: https://composablehorizons.github.io/compose-menu/
 theme:
   name: material
   font:
-    text: Open Sans
+    text: Fira Sans
+    code: Jetbrains Mono
   features:
     - navigation.sections
     - toc.integrate
@@ -18,7 +19,7 @@ theme:
   palette:
     - scheme: default
       primary: white
-      accent: red
+      accent: gray
 
 plugins:
   - social
@@ -32,13 +33,16 @@ extra:
       link: https://x.com/alexstyl
 
 markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - toc:
+      permalink: true
+  - pymdownx.betterem
   - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.details
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 copyright: |
   <a href="https://github.com/composablehorizons"><img  src="composables.svg"></a>

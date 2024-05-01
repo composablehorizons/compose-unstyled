@@ -1,4 +1,4 @@
-# Compose Menu (Dropdown)
+# Overview
 
 An unstyled Composable component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
 of your choice.
@@ -21,12 +21,12 @@ dependencies {
  
 ## Basic Example
 
-There are four components that you will use to implement a dropdown: `Menu`, `MenuButton`, `MenuItems` and `MenuItem`.
+There are four components that you will use to implement a dropdown: `Menu`, `MenuButton`, `MenuContent` and `MenuItem`.
 
-The `Menu` wraps the `MenuButton` and the `MenuItems` components. When the `MenuButton` is clicked, the `MenuItems` will
+The `Menu` wraps the `MenuButton` and the `MenuContent` components. When the `MenuButton` is clicked, the `MenuContent` will
 be displayed on the screen at the position relative to the `Menu`.
 
-The `MenuItems` component wraps multiple `MenuItem`s. When a `MenuItem` is clicked, the menu is dismissed.
+The `MenuContent` component wraps multiple `MenuItem`s. When a `MenuItem` is clicked, the menu is dismissed.
 Each `MenuItem` has a `onClick` parameter you can use for interaction purposes.
 
 The menu's dropdown visibility is handled for you thanks to the `Menu`'s internal state.
@@ -42,35 +42,28 @@ Column(Modifier.fillMaxSize()) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
             ) {
-                Text("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
+                BasicText("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
                 Spacer(Modifier.width(4.dp))
                 Image(ChevronDown, null)
             }
         }
 
-        MenuItems(
+        MenuContent(
             modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
                 .background(Color.White).padding(4.dp),
             hideTransition = fadeOut()
         ) {
-            Column {
-                options.forEachIndexed { index, option ->
-                    MenuItem(
-                        modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-                        onClick = { selected = index }
-                    ) {
-                        Text(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
-                    }
+            options.forEachIndexed { index, option ->
+                MenuItem(
+                    modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+                    onClick = { selected = index }
+                ) {
+                    BasicText(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
                 }
             }
         }
     }
-    Text("Selected = ${options[selected]}")
-}
-
-@Composable
-fun Text(text: String, style: TextStyle = defaultTextStyle, modifier: Modifier = Modifier) {
-    BasicText(text, style = style, modifier = modifier)
+    BasicText("Selected = ${options[selected]}")
 }
 ```
 
@@ -92,7 +85,7 @@ Menu {
         BasicText("Show Options")
     }
 
-    MenuItems {
+    MenuContent {
         MenuItem(onClick = { /* TODO handle click */ }) {
             BasicText("Option 1")
         }
@@ -122,7 +115,7 @@ Menu {
         BasicText("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
     }
 
-    MenuItems {
+    MenuContent {
         MenuItem(onClick = { /* TODO handle click */ }) {
             BasicText("Option 1")
         }
@@ -136,21 +129,18 @@ Menu {
 }
 ```
 
-### Styling the MenuItems
+### Styling the MenuContent
 
-The `MenuItems` component is a layout on which the menu's items will be displayed when the menu is expanded. In Material
+The `MenuContent` component is a layout on which the menu's items will be displayed when the menu is expanded. In Material
 Design this is often a card.
 
-```kotlin hl_lines="6 7 8 9 10 11 12"
+```kotlin hl_lines="6 7 8 9 10"
 Menu {
     MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))) {
         BasicText("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
     }
 
-    MenuItems(
-        modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
-            .background(Color.White).padding(4.dp)
-    ) {
+    MenuContent(Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp)).background(Color.White).padding(4.dp)) {
         MenuItem(onClick = { selected = index }) {
             Text(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
         }
@@ -160,10 +150,10 @@ Menu {
 
 ## Animating the Menu
 
-Modify the `enter` and `exit` parameters of the `MenuItems` component to modify the animation specs of the dropdown menu
+Modify the `showTransition` and `hideTransition` parameters of the `MenuContent` component to modify the animation specs of the dropdown menu
 when it is visible/hidden.
 
-The `MenuItems` use the `AnimatedVisiblity` composable internally, which gives you a lot of flexibility towards what you
+The `MenuContent` use the `AnimatedVisiblity` composable internally, which gives you a lot of flexibility towards what you
 can achieve.
 
 ### Animation Recipes
@@ -173,14 +163,9 @@ can achieve.
 Material Design scales and fades the dropdown in and out.
 
 ```kotlin  hl_lines="3 4"
-MenuItems(
-    modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp)).background(Color.White)
-        .padding(4.dp),
-    showTransition =scaleIn(
-        tween(durationMillis = 120, easing = LinearOutSlowInEasing),
-        initialScale = 0.8f,
-        transformOrigin = TransformOrigin(0f, 0f)
-    ) + fadeIn(tween(durationMillis = 30)),
+MenuContent(
+    modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp)).background(Color.White).padding(4.dp),
+    showTransition = scaleIn(tween(durationMillis = 120, easing = LinearOutSlowInEasing), initialScale = 0.8f, transformOrigin = TransformOrigin(0f, 0f)) + fadeIn(tween(durationMillis = 30)),
     hideTransition = scaleOut(tween(durationMillis = 1, delayMillis = 75), targetScale = 1f) + fadeOut(tween(durationMillis = 75))
 ) {
     MenuItem(onClick = { /* TODO */ }) {
@@ -198,7 +183,7 @@ MenuItems(
 macOS shows the menu instantly on click, and quickly fades the menu out when dismissed:
 
 ```kotlin  hl_lines="1"
-MenuItems(hideTransition = fadeOut(tween(durationMillis = 100, easing = LinearEasing))) {
+MenuContent(hideTransition = fadeOut(tween(durationMillis = 100, easing = LinearEasing))) {
     MenuItem(onClick = { /* TODO */ }) {
         Basictext("Option 1")
     }
@@ -217,7 +202,7 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.material.ripple.rememberRipple
 
 CompositionLocalProvider(LocalIndication provides rememberRipple()) {
-    // MenuButton and MenuItems will use the ripple effect when focused and pressed
+    // MenuButton and MenuContent will use the ripple effect when focused and pressed
 
     Menu {
         // TODO implement the rest of the menu
