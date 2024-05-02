@@ -58,20 +58,9 @@ jobs:
             ~/.konan
           key: ${{ runner.os }}-${{ hashFiles('**/.lock') }}
 
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-
       - name: Gradle publish
         uses: gradle/gradle-build-action@v3
         with:
           arguments: |
             ${{ matrix.target }}
             closeAndReleaseSonatypeStagingRepository
-            -Psigning.gnupg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-            -Psigning.gnupg.keyName=${{ secrets.OSSRH_GPG_SECRET_KEY_ID }}
-            -PsonatypeUsername=${{ secrets.OSSRH_USERNAME }}
-            -PsonatypePassword=${{ secrets.OSSRH_PASSWORD }}
-            -PsonatypeStagingProfileId=${{ secrets.OSSRH_STAGING_PROFILE_ID }}
