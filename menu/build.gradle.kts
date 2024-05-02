@@ -1,4 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
@@ -114,12 +114,10 @@ afterEvaluate {
 }
 
 signing {
-    with(gradleLocalProperties(rootDir)) {
-        useInMemoryPgpKeys(
-            getProperty("signing.keyId"),
-            getProperty("signing.key"),
-            getProperty("signing.password"),
-        )
-    }
+    useInMemoryPgpKeys(
+        getLocalProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID"),
+        getLocalProperty("signing.key") ?: System.getenv("SIGNING_KEY"),
+        getLocalProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD"),
+    )
     sign(publishing.publications)
 }
