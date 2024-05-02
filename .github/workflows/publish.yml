@@ -1,26 +1,16 @@
 name: Publish to Maven Central
-
-permissions:
-  contents: read
-
 on:
   workflow_dispatch:
-
   release:
     types: [ released ]
-
+permissions:
+  contents: read
 jobs:
   build-release:
     uses: ./.github/workflows/buildRelease.yml
 
   publish:
     needs: build-release
-
-    env:
-      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-      OSSRH_STAGING_PROFILE_ID: ${{ secrets.OSSRH_STAGING_PROFILE_ID }}
-
     strategy:
       matrix:
         include:

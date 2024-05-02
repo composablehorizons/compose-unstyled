@@ -1,4 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
     alias(libs.plugins.jetbrainsCompose) apply false
@@ -12,13 +12,13 @@ plugins {
 nexusPublishing {
     repositories {
         sonatype {
-            with(gradleLocalProperties(rootDir)) {
-                stagingProfileId.set(getProperty("sonatype.stagingProfileId") ?: System.getenv("SONATYPE_STAGING_PROFILE_ID"))
-                username.set(getProperty("sonatype.username") ?: System.getenv("OSSRH_USERNAME"))
-                password.set(getProperty("sonatype.password") ?: System.getenv("OSSRH_PASSWORD"))
-                nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-                snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            }
+            stagingProfileId.set(
+                getLocalProperty("sonatype.stagingProfileId") ?: System.getenv("SONATYPE_STAGING_PROFILE_ID")
+            )
+            username.set(getLocalProperty("sonatype.username") ?: System.getenv("OSSRH_USERNAME"))
+            password.set(getLocalProperty("sonatype.password") ?: System.getenv("OSSRH_PASSWORD"))
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
