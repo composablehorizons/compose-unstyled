@@ -1,8 +1,7 @@
 name: Publish docs
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [ released ]
 permissions:
   contents: write
 jobs:
