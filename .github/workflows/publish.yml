@@ -5,6 +5,14 @@ on:
     types: [ released ]
 permissions:
   contents: read
+env:
+  OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+  SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+  SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+  SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+  SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+
 jobs:
   build-release:
     uses: ./.github/workflows/buildRelease.yml
