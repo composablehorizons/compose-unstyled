@@ -1,5 +1,3 @@
-package com.composables.ui
-
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -9,10 +7,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.*
-import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
@@ -23,48 +21,60 @@ import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Menu(modifier: Modifier = Modifier, contents: @Composable MenuScope.() -> Unit) {
-    val scope = rememberSaveable { MenuScope() }
+    val scope = remember { MenuScope() }
     val coroutineScope = rememberCoroutineScope()
-    var focusManager: FocusManager? by mutableStateOf(null)
-    focusManager = LocalFocusManager.current
+    var hasFocus by remember { mutableStateOf(false) }
 
-
-    Box(modifier.onKeyEvent { keyEvent ->
-        if (keyEvent.type != KeyEventType.KeyDown) {
-            return@onKeyEvent false
-        }
-
-        return@onKeyEvent when (keyEvent.key) {
-            Key.DirectionDown -> {
-                if (scope.expanded.not()) {
-                    scope.expanded = true
-                    coroutineScope.launch {
-                        // wait for the Popup to be displayed.
-                        // There is no official API to wait for this to happen
-                        delay(50)
-                        scope.menuFocusRequester.requestFocus()
+    if (hasFocus) {
+        KeyDownHandler { event ->
+            when (event.key) {
+                Key.DirectionDown -> {
+                    if (scope.expanded.not()) {
+                        scope.expanded = true
+                        coroutineScope.launch {
+                            // wait for the Popup to be displayed.
+                            // There is no official API to wait for this to happen
+                            delay(50)
+                            scope.menuFocusRequester.requestFocus()
+                            scope.currentFocusManager?.moveFocus(FocusDirection.Enter)
+                        }
+                        true
+                    } else {
+                        if (scope.hasMenuFocus.not()) {
+                            scope.menuFocusRequester.requestFocus()
+                            scope.currentFocusManager?.moveFocus(FocusDirection.Enter)
+                        } else
+                            scope.currentFocusManager?.moveFocus(FocusDirection.Next)
+                        true
                     }
-                    true
-                } else {
-                    focusManager?.moveFocus(FocusDirection.Next)
-                    false
                 }
-            }
 
-            Key.Escape -> {
-                scope.expanded = false
-                focusManager?.clearFocus()
-                true
-            }
+                Key.DirectionUp -> {
+                    scope.currentFocusManager?.moveFocus(FocusDirection.Previous)
+                    true
+                }
 
-            else -> false
+                Key.Escape -> {
+                    scope.expanded = false
+                    scope.currentFocusManager?.clearFocus()
+                    true
+                }
+
+                else -> false
+            }
         }
+    }
+    Box(modifier.onFocusChanged {
+        hasFocus = it.hasFocus
     }) {
+        scope.currentFocusManager = LocalFocusManager.current
         scope.contents()
     }
 }
+
 
 @Composable
 fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
@@ -77,7 +87,8 @@ fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable ()
 class MenuScope {
     internal var expanded by mutableStateOf(false)
     internal val menuFocusRequester = FocusRequester()
-
+    internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
+    internal var hasMenuFocus by mutableStateOf<Boolean>(false)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
@@ -86,6 +97,8 @@ class MenuScope {
 
         if (expanded != other.expanded) return false
         if (menuFocusRequester != other.menuFocusRequester) return false
+        if (currentFocusManager != other.currentFocusManager) return false
+        if (hasMenuFocus != other.hasMenuFocus) return false
 
         return true
     }
@@ -93,6 +106,8 @@ class MenuScope {
     override fun hashCode(): Int {
         var result = expanded.hashCode()
         result = 31 * result + menuFocusRequester.hashCode()
+        result = 31 * result + (currentFocusManager?.hashCode() ?: 0)
+        result = 31 * result + hasMenuFocus.hashCode()
         return result
     }
 }
@@ -168,44 +183,28 @@ fun MenuScope.MenuContent(
     val popupPositionProvider = DropdownMenuPositionProvider(offset, density)
     val expandedState = remember { MutableTransitionState(false) }
     expandedState.targetState = expanded
-    var focusManager by remember { mutableStateOf<FocusManager?>(null) }
-    focusManager = LocalFocusManager.current
+    currentFocusManager = LocalFocusManager.current
 
     if (expandedState.currentState || expandedState.targetState || !expandedState.isIdle) {
         val groupRequester = remember { FocusRequester() }
         Popup(
-            properties = PopupProperties(focusable = true, dismissOnBackPress = true),
+            properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = true),
             onDismissRequest = {
                 expanded = false
-                focusManager?.clearFocus()
+                currentFocusManager?.clearFocus()
             },
             popupPositionProvider = popupPositionProvider
         ) {
-            focusManager = LocalFocusManager.current
+            currentFocusManager = LocalFocusManager.current
             AnimatedVisibility(
                 visibleState = expandedState,
                 enter = showTransition,
                 exit = hideTransition,
-                modifier = Modifier.focusRequester(groupRequester)
+                modifier = Modifier.focusRequester(groupRequester).onFocusChanged {
+                    hasMenuFocus = it.hasFocus
+                }
             ) {
-                Column(modifier.focusRequester(menuFocusRequester)
-                    .onKeyEvent {
-                        if (it.type == KeyEventType.KeyDown) {
-                            when (it.key) {
-                                Key.DirectionDown -> {
-                                    focusManager?.moveFocus(FocusDirection.Down)
-                                    return@onKeyEvent true
-                                }
-
-                                Key.DirectionUp -> {
-                                    focusManager?.moveFocus(FocusDirection.Up)
-                                    return@onKeyEvent true
-                                }
-                            }
-                        }
-                        false
-                    }
-                ) {
+                Column(modifier.focusRequester(menuFocusRequester)) {
                     contents()
                 }
             }
@@ -229,6 +228,7 @@ fun MenuScope.MenuItem(
                 onClick = {
                     onClick()
                     expanded = false
+                    currentFocusManager?.clearFocus()
                 },
                 indication = LocalIndication.current
             )

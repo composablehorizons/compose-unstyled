@@ -20,15 +20,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.ui.Menu
-import com.composables.ui.MenuButton
-import com.composables.ui.MenuContent
-import com.composables.ui.MenuItem
 
 @Composable
 fun App() {
-    Box(Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFBDA61), Color(0xFFFFC371)))).padding(vertical = 40.dp, horizontal = 12.dp),
-        contentAlignment = Alignment.TopCenter) {
+    Box(
+        Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFBDA61), Color(0xFFFFC371))))
+            .padding(vertical = 40.dp, horizontal = 12.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
         Menu {
             MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White)) {
                 Row(
