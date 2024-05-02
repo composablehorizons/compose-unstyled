@@ -32,6 +32,8 @@ jobs:
             os: macos-latest
           - target: publishAndroidReleasePublicationToSonatypeRepository
             os: ubuntu-latest
+          - target: publishAndroidDebugPublicationToSonatypeRepository
+            os: ubuntu-latest
           - target: publishKotlinMultiplatformPublicationToSonatypeRepository
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
