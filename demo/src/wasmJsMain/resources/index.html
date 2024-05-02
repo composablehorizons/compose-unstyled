@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Compose Menu</title>
-    <script type="application/javascript" src="skiko.js"></script>
-    <script type="application/javascript" src="composeApp.js"></script>
+    <script>
+        const canRunDemo = WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 95, 1, 120, 0]));
+        if (canRunDemo) {
+            const skikoScript = document.createElement('script');
+            skikoScript.src = "skiko.js";
+            document.head.appendChild(skikoScript);
+
+            const composeAppScript = document.createElement('script');
+            composeAppScript.src = "composeApp.js";
+            document.head.appendChild(composeAppScript);
+        } else {
+            console.error("Cannot run demo");
+        }
+    </script>
 </head>
 <body>
 <canvas id="ComposeTarget"></canvas>
