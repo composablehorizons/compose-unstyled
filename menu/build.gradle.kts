@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
@@ -15,14 +17,25 @@ val publishArtifactId = "menu"
 val publishVersion = "1.2.0"
 val githubUrl = "github.com/composablehorizons/compose-menu"
 
+java {
+    toolchain {
+        vendor = JvmVendorSpec.JETBRAINS
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.JETBRAINS
+        languageVersion = JavaLanguageVersion.of(17)
+    }
     explicitApi()
 
     androidTarget {
         publishLibraryVariants("release", "debug")
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
         }
     }
