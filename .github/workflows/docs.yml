@@ -1,8 +1,8 @@
 name: Publish docs
 on:
-  workflow_dispatch:
-  release:
-    types: [ released ]
+  push:
+    branches:
+      - main
 permissions:
   contents: write
 jobs:
@@ -14,13 +14,13 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
       - uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
           java-version: '17'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
       - name: Prepare demo app
         run: bash scripts/update_demo.sh
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
