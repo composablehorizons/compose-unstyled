@@ -24,19 +24,22 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun App() {
     Box(
-        Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFBDA61), Color(0xFFFFC371))))
-            .padding(vertical = 40.dp, horizontal = 12.dp),
+        Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))
+            .padding(vertical = 40.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Menu {
-            MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
-                ) {
-                    Text("Options", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
-                    Spacer(Modifier.width(8.dp))
-                    Image(ChevronDown, null)
+            // setting fixed width so that the MenuContents is visually centered
+            Box(Modifier.width(240.dp)) {
+                MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
+                    ) {
+                        Text("Options", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
+                        Spacer(Modifier.width(8.dp))
+                        Image(ChevronDown, null)
+                    }
                 }
             }
 
