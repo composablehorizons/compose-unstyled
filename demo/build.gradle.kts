@@ -6,7 +6,18 @@ plugins {
     id("com.android.application")
 }
 
+java {
+    toolchain {
+        vendor = JvmVendorSpec.JETBRAINS
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 kotlin {
+    jvmToolchain {
+        vendor = JvmVendorSpec.JETBRAINS
+        languageVersion = JavaLanguageVersion.of(17)
+    }
     @OptIn(ExperimentalWasmDsl::class) wasmJs {
         moduleName = "demo"
         browser {
