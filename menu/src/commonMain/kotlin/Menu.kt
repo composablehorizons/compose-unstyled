@@ -1,3 +1,5 @@
+package com.composables.ui
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Menu(modifier: Modifier = Modifier, contents: @Composable MenuScope.() -> Unit) {
+public fun Menu(modifier: Modifier = Modifier, contents: @Composable MenuScope.() -> Unit) {
     val scope = remember { MenuScope() }
     val coroutineScope = rememberCoroutineScope()
     var hasFocus by remember { mutableStateOf(false) }
@@ -77,18 +79,18 @@ fun Menu(modifier: Modifier = Modifier, contents: @Composable MenuScope.() -> Un
 
 
 @Composable
-fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
+public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
     Box(modifier = modifier.clickable(role = Role.DropdownList) { this.expanded = expanded.not() }) {
         contents()
     }
 }
 
 @Stable
-class MenuScope {
+public class MenuScope {
     internal var expanded by mutableStateOf(false)
     internal val menuFocusRequester = FocusRequester()
     internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
-    internal var hasMenuFocus by mutableStateOf<Boolean>(false)
+    internal var hasMenuFocus by mutableStateOf(false)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
@@ -172,7 +174,7 @@ internal data class DropdownMenuPositionProvider(
 }
 
 @Composable
-fun MenuScope.MenuContent(
+public fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
     showTransition: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0)),
     hideTransition: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0)),
@@ -213,7 +215,7 @@ fun MenuScope.MenuContent(
 }
 
 @Composable
-fun MenuScope.MenuItem(
+public fun MenuScope.MenuItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,

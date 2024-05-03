@@ -16,6 +16,8 @@ val publishVersion = "1.2.0"
 val githubUrl = "github.com/composablehorizons/compose-menu"
 
 kotlin {
+    explicitApi()
+
     androidTarget {
         publishLibraryVariants("release", "debug")
         compilations.all {

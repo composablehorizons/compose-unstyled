@@ -20,6 +20,10 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.composables.ui.Menu
+import com.composables.ui.MenuButton
+import com.composables.ui.MenuContent
+import com.composables.ui.MenuItem
 
 @Composable
 fun App() {
