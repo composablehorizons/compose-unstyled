@@ -86,7 +86,7 @@ public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Compos
 }
 
 @Stable
-public class MenuScope {
+public class MenuScope internal constructor() {
     internal var expanded by mutableStateOf(false)
     internal val menuFocusRequester = FocusRequester()
     internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
