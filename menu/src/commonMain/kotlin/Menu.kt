@@ -115,7 +115,7 @@ public class MenuScope internal constructor() {
 }
 
 
-// Cope taken from Material 3 DropdownMenu.kt
+// Code taken from Material 3 DropdownMenu.kt
 // https://github.com/JetBrains/compose-multiplatform-core/blob/e62838f496d592c019a3539669a9fbfd33928121/compose/material/material/src/commonMain/kotlin/androidx/compose/material/Menu.kt
 @Immutable
 internal data class DropdownMenuPositionProvider(
