@@ -78,7 +78,7 @@ fun App() {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Image(Copy, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
+                        Image(Copy, null)
                         Spacer(Modifier.width(8.dp))
                         Text("Copy", modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
                     }
