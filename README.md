@@ -2,7 +2,7 @@
 
 An unstyled Composable component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling of your choice. 
 
-Comes with built-in Keyboard management and animation support. Supports Compose Desktop, Web (WASM), Android and iOS.
+Comes with built-in Keyboard management and animation support. Supports Compose Desktop, Web (Js/WASM), Android and iOS.
 
 ## Installation
 
