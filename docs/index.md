@@ -5,21 +5,10 @@ of your choice. Fully accessible, supports keyboard navigation and open/close an
 
 Available for Compose Desktop, Compose Web (WASM), Jetpack Compose (Android) and iOS.
 
-<script src="jquery-3.7.1.min.js"></script>
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden;">
     <img src="menu-preview.jpg" id="menuImage" style="max-width: 100%; height: 100%; display: block; object-fit: cover; object-position: center;">
-    <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; display: none;" src="preview/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="preview/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
-
-<script>
-    const supported = WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 95, 1, 120, 0]));
-    console.log("Supports Compose Web = "+supported)
-    if (supported) {
-        $('#demoIframe').show();
-    } else {
-        $('#demoIframe').hide();
-    }
-</script>
 
 ## Installation
 

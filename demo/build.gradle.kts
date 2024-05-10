@@ -18,8 +18,15 @@ kotlin {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(17)
     }
-    @OptIn(ExperimentalWasmDsl::class) wasmJs {
-        moduleName = "demo"
+    js(IR){
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
+    wasmJs {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
