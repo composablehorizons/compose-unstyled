@@ -23,26 +23,11 @@ import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
-@Stable
-public class MenuState(expanded: Boolean = false) {
-    public var expanded: Boolean by mutableStateOf(expanded)
-    internal val menuFocusRequester = FocusRequester()
-    internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
-    internal var hasMenuFocus by mutableStateOf(false)
-}
-
-
-@Composable
-public fun rememberMenuState(expanded: Boolean = false): MenuState {
-    return remember { MenuState(expanded) }
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 public fun Menu(
-    state: MenuState = rememberMenuState(),
     modifier: Modifier = Modifier,
+    state: MenuState = rememberMenuState(),
     contents: @Composable MenuScope.() -> Unit
 ) {
     val scope = remember(state.expanded) { MenuScope(state) }
@@ -88,18 +73,29 @@ public fun Menu(
             }
         }
     }
-    Box(modifier.onFocusChanged {
-        hasFocus = it.hasFocus
-    }) {
+    Box(modifier.onFocusChanged { hasFocus = it.hasFocus }) {
         state.currentFocusManager = LocalFocusManager.current
         scope.contents()
     }
 }
 
+@Stable
+public class MenuState(expanded: Boolean = false) {
+    public var expanded: Boolean by mutableStateOf(expanded)
+    internal val menuFocusRequester = FocusRequester()
+    internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
+    internal var hasMenuFocus by mutableStateOf(false)
+}
+
+
+@Composable
+public fun rememberMenuState(expanded: Boolean = false): MenuState {
+    return remember { MenuState(expanded) }
+}
 
 @Composable
 public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
-    Box(modifier = modifier.clickable(role = Role.DropdownList) {
+    Box(modifier.clickable(role = Role.DropdownList) {
         menuState.expanded = menuState.expanded.not()
     }) {
         contents()
@@ -213,8 +209,8 @@ public fun MenuScope.MenuContent(
 
 @Composable
 public fun MenuScope.MenuItem(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     contents: @Composable () -> Unit
