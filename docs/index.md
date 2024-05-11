@@ -6,7 +6,7 @@ of your choice. Fully accessible, supports keyboard navigation and open/close an
 Available for Compose Desktop, Compose Web (Js/WASM), Jetpack Compose (Android) and iOS.
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden;">
-    <img src="menu-preview.jpg" id="menuImage" style="max-width: 100%; height: 100%; display: block; object-fit: cover; object-position: center;">
+    <img alt="Menu preview" src="menu-preview.jpg" id="menuImage" style="max-width: 100%; height: 100%; display: block; object-fit: cover; object-position: center;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="preview/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
@@ -67,6 +67,26 @@ Column(Modifier.fillMaxSize()) {
         }
     }
     BasicText("Selected = ${options[selected]}")
+}
+```
+
+## Expand/Close the Menu programmatically
+
+Pass your own `MenuState` to the `Menu` and change the *expanded* property according to your needs:
+
+```kotlin
+val state = rememberMenuState(expanded = true)
+
+Menu(state = state) {
+    MenuButton {
+        BasicText("Toggle the menu")
+    }
+
+    MenuContent {
+        MenuItem(onClick = { state.expanded = false }) {
+            BasicText("Close this menu")
+        }
+    }
 }
 ```
 
