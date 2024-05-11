@@ -9,7 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,19 +20,15 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.ui.Menu
-import com.composables.ui.MenuButton
-import com.composables.ui.MenuContent
-import com.composables.ui.MenuItem
+import com.composables.ui.*
 
 @Composable
 fun App() {
     Box(
-        Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))
-            .padding(vertical = 40.dp),
+        modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))).padding(vertical = 40.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        Menu {
+        Menu(state = rememberMenuState(expanded = true)) {
             // setting fixed width so that the MenuContents is visually centered
             Box(Modifier.width(240.dp)) {
                 MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White)) {
