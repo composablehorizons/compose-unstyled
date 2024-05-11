@@ -14,7 +14,7 @@ plugins {
 
 val publishGroupId = "com.composables.ui"
 val publishArtifactId = "menu"
-val publishVersion = "1.3.0"
+val publishVersion = "1.4.0"
 val githubUrl = "github.com/composablehorizons/compose-menu"
 
 java {

@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.composables.ui:menu:1.2.0")
+    implementation("com.composables.ui:menu:1.3.0")
 }
 ```
 
