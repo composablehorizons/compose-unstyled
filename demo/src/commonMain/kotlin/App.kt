@@ -6,6 +6,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -29,7 +30,6 @@ fun App() {
         contentAlignment = Alignment.TopCenter
     ) {
         Menu(state = rememberMenuState(expanded = true)) {
-            // setting fixed width so that the MenuContents is visually centered
             Box(Modifier.width(240.dp)) {
                 MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White)) {
                     Row(
