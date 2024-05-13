@@ -70,7 +70,9 @@ Column(Modifier.fillMaxSize()) {
 }
 ```
 
-## Expand/Close the Menu programmatically
+## Code Examples
+
+### Expand/Close the Menu programmatically
 
 Pass your own `MenuState` to the `Menu` and change the *expanded* property according to your needs:
 
@@ -85,6 +87,24 @@ Menu(state = state) {
     MenuContent {
         MenuItem(onClick = { state.expanded = false }) {
             BasicText("Close this menu")
+        }
+    }
+}
+```
+
+### Change the alignment of the `MenuContent`
+
+This option is useful if you want to left align, center align or right align the `MenuButton` and the `MenuContent` when expanded. 
+
+```kotlin
+Menu {
+    MenuButton {
+        BasicText("Toggle the menu")
+    }
+
+    MenuContent(alignment = Alignment.End) {
+        MenuItem(onClick = { /* TODO */ }) {
+            BasicText("Option")
         }
     }
 }
