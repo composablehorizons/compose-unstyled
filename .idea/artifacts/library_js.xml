@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="library-js">
+    <output-path>$PROJECT_DIR$/library/build/libs</output-path>
+    <root id="archive" name="library-js.jar">
+      <element id="module-output" name="ComposeMenu.library.jsMain" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="demo-js">
+    <output-path>$PROJECT_DIR$/demo/build/libs</output-path>
+    <root id="archive" name="demo-js.jar">
+      <element id="module-output" name="ComposeMenu.demo.jsMain" />
+    </root>
+  </artifact>
+</component>
