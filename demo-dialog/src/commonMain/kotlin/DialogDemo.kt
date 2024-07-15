@@ -1,5 +1,8 @@
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,7 +38,8 @@ import com.composables.composetheme.roundXL
 import com.composables.composetheme.shapes
 import com.composables.composetheme.textStyles
 import com.composables.ui.Dialog
-import com.composables.ui.DialogContent
+import com.composables.ui.DialogPanel
+import com.composables.ui.DialogProperties
 import com.composables.ui.Scrim
 import com.composables.ui.rememberDialogState
 
@@ -59,16 +63,15 @@ fun DialogDemo() {
                 BasicText("Show dialog", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
             }
             Dialog(state = dialogState) {
-                Scrim(enter = fadeIn(), exit = fadeOut())
-                DialogContent(
+                DialogPanel(
                     modifier = Modifier.systemBarsPadding()
                         .widthIn(min = 280.dp, max = 560.dp)
                         .padding(20.dp)
                         .clip(ComposeTheme.shapes.roundXL)
                         .border(1.dp, ComposeTheme.colors.gray100, ComposeTheme.shapes.roundXL)
                         .background(Color.White),
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                    enter = scaleIn(initialScale = 0.8f,) + fadeIn(tween(durationMillis = 250)),
+                    exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
                 ) {
                     Column {
                         Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {

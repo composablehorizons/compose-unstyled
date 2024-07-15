@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -100,7 +99,7 @@ public fun Dialog(
 }
 
 @Composable
-public fun DialogScope.DialogContent(
+public fun DialogScope.DialogPanel(
     modifier: Modifier,
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
@@ -109,11 +108,10 @@ public fun DialogScope.DialogContent(
     AnimatedVisibility(
         visibleState = visibilityState,
         enter = enter,
-        exit = exit
+        exit = exit,
     ) {
-        Box(modifier = modifier.semantics {
-            dialog()
-        }.pointerInput(Unit) { detectTapGestures { } }) {
+        Box(modifier.semantics { dialog() }
+            .pointerInput(Unit) { detectTapGestures { } }, contentAlignment = Alignment.Center) {
             content()
         }
     }

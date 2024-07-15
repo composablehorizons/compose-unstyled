@@ -1,6 +1,6 @@
 # Dropdown Menu
 
-An unstyled Composable component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
+An unstyled component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
 of your choice. 
 
 Fully accessible, supports keyboard navigation and open/close animations.

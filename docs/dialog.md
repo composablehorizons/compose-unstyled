@@ -23,11 +23,11 @@ dependencies {
 
 ## Basic Example
 
-A dialog consists of the following components: `Dialog`, `DialogContent` and the optional `Scrim`.
+A dialog consists of the following components: `Dialog`, `DialogPanel` and the optional `Scrim`.
 
 The `Dialog` controls the visibility of the dialog via the `DialogState` object.
 
-The `DialogContent` renders the
+The `DialogPanel` renders the
 
 The optional `Scrim` component is used to add layer behind the dialog
 
@@ -39,15 +39,13 @@ Box {
         BasicText("Show Dialog")
     }
     Dialog(state = dialogState) {
-        DialogContent(
+        DialogPanel(
             modifier = Modifier.systemBarsPadding()
                 .widthIn(min = 280.dp, max = 560.dp)
                 .padding(20.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .border(1.dp, Color(0xFFE4E4E4), RoundedCornerShape(12.dp))
                 .background(Color.White),
-            enter = fadeIn(),
-            exit = fadeOut()
         ) {
             Column {
                 Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
@@ -82,11 +80,11 @@ Box {
 
 Any sort of styling is done by the `Modifier` of the respective component.
 
-Changing the looks of the dialog's panel is done by passing the respective styling `Modifier`s to your `DialogContent`:
+Changing the looks of the dialog's panel is done by passing the respective styling `Modifier`s to your `DialogPanel`:
 
 ```kotlin
 Dialog(state = rememberDialogState(visible = true)) {
-    DialogContent(
+    DialogPanel(
         modifier = Modifier.systemBarsPadding()
             .widthIn(min = 280.dp, max = 560.dp)
             .padding(20.dp)
@@ -117,7 +115,7 @@ Box(Modifier.clickable { state.visible = true }) {
     BasicText("Show dialog")
 }
 Dialog(state = state) {
-    DialogContent {
+    DialogPanel {
         Column {
             BasicText("Something important happened")
             Box(Modifier.clickable { state.visible = false }) {
@@ -125,6 +123,16 @@ Dialog(state = state) {
             }
         }
     }
+}
+```
+
+The Dialog will also be automatically dismissed by default if the user taps outside the DialogPanel or presses the 'Escape' or 'Back' button on their device. 
+
+In override to override this behavior pass the `DialogProperties` object to the Dialog with the desired properties:
+
+```kotlin
+Dialog(state = rememberDialogState(), properties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)) {
+    // TODO the rest of your dialog
 }
 ```
 
@@ -140,7 +148,7 @@ Box(Modifier.clickable { state.visible = true }) {
 }
 Dialog(state = state) {
     Scrim()
-    DialogContent {
+    DialogPanel {
         Column {
             BasicText("Something important happened")
             Box(Modifier.clickable { state.visible = false }) {
@@ -151,7 +159,8 @@ Dialog(state = state) {
 }
 ```
 
-The `Scrim` is customizable and you can pass any *scrimColor*, and *enter*/*exit* transitions that matches your design specs.
+The `Scrim` is customizable and you can pass any *scrimColor*, and *enter*/*exit* transitions that matches your design
+specs.
 
 ### Scrollable dialogs
 
@@ -164,11 +173,11 @@ Box(Modifier.clickable { state.visible = true }) {
     BasicText("Show dialog")
 }
 Dialog(state = state) {
-    DialogContent {
+    DialogPanel {
         Column {
             LazyColumn(Modifier.height(320.dp)) {
                 item { BasicText("Something important happened") }
-                repeat(100) { i -> 
+                repeat(100) { i ->
                     item { BasicText("Update number ${i}") }
                 }
             }
@@ -180,27 +189,103 @@ Dialog(state = state) {
 }
 ```
 
-
 ### Full-screen dialogs
+
+Pass a `Modifier.fillMaxSize()` to the `DialogPanel`'s modifier parameter. Make sure to pass
+the `Modifier.systemBarsPadding()` or any related inset Modifier so that the dialog is not drawn behind any system
+bars (such as status and navigation bar on Android):
+
+```kotlin
+Dialog(state = rememberDialogState(visible = true)) {
+    DialogPanel(
+        modifier = Modifier
+            .systemBarsPadding()
+            .fillMaxSize()
+    ) {
+        Column {
+            BasicText("This is a full screen dialog")
+            Box(Modifier.clickable { state.visible = false }) {
+                BasicText("Got it")
+            }
+        }
+    }
+}
+```
 
 ### Adding transitions
 
+Add any *enter*/*exit* transitions into the `DialogPanel` and `Scrim` to control how they appear on the screen when they
+enter and exit the composition:
+
+```kotlin
+Dialog(state = rememberDialogState(visible = true)) {
+    Scrim(enter = fadeIn(), exit = fadeOut())
+    DialogPanel(
+        enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
+        exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+    ) {
+        // TODO the dialog's contents
+    }
+}
+```
+
 ## Keyboard Interactions
 
-Esc
+<style>
+.keyboard-key {
+  background-color: #EEEEEE;
+  color: black;
+  text-align: center;
+  border-radius: 4px;
+}
+</style>
 
-## Component API
+| Key                                         | Description                                                                                  |
+|---------------------------------------------|----------------------------------------------------------------------------------------------|
+| <div class="keyboard-key">Esc</div>         | Closes any open dialogs, if the *dismissOnBackPress* of `DialogProperties()` is set to true. |
+| <div class="keyboard-key">Back</div>        | Closes any open dialogs, if the *dismissOnBackPress* of `DialogProperties()` is set to true. |
+| <div class="keyboard-key">Tab</div>         | Cycles through the dialog's contents.                                                        |
+| <div class="keyboard-key">Shift + Tab</div> | Cycles through the dialog's contents in backwards order.                                     |
+
+## Parameters
 
 ### Dialog
 
-### DialogContent
+The main component.
+
+| Parameter    | Description                                                                                                                   |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `state`      | A `DialogState` object which controls the visibility of the dialog.                                                           |
+| `properties` | Properties that control when the dialog needs to be dismissed (such as clicking outside of the panel or pressing Esc or Back. |
+| `content`    | A `@Composable` function that provides a `DialogScope`.                                                                       |
+
+### DialogPanel
+
+The visual representation of your dialog. Can only be used from a `DialogScope`.
+
+| Parameter    | Description                                                                                                                   |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `state`      | A `DialogState` object which controls the visibility of the dialog.                                                           |
+| `properties` | Properties that control when the dialog needs to be dismissed (such as clicking outside of the panel or pressing Esc or Back. |
+| `content`    | A `@Composable` function that provides a `DialogScope`.                                                                       |
 
 ### Scrim
+
+The dimming layer that is often placed behind a `DialogPanel`, to let the user focus on the dialog. Can only be used
+from a `DialogScope`.
+
+| Parameter    | Description                                                                       |
+|--------------|-----------------------------------------------------------------------------------|
+| `modifier`   | `Modifier` for the Scrim                                                          |
+| `scrimColor` | Controls the color of the Scrim. The default color is Black with an alpha of 60%. |
+| `enter`      | The `EnterTransition` when the Scrim enters the composition                       |
+| `exit`       | The `ExitTransition` when the Scrim enters the composition                        |
 
 ## Core Dialog vs Compose Dialog
 
 Compose Multiplatform's original Dialog component does not support custom animations. Even though it is possible to
-animate it, it requires you to combine multiple components together and sync state to animations to composition which is not
+animate it, it requires you to combine multiple components together and sync state to animations to composition which is
+not
 straightforward to do.
 
 In addition, the Jetpack Compose (Android) Dialog comes with the original Android's dialog width and inset constraints,
@@ -208,7 +293,7 @@ which are historically a pain to deal with and customize.
 
 Our Dialog is designed to be customizable inside out and work the same way on every platform without surprises. It
 behaves like any other component. If for example you need a full
-screen dialog, all you have to do is pass `Modifier.fillMaxSize()` to the `DialogContent`, without having to worry about
+screen dialog, all you have to do is pass `Modifier.fillMaxSize()` to the `DialogPanel`, without having to worry about
 platform flags.
 
 ## Styled Examples
