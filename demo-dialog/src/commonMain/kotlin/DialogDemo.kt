@@ -28,6 +28,7 @@ val AppTheme = buildComposeTheme { }
 fun DialogDemo() {
     AppTheme {
         val dialogState = rememberDialogState(false)
+
         Box(modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFF4A90E2), Color(0xFF50C9C3)))).padding(vertical = 40.dp), contentAlignment = Alignment.Center) {
             Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).clickable(role = Role.Button) { dialogState.visible = true }.background(Color.White).padding(horizontal = 14.dp, vertical = 10.dp)) {
                 BasicText("Show dialog", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))

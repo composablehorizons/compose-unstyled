@@ -1,10 +1,11 @@
-# Overview
+# Dropdown Menu
 
 An unstyled Composable component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
-of your choice. Fully accessible, supports keyboard navigation and open/close animations.
+of your choice. 
+
+Fully accessible, supports keyboard navigation and open/close animations.
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden;">
-    <img alt="Menu preview" src="menu-preview.jpg" id="menuImage" style="max-width: 100%; height: 100%; display: block; object-fit: cover; object-position: center;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../menu-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 

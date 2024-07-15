@@ -12,8 +12,6 @@ theme:
     code: Jetbrains Mono
   features:
     - toc.integrate
-#    - navigation.sections
-#    - navigation.top
     - search.suggest
     - search.highlight
     - content.tabs.link
@@ -26,9 +24,8 @@ theme:
       accent: gray
 
 nav:
-  - 'Overview': index.md
-  - 'Menu' : menu.md
   - 'Dialog' : dialog.md
+  - 'Dropdown Menu' : menu.md
 
 plugins:
   - social
