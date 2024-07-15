@@ -27,9 +27,9 @@ A dialog consists of the following components: `Dialog`, `DialogPanel` and the o
 
 The `Dialog` controls the visibility of the dialog via the `DialogState` object.
 
-The `DialogPanel` renders the
+The `DialogPanel` is a container component that renders the dialog's panel and its contents. 
 
-The optional `Scrim` component is used to add layer behind the dialog
+The optional `Scrim` component is used to add layer behind the dialog and dim the rest of the UI.
 
 ```kotlin
 val dialogState = rememberDialogState()
