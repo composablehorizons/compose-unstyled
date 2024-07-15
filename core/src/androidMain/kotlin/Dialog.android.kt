@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import com.composables.core.R
 
 @Composable
 internal actual fun NoScrimDialog(onDismissRequest: () -> Unit, properties: DialogProperties, content: @Composable () -> Unit) {

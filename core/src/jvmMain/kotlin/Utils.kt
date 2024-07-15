@@ -1,3 +1,5 @@
+@file:JvmName("CommonUtilsKt")
+
 package com.composables.ui
 
 import androidx.compose.runtime.Composable

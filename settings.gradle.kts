@@ -1,4 +1,4 @@
-rootProject.name = "ComposeMenu"
+rootProject.name = "ComposablesCore"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -35,4 +35,4 @@ dependencyResolutionManagement {
 }
 
 include(":demo")
-include(":menu")
+include(":core")

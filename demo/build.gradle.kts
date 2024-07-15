@@ -58,7 +58,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.ui)
             implementation(compose.components.resources)
-            implementation(project(":menu"))
+            implementation(project(":core"))
         }
 
         val desktopMain by getting {

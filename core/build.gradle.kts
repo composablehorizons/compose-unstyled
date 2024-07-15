@@ -12,10 +12,10 @@ plugins {
     id("signing")
 }
 
-val publishGroupId = "com.composables.ui"
-val publishArtifactId = "menu"
+val publishGroupId = "com.composables.core"
+val publishArtifactId = "core"
 val publishVersion = "1.5.0"
-val githubUrl = "github.com/composablehorizons/compose-menu"
+val githubUrl = "github.com/composablehorizons/composables-core"
 
 java {
     toolchain {
@@ -52,7 +52,7 @@ kotlin {
 
     listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeMenu"
+            baseName = "ComposablesCore"
             isStatic = true
         }
     }
@@ -71,7 +71,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.composables.ui"
+    namespace = "com.composables.core"
     compileSdk = 34
     defaultConfig {
         minSdk = 21
@@ -100,8 +100,8 @@ afterEvaluate {
                 artifact(javadocJar)
 
                 pom {
-                    name.set("Compose Menu")
-                    description.set("An unstyled Menu (Dropdown) Compose Multiplatform component with keyboard navigation and animation support.")
+                    name.set("Composables Core")
+                    description.set("Unstyled, fully accesible Compose Multiplatform components that you can customize to your heart's desire.")
                     url.set("https://${githubUrl}")
                     licenses {
                         license {
@@ -117,7 +117,7 @@ afterEvaluate {
                         developer {
                             id.set("composablehorizons")
                             name.set("Composable Horizons")
-                            email.set("alex@composablehorizons.com")
+                            email.set("alex@composablesui.com")
                         }
                     }
 
