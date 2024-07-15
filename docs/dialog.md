@@ -126,12 +126,16 @@ Dialog(state = state) {
 }
 ```
 
-The Dialog will also be automatically dismissed by default if the user taps outside the DialogPanel or presses the 'Escape' or 'Back' button on their device. 
+The Dialog will also be automatically dismissed by default if the user taps outside the DialogPanel or presses the '
+Escape' or 'Back' button on their device.
 
 In override to override this behavior pass the `DialogProperties` object to the Dialog with the desired properties:
 
 ```kotlin
-Dialog(state = rememberDialogState(), properties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)) {
+Dialog(
+    state = rememberDialogState(),
+    properties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)
+) {
     // TODO the rest of your dialog
 }
 ```
@@ -298,3 +302,11 @@ platform flags.
 
 ## Styled Examples
 
+<a href="https://composablesui.com">
+
+Looking for styled components for Compose Multiplatform?
+
+Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">ComposablesUi.com</span>
+
+<img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
+</a>
