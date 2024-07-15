@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composables.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -37,11 +37,18 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import com.composables.core.AppearInstantly
+import com.composables.core.DisappearInstantly
+import com.composables.core.KeyDownHandler
+import com.composables.core.MenuContentPositionProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.Menu(modifier, state, contents)")
+)
 public fun Menu(
     modifier: Modifier = Modifier,
     state: MenuState = rememberMenuState(),
@@ -97,6 +104,9 @@ public fun Menu(
     }
 }
 
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.MenuState(expanded)")
+)
 @Stable
 public class MenuState(expanded: Boolean = false) {
     public var expanded: Boolean by mutableStateOf(expanded)
@@ -105,11 +115,18 @@ public class MenuState(expanded: Boolean = false) {
     internal var hasMenuFocus by mutableStateOf(false)
 }
 
+
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.rememberMenuState(expanded)")
+)
 @Composable
 public fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
 }
 
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.MenuButton(modifier, contents)")
+)
 @Composable
 public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
     Box(modifier.clickable(role = Role.DropdownList) {
@@ -119,66 +136,24 @@ public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Compos
     }
 }
 
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.MenuScope(state)")
+)
 @Stable
 public class MenuScope internal constructor(state: MenuState) {
     internal var menuState by mutableStateOf(state)
 }
 
 
-// Code modified from Material 3 DropdownMenu.kt
-// https://github.com/JetBrains/compose-multiplatform-core/blob/e62838f496d592c019a3539669a9fbfd33928121/compose/material/material/src/commonMain/kotlin/androidx/compose/material/Menu.kt
-@Immutable
-internal data class MenuContentPositionProvider(val density: Density, val alignment: Alignment.Horizontal) :
-    PopupPositionProvider {
-    override fun calculatePosition(
-        anchorBounds: IntRect, windowSize: IntSize, layoutDirection: LayoutDirection, popupContentSize: IntSize
-    ): IntOffset { // The min margin above and below the menu, relative to the screen.
-        // The content offset specified using the dropdown offset parameter.
 
-        // Compute horizontal position.
-        val toRight = anchorBounds.left
-        val toLeft = anchorBounds.right - popupContentSize.width
-
-        val toDisplayRight = windowSize.width - popupContentSize.width
-        val toDisplayLeft = 0
-
-        val x = (if (alignment == Alignment.Start) {
-            sequenceOf(
-                toRight, toLeft,
-                // If the anchor gets outside of the window on the left, we want to position
-                // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
-                if (anchorBounds.left >= 0) toDisplayRight else toDisplayLeft
-            )
-        } else if (alignment == Alignment.End) {
-            sequenceOf(
-                toLeft, toRight, // If the anchor gets outside of the window on the right, we want to position
-                // toDisplayRight for proximity to the anchor. Otherwise, toDisplayLeft.
-                if (anchorBounds.right <= windowSize.width) toDisplayLeft else toDisplayRight
-            )
-        } else { // middle
-            sequenceOf(anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2)
-        }).firstOrNull {
-            it >= 0 && it + popupContentSize.width <= windowSize.width
-        } ?: toLeft
-
-        // Compute vertical position.
-        val toBottom = maxOf(anchorBounds.bottom, 0)
-        val toTop = anchorBounds.top - popupContentSize.height
-        val toCenter = anchorBounds.top - popupContentSize.height / 2
-        val toDisplayBottom = windowSize.height - popupContentSize.height
-        val y = sequenceOf(toBottom, toTop, toCenter, toDisplayBottom).firstOrNull {
-            it >= 0 && it + popupContentSize.height <= windowSize.height
-        } ?: toTop
-
-        return IntOffset(x, y)
-    }
-}
-
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.MenuContent(modifier, enter, exit, alignment, contents)")
+)
 @Composable
 public fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
-    enter: EnterTransition = AppearInstantly,
-    exit: ExitTransition = DisappearInstantly,
+    showTransition: EnterTransition = AppearInstantly,
+    hideTransition: ExitTransition = DisappearInstantly,
     alignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit
 ) {
@@ -204,8 +179,8 @@ public fun MenuScope.MenuContent(
             menuState.currentFocusManager = LocalFocusManager.current
             AnimatedVisibility(
                 visibleState = expandedState,
-                enter = enter,
-                exit = exit,
+                enter = showTransition,
+                exit = hideTransition,
                 modifier = Modifier.onFocusChanged {
                     menuState.hasMenuFocus = it.hasFocus
                 }) {
@@ -217,6 +192,9 @@ public fun MenuScope.MenuContent(
     }
 }
 
+@Deprecated("Use com.composables.core package instead",
+    ReplaceWith("com.composables.core.MenuItem(onClick, modifier, enabled, interactionSource, contents)")
+)
 @Composable
 public fun MenuScope.MenuItem(
     onClick: () -> Unit,
