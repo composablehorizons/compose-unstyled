@@ -1,3 +1,5 @@
+package com.composables.core.demo
+
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,11 +39,9 @@ import com.composables.composetheme.round
 import com.composables.composetheme.roundXL
 import com.composables.composetheme.shapes
 import com.composables.composetheme.textStyles
-import com.composables.ui.Dialog
-import com.composables.ui.DialogPanel
-import com.composables.ui.DialogProperties
-import com.composables.ui.Scrim
-import com.composables.ui.rememberDialogState
+import com.composables.core.Dialog
+import com.composables.core.DialogPanel
+import com.composables.core.rememberDialogState
 
 val AppTheme = buildComposeTheme { }
 
@@ -70,7 +70,7 @@ fun DialogDemo() {
                         .clip(ComposeTheme.shapes.roundXL)
                         .border(1.dp, ComposeTheme.colors.gray100, ComposeTheme.shapes.roundXL)
                         .background(Color.White),
-                    enter = scaleIn(initialScale = 0.8f,) + fadeIn(tween(durationMillis = 250)),
+                    enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
                     exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
                 ) {
                     Column {

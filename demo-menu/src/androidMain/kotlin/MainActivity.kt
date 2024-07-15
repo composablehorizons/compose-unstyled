@@ -1,4 +1,4 @@
-package com.composables.ui
+package com.composables.core.demo
 
 import MenuDemo
 import android.os.Bundle

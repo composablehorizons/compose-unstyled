@@ -1,3 +1,5 @@
+package com.composables.core.demo
+
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn

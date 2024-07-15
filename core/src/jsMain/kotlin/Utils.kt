@@ -1,4 +1,4 @@
-package com.composables.ui
+package com.composables.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

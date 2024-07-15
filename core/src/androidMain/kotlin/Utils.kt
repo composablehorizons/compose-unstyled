@@ -1,6 +1,6 @@
 @file:JvmName("AndroidUtilsKt")
 
-package com.composables.ui
+package com.composables.core
 
 import android.view.KeyEvent
 import android.view.View.OnKeyListener

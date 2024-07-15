@@ -1,6 +1,5 @@
-package com.composables.ui
+package com.composables.core.demo
 
-import DialogDemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

@@ -84,18 +84,18 @@ compose.experimental {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.composables.core.demo.MainKt"
     }
 }
 
 android {
-    namespace = "com.composables.ui.demo"
+    namespace = "com.composables.core.demo"
     compileSdk = 34
     defaultConfig {
         minSdk = 21
         targetSdk = 34
 
-        applicationId = "com.composables.ui.demo"
+        applicationId = "com.composables.core.demo"
         versionCode = 1
         versionName = "1.0.0"
     }

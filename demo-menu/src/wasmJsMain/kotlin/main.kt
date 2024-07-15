@@ -1,3 +1,5 @@
+package com.composables.core.demo
+
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
 
