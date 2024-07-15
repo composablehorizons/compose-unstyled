@@ -161,8 +161,8 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
 @Composable
 public fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
-    showTransition: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0)),
-    hideTransition: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0)),
+    showTransition: EnterTransition = AppearInstantly,
+    hideTransition: ExitTransition = DisappearInstantly,
     alignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit
 ) {
