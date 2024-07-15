@@ -6,26 +6,46 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.ui.*
+import com.composables.ui.Menu
+import com.composables.ui.MenuButton
+import com.composables.ui.MenuContent
+import com.composables.ui.MenuItem
+import com.composables.ui.rememberMenuState
 
 @Composable
 fun MenuDemo() {
     Box(
-        modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))).padding(vertical = 40.dp),
+        modifier = Modifier.fillMaxSize()
+            .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))
+            .padding(vertical = 40.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Menu(state = rememberMenuState(expanded = true)) {
@@ -35,7 +55,10 @@ fun MenuDemo() {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
                     ) {
-                        Text("Options", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
+                        Text(
+                            text = "Options",
+                            style = TextStyle.Default.copy(fontWeight = FontWeight(500))
+                        )
                         Spacer(Modifier.width(8.dp))
                         Image(ChevronDown, null)
                     }
@@ -43,18 +66,24 @@ fun MenuDemo() {
             }
 
             MenuContent(
-                modifier = Modifier.padding(vertical = 4.dp).width(240.dp).shadow(4.dp, RoundedCornerShape(8.dp))
-                    .clip(RoundedCornerShape(8.dp)).background(Color.White),
+                modifier = Modifier.padding(vertical = 4.dp)
+                    .width(240.dp)
+                    .shadow(4.dp, RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.White),
                 showTransition = scaleIn(
-                    tween(durationMillis = 120, easing = LinearOutSlowInEasing),
+                    animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
                     initialScale = 0.8f,
                     transformOrigin = TransformOrigin(0f, 0f)
                 ) + fadeIn(tween(durationMillis = 30)),
-                hideTransition = scaleOut(tween(durationMillis = 1, delayMillis = 75), targetScale = 1f) + fadeOut(
-                    tween(durationMillis = 75)
-                )
+                hideTransition = scaleOut(
+                    animationSpec = tween(durationMillis = 1, delayMillis = 75),
+                    targetScale = 1f
+                ) + fadeOut(tween(durationMillis = 75))
             ) {
-                MenuItem(modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)), onClick = { /* TODO */ }) {
+                MenuItem(
+                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    onClick = { /* TODO */ }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -62,34 +91,39 @@ fun MenuDemo() {
                         Image(SelectAll, null)
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "Select all",
+                            text = "Select all",
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
                         )
                     }
                 }
                 Divider()
-                MenuItem(modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)), onClick = { /* TODO */ }) {
+                MenuItem(
+                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    onClick = { /* TODO */ }) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Image(Copy, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Copy", modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
+                        Text(
+                            text = "Copy",
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
+                        )
                     }
                 }
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     enabled = false,
-                    onClick = { }) {
+                    onClick = { /* TODO */ }) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(Cut, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "Cut",
+                            text = "Cut",
                             style = TextStyle.Default.copy(color = Color(0xFF9E9E9E)),
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
                         )
@@ -98,30 +132,32 @@ fun MenuDemo() {
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     enabled = false,
-                    onClick = { }) {
+                    onClick = { /* TODO */ }) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(Paste, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "Paste",
+                            text = "Paste",
                             style = TextStyle.Default.copy(color = Color(0xFF9E9E9E)),
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
                         )
                     }
                 }
                 Divider()
-                MenuItem(modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)), onClick = { /* TODO */ }) {
+                MenuItem(
+                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    onClick = { /* TODO */ }) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(Copy, null, colorFilter = ColorFilter.tint(Color(0xFFC62828)))
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "Delete",
+                            text = "Delete",
                             style = TextStyle.Default.copy(color = Color(0xFFC62828)),
                             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
                         )
@@ -134,7 +170,11 @@ fun MenuDemo() {
 
 val ChevronDown: ImageVector by lazy {
     ImageVector.Builder(
-        name = "ChevronDown", defaultWidth = 16.dp, defaultHeight = 16.dp, viewportWidth = 24f, viewportHeight = 24f
+        name = "ChevronDown",
+        defaultWidth = 16.dp,
+        defaultHeight = 16.dp,
+        viewportWidth = 24f,
+        viewportHeight = 24f
     ).apply {
         path(
             fill = null,
@@ -147,16 +187,29 @@ val ChevronDown: ImageVector by lazy {
             strokeLineMiter = 1.0f,
             pathFillType = PathFillType.NonZero
         ) {
-            moveTo(6f, 9f)
-            lineToRelative(6f, 6f)
-            lineToRelative(6f, -6f)
+            moveTo(
+                6f,
+                9f
+            )
+            lineToRelative(
+                6f,
+                6f
+            )
+            lineToRelative(
+                6f,
+                -6f
+            )
         }
     }.build()
 }
 
 @Composable
 fun Text(text: String, style: TextStyle = TextStyle.Default, modifier: Modifier = Modifier) {
-    BasicText(text, style = style, modifier = modifier)
+    BasicText(
+        text,
+        style = style,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -166,13 +219,17 @@ fun Divider(modifier: Modifier = Modifier) {
 
 private var _Cut: ImageVector? = null
 
-public val Cut: ImageVector
+val Cut: ImageVector
     get() {
         if (_Cut != null) {
             return _Cut!!
         }
         _Cut = ImageVector.Builder(
-            name = "Scissors", defaultWidth = 20.dp, defaultHeight = 20.dp, viewportWidth = 24f, viewportHeight = 24f
+            name = "Scissors",
+            defaultWidth = 20.dp,
+            defaultHeight = 20.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
         ).apply {
             path(
                 fill = null,
@@ -185,10 +242,37 @@ public val Cut: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(9f, 6f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 6f, 9f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 6f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 6f)
+                moveTo(
+                    9f,
+                    6f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    6f,
+                    9f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    3f,
+                    6f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    9f,
+                    6f
+                )
                 close()
             }
             path(
@@ -202,8 +286,14 @@ public val Cut: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(8.12f, 8.12f)
-                lineTo(12f, 12f)
+                moveTo(
+                    8.12f,
+                    8.12f
+                )
+                lineTo(
+                    12f,
+                    12f
+                )
             }
             path(
                 fill = null,
@@ -216,8 +306,14 @@ public val Cut: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(20f, 4f)
-                lineTo(8.12f, 15.88f)
+                moveTo(
+                    20f,
+                    4f
+                )
+                lineTo(
+                    8.12f,
+                    15.88f
+                )
             }
             path(
                 fill = null,
@@ -230,10 +326,37 @@ public val Cut: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(9f, 18f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 6f, 21f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 18f)
-                arcTo(3f, 3f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 18f)
+                moveTo(
+                    9f,
+                    18f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    6f,
+                    21f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    3f,
+                    18f
+                )
+                arcTo(
+                    3f,
+                    3f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    9f,
+                    18f
+                )
                 close()
             }
             path(
@@ -247,8 +370,14 @@ public val Cut: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(14.8f, 14.8f)
-                lineTo(20f, 20f)
+                moveTo(
+                    14.8f,
+                    14.8f
+                )
+                lineTo(
+                    20f,
+                    20f
+                )
             }
         }.build()
         return _Cut!!
@@ -257,13 +386,17 @@ public val Cut: ImageVector
 
 private var _Paste: ImageVector? = null
 
-public val Paste: ImageVector
+val Paste: ImageVector
     get() {
         if (_Paste != null) {
             return _Paste!!
         }
         _Paste = ImageVector.Builder(
-            name = "Clipboard", defaultWidth = 20.dp, defaultHeight = 20.dp, viewportWidth = 24f, viewportHeight = 24f
+            name = "Clipboard",
+            defaultWidth = 20.dp,
+            defaultHeight = 20.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
         ).apply {
             path(
                 fill = null,
@@ -276,15 +409,50 @@ public val Paste: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(9f, 2f)
+                moveTo(
+                    9f,
+                    2f
+                )
                 horizontalLineTo(15f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 16f, 3f)
+                arcTo(
+                    1f,
+                    1f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    16f,
+                    3f
+                )
                 verticalLineTo(5f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 15f, 6f)
+                arcTo(
+                    1f,
+                    1f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    15f,
+                    6f
+                )
                 horizontalLineTo(9f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 8f, 5f)
+                arcTo(
+                    1f,
+                    1f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    8f,
+                    5f
+                )
                 verticalLineTo(3f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 2f)
+                arcTo(
+                    1f,
+                    1f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    9f,
+                    2f
+                )
                 close()
             }
             path(
@@ -298,15 +466,50 @@ public val Paste: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 4f)
+                moveTo(
+                    16f,
+                    4f
+                )
                 horizontalLineToRelative(2f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, 2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    2f,
+                    2f
+                )
                 verticalLineToRelative(14f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2f, 2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    -2f,
+                    2f
+                )
                 horizontalLineTo(6f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2f, -2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    -2f,
+                    -2f
+                )
                 verticalLineTo(6f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, -2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    2f,
+                    -2f
+                )
                 horizontalLineToRelative(2f)
             }
         }.build()
@@ -316,13 +519,17 @@ public val Paste: ImageVector
 
 private var _Copy: ImageVector? = null
 
-public val Copy: ImageVector
+val Copy: ImageVector
     get() {
         if (_Copy != null) {
             return _Copy!!
         }
         _Copy = ImageVector.Builder(
-            name = "Copy", defaultWidth = 20.dp, defaultHeight = 20.dp, viewportWidth = 24f, viewportHeight = 24f
+            name = "Copy",
+            defaultWidth = 20.dp,
+            defaultHeight = 20.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
         ).apply {
             path(
                 fill = null,
@@ -335,15 +542,50 @@ public val Copy: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(10f, 8f)
+                moveTo(
+                    10f,
+                    8f
+                )
                 horizontalLineTo(20f)
-                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 22f, 10f)
+                arcTo(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    22f,
+                    10f
+                )
                 verticalLineTo(20f)
-                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 20f, 22f)
+                arcTo(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    20f,
+                    22f
+                )
                 horizontalLineTo(10f)
-                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 8f, 20f)
+                arcTo(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    8f,
+                    20f
+                )
                 verticalLineTo(10f)
-                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 10f, 8f)
+                arcTo(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    10f,
+                    8f
+                )
                 close()
             }
             path(
@@ -357,12 +599,36 @@ public val Copy: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(4f, 16f)
-                curveToRelative(-1.1f, 0f, -2f, -0.9f, -2f, -2f)
+                moveTo(
+                    4f,
+                    16f
+                )
+                curveToRelative(
+                    -1.1f,
+                    0f,
+                    -2f,
+                    -0.9f,
+                    -2f,
+                    -2f
+                )
                 verticalLineTo(4f)
-                curveToRelative(0f, -1.1f, 0.9f, -2f, 2f, -2f)
+                curveToRelative(
+                    0f,
+                    -1.1f,
+                    0.9f,
+                    -2f,
+                    2f,
+                    -2f
+                )
                 horizontalLineToRelative(10f)
-                curveToRelative(1.1f, 0f, 2f, 0.9f, 2f, 2f)
+                curveToRelative(
+                    1.1f,
+                    0f,
+                    2f,
+                    0.9f,
+                    2f,
+                    2f
+                )
             }
         }.build()
         return _Copy!!
@@ -371,13 +637,17 @@ public val Copy: ImageVector
 
 private var _SelectAll: ImageVector? = null
 
-public val SelectAll: ImageVector
+val SelectAll: ImageVector
     get() {
         if (_SelectAll != null) {
             return _SelectAll!!
         }
         _SelectAll = ImageVector.Builder(
-            name = "Scan", defaultWidth = 24.dp, defaultHeight = 24.dp, viewportWidth = 24f, viewportHeight = 24f
+            name = "Scan",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
         ).apply {
             path(
                 fill = null,
@@ -390,9 +660,20 @@ public val SelectAll: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(3f, 7f)
+                moveTo(
+                    3f,
+                    7f
+                )
                 verticalLineTo(5f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, -2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    2f,
+                    -2f
+                )
                 horizontalLineToRelative(2f)
             }
             path(
@@ -406,9 +687,20 @@ public val SelectAll: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(17f, 3f)
+                moveTo(
+                    17f,
+                    3f
+                )
                 horizontalLineToRelative(2f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, 2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    2f,
+                    2f
+                )
                 verticalLineToRelative(2f)
             }
             path(
@@ -422,9 +714,20 @@ public val SelectAll: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 17f)
+                moveTo(
+                    21f,
+                    17f
+                )
                 verticalLineToRelative(2f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2f, 2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    -2f,
+                    2f
+                )
                 horizontalLineToRelative(-2f)
             }
             path(
@@ -438,9 +741,20 @@ public val SelectAll: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(7f, 21f)
+                moveTo(
+                    7f,
+                    21f
+                )
                 horizontalLineTo(5f)
-                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2f, -2f)
+                arcToRelative(
+                    2f,
+                    2f,
+                    0f,
+                    isMoreThanHalf = false,
+                    isPositiveArc = true,
+                    -2f,
+                    -2f
+                )
                 verticalLineToRelative(-2f)
             }
         }.build()

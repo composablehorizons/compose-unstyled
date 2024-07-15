@@ -1,23 +1,38 @@
 package com.composables.ui
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.*
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
@@ -42,7 +57,8 @@ public fun Menu(
                 Key.DirectionDown -> {
                     if (scope.menuState.expanded.not()) {
                         scope.menuState.expanded = true
-                        coroutineScope.launch { // wait for the Popup to be displayed.
+                        coroutineScope.launch {
+                            // wait for the Popup to be displayed.
                             // There is no official API to wait for this to happen
                             delay(50)
                             state.menuFocusRequester.requestFocus()
@@ -89,7 +105,6 @@ public class MenuState(expanded: Boolean = false) {
     internal var hasMenuFocus by mutableStateOf(false)
 }
 
-
 @Composable
 public fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
@@ -129,7 +144,8 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
 
         val x = (if (alignment == Alignment.Start) {
             sequenceOf(
-                toRight, toLeft, // If the anchor gets outside of the window on the left, we want to position
+                toRight, toLeft,
+                // If the anchor gets outside of the window on the left, we want to position
                 // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
                 if (anchorBounds.left >= 0) toDisplayRight else toDisplayLeft
             )
@@ -174,7 +190,11 @@ public fun MenuScope.MenuContent(
 
     if (expandedState.currentState || expandedState.targetState || !expandedState.isIdle) {
         Popup(
-            properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = true),
+            properties = PopupProperties(
+                focusable = true,
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true
+            ),
             onDismissRequest = {
                 menuState.expanded = false
                 menuState.currentFocusManager?.clearFocus()

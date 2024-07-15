@@ -39,10 +39,13 @@ var selected by remember { mutableStateOf(0) }
 
 Column(Modifier.fillMaxSize()) {
     Menu(Modifier.align(Alignment.End)) {
-        MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))) {
+        MenuButton(
+            Modifier.clip(RoundedCornerShape(6.dp))
+                .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))
+        ) {
             Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
             ) {
                 BasicText("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
                 Spacer(Modifier.width(4.dp))
@@ -51,8 +54,10 @@ Column(Modifier.fillMaxSize()) {
         }
 
         MenuContent(
-            modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
-                .background(Color.White).padding(4.dp),
+            modifier = Modifier.width(320.dp)
+                .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
+                .background(Color.White)
+                .padding(4.dp),
             hideTransition = fadeOut()
         ) {
             options.forEachIndexed { index, option ->
