@@ -12,7 +12,7 @@ plugins {
     id("signing")
 }
 
-val publishGroupId = "com.composables.core"
+val publishGroupId = "com.composables"
 val publishArtifactId = "core"
 val publishVersion = "1.5.0"
 val githubUrl = "github.com/composablehorizons/composables-core"
