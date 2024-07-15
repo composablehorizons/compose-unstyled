@@ -1,3 +1,7 @@
+--- 
+hide: -navigation -toc 
+---
+
 # Composables Core
 
 Unstyled, fully accessible Compose Multiplatform UI components that you can customize to your heart's desire.
