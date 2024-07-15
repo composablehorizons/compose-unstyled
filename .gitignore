@@ -28,6 +28,7 @@ docs/preview/
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/deploymentTargetDropDown.xml
 
 # AWS User-specific
 .idea/**/aws.xml
