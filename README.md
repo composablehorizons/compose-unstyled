@@ -12,13 +12,13 @@ repositories {
 }
 
 dependencies {
-    implementation("com.composables.ui:menu:1.4.0")
+    implementation("com.composables:core:1.5.0")
 }
 ```
 
 ## Documentation
 
-For full documentation, checkout: https://composablehorizons.github.io/compose-menu
+For full documentation, checkout: https://composablehorizons.github.io/composables-core
 
 ## Contributing
 
