@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -111,10 +112,20 @@ public fun rememberMenuState(expanded: Boolean = false): MenuState {
 }
 
 @Composable
-public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Composable () -> Unit) {
-    Box(modifier.clickable(role = Role.DropdownList) {
-        menuState.expanded = menuState.expanded.not()
-    }) {
+public fun MenuScope.MenuButton(
+    modifier: Modifier = Modifier,
+    mutableInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication = LocalIndication.current,
+    contents: @Composable () -> Unit
+) {
+    Box(
+        modifier.clickable(
+            role = Role.DropdownList,
+            interactionSource = mutableInteractionSource,
+            indication = indication
+        ) {
+            menuState.expanded = menuState.expanded.not()
+        }) {
         contents()
     }
 }
@@ -223,6 +234,7 @@ public fun MenuScope.MenuItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication = LocalIndication.current,
     contents: @Composable () -> Unit
 ) {
     Box(
@@ -234,7 +246,7 @@ public fun MenuScope.MenuItem(
                 menuState.expanded = false
                 menuState.currentFocusManager?.clearFocus()
             },
-            indication = LocalIndication.current
+            indication = indication
         )
     ) {
         contents()
