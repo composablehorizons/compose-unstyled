@@ -5,6 +5,6 @@ import org.jetbrains.skiko.wasm.onWasmReady
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     onWasmReady {
-        CanvasBasedWindow(canvasElementId = "ComposeTarget") { App() }
+        CanvasBasedWindow(canvasElementId = "ComposeTarget") { MenuDemo() }
     }
 }

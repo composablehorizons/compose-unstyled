@@ -6,7 +6,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.ui.*
 
 @Composable
-fun App() {
+fun MenuDemo() {
     Box(
         modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))).padding(vertical = 40.dp),
         contentAlignment = Alignment.TopCenter

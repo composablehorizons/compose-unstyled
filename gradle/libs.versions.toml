@@ -1,8 +1,10 @@
 [versions]
 compose = "1.6.2"
 kotlin = "1.9.23"
+composetheme = "1.2.0-alpha"
 
 [libraries]
+composetheme = { module = "com.composables:composetheme", version.ref = "composetheme" }
 
 
 [plugins]

@@ -1,15 +1,19 @@
-site_name: Compose Menu (Dropdown)
-repo_url: https://github.com/composablehorizons/compose-menu/
-site_url: https://composablehorizons.github.io/compose-menu/
+site_name: 'Composables Core'
+site_description: "Unstyled, fully accesible Compose Multiplatform components that you can customize to your heart's desire."
+site_url: https://composablehorizons.github.io/composables-core/
+
+repo_name: 'Composables Core'
+repo_url: https://github.com/composablehorizons/composables-core/
+
 theme:
   name: material
   font:
     text: Fira Sans
     code: Jetbrains Mono
   features:
-    - navigation.sections
     - toc.integrate
-    - navigation.top
+#    - navigation.sections
+#    - navigation.top
     - search.suggest
     - search.highlight
     - content.tabs.link
@@ -20,6 +24,11 @@ theme:
     - scheme: default
       primary: white
       accent: gray
+
+nav:
+  - 'Overview': index.md
+  - 'Menu' : menu.md
+  - 'Dialog' : dialog.md
 
 plugins:
   - social
