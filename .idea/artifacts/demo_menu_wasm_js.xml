@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="demo-menu-wasm-js">
+    <output-path>$PROJECT_DIR$/demo-menu/build/libs</output-path>
+    <root id="archive" name="demo-menu-wasm-js.jar">
+      <element id="module-output" name="ComposablesCore.demo-menu.wasmJsMain" />
+    </root>
+  </artifact>
+</component>

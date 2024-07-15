@@ -34,5 +34,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":demo")
 include(":core")
+include(":demo-menu")
