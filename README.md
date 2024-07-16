@@ -1,10 +1,3 @@
----
-social:
-  cards_layout_options:
-    background_color: blue # Change background color
-    background_image: null # Remove background image
----
-
 # Composables Core
 
 Unstyled, fully accessible Compose Multiplatform UI components that you can customize to your heart's desire.
