@@ -100,7 +100,7 @@ public fun Dialog(
 
 @Composable
 public fun DialogScope.DialogPanel(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
     content: @Composable () -> Unit
