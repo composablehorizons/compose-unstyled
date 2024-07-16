@@ -4,17 +4,18 @@ import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.multiplatform)
     id("com.android.library")
     id("org.jetbrains.dokka")
     id("maven-publish")
     id("signing")
 }
 
-val publishGroupId = "com.composables.core"
+val publishGroupId = "com.composables"
 val publishArtifactId = "core"
-val publishVersion = "1.5.1"
+val publishVersion = "1.5.2"
 val githubUrl = "github.com/composablehorizons/composables-core"
 
 java {
