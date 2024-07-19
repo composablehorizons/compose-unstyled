@@ -71,10 +71,7 @@ public fun Dialog(
     }
 
     if (scope.visibilityState.currentState || scope.visibilityState.targetState || scope.visibilityState.isIdle.not()) {
-        NoScrimDialog(
-            onDismissRequest = { state.visible = false },
-            properties = properties
-        ) {
+        NoScrimDialog {
             if (properties.dismissOnBackPress) {
                 KeyDownHandler { event ->
                     return@KeyDownHandler when (event.key) {
@@ -89,7 +86,11 @@ public fun Dialog(
             }
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .pointerInput(Unit) { detectTapGestures { scope.dialogState.visible = false } },
+                    .let {
+                        if (properties.dismissOnClickOutside) {
+                            it.pointerInput(Unit) { detectTapGestures { scope.dialogState.visible = false } }
+                        } else it
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 scope.content()
@@ -118,11 +119,7 @@ public fun DialogScope.DialogPanel(
 }
 
 @Composable
-expect internal fun NoScrimDialog(
-    onDismissRequest: () -> Unit,
-    properties: DialogProperties,
-    content: @Composable () -> Unit
-)
+expect internal fun NoScrimDialog(content: @Composable () -> Unit)
 
 @Composable
 public fun DialogScope.Scrim(

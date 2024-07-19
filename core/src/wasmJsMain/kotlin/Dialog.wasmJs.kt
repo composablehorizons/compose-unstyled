@@ -8,13 +8,9 @@ import androidx.compose.ui.window.Dialog
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal actual fun NoScrimDialog(
-    onDismissRequest: () -> Unit,
-    properties: DialogProperties,
-    content: @Composable () -> Unit
-) {
+internal actual fun NoScrimDialog(content: @Composable () -> Unit) {
     Dialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {},
         properties = ComposeDialogProperties(
             dismissOnBackPress = false,
             dismissOnClickOutside = false,
