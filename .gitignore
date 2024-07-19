@@ -30,6 +30,7 @@ venv/
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/deploymentTargetDropDown.xml
+.idea/artifacts
 
 # AWS User-specific
 .idea/**/aws.xml
