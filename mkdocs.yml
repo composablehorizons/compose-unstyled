@@ -8,6 +8,7 @@ repo_url: https://github.com/composablehorizons/composables-core/
 
 theme:
   name: material
+  custom_dir: docs/overrides
   favicon: assets/favicon.ico
   logo: assets/composables.png
   font:
@@ -50,6 +51,8 @@ plugins:
   - search
 
 extra:
+  analytics:
+    provider: custom
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/composablehorizons/
