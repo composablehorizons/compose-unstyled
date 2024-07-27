@@ -41,7 +41,6 @@ import com.composables.composetheme.shapes
 import com.composables.composetheme.textStyles
 import com.composables.core.Dialog
 import com.composables.core.DialogPanel
-import com.composables.core.DialogProperties
 import com.composables.core.rememberDialogState
 
 val AppTheme = buildComposeTheme { }

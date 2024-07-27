@@ -8,11 +8,13 @@ repo_url: https://github.com/composablehorizons/composables-core/
 
 theme:
   name: material
+  favicon: assets/favicon.ico
+  logo: assets/composables.png
   font:
     text: Fira Sans
     code: Jetbrains Mono
   features:
-    - toc.integrate
+    - navigation.sections
     - search.suggest
     - search.highlight
     - content.tabs.link
@@ -20,13 +22,28 @@ theme:
     - content.code.copy
   language: en
   palette:
-    - scheme: default
-      primary: white
-      accent: gray
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: 'white'
+      accent: 'gray'
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: 'black'
+      accent: 'gray'
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 nav:
-  - 'Dialog' : dialog.md
-  - 'Dropdown Menu' : menu.md
+  - Components:
+    - 'Bottom Sheet' : bottom-sheet.md
+    - 'Bottom Sheet (Modal)' : modal-bottom-sheet.md
+    - 'Dialog' : dialog.md
+    - 'Dropdown (Menu)' : menu.md
+    - 'Icon' : icon.md
 
 plugins:
   - social

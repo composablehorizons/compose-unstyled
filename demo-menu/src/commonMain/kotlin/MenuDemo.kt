@@ -36,11 +36,11 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.ui.Menu
-import com.composables.ui.MenuButton
-import com.composables.ui.MenuContent
-import com.composables.ui.MenuItem
-import com.composables.ui.rememberMenuState
+import com.composables.core.Menu
+import com.composables.core.MenuButton
+import com.composables.core.MenuContent
+import com.composables.core.MenuItem
+import com.composables.core.rememberMenuState
 
 @Composable
 fun MenuDemo() {
@@ -73,12 +73,12 @@ fun MenuDemo() {
                     .shadow(4.dp, RoundedCornerShape(8.dp))
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.White),
-                showTransition = scaleIn(
+                enter = scaleIn(
                     animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
                     initialScale = 0.8f,
                     transformOrigin = TransformOrigin(0f, 0f)
                 ) + fadeIn(tween(durationMillis = 30)),
-                hideTransition = scaleOut(
+                exit = scaleOut(
                     animationSpec = tween(durationMillis = 1, delayMillis = 75),
                     targetScale = 1f
                 ) + fadeOut(tween(durationMillis = 75))

@@ -31,9 +31,13 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         mavenLocal()
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
 include(":core")
 include(":demo-menu")
 include(":demo-dialog")
+include(":demo-sheet")
+include(":demo-modalsheet")
+include(":demo-icon")

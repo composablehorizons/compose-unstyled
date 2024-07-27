@@ -10,7 +10,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
@@ -29,13 +27,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntRect
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.composables.core.AppearInstantly
 import com.composables.core.DisappearInstantly
@@ -44,9 +36,9 @@ import com.composables.core.MenuContentPositionProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.Menu(modifier, state, contents)")
 )
 public fun Menu(
@@ -104,7 +96,8 @@ public fun Menu(
     }
 }
 
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.MenuState(expanded)")
 )
 @Stable
@@ -116,7 +109,8 @@ public class MenuState(expanded: Boolean = false) {
 }
 
 
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.rememberMenuState(expanded)")
 )
 @Composable
@@ -124,7 +118,8 @@ public fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
 }
 
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.MenuButton(modifier, contents)")
 )
 @Composable
@@ -136,7 +131,8 @@ public fun MenuScope.MenuButton(modifier: Modifier = Modifier, contents: @Compos
     }
 }
 
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.MenuScope(state)")
 )
 @Stable
@@ -145,8 +141,8 @@ public class MenuScope internal constructor(state: MenuState) {
 }
 
 
-
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.MenuContent(modifier, enter, exit, alignment, contents)")
 )
 @Composable
@@ -192,7 +188,8 @@ public fun MenuScope.MenuContent(
     }
 }
 
-@Deprecated("Use com.composables.core package instead",
+@Deprecated(
+    "Use com.composables.core package instead",
     ReplaceWith("com.composables.core.MenuItem(onClick, modifier, enabled, interactionSource, contents)")
 )
 @Composable

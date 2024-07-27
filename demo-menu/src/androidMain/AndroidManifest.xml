@@ -4,7 +4,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application>
-        <activity android:name="com.composables.core.demo.MainActivity" android:exported="true">
+        <activity
+                android:name="com.composables.core.demo.MenuDemoActivity"
+                android:windowSoftInputMode="adjustResize"
+                android:theme="@style/NoDecor"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

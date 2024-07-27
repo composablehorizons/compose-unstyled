@@ -4,16 +4,25 @@ hide: -navigation -toc
 
 # Composables Core
 
-Unstyled, fully accessible Compose Multiplatform UI components that you can customize to your heart's desire.
+Unstyled, fully accessible components for Jetpack Compose & Compose Multiplatform that you can customize to your heart's content.
 
-Available for Compose Desktop, Compose Web (Js/WASM), Jetpack Compose (Android), iOS, and any other platform Compose can run on.
+Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and any other platform Compose can run on.
 
 <style>
+  img {
+    border-radius: 20px;
+  }
   .image-grid {
+    margin-top: 80px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
     text-align: center;
+  }
+  @media (max-width: 900px) {
+    .image-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   @media (max-width: 600px) {
@@ -24,16 +33,38 @@ Available for Compose Desktop, Compose Web (Js/WASM), Jetpack Compose (Android),
 </style>
 
 <div class="image-grid">
+    <div>
+        <a href="bottom-sheet">
+          <img src="preview_sheet.jpg" alt="Bottom Sheet Preview">
+        </a>
+        <div>Bottom Sheet</div>
+    </div>
+
+    <div>
+        <a href="modal-bottom-sheet">
+          <img src="preview_modal_sheet.jpg" alt="Bottom Sheet (Modal) Preview">
+        </a>
+        <div>Bottom Sheet (Modal)</div>
+    </div>
+
   <div>
     <a href="dialog">
       <img src="preview_dialog.jpg" alt="Dialog Preview">
     </a>
     <div>Dialog</div>
   </div>
+
   <div>
     <a href="menu">
       <img src="preview_menu.jpg" alt="Menu Preview">
     </a>
     <div>Dropdown Menu</div>
+  </div>
+
+  <div>
+    <a href="icon">
+      <img src="preview_icon.jpg" alt="Icon Preview">
+    </a>
+    <div>Icon</div>
   </div>
 </div>

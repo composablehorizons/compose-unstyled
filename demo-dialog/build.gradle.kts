@@ -46,14 +46,18 @@ kotlin {
         }
     }
 
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+//    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            isStatic = true
+//        }
+//    }
 
     sourceSets {
+        all {
+            languageSettings.optIn("androidx.compose.foundation.ExperimentalFoundationApi")
+            languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
+        }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)

@@ -52,6 +52,10 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("androidx.compose.foundation.ExperimentalFoundationApi")
+            languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
+        }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)

@@ -5,7 +5,7 @@ choice.
 
 Fully accessible, supports animations, offers consistent behavior across platforms and an optional background scrim.
 
-<div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden;">
+<div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid lightgray;">menu
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../dialog-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
@@ -302,9 +302,9 @@ platform flags.
 
 ## Styled Examples
 
-<a href="https://composablesui.com">
+<a href="https://composablesui.com?ref=core">
 
-Looking for styled components for Compose Multiplatform?
+Looking for styled components for Jetpack Compose or Compose Multiplatform?
 
 Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">ComposablesUi.com</span>
 

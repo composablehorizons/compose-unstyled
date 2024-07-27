@@ -36,7 +36,7 @@ public class DialogState(visible: Boolean = false) {
 @Stable
 public class DialogScope internal constructor(state: DialogState) {
     internal var dialogState by mutableStateOf(state)
-    internal val visibilityState = MutableTransitionState(false)
+    internal val visibleState = MutableTransitionState(false)
 }
 
 private val DialogStateSaver = run {
@@ -62,16 +62,16 @@ public fun Dialog(
     content: @Composable() (DialogScope.() -> Unit)
 ) {
     val scope = remember { DialogScope(state) }
-    scope.visibilityState.targetState = state.visible
+    scope.visibleState.targetState = state.visible
 
-    LaunchedEffect(scope.visibilityState.currentState) {
-        if (scope.visibilityState.isIdle && scope.visibilityState.currentState.not()) {
+    LaunchedEffect(scope.visibleState.currentState) {
+        if (scope.visibleState.isIdle && scope.visibleState.currentState.not()) {
             scope.dialogState.visible = false
         }
     }
 
-    if (scope.visibilityState.currentState || scope.visibilityState.targetState || scope.visibilityState.isIdle.not()) {
-        NoScrimDialog {
+    if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
+        Modal {
             if (properties.dismissOnBackPress) {
                 KeyDownHandler { event ->
                     return@KeyDownHandler when (event.key) {
@@ -107,19 +107,16 @@ public fun DialogScope.DialogPanel(
     content: @Composable () -> Unit
 ) {
     AnimatedVisibility(
-        visibleState = visibilityState,
+        visibleState = visibleState,
         enter = enter,
         exit = exit,
     ) {
         Box(modifier.semantics { dialog() }
-            .pointerInput(Unit) { detectTapGestures { } }, contentAlignment = Alignment.Center) {
+            .pointerInput(Unit) { detectTapGestures { } }) {
             content()
         }
     }
 }
-
-@Composable
-expect internal fun NoScrimDialog(content: @Composable () -> Unit)
 
 @Composable
 public fun DialogScope.Scrim(
@@ -129,7 +126,7 @@ public fun DialogScope.Scrim(
     exit: ExitTransition = DisappearInstantly,
 ) {
     AnimatedVisibility(
-        visibleState = visibilityState,
+        visibleState = visibleState,
         enter = enter,
         exit = exit
     ) {

@@ -5,7 +5,7 @@ of your choice.
 
 Fully accessible, supports keyboard navigation and open/close animations.
 
-<div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden;">
+<div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid lightgray;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../menu-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
@@ -76,7 +76,7 @@ Column(Modifier.fillMaxSize()) {
 
 ## Code Examples
 
-### Expand/Close the Menu programmatically
+### Toggling the Menu
 
 Pass your own `MenuState` to the `Menu` and change the *expanded* property according to your needs:
 
@@ -96,7 +96,7 @@ Menu(state = state) {
 }
 ```
 
-### Change the alignment of the `MenuContent`
+### Positioning the menu
 
 This option is useful if you want to left align, center align or right align the `MenuButton` and the `MenuContent` when expanded.
 
@@ -205,7 +205,7 @@ can achieve.
 
 ### Animation Recipes
 
-#### Material Design Dropdown Animation
+#### Material Design Dropdown
 
 Material Design scales and fades the dropdown in and out.
 
@@ -225,7 +225,7 @@ MenuContent(
 
 ```
 
-#### Mac OS Menu Animations
+#### Mac OS Menu
 
 macOS shows the menu instantly on click, and quickly fades the menu out when dismissed:
 
@@ -237,7 +237,7 @@ MenuContent(hideTransition = fadeOut(tween(durationMillis = 100, easing = Linear
 }
 ```
 
-### Styling touch presses and focus
+## Styling touch presses and focus
 
 `MenuItem`'s uses the default Compose mechanism for providing touch and focus feedback. Use the `LocalIndication`
 CompositionLocal to override the default indication.
@@ -277,9 +277,9 @@ CompositionLocalProvider(LocalIndication provides rememberRipple()) {
 
 ## Styled Examples
 
-<a href="https://composablesui.com">
+<a href="https://composablesui.com?ref=core">
 
-Looking for styled components for Compose Multiplatform?
+Looking for styled components for Jetpack Compose or Compose Multiplatform?
 
 Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">ComposablesUi.com</span>
 

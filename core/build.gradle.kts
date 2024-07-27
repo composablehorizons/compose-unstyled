@@ -59,14 +59,21 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("androidx.compose.foundation.ExperimentalFoundationApi")
+            languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
+        }
         val commonMain by getting {
             dependencies {
                 implementation(compose.foundation)
             }
         }
         androidMain.dependencies {
-            implementation ("androidx.activity:activity:1.9.0")
-            implementation ("androidx.activity:activity-compose:1.9.0")
+            implementation("androidx.activity:activity:1.9.0")
+            implementation("androidx.activity:activity-compose:1.9.0")
+        }
+        jvmMain.dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
         }
     }
 }

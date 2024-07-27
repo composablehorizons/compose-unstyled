@@ -1,19 +1,21 @@
-# Script that builds the WASM version of the demo and moves it to the docs resources
+# Script that builds the JS version of the demo and moves it to the docs resources
 
 project_root=$(pwd)
+demo_names=("dialog" "icon" "menu" "modalsheet" "sheet")
 
-menu_demo_destination="${project_root}/docs/menu-demo"
-dialog_demo_destination="${project_root}/docs/dialog-demo"
+# Create directories for each demo
+for demo in "${demo_names[@]}"; do
+    demo_destination="${project_root}/docs/${demo}"
+    mkdir -p "$demo_destination-demo"
+    rm -rf "$demo_destination-demo"/*
+done
 
-mkdir -p "$menu_demo_destination"
-mkdir -p "$dialog_demo_destination"
-
+## Build the project
 ./gradlew jsBrowserDistribution
 
-# shellcheck disable=SC2115
-rm -rf "$menu_demo_destination"/*
-# shellcheck disable=SC2115
-rm -rf "$dialog_demo_destination"/*
-
-mv "${project_root}"/demo-menu/build/dist/js/productionExecutable/* "$menu_demo_destination"
-mv "${project_root}"/demo-dialog/build/dist/js/productionExecutable/* "$dialog_demo_destination"
+## Move built files to respective directories
+for demo in "${demo_names[@]}"; do
+    demo_source="${project_root}/demo-${demo%-demo}/build/dist/js/productionExecutable/*"
+    demo_destination="${project_root}/docs/${demo}-demo"
+    mv $demo_source "$demo_destination"
+done
