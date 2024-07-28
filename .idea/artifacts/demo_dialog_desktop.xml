@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="demo-dialog-desktop">
-    <output-path>$PROJECT_DIR$/demo-dialog/build/libs</output-path>
-    <root id="archive" name="demo-dialog-desktop.jar">
-      <element id="module-output" name="ComposablesCore.demo-dialog.desktopMain" />
-    </root>
-  </artifact>
-</component>

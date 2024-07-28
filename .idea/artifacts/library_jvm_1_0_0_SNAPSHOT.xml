@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="library-jvm-1.0.0-SNAPSHOT">
-    <output-path>$PROJECT_DIR$/library/build/libs</output-path>
-    <root id="archive" name="library-jvm-1.0.0-SNAPSHOT.jar">
-      <element id="module-output" name="ComposeMenu.library.jvmMain" />
-    </root>
-  </artifact>
-</component>

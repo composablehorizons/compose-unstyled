@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="library-wasm-js-0.0.1">
-    <output-path>$PROJECT_DIR$/library/build/libs</output-path>
-    <root id="archive" name="library-wasm-js-0.0.1.jar">
-      <element id="module-output" name="ComposeMenu.library.wasmJsMain" />
-    </root>
-  </artifact>
-</component>

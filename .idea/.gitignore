@@ -1,8 +1,14 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# Ignore everything by default
+# (ignore specific files instead of folders, because we can't unignore files in ignored folders)
+*.xml
+*.iml
+
+shelf/
+
+!.name
+!.icon.svg
+!inspectionProfiles/*
+!runConfigurations/*
+!git_toolbox_prj.xml
+!codeStyles/*
+!copyright/*
