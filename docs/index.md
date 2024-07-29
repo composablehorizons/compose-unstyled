@@ -35,35 +35,35 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 <div class="image-grid">
     <div>
         <a href="bottom-sheet">
-          <img src="preview_sheet.jpg" alt="Bottom Sheet Preview">
+          <img src="preview_bottom_sheet.png" alt="Bottom Sheet Preview">
         </a>
         <div>Bottom Sheet</div>
     </div>
 
     <div>
         <a href="modal-bottom-sheet">
-          <img src="preview_modal_sheet.jpg" alt="Bottom Sheet (Modal) Preview">
+          <img src="preview_modal_bottom_sheet.png" alt="Bottom Sheet (Modal) Preview">
         </a>
         <div>Bottom Sheet (Modal)</div>
     </div>
 
   <div>
     <a href="dialog">
-      <img src="preview_dialog.jpg" alt="Dialog Preview">
+      <img src="preview_dialog.png" alt="Dialog Preview">
     </a>
     <div>Dialog</div>
   </div>
 
   <div>
     <a href="menu">
-      <img src="preview_menu.jpg" alt="Menu Preview">
+      <img src="preview_menu.png" alt="Menu Preview">
     </a>
     <div>Dropdown Menu</div>
   </div>
 
   <div>
     <a href="icon">
-      <img src="preview_icon.jpg" alt="Icon Preview">
+      <img src="preview_icon.png" alt="Icon Preview">
     </a>
     <div>Icon</div>
   </div>
