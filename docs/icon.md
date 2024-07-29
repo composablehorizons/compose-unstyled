@@ -1,7 +1,6 @@
 # Icon
 
-An unstyled Icon component for Jetpack Compose & Composable Multiplatform for rendering iconography tinting of your
-choice.
+A component for rendering iconography with the tinting of your choice.
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid lightgray;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../icon-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -26,25 +25,31 @@ Basic example using Icons from the Material Extended Library:
 ```kotlin
 Icon(
     imageVector = Icons.Rounded.Favorite,
-    contentDescription = null,
+    contentDescription = "This song is in your favorites",
     tint = Color(0xFF9E9E9E),
 )
 ```
+
+<style>
+.parameter {
+    white-space: nowrap
+}
+</style>
 
 ## Parameters
 
 ### Icon
 
-| Parameter            | Description                                                                                                                                           |
-|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `painter`            | a `Painter`  to draw inside this icon.                                                                                                                |
-| or `imageVector`     | a `ImageVector` to draw inside this icon.                                                                                                             |
-| or `imageBitmap`     | an `ImageBitmap` to draw inside this icon.                                                                                                            |
-| `contentDescription` | text used by accessibility services to describe what this icon represents. This value can be ommited if the icon is used for stylistic purposes only. |
-| `modifier`           | the `Modifier` to be used to this icon.                                                                                                               |
-| `tint`               | a `Color` that will be used to tint the `painter`. If `Color.Unspecified` is passed, then no tinting will be used.                                    |
+| Parameter                                          | Description                                                                                                                                           |
+|----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <div class='parameter'>`painter`            </div> | a `Painter`  to draw inside this icon.                                                                                                                |
+| <div class='parameter'>or `imageVector`     </div> | a `ImageVector` to draw inside this icon.                                                                                                             |
+| <div class='parameter'>or `imageBitmap`     </div> | an `ImageBitmap` to draw inside this icon.                                                                                                            |
+| <div class='parameter'>`contentDescription` </div> | text used by accessibility services to describe what this icon represents. This value can be ommited if the icon is used for stylistic purposes only. |
+| <div class='parameter'>`modifier`           </div> | the `Modifier` to be used to this icon.                                                                                                               |
+| <div class='parameter'>`tint`               </div> | a `Color` that will be used to tint the `painter`. If `Color.Unspecified` is passed, then no tinting will be used.                                    |
 
-## Where to find Icons for your Compose apps
+## Icons Sets
 
 Great apps require great iconography. You can use the [SVG to Compose](https://www.composables.com/svgtocompose) tool to
 convert your beautiful SVGs to Compose `ImageVectors`.
