@@ -63,7 +63,8 @@ ModalBottomSheet(state = sheetState) {
 
 ## Styling
 
-The modal bottom sheet renders nothing on the screen by default. It manages a lot of states internally and leaves the styling
+The modal bottom sheet renders nothing on the screen by default. It manages a lot of states internally and leaves the
+styling
 to you.
 
 Any sort of styling is done by the `Modifier` of the respective component.
@@ -205,7 +206,8 @@ ModalBottomSheet(state = sheetState) {
 
 ### Drawing behind the nav bar
 
-The ModalBottomSheet component is a modal component. When displayed on the screen, it dims the navigation bars and protect its icons. 
+The ModalBottomSheet component is a modal component. When displayed on the screen, it dims the navigation bars and
+protect its icons.
 
 Other than that, you have full control over how you want sheet and its contents to be rendered on the screen.
 
@@ -436,15 +438,23 @@ following keyboard interactions:
 | <div class='parameter'>`fun jumpTo()` </div>            | Makes the sheet to immediately appear to the given detent without any animation.                                                  |
 | <div class='parameter'>`suspend fun animateTo()` </div> | Animates the sheet to the given detent. This is a `suspend` function, which you can use to wait until the animation is complete.  |
 
+### ModalBottomSheet()
+
+The main component. Defines the area in which the sheet can be dragged in.
+
+| Parameter                                 | Description                                                                                          |
+|-------------------------------------------|------------------------------------------------------------------------------------------------------|
+| <div class='parameter'>`state`</div>      | The `ModalBottomSheetState` for the component                                                        |
+| <div class='parameter'>`properties`</div> | `ModalSheetProperties` that control whether the sheet needs to be dismissed on clicked outside, etc. |
+| <div class='parameter'>`content`</div>    | The contents of the Modal Bottom Sheet.                                                              |
+
 ### Sheet()
 
-The main component. Defines the area in which the sheet can be dragged in and renders the sheet.
+Renders the sheet and its contents.
 
 | Parameter                               | Description                                      |
 |-----------------------------------------|--------------------------------------------------|
-| <div class='parameter'>`state`</div>    | The `BottomSheetState` for the component         |
 | <div class='parameter'>`modifier`</div> | The `Modifier` for the component                 |
-| <div class='parameter'>`enabled`</div>  | Enables or disables touch gestures to the sheet. |
 | <div class='parameter'>`content`</div>  | The contents of the sheet.                       |
 
 ### DragIndication()
