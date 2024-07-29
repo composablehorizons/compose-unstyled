@@ -455,14 +455,6 @@ A component that indicates that the sheet can be dragged.
 |-----------------------------------------|----------------------------------|
 | <div class='parameter'>`modifier`</div> | The `Modifier` for the component |
 
-## Android Navigation bar design recommendations
-
-Bottom sheets are often used as part of your screens' layout. Because of this the BottomSheet component does not try to
-dim the navigation bar
-
-Use [androidx.activity](https://developer.android.com/jetpack/androidx/releases/activity)'s `enableEdgeToEdge()`
-function in your activity to style your navigation bar.
-
 ## Styled Examples
 
 <a href="https://composablesui.com?ref=core">
