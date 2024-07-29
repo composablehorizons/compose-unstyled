@@ -1,14 +1,13 @@
 ---
 title: Bottom Sheet
-description: A renderless, highly performant foundational component to build bottom sheets with, jam-packed with styling features without sacrifing
+description: A renderless, highly performant foundational component to build bottom sheets with, jam-packed with styling features without compromising on
   accessibility or keyboard interactions.
 ---
 
 # Bottom Sheet
 
 A renderless, highly performant foundational component to build bottom sheets with, jam-packed with styling features
-without sacrifing
-accessibility or keyboard interactions.
+without compromising on accessibility or keyboard interactions.
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid lightgray;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../sheet-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -138,32 +137,6 @@ BottomSheet(
 
 Using the `currentDetent` property will cause the sheet to animate to given detent.
 
-If you want to display the sheet to a given detent without any animation, use the `jumpTo()` function instead:
-
-```kotlin
-val sheetState = rememberBottomSheetState(
-    initialDetent = Hidden,
-)
-
-Box(Modifier.clickable { sheetState.jumpTo(FullyExpanded) }) {
-    BasicText("Show Sheet instantly")
-}
-
-BottomSheet(
-    state = sheetState,
-    modifier = Modifier.fillMaxWidth(),
-) {
-    Box(
-        modifier = Modifier.fillMaxWidth().height(1200.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Box(Modifier.clickable { sheetState.jumpTo(Hidden) }) {
-            BasicText("Hide Sheet instantly")
-        }
-    }
-}
-```
-
 ### Customizing sheet heights
 
 The heights in which the bottom sheet needs to stop for dragging purposes is controlled by the sheet's
@@ -287,7 +260,9 @@ val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
 val sheetState = rememberBottomSheetState(
     initialDetent = Peek,
     detents = listOf(Peek, FullyExpanded),
-    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+    animationSpec = spring(
+        dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow
+    )
 )
 
 BottomSheet(
