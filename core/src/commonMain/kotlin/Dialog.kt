@@ -55,9 +55,21 @@ public fun rememberDialogState(visible: Boolean = false): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(visible) }
 }
 
+@Deprecated(
+    "This overload will go away in a future version of the library. Use overload with explicit default state",
+    ReplaceWith("Dialog(rememberDialogState(),properties,content)")
+)
 @Composable
 public fun Dialog(
-    state: DialogState = rememberDialogState(),
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable() (DialogScope.() -> Unit)
+) {
+    Dialog(rememberDialogState(), properties, content)
+}
+
+@Composable
+public fun Dialog(
+    state: DialogState,
     properties: DialogProperties = DialogProperties(),
     content: @Composable() (DialogScope.() -> Unit)
 ) {
