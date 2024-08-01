@@ -37,14 +37,15 @@ public fun rememberModalBottomSheetState(
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
 ): ModalBottomSheetState {
+    val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
     return rememberSaveable(
         saver = mapSaver(
             save = { modalBottomSheetState -> mapOf("detent" to modalBottomSheetState.currentDetent.identifier) },
             restore = { map ->
-                val restoredDetent = detents.first { it.identifier == map["detent"] }
+                val restoredDetent = actualDetents.first { it.identifier == map["detent"] }
                 ModalBottomSheetState(
                     bottomSheetDetent = restoredDetent,
-                    sheetDetents = detents,
+                    sheetDetents = actualDetents,
                     animationSpec = animationSpec
                 )
             }
@@ -52,7 +53,7 @@ public fun rememberModalBottomSheetState(
     ) {
         ModalBottomSheetState(
             bottomSheetDetent = initialDetent,
-            sheetDetents = detents,
+            sheetDetents = actualDetents,
             animationSpec = animationSpec,
         )
     }
