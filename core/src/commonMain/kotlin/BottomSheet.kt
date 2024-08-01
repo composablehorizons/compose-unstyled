@@ -4,10 +4,10 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.AnchoredDraggableState
-import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.CoreAnchoredDraggableState
+import androidx.compose.foundation.gestures.CoreDraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.coreAnchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.snapTo
@@ -149,7 +149,7 @@ public class BottomSheetState internal constructor(
 
     internal var containerHeight = Float.NaN
 
-    internal val anchoredDraggableState = AnchoredDraggableState(
+    internal val coreAnchoredDraggableState = CoreAnchoredDraggableState(
         initialValue = initialDetent,
         positionalThreshold = { distance -> with(density) { 56.dp.toPx() } },
         velocityThreshold = { with(density) { 125.dp.toPx() } },
@@ -157,45 +157,45 @@ public class BottomSheetState internal constructor(
     )
 
     public var currentDetent: SheetDetent
-        get() = anchoredDraggableState.currentValue
+        get() = coreAnchoredDraggableState.currentValue
         set(value) {
             check(detents.contains(value)) {
                 "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
             }
-            coroutineScope.launch { anchoredDraggableState.animateTo(value, anchoredDraggableState.lastVelocity) }
+            coroutineScope.launch { coreAnchoredDraggableState.animateTo(value, coreAnchoredDraggableState.lastVelocity) }
         }
 
     public val targetDetent: SheetDetent
-        get() = anchoredDraggableState.targetValue
+        get() = coreAnchoredDraggableState.targetValue
 
     public val isIdle: Boolean by derivedStateOf {
         progress == 1f && currentDetent == targetDetent
     }
 
     public val progress: Float
-        get() = anchoredDraggableState.progress
+        get() = coreAnchoredDraggableState.progress
 
     public val offset: Float by derivedStateOf {
-        if (anchoredDraggableState.offset.isNaN()) {
+        if (coreAnchoredDraggableState.offset.isNaN()) {
             1f
         } else {
-            val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
+            val offsetFromTop = coreAnchoredDraggableState.offset - closestDentToTop
             1f - (offsetFromTop / containerHeight)
         }
     }
 
-    public suspend fun animateTo(value: SheetDetent, velocity: Float = anchoredDraggableState.lastVelocity) {
+    public suspend fun animateTo(value: SheetDetent, velocity: Float = coreAnchoredDraggableState.lastVelocity) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
-        anchoredDraggableState.animateTo(value, velocity)
+        coreAnchoredDraggableState.animateTo(value, velocity)
     }
 
     public fun jumpTo(value: SheetDetent) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
-        coroutineScope.launch { anchoredDraggableState.snapTo(value) }
+        coroutineScope.launch { coreAnchoredDraggableState.snapTo(value) }
     }
 }
 
@@ -231,7 +231,7 @@ public fun BottomSheet(
                     if (containerHeight != Dp.Unspecified) {
                         it.onSizeChanged {
                             val sheetHeight = with(density) { it.height.toDp() }
-                            val anchors = DraggableAnchors {
+                            val anchors = CoreDraggableAnchors {
                                 with(density) {
                                     state.closestDentToTop = Float.NaN
 
@@ -249,13 +249,13 @@ public fun BottomSheet(
                                     }
                                 }
                             }
-                            val previous = state.anchoredDraggableState.currentValue
-                            state.anchoredDraggableState.updateAnchors(anchors, previous)
+                            val previous = state.coreAnchoredDraggableState.currentValue
+                            state.coreAnchoredDraggableState.updateAnchors(anchors, previous)
                         }
                     } else it
                 }.offset {
-                    if (state.anchoredDraggableState.offset.isNaN().not()) {
-                        val requireOffset = state.anchoredDraggableState.requireOffset()
+                    if (state.coreAnchoredDraggableState.offset.isNaN().not()) {
+                        val requireOffset = state.coreAnchoredDraggableState.requireOffset()
                         val y = requireOffset.toInt()
                         IntOffset(x = 0, y = y)
                     } else {
@@ -264,14 +264,14 @@ public fun BottomSheet(
                 }.then(
                     if (scope.enabled) {
                         Modifier.nestedScroll(
-                            remember(state.anchoredDraggableState, Orientation.Vertical) {
+                            remember(state.coreAnchoredDraggableState, Orientation.Vertical) {
                                 ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                                    state = state.anchoredDraggableState, orientation = Orientation.Vertical
+                                    state = state.coreAnchoredDraggableState, orientation = Orientation.Vertical
                                 )
                             })
                     } else Modifier
                 )
-                    .anchoredDraggable(state.anchoredDraggableState, Orientation.Vertical, enabled = scope.enabled)
+                    .coreAnchoredDraggable(state.coreAnchoredDraggableState, Orientation.Vertical, enabled = scope.enabled)
                     .pointerInput(Unit) { detectTapGestures { } }
                     .then(modifier)
             ) {
@@ -283,7 +283,7 @@ public fun BottomSheet(
 
 // Code modified from Material 2's ModalBottomSheet.kt
 private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-    state: AnchoredDraggableState<*>, orientation: Orientation
+    state: CoreAnchoredDraggableState<*>, orientation: Orientation
 ): NestedScrollConnection = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.toFloat()
