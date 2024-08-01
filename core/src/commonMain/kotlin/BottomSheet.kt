@@ -7,8 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.CoreAnchoredDraggableState
 import androidx.compose.foundation.gestures.CoreDraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.coreAnchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.gestures.coreAnchoredDraggable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -162,7 +163,12 @@ public class BottomSheetState internal constructor(
             check(detents.contains(value)) {
                 "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
             }
-            coroutineScope.launch { coreAnchoredDraggableState.animateTo(value, coreAnchoredDraggableState.lastVelocity) }
+            coroutineScope.launch {
+                coreAnchoredDraggableState.animateTo(
+                    value,
+                    coreAnchoredDraggableState.lastVelocity
+                )
+            }
         }
 
     public val targetDetent: SheetDetent
@@ -217,61 +223,76 @@ public fun BottomSheet(
         state.containerHeight = Float.NaN
 
         val density = LocalDensity.current
+        var cappedHeight by remember { mutableStateOf(Dp.Unspecified) }
 
         Box(
-            modifier = Modifier.matchParentSize().onSizeChanged {
-                containerHeight = with(density) { it.height.toDp() }
-                state.containerHeight = it.height.toFloat()
-            },
+            modifier = Modifier.matchParentSize()
+                .onSizeChanged {
+                    containerHeight = with(density) { it.height.toDp() }
+                    state.containerHeight = it.height.toFloat()
+                },
             contentAlignment = Alignment.TopCenter
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
-                modifier = Modifier.let {
-                    if (containerHeight != Dp.Unspecified) {
-                        it.onSizeChanged {
-                            val sheetHeight = with(density) { it.height.toDp() }
-                            val anchors = CoreDraggableAnchors {
-                                with(density) {
-                                    state.closestDentToTop = Float.NaN
+                modifier = Modifier
+                    .let { if (cappedHeight == Dp.Unspecified) it else it.heightIn(max = cappedHeight) }
+                    .let {
+                        if (containerHeight != Dp.Unspecified) {
+                            it.onSizeChanged {
+                                val sheetHeight = with(density) { it.height.toDp() }
 
-                                    state.detents.forEach { detent ->
-                                        val detentHeight = detent
-                                            .calculateDetentHeight(containerHeight, sheetHeight)
-                                            .coerceIn(0.dp, sheetHeight)
+                                val calculatedDetentHeights = mutableListOf<Dp>()
 
-                                        val offsetDp = containerHeight - detentHeight
-                                        val offset = offsetDp.toPx()
-                                        if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
-                                            state.closestDentToTop = offset
+                                val anchors = CoreDraggableAnchors {
+                                    with(density) {
+                                        state.closestDentToTop = Float.NaN
+
+                                        state.detents.forEach { detent ->
+                                            val contentHeight = detent
+                                                .calculateDetentHeight(containerHeight, sheetHeight)
+                                                .coerceIn(0.dp, sheetHeight)
+
+                                            calculatedDetentHeights += contentHeight
+
+                                            val offsetDp = containerHeight - contentHeight
+                                            val offset = offsetDp.toPx()
+                                            if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
+                                                state.closestDentToTop = offset
+                                            }
+                                            detent at offset
                                         }
-                                        detent at offset
                                     }
                                 }
+                                val maxDetentHeight = calculatedDetentHeights.max()
+                                cappedHeight = maxDetentHeight
+                                val previous = state.coreAnchoredDraggableState.currentValue
+                                state.coreAnchoredDraggableState.updateAnchors(anchors, previous)
                             }
-                            val previous = state.coreAnchoredDraggableState.currentValue
-                            state.coreAnchoredDraggableState.updateAnchors(anchors, previous)
+                        } else it
+                    }.offset {
+                        if (state.coreAnchoredDraggableState.offset.isNaN().not()) {
+                            val requireOffset = state.coreAnchoredDraggableState.requireOffset()
+                            val y = requireOffset.toInt()
+                            IntOffset(x = 0, y = y)
+                        } else {
+                            IntOffset(x = 0, y = containerHeight.roundToPx())
                         }
-                    } else it
-                }.offset {
-                    if (state.coreAnchoredDraggableState.offset.isNaN().not()) {
-                        val requireOffset = state.coreAnchoredDraggableState.requireOffset()
-                        val y = requireOffset.toInt()
-                        IntOffset(x = 0, y = y)
-                    } else {
-                        IntOffset(x = 0, y = containerHeight.roundToPx())
-                    }
-                }.then(
-                    if (scope.enabled) {
-                        Modifier.nestedScroll(
-                            remember(state.coreAnchoredDraggableState, Orientation.Vertical) {
-                                ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                                    state = state.coreAnchoredDraggableState, orientation = Orientation.Vertical
-                                )
-                            })
-                    } else Modifier
-                )
-                    .coreAnchoredDraggable(state.coreAnchoredDraggableState, Orientation.Vertical, enabled = scope.enabled)
+                    }.then(
+                        if (scope.enabled) {
+                            Modifier.nestedScroll(
+                                remember(state.coreAnchoredDraggableState, Orientation.Vertical) {
+                                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                                        state = state.coreAnchoredDraggableState, orientation = Orientation.Vertical
+                                    )
+                                })
+                        } else Modifier
+                    )
+                    .coreAnchoredDraggable(
+                        state.coreAnchoredDraggableState,
+                        Orientation.Vertical,
+                        enabled = scope.enabled
+                    )
                     .pointerInput(Unit) { detectTapGestures { } }
                     .then(modifier)
             ) {
