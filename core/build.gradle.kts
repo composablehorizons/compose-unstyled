@@ -30,7 +30,6 @@ kotlin {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(17)
     }
-    explicitApi()
 
     androidTarget {
         publishLibraryVariants("release", "debug")
