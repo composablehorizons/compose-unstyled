@@ -133,7 +133,7 @@ public class BottomSheetState internal constructor(
             "Tried to create a bottom sheet without any detents. Make sure to pass at least one detent when creating your sheet's state."
         }
         check(detents.contains(initialDetent)) {
-            "The initialDetent was not part of the included detents while creating the sheet's state."
+            "The initialDetent ${initialDetent.identifier} was not part of the included detents while creating the sheet's state."
         }
 
         val duplicates = detents.groupBy { it.identifier }
