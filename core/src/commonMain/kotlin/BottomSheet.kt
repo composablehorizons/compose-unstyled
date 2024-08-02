@@ -230,8 +230,7 @@ public fun BottomSheet(
                 .onSizeChanged {
                     containerHeight = with(density) { it.height.toDp() }
                     state.containerHeight = it.height.toFloat()
-                },
-            contentAlignment = Alignment.TopCenter
+                }
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
@@ -294,6 +293,7 @@ public fun BottomSheet(
                         enabled = scope.enabled
                     )
                     .pointerInput(Unit) { detectTapGestures { } }
+                    .align(Alignment.TopCenter)
                     .then(modifier)
             ) {
                 scope.content()

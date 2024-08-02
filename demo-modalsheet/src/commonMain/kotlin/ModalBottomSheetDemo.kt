@@ -78,7 +78,6 @@ fun ModalBottomSheetDemo() {
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
-                    .align(Alignment.BottomCenter)
                     .statusBarsPadding()
                     .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                     .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
