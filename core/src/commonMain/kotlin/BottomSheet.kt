@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -42,6 +41,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
@@ -223,7 +223,6 @@ public fun BottomSheet(
         state.containerHeight = Float.NaN
 
         val density = LocalDensity.current
-        var cappedHeight by remember { mutableStateOf(Dp.Unspecified) }
 
         Box(
             modifier = Modifier.matchParentSize()
@@ -235,13 +234,10 @@ public fun BottomSheet(
             Box(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
-                    .let { if (cappedHeight == Dp.Unspecified) it else it.heightIn(max = cappedHeight) }
                     .let {
                         if (containerHeight != Dp.Unspecified) {
                             it.onSizeChanged {
                                 val sheetHeight = with(density) { it.height.toDp() }
-
-                                val calculatedDetentHeights = mutableListOf<Dp>()
 
                                 val anchors = CoreDraggableAnchors {
                                     with(density) {
@@ -252,8 +248,6 @@ public fun BottomSheet(
                                                 .calculateDetentHeight(containerHeight, sheetHeight)
                                                 .coerceIn(0.dp, sheetHeight)
 
-                                            calculatedDetentHeights += contentHeight
-
                                             val offsetDp = containerHeight - contentHeight
                                             val offset = offsetDp.toPx()
                                             if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
@@ -263,13 +257,29 @@ public fun BottomSheet(
                                         }
                                     }
                                 }
-                                val maxDetentHeight = calculatedDetentHeights.max()
-                                cappedHeight = maxDetentHeight
                                 val previous = state.coreAnchoredDraggableState.currentValue
                                 state.coreAnchoredDraggableState.updateAnchors(anchors, previous)
                             }
                         } else it
-                    }.offset {
+                    }
+                    .layout { measurable, constraints ->
+                        val maxDetentHeight = if (containerHeight == Dp.Unspecified) {
+                            constraints.maxHeight
+                        } else {
+                            state.detents.maxOf { detent ->
+                                detent.calculateDetentHeight(containerHeight, with(density) {
+                                    constraints.maxHeight.toDp()
+                                })
+                            }.roundToPx()
+                        }
+                        val placeable = measurable.measure(
+                            constraints.copy(maxHeight = maxDetentHeight)
+                        )
+                        layout(placeable.width, placeable.height) {
+                            placeable.place(0, 0)
+                        }
+                    }
+                    .offset {
                         if (state.coreAnchoredDraggableState.offset.isNaN().not()) {
                             val requireOffset = state.coreAnchoredDraggableState.requireOffset()
                             val y = requireOffset.toInt()
