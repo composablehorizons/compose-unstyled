@@ -1,5 +1,6 @@
 package com.composables.core
 
+import android.view.WindowManager
 import androidx.activity.ComponentDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -27,8 +28,9 @@ internal actual fun Modal(
         val dialog = ComponentDialog(context, R.style.TranslucentDialog).apply {
             val window =
                 requireNotNull(this.window) { "Tried to use a Modal without a window. Is your parent composable attached to an Activity?" }
-
             WindowCompat.setDecorFitsSystemWindows(window, false)
+            @Suppress("DEPRECATION") // applying View.OnApplyWindowInsetsListener doesn't seem to work
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
             window.setDimAmount(0f)
             window.setWindowAnimations(-1)
