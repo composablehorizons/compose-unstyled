@@ -7,16 +7,10 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -26,12 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 public data class ModalSheetProperties(
@@ -181,6 +173,7 @@ public fun ModalBottomSheetScope.Scrim(
 @Composable
 public fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     content: @Composable() (BottomSheetScope.() -> Unit)
 ) {
     var hasBeenIntroduced by remember { mutableStateOf(false) }
@@ -229,6 +222,7 @@ public fun ModalBottomSheetScope.Sheet(
     }
     BottomSheet(
         state = sheetState,
+        enabled = enabled,
         modifier = modifier,
         content = content
     )
