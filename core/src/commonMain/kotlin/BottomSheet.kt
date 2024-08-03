@@ -205,8 +205,11 @@ public class BottomSheetState internal constructor(
     }
 }
 
-public class BottomSheetScope internal constructor(internal val state: BottomSheetState, enabled: Boolean) {
-    internal val enabled by mutableStateOf(enabled)
+public class BottomSheetScope internal constructor(
+    internal val state: BottomSheetState,
+    enabled: Boolean
+) {
+    internal var enabled by mutableStateOf(enabled)
 }
 
 @Composable
@@ -217,6 +220,7 @@ public fun BottomSheet(
     content: @Composable BottomSheetScope.() -> Unit,
 ) {
     val scope = remember { BottomSheetScope(state, enabled) }
+    scope.enabled = enabled
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
