@@ -7,10 +7,16 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -20,10 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 public data class ModalSheetProperties(
@@ -38,6 +46,11 @@ public fun rememberModalBottomSheetState(
     animationSpec: AnimationSpec<Float> = tween(),
 ): ModalBottomSheetState {
     val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
+    val sheetState = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+        detents = detents,
+        animationSpec = animationSpec
+    )
     return rememberSaveable(
         saver = mapSaver(
             save = { modalBottomSheetState -> mapOf("detent" to modalBottomSheetState.currentDetent.identifier) },
@@ -45,25 +58,24 @@ public fun rememberModalBottomSheetState(
                 val restoredDetent = actualDetents.first { it.identifier == map["detent"] }
                 ModalBottomSheetState(
                     bottomSheetDetent = restoredDetent,
-                    sheetDetents = actualDetents,
-                    animationSpec = animationSpec
+                    sheetState = sheetState
                 )
             }
         )
     ) {
         ModalBottomSheetState(
             bottomSheetDetent = initialDetent,
-            sheetDetents = actualDetents,
-            animationSpec = animationSpec,
+            sheetState = sheetState
         )
     }
 }
 
 public class ModalBottomSheetState internal constructor(
     internal val bottomSheetDetent: SheetDetent,
-    internal val sheetDetents: List<SheetDetent>,
-    internal val animationSpec: AnimationSpec<Float>
+    sheetState: BottomSheetState
 ) {
+    internal val bottomSheetState by mutableStateOf<BottomSheetState>(sheetState)
+
     internal var modalDetent by mutableStateOf(bottomSheetDetent)
 
     public var currentDetent: SheetDetent
@@ -71,47 +83,45 @@ public class ModalBottomSheetState internal constructor(
             return modalDetent
         }
         set(value) {
-            val isBottomSheetVisible = bottomSheetState != null &&
-                    (bottomSheetState!!.currentDetent != SheetDetent.Hidden || bottomSheetState!!.targetDetent != SheetDetent.Hidden)
+            val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
+                    || bottomSheetState.targetDetent != SheetDetent.Hidden
 
             if (isBottomSheetVisible) {
-                bottomSheetState!!.currentDetent = value
+                bottomSheetState.currentDetent = value
             } else {
                 modalDetent = value
             }
         }
-
     public val targetDetent: SheetDetent by derivedStateOf {
-        bottomSheetState?.targetDetent ?: modalDetent
+        bottomSheetState.targetDetent
     }
     public val isIdle: Boolean by derivedStateOf {
-        bottomSheetState?.isIdle ?: true
+        bottomSheetState.isIdle
     }
     public val progress: Float by derivedStateOf {
-        bottomSheetState?.progress ?: 0f
+        bottomSheetState.progress
     }
     public val offset: Float by derivedStateOf {
-        bottomSheetState?.offset ?: 1f
+        bottomSheetState.offset
     }
-    internal var bottomSheetState by mutableStateOf<BottomSheetState?>(null)
 
     public suspend fun animateTo(value: SheetDetent) {
-        val isBottomSheetVisible = bottomSheetState != null &&
-                (bottomSheetState!!.currentDetent != SheetDetent.Hidden || bottomSheetState!!.targetDetent != SheetDetent.Hidden)
+        val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
+                || bottomSheetState.targetDetent != SheetDetent.Hidden
 
         if (isBottomSheetVisible) {
-            bottomSheetState!!.animateTo(value)
+            bottomSheetState.animateTo(value)
         } else {
             modalDetent = value
         }
     }
 
     public fun jumpTo(value: SheetDetent) {
-        val isBottomSheetVisible = bottomSheetState != null &&
-                (bottomSheetState!!.currentDetent != SheetDetent.Hidden || bottomSheetState!!.targetDetent != SheetDetent.Hidden)
+        val isBottomSheetVisible =
+            bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
 
         if (isBottomSheetVisible) {
-            bottomSheetState!!.jumpTo(value)
+            bottomSheetState.jumpTo(value)
         } else {
             modalDetent = value
         }
@@ -120,7 +130,8 @@ public class ModalBottomSheetState internal constructor(
 
 public class ModalBottomSheetScope internal constructor(
     internal val modalState: ModalBottomSheetState,
-    internal val properties: ModalSheetProperties
+    internal val properties: ModalSheetProperties,
+    internal val sheetState: BottomSheetState,
 ) {
     internal val visibleState = MutableTransitionState(false)
 }
@@ -131,8 +142,9 @@ public fun ModalBottomSheet(
     properties: ModalSheetProperties = ModalSheetProperties(),
     content: @Composable() (ModalBottomSheetScope.() -> Unit),
 ) {
-    val scope = remember { ModalBottomSheetScope(state, properties) }
+    val scope = remember { ModalBottomSheetScope(state, properties, state.bottomSheetState) }
     scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
+    println("> scope.visibleState.targetState = ${scope.visibleState.targetState}")
 
     if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
         Modal(protectNavBars = true) {
@@ -171,13 +183,6 @@ public fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,
     content: @Composable() (BottomSheetScope.() -> Unit)
 ) {
-    val sheetState = rememberBottomSheetState(
-        initialDetent = SheetDetent.Hidden,
-        detents = modalState.sheetDetents,
-        animationSpec = modalState.animationSpec
-    )
-    modalState.bottomSheetState = sheetState
-
     var hasBeenIntroduced by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
