@@ -220,6 +220,59 @@ BottomSheet(
 }
 ```
 
+### Working with the soft-keyboard
+
+Add the `Modifier.imePadding()` in the contents of your sheet to make sure its contents are always drawn above the soft
+keyboard.
+
+Here is a styled example of a 'Add note' sheet:
+
+```kotlin
+val sheetState = rememberBottomSheetState(
+    initialDetent = FullyExpanded,
+)
+BottomSheet(
+    state = sheetState,
+    modifier = Modifier.fillMaxWidth()
+        .padding(
+            // make sure the sheet is not behind nav bars on landscape
+            WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+                .asPaddingValues()
+        )
+        .background(Color.White),
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .padding(16.dp)
+            // make sure the contents of the sheet is always above the nav bar
+            .navigationBarsPadding()
+            // draw the contents above the soft keyboard
+            .imePadding()
+    ) {
+        DragIndication(Modifier.align(Alignment.CenterHorizontally))
+
+        var text by remember { mutableStateOf("") }
+        BasicTextField(
+            value = text,
+            onValueChange = { text = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Box(Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(Color.Blue)
+            .clickable { /* TODO */ }
+            .padding(4.dp)
+            .align(Alignment.End)) {
+            BasicText(
+                text = "Save note",
+                style = TextStyle.Default.copy(color = Color.White)
+            )
+        }
+    }
+}
+
+```
+
 ### Scrollable sheets
 
 Add any scrollable component within the contents of your sheet. `BottomSheet` supports nesting scrolling out of the box:
@@ -419,12 +472,12 @@ following keyboard interactions:
 
 The main component. Defines the area in which the sheet can be dragged in and renders the sheet.
 
-| Parameter                               | Description                                      |
-|-----------------------------------------|--------------------------------------------------|
-| <div class='parameter'>`state`</div>    | The `BottomSheetState` for the component         |
-| <div class='parameter'>`modifier`</div> | The `Modifier` for the component                 |
-| <div class='parameter'>`enabled`</div>  | Enables or disables touch gestures to the sheet. |
-| <div class='parameter'>`content`</div>  | The contents of the sheet.                       |
+| Parameter                               | Description                              |
+|-----------------------------------------|------------------------------------------|
+| <div class='parameter'>`state`</div>    | The `BottomSheetState` for the component |
+| <div class='parameter'>`modifier`</div> | The `Modifier` for the component         |
+| <div class='parameter'>`enabled`</div>  | Enables or disables dragging.            |
+| <div class='parameter'>`content`</div>  | The contents of the sheet.               |
 
 ### DragIndication()
 
