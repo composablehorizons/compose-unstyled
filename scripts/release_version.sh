@@ -16,7 +16,7 @@ echo "Publishing to Sonar..."
 
 ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 
-echo "👍 Published"
+echo "👍 Published $previous_version"
 
 # Retrieve the last commit hash
 last_commit=$(git rev-parse HEAD)
@@ -42,3 +42,6 @@ git commit -m "Prepare version $wip_version"
 git push origin --follow-tags
 
 echo "💯 All done. Working version is $previous_version"
+
+echo "TODO: Open a Github version for $previous_version"
+open https://github.com/composablehorizons/composables-core/releases/new
