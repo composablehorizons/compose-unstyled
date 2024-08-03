@@ -24,7 +24,7 @@ error: `No staging repository with name sonatype created`
 ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 ```
 
-As soon as the version is available it will be listed at: https://repo1.maven.org/maven2/com/alexstyl/
+As soon as the version is available it will be listed at: https://repo1.maven.org/maven2/com/composables/core/
 
 ## Release to Maven Local
 
