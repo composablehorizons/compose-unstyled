@@ -16,7 +16,7 @@ dependencies {
 
 ## Documentation
 
-For full documentation, checkout: https://composablehorizons.github.io/composables-core
+For full documentation, checkout: https://composablescore.com
 
 ## Contributing
 
