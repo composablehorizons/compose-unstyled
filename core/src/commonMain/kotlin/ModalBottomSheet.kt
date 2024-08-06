@@ -136,7 +136,6 @@ public fun ModalBottomSheet(
 ) {
     val scope = remember { ModalBottomSheetScope(state, properties, state.bottomSheetState) }
     scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
-    println("> scope.visibleState.targetState = ${scope.visibleState.targetState}")
 
     if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
         Modal(protectNavBars = true) {
