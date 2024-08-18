@@ -233,6 +233,30 @@ Dialog(state = rememberDialogState(visible = true)) {
 }
 ```
 
+### Styling the system bars
+
+**Android only**
+
+Dialogs will not change the color of your system UI when displayed. We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the dialog, so that you can customize the System UI according to your needs:
+
+```kotlin
+Dialog(rememberDialogState()) {
+    DialogPanel {
+        val window = LocalModalWindow.current
+        LaunchedEffect(Unit) {
+            // change system bars to transparent
+            window.navigationBarColor = Color.TRANSPARENT
+            window.statusBarColor = Color.TRANSPARENT
+            
+            // don't forget to update the icons too
+            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true
+        }
+        BasicText("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
+    }
+}
+```
+
 ## Keyboard Interactions
 
 <style>
