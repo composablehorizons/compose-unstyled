@@ -72,4 +72,4 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 copyright: |
-  <a href="https://github.com/composablehorizons"><img  src="composables.svg"></a>
+  <a href="https://github.com/composablehorizons"><img  src="/composables.svg"></a>
