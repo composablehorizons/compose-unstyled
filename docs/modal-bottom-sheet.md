@@ -440,7 +440,7 @@ ModalBottomSheet(state = sheetState) {
 
 **Android only**
 
-Modal bottom sheets will darken the navigation bar when displayed by default. This will work for most designs, but there might need more customizations. 
+Modal bottom sheets will darken the navigation bar when displayed by default. This will work for most designs, but you might need more customizations. 
 
 We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the modal sheet, so that you can customize the System UI according to your needs:
 
