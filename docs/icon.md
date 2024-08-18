@@ -49,15 +49,9 @@ Icon(
 | <div class='parameter'>`modifier`           </div> | the `Modifier` to be used to this icon.                                                                                                               |
 | <div class='parameter'>`tint`               </div> | a `Color` that will be used to tint the `painter`. If `Color.Unspecified` is passed, then no tinting will be used.                                    |
 
-## Icons Sets
+## Where to find icons
 
-Great apps require great iconography. You can use the [SVG to Compose](https://www.composables.com/svgtocompose) tool to
-convert your beautiful SVGs to Compose `ImageVectors`.
-
-We also recommend the following icon sets:
-
-- [Material Compose Symbols](https://www.composables.com/icons)
-- [Lucide](https://lucide.dev/)
+Great apps require great iconography. Visit [composeicons.com](https://composeicons.com) for a collection of over 7,000+ icons ready to be used in Jetpack Compose and Compose Multiplatform.
 
 ## Styled Examples
 
