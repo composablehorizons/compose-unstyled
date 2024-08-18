@@ -1,11 +1,14 @@
 package com.composables.core
 
+import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
@@ -32,21 +35,19 @@ internal actual fun Modal(
     val id = rememberSaveable { UUID.randomUUID() }
 
     DisposableEffect(parentView) {
-        val contentView = ComposeView(context).apply {
-            setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
-            setParentCompositionContext(composition)
-            setContent(content)
-        }
+        val contentView: ComposeView
 
         val dialog = ComponentDialog(context, R.style.TranslucentDialog).apply {
-            val window =
-                requireNotNull(this.window) { "Tried to use a Modal without a window. Is your parent composable attached to an Activity?" }
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            @Suppress("DEPRECATION") // applying View.OnApplyWindowInsetsListener doesn't seem to work
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
-            window.setDimAmount(0f)
-            window.setWindowAnimations(-1)
+            contentView = ComposeView(context).apply {
+                setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
+                setParentCompositionContext(composition)
+                setContent {
+                    val localWindow = window ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
+                    CompositionLocalProvider(LocalModalWindow provides localWindow) {
+                        content()
+                    }
+                }
+            }
 
             setContentView(contentView)
 
@@ -56,12 +57,22 @@ internal actual fun Modal(
 
             setCancelable(false)
             setCanceledOnTouchOutside(false)
-
-            if (protectNavBars) {
-                window.navigationBarColor = Color.Black.copy(alpha = 0.33f).toArgb()
-                WindowInsetsControllerCompat(window, contentView).isAppearanceLightNavigationBars = false
-            }
         }
+
+        val window = requireNotNull(dialog.window) {
+            "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
+        }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        @Suppress("DEPRECATION") // applying View.OnApplyWindowInsetsListener doesn't seem to work
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        if (protectNavBars) {
+            window.navigationBarColor = Color.Black.copy(alpha = 0.33f).toArgb()
+            WindowInsetsControllerCompat(window, contentView).isAppearanceLightNavigationBars = false
+        }
+
+        window.setDimAmount(0f)
+        window.setWindowAnimations(-1)
 
         dialog.show()
 
@@ -70,4 +81,8 @@ internal actual fun Modal(
             dialog.dismiss()
         }
     }
+}
+
+val LocalModalWindow = staticCompositionLocalOf<Window> {
+    error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")
 }
