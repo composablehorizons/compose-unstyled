@@ -12,6 +12,9 @@ if [[ "$confirm" != "y" ]]; then
     exit 1
 fi
 
+# Read the WIP version from the keyboard
+read -p "Enter next version (e.g., 1.8.0): " wip_version
+
 echo "Publishing to Sonar..."
 
 ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
@@ -24,8 +27,6 @@ last_commit=$(git rev-parse HEAD)
 # Tag the last commit with the last version
 git tag "$previous_version" $last_commit
 
-# Read the WIP version from the keyboard
-read -p "Enter next version (e.g., 1.8.0): " wip_version
 
 # Find and update the version in .md files
 find "$root_dir" -type f -name "*.md" -exec sed -i '' "s/implementation(\"com\.composables:core:[^\"]*\")/implementation(\"com.composables:core:$previous_version\")/g" {} +
