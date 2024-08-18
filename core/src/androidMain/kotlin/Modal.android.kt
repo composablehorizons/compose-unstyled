@@ -1,5 +1,6 @@
 package com.composables.core
 
+import android.os.Build
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentDialog
@@ -42,7 +43,8 @@ internal actual fun Modal(
                 setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
                 setParentCompositionContext(composition)
                 setContent {
-                    val localWindow = window ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
+                    val localWindow = window
+                        ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
                     CompositionLocalProvider(LocalModalWindow provides localWindow) {
                         content()
                     }
@@ -63,8 +65,11 @@ internal actual fun Modal(
             "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
         }
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        @Suppress("DEPRECATION") // applying View.OnApplyWindowInsetsListener doesn't seem to work
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+        } else {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
 
         if (protectNavBars) {
             window.navigationBarColor = Color.Black.copy(alpha = 0.33f).toArgb()
