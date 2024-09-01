@@ -296,7 +296,9 @@ public fun BottomSheet(
                             Modifier.nestedScroll(
                                 remember(state.coreAnchoredDraggableState, Orientation.Vertical) {
                                     ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                                        state = state.coreAnchoredDraggableState, orientation = Orientation.Vertical
+                                        orientation = Orientation.Vertical,
+                                        sheetState = state,
+                                        draggableState = state.coreAnchoredDraggableState
                                     )
                                 })
                         } else Modifier
@@ -316,22 +318,28 @@ public fun BottomSheet(
     }
 }
 
-// Code modified from Material 2's ModalBottomSheet.kt
 private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-    state: CoreAnchoredDraggableState<*>, orientation: Orientation
+    draggableState: CoreAnchoredDraggableState<*>,
+    orientation: Orientation,
+    sheetState: BottomSheetState
 ): NestedScrollConnection = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.toFloat()
-        return if (delta < 0 && source == NestedScrollSource.Drag) {
-            state.dispatchRawDelta(delta).toOffset()
-        } else {
-            Offset.Zero
+        if (source == NestedScrollSource.Drag) {
+            val delta = available.toFloat()
+
+            val canDragSheetUp = delta < 0 && sheetState.offset > 0f
+            val canDragSheetDown = delta > 0 && sheetState.offset < 1f
+
+            if (canDragSheetUp || canDragSheetDown) {
+                return draggableState.dispatchRawDelta(delta).toOffset()
+            }
         }
+        return Offset.Zero
     }
 
     override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
         return if (source == NestedScrollSource.Drag) {
-            state.dispatchRawDelta(available.toFloat()).toOffset()
+            draggableState.dispatchRawDelta(available.toFloat()).toOffset()
         } else {
             Offset.Zero
         }
@@ -339,9 +347,9 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 
     override suspend fun onPreFling(available: Velocity): Velocity {
         val toFling = available.toFloat()
-        val currentOffset = state.requireOffset()
-        return if (toFling < 0 && currentOffset > state.anchors.minAnchor()) {
-            state.settle(velocity = toFling)
+        val currentOffset = draggableState.requireOffset()
+        return if (toFling < 0 && currentOffset > draggableState.anchors.minAnchor()) {
+            draggableState.settle(velocity = toFling)
             // since we go to the anchor with tween settling, consume all for the best UX
             available
         } else {
@@ -350,7 +358,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     }
 
     override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-        state.settle(velocity = available.toFloat())
+        draggableState.settle(velocity = available.toFloat())
         return available
     }
 
