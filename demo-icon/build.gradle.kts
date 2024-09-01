@@ -62,7 +62,6 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(project(":core"))
-            implementation(compose.materialIconsExtended)
         }
 
         val desktopMain by getting {
