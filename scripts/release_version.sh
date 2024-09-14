@@ -40,7 +40,8 @@ git add .
 # Commit with the provided version in the message
 git commit -m "Prepare version $wip_version"
 
-git push origin --follow-tags
+git push origin
+git push origin $previous_version
 
 echo "💯 All done. Working version is $previous_version"
 
