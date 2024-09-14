@@ -261,8 +261,13 @@ public fun BottomSheet(
                                         }
                                     }
                                 }
-                                val previous = state.coreAnchoredDraggableState.currentValue
-                                state.coreAnchoredDraggableState.updateAnchors(anchors, previous)
+                                val newTarget = if (state.isIdle) {
+                                    state.coreAnchoredDraggableState.currentValue
+                                } else {
+                                    state.coreAnchoredDraggableState.targetValue
+                                }
+
+                                state.coreAnchoredDraggableState.updateAnchors(anchors, newTarget)
                             }
                         } else it
                     }
