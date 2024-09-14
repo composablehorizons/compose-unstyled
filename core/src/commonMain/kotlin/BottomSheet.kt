@@ -175,7 +175,7 @@ public class BottomSheetState internal constructor(
         get() = coreAnchoredDraggableState.targetValue
 
     public val isIdle: Boolean by derivedStateOf {
-        progress == 1f && currentDetent == targetDetent
+        progress == 1f && currentDetent == targetDetent && coreAnchoredDraggableState.isAnimationRunning.not()
     }
 
     public val progress: Float
