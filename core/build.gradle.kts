@@ -74,6 +74,20 @@ kotlin {
         jvmMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
         }
+
+        val jvmTest by getting
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        jvmTest.dependencies {
+            implementation(compose.desktop.uiTestJUnit4)
+            implementation(compose.desktop.currentOs)
+        }
     }
 }
 
