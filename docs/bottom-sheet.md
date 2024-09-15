@@ -1,5 +1,5 @@
 ---
-title: Bottom Sheet
+title: Unstyled Jetpack Compose Bottom Sheet component
 description: A renderless, highly performant foundational component to build bottom sheets with, jam-packed with styling features without compromising on
   accessibility or keyboard interactions.
 ---

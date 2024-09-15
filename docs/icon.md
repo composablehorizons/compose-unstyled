@@ -1,3 +1,7 @@
+---
+title: Unstyled Jetpack Compose Icon component
+description: A component for rendering iconography with the tinting of your choice.
+---
 # Icon
 
 A component for rendering iconography with the tinting of your choice.

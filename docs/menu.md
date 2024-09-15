@@ -1,3 +1,7 @@
+---
+title: Unstyled Jetpack Compose Dropdown Menu component
+description: A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with styling features without compromising on accessibility or keyboard interactions.
+---
 # Dropdown Menu
 
 An unstyled component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling

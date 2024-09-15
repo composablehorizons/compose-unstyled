@@ -1,7 +1,10 @@
+---
+title: Unstyled Jetpack Compose Dialog component
+description: A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with styling features without compromising on accessibility or keyboard interactions.
+---
 # Dialog
 
-An unstyled Dialog component for Composable Multiplatform that can be used to implement Dialogs with the styling of your
-choice.
+An unstyled Dialog component for Jetpack Compose that can be used to implement Dialogs with the styling of your choice.
 
 Fully accessible, supports animations, offers consistent behavior across platforms and an optional background scrim.
 
