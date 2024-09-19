@@ -68,3 +68,87 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     <div>Icon</div>
   </div>
 </div>
+
+## What developers say
+
+<div class="testimonial-container">
+  <div class="testimonial-image">
+    <img src="/testimonials/matt.png" alt="Matt Kula">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+      "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your composables core one and it fixed multiple issues 🎉"
+    </div>
+    <div class="testimonial-author">
+      <h3>Matt Kula</h3>
+      <p>Android @ Warner Music Group</p>
+    </div>
+  </div>
+</div>
+
+<div class="testimonial-container">
+  <div class="testimonial-image">
+    <img src="/testimonials/jacob.jpeg" alt="Jacob Ras">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+"Ever since Composables Core was pointed out to me I use that one.
+Simpler API, and it actually works. I like it a lot, after continuously having something broken with the (Material Compose) bottom sheets."  
+    </div>
+    <div class="testimonial-author">
+      <h3>Jacob Ras</h3>
+      <p>Android Engineer @ Albert Heijn</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .testimonial-container {
+    display: flex;
+    max-width: 800px;
+    font-family: Arial, sans-serif;
+  }
+  .testimonial-image {
+    flex: 0 0 192px;
+    max-width: 192px;
+    height: 192px;
+  }
+  .testimonial-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px; /* Rounded corners for the image */
+  }
+  .testimonial-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .testimonial-text {
+    font-size: 18px;
+    margin: 0 0 20px 0;
+    line-height: 1.6;
+  }
+  .testimonial-author h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  .testimonial-author p {
+    margin: 5px 0 0;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  /* These variables should be defined in your global CSS for light/dark mode */
+  :root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #1a1a2e;
+      --text-color: #ffffff;
+    }
+  }
+</style>
