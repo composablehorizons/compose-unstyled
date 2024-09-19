@@ -102,6 +102,22 @@ Simpler API, and it actually works. I like it a lot, after continuously having s
   </div>
 </div>
 
+<div class="testimonial-container">
+  <div class="testimonial-image">
+    <img src="/testimonials/alexstyl.jpg" alt="Alex Styl">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+      "I wrote this library, so this will be biased 😁. I was tired of dealing with Material Compose sheets and dialogs issues, so I decided to write my own from scratch.
+Plus, I needed high-quality, non-Material looking components for my Compose Multiplatform (desktop) apps, hence this library was born."
+    </div>
+    <div class="testimonial-author">
+      <h3>Alex Styl</h3>
+      <p>Founder @ Composable Horizons</p>
+    </div>
+  </div>
+</div>
+
 <style>
   .testimonial-container {
     display: flex;
