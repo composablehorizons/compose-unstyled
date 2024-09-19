@@ -8,6 +8,8 @@ Unstyled, fully accessible components for Jetpack Compose & Compose Multiplatfor
 
 Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and any other platform Compose can run on.
 
+[💬 Ask questions on Discord](https://discord.com/channels/1264922125920374905/1264949180967686284)
+
 <style>
   img {
     border-radius: 20px;
@@ -113,7 +115,7 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     </div>
     <div class="testimonial-author">
       <h3>Alex Styl</h3>
-      <p>Founder @ Composable Horizons</p>
+      <p>Author of Composables Core</p>
     </div>
   </div>
 </div>
