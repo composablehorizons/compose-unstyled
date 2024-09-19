@@ -45,6 +45,7 @@ nav:
     - 'Dialog' : dialog.md
     - 'Dropdown (Menu)' : menu.md
     - 'Icon' : icon.md
+    - 'Separators' : separators.md
 
 plugins:
   - social

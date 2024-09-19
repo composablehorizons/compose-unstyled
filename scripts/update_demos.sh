@@ -1,7 +1,7 @@
 # Script that builds the JS version of the demo and moves it to the docs resources
 
 project_root=$(pwd)
-demo_names=("dialog" "icon" "menu" "modalsheet" "sheet")
+demo_names=("dialog" "icon" "menu" "modalsheet" "sheet" "separators")
 
 # Create directories for each demo
 for demo in "${demo_names[@]}"; do

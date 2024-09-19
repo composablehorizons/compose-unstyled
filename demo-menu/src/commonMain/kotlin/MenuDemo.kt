@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,21 +25,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.PathFillType
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.composables.core.HorizontalSeparator
 import com.composables.core.Menu
 import com.composables.core.MenuButton
 import com.composables.core.MenuContent
 import com.composables.core.MenuItem
 import com.composables.core.rememberMenuState
+import com.composables.icons.lucide.ChevronDown
+import com.composables.icons.lucide.Clipboard
+import com.composables.icons.lucide.Copy
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Maximize
+import com.composables.icons.lucide.Scissors
+import com.composables.icons.lucide.Trash2
 
 @Composable
 fun MenuDemo() {
@@ -62,7 +63,7 @@ fun MenuDemo() {
                             style = TextStyle.Default.copy(fontWeight = FontWeight(500))
                         )
                         Spacer(Modifier.width(8.dp))
-                        Image(ChevronDown, null)
+                        Image(Lucide.ChevronDown, null)
                     }
                 }
             }
@@ -90,7 +91,7 @@ fun MenuDemo() {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Image(SelectAll, null)
+                        Image(Lucide.Maximize, null)
                         Spacer(Modifier.width(4.dp))
                         Text(
                             text = "Select all",
@@ -98,7 +99,7 @@ fun MenuDemo() {
                         )
                     }
                 }
-                Divider()
+                HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     onClick = { /* TODO */ }) {
@@ -106,7 +107,7 @@ fun MenuDemo() {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Image(Copy, null)
+                        Image(Lucide.Copy, null)
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "Copy",
@@ -122,7 +123,7 @@ fun MenuDemo() {
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(Cut, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
+                        Image(Lucide.Scissors, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "Cut",
@@ -139,7 +140,7 @@ fun MenuDemo() {
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(Paste, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
+                        Image(Lucide.Clipboard, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
                         Spacer(Modifier.width(4.dp))
                         Text(
                             text = "Paste",
@@ -148,7 +149,7 @@ fun MenuDemo() {
                         )
                     }
                 }
-                Divider()
+                HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     onClick = { /* TODO */ }) {
@@ -156,7 +157,7 @@ fun MenuDemo() {
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(Copy, null, colorFilter = ColorFilter.tint(Color(0xFFC62828)))
+                        Image(Lucide.Trash2, null, colorFilter = ColorFilter.tint(Color(0xFFC62828)))
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "Delete",
@@ -170,41 +171,6 @@ fun MenuDemo() {
     }
 }
 
-val ChevronDown: ImageVector by lazy {
-    ImageVector.Builder(
-        name = "ChevronDown",
-        defaultWidth = 16.dp,
-        defaultHeight = 16.dp,
-        viewportWidth = 24f,
-        viewportHeight = 24f
-    ).apply {
-        path(
-            fill = null,
-            fillAlpha = 1.0f,
-            stroke = SolidColor(Color(0xFF000000)),
-            strokeAlpha = 1.0f,
-            strokeLineWidth = 2f,
-            strokeLineCap = StrokeCap.Round,
-            strokeLineJoin = StrokeJoin.Round,
-            strokeLineMiter = 1.0f,
-            pathFillType = PathFillType.NonZero
-        ) {
-            moveTo(
-                6f,
-                9f
-            )
-            lineToRelative(
-                6f,
-                6f
-            )
-            lineToRelative(
-                6f,
-                -6f
-            )
-        }
-    }.build()
-}
-
 @Composable
 fun Text(text: String, style: TextStyle = TextStyle.Default, modifier: Modifier = Modifier) {
     BasicText(
@@ -213,552 +179,3 @@ fun Text(text: String, style: TextStyle = TextStyle.Default, modifier: Modifier 
         modifier = modifier
     )
 }
-
-@Composable
-fun Divider(modifier: Modifier = Modifier) {
-    Box(modifier.height(1.dp).fillMaxWidth().background(Color(0xFFBDBDBD)))
-}
-
-private var _Cut: ImageVector? = null
-
-val Cut: ImageVector
-    get() {
-        if (_Cut != null) {
-            return _Cut!!
-        }
-        _Cut = ImageVector.Builder(
-            name = "Scissors",
-            defaultWidth = 20.dp,
-            defaultHeight = 20.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    9f,
-                    6f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    6f,
-                    9f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    3f,
-                    6f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    9f,
-                    6f
-                )
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    8.12f,
-                    8.12f
-                )
-                lineTo(
-                    12f,
-                    12f
-                )
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    20f,
-                    4f
-                )
-                lineTo(
-                    8.12f,
-                    15.88f
-                )
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    9f,
-                    18f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    6f,
-                    21f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    3f,
-                    18f
-                )
-                arcTo(
-                    3f,
-                    3f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    9f,
-                    18f
-                )
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    14.8f,
-                    14.8f
-                )
-                lineTo(
-                    20f,
-                    20f
-                )
-            }
-        }.build()
-        return _Cut!!
-    }
-
-
-private var _Paste: ImageVector? = null
-
-val Paste: ImageVector
-    get() {
-        if (_Paste != null) {
-            return _Paste!!
-        }
-        _Paste = ImageVector.Builder(
-            name = "Clipboard",
-            defaultWidth = 20.dp,
-            defaultHeight = 20.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    9f,
-                    2f
-                )
-                horizontalLineTo(15f)
-                arcTo(
-                    1f,
-                    1f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    16f,
-                    3f
-                )
-                verticalLineTo(5f)
-                arcTo(
-                    1f,
-                    1f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    15f,
-                    6f
-                )
-                horizontalLineTo(9f)
-                arcTo(
-                    1f,
-                    1f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    8f,
-                    5f
-                )
-                verticalLineTo(3f)
-                arcTo(
-                    1f,
-                    1f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    9f,
-                    2f
-                )
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    16f,
-                    4f
-                )
-                horizontalLineToRelative(2f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    2f,
-                    2f
-                )
-                verticalLineToRelative(14f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    -2f,
-                    2f
-                )
-                horizontalLineTo(6f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    -2f,
-                    -2f
-                )
-                verticalLineTo(6f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    2f,
-                    -2f
-                )
-                horizontalLineToRelative(2f)
-            }
-        }.build()
-        return _Paste!!
-    }
-
-
-private var _Copy: ImageVector? = null
-
-val Copy: ImageVector
-    get() {
-        if (_Copy != null) {
-            return _Copy!!
-        }
-        _Copy = ImageVector.Builder(
-            name = "Copy",
-            defaultWidth = 20.dp,
-            defaultHeight = 20.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    10f,
-                    8f
-                )
-                horizontalLineTo(20f)
-                arcTo(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    22f,
-                    10f
-                )
-                verticalLineTo(20f)
-                arcTo(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    20f,
-                    22f
-                )
-                horizontalLineTo(10f)
-                arcTo(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    8f,
-                    20f
-                )
-                verticalLineTo(10f)
-                arcTo(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    10f,
-                    8f
-                )
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    4f,
-                    16f
-                )
-                curveToRelative(
-                    -1.1f,
-                    0f,
-                    -2f,
-                    -0.9f,
-                    -2f,
-                    -2f
-                )
-                verticalLineTo(4f)
-                curveToRelative(
-                    0f,
-                    -1.1f,
-                    0.9f,
-                    -2f,
-                    2f,
-                    -2f
-                )
-                horizontalLineToRelative(10f)
-                curveToRelative(
-                    1.1f,
-                    0f,
-                    2f,
-                    0.9f,
-                    2f,
-                    2f
-                )
-            }
-        }.build()
-        return _Copy!!
-    }
-
-
-private var _SelectAll: ImageVector? = null
-
-val SelectAll: ImageVector
-    get() {
-        if (_SelectAll != null) {
-            return _SelectAll!!
-        }
-        _SelectAll = ImageVector.Builder(
-            name = "Scan",
-            defaultWidth = 24.dp,
-            defaultHeight = 24.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    3f,
-                    7f
-                )
-                verticalLineTo(5f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    2f,
-                    -2f
-                )
-                horizontalLineToRelative(2f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    17f,
-                    3f
-                )
-                horizontalLineToRelative(2f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    2f,
-                    2f
-                )
-                verticalLineToRelative(2f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    21f,
-                    17f
-                )
-                verticalLineToRelative(2f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    -2f,
-                    2f
-                )
-                horizontalLineToRelative(-2f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(
-                    7f,
-                    21f
-                )
-                horizontalLineTo(5f)
-                arcToRelative(
-                    2f,
-                    2f,
-                    0f,
-                    isMoreThanHalf = false,
-                    isPositiveArc = true,
-                    -2f,
-                    -2f
-                )
-                verticalLineToRelative(-2f)
-            }
-        }.build()
-        return _SelectAll!!
-    }
