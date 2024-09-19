@@ -3,9 +3,11 @@ kotlin = "2.0.10"
 compose = "1.6.11"
 agp = "8.2.0"
 composetheme = "1.2.0-alpha"
+composeicons = "1.0.0"
 
 [libraries]
 composetheme = { module = "com.composables:composetheme", version.ref = "composetheme" }
+composeicons = { module = "com.composables:icons-lucide", version.ref = "composeicons" }
 
 
 [plugins]
