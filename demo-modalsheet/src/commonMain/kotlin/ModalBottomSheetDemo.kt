@@ -41,7 +41,7 @@ import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberModalBottomSheetState
 
-val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
+private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
 }
 

@@ -45,6 +45,7 @@ nav:
     - 'Dialog' : dialog.md
     - 'Dropdown (Menu)' : menu.md
     - 'Icon' : icon.md
+    - 'Scroll Area (Scrollbars)' : scroll-area.md
     - 'Separators' : separators.md
 
 plugins:

@@ -69,6 +69,20 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </a>
     <div>Icon</div>
   </div>
+
+  <div>
+      <a href="scroll-area">
+        <img src="preview_scroll_area.png" alt="Scroll Area Preview">
+      </a>
+      <div>Scroll Area</div>
+  </div>
+
+  <div>
+      <a href="separators">
+        <img src="preview_separators.png" alt="Separators Preview">
+      </a>
+      <div>Separators</div>
+  </div>
 </div>
 
 ## What developers say

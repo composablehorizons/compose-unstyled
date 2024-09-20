@@ -25,17 +25,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.PathFillType
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.core.HorizontalDivider
+import com.composables.core.HorizontalSeparator
 import com.composables.core.Menu
 import com.composables.core.MenuButton
 import com.composables.core.MenuContent
@@ -43,12 +37,10 @@ import com.composables.core.MenuItem
 import com.composables.core.rememberMenuState
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
-import com.composables.icons.lucide.ClipboardPaste
 import com.composables.icons.lucide.Copy
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
-import com.composables.icons.lucide.Trash
 import com.composables.icons.lucide.Trash2
 
 @Composable
@@ -107,7 +99,7 @@ fun MenuDemo() {
                         )
                     }
                 }
-                HorizontalDivider(color = Color(0xFFBDBDBD))
+                HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     onClick = { /* TODO */ }) {
@@ -157,7 +149,7 @@ fun MenuDemo() {
                         )
                     }
                 }
-                HorizontalDivider(color = Color(0xFFBDBDBD))
+                HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
                     modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
                     onClick = { /* TODO */ }) {
