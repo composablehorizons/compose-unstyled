@@ -16,7 +16,7 @@ dependencies {
 
 ## Documentation
 
-For full documentation, checkout: https://composablescore.com
+For full documentation, checkout: https://composeunstyled.com
 
 ## Contributing
 
