@@ -6,7 +6,7 @@ root_dir=$(pwd)
 # Read the docs version from the keyboard
 previous_version=$(grep '^val publishVersion =' "$root_dir/core/build.gradle.kts" | sed 's/^val publishVersion = "\([^\"]*\)"/\1/')
 
-read -p "🚢 Shipping version $previous_version (y/n):" confirm
+read -p "🚢 Current version is $previous_version – read from gradle. Ship it? (y/n):" confirm
 if [[ "$confirm" != "y" ]]; then
     echo "Aborted."
     exit 1
