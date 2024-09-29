@@ -284,16 +284,6 @@ ScrollArea(state = state) {
 }
 </style>
 
-## Parameters
-
-### ScrollArea
-
-| Parameter                                | Description                                      |
-|------------------------------------------|--------------------------------------------------|
-| <div class='parameter'>`color`</div>     | the `Color` of the divider.                      |
-| <div class='parameter'>`thickness`</div> | a `Dp` of how thick the divider should rendered. |
-| <div class='parameter'>`modifier` </div> | the `Modifier` to be used to this divider.       |
-
 ## Styled Examples
 
 <a href="https://composablesui.com?ref=core">
