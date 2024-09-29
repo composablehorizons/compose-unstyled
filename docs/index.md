@@ -120,6 +120,22 @@ Simpler API, and it actually works. I like it a lot, after continuously having s
 
 <div class="testimonial-container">
   <div class="testimonial-image">
+    <img src="/testimonials/gabor.jpg" alt="Gabor Varadi">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+"This man did, what Googlers couldn't in 3 years of scrollbars "being on the roadmap" #androiddev"  
+    </div>
+    <div class="testimonial-author">
+      <h3>Jacob Ras</h3>
+      <p>EpicPandaForce @ SO</p>
+    </div>
+  </div>
+</div>
+
+
+<div class="testimonial-container">
+  <div class="testimonial-image">
     <img src="/testimonials/alexstyl.jpg" alt="Alex Styl">
   </div>
   <div class="testimonial-content">
@@ -139,6 +155,8 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     display: flex;
     max-width: 800px;
     font-family: Arial, sans-serif;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
   .testimonial-image {
     flex: 0 0 192px;
