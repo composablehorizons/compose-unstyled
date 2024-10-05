@@ -48,7 +48,7 @@ val AppTheme = buildComposeTheme { }
 @Composable
 fun DialogDemo() {
     AppTheme {
-        val dialogState = rememberDialogState()
+        val dialogState = rememberDialogState(initiallyVisible = false)
 
         Box(
             modifier = Modifier.fillMaxSize()

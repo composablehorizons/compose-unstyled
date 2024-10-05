@@ -62,25 +62,13 @@ private val DialogStateSaver = run {
     "This function is going away soon. Use the updated function with renamed parameters",
     ReplaceWith("rememberDialogState(initiallyVisible = visible)")
 )
-public fun rememberDialogState(visible: Boolean = false, ____deprecated_constructor: Unit): DialogState {
+public fun rememberDialogState(visible: Boolean = false, ____deprecated_constructor: Unit = Unit): DialogState {
     return rememberDialogState(initiallyVisible = visible)
 }
 
 @Composable
 public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
-}
-
-@Deprecated(
-    "This overload will go away in a future version of the library. Use overload with explicit default state",
-    ReplaceWith("Dialog(rememberDialogState(),properties,content)")
-)
-@Composable
-public fun Dialog(
-    properties: DialogProperties = DialogProperties(),
-    content: @Composable() (DialogScope.() -> Unit)
-) {
-    Dialog(rememberDialogState(initiallyVisible = false), properties, content)
 }
 
 @Composable
