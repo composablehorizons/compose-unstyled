@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 public data class ModalSheetProperties(
@@ -38,12 +40,16 @@ public fun rememberModalBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
+    velocityThreshold: () -> Dp = { 125.dp },
+    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp }
 ): ModalBottomSheetState {
     val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
     val sheetState = rememberBottomSheetState(
         initialDetent = SheetDetent.Hidden,
         detents = detents,
-        animationSpec = animationSpec
+        animationSpec = animationSpec,
+        velocityThreshold = velocityThreshold,
+        positionalThreshold = positionalThreshold,
     )
     return rememberSaveable(
         saver = mapSaver(

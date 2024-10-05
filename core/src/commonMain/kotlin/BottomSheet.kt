@@ -60,14 +60,17 @@ private fun Saver(
     density: Density,
     coroutineScope: CoroutineScope,
     sheetDetents: List<SheetDetent>,
+    velocityThreshold: () -> Float,
+    positionalThreshold: (totalDistance: Float) -> Float,
 ): Saver<BottomSheetState, *> = mapSaver(save = { mapOf("detent" to it.currentDetent.identifier) }, restore = { map ->
     val selectedDetentName = map["detent"]
     BottomSheetState(
         initialDetent = sheetDetents.first { it.identifier == selectedDetentName },
         detents = sheetDetents,
-        density = density,
-        animationSpec = animationSpec,
         coroutineScope = coroutineScope,
+        animationSpec = animationSpec,
+        velocityThreshold = velocityThreshold,
+        positionalThreshold = positionalThreshold,
     )
 })
 
@@ -75,7 +78,9 @@ private fun Saver(
 public fun rememberBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-    animationSpec: AnimationSpec<Float> = tween()
+    animationSpec: AnimationSpec<Float> = tween(),
+    velocityThreshold: () -> Dp = { 125.dp },
+    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp }
 ): BottomSheetState {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -85,6 +90,16 @@ public fun rememberBottomSheetState(
             density = density,
             sheetDetents = detents,
             coroutineScope = scope,
+            velocityThreshold = {
+                with(density) {
+                    velocityThreshold().toPx()
+                }
+            },
+            positionalThreshold = { totalDistance ->
+                with(density) {
+                    positionalThreshold(totalDistance.toDp()).toPx()
+                }
+            }
         )
     ) {
         BottomSheetState(
@@ -92,7 +107,16 @@ public fun rememberBottomSheetState(
             detents = detents,
             coroutineScope = scope,
             animationSpec = animationSpec,
-            density = density,
+            velocityThreshold = {
+                with(density) {
+                    velocityThreshold().toPx()
+                }
+            },
+            positionalThreshold = { totalDistance ->
+                with(density) {
+                    positionalThreshold(totalDistance.toDp()).toPx()
+                }
+            }
         )
     }
 }
@@ -126,8 +150,9 @@ public class BottomSheetState internal constructor(
     initialDetent: SheetDetent,
     internal val detents: List<SheetDetent>,
     private val coroutineScope: CoroutineScope,
-    density: Density,
-    animationSpec: AnimationSpec<Float>
+    animationSpec: AnimationSpec<Float>,
+    velocityThreshold: () -> Float,
+    positionalThreshold: (totalDistance: Float) -> Float
 ) {
     init {
         check(detents.isNotEmpty()) {
@@ -152,8 +177,8 @@ public class BottomSheetState internal constructor(
 
     internal val coreAnchoredDraggableState = CoreAnchoredDraggableState(
         initialValue = initialDetent,
-        positionalThreshold = { distance -> with(density) { 56.dp.toPx() } },
-        velocityThreshold = { with(density) { 125.dp.toPx() } },
+        positionalThreshold = positionalThreshold,
+        velocityThreshold = velocityThreshold,
         animationSpec = animationSpec
     )
 
