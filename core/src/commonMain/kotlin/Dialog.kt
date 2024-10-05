@@ -29,8 +29,15 @@ import androidx.compose.ui.semantics.semantics
 public data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
 @Stable
-public class DialogState(visible: Boolean = false) {
-    public var visible: Boolean by mutableStateOf(visible)
+public class DialogState internal constructor(initiallyVisible: Boolean = false) {
+
+    @Deprecated(
+        "This constructor will go away in future versions of the library. Use the respective remember function instead",
+        ReplaceWith("rememberDialogState(visible)")
+    )
+    constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
+
+    public var visible: Boolean by mutableStateOf(initiallyVisible)
 }
 
 @Stable
@@ -51,8 +58,17 @@ private val DialogStateSaver = run {
 }
 
 @Composable
-public fun rememberDialogState(visible: Boolean = false): DialogState {
-    return rememberSaveable(saver = DialogStateSaver) { DialogState(visible) }
+@Deprecated(
+    "This function is going away soon. Use the updated function with renamed parameters",
+    ReplaceWith("rememberDialogState(initiallyVisible = visible)")
+)
+public fun rememberDialogState(visible: Boolean = false, ____deprecated_constructor: Unit): DialogState {
+    return rememberDialogState(initiallyVisible = visible)
+}
+
+@Composable
+public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
+    return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
 
 @Deprecated(
@@ -64,7 +80,7 @@ public fun Dialog(
     properties: DialogProperties = DialogProperties(),
     content: @Composable() (DialogScope.() -> Unit)
 ) {
-    Dialog(rememberDialogState(), properties, content)
+    Dialog(rememberDialogState(initiallyVisible = false), properties, content)
 }
 
 @Composable
