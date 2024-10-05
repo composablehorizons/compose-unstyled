@@ -409,20 +409,25 @@ public fun BottomSheetScope.DragIndication(
 
     Box(
         modifier = modifier
-            .onKeyEvent { event ->
-                return@onKeyEvent if (event.key == Key.Spacebar && event.type == KeyEventType.KeyUp && enabled) {
-                    onIndicationClicked()
-                    true
-                } else
-                    false
+            .let {
+                if (enabled && state.detents.size > 1) {
+                    it.onKeyEvent { event ->
+                        // manually trigger a click as Compose does not trigger clicks on Space press
+                        return@onKeyEvent if (event.key == Key.Spacebar && event.type == KeyEventType.KeyUp) {
+                            onIndicationClicked()
+                            true
+                        } else
+                            false
+                    }
+                        .clickable(
+                            role = Role.Button,
+                            enabled = enabled,
+                            interactionSource = interactionSource,
+                            indication = indication,
+                            onClickLabel = onClickLabel,
+                            onClick = onIndicationClicked
+                        )
+                } else it
             }
-            .clickable(
-                role = Role.Button,
-                enabled = enabled,
-                interactionSource = interactionSource,
-                indication = indication,
-                onClickLabel = onClickLabel,
-                onClick = onIndicationClicked
-            )
     )
 }
