@@ -12,7 +12,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -122,10 +124,13 @@ public class ModalBottomSheetState internal constructor(
 
 public class ModalBottomSheetScope internal constructor(
     internal val modalState: ModalBottomSheetState,
-    internal val properties: ModalSheetProperties,
     internal val sheetState: BottomSheetState,
 ) {
     internal val visibleState = MutableTransitionState(false)
+}
+
+private val LocalModalProperties = compositionLocalOf<ModalSheetProperties> {
+    error("Modal properties not initialized")
 }
 
 @Composable
@@ -134,20 +139,22 @@ public fun ModalBottomSheet(
     properties: ModalSheetProperties = ModalSheetProperties(),
     content: @Composable() (ModalBottomSheetScope.() -> Unit),
 ) {
-    val scope = remember { ModalBottomSheetScope(state, properties, state.bottomSheetState) }
-    scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
+    CompositionLocalProvider(LocalModalProperties provides properties) {
+        val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
+        scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
 
-    if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
-        Modal(protectNavBars = true) {
-            Box(Modifier
-                .fillMaxSize()
-                .let {
-                    if (properties.dismissOnClickOutside) {
-                        it.pointerInput(Unit) { detectTapGestures { state.currentDetent = SheetDetent.Hidden } }
-                    } else it
+        if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
+            Modal(protectNavBars = true) {
+                Box(Modifier
+                    .fillMaxSize()
+                    .let {
+                        if (properties.dismissOnClickOutside) {
+                            it.pointerInput(Unit) { detectTapGestures { state.currentDetent = SheetDetent.Hidden } }
+                        } else it
+                    }
+                ) {
+                    scope.content()
                 }
-            ) {
-                scope.content()
             }
         }
     }
@@ -196,6 +203,7 @@ public fun ModalBottomSheetScope.Sheet(
         }
     }
 
+    val properties = LocalModalProperties.current
     if (sheetState.isIdle && properties.dismissOnBackPress) {
         // AnchoredDraggableState jumps to 1.0f progress as soon as we change the current value
         // while moving. This causes the sheet to disappear instead of animating away nicely.
