@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.overscroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
@@ -57,6 +58,7 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import kotlin.js.JsName
+import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Duration
@@ -86,105 +88,128 @@ fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState = rem
     LazyGridScrollAreaScrollAreaState(lazyGridState)
 }
 
+@JvmInline
+@Immutable
+value class OverscrollSides private constructor(private val id: Int) {
+    companion object {
+        val Top = OverscrollSides(0)
+        val Bottom = OverscrollSides(1)
+        val Left = OverscrollSides(2)
+        val Right = OverscrollSides(3)
+        val Vertical = OverscrollSides(3)
+        val Horizontal = OverscrollSides(3)
+    }
+}
+
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,
     modifier: Modifier = Modifier,
     overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect(),
+    overscrollEffectSides: List<OverscrollSides> = listOf(OverscrollSides.Vertical, OverscrollSides.Horizontal),
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
     val scrollEvents = remember { MutableSharedFlow<Unit>() }
+    NoOverscroll {
+        Box(
+            modifier.nestedScroll(remember {
+                object : NestedScrollConnection {
+                    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                        if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                            // they are scrolling past a dead-end
+                            // forward to overscrollEffect's direction they are trying to go
 
-    Box(
-        modifier.nestedScroll(remember {
-            object : NestedScrollConnection {
-                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                    scope.launch {
-                        scrollEvents.emit(Unit)
-                    }
+                            val isOverscrollTop = isMovingBackwards(available.y) && canScrollBackwards.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
 
-                    if (overscrollEffect == null) return super.onPreScroll(available, source)
+                            val isOverscrollBottom = isMovingForward(available.y) && canScrollForward.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
 
+                            val isOverscrollLeft = isMovingBackwards(available.x) && canScrollBackwards.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
 
-                    return if ((isStuck(available.toFloat())) && source == NestedScrollSource.Drag) {
-                        return overscrollEffect.applyToScroll(available, source) { remainingOffset ->
-                            performDrag(remainingOffset.toFloat()).toOffset()
+                            val isOverscrollRight = isMovingForward(available.x) && canScrollForward.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                            if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                                return overscrollEffect.applyToScroll(available, source, noScroll)
+                            }
                         }
-                    } else {
-                        Offset.Zero
+                        return super.onPostScroll(consumed, available, source)
                     }
-                }
 
-                override fun onPostScroll(
-                    consumed: Offset,
-                    available: Offset,
-                    source: NestedScrollSource
-                ): Offset {
-                    if (overscrollEffect == null) return super.onPostScroll(consumed, available, source)
 
-                    return if (source == NestedScrollSource.Drag) {
-                        performDrag(available.toFloat()).toOffset()
-                    } else {
-                        Offset.Zero
-                    }
-                }
-
-                override suspend fun onPreFling(available: Velocity): Velocity {
-                    if (overscrollEffect == null) return super.onPreFling(available)
-                    val toFling = Offset(available.x, available.y).toFloat()
-                    return if (isStuck(toFling)) {
-                        val performFling: suspend (Velocity) -> Velocity = { remaining ->
-                            remaining
-                        }
-                        overscrollEffect.applyToFling(available, performFling)
-                        available - performFling(available)
-                    } else {
-                        Velocity.Zero
-                    }
-                }
-
-                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-                    overscrollEffect?.applyToFling(available) { remaining ->
-                        remaining
-                    }
-                    return available
-                }
-
-                fun performDrag(delta: Float): Float {
-                    val potentiallyConsumed = state.scrollOffset + delta
-
-                    val clamped = when {
-                        delta > 0 -> potentiallyConsumed.coerceAtMost(0.toDouble())
-                        delta < 0 -> potentiallyConsumed.coerceAtLeast(state.maxScrollOffset)
-                        else -> potentiallyConsumed
-                    }
-                    val deltaToConsume = clamped - state.scrollOffset
-                    if (abs(deltaToConsume) > 0) {
+                    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                         scope.launch {
-                            state.scrollTo(deltaToConsume)
+                            scrollEvents.emit(Unit)
                         }
+                        if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                            // they have already started scrolling
+                            // forward to overscrollEffect's opposite direction they are trying to go
+
+                            val isOverscrollTop = isMovingForward(available.y) && canScrollBackwards.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+
+                            val isOverscrollBottom = isMovingBackwards(available.y) && canScrollForward.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+
+                            val isOverscrollLeft = isMovingForward(available.x) && canScrollBackwards.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+
+                            val isOverscrollRight = isMovingBackwards(available.x) && canScrollForward.not()
+                                    && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                            if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                                return overscrollEffect.applyToScroll(available, source, noScroll)
+                            }
+                        }
+
+                        return super.onPreScroll(available, source)
                     }
-                    return deltaToConsume.toFloat()
+
+                    override suspend fun onPreFling(available: Velocity): Velocity {
+                        if (overscrollEffect !== null) {
+                            overscrollEffect.applyToFling(available, consumeVelocity)
+                            return available
+                        }
+                        return super.onPreFling(available)
+                    }
+
+                    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                        if (overscrollEffect != null) {
+                            overscrollEffect.applyToFling(available, consumeVelocity)
+                            return available
+                        }
+                        return super.onPostFling(consumed, available)
+                    }
+
+                    val consumeVelocity: (Velocity) -> Velocity = { velocity ->
+                        // we are forwarding the full velocity to the overscroll effect, always
+                        velocity
+                    }
+
+                    val noScroll: (Offset) -> Offset = {
+                        // we are only listening to scrolling
+                        // we are consuming nothing
+                        Offset.Zero
+                    }
+
+                    val canScrollBackwards: Boolean
+                        get() = state.scrollOffset > 0
+
+                    val canScrollForward: Boolean
+                        get() = state.scrollOffset < state.maxScrollOffset
+
+                    fun isMovingForward(delta: Float): Boolean = delta < 0
+
+                    fun isMovingBackwards(delta: Float): Boolean = delta > 0
                 }
+            })
+                .let { if (overscrollEffect != null) it.overscroll(overscrollEffect) else it }
+        ) {
 
-                fun isStuck(delta: Float): Boolean {
-                    val canScrollBackwards = state.scrollOffset > 0.toDouble()
-                    val canScrollForward = state.scrollOffset < state.maxScrollOffset
-
-                    return (delta > 0 && !canScrollBackwards
-                            || delta < 0 && !canScrollForward)
-                }
-
-                fun Offset.toFloat(): Float = y
-
-                fun Float.toOffset(): Offset = Offset(0f, this)
-            }
-        })
-            .let { if (overscrollEffect != null) it.overscroll(overscrollEffect) else it }
-    ) {
-        NoOverscroll {
             val boxScope = this
             val scrollAreaScope = remember {
                 ScrollAreaScope(boxScope, state, scrollEvents)
@@ -807,7 +832,9 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
 
 }
 
-internal class LazyListScrollAreaState(private val scrollState: LazyListState) : LazyLineContentScrollAreaState() {
+internal class LazyListScrollAreaState(
+    private val scrollState: LazyListState
+) : LazyLineContentScrollAreaState() {
 
     override val interactionSource: InteractionSource
         get() = scrollState.interactionSource
