@@ -4,7 +4,7 @@ site_url: https://composeunstyled.com
 docs_dir: 'docs'
 
 repo_name: 'Compose Unstyled'
-repo_url: https://github.com/composablehorizons/composables-core/
+repo_url: https://github.com/composablehorizons/compose-unstyled/
 
 theme:
   name: material
