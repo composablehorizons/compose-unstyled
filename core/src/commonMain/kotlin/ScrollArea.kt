@@ -5,38 +5,16 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitHorizontalDragOrCancellation
-import androidx.compose.foundation.gestures.awaitVerticalDragOrCancellation
-import androidx.compose.foundation.gestures.drag
-import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.DragInteraction
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.overscroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -51,24 +29,15 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.Velocity
-import androidx.compose.ui.unit.constrainHeight
-import androidx.compose.ui.unit.constrainWidth
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import kotlin.js.JsName
 import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Duration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -106,109 +75,137 @@ fun ScrollArea(
     state: ScrollAreaState,
     modifier: Modifier = Modifier,
     overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect(),
-    overscrollEffectSides: List<OverscrollSides> = listOf(OverscrollSides.Vertical, OverscrollSides.Horizontal),
+    overscrollEffectSides: List<OverscrollSides> = listOf(
+        OverscrollSides.Vertical, OverscrollSides.Horizontal
+    ),
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
     val scrollEvents = remember { MutableSharedFlow<Unit>() }
     NoOverscroll {
-        Box(
-            modifier.nestedScroll(remember {
-                object : NestedScrollConnection {
-                    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-                        if (source == NestedScrollSource.Drag && overscrollEffect != null) {
-                            // they are scrolling past a dead-end
-                            // forward to overscrollEffect's direction they are trying to go
+        Box(modifier.nestedScroll(remember {
+            object : NestedScrollConnection {
+                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                    if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                        // they are scrolling past a dead-end
+                        // forward to overscrollEffect's direction they are trying to go
 
-                            val isOverscrollTop = isMovingBackwards(available.y) && canScrollBackwards.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+                        val isOverscrollTop =
+                            isMovingBackwards(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
 
-                            val isOverscrollBottom = isMovingForward(available.y) && canScrollForward.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+                        val isOverscrollBottom =
+                            isMovingForward(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
 
-                            val isOverscrollLeft = isMovingBackwards(available.x) && canScrollBackwards.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+                        val isOverscrollLeft =
+                            isMovingBackwards(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
 
-                            val isOverscrollRight = isMovingForward(available.x) && canScrollForward.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+                        val isOverscrollRight =
+                            isMovingForward(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
 
-                            if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
-                                return overscrollEffect.applyToScroll(available, source, noScroll)
-                            }
+                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                            return overscrollEffect.applyToScroll(available, source, performScroll)
                         }
-                        return super.onPostScroll(consumed, available, source)
                     }
-
-
-                    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                        scope.launch {
-                            scrollEvents.emit(Unit)
-                        }
-                        if (source == NestedScrollSource.Drag && overscrollEffect != null) {
-                            // they have already started scrolling
-                            // forward to overscrollEffect's opposite direction they are trying to go
-
-                            val isOverscrollTop = isMovingForward(available.y) && canScrollBackwards.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
-
-                            val isOverscrollBottom = isMovingBackwards(available.y) && canScrollForward.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
-
-                            val isOverscrollLeft = isMovingForward(available.x) && canScrollBackwards.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
-
-                            val isOverscrollRight = isMovingBackwards(available.x) && canScrollForward.not()
-                                    && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
-
-                            if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
-                                return overscrollEffect.applyToScroll(available, source, noScroll)
-                            }
-                        }
-
-                        return super.onPreScroll(available, source)
-                    }
-
-                    override suspend fun onPreFling(available: Velocity): Velocity {
-                        if (overscrollEffect !== null) {
-                            overscrollEffect.applyToFling(available, consumeVelocity)
-                            return available
-                        }
-                        return super.onPreFling(available)
-                    }
-
-                    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-                        if (overscrollEffect != null) {
-                            overscrollEffect.applyToFling(available, consumeVelocity)
-                            return available
-                        }
-                        return super.onPostFling(consumed, available)
-                    }
-
-                    val consumeVelocity: (Velocity) -> Velocity = { velocity ->
-                        // we are forwarding the full velocity to the overscroll effect, always
-                        velocity
-                    }
-
-                    val noScroll: (Offset) -> Offset = {
-                        // we are only listening to scrolling
-                        // we are consuming nothing
-                        Offset.Zero
-                    }
-
-                    val canScrollBackwards: Boolean
-                        get() = state.scrollOffset > 0
-
-                    val canScrollForward: Boolean
-                        get() = state.scrollOffset < state.maxScrollOffset
-
-                    fun isMovingForward(delta: Float): Boolean = delta < 0
-
-                    fun isMovingBackwards(delta: Float): Boolean = delta > 0
+                    return super.onPostScroll(consumed, available, source)
                 }
-            })
-                .let { if (overscrollEffect != null) it.overscroll(overscrollEffect) else it }
-        ) {
+
+
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    scope.launch {
+                        scrollEvents.emit(Unit)
+                    }
+                    if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                        // they have already started scrolling
+                        // forward to overscrollEffect's opposite direction they are trying to go
+
+                        val isOverscrollTop =
+                            isMovingForward(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+
+                        val isOverscrollBottom =
+                            isMovingBackwards(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+
+                        val isOverscrollLeft =
+                            isMovingForward(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+
+                        val isOverscrollRight =
+                            isMovingBackwards(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                            return overscrollEffect.applyToScroll(available, source, performScroll)
+                        }
+                    }
+
+                    return super.onPreScroll(available, source)
+                }
+
+                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                    if (overscrollEffect != null) {
+                        val isOverscrollTop =
+                            isMovingBackwards(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+
+                        val isOverscrollBottom =
+                            isMovingForward(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+
+                        val isOverscrollLeft =
+                            isMovingBackwards(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+
+                        val isOverscrollRight =
+                            isMovingForward(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                            overscrollEffect.applyToFling(available, performFling)
+                            return available
+                        }
+                    }
+                    return super.onPostFling(consumed, available)
+                }
+
+                override suspend fun onPreFling(available: Velocity): Velocity {
+                    if (overscrollEffect != null) {
+                        val isOverscrollTop =
+                            isMovingForward(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+
+                        val isOverscrollBottom =
+                            isMovingBackwards(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+
+                        val isOverscrollLeft =
+                            isMovingForward(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+
+                        val isOverscrollRight =
+                            isMovingBackwards(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                            overscrollEffect.applyToFling(available, performFling)
+                            return available
+                        }
+                    }
+                    return super.onPreFling(available)
+                }
+
+                val performFling: (Velocity) -> Velocity = {
+                    // we are only not really managing scrolling
+                    // so consume no velocity
+                    Velocity.Zero
+                }
+
+                val performScroll: (Offset) -> Offset = {
+                    // we are only not really managing scrolling
+                    // so consume no offset
+                    Offset.Zero
+                }
+
+                val canScrollBackwards: Boolean
+                    get() = state.scrollOffset > 0
+
+                val canScrollForward: Boolean
+                    get() = state.scrollOffset < state.maxScrollOffset
+
+                fun isMovingForward(delta: Float): Boolean = delta < 0
+
+                fun isMovingBackwards(delta: Float): Boolean = delta > 0
+            }
+        }).let { if (overscrollEffect != null) it.overscroll(overscrollEffect) else it }) {
 
             val boxScope = this
             val scrollAreaScope = remember {
@@ -221,7 +218,7 @@ fun ScrollArea(
 }
 
 @Composable
-expect internal fun NoOverscroll(content: @Composable () -> Unit)
+internal expect fun NoOverscroll(content: @Composable () -> Unit)
 
 class ScrollAreaScope internal constructor(
     private val boxScope: BoxScope,
@@ -246,9 +243,7 @@ class ScrollbarScope internal constructor(
 sealed class ThumbVisibility {
     data object AlwaysVisible : ThumbVisibility()
     data class HideWhileIdle(
-        val enter: EnterTransition,
-        val exit: ExitTransition,
-        val hideDelay: Duration
+        val enter: EnterTransition, val exit: ExitTransition, val hideDelay: Duration
     ) : ThumbVisibility()
 }
 
@@ -300,11 +295,15 @@ private fun ScrollAreaScope.ScrollBar(
     val sliderAdapter = remember(
         scrollAreaState, containerSize, minimalHeight, reverseLayout, isVertical, coroutineScope
     ) {
-        SliderAdapter(scrollAreaState, containerSize, minimalHeight, reverseLayout, isVertical, coroutineScope)
+        SliderAdapter(
+            scrollAreaState, containerSize, minimalHeight, reverseLayout, isVertical, coroutineScope
+        )
     }
 
     val scrollbarScope = remember(sliderAdapter, containerSize) {
-        ScrollbarScope(dragInteraction, sliderAdapter, interactionSource, scrollAreaState, onScrolledEvents)
+        ScrollbarScope(
+            dragInteraction, sliderAdapter, interactionSource, scrollAreaState, onScrolledEvents
+        )
     }
     val scrollThickness = 8.dp.roundToPx()
 
@@ -318,17 +317,14 @@ private fun ScrollAreaScope.ScrollBar(
         }
     }
 
-    Layout(
-        content = { scrollbarScope.thumb() },
-        modifier = modifier
-            .hoverable(interactionSource = interactionSource)
-            .let {
-                if (enabled) {
-                    it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
-                } else {
-                    it
-                }
-            },
+    Layout(content = { scrollbarScope.thumb() },
+        modifier = modifier.hoverable(interactionSource = interactionSource).let {
+            if (enabled) {
+                it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
+            } else {
+                it
+            }
+        },
         measurePolicy = measurePolicy
     )
 }
@@ -340,18 +336,15 @@ fun ScrollbarScope.Thumb(
     enabled: Boolean = true,
 ) {
     val content = @Composable {
-        Box(
-            modifier
-                .let {
-                    if (enabled) {
-                        it.scrollbarDrag(
-                            interactionSource = mutableInteractionSource,
-                            draggedInteraction = dragInteraction,
-                            sliderAdapter = sliderAdapter,
-                        )
-                    } else it
-                }
-        )
+        Box(modifier.let {
+            if (enabled) {
+                it.scrollbarDrag(
+                    interactionSource = mutableInteractionSource,
+                    draggedInteraction = dragInteraction,
+                    sliderAdapter = sliderAdapter,
+                )
+            } else it
+        })
 
     }
     if (thumbVisibility == ThumbVisibility.AlwaysVisible) {
@@ -375,10 +368,9 @@ fun ScrollbarScope.Thumb(
             }
         }
         LaunchedEffect(Unit) {
-            onScrolledEvents
-                .collect {
-                    show = true
-                }
+            onScrolledEvents.collect {
+                show = true
+            }
         }
 
         AnimatedVisibility(show, enter = thumbVisibility.enter, exit = thumbVisibility.exit) {
@@ -398,21 +390,17 @@ private val SliderAdapter.thumbPixelRange: IntRange
 private val IntRange.size get() = last + 1 - first
 
 private fun verticalMeasurePolicy(
-    sliderAdapter: SliderAdapter,
-    setContainerSize: (Int) -> Unit,
-    scrollThickness: Int
+    sliderAdapter: SliderAdapter, setContainerSize: (Int) -> Unit, scrollThickness: Int
 ) = MeasurePolicy { measurables, constraints ->
     setContainerSize(constraints.maxHeight)
     val pixelRange = sliderAdapter.thumbPixelRange
     val placeable = measurables.firstOrNull()?.measure(
         Constraints.fixed(
-            constraints.constrainWidth(scrollThickness),
-            pixelRange.size
+            constraints.constrainWidth(scrollThickness), pixelRange.size
         )
     )
     if (placeable == null) {
-        layout(0, constraints.maxHeight) {
-        }
+        layout(0, constraints.maxHeight) {}
     } else {
         layout(placeable.width, constraints.maxHeight) {
             placeable.place(0, pixelRange.first)
@@ -421,9 +409,7 @@ private fun verticalMeasurePolicy(
 }
 
 private fun horizontalMeasurePolicy(
-    sliderAdapter: SliderAdapter,
-    setContainerSize: (Int) -> Unit,
-    scrollThickness: Int
+    sliderAdapter: SliderAdapter, setContainerSize: (Int) -> Unit, scrollThickness: Int
 ) = MeasurePolicy { measurables, constraints ->
     setContainerSize(constraints.maxWidth)
     val pixelRange = sliderAdapter.thumbPixelRange
@@ -434,8 +420,7 @@ private fun horizontalMeasurePolicy(
     } else {
         val placeable = measurables.first().measure(
             Constraints.fixed(
-                pixelRange.size,
-                constraints.constrainHeight(scrollThickness)
+                pixelRange.size, constraints.constrainHeight(scrollThickness)
             )
         )
         layout(constraints.maxWidth, placeable.height) {
@@ -486,8 +471,7 @@ private fun Modifier.scrollOnPressTrack(
     }
     Modifier.pointerInput(scroller) {
         detectScrollViaTrackGestures(
-            isVertical = isVertical,
-            scroller = scroller
+            isVertical = isVertical, scroller = scroller
         )
     }
 }
@@ -534,8 +518,7 @@ private class TrackPressScroller(
     private suspend fun scrollTowardsCurrentOffset() {
         offset?.let {
             val currentDirection = directionOfScrollTowards(it)
-            if (currentDirection != direction)
-                return
+            if (currentDirection != direction) return
             with(sliderAdapter.adapter) {
                 scrollTo(scrollOffset + currentDirection * viewportSize)
             }
@@ -564,8 +547,7 @@ private class TrackPressScroller(
         this.offset = offset
         this.direction = directionOfScrollTowards(offset)
 
-        if (direction != 0)
-            startScrolling()
+        if (direction != 0) startScrolling()
     }
 
     /**
@@ -606,8 +588,7 @@ private class TrackPressScroller(
  * gesture and calls the corresponding methods in the [scroller].
  */
 private suspend fun PointerInputScope.detectScrollViaTrackGestures(
-    isVertical: Boolean,
-    scroller: TrackPressScroller
+    isVertical: Boolean, scroller: TrackPressScroller
 ) {
     fun Offset.onScrollAxis() = if (isVertical) y else x
 
@@ -616,11 +597,8 @@ private suspend fun PointerInputScope.detectScrollViaTrackGestures(
         scroller.onPress(down.position.onScrollAxis())
 
         while (true) {
-            val drag =
-                if (isVertical)
-                    awaitVerticalDragOrCancellation(down.id)
-                else
-                    awaitHorizontalDragOrCancellation(down.id)
+            val drag = if (isVertical) awaitVerticalDragOrCancellation(down.id)
+            else awaitHorizontalDragOrCancellation(down.id)
 
             if (drag == null) {
                 scroller.onGestureCancelled()
@@ -628,8 +606,7 @@ private suspend fun PointerInputScope.detectScrollViaTrackGestures(
             } else if (!drag.pressed) {
                 scroller.onRelease()
                 break
-            } else
-                scroller.onMovePressed(drag.position.onScrollAxis())
+            } else scroller.onMovePressed(drag.position.onScrollAxis())
         }
     }
 }
@@ -730,8 +707,7 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
     // translates to rows/columns of items.
 
     class VisibleLine(
-        val index: Int,
-        val offset: Int
+        val index: Int, val offset: Int
     )
 
     /**
@@ -771,10 +747,8 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
 
     @JsName("averageVisibleLineSizeProperty")
     private val averageVisibleLineSize by derivedStateOf {
-        if (totalLineCount() == 0)
-            0.0
-        else
-            averageVisibleLineSize()
+        if (totalLineCount() == 0) 0.0
+        else averageVisibleLineSize()
     }
 
     private val averageVisibleLineSizeWithSpacing get() = averageVisibleLineSize + lineSpacing
@@ -795,9 +769,7 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
     override val contentSize: Double
         get() {
             val totalLineCount = totalLineCount()
-            return averageVisibleLineSize * totalLineCount +
-                    lineSpacing * (totalLineCount - 1).coerceAtLeast(0) +
-                    contentPadding()
+            return averageVisibleLineSize * totalLineCount + lineSpacing * (totalLineCount - 1).coerceAtLeast(0) + contentPadding()
         }
 
     override suspend fun scrollTo(scrollOffset: Double) {
@@ -818,14 +790,10 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
     private suspend fun snapTo(scrollOffset: Double) {
         val scrollOffsetCoerced = scrollOffset.coerceIn(0.0, maxScrollOffset)
 
-        val index = (scrollOffsetCoerced / averageVisibleLineSizeWithSpacing)
-            .toInt()
-            .coerceAtLeast(0)
+        val index = (scrollOffsetCoerced / averageVisibleLineSizeWithSpacing).toInt().coerceAtLeast(0)
             .coerceAtMost(totalLineCount() - 1)
 
-        val offset = (scrollOffsetCoerced - index * averageVisibleLineSizeWithSpacing)
-            .toInt()
-            .coerceAtLeast(0)
+        val offset = (scrollOffsetCoerced - index * averageVisibleLineSizeWithSpacing).toInt().coerceAtLeast(0)
 
         snapToLine(lineIndex = index, scrollOffset = offset)
     }
@@ -841,10 +809,8 @@ internal class LazyListScrollAreaState(
 
     override val viewportSize: Double
         get() = with(scrollState.layoutInfo) {
-            if (orientation == Orientation.Vertical)
-                viewportSize.height
-            else
-                viewportSize.width
+            if (orientation == Orientation.Vertical) viewportSize.height
+            else viewportSize.width
         }.toDouble()
 
     /**
@@ -872,12 +838,8 @@ internal class LazyListScrollAreaState(
                 val second = this[1]
                 // If either the indices or the offsets aren't continuous, then the first item is
                 // sticky, so we return 1
-                if ((first.index < second.index - 1) ||
-                    (first.offset + first.size + lineSpacing > second.offset)
-                )
-                    1
-                else
-                    0
+                if ((first.index < second.index - 1) || (first.offset + first.size + lineSpacing > second.offset)) 1
+                else 0
             }
         }
     }
@@ -886,8 +848,7 @@ internal class LazyListScrollAreaState(
         val firstFloatingVisibleIndex = firstFloatingVisibleItemIndex() ?: return null
         val firstFloatingItem = scrollState.layoutInfo.visibleItemsInfo[firstFloatingVisibleIndex]
         return VisibleLine(
-            index = firstFloatingItem.index,
-            offset = firstFloatingItem.offset
+            index = firstFloatingItem.index, offset = firstFloatingItem.offset
         )
     }
 
@@ -926,10 +887,8 @@ internal class LazyGridScrollAreaScrollAreaState(
 
     override val viewportSize: Double
         get() = with(scrollState.layoutInfo) {
-            if (orientation == Orientation.Vertical)
-                viewportSize.height
-            else
-                viewportSize.width
+            if (orientation == Orientation.Vertical) viewportSize.height
+            else viewportSize.width
         }.toDouble()
 
     private val isVertical: Boolean
@@ -954,8 +913,7 @@ internal class LazyGridScrollAreaScrollAreaState(
         val orientation = scrollState.layoutInfo.orientation
 
         // count all unique columns or rows of the respective orientation
-        scrollState.layoutInfo.visibleItemsInfo
-            .distinctBy { if (orientation == Orientation.Vertical) it.column else it.row }
+        scrollState.layoutInfo.visibleItemsInfo.distinctBy { if (orientation == Orientation.Vertical) it.column else it.row }
             .count()
     }
 
@@ -964,22 +922,18 @@ internal class LazyGridScrollAreaScrollAreaState(
     private fun indexOfFirstInLine(line: Int): Int = line * slotsPerLine
 
     override fun firstVisibleLine(): VisibleLine? {
-        return scrollState.layoutInfo.visibleItemsInfo
-            .firstOrNull { it.line() != unknownLine } // Skip exiting items
+        return scrollState.layoutInfo.visibleItemsInfo.firstOrNull { it.line() != unknownLine } // Skip exiting items
             ?.let { firstVisibleItem ->
                 VisibleLine(
-                    index = firstVisibleItem.line(),
-                    offset = firstVisibleItem.mainAxisOffset()
+                    index = firstVisibleItem.line(), offset = firstVisibleItem.mainAxisOffset()
                 )
             }
     }
 
     override fun totalLineCount(): Int {
         val itemCount = scrollState.layoutInfo.totalItemsCount
-        return if (itemCount == 0)
-            0
-        else
-            lineOfIndex(itemCount - 1) + 1
+        return if (itemCount == 0) 0
+        else lineOfIndex(itemCount - 1) + 1
     }
 
     override fun contentPadding() = with(scrollState.layoutInfo) {
@@ -988,8 +942,7 @@ internal class LazyGridScrollAreaScrollAreaState(
 
     override suspend fun snapToLine(lineIndex: Int, scrollOffset: Int) {
         scrollState.scrollToItem(
-            index = indexOfFirstInLine(lineIndex),
-            scrollOffset = scrollOffset
+            index = indexOfFirstInLine(lineIndex), scrollOffset = scrollOffset
         )
     }
 
@@ -1000,26 +953,20 @@ internal class LazyGridScrollAreaScrollAreaState(
     override fun averageVisibleLineSize(): Double {
         val visibleItemsInfo = scrollState.layoutInfo.visibleItemsInfo
         val indexOfFirstKnownLineItem = visibleItemsInfo.indexOfFirst { it.line() != unknownLine }
-        if (indexOfFirstKnownLineItem == -1)
-            return 0.0
+        if (indexOfFirstKnownLineItem == -1) return 0.0
         val reallyVisibleItemsInfo =  // Non-exiting visible items
             visibleItemsInfo.subList(indexOfFirstKnownLineItem, visibleItemsInfo.size)
 
         // Compute the size of the last line
         val lastLine = reallyVisibleItemsInfo.last().line()
-        val lastLineSize = reallyVisibleItemsInfo
-            .asReversed()
-            .asSequence()
-            .takeWhile { it.line() == lastLine }
+        val lastLineSize = reallyVisibleItemsInfo.asReversed().asSequence().takeWhile { it.line() == lastLine }
             .maxOf { it.mainAxisSize() }
 
         val first = reallyVisibleItemsInfo.first()
         val last = reallyVisibleItemsInfo.last()
         val lineCount = last.line() - first.line() + 1
         val lineSpacingSum = (lineCount - 1) * lineSpacing
-        return (
-                last.mainAxisOffset() + lastLineSize - first.mainAxisOffset() - lineSpacingSum
-                ).toDouble() / lineCount
+        return (last.mainAxisOffset() + lastLineSize - first.mainAxisOffset() - lineSpacingSum).toDouble() / lineCount
     }
 
     override val lineSpacing get() = scrollState.layoutInfo.mainAxisItemSpacing
@@ -1037,10 +984,8 @@ internal class SliderAdapter internal constructor(
     private val visiblePart: Double
         get() {
             val contentSize = contentSize
-            return if (contentSize == 0.0)
-                1.0
-            else
-                (adapter.viewportSize / contentSize).coerceAtMost(1.0)
+            return if (contentSize == 0.0) 1.0
+            else (adapter.viewportSize / contentSize).coerceAtMost(1.0)
         }
 
     val thumbSize
@@ -1089,11 +1034,9 @@ internal class SliderAdapter internal constructor(
                 val dragDelta = if (isVertical) offset.y else offset.x
                 val maxScrollPosition = adapter.maxScrollOffset * scrollScale
                 val currentPosition = position
-                val targetPosition =
-                    (currentPosition + dragDelta + unscrolledDragDistance).coerceIn(
-                        0.0,
-                        maxScrollPosition
-                    )
+                val targetPosition = (currentPosition + dragDelta + unscrolledDragDistance).coerceIn(
+                    0.0, maxScrollPosition
+                )
                 val sliderDelta = targetPosition - currentPosition
 
                 // Have to add to position for smooth content scroll if the items are of different size

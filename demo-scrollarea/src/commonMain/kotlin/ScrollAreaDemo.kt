@@ -2,27 +2,16 @@ package com.composables.core.demo
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -33,15 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.core.ScrollArea
-import com.composables.core.Thumb
-import com.composables.core.ThumbVisibility
-import com.composables.core.VerticalScrollbar
-import com.composables.core.rememberScrollAreaState
+import com.composables.core.*
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ScrollAreaDemo() {
+    ScrollAreaDemo(ScrollableDefaults.overscrollEffect())
+}
+
+@Composable
+fun ScrollAreaDemo(overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect()) {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
@@ -76,9 +66,9 @@ fun ScrollAreaDemo() {
         )
 
         val state = rememberScrollState()
-
         ScrollArea(
             state = rememberScrollAreaState(state),
+            overscrollEffect = overscrollEffect,
             modifier = Modifier
                 .widthIn(max = 400.dp)
                 .shadow(4.dp, RoundedCornerShape(8.dp))
