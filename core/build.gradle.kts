@@ -121,7 +121,7 @@ afterEvaluate {
                 artifact(javadocJar)
 
                 pom {
-                    name.set("Composables Core")
+                    name.set("Compose Unstyled")
                     description.set("Unstyled, fully accesible Compose Multiplatform components that you can customize to your heart's desire.")
                     url.set("https://${githubUrl}")
                     licenses {

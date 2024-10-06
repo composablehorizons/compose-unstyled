@@ -1,16 +1,16 @@
-site_name: 'Composables Core'
-site_description: "Unstyled, fully accessible Compose Multiplatform components that you can customize to your heart's desire."
-site_url: https://composablescore.com
+site_name: 'Compose Unstyled'
+site_description: "Unstyled, fully accessible Jetpack Compose & Compose Multiplatform components that you can customize to your heart's desire."
+site_url: https://composeunstyled.com
 docs_dir: 'docs'
 
-repo_name: 'Composables Core'
+repo_name: 'Compose Unstyled'
 repo_url: https://github.com/composablehorizons/composables-core/
 
 theme:
   name: material
   custom_dir: docs/overrides
-  favicon: assets/favicon.ico
-  logo: assets/composables.png
+  favicon: assets/favicon.png
+  logo: assets/logo.png
   font:
     text: Fira Sans
     code: Jetbrains Mono

@@ -2,13 +2,11 @@
 hide: -navigation -toc 
 ---
 
-# Composables Core
+# Compose Unstyled
 
 Unstyled, fully accessible components for Jetpack Compose & Compose Multiplatform that you can customize to your heart's content.
 
 Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and any other platform Compose can run on.
-
-[💬 Ask questions on Discord](https://discord.com/channels/1264922125920374905/1264949180967686284)
 
 <style>
   img {
@@ -93,7 +91,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
   <div class="testimonial-content">
     <div class="testimonial-text">
-      "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your composables core one and it fixed multiple issues 🎉"
+      "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your Compose Unstyled one and it fixed multiple issues 🎉"
     </div>
     <div class="testimonial-author">
       <h3>Matt Kula</h3>
@@ -108,7 +106,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
   <div class="testimonial-content">
     <div class="testimonial-text">
-"Ever since Composables Core was pointed out to me I use that one.
+"Ever since Compose Unstyled was pointed out to me I use that one.
 Simpler API, and it actually works. I like it a lot, after continuously having something broken with the (Material Compose) bottom sheets."  
     </div>
     <div class="testimonial-author">
@@ -145,7 +143,7 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     </div>
     <div class="testimonial-author">
       <h3>Alex Styl</h3>
-      <p>Author of Composables Core</p>
+      <p>Author of Compose Unstyled</p>
     </div>
   </div>
 </div>

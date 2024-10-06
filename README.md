@@ -1,6 +1,6 @@
-# Composables Core
+# Compose Unstyled
 
-Unstyled, fully accessible Compose Multiplatform UI components that you can customize to your heart's content.
+Unstyled, fully accessible Jetpack Compose and Compose Multiplatform UI components that you can customize to your heart's content.
 
 ## Installation
 
@@ -16,7 +16,7 @@ dependencies {
 
 ## Documentation
 
-For full documentation, checkout: https://composablescore.com/
+For full documentation, checkout: https://composeunstyled.com/
 
 ## Contributing
 
