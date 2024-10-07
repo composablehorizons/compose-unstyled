@@ -131,7 +131,6 @@ Simpler API, and it actually works. I like it a lot, after continuously having s
   </div>
 </div>
 
-
 <div class="testimonial-container">
   <div class="testimonial-image">
     <img src="/testimonials/alexstyl.jpg" alt="Alex Styl">
@@ -155,6 +154,7 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     font-family: Arial, sans-serif;
     padding-top: 8px;
     padding-bottom: 8px;
+    flex-wrap: wrap;
   }
   .testimonial-image {
     flex: 0 0 192px;
@@ -188,7 +188,30 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     opacity: 0.8;
   }
 
-  /* These variables should be defined in your global CSS for light/dark mode */
+  @media (max-width: 768px) {
+    .testimonial-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .testimonial-image {
+      max-width: 100px;
+      height: 100px;
+      flex: 0 0 100px;
+    }
+    .testimonial-content {
+      padding: 10px;
+    }
+    .testimonial-text {
+      font-size: 16px;
+    }
+    .testimonial-author h3 {
+      font-size: 18px;
+    }
+    .testimonial-author p {
+      font-size: 14px;
+    }
+  }
+
   :root {
     --background-color: #ffffff;
     --text-color: #000000;
