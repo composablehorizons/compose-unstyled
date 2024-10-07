@@ -69,7 +69,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
 
   <div>
-      <a href="scroll-area">
+      <a href="scrollarea">
         <img src="preview_scroll_area.png" alt="Scroll Area Preview">
       </a>
       <div>Scroll Area</div>
