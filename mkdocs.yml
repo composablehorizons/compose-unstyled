@@ -43,7 +43,7 @@ nav:
     - 'Bottom Sheet' : bottom-sheet.md
     - 'Bottom Sheet (Modal)' : modal-bottom-sheet.md
     - 'Dialog' : dialog.md
-    - 'Dropdown (Menu)' : menu.md
+    - 'Dropdown (Menu)' : dropdown-menu.md
     - 'Icon' : icon.md
     - 'Scroll Area (Scrollbars)' : scroll-area.md
     - 'Separators' : separators.md

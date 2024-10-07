@@ -1,5 +1,5 @@
 ---
-title: Unstyled Jetpack Compose Modal Bottom Sheet component
+title: Modal Bottom Sheet
 description: A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with styling features without compromising on accessibility or keyboard interactions.
 ---
 # Bottom Sheet (Modal)

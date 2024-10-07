@@ -55,7 +55,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
 
   <div>
-    <a href="menu">
+    <a href="dropdown-menu">
       <img src="preview_menu.png" alt="Menu Preview">
     </a>
     <div>Dropdown Menu</div>

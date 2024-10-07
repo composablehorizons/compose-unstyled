@@ -1,5 +1,5 @@
 ---
-title: Unstyled Jetpack Scroll Area component (with Scrollbars)
+title: Scroll Area (with Scrollbars)
 description: Scroll Area can be used to add Scrollbars to any scrollable components.
 ---
 

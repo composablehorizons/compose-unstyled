@@ -1,5 +1,5 @@
 ---
-title: Unstyled Jetpack Compose Separator components
+title: Separators
 description: Horizontal and Vertical separator component for visually separating content.
 ---
 
