@@ -91,7 +91,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
   <div class="testimonial-content">
     <div class="testimonial-text">
-      "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your Compose Unstyled one and it fixed multiple issues 🎉"
+      "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your Compose Unstyled one and <a class="highlight" href="/modal-bottom-sheet">it fixed multiple issues 🎉</a>"
     </div>
     <div class="testimonial-author">
       <h3>Matt Kula</h3>
@@ -107,7 +107,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   <div class="testimonial-content">
     <div class="testimonial-text">
 "Ever since Compose Unstyled was pointed out to me I use that one.
-Simpler API, and it actually works. I like it a lot, after continuously having something broken with the (Material Compose) bottom sheets."  
+<a class="highlight" href="/modal-bottom-sheet">Simpler API, and it actually works.</a> I like it a lot, after continuously having something broken with the (Material Compose) bottom sheets."  
     </div>
     <div class="testimonial-author">
       <h3>Jacob Ras</h3>
@@ -122,7 +122,7 @@ Simpler API, and it actually works. I like it a lot, after continuously having s
   </div>
   <div class="testimonial-content">
     <div class="testimonial-text">
-"This man did, what Googlers couldn't in 3 years of scrollbars "being on the roadmap" #androiddev"  
+"This man did, what Googlers couldn't in 3 years of <a class="highlight" href="/scrollarea">scrollbars</a> "being on the roadmap" #androiddev"  
     </div>
     <div class="testimonial-author">
       <h3>Jacob Ras</h3>
@@ -137,7 +137,7 @@ Simpler API, and it actually works. I like it a lot, after continuously having s
   </div>
   <div class="testimonial-content">
     <div class="testimonial-text">
-      "I wrote this library, so this will be biased 😁. I was tired of dealing with Material Compose sheets and dialogs issues, so I decided to write my own from scratch.
+      "I wrote this library, so this will be biased 😁. I was tired of dealing with Material Compose sheets and dialogs issues, <a class="highlight" href="/bottom-sheet">so I decided</a> <a class="highlight" href="/modal-bottom-sheet">to write my own</a> <a class="highlight" href="/dialog">from scratch</a>.
 Plus, I needed high-quality, non-Material looking components for my Compose Multiplatform (desktop) apps, hence this library was born."
     </div>
     <div class="testimonial-author">
@@ -148,6 +148,19 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
 </div>
 
 <style>
+     .highlight {
+        background: #fce74c; /* Softer, nicer yellow */
+        padding: 0 2px; /* Adds some space around the text */
+        border-radius: 3px; /* Slightly rounds the corners */
+        box-shadow: 0 0 5px rgba(252, 231, 76, 0.5); /* Creates a glowing effect */
+        color: black; /* Sets the text color to black */
+        font-weight: bold; /* Optional: makes the text bolder for emphasis */
+    }
+    
+    .highlight a {
+        color: black; /* Sets the link text color to black */
+        text-decoration: none; /* Optional: removes underline from link */
+    }
   .testimonial-container {
     display: flex;
     max-width: 800px;
