@@ -4,7 +4,7 @@ description: A stackable, renderless, highly performant foundational component t
 ---
 # Dialog
 
-An unstyled Dialog component for Jetpack Compose that can be used to implement Dialogs with the styling of your choice.
+An unstyled Dialog component that can be used to implement Dialogs with the styling of your choice.
 
 Fully accessible, supports animations, offers consistent behavior across platforms and an optional background scrim.
 
