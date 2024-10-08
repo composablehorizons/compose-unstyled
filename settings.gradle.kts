@@ -1,4 +1,4 @@
-rootProject.name = "ComposablesCore"
+rootProject.name = "ComposeUnstyled"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
