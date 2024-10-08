@@ -355,8 +355,7 @@ fun ScrollbarScope.Thumb(
         val isHovered by mutableInteractionSource.collectIsHoveredAsState()
         val isDraggingList by scrollAreaState.interactionSource.collectIsDraggedAsState()
 
-
-        LaunchedEffect(show) {
+        LaunchedEffect(show, isDraggingList) {
             if (show) {
                 delay(thumbVisibility.hideDelay)
                 show = false
