@@ -94,7 +94,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
       "@alexstyl just wanted to let you know that we just transition from M3 Modal Bottom Sheet to your Compose Unstyled one and <a class="highlight" href="/modal-bottom-sheet">it fixed multiple issues 🎉</a>"
     </div>
     <div class="testimonial-author">
-      <h3>Matt Kula</h3>
+      <div>Matt Kula</div>
       <p>Android @ Warner Music Group</p>
     </div>
   </div>
@@ -110,7 +110,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 <a class="highlight" href="/modal-bottom-sheet">Simpler API, and it actually works.</a> I like it a lot, after continuously having something broken with the (Material Compose) bottom sheets."  
     </div>
     <div class="testimonial-author">
-      <h3>Jacob Ras</h3>
+      <div>Jacob Ras</div>
       <p>Android Engineer @ Albert Heijn</p>
     </div>
   </div>
@@ -125,7 +125,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 "This man did, what Googlers couldn't in 3 years of <a class="highlight" href="/scrollarea">scrollbars</a> "being on the roadmap" #androiddev"  
     </div>
     <div class="testimonial-author">
-      <h3>Gabor Varadi</h3>
+      <div>Gabor Varadi</div>
       <p>EpicPandaForce @ SO</p>
     </div>
   </div>
@@ -141,7 +141,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 Plus, I needed high-quality, non-Material looking components for my Compose Multiplatform (desktop) apps, hence this library was born."
     </div>
     <div class="testimonial-author">
-      <h3>Alex Styl</h3>
+      <div>Alex Styl</div>
       <p>Author of Compose Unstyled</p>
     </div>
   </div>
@@ -149,17 +149,17 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
 
 <style>
      .highlight {
-        background: #fce74c; /* Softer, nicer yellow */
-        padding: 0 2px; /* Adds some space around the text */
-        border-radius: 3px; /* Slightly rounds the corners */
-        box-shadow: 0 0 5px rgba(252, 231, 76, 0.5); /* Creates a glowing effect */
-        color: black; /* Sets the text color to black */
-        font-weight: bold; /* Optional: makes the text bolder for emphasis */
+        background: #fce74c; 
+        padding: 0 2px;
+        border-radius: 3px;
+        box-shadow: 0 0 5px rgba(252, 231, 76, 0.5); 
+        color: black;
+        font-weight: bold;
     }
     
     .highlight a {
-        color: black; /* Sets the link text color to black */
-        text-decoration: none; /* Optional: removes underline from link */
+        color: black;
+        text-decoration: none; 
     }
   .testimonial-container {
     display: flex;
@@ -178,7 +178,7 @@ Plus, I needed high-quality, non-Material looking components for my Compose Mult
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px; /* Rounded corners for the image */
+    border-radius: 10px; 
   }
   .testimonial-content {
     flex: 1;
