@@ -125,7 +125,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 "This man did, what Googlers couldn't in 3 years of <a class="highlight" href="/scrollarea">scrollbars</a> "being on the roadmap" #androiddev"  
     </div>
     <div class="testimonial-author">
-      <h3>Jacob Ras</h3>
+      <h3>Gabor Varadi</h3>
       <p>EpicPandaForce @ SO</p>
     </div>
   </div>
