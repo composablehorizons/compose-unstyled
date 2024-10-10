@@ -9,5 +9,6 @@ fun MainViewController() = ComposeUIViewController {
 //    BottomSheetDemo()
 //    ModalBottomSheetDemo()
 //    SeparatorsDemo()
-    ScrollAreaDemo()
+//    ScrollAreaDemo()
+    ModalBottomSheetDemo()
 }
