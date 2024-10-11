@@ -4,21 +4,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -32,14 +18,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.core.DragIndication
-import com.composables.core.ModalBottomSheet
-import com.composables.core.Scrim
-import com.composables.core.Sheet
-import com.composables.core.SheetDetent
+import com.composables.core.*
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
-import com.composables.core.rememberModalBottomSheetState
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
@@ -78,6 +59,7 @@ fun ModalBottomSheetDemo() {
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
+                    .displayCutoutPadding()
                     .statusBarsPadding()
                     .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                     .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))

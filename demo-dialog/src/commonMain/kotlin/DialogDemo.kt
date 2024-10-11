@@ -8,14 +8,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -64,7 +57,9 @@ fun DialogDemo() {
             }
             Dialog(state = dialogState) {
                 DialogPanel(
-                    modifier = Modifier.systemBarsPadding()
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .systemBarsPadding()
                         .widthIn(min = 280.dp, max = 560.dp)
                         .padding(20.dp)
                         .clip(ComposeTheme.shapes.roundXL)
