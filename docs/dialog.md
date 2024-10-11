@@ -43,7 +43,9 @@ Box {
     }
     Dialog(state = dialogState) {
         DialogPanel(
-            modifier = Modifier.systemBarsPadding()
+            modifier = Modifier
+                .displayCutoutPadding()
+                .systemBarsPadding()
                 .widthIn(min = 280.dp, max = 560.dp)
                 .padding(20.dp)
                 .clip(RoundedCornerShape(12.dp))
@@ -199,13 +201,14 @@ Dialog(state = state) {
 ### Full-screen dialogs
 
 Pass a `Modifier.fillMaxSize()` to the `DialogPanel`'s modifier parameter. Make sure to pass
-the `Modifier.systemBarsPadding()` or any related inset Modifier so that the dialog is not drawn behind any system
+the `Modifier.systemBarsPadding()` and `Modifier.displayCutoutPadding()` or any related inset Modifier so that the dialog is not drawn behind any system
 bars (such as status and navigation bar on Android):
 
 ```kotlin
 Dialog(state = rememberDialogState(visible = true)) {
     DialogPanel(
         modifier = Modifier
+            .displayCutoutPadding()
             .systemBarsPadding()
             .fillMaxSize()
     ) {
