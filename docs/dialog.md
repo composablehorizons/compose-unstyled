@@ -251,8 +251,8 @@ Dialog(rememberDialogState()) {
         val window = LocalModalWindow.current
         LaunchedEffect(Unit) {
             // change system bars to transparent
-            window.navigationBarColor = Color.TRANSPARENT
-            window.statusBarColor = Color.TRANSPARENT
+            window.navigationBarColor = Color.Transparent.toArgb()
+            window.statusBarColor = Color.Transparent.toArgb()
             
             // don't forget to update the icons too
             WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
