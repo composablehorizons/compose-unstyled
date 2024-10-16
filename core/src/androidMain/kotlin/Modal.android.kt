@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentDialog
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.NativeKeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +50,11 @@ internal actual fun Modal(
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
                     CompositionLocalProvider(LocalModalWindow provides localWindow) {
                         Box(Modifier.onKeyEvent(onKeyEvent)) {
+                            BackHandler {
+                                val backKeyDown = NativeKeyEvent(NativeKeyEvent.ACTION_DOWN, NativeKeyEvent.KEYCODE_BACK)
+                                val backPress = KeyEvent(backKeyDown)
+                                onKeyEvent(backPress)
+                            }
                             content()
                         }
                     }
