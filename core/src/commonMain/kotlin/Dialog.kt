@@ -9,19 +9,15 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
@@ -87,19 +83,21 @@ public fun Dialog(
     }
 
     if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
-        Modal {
-            if (properties.dismissOnBackPress) {
-                KeyDownHandler { event ->
-                    return@KeyDownHandler when (event.key) {
-                        Key.Back, Key.Escape -> {
-                            scope.dialogState.visible = false
-                            true
-                        }
-
-                        else -> false
+        val onKeyEvent: ((KeyEvent) -> Boolean) = if (properties.dismissOnBackPress) {
+            { event: KeyEvent ->
+                when (event.key) {
+                    Key.Back, Key.Escape -> {
+                        scope.dialogState.visible = false
+                        true
                     }
+
+                    else -> false
                 }
             }
+        } else {
+            { false }
+        }
+        Modal(onKeyEvent = onKeyEvent) {
             Box(
                 modifier = Modifier.fillMaxSize()
                     .let {

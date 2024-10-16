@@ -4,14 +4,14 @@ import android.os.Build
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentDialog
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCompositionContext
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -23,11 +23,12 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import java.util.UUID
+import java.util.*
 
 @Composable
 internal actual fun Modal(
     protectNavBars: Boolean,
+    onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
 ) {
     val parentView = LocalView.current
@@ -46,7 +47,9 @@ internal actual fun Modal(
                     val localWindow = window
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
                     CompositionLocalProvider(LocalModalWindow provides localWindow) {
-                        content()
+                        Box(Modifier.onKeyEvent(onKeyEvent)) {
+                            content()
+                        }
                     }
                 }
             }

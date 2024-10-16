@@ -11,20 +11,14 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -150,7 +144,26 @@ public fun ModalBottomSheet(
         scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
 
         if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
-            Modal(protectNavBars = true) {
+
+            val onKeyEvent: (KeyEvent) -> Boolean = if (scope.sheetState.isIdle && properties.dismissOnBackPress) {
+                // AnchoredDraggableState jumps to 1.0f progress as soon as we change the current value
+                // while moving. This causes the sheet to disappear instead of animating away nicely.
+                // Because of this, we only manage back presses when the sheet is idle
+                { event ->
+                    when (event.key) {
+                        Key.Back, Key.Escape -> {
+                            scope.sheetState.currentDetent = SheetDetent.Hidden
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+            } else {
+                { false }
+            }
+
+            Modal(protectNavBars = true, onKeyEvent = onKeyEvent) {
                 Box(Modifier
                     .fillMaxSize()
                     .let {
@@ -205,23 +218,6 @@ public fun ModalBottomSheetScope.Sheet(
                 } else {
                     modalState.modalDetent = sheetState.currentDetent
                 }
-            }
-        }
-    }
-
-    val properties = LocalModalProperties.current
-    if (sheetState.isIdle && properties.dismissOnBackPress) {
-        // AnchoredDraggableState jumps to 1.0f progress as soon as we change the current value
-        // while moving. This causes the sheet to disappear instead of animating away nicely.
-        // Because of this, we only manage back presses when the sheet is idle
-        KeyDownHandler { event ->
-            return@KeyDownHandler when (event.key) {
-                Key.Back, Key.Escape -> {
-                    sheetState.currentDetent = SheetDetent.Hidden
-                    true
-                }
-
-                else -> false
             }
         }
     }

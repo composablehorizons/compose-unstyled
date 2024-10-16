@@ -1,3 +1,5 @@
+@file:OptIn(InternalComposeUiApi::class)
+
 package com.composables.core
 
 import androidx.compose.animation.AnimatedVisibility
@@ -12,9 +14,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.*
-import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
@@ -37,54 +40,29 @@ public fun Menu(
 }
 
 @Composable
-public fun Menu(
-    state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit
-) {
+public fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
     val scope = remember(state.expanded) { MenuScope(state) }
     val coroutineScope = rememberCoroutineScope()
-    var hasFocus by remember { mutableStateOf(false) }
 
-    if (hasFocus) {
-        KeyDownHandler { event ->
-            when (event.key) {
-                Key.DirectionDown -> {
-                    if (scope.menuState.expanded.not()) {
-                        scope.menuState.expanded = true
-                        coroutineScope.launch {
-                            // wait for the Popup to be displayed.
-                            // There is no official API to wait for this to happen
-                            delay(50)
-                            state.menuFocusRequester.requestFocus()
-                            state.currentFocusManager?.moveFocus(FocusDirection.Enter)
-                        }
-                        true
-                    } else {
-                        if (state.hasMenuFocus.not()) {
-                            state.menuFocusRequester.requestFocus()
-                            state.currentFocusManager?.moveFocus(FocusDirection.Enter)
-                        } else {
-                            state.currentFocusManager?.moveFocus(FocusDirection.Next)
-                        }
-                        true
+    Box(modifier.onKeyEvent { event ->
+        if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+        when (event.key) {
+            Key.DirectionDown -> {
+                if (scope.menuState.expanded.not()) {
+                    scope.menuState.expanded = true
+                    coroutineScope.launch {
+                        // wait for the Popup to be displayed.
+                        // There is no official API to wait for this to happen
+                        delay(50)
+                        state.menuFocusRequester.requestFocus()
+                        state.currentFocusManager?.moveFocus(FocusDirection.Enter)
                     }
-                }
-
-                Key.DirectionUp -> {
-                    state.currentFocusManager?.moveFocus(FocusDirection.Previous)
                     true
-                }
-
-                Key.Escape -> {
-                    state.expanded = false
-                    state.currentFocusManager?.clearFocus()
-                    true
-                }
-
-                else -> false
+                } else false
             }
+            else -> false
         }
-    }
-    Box(modifier.onFocusChanged { hasFocus = it.hasFocus }) {
+    }) {
         state.currentFocusManager = LocalFocusManager.current
         scope.content()
     }
@@ -200,13 +178,38 @@ public fun MenuScope.MenuContent(
             popupPositionProvider = positionProvider,
         ) {
             menuState.currentFocusManager = LocalFocusManager.current
-            AnimatedVisibility(visibleState = expandedState,
+            AnimatedVisibility(
+                visibleState = expandedState,
                 enter = enter,
                 exit = exit,
                 modifier = Modifier.onFocusChanged {
                     menuState.hasMenuFocus = it.hasFocus
-                }) {
+                }.onKeyEvent { event ->
+                    if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+
+                    return@onKeyEvent when (event.key) {
+                        Key.DirectionDown -> {
+                            menuState.currentFocusManager!!.moveFocus(FocusDirection.Next)
+                            true
+                        }
+
+                        Key.DirectionUp -> {
+                            menuState.currentFocusManager!!.moveFocus(FocusDirection.Previous)
+                            true
+                        }
+
+                        Key.Escape -> {
+                            menuState.expanded = false
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            ) {
                 Column(modifier.focusRequester(menuState.menuFocusRequester)) {
+                    LaunchedEffect(Unit) {
+                        menuState.menuFocusRequester.requestFocus()
+                    }
                     contents()
                 }
             }
