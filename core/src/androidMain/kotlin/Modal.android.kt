@@ -47,7 +47,7 @@ internal actual fun Modal(
                 setParentCompositionContext(composition)
                 setContent {
                     val localWindow = window
-                        ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/composables-core/issues/new")
+                        ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
                     CompositionLocalProvider(LocalModalWindow provides localWindow) {
                         Box(Modifier.onKeyEvent(onKeyEvent)) {
                             BackHandler {

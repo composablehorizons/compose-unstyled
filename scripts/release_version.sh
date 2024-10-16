@@ -46,4 +46,4 @@ git push origin $previous_version
 echo "💯 All done. Working version is $previous_version"
 
 echo "TODO: Open a Github version for $previous_version"
-open https://github.com/composablehorizons/composables-core/releases/new
+open https://github.com/composablehorizons/compose-unstyled/releases/new
