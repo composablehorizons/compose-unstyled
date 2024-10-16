@@ -83,16 +83,13 @@ public fun Dialog(
     }
 
     if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
-        val onKeyEvent: ((KeyEvent) -> Boolean) = if (properties.dismissOnBackPress) {
+        val onKeyEvent = if (properties.dismissOnBackPress) {
             { event: KeyEvent ->
-                when (event.key) {
-                    Key.Back, Key.Escape -> {
-                        scope.dialogState.visible = false
-                        true
-                    }
-
-                    else -> false
+                if (event.key == Key.Back || event.key == Key.Escape) {
+                    scope.dialogState.visible = false
+                    true
                 }
+                else false
             }
         } else {
             { false }

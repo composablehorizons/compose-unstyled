@@ -144,20 +144,12 @@ public fun ModalBottomSheet(
         scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
 
         if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
-
-            val onKeyEvent: (KeyEvent) -> Boolean = if (scope.sheetState.isIdle && properties.dismissOnBackPress) {
-                // AnchoredDraggableState jumps to 1.0f progress as soon as we change the current value
-                // while moving. This causes the sheet to disappear instead of animating away nicely.
-                // Because of this, we only manage back presses when the sheet is idle
-                { event ->
-                    when (event.key) {
-                        Key.Back, Key.Escape -> {
-                            scope.sheetState.currentDetent = SheetDetent.Hidden
-                            true
-                        }
-
-                        else -> false
-                    }
+            val onKeyEvent = if (properties.dismissOnBackPress) {
+                { event: KeyEvent ->
+                    if (event.key == Key.Back || event.key == Key.Escape) {
+                        scope.sheetState.currentDetent = SheetDetent.Hidden
+                        true
+                    } else false
                 }
             } else {
                 { false }
