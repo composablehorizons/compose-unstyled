@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.composables:core:1.15.0")
+    implementation("com.composables:core:1.16.0")
 }
 ```
 
