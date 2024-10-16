@@ -16,9 +16,7 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -146,7 +144,7 @@ public fun ModalBottomSheet(
         if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
             val onKeyEvent = if (properties.dismissOnBackPress) {
                 { event: KeyEvent ->
-                    if (event.key == Key.Back || event.key == Key.Escape) {
+                    if (event.type == KeyEventType.KeyDown && (event.key == Key.Back || event.key == Key.Escape)) {
                         scope.sheetState.currentDetent = SheetDetent.Hidden
                         true
                     } else false
