@@ -213,14 +213,6 @@ public fun ModalBottomSheetScope.Sheet(
             }
         }
     }
-
-    if (hasBeenIntroduced) {
-        LaunchedEffect(sheetState.currentDetent) {
-            if (sheetState.currentDetent == SheetDetent.Hidden && sheetState.targetDetent == sheetState.currentDetent) {
-                modalState.currentDetent = SheetDetent.Hidden
-            }
-        }
-    }
     BottomSheet(
         state = sheetState,
         enabled = enabled,
