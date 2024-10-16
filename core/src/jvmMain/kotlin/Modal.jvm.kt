@@ -1,12 +1,39 @@
 package com.composables.core
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
-import internal.ComposeDialog
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
 internal actual fun Modal(
     protectNavBars: Boolean,
     onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
-) = ComposeDialog(onKeyEvent, content)
+) = androidx.compose.ui.window.Dialog(
+    onDismissRequest = {},
+    properties = DialogProperties(
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
+        usePlatformInsets = false,
+        usePlatformDefaultWidth = false,
+        scrimColor = Color.Transparent
+    ),
+    content = {
+        val focusRequester = remember { FocusRequester() }
+        Box(Modifier.focusRequester(focusRequester).fillMaxSize().onKeyEvent(onKeyEvent)) {
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
+            content()
+        }
+    }
+)
