@@ -15,7 +15,7 @@ plugins {
 
 val publishGroupId = "com.composables"
 val publishArtifactId = "core"
-val publishVersion = "1.17.0"
+val publishVersion = "1.18.0"
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 
 java {
