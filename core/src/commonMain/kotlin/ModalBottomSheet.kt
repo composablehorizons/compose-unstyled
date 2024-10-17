@@ -135,7 +135,7 @@ private val LocalModalProperties = compositionLocalOf<ModalSheetProperties> {
 public fun ModalBottomSheet(
     state: ModalBottomSheetState,
     properties: ModalSheetProperties = ModalSheetProperties(),
-    content: @Composable() (ModalBottomSheetScope.() -> Unit),
+    content: @Composable (ModalBottomSheetScope.() -> Unit),
 ) {
     CompositionLocalProvider(LocalModalProperties provides properties) {
         val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
@@ -189,7 +189,7 @@ public fun ModalBottomSheetScope.Scrim(
 public fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable() (BottomSheetScope.() -> Unit)
+    content: @Composable (BottomSheetScope.() -> Unit)
 ) {
     var hasBeenIntroduced by remember { mutableStateOf(false) }
 

@@ -3,17 +3,14 @@ package com.composables.core
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.OverscrollEffect
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
-import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.overscroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,6 +73,7 @@ fun ScrollArea(
     modifier: Modifier = Modifier,
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
+    @OptIn(ExperimentalFoundationApi::class)
     ScrollArea(
         state = state,
         modifier = modifier,
@@ -85,6 +83,7 @@ fun ScrollArea(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,

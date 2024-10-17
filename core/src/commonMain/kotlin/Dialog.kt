@@ -69,7 +69,7 @@ public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
 public fun Dialog(
     state: DialogState,
     properties: DialogProperties = DialogProperties(),
-    content: @Composable() (DialogScope.() -> Unit)
+    content: @Composable (DialogScope.() -> Unit)
 ) {
     val scope = remember { DialogScope(state) }
     scope.visibleState.targetState = state.visible

@@ -1,5 +1,3 @@
-@file:OptIn(InternalComposeUiApi::class)
-
 package com.composables.core
 
 import androidx.compose.animation.AnimatedVisibility
@@ -25,8 +23,6 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Deprecated("This signature is going away in a future version", ReplaceWith("Menu(state,modifier,contents)"))
 @Composable
@@ -42,7 +38,6 @@ public fun Menu(
 @Composable
 public fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
     val scope = remember(state.expanded) { MenuScope(state) }
-    val coroutineScope = rememberCoroutineScope()
 
     Box(modifier.onKeyEvent { event ->
         if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
@@ -50,16 +45,12 @@ public fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Compo
             Key.DirectionDown -> {
                 if (scope.menuState.expanded.not()) {
                     scope.menuState.expanded = true
-                    coroutineScope.launch {
-                        // wait for the Popup to be displayed.
-                        // There is no official API to wait for this to happen
-                        delay(50)
-                        state.menuFocusRequester.requestFocus()
-                        state.currentFocusManager?.moveFocus(FocusDirection.Enter)
-                    }
                     true
-                } else false
+                } else {
+                    false
+                }
             }
+
             else -> false
         }
     }) {
@@ -202,6 +193,7 @@ public fun MenuScope.MenuContent(
                             menuState.expanded = false
                             true
                         }
+
                         else -> false
                     }
                 }

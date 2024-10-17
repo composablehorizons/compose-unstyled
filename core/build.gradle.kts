@@ -42,7 +42,7 @@ kotlin {
 
     jvm()
 
-    @OptIn(ExperimentalWasmDsl::class) wasmJs {
+    wasmJs {
         browser()
     }
 
@@ -58,10 +58,6 @@ kotlin {
     }
 
     sourceSets {
-        all {
-            languageSettings.optIn("androidx.compose.foundation.ExperimentalFoundationApi")
-            languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
-        }
         val commonMain by getting {
             dependencies {
                 implementation(compose.foundation)
