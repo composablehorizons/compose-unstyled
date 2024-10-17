@@ -74,6 +74,21 @@ value class OverscrollSides private constructor(private val id: Int) {
 fun ScrollArea(
     state: ScrollAreaState,
     modifier: Modifier = Modifier,
+    content: @Composable ScrollAreaScope.() -> Unit
+) {
+    ScrollArea(
+        state = state,
+        modifier = modifier,
+        overscrollEffect = ScrollableDefaults.overscrollEffect(),
+        overscrollEffectSides = listOf(OverscrollSides.Vertical, OverscrollSides.Horizontal),
+        content = content
+    )
+}
+
+@Composable
+fun ScrollArea(
+    state: ScrollAreaState,
+    modifier: Modifier = Modifier,
     overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect(),
     overscrollEffectSides: List<OverscrollSides> = listOf(
         OverscrollSides.Vertical, OverscrollSides.Horizontal
@@ -317,7 +332,8 @@ private fun ScrollAreaScope.ScrollBar(
         }
     }
 
-    Layout(content = { scrollbarScope.thumb() },
+    Layout(
+        content = { scrollbarScope.thumb() },
         modifier = modifier.hoverable(interactionSource = interactionSource).let {
             if (enabled) {
                 it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)

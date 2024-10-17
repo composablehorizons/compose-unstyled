@@ -27,11 +27,6 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ScrollAreaDemo() {
-    ScrollAreaDemo(ScrollableDefaults.overscrollEffect())
-}
-
-@Composable
-fun ScrollAreaDemo(overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect()) {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
@@ -66,9 +61,9 @@ fun ScrollAreaDemo(overscrollEffect: OverscrollEffect? = ScrollableDefaults.over
         )
 
         val state = rememberScrollState()
+
         ScrollArea(
             state = rememberScrollAreaState(state),
-            overscrollEffect = overscrollEffect,
             modifier = Modifier
                 .widthIn(max = 400.dp)
                 .shadow(4.dp, RoundedCornerShape(8.dp))
