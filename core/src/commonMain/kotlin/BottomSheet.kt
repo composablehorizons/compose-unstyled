@@ -4,39 +4,17 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.CoreAnchoredDraggableState
-import androidx.compose.foundation.gestures.CoreDraggableAnchors
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.animateTo
-import androidx.compose.foundation.gestures.coreAnchoredDraggable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.snapTo
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,12 +23,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.Velocity
-import androidx.compose.ui.unit.coerceIn
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -433,26 +406,13 @@ public fun BottomSheetScope.DragIndication(
     }
 
     Box(
-        modifier = modifier
-            .let {
-                if (enabled && state.detents.size > 1) {
-                    it.onKeyEvent { event ->
-                        // manually trigger a click as Compose does not trigger clicks on Space press
-                        return@onKeyEvent if (event.key == Key.Spacebar && event.type == KeyEventType.KeyUp) {
-                            onIndicationClicked()
-                            true
-                        } else
-                            false
-                    }
-                        .clickable(
-                            role = Role.Button,
-                            enabled = enabled,
-                            interactionSource = interactionSource,
-                            indication = indication,
-                            onClickLabel = onClickLabel,
-                            onClick = onIndicationClicked
-                        )
-                } else it
-            }
+        modifier = modifier.clickable(
+            role = Role.Button,
+            enabled = enabled && state.detents.size > 1,
+            interactionSource = interactionSource,
+            indication = indication,
+            onClickLabel = onClickLabel,
+            onClick = onIndicationClicked
+        )
     )
 }
