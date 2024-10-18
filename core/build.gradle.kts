@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import org.jetbrains.compose.internal.utils.getLocalProperty
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
     alias(libs.plugins.compose)
@@ -17,6 +17,12 @@ val publishGroupId = "com.composables"
 val publishArtifactId = "core"
 val publishVersion = "1.18.0"
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
+
+composeCompiler {
+    featureFlags.set(
+        setOf(ComposeFeatureFlag.StrongSkipping.disabled())
+    )
+}
 
 java {
     toolchain {
@@ -118,7 +124,7 @@ afterEvaluate {
 
                 pom {
                     name.set("Compose Unstyled")
-                    description.set("Unstyled, fully accesible Compose Multiplatform components that you can customize to your heart's desire.")
+                    description.set("Unstyled, fully accessible Compose Multiplatform components that you can customize to your heart's desire.")
                     url.set("https://${githubUrl}")
                     licenses {
                         license {
