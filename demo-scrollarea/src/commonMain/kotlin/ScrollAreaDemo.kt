@@ -24,7 +24,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ScrollAreaDemo() {
-    HorizontalScrollAreaDemo()
+    VerticalScrollAreaDemo()
 }
 
 
