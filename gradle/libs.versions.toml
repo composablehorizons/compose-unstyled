@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.0.20"
 compose = "1.7.0"
+composecompiler = "2.0.10"
 agp = "8.2.0"
 composetheme = "1.2.0-alpha"
 composeicons = "1.0.0"
@@ -13,5 +14,5 @@ composeicons = { module = "com.composables:icons-lucide", version.ref = "compose
 [plugins]
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "composecompiler" }
 android-application = { id = "com.android.application", version.ref = "agp" }
