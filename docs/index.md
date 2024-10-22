@@ -35,14 +35,14 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 <div class="image-grid">
     <div>
         <a href="bottom-sheet">
-          <img src="preview_bottom_sheet.png" alt="Bottom Sheet Preview">
+          <img src="preview_bottomsheet.png" alt="Bottom Sheet Preview">
         </a>
         <div>Bottom Sheet</div>
     </div>
 
     <div>
         <a href="modal-bottom-sheet">
-          <img src="preview_modal_bottom_sheet.png" alt="Bottom Sheet (Modal) Preview">
+          <img src="preview_modalbottomsheet.png" alt="Bottom Sheet (Modal) Preview">
         </a>
         <div>Bottom Sheet (Modal)</div>
     </div>
@@ -70,7 +70,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 
   <div>
       <a href="scrollarea">
-        <img src="preview_scroll_area.png" alt="Scroll Area Preview">
+        <img src="preview_scrollarea.png" alt="Scroll Area Preview">
       </a>
       <div>Scroll Area</div>
   </div>
