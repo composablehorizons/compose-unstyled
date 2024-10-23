@@ -146,7 +146,7 @@ public class BottomSheetState internal constructor(
 
     internal var closestDentToTop: Float by mutableStateOf(Float.NaN)
 
-    internal var containerHeight = Float.NaN
+    internal var fullContentHeight = Float.NaN
 
     internal val coreAnchoredDraggableState = CoreAnchoredDraggableState(
         initialValue = initialDetent,
@@ -180,11 +180,11 @@ public class BottomSheetState internal constructor(
         get() = coreAnchoredDraggableState.progress
 
     public val offset: Float by derivedStateOf {
-        if (coreAnchoredDraggableState.offset.isNaN()) {
+        if (coreAnchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
             1f
         } else {
             val offsetFromTop = coreAnchoredDraggableState.offset - closestDentToTop
-            1f - (offsetFromTop / containerHeight)
+            fullContentHeight - offsetFromTop
         }
     }
 
@@ -222,25 +222,22 @@ public fun BottomSheet(
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
-        state.containerHeight = Float.NaN
+        state.fullContentHeight = Float.NaN
 
         val density = LocalDensity.current
 
         Box(
             modifier = Modifier.matchParentSize()
-                .onSizeChanged {
-                    containerHeight = with(density) { it.height.toDp() }
-                    state.containerHeight = it.height.toFloat()
-                }
+                .onSizeChanged { containerHeight = with(density) { it.height.toDp() } }
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .let {
                         if (containerHeight != Dp.Unspecified) {
-                            it.onSizeChanged {
-                                val sheetHeight = with(density) { it.height.toDp() }
-
+                            it.onSizeChanged { sheetSize ->
+                                val sheetHeight = with(density) { sheetSize.height.toDp() }
+                                state.fullContentHeight = sheetSize.height.toFloat()
                                 val anchors = CoreDraggableAnchors {
                                     with(density) {
                                         state.closestDentToTop = Float.NaN
