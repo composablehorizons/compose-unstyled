@@ -127,17 +127,23 @@ public class ModalBottomSheetScope internal constructor(
     internal val visibleState = MutableTransitionState(false)
 }
 
-private val LocalModalProperties = compositionLocalOf<ModalSheetProperties> {
-    error("Modal properties not initialized")
+private class ModalContext(val onDismissRequest: () -> Unit)
+
+private val LocalModalContext = compositionLocalOf<ModalContext> {
+    error("Modal not initialized")
 }
+val DoNothing: () -> Unit = {}
 
 @Composable
 public fun ModalBottomSheet(
     state: ModalBottomSheetState,
     properties: ModalSheetProperties = ModalSheetProperties(),
+    onDismiss: () -> Unit = DoNothing,
     content: @Composable (ModalBottomSheetScope.() -> Unit),
 ) {
-    CompositionLocalProvider(LocalModalProperties provides properties) {
+    val currentCallback by rememberUpdatedState(onDismiss)
+
+    CompositionLocalProvider(LocalModalContext provides ModalContext(currentCallback)) {
         val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
         scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
 
@@ -201,9 +207,11 @@ public fun ModalBottomSheetScope.Sheet(
     }
 
     if (hasBeenIntroduced) {
+        val context = LocalModalContext.current
         LaunchedEffect(sheetState.isIdle) {
             if (sheetState.isIdle) {
                 if (sheetState.currentDetent == SheetDetent.Hidden) {
+                    context.onDismissRequest()
                     modalState.modalDetent = SheetDetent.Hidden
                 } else {
                     modalState.modalDetent = sheetState.currentDetent

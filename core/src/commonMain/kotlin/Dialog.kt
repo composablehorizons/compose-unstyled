@@ -69,21 +69,19 @@ public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
 public fun Dialog(
     state: DialogState,
     properties: DialogProperties = DialogProperties(),
+    onDismiss: () -> Unit = DoNothing,
     content: @Composable (DialogScope.() -> Unit)
 ) {
     val scope = remember { DialogScope(state) }
     scope.visibleState.targetState = state.visible
 
-    LaunchedEffect(scope.visibleState.currentState) {
-        if (scope.visibleState.isIdle && scope.visibleState.currentState.not()) {
-            scope.dialogState.visible = false
-        }
-    }
+    val currentDismiss by rememberUpdatedState(onDismiss)
 
     if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
         val onKeyEvent = if (properties.dismissOnBackPress) {
             { event: KeyEvent ->
                 if (event.type == KeyEventType.KeyDown && (event.key == Key.Back || event.key == Key.Escape)) {
+                    currentDismiss()
                     scope.dialogState.visible = false
                     true
                 } else false
@@ -96,7 +94,12 @@ public fun Dialog(
                 modifier = Modifier.fillMaxSize()
                     .let {
                         if (properties.dismissOnClickOutside) {
-                            it.pointerInput(Unit) { detectTapGestures { scope.dialogState.visible = false } }
+                            it.pointerInput(Unit) {
+                                detectTapGestures {
+                                    currentDismiss()
+                                    scope.dialogState.visible = false
+                                }
+                            }
                         } else it
                     },
                 contentAlignment = Alignment.Center
