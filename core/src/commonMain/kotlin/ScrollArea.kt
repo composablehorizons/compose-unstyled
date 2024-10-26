@@ -101,7 +101,7 @@ fun ScrollArea(
         Box(modifier.nestedScroll(remember {
             object : NestedScrollConnection {
                 override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-                    if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                    if (source == NestedScrollSource.UserInput && overscrollEffect != null) {
                         // they are scrolling past a dead-end
                         // forward to overscrollEffect's direction they are trying to go
 
@@ -129,7 +129,7 @@ fun ScrollArea(
                     scope.launch {
                         scrollEvents.emit(Unit)
                     }
-                    if (source == NestedScrollSource.Drag && overscrollEffect != null) {
+                    if (source == NestedScrollSource.UserInput && overscrollEffect != null) {
                         // they have already started scrolling
                         // forward to overscrollEffect's opposite direction they are trying to go
 
