@@ -40,9 +40,10 @@ The menu's dropdown visibility is handled for you thanks to the `Menu`'s interna
 ```kotlin
 val options = listOf("United States", "Greece", "Indonesia", "United Kingdom")
 var selected by remember { mutableStateOf(0) }
+val state = rememberMenuState(expanded = true)
 
 Column(Modifier.fillMaxSize()) {
-    Menu(Modifier.align(Alignment.End)) {
+    Menu(state, modifier = Modifier.align(Alignment.End)) {
         MenuButton(
             Modifier.clip(RoundedCornerShape(6.dp))
                 .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))
@@ -62,7 +63,7 @@ Column(Modifier.fillMaxSize()) {
                 .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
                 .background(Color.White)
                 .padding(4.dp),
-            hideTransition = fadeOut()
+            exit = fadeOut()
         ) {
             options.forEachIndexed { index, option ->
                 MenuItem(
@@ -216,14 +217,14 @@ Material Design scales and fades the dropdown in and out.
 ```kotlin  hl_lines="3 4"
 MenuContent(
     modifier = Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp)).background(Color.White).padding(4.dp),
-    showTransition = scaleIn(tween(durationMillis = 120, easing = LinearOutSlowInEasing), initialScale = 0.8f, transformOrigin = TransformOrigin(0f, 0f)) + fadeIn(tween(durationMillis = 30)),
-    hideTransition = scaleOut(tween(durationMillis = 1, delayMillis = 75), targetScale = 1f) + fadeOut(tween(durationMillis = 75))
+    enter = scaleIn(tween(durationMillis = 120, easing = LinearOutSlowInEasing), initialScale = 0.8f, transformOrigin = TransformOrigin(0f, 0f)) + fadeIn(tween(durationMillis = 30)),
+    exit = scaleOut(tween(durationMillis = 1, delayMillis = 75), targetScale = 1f) + fadeOut(tween(durationMillis = 75))
 ) {
     MenuItem(onClick = { /* TODO */ }) {
-        Basictext("Option 1")
+        BasicText("Option 1")
     }
     MenuItem(onClick = { /* TODO */ }) {
-        Basictext("Option 2")
+        BasicText("Option 2")
     }
 }
 
@@ -234,9 +235,9 @@ MenuContent(
 macOS shows the menu instantly on click, and quickly fades the menu out when dismissed:
 
 ```kotlin  hl_lines="1"
-MenuContent(hideTransition = fadeOut(tween(durationMillis = 100, easing = LinearEasing))) {
+MenuContent(exit = fadeOut(tween(durationMillis = 100, easing = LinearEasing))) {
     MenuItem(onClick = { /* TODO */ }) {
-        Basictext("Option 1")
+        BasicText("Option 1")
     }
 }
 ```
