@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
@@ -34,7 +35,8 @@ public fun rememberModalBottomSheetState(
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
     velocityThreshold: () -> Dp = { 125.dp },
-    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp }
+    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
+    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
 ): ModalBottomSheetState {
     val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
     val sheetState = rememberBottomSheetState(
@@ -43,7 +45,7 @@ public fun rememberModalBottomSheetState(
         animationSpec = animationSpec,
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
-        decayAnimationSpec = rememberSplineBasedDecay(),
+        decayAnimationSpec = decayAnimationSpec,
     )
     return rememberSaveable(
         saver = mapSaver(
