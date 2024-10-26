@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.composables.core
 
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.*
@@ -30,11 +35,11 @@ import kotlinx.coroutines.launch
 
 private fun Saver(
     animationSpec: AnimationSpec<Float>,
-    density: Density,
     coroutineScope: CoroutineScope,
     sheetDetents: List<SheetDetent>,
     velocityThreshold: () -> Float,
     positionalThreshold: (totalDistance: Float) -> Float,
+    decayAnimationSpec: DecayAnimationSpec<Float>,
 ): Saver<BottomSheetState, *> = mapSaver(save = { mapOf("detent" to it.currentDetent.identifier) }, restore = { map ->
     val selectedDetentName = map["detent"]
     BottomSheetState(
@@ -44,6 +49,7 @@ private fun Saver(
         animationSpec = animationSpec,
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
+        decayAnimationSpec = decayAnimationSpec,
     )
 })
 
@@ -52,6 +58,7 @@ public fun rememberBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
+    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
     velocityThreshold: () -> Dp = { 125.dp },
     positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp }
 ): BottomSheetState {
@@ -60,9 +67,8 @@ public fun rememberBottomSheetState(
     return rememberSaveable(
         saver = Saver(
             animationSpec = animationSpec,
-            density = density,
-            sheetDetents = detents,
             coroutineScope = scope,
+            sheetDetents = detents,
             velocityThreshold = {
                 with(density) {
                     velocityThreshold().toPx()
@@ -72,7 +78,8 @@ public fun rememberBottomSheetState(
                 with(density) {
                     positionalThreshold(totalDistance.toDp()).toPx()
                 }
-            }
+            },
+            decayAnimationSpec = decayAnimationSpec
         )
     ) {
         BottomSheetState(
@@ -89,7 +96,8 @@ public fun rememberBottomSheetState(
                 with(density) {
                     positionalThreshold(totalDistance.toDp()).toPx()
                 }
-            }
+            },
+            decayAnimationSpec = decayAnimationSpec
         )
     }
 }
@@ -125,7 +133,8 @@ public class BottomSheetState internal constructor(
     private val coroutineScope: CoroutineScope,
     animationSpec: AnimationSpec<Float>,
     velocityThreshold: () -> Float,
-    positionalThreshold: (totalDistance: Float) -> Float
+    positionalThreshold: (totalDistance: Float) -> Float,
+    decayAnimationSpec: DecayAnimationSpec<Float>
 ) {
     init {
         check(detents.isNotEmpty()) {
@@ -148,58 +157,61 @@ public class BottomSheetState internal constructor(
 
     internal var fullContentHeight = Float.NaN
 
-    internal val coreAnchoredDraggableState = CoreAnchoredDraggableState(
+    internal val anchoredDraggableState = AnchoredDraggableState(
         initialValue = initialDetent,
         positionalThreshold = positionalThreshold,
         velocityThreshold = velocityThreshold,
-        animationSpec = animationSpec
+        snapAnimationSpec = animationSpec,
+        decayAnimationSpec = decayAnimationSpec,
     )
 
     public var currentDetent: SheetDetent
-        get() = coreAnchoredDraggableState.currentValue
+        get() = anchoredDraggableState.currentValue
         set(value) {
             check(detents.contains(value)) {
                 "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
             }
             coroutineScope.launch {
-                coreAnchoredDraggableState.animateTo(
-                    value,
-                    coreAnchoredDraggableState.lastVelocity
-                )
+                anchoredDraggableState.animateTo(value)
             }
         }
 
     public val targetDetent: SheetDetent
-        get() = coreAnchoredDraggableState.targetValue
+        get() = anchoredDraggableState.targetValue
 
     public val isIdle: Boolean by derivedStateOf {
-        progress == 1f && currentDetent == targetDetent && coreAnchoredDraggableState.isAnimationRunning.not()
+        progress == 1f && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
     }
 
     public val progress: Float
-        get() = coreAnchoredDraggableState.progress
+        get() = anchoredDraggableState.progress
 
     public val offset: Float by derivedStateOf {
-        if (coreAnchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
+        if (anchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
             1f
         } else {
-            val offsetFromTop = coreAnchoredDraggableState.offset - closestDentToTop
+            val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
             fullContentHeight - offsetFromTop
         }
     }
 
-    public suspend fun animateTo(value: SheetDetent, velocity: Float = coreAnchoredDraggableState.lastVelocity) {
+    @Deprecated("Velocity can no longer be set", ReplaceWith("animateTo(value)"))
+    public suspend fun animateTo(value: SheetDetent, velocity: Float = anchoredDraggableState.lastVelocity) {
+        animateTo(value)
+    }
+
+    public suspend fun animateTo(value: SheetDetent) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
-        coreAnchoredDraggableState.animateTo(value, velocity)
+        anchoredDraggableState.animateTo(value)
     }
 
     public fun jumpTo(value: SheetDetent) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
-        coroutineScope.launch { coreAnchoredDraggableState.snapTo(value) }
+        coroutineScope.launch { anchoredDraggableState.snapTo(value) }
     }
 }
 
@@ -220,6 +232,8 @@ public fun BottomSheet(
     val scope = remember { BottomSheetScope(state, enabled) }
     scope.enabled = enabled
 
+    val coroutineScope = rememberCoroutineScope()
+
     BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
         state.fullContentHeight = Float.NaN
@@ -238,7 +252,7 @@ public fun BottomSheet(
                             it.onSizeChanged { sheetSize ->
                                 val sheetHeight = with(density) { sheetSize.height.toDp() }
                                 state.fullContentHeight = sheetSize.height.toFloat()
-                                val anchors = CoreDraggableAnchors {
+                                val anchors = DraggableAnchors {
                                     with(density) {
                                         state.closestDentToTop = Float.NaN
 
@@ -257,12 +271,12 @@ public fun BottomSheet(
                                     }
                                 }
                                 val newTarget = if (state.isIdle) {
-                                    state.coreAnchoredDraggableState.currentValue
+                                    state.anchoredDraggableState.currentValue
                                 } else {
-                                    state.coreAnchoredDraggableState.targetValue
+                                    state.anchoredDraggableState.targetValue
                                 }
 
-                                state.coreAnchoredDraggableState.updateAnchors(anchors, newTarget)
+                                state.anchoredDraggableState.updateAnchors(anchors, newTarget)
                             }
                         } else it
                     }
@@ -284,8 +298,8 @@ public fun BottomSheet(
                         }
                     }
                     .offset {
-                        if (state.coreAnchoredDraggableState.offset.isNaN().not()) {
-                            val requireOffset = state.coreAnchoredDraggableState.requireOffset()
+                        if (state.anchoredDraggableState.offset.isNaN().not()) {
+                            val requireOffset = state.anchoredDraggableState.requireOffset()
                             val y = requireOffset.toInt()
                             IntOffset(x = 0, y = y)
                         } else {
@@ -294,18 +308,20 @@ public fun BottomSheet(
                     }.then(
                         if (scope.enabled) {
                             Modifier.nestedScroll(
-                                remember(state.coreAnchoredDraggableState, Orientation.Vertical) {
+                                remember(state.anchoredDraggableState, Orientation.Vertical) {
                                     ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
                                         orientation = Orientation.Vertical,
-                                        sheetState = state,
-                                        draggableState = state.coreAnchoredDraggableState
+                                        sheetState = state.anchoredDraggableState,
+                                        onFling = {
+                                            coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                                        }
                                     )
                                 })
                         } else Modifier
                     )
-                    .coreAnchoredDraggable(
-                        state.coreAnchoredDraggableState,
-                        Orientation.Vertical,
+                    .anchoredDraggable(
+                        state = state.anchoredDraggableState,
+                        orientation = Orientation.Vertical,
                         enabled = scope.enabled
                     )
                     .pointerInput(Unit) { detectTapGestures { } }
@@ -318,61 +334,63 @@ public fun BottomSheet(
     }
 }
 
-private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-    draggableState: CoreAnchoredDraggableState<*>,
+internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+    sheetState: AnchoredDraggableState<SheetDetent>,
     orientation: Orientation,
-    sheetState: BottomSheetState
-): NestedScrollConnection = object : NestedScrollConnection {
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        if (source == NestedScrollSource.Drag) {
+    onFling: (velocity: Float) -> Unit
+): NestedScrollConnection =
+    object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
             val delta = available.toFloat()
-
-            val canDragSheetUp = delta < 0 && sheetState.offset > 0f
-            val canDragSheetDown = delta > 0 && sheetState.offset < 1f
-
-            if (canDragSheetUp || canDragSheetDown) {
-                return draggableState.dispatchRawDelta(delta).toOffset()
+            return if (delta < 0 && source == NestedScrollSource.UserInput) {
+                sheetState.dispatchRawDelta(delta).toOffset()
+            } else {
+                Offset.Zero
             }
         }
-        return Offset.Zero
-    }
 
-    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-        return if (source == NestedScrollSource.Drag) {
-            draggableState.dispatchRawDelta(available.toFloat()).toOffset()
-        } else {
-            Offset.Zero
+        override fun onPostScroll(
+            consumed: Offset,
+            available: Offset,
+            source: NestedScrollSource
+        ): Offset {
+            return if (source == NestedScrollSource.UserInput) {
+                sheetState.dispatchRawDelta(available.toFloat()).toOffset()
+            } else {
+                Offset.Zero
+            }
         }
-    }
 
-    override suspend fun onPreFling(available: Velocity): Velocity {
-        val toFling = available.toFloat()
-        val currentOffset = draggableState.requireOffset()
-        return if (toFling < 0 && currentOffset > draggableState.anchors.minAnchor()) {
-            draggableState.settle(velocity = toFling)
-            // since we go to the anchor with tween settling, consume all for the best UX
-            available
-        } else {
-            Velocity.Zero
+        override suspend fun onPreFling(available: Velocity): Velocity {
+            val toFling = available.toFloat()
+            val currentOffset = sheetState.requireOffset()
+            val minAnchor = sheetState.anchors.minAnchor()
+            return if (toFling < 0 && currentOffset > minAnchor) {
+                onFling(toFling)
+                // since we go to the anchor with tween settling, consume all for the best UX
+                available
+            } else {
+                Velocity.Zero
+            }
         }
+
+        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+            onFling(available.toFloat())
+            return available
+        }
+
+        private fun Float.toOffset(): Offset =
+            Offset(
+                x = if (orientation == Orientation.Horizontal) this else 0f,
+                y = if (orientation == Orientation.Vertical) this else 0f
+            )
+
+        @JvmName("velocityToFloat")
+        private fun Velocity.toFloat() = if (orientation == Orientation.Horizontal) x else y
+
+        @JvmName("offsetToFloat")
+        private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
     }
-
-    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-        draggableState.settle(velocity = available.toFloat())
-        return available
-    }
-
-    private fun Float.toOffset(): Offset = Offset(
-        x = if (orientation == Orientation.Horizontal) this else 0f,
-        y = if (orientation == Orientation.Vertical) this else 0f
-    )
-
-    @JvmName("velocityToFloat")
-    private fun Velocity.toFloat() = if (orientation == Orientation.Horizontal) x else y
-
-    @JvmName("offsetToFloat")
-    private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
-}
 
 @Composable
 public fun BottomSheetScope.DragIndication(

@@ -6,6 +6,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -42,6 +43,7 @@ public fun rememberModalBottomSheetState(
         animationSpec = animationSpec,
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
+        decayAnimationSpec = rememberSplineBasedDecay(),
     )
     return rememberSaveable(
         saver = mapSaver(

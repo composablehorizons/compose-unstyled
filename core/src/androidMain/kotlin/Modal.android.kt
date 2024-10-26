@@ -50,11 +50,15 @@ internal actual fun Modal(
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
                     CompositionLocalProvider(LocalModalWindow provides localWindow) {
                         Box(Modifier.onKeyEvent(onKeyEvent)) {
-                            BackHandler {
-                                val backKeyDown = NativeKeyEvent(NativeKeyEvent.ACTION_DOWN, NativeKeyEvent.KEYCODE_BACK)
-                                val backPress = KeyEvent(backKeyDown)
-                                onKeyEvent(backPress)
-                            }
+                            BackHandler(
+                                onBack = {
+                                    val backKeyDown = NativeKeyEvent(
+                                        NativeKeyEvent.ACTION_DOWN, NativeKeyEvent.KEYCODE_BACK
+                                    )
+                                    val backPress = KeyEvent(backKeyDown)
+                                    onKeyEvent(backPress)
+                                }
+                            )
                             content()
                         }
                     }
@@ -78,6 +82,7 @@ internal actual fun Modal(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         } else {
+            @Suppress("DEPRECATION")
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
 

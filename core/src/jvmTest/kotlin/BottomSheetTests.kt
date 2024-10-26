@@ -1,5 +1,6 @@
 package com.composables.core
 
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +27,10 @@ class BottomSheetTests {
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {
         setContent {
-            BottomSheet(rememberBottomSheetState(initialDetent = SheetDetent.Hidden)) {
+            BottomSheet(rememberBottomSheetState(
+                initialDetent = SheetDetent.Hidden,
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
             }
         }
@@ -37,7 +41,10 @@ class BottomSheetTests {
     @Test
     fun sheetWithInitialDetentFullyExpanded_isDisplayed() = runComposeUiTest {
         setContent {
-            BottomSheet(rememberBottomSheetState(initialDetent = SheetDetent.FullyExpanded)) {
+            BottomSheet(rememberBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded,
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
             }
         }
@@ -49,7 +56,10 @@ class BottomSheetTests {
     @Test
     fun settingDetentToFullyDetent_whenInitialIsDetentHidden_isDisplayed() = runComposeUiTest {
         setContent {
-            val state = rememberBottomSheetState(initialDetent = SheetDetent.Hidden)
+            val state = rememberBottomSheetState(
+                initialDetent = SheetDetent.Hidden,
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )
 
             LaunchedEffect(Unit) {
                 state.currentDetent = SheetDetent.FullyExpanded
@@ -72,7 +82,10 @@ class BottomSheetTests {
                 contentSize = 150.dp
             }
 
-            val state = rememberBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
+            val state = rememberBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded,
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )
 
             BottomSheet(state, Modifier.testTag("sheet")) {
                 Box(Modifier.testTag("sheet_contents").size(contentSize))
