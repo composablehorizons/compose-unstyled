@@ -2,6 +2,7 @@
 title: Dialog
 description: A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with styling features without compromising on accessibility or keyboard interactions.
 ---
+
 # Dialog
 
 An unstyled Dialog component that can be used to implement Dialogs with the styling of your choice.
@@ -30,7 +31,7 @@ A dialog consists of the following components: `Dialog`, `DialogPanel` and the o
 
 The `Dialog` controls the visibility of the dialog via the `DialogState` object.
 
-The `DialogPanel` is a container component that renders the dialog's panel and its contents. 
+The `DialogPanel` is a container component that renders the dialog's panel and its contents.
 
 The optional `Scrim` component is used to add layer behind the dialog and dim the rest of the UI.
 
@@ -201,7 +202,8 @@ Dialog(state = state) {
 ### Full-screen dialogs
 
 Pass a `Modifier.fillMaxSize()` to the `DialogPanel`'s modifier parameter. Make sure to pass
-the `Modifier.systemBarsPadding()` and `Modifier.displayCutoutPadding()` or any related inset Modifier so that the dialog is not drawn behind any system
+the `Modifier.systemBarsPadding()` and `Modifier.displayCutoutPadding()` or any related inset Modifier so that the
+dialog is not drawn behind any system
 bars (such as status and navigation bar on Android):
 
 ```kotlin
@@ -243,7 +245,9 @@ Dialog(state = rememberDialogState(visible = true)) {
 
 **Android only**
 
-Dialogs will not change the color of your system UI when displayed. We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the dialog, so that you can customize the System UI according to your needs:
+Dialogs will not change the color of your system UI when displayed. We provide a `LocalModalWindow` composition local,
+which provides you with the Android `Window` that hosts the dialog, so that you can customize the System UI according to
+your needs:
 
 ```kotlin
 Dialog(rememberDialogState()) {
@@ -253,7 +257,7 @@ Dialog(rememberDialogState()) {
             // change system bars to transparent
             window.navigationBarColor = Color.Transparent.toArgb()
             window.statusBarColor = Color.Transparent.toArgb()
-            
+
             // don't forget to update the icons too
             WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
             WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true
@@ -291,6 +295,7 @@ The main component.
 |--------------|-------------------------------------------------------------------------------------------------------------------------------|
 | `state`      | A `DialogState` object which controls the visibility of the dialog.                                                           |
 | `properties` | Properties that control when the dialog needs to be dismissed (such as clicking outside of the panel or pressing Esc or Back. |
+| `onDismiss`  | Called when the dialog is being dismissed either by tapping outside or by pressing `Esc` or `Back`.                           |
 | `content`    | A `@Composable` function that provides a `DialogScope`.                                                                       |
 
 ### DialogPanel
@@ -336,7 +341,8 @@ platform flags.
 
 Looking for styled components for Jetpack Compose or Compose Multiplatform?
 
-Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">ComposablesUi.com</span>
+Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">
+ComposablesUi.com</span>
 
 <img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
 </a>

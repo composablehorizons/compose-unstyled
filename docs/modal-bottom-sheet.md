@@ -2,6 +2,7 @@
 title: Modal Bottom Sheet
 description: A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with styling features without compromising on accessibility or keyboard interactions.
 ---
+
 # Bottom Sheet (Modal)
 
 A stackable, renderless, highly performant foundational component to build modal bottom sheets with, jam-packed with
@@ -444,9 +445,11 @@ ModalBottomSheet(state = sheetState) {
 
 **Android only**
 
-Modal bottom sheets will darken the navigation bar when displayed by default. This will work for most designs, but you might need more customizations. 
+Modal bottom sheets will darken the navigation bar when displayed by default. This will work for most designs, but you
+might need more customizations.
 
-We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the modal sheet, so that you can customize the System UI according to your needs:
+We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the modal
+sheet, so that you can customize the System UI according to your needs:
 
 ```kotlin
 ModalBottomSheet(rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)) {
@@ -503,11 +506,13 @@ following keyboard interactions:
 
 ### rememberModalBottomSheetState()
 
-| Parameter                                    | Description                                                                                           |
-|----------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| <div class="parameter">`initialDetent`</div> | A `SheetDetent` which controls the height in which the sheet will be introduced within its container. |
-| <div class="parameter">`sheetDetents`</div>  | A list of `SheetDetent` which the sheet can be rested for dragging purposes.                          |
-| <div class="parameter">`animationSpec`</div> | An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.                 |
+| Parameter                                          | Description                                                                                                                                                                                                                                                                                                                                           |
+|----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <div class="parameter">`initialDetent`</div>       | A `SheetDetent` which controls the height in which the sheet will be introduced within its container.                                                                                                                                                                                                                                                 |
+| <div class="parameter">`detents`</div>             | A list of `SheetDetent` which the sheet can be rested for dragging purposes.                                                                                                                                                                                                                                                                          |
+| <div class="parameter">`animationSpec`</div>       | An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.                                                                                                                                                                                                                                                                 |
+| <div class="parameter">`positionalThreshold`</div> | The positional threshold, in px, to be used when calculating the target state while a drag is in progress and when settling after the drag ends. This is the distance from the start of a transition. It will be, depending on the direction of the interaction, added or subtracted from/to the origin offset. It should always be a positive value. |
+| <div class="parameter">`velocityThreshold`</div>   | The velocity threshold (in px per second) that the end velocity has to exceed in order to animate to the next state, even if the [positionalThreshold] has not been reached.                                                                                                                                                                          |
 
 ### ModalBottomSheetState
 
@@ -529,6 +534,7 @@ The main component. Defines the area in which the sheet can be dragged in.
 |-------------------------------------------|------------------------------------------------------------------------------------------------------|
 | <div class='parameter'>`state`</div>      | The `ModalBottomSheetState` for the component                                                        |
 | <div class='parameter'>`properties`</div> | `ModalSheetProperties` that control whether the sheet needs to be dismissed on clicked outside, etc. |
+| <div class='parameter'>`onDismiss`</div>  | Called when the sheet is being dismissed either by tapping outside or by pressing `Esc` or `Back`.   |
 | <div class='parameter'>`content`</div>    | The contents of the Modal Bottom Sheet.                                                              |
 
 ### Sheet()
