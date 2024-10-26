@@ -19,10 +19,10 @@
     "NOTHING_TO_INLINE"
 )
 
-package androidx.collection
+package com.composables.core.androidx.collection
 
-import androidx.collection.internal.EMPTY_OBJECTS
-import androidx.collection.internal.requirePrecondition
+import com.composables.core.androidx.collection.internal.EMPTY_OBJECTS
+import com.composables.core.androidx.collection.internal.requirePrecondition
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
 

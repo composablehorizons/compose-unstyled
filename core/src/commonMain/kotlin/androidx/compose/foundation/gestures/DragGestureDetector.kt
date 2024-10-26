@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package androidx.compose.foundation.gestures
+package com.composables.core.androidx.compose.foundation.gestures
 
 // Note, that there is a copy-paste version of this file (DragGestureDetectorCopy.kt), don't
 // forget to change it too.
@@ -25,6 +25,9 @@ package androidx.compose.foundation.gestures
 // TODO(b/193549931): when the new pointer API will be ready we should make *PointerSlop*
 //  functions public
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerEvent

@@ -17,10 +17,10 @@
 
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package androidx.compose.foundation.gestures
+package com.composables.core.androidx.compose.foundation.gestures
 
-import androidx.collection.MutableObjectFloatMap
-import androidx.collection.ObjectFloatMap
+import com.composables.core.androidx.collection.MutableObjectFloatMap
+import com.composables.core.androidx.collection.ObjectFloatMap
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.DecayAnimationSpec
@@ -31,7 +31,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
 import androidx.compose.foundation.OverscrollEffect
-import androidx.compose.foundation.gestures.DragEvent.DragDelta
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Stable
@@ -53,7 +53,7 @@ import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Velocity
-import androidx.annotation.FloatRange
+import com.composables.core.androidx.annotation.FloatRange
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -248,7 +248,7 @@ private class AnchoredDraggableNode<T>(
             else -> reverseDirection!!
         }
 
-    override suspend fun drag(forEachDelta: suspend ((dragDelta: DragDelta) -> Unit) -> Unit) {
+    override suspend fun drag(forEachDelta: suspend ((dragDelta: DragEvent.DragDelta) -> Unit) -> Unit) {
         state.anchoredDrag {
             forEachDelta { dragDelta ->
                 if (overscrollEffect == null) {

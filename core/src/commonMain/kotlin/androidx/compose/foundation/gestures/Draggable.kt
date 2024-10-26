@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package androidx.compose.foundation.gestures
+package com.composables.core.androidx.compose.foundation.gestures
 
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
-import androidx.compose.foundation.gestures.DragEvent.DragCancelled
-import androidx.compose.foundation.gestures.DragEvent.DragDelta
-import androidx.compose.foundation.gestures.DragEvent.DragStarted
-import androidx.compose.foundation.gestures.DragEvent.DragStopped
+import androidx.compose.foundation.gestures.Orientation
+import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragCancelled
+import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragDelta
+import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragStarted
+import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragStopped
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable

@@ -24,7 +24,7 @@
     "NOTHING_TO_INLINE"
 )
 
-package androidx.collection
+package com.composables.core.androidx.collection
 
 // An empty array of floats
 internal val EmptyFloatArray = FloatArray(0)
