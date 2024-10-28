@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 
 public data class ModalSheetProperties(
     val dismissOnBackPress: Boolean = true,
-    val dismissOnClickOutside: Boolean = true
+    val dismissOnClickOutside: Boolean = true,
 )
 
 @Composable
@@ -163,7 +163,7 @@ public fun ModalBottomSheet(
                 { false }
             }
 
-            Modal(protectNavBars = true, onKeyEvent = onKeyEvent) {
+            Modal(onKeyEvent = onKeyEvent) {
                 Box(Modifier
                     .fillMaxSize()
                     .let {
