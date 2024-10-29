@@ -2,19 +2,10 @@ package com.composables.core
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertHeightIsEqualTo
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertWidthIsEqualTo
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlinx.coroutines.delay
@@ -91,5 +82,20 @@ class ModalBottomSheetTests {
 
         onNodeWithTag("sheet").assertWidthIsEqualTo(150.dp)
         onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
+    }
+
+    @Test
+    fun always_adds_hidden_detent() = runComposeUiTest {
+        setContent {
+            val sheetState = rememberModalBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded,
+                detents = listOf(SheetDetent.FullyExpanded)
+            )
+            sheetState.currentDetent = SheetDetent.Hidden
+
+            assert(sheetState.currentDetent == SheetDetent.Hidden) {
+                "Expected currentDetent to be ${SheetDetent.Hidden.identifier} at this point but was ${sheetState.currentDetent.identifier}"
+            }
+        }
     }
 }

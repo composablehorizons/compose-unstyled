@@ -41,7 +41,7 @@ public fun rememberModalBottomSheetState(
     val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
     val sheetState = rememberBottomSheetState(
         initialDetent = SheetDetent.Hidden,
-        detents = detents,
+        detents = actualDetents,
         animationSpec = animationSpec,
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
