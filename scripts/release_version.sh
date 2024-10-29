@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+echo "Running tests..."
+./gradlew core:jvmTest
+
+echo "All tests passed..."
+
 # Define the root directory as the current directory
 root_dir=$(pwd)
 
