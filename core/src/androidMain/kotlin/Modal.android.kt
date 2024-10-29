@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.NativeKeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
@@ -18,7 +16,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
@@ -29,7 +26,6 @@ import java.util.*
 
 @Composable
 internal actual fun Modal(
-    protectNavBars: Boolean,
     onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
 ) {
@@ -84,11 +80,6 @@ internal actual fun Modal(
         } else {
             @Suppress("DEPRECATION")
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        }
-
-        if (protectNavBars) {
-            window.navigationBarColor = Color.Black.copy(alpha = 0.33f).toArgb()
-            WindowInsetsControllerCompat(window, contentView).isAppearanceLightNavigationBars = false
         }
 
         window.setDimAmount(0f)
