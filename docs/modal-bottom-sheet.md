@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.composables:core:1.18.2")
+    implementation("com.composables:core:1.19.1")
 }
 ```
 
@@ -463,7 +463,7 @@ ModalBottomSheet(rememberModalBottomSheetState(initialDetent = SheetDetent.Fully
             windowInsetsController.isAppearanceLightStatusBars = true
             windowInsetsController.isAppearanceLightNavigationBars = false
         }
-        BasicText("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
+        BasicText("Transparent status bar, darkened navbars. Easy-peazy 😎 ", modifier = Modifier.navigationBarsPadding())
     }
 }
 ```
