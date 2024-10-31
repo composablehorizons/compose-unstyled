@@ -255,12 +255,13 @@ Dialog(rememberDialogState()) {
         val window = LocalModalWindow.current
         LaunchedEffect(Unit) {
             // change system bars to transparent
-            window.navigationBarColor = Color.Transparent.toArgb()
             window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
 
             // don't forget to update the icons too
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true
+            val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+            windowInsetsControllerCompat.isAppearanceLightStatusBars = true
+            windowInsetsControllerCompat.isAppearanceLightNavigationBars = true
         }
         BasicText("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
     }
@@ -320,7 +321,7 @@ from a `DialogScope`.
 | `enter`      | The `EnterTransition` when the Scrim enters the composition                       |
 | `exit`       | The `ExitTransition` when the Scrim enters the composition                        |
 
-## Core Dialog vs Compose Dialog
+## Compose Unstyled Dialog vs Compose Dialog
 
 Compose Multiplatform's original Dialog component does not support custom animations. Even though it is possible to
 animate it, it requires you to combine multiple components together and sync state to animations to composition which is

@@ -445,11 +445,9 @@ ModalBottomSheet(state = sheetState) {
 
 **Android only**
 
-Modal bottom sheets will darken the navigation bar when displayed by default. This will work for most designs, but you
-might need more customizations.
-
-We provide a `LocalModalWindow` composition local, which provides you with the Android `Window` that hosts the modal
-sheet, so that you can customize the System UI according to your needs:
+ModalBottomSheet will not change the color of your system UI when displayed. We provide a `LocalModalWindow` composition local,
+which provides you with the Android `Window` that hosts the dialog, so that you can customize the System UI according to
+your needs:
 
 ```kotlin
 ModalBottomSheet(rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)) {
@@ -457,12 +455,13 @@ ModalBottomSheet(rememberModalBottomSheetState(initialDetent = SheetDetent.Fully
         val window = LocalModalWindow.current
         LaunchedEffect(Unit) {
             // change system bars to transparent
-            window.navigationBarColor = Color.Transparent.toArgb()
             window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Black.copy(0.3f).toArgb()
 
             // don't forget to update the icons too
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true
+            val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+            windowInsetsController.isAppearanceLightStatusBars = true
+            windowInsetsController.isAppearanceLightNavigationBars = false
         }
         BasicText("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
     }
