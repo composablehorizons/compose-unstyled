@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+echo "Pulling changes..."
+git pull
+
 echo "Running tests..."
 ./gradlew core:jvmTest
 
