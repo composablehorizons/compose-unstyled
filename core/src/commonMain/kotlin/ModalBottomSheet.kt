@@ -38,10 +38,9 @@ public fun rememberModalBottomSheetState(
     positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
     decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
 ): ModalBottomSheetState {
-    val actualDetents = (setOf(SheetDetent.Hidden) + detents).toList()
     val sheetState = rememberBottomSheetState(
-        initialDetent = SheetDetent.Hidden,
-        detents = actualDetents,
+        initialDetent = initialDetent,
+        detents = detents,
         animationSpec = animationSpec,
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
@@ -51,19 +50,20 @@ public fun rememberModalBottomSheetState(
         saver = mapSaver(
             save = { modalBottomSheetState -> mapOf("detent" to modalBottomSheetState.currentDetent.identifier) },
             restore = { map ->
-                val restoredDetent = actualDetents.first { it.identifier == map["detent"] }
+                val restoredDetent = detents.first { it.identifier == map["detent"] }
                 ModalBottomSheetState(
                     bottomSheetDetent = restoredDetent,
-                    sheetState = sheetState
+                    bottomSheetState = sheetState
                 )
             }
-        )
-    ) {
-        ModalBottomSheetState(
-            bottomSheetDetent = initialDetent,
-            sheetState = sheetState
-        )
-    }
+        ),
+        init = {
+            ModalBottomSheetState(
+                bottomSheetDetent = initialDetent,
+                bottomSheetState = sheetState
+            )
+        }
+    )
 }
 
 public class ModalBottomSheetState internal constructor(
