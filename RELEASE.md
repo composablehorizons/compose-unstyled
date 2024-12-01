@@ -15,13 +15,12 @@ signing.keyId=
 
 ## Release to Maven Central
 
-The following command uploads all kotlin multiplatform artifacts to Sonatype Nexus and then closes the release.
+The following script uploads all kotlin multiplatform artifacts to Sonatype Nexus and then closes the release.
 
-The commands that follows need to be run together. Otherwise you will get an
-error: `No staging repository with name sonatype created`
+It also updates the installation blocks through the docs, and drafts a release after it is done:
 
 ```shell
-./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+./scripts/release_version.sh
 ```
 
 As soon as the version is available it will be listed at: https://repo1.maven.org/maven2/com/composables/core/
