@@ -92,16 +92,15 @@ public fun Dialog(
         Modal(onKeyEvent = onKeyEvent) {
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .let {
-                        if (properties.dismissOnClickOutside) {
-                            it.pointerInput(Unit) {
-                                detectTapGestures {
-                                    currentDismiss()
-                                    scope.dialogState.visible = false
-                                }
+                    .then(if (properties.dismissOnClickOutside) {
+                        Modifier.pointerInput(Unit) {
+                            detectTapGestures {
+                                currentDismiss()
+                                scope.dialogState.visible = false
                             }
-                        } else it
-                    },
+                        }
+                    } else Modifier
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 scope.content()
