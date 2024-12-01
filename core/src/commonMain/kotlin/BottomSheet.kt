@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.*
+import com.composables.core.androidx.compose.foundation.gestures.*
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -163,7 +164,7 @@ public class BottomSheetState internal constructor(
 
     internal var fullContentHeight = Float.NaN
 
-    internal val anchoredDraggableState = AnchoredDraggableState(
+    internal val anchoredDraggableState = UnstyledAnchoredDraggableState(
         initialValue = initialDetent,
         positionalThreshold = positionalThreshold,
         velocityThreshold = velocityThreshold,
@@ -259,7 +260,7 @@ public fun BottomSheet(
                             it.onSizeChanged { sheetSize ->
                                 val sheetHeight = with(density) { sheetSize.height.toDp() }
                                 state.fullContentHeight = sheetSize.height.toFloat()
-                                val anchors = DraggableAnchors {
+                                val anchors = UnstyledDraggableAnchors {
                                     with(density) {
                                         state.closestDentToTop = Float.NaN
 
@@ -326,7 +327,7 @@ public fun BottomSheet(
                                 })
                         } else Modifier
                     )
-                    .anchoredDraggable(
+                    .unstyledAnchoredDraggable(
                         state = state.anchoredDraggableState,
                         orientation = Orientation.Vertical,
                         enabled = scope.enabled
@@ -342,7 +343,7 @@ public fun BottomSheet(
 }
 
 internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-    sheetState: AnchoredDraggableState<SheetDetent>,
+    sheetState: UnstyledAnchoredDraggableState<SheetDetent>,
     orientation: Orientation,
     onFling: (velocity: Float) -> Unit
 ): NestedScrollConnection =
