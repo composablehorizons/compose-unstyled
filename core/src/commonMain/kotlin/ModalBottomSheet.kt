@@ -36,6 +36,7 @@ public fun rememberModalBottomSheetState(
     animationSpec: AnimationSpec<Float> = tween(),
     velocityThreshold: () -> Dp = { 125.dp },
     positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
+    confirmDetentChange: (SheetDetent) -> Boolean = { true },
     decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
 ): ModalBottomSheetState {
     val sheetState = rememberBottomSheetState(
@@ -45,6 +46,7 @@ public fun rememberModalBottomSheetState(
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
+        confirmDetentChange = confirmDetentChange,
     )
     return rememberSaveable(
         saver = mapSaver(
@@ -68,9 +70,8 @@ public fun rememberModalBottomSheetState(
 
 public class ModalBottomSheetState internal constructor(
     internal val bottomSheetDetent: SheetDetent,
-    sheetState: BottomSheetState
+    internal val bottomSheetState: BottomSheetState
 ) {
-    internal val bottomSheetState by mutableStateOf<BottomSheetState>(sheetState)
 
     internal var modalDetent by mutableStateOf(bottomSheetDetent)
 
@@ -154,7 +155,11 @@ public fun ModalBottomSheet(
         if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
             val onKeyEvent = if (properties.dismissOnBackPress) {
                 { event: KeyEvent ->
-                    if (event.type == KeyEventType.KeyDown && (event.key == Key.Back || event.key == Key.Escape)) {
+                    if (
+                        event.type == KeyEventType.KeyDown
+                        && (event.key == Key.Back || event.key == Key.Escape)
+                        && state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)
+                    ) {
                         scope.sheetState.currentDetent = SheetDetent.Hidden
                         true
                     } else false
@@ -168,7 +173,13 @@ public fun ModalBottomSheet(
                     .fillMaxSize()
                     .let {
                         if (properties.dismissOnClickOutside) {
-                            it.pointerInput(Unit) { detectTapGestures { state.currentDetent = SheetDetent.Hidden } }
+                            it.pointerInput(Unit) {
+                                detectTapGestures {
+                                    if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
+                                        state.currentDetent = SheetDetent.Hidden
+                                    }
+                                }
+                            }
                         } else it
                     }
                 ) {

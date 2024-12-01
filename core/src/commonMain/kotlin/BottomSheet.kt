@@ -40,6 +40,7 @@ private fun Saver(
     velocityThreshold: () -> Float,
     positionalThreshold: (totalDistance: Float) -> Float,
     decayAnimationSpec: DecayAnimationSpec<Float>,
+    confirmDetentChange: (SheetDetent) -> Boolean,
 ): Saver<BottomSheetState, *> = mapSaver(save = { mapOf("detent" to it.currentDetent.identifier) }, restore = { map ->
     val selectedDetentName = map["detent"]
     BottomSheetState(
@@ -50,6 +51,7 @@ private fun Saver(
         velocityThreshold = velocityThreshold,
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
+        confirmDetentChange = confirmDetentChange,
     )
 })
 
@@ -58,9 +60,10 @@ public fun rememberBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
+    confirmDetentChange: (SheetDetent) -> Boolean = { true },
     decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
     velocityThreshold: () -> Dp = { 125.dp },
-    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp }
+    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
 ): BottomSheetState {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -79,7 +82,8 @@ public fun rememberBottomSheetState(
                     positionalThreshold(totalDistance.toDp()).toPx()
                 }
             },
-            decayAnimationSpec = decayAnimationSpec
+            decayAnimationSpec = decayAnimationSpec,
+            confirmDetentChange = confirmDetentChange,
         )
     ) {
         BottomSheetState(
@@ -97,7 +101,8 @@ public fun rememberBottomSheetState(
                     positionalThreshold(totalDistance.toDp()).toPx()
                 }
             },
-            decayAnimationSpec = decayAnimationSpec
+            decayAnimationSpec = decayAnimationSpec,
+            confirmDetentChange = confirmDetentChange
         )
     }
 }
@@ -134,7 +139,8 @@ public class BottomSheetState internal constructor(
     animationSpec: AnimationSpec<Float>,
     velocityThreshold: () -> Float,
     positionalThreshold: (totalDistance: Float) -> Float,
-    decayAnimationSpec: DecayAnimationSpec<Float>
+    decayAnimationSpec: DecayAnimationSpec<Float>,
+    internal val confirmDetentChange: (SheetDetent) -> Boolean,
 ) {
     init {
         check(detents.isNotEmpty()) {
@@ -163,6 +169,7 @@ public class BottomSheetState internal constructor(
         velocityThreshold = velocityThreshold,
         snapAnimationSpec = animationSpec,
         decayAnimationSpec = decayAnimationSpec,
+        confirmValueChange = confirmDetentChange,
     )
 
     public var currentDetent: SheetDetent
@@ -180,7 +187,7 @@ public class BottomSheetState internal constructor(
         get() = anchoredDraggableState.targetValue
 
     public val isIdle: Boolean by derivedStateOf {
-        progress == 1f && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
+        (offset == 1f || offset == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
     }
 
     public val progress: Float
@@ -227,7 +234,7 @@ public fun BottomSheet(
     state: BottomSheetState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable BottomSheetScope.() -> Unit,
+    content: @Composable (BottomSheetScope.() -> Unit),
 ) {
     val scope = remember { BottomSheetScope(state, enabled) }
     scope.enabled = enabled
