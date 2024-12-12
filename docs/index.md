@@ -95,7 +95,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
     <div class="testimonial-author">
       <div>Matt Kula</div>
-      <p>Android @ Warner Music Group</p>
+      <p>Android Engineer, Warner Music Group</p>
     </div>
   </div>
 </div>
@@ -111,7 +111,22 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
     <div class="testimonial-author">
       <div>Jacob Ras</div>
-      <p>Android Engineer @ Albert Heijn</p>
+      <p>Android Engineer, Albert Heijn</p>
+    </div>
+  </div>
+</div>
+
+<div class="testimonial-container">
+  <div class="testimonial-image">
+    <img src="/testimonials/isaac.jpg" alt="Isaac Zikstar">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+      "Thank you for making <a class="highlight" href="/modal-bottom-sheet">the only bottomsheet</a> composable library <a class="highlight" href="/modal-bottom-sheet">that actually makes sense!</a>"
+    </div>
+    <div class="testimonial-author">
+      <div>Isaac Zikstar</div>
+      <p>Android Engineer, Block</p>
     </div>
   </div>
 </div>
@@ -126,7 +141,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
     <div class="testimonial-author">
       <div>Gabor Varadi</div>
-      <p>EpicPandaForce @ SO</p>
+      <p>EpicPandaForce</p>
     </div>
   </div>
 </div>
@@ -138,7 +153,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   <div class="testimonial-content">
     <div class="testimonial-text">
       "I wrote this library, so this will be biased 😁. I was tired of dealing with Material Compose sheets and dialogs issues, <a class="highlight" href="/bottom-sheet">so I decided</a> <a class="highlight" href="/modal-bottom-sheet">to write my own</a> <a class="highlight" href="/dialog">from scratch</a>.
-Plus, I needed high-quality, non-Material looking components for my Compose Multiplatform (desktop) apps, hence this library was born."
+I also needed components that I can style according to my app needs instead of looking Material for my desktop apps, hence this library was born."
     </div>
     <div class="testimonial-author">
       <div>Alex Styl</div>
