@@ -43,13 +43,14 @@ private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
 
 @Composable
 fun BottomSheetDemo() {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6)))),
+            .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6))))
+            .padding(top = 12.dp)
+            .statusBarsPadding()
+            .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
     ) {
-        val isCompact = maxWidth < 600.dp
-
         val sheetState = rememberBottomSheetState(
             initialDetent = Peek,
             detents = listOf(Hidden, Peek, FullyExpanded)
@@ -70,10 +71,6 @@ fun BottomSheetDemo() {
         BottomSheet(
             state = sheetState,
             modifier = Modifier
-                .padding(top = 12.dp)
-                .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
-                .statusBarsPadding()
-                .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                 .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .background(Color.White)

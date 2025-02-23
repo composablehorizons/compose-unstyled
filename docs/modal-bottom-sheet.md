@@ -85,7 +85,6 @@ val sheetState = rememberModalBottomSheetState(
 ModalBottomSheet(state = sheetState) {
     Sheet(
         modifier = Modifier
-            .padding(top = 12.dp)
             .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .background(Color.White)
@@ -231,20 +230,21 @@ val sheetState = rememberModalBottomSheetState(
 )
 
 ModalBottomSheet(state = sheetState) {
-    Sheet(
-        modifier = Modifier.fillMaxWidth()
-            .padding(
-                WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
-                    .asPaddingValues()
-            )
-            .navigationBarsPadding(),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Box(Modifier.padding(
+        // make sure the sheet is not behind nav bars on landscape
+        WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+            .asPaddingValues()
+    )) {
+        Sheet(
+            modifier = Modifier.fillMaxWidth().navigationBarsPadding(),
         ) {
-            DragIndication()
-            BasicText("Here is some content")
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                DragIndication()
+                BasicText("Here is some content")
+            }
         }
     }
 }
@@ -262,45 +262,46 @@ val sheetState = rememberModalBottomSheetState(
     initialDetent = FullyExpanded,
 )
 ModalBottomSheet(state = sheetState) {
-    Sheet(
-        modifier = Modifier.fillMaxWidth()
-            .padding(
-                // make sure the sheet is not behind nav bars on landscape
-                WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
-                    .asPaddingValues()
-            )
-            .background(Color.White),
-    ) {
-        Column(
+   Box(Modifier.padding(
+       // make sure the sheet is not behind nav bars on landscape
+       WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+           .asPaddingValues()
+   )) {
+        Sheet(
             modifier = Modifier.fillMaxWidth()
-                .padding(16.dp)
-                // make sure the contents of the sheet is always above the nav bar
-                .navigationBarsPadding()
-                // draw the contents above the soft keyboard
-                .imePadding()
+                .background(Color.White),
         ) {
-            DragIndication(Modifier.align(Alignment.CenterHorizontally))
-
-            var text by remember { mutableStateOf("") }
-            BasicTextField(
-                value = text,
-                onValueChange = { text = it },
+            Column(
                 modifier = Modifier.fillMaxWidth()
-            )
-            Box(Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color.Blue)
-                .clickable { /* TODO */ }
-                .padding(4.dp)
-                .align(Alignment.End)) {
-                BasicText(
-                    text = "Save note",
-                    style = TextStyle.Default.copy(color = Color.White)
+                    .padding(16.dp)
+                    // make sure the contents of the sheet is always above the nav bar
+                    .navigationBarsPadding()
+                    // draw the contents above the soft keyboard
+                    .imePadding()
+            ) {
+                DragIndication(Modifier.align(Alignment.CenterHorizontally))
+
+                var text by remember { mutableStateOf("") }
+                BasicTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    modifier = Modifier.fillMaxWidth()
                 )
+                Box(
+                    Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(Color.Blue)
+                    .clickable { /* TODO */ }
+                    .padding(4.dp)
+                    .align(Alignment.End)) {
+                    BasicText(
+                        text = "Save note",
+                        style = TextStyle.Default.copy(color = Color.White)
+                    )
+                }
             }
         }
-    }
-}
+    }}
 ```
 
 ### Scrollable sheets

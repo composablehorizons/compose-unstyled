@@ -79,7 +79,6 @@ val sheetState = rememberBottomSheetState(
 BottomSheet(
     state = sheetState,
     modifier = Modifier
-        .padding(top = 12.dp)
         .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
         .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
         .background(Color.White)

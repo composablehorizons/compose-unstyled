@@ -55,27 +55,30 @@ fun ModalBottomSheetDemo() {
         ModalBottomSheet(state = modalSheetState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
 
-            Sheet(
-                modifier = Modifier
+            Box(
+                Modifier.fillMaxSize()
                     .padding(top = 12.dp)
                     .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
                     .displayCutoutPadding()
                     .statusBarsPadding()
-                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-                    .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                    .background(Color.White)
-                    .widthIn(max = 640.dp)
-                    .fillMaxWidth()
-                    .imePadding(),
-            ) {
-                Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
-                    DragIndication(
-                        modifier = Modifier.padding(top = 22.dp)
-                            .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-                            .width(32.dp)
-                            .height(4.dp)
-                    )
+                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())) {
+                Sheet(
+                    modifier = Modifier
+                        .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                        .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                        .background(Color.White)
+                        .widthIn(max = 640.dp)
+                        .fillMaxWidth()
+                        .imePadding(),
+                ) {
+                    Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+                        DragIndication(
+                            modifier = Modifier.padding(top = 22.dp)
+                                .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
+                                .width(32.dp)
+                                .height(4.dp)
+                        )
+                    }
                 }
             }
         }
