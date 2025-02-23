@@ -9,7 +9,8 @@ import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -192,7 +193,7 @@ public class BottomSheetState internal constructor(
     }
 
     public val progress: Float
-        get() = anchoredDraggableState.progress
+        get() = anchoredDraggableState.progress(detents.first(), detents.last())
 
     public val offset: Float by derivedStateOf {
         if (anchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
