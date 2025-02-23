@@ -100,11 +100,11 @@ fun ScrollArea(
     NoOverscroll {
         Box(modifier.nestedScroll(remember {
             object : NestedScrollConnection {
-                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    scope.launch {
+                        scrollEvents.emit(Unit)
+                    }
                     if (source == NestedScrollSource.UserInput && overscrollEffect != null) {
-                        // they are scrolling past a dead-end
-                        // forward to overscrollEffect's direction they are trying to go
-
                         val isOverscrollTop =
                             isMovingBackwards(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
 
@@ -118,43 +118,16 @@ fun ScrollArea(
                             isMovingForward(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
 
                         if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
-                            return overscrollEffect.applyToScroll(available, source, performScroll)
-                        }
-                    }
-                    return super.onPostScroll(consumed, available, source)
-                }
-
-
-                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                    scope.launch {
-                        scrollEvents.emit(Unit)
-                    }
-                    if (source == NestedScrollSource.UserInput && overscrollEffect != null) {
-                        // they have already started scrolling
-                        // forward to overscrollEffect's opposite direction they are trying to go
-
-                        val isOverscrollTop =
-                            isMovingForward(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
-
-                        val isOverscrollBottom =
-                            isMovingBackwards(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
-
-                        val isOverscrollLeft =
-                            isMovingForward(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
-
-                        val isOverscrollRight =
-                            isMovingBackwards(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
-
-                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
-                            return overscrollEffect.applyToScroll(available, source, performScroll)
+                            overscrollEffect.applyToScroll(available, source, performScroll)
                         }
                     }
 
                     return super.onPreScroll(available, source)
                 }
 
-                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-                    if (overscrollEffect != null) {
+
+                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                    if (source == NestedScrollSource.UserInput && overscrollEffect != null) {
                         val isOverscrollTop =
                             isMovingBackwards(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
 
@@ -168,11 +141,10 @@ fun ScrollArea(
                             isMovingForward(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
 
                         if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
-                            overscrollEffect.applyToFling(available, performFling)
-                            return available
+                            overscrollEffect.applyToScroll(available, source, performScroll)
                         }
                     }
-                    return super.onPostFling(consumed, available)
+                    return super.onPostScroll(consumed, available, source)
                 }
 
                 override suspend fun onPreFling(available: Velocity): Velocity {
@@ -195,6 +167,28 @@ fun ScrollArea(
                         }
                     }
                     return super.onPreFling(available)
+                }
+
+                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                    if (overscrollEffect != null) {
+                        val isOverscrollTop =
+                            isMovingBackwards(available.y) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }
+
+                        val isOverscrollBottom =
+                            isMovingForward(available.y) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }
+
+                        val isOverscrollLeft =
+                            isMovingBackwards(available.x) && canScrollBackwards.not() && overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }
+
+                        val isOverscrollRight =
+                            isMovingForward(available.x) && canScrollForward.not() && overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }
+
+                        if (isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight) {
+                            overscrollEffect.applyToFling(available, performFling)
+                            return available
+                        }
+                    }
+                    return super.onPostFling(consumed, available)
                 }
 
                 val performFling: (Velocity) -> Velocity = {
