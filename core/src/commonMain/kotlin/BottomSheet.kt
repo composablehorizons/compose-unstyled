@@ -188,7 +188,7 @@ public class BottomSheetState internal constructor(
         get() = anchoredDraggableState.targetValue
 
     public val isIdle: Boolean by derivedStateOf {
-        (offset == 1f || offset == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
+        (progress == 1f || progress == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
     }
 
     public val progress: Float
