@@ -525,7 +525,7 @@ following keyboard interactions:
 | <div class='parameter'>`targetDetent` </div>            | The `SheetDetent` in which the sheet is about to rest on, if it is being dragged or animated.                                     |
 | <div class='parameter'>`isIdle` </div>                  | Whether the sheet is currently resting at a specific detent.                                                                      |
 | <div class='parameter'>`progress` </div>                | A 0 to 1 `Float` which represents how far between two detents the sheet has currently moved. 1.0f for arrived at the end.         |
-| <div class='parameter'>`offset` </div>                  | A 0 to 1 `Float` which represents how far the sheet has moved within its dragging container. 1.0f for top of the container.       |
+| <div class='parameter'>`offset` </div>                  | The current offset of the sheet.                                                                                                  |
 | <div class='parameter'>`fun jumpTo()` </div>            | Makes the sheet to immediately appear to the given detent without any animation.                                                  |
 | <div class='parameter'>`suspend fun animateTo()` </div> | Animates the sheet to the given detent. This is a `suspend` function, which you can use to wait until the animation is complete.  |
 
