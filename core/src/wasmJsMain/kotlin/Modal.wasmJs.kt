@@ -25,6 +25,7 @@ internal actual fun Modal(
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         usePlatformInsets = false,
+        useSoftwareKeyboardInset = false,
         usePlatformDefaultWidth = false,
         scrimColor = Color.Transparent
     ),
