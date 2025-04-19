@@ -47,6 +47,7 @@ nav:
     - 'Icon' : icon.md
     - 'Scroll Area (Scrollbars)' : scrollarea.md
     - 'Separators' : separators.md
+    - 'Slider' : slider.md
 
 plugins:
   - social

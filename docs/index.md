@@ -81,6 +81,12 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
       </a>
       <div>Separators</div>
   </div>
+  <div>
+      <a href="slider">
+        <img src="preview_slider.png" alt="Slider Preview">
+      </a>
+      <div>Slider</div>
+  </div>
 </div>
 
 ## What developers say
