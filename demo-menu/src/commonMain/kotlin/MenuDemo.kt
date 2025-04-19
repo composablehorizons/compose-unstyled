@@ -1,4 +1,4 @@
-package com.composables.core.demo
+package com.composeunstyled.demo
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween

@@ -5,7 +5,7 @@
 
     <application>
         <activity
-                android:name="com.composables.core.demo.ModalBottomSheetDemoActivity"
+                android:name="com.composeunstyled.demo.ModalBottomSheetDemoActivity"
                 android:windowSoftInputMode="adjustResize"
                 android:theme="@style/NoDecor"
                 android:exported="true">

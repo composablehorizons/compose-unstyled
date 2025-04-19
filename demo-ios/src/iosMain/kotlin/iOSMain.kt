@@ -1,4 +1,4 @@
-package com.composables.core.demo
+package com.composeunstyled.demo
 
 import androidx.compose.ui.window.ComposeUIViewController
 

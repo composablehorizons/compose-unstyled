@@ -1,4 +1,4 @@
-package com.composables.core.demo
+package com.composeunstyled.demo
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn

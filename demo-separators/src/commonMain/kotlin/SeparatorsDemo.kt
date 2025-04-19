@@ -1,4 +1,4 @@
-package com.composables.core.demo
+package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints

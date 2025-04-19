@@ -1,4 +1,4 @@
-package com.composables.core.demo
+package com.composeunstyled.demo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
