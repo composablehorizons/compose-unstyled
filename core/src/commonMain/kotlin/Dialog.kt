@@ -19,6 +19,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import com.composeunstyled.Modal
 
 public data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
@@ -92,7 +93,8 @@ public fun Dialog(
         Modal(onKeyEvent = onKeyEvent) {
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .then(if (properties.dismissOnClickOutside) {
+                    .then(
+                        if (properties.dismissOnClickOutside) {
                         Modifier.pointerInput(Unit) {
                             detectTapGestures {
                                 currentDismiss()

@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,8 +25,8 @@ internal actual fun Modal(
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         usePlatformInsets = false,
-        useSoftwareKeyboardInset = false,
         usePlatformDefaultWidth = false,
+        useSoftwareKeyboardInset = false,
         scrimColor = Color.Transparent
     ),
     content = {

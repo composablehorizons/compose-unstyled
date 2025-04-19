@@ -22,6 +22,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Modal
 import kotlinx.coroutines.delay
 
 public data class ModalSheetProperties(
@@ -169,19 +170,20 @@ public fun ModalBottomSheet(
             }
 
             Modal(onKeyEvent = onKeyEvent) {
-                Box(Modifier
-                    .fillMaxSize()
-                    .let {
-                        if (properties.dismissOnClickOutside) {
-                            it.pointerInput(Unit) {
-                                detectTapGestures {
-                                    if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                                        state.currentDetent = SheetDetent.Hidden
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .let {
+                            if (properties.dismissOnClickOutside) {
+                                it.pointerInput(Unit) {
+                                    detectTapGestures {
+                                        if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
+                                            state.currentDetent = SheetDetent.Hidden
+                                        }
                                     }
                                 }
-                            }
-                        } else it
-                    }
+                            } else it
+                        }
                 ) {
                     scope.content()
                 }

@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import android.os.Build
 import android.view.Window
@@ -22,6 +22,7 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.composables.core.R
 import java.util.*
 
 @Composable
