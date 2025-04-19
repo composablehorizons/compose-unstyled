@@ -11,11 +11,11 @@ for demo in "${demo_names[@]}"; do
 done
 
 ## Build the project
-./gradlew jsBrowserDistribution
+./gradlew jsBrowserDevelopmentExecutableDistribution
 
 ## Move built files to respective directories
 for demo in "${demo_names[@]}"; do
-    demo_source="${project_root}/demo-${demo%-demo}/build/dist/js/productionExecutable/*"
+    demo_source="${project_root}/demo-${demo%-demo}/build/dist/js/developmentExecutable/*"
     demo_destination="${project_root}/docs/${demo}-demo"
     mv $demo_source "$demo_destination"
 done
