@@ -26,7 +26,7 @@ import com.composables.core.R
 import java.util.*
 
 @Composable
-internal actual fun Modal(
+actual fun Modal(
     onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
 ) {

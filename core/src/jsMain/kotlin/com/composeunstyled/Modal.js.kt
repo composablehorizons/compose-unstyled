@@ -16,7 +16,7 @@ import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal actual fun Modal(
+actual fun Modal(
     onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
 ) = androidx.compose.ui.window.Dialog(
