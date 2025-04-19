@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KotlinProject</title>
+    <script type="application/javascript" src="skiko.js"></script>
+</head>
+<body>
+<canvas id="ComposeTarget"></canvas>
+<script type="application/javascript" src="composeApp.js"></script>
+<script>
+    const canvas = document.getElementById('ComposeTarget');
+
+    canvas.addEventListener('wheel', (event) => {
+        event.preventDefault();
+    });
+</script>
+</body>
+</html>
