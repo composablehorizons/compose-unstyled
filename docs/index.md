@@ -87,6 +87,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
       </a>
       <div>Slider</div>
   </div>
+
+    <div>
+        <a href="tabgroup">
+          <img src="preview_tab_group.png" alt="Tab Group Preview">
+        </a>
+        <div>Tab Group</div>
+    </div>
 </div>
 
 ## What developers say

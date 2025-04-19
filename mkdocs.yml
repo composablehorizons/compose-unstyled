@@ -48,6 +48,7 @@ nav:
     - 'Scroll Area (Scrollbars)' : scrollarea.md
     - 'Separators' : separators.md
     - 'Slider' : slider.md
+    - 'Tab Group' : tabgroup.md
 
 plugins:
   - social
