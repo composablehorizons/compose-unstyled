@@ -87,7 +87,10 @@ kotlin {
 
         jvmTest.dependencies {
             implementation(compose.desktop.uiTestJUnit4)
-            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.currentOs) {
+                exclude("org.jetbrains.compose.material")
+                exclude("org.jetbrains.compose.material3")
+            }
         }
     }
 }

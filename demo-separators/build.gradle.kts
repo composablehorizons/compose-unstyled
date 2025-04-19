@@ -66,7 +66,10 @@ kotlin {
 
         val desktopMain by getting {
             dependencies {
-                implementation(compose.desktop.currentOs)
+                implementation(compose.desktop.currentOs) {
+                    exclude("org.jetbrains.compose.material")
+                    exclude("org.jetbrains.compose.material3")
+                }
             }
         }
 

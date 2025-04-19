@@ -66,7 +66,10 @@ kotlin {
 
         val desktopMain by getting {
             dependencies {
-                implementation(compose.desktop.currentOs)
+                implementation(compose.desktop.currentOs) {
+                    exclude("org.jetbrains.compose.material")
+                    exclude("org.jetbrains.compose.material3")
+                }
             }
         }
 
@@ -74,7 +77,6 @@ kotlin {
             dependencies {
                 implementation("androidx.activity:activity-compose:1.9.0")
                 implementation("androidx.activity:activity:1.9.0")
-                implementation("androidx.compose.material3:material3:1.3.0")
 
             }
         }
