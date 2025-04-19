@@ -19,6 +19,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import com.composeunstyled.AppearInstantly
+import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.Modal
 
 public data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)

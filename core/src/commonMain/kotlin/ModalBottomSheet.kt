@@ -22,6 +22,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.AppearInstantly
+import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.Modal
 import kotlinx.coroutines.delay
 

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import com.composeunstyled.AppearInstantly
+import com.composeunstyled.DisappearInstantly
 
 @Deprecated("This signature is going away in a future version", ReplaceWith("Menu(state,modifier,contents)"))
 @Composable
