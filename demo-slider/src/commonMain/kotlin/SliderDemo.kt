@@ -41,7 +41,11 @@ fun SliderDemo() {
 
         val state = rememberSliderState(0.7f)
 
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.widthIn(400.dp).fillMaxWidth().padding(horizontal = 16.dp)
+        ) {
             Button(
                 onClick = { state.value -= 0.1f },
             ) {
@@ -51,7 +55,7 @@ fun SliderDemo() {
             Slider(
                 interactionSource = interactionSource,
                 state = state,
-                modifier = Modifier.width(400.dp),
+                modifier = Modifier.weight(1f),
                 track = {
                     Box(
                         Modifier
