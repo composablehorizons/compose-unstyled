@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.PressInteraction.Press
+import androidx.compose.foundation.interaction.PressInteraction.Release
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -24,7 +24,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.disabled
@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.setProgress
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastCoerceIn
 import androidx.compose.ui.util.lerp
 import com.composables.core.androidx.annotation.IntRange
@@ -40,6 +41,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class SliderState(
@@ -97,6 +100,19 @@ private fun CorrectValueSideEffect(
 }
 
 
+suspend fun AwaitPointerEventScope.waitRelease(
+    pass: PointerEventPass = PointerEventPass.Main
+): PointerInputChange? {
+    while (true) {
+        val event = awaitPointerEvent(pass)
+        if (event.changes.fastAll { it.changedToUp() }) {
+            // All pointers are up
+            return event.changes[0]
+        }
+    }
+}
+
+
 @Composable
 fun Slider(
     state: SliderState,
@@ -127,9 +143,6 @@ fun Slider(
 
     val offset = (sliderWidth - thumbWidthPx) * fraction
 
-    var currentPress by remember { mutableStateOf<Press?>(null) }
-    var isDragging by remember { mutableStateOf(false) }
-
     fun scaleToUserValue(offset: Float) = scale(minPx, maxPx, offset, valueRange.start, valueRange.endInclusive)
 
     fun scaleToOffset(userValue: Float) = scale(
@@ -151,78 +164,73 @@ fun Slider(
         value = state.value
     )
 
-    fun onDragEnded() {
-        isDragging = false
-        if (currentPress != null) {
-            scope.launch {
-                var interaction = PressInteraction.Release(currentPress!!)
-                interactionSource.emit(interaction)
-                currentPress = null
-            }
+    val dragOnTap = Modifier.pointerInput(draggableState, interactionSource, maxPx, isRtl) {
+        if (enabled) {
+            detectTapGestures(
+                onPress = { pos ->
+                    val to = if (isRtl) maxPx - pos.x else pos.x
+                    pressOffset = to - rawOffset
+
+                    // dispatch a drag so that offset calculations kick in
+                    scope.launch {
+                        draggableState.drag(MutatePriority.UserInput) {
+                            focusRequester.requestFocus()
+                            dragBy(0f)
+                        }
+                    }
+                    try {
+                        awaitRelease()
+                    } catch (_: GestureCancellationException) {
+                        pressOffset = 0f
+                    }
+                },
+                onTap = {
+                    scope.launch {
+                        draggableState.drag(MutatePriority.UserInput) {
+                            // just trigger animation, press offset will be applied
+                            dragBy(0f)
+                        }
+                    }
+                }
+            )
         }
     }
-
-    val dragOnTap = Modifier
-        .pointerInput(draggableState, interactionSource, maxPx, isRtl) {
+        .pointerInput(draggableState, interactionSource, enabled) {
+            val currentContext = currentCoroutineContext()
             if (enabled) {
-                detectTapGestures(
-                    onPress = { pos ->
-                        val to = if (isRtl) maxPx - pos.x else pos.x
-                        pressOffset = to - rawOffset
-                        var interaction = Press(pos)
+                awaitPointerEventScope {
+                    while (currentContext.isActive) {
+                        val down = awaitFirstDown()
 
-                        currentPress = interaction
-                        interactionSource.emit(interaction)
-
-                        isDragging = true
-                        scope.launch {
-                            draggableState.drag(MutatePriority.UserInput) {
-                                focusRequester.requestFocus()
-                                dragBy(0f)
-                            }
-                        }
-
+                        var press = Press(down.position)
+                        scope.launch { interactionSource.emit(press) }
                         try {
-                            awaitRelease()
-                        } catch (_: GestureCancellationException) {
-                            pressOffset = 0f
+                            waitRelease()
+                        } catch (_: Exception) {
                         }
-                    },
-                    onTap = {
-                        onDragEnded()
+                        scope.launch { interactionSource.emit(Release(press)) }
                     }
-                )
+                }
             }
         }
 
     Box(
-        modifier = modifier
-                then dragOnTap
-            .focusRequester(focusRequester)
+        modifier = modifier then dragOnTap.focusRequester(focusRequester)
             .focusable(enabled, interactionSource = interactionSource)
             .sliderKeyboardInteractions(enabled = enabled, state = state)
             .draggable(
                 state = draggableState,
                 orientation = orientation,
-                onDragStarted = {
-                    focusRequester.requestFocus()
-                },
-                onDragStopped = {
-                    onDragEnded()
-                },
+                onDragStarted = { focusRequester.requestFocus() },
                 interactionSource = interactionSource
-            )
-            .onSizeChanged { sliderWidth = it.width.toFloat() }
+            ).onSizeChanged { sliderWidth = it.width.toFloat() }
             .sliderSemantics(enabled = enabled, state = state, coerced = coerced),
         contentAlignment = Alignment.CenterStart,
     ) {
         track()
 
-        Box(
-            Modifier
-                .onSizeChanged { thumbWidthPx = it.width.toFloat() }
-                .offset { IntOffset(x = offset.roundToInt(), 0) }
-        ) {
+        Box(Modifier.onSizeChanged { thumbWidthPx = it.width.toFloat() }
+            .offset { IntOffset(x = offset.roundToInt(), 0) }) {
             thumb()
         }
     }
@@ -239,9 +247,7 @@ private fun Modifier.sliderSemantics(enabled: Boolean, state: SliderState, coerc
                     var distance: Float = newValue
                     for (i in 0..state.steps + 1) {
                         val stepValue = lerp(
-                            state.valueRange.start,
-                            state.valueRange.endInclusive,
-                            i.toFloat() / (state.steps + 1)
+                            state.valueRange.start, state.valueRange.endInclusive, i.toFloat() / (state.steps + 1)
                         )
                         if (abs(stepValue - originalVal) <= distance) {
                             distance = abs(stepValue - originalVal)
@@ -260,14 +266,10 @@ private fun Modifier.sliderSemantics(enabled: Boolean, state: SliderState, coerc
                     state.value = resolvedValue
                     true
                 }
-            }
-        )
-    }
-        .progressSemantics(
-            state.value,
-            state.valueRange.start..state.valueRange.endInclusive,
-            state.steps
-        )
+            })
+    }.progressSemantics(
+        state.value, state.valueRange.start..state.valueRange.endInclusive, state.steps
+    )
 }
 
 private fun Modifier.sliderKeyboardInteractions(enabled: Boolean, state: SliderState): Modifier {
@@ -333,19 +335,13 @@ private fun calcFraction(a: Float, b: Float, pos: Float) =
 
 
 // Scale x1 from a1..b1 range to a2..b2 range
-private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
-    lerp(a2, b2, calcFraction(a1, b1, x1))
+private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) = lerp(a2, b2, calcFraction(a1, b1, x1))
 
 @Composable
 fun Thumb(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    color: Color = Color.Unspecified
+    modifier: Modifier = Modifier, shape: Shape = RectangleShape, color: Color = Color.Unspecified
 ) {
     Box(
-        modifier
-            .clip(shape)
-            .background(color)
-            .size(24.dp)
+        modifier.clip(shape).background(color).size(24.dp)
     )
 }
