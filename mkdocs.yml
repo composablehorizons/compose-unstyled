@@ -45,6 +45,7 @@ nav:
     - 'Dialog' : dialog.md
     - 'Dropdown (Menu)' : dropdown-menu.md
     - 'Icon' : icon.md
+    - 'Progress Indicator' : progressindicator.md
     - 'Scroll Area (Scrollbars)' : scrollarea.md
     - 'Separators' : separators.md
     - 'Slider' : slider.md

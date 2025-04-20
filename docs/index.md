@@ -69,6 +69,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
   </div>
 
   <div>
+      <a href="progressindicator">
+        <img src="preview_progress_indicator.png" alt="Progress Indicator Preview">
+      </a>
+      <div>Progress Indicator</div>
+  </div>
+
+  <div>
       <a href="scrollarea">
         <img src="preview_scrollarea.png" alt="Scroll Area Preview">
       </a>
