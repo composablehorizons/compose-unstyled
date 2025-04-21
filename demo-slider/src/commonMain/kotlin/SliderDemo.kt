@@ -43,8 +43,8 @@ fun SliderDemo() {
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.widthIn(400.dp).fillMaxWidth().padding(horizontal = 16.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth()
         ) {
             Button(
                 onClick = { state.value -= 0.1f },
