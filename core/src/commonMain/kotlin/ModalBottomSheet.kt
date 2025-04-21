@@ -27,13 +27,13 @@ import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.Modal
 import kotlinx.coroutines.delay
 
-public data class ModalSheetProperties(
+data class ModalSheetProperties(
     val dismissOnBackPress: Boolean = true,
     val dismissOnClickOutside: Boolean = true,
 )
 
 @Composable
-public fun rememberModalBottomSheetState(
+fun rememberModalBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
@@ -71,14 +71,14 @@ public fun rememberModalBottomSheetState(
     )
 }
 
-public class ModalBottomSheetState internal constructor(
+class ModalBottomSheetState internal constructor(
     internal val bottomSheetDetent: SheetDetent,
     internal val bottomSheetState: BottomSheetState
 ) {
 
     internal var modalDetent by mutableStateOf(bottomSheetDetent)
 
-    public var currentDetent: SheetDetent
+    var currentDetent: SheetDetent
         get() {
             return modalDetent
         }
@@ -92,20 +92,20 @@ public class ModalBottomSheetState internal constructor(
                 modalDetent = value
             }
         }
-    public val targetDetent: SheetDetent by derivedStateOf {
+    val targetDetent: SheetDetent by derivedStateOf {
         bottomSheetState.targetDetent
     }
-    public val isIdle: Boolean by derivedStateOf {
+    val isIdle: Boolean by derivedStateOf {
         bottomSheetState.isIdle
     }
-    public val progress: Float by derivedStateOf {
+    val progress: Float by derivedStateOf {
         bottomSheetState.progress
     }
-    public val offset: Float by derivedStateOf {
+    val offset: Float by derivedStateOf {
         bottomSheetState.offset
     }
 
-    public suspend fun animateTo(value: SheetDetent) {
+    suspend fun animateTo(value: SheetDetent) {
         val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
                 || bottomSheetState.targetDetent != SheetDetent.Hidden
 
@@ -116,7 +116,7 @@ public class ModalBottomSheetState internal constructor(
         }
     }
 
-    public fun jumpTo(value: SheetDetent) {
+    fun jumpTo(value: SheetDetent) {
         val isBottomSheetVisible =
             bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
 
@@ -128,7 +128,7 @@ public class ModalBottomSheetState internal constructor(
     }
 }
 
-public class ModalBottomSheetScope internal constructor(
+class ModalBottomSheetScope internal constructor(
     internal val modalState: ModalBottomSheetState,
     internal val sheetState: BottomSheetState,
 ) {
@@ -143,7 +143,7 @@ private val LocalModalContext = compositionLocalOf<ModalContext> {
 val DoNothing: () -> Unit = {}
 
 @Composable
-public fun ModalBottomSheet(
+fun ModalBottomSheet(
     state: ModalBottomSheetState,
     properties: ModalSheetProperties = ModalSheetProperties(),
     onDismiss: () -> Unit = DoNothing,
@@ -195,7 +195,7 @@ public fun ModalBottomSheet(
 }
 
 @Composable
-public fun ModalBottomSheetScope.Scrim(
+fun ModalBottomSheetScope.Scrim(
     modifier: Modifier = Modifier,
     scrimColor: Color = Color.Black.copy(0.6f),
     enter: EnterTransition = AppearInstantly,
@@ -211,7 +211,7 @@ public fun ModalBottomSheetScope.Scrim(
 }
 
 @Composable
-public fun ModalBottomSheetScope.Sheet(
+fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     content: @Composable (BottomSheetScope.() -> Unit)
