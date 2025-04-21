@@ -3,7 +3,6 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -61,7 +60,7 @@ fun BottomSheetDemo() {
                 .align(Alignment.Center)
                 .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                 .clip(RoundedCornerShape(6.dp))
-                .clickable(role = Role.Button) { sheetState.currentDetent = Peek }
+                .clickable(role = Role.Button) { sheetState.targetDetent = Peek }
                 .background(Color.White)
                 .padding(horizontal = 14.dp, vertical = 10.dp)
         ) {

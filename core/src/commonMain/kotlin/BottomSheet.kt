@@ -176,6 +176,10 @@ class BottomSheetState internal constructor(
 
     var currentDetent: SheetDetent
         get() = anchoredDraggableState.currentValue
+        @Deprecated(
+            message = "This setter will go away in a future version of the library. Set the value to targetDetent instead",
+            replaceWith = ReplaceWith("targetDetent")
+        )
         set(value) {
             check(detents.contains(value)) {
                 "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -185,8 +189,17 @@ class BottomSheetState internal constructor(
             }
         }
 
-    val targetDetent: SheetDetent
+    var targetDetent: SheetDetent
         get() = anchoredDraggableState.targetValue
+        set(value) {
+            check(detents.contains(value)) {
+                "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
+            }
+            coroutineScope.launch {
+                anchoredDraggableState.animateTo(value)
+            }
+        }
+
 
     val isIdle: Boolean by derivedStateOf {
         (progress == 1f || progress == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
