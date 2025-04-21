@@ -58,7 +58,7 @@ private fun Saver(
 })
 
 @Composable
-public fun rememberBottomSheetState(
+fun rememberBottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
     animationSpec: AnimationSpec<Float> = tween(),
@@ -110,14 +110,14 @@ public fun rememberBottomSheetState(
 }
 
 @Immutable
-public class SheetDetent(
-    public val identifier: String,
-    public val calculateDetentHeight: (containerHeight: Dp, sheetHeight: Dp) -> Dp
+class SheetDetent(
+    val identifier: String,
+    val calculateDetentHeight: (containerHeight: Dp, sheetHeight: Dp) -> Dp
 ) {
-    public companion object {
-        public val FullyExpanded: SheetDetent =
+    companion object {
+        val FullyExpanded: SheetDetent =
             SheetDetent("fully-expanded") { containerHeight, sheetHeight -> sheetHeight }
-        public val Hidden: SheetDetent = SheetDetent("hidden") { containerHeight, sheetHeight -> 0.dp }
+        val Hidden: SheetDetent = SheetDetent("hidden") { containerHeight, sheetHeight -> 0.dp }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -134,7 +134,7 @@ public class SheetDetent(
     }
 }
 
-public class BottomSheetState internal constructor(
+class BottomSheetState internal constructor(
     initialDetent: SheetDetent,
     internal val detents: List<SheetDetent>,
     private val coroutineScope: CoroutineScope,
@@ -174,7 +174,7 @@ public class BottomSheetState internal constructor(
         confirmValueChange = confirmDetentChange,
     )
 
-    public var currentDetent: SheetDetent
+    var currentDetent: SheetDetent
         get() = anchoredDraggableState.currentValue
         set(value) {
             check(detents.contains(value)) {
@@ -185,17 +185,17 @@ public class BottomSheetState internal constructor(
             }
         }
 
-    public val targetDetent: SheetDetent
+    val targetDetent: SheetDetent
         get() = anchoredDraggableState.targetValue
 
-    public val isIdle: Boolean by derivedStateOf {
+    val isIdle: Boolean by derivedStateOf {
         (progress == 1f || progress == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
     }
 
-    public val progress: Float
+    val progress: Float
         get() = anchoredDraggableState.progress(detents.first(), detents.last())
 
-    public val offset: Float by derivedStateOf {
+    val offset: Float by derivedStateOf {
         if (anchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
             1f
         } else {
@@ -205,18 +205,18 @@ public class BottomSheetState internal constructor(
     }
 
     @Deprecated("Velocity can no longer be set", ReplaceWith("animateTo(value)"))
-    public suspend fun animateTo(value: SheetDetent, velocity: Float = anchoredDraggableState.lastVelocity) {
+    suspend fun animateTo(value: SheetDetent, velocity: Float = anchoredDraggableState.lastVelocity) {
         animateTo(value)
     }
 
-    public suspend fun animateTo(value: SheetDetent) {
+    suspend fun animateTo(value: SheetDetent) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
         anchoredDraggableState.animateTo(value)
     }
 
-    public fun jumpTo(value: SheetDetent) {
+    fun jumpTo(value: SheetDetent) {
         check(detents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
@@ -224,7 +224,7 @@ public class BottomSheetState internal constructor(
     }
 }
 
-public class BottomSheetScope internal constructor(
+class BottomSheetScope internal constructor(
     internal val state: BottomSheetState,
     enabled: Boolean
 ) {
@@ -232,7 +232,7 @@ public class BottomSheetScope internal constructor(
 }
 
 @Composable
-public fun BottomSheet(
+fun BottomSheet(
     state: BottomSheetState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -402,7 +402,7 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     }
 
 @Composable
-public fun BottomSheetScope.DragIndication(
+fun BottomSheetScope.DragIndication(
     modifier: Modifier = Modifier,
     indication: Indication = rememberFocusRingIndication(
         ringColor = Color.Blue,
