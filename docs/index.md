@@ -168,6 +168,20 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 
 <div class="testimonial-container">
   <div class="testimonial-image">
+    <img src="/testimonials/shiv.jpg" alt="Shiv">
+  </div>
+  <div class="testimonial-content">
+    <div class="testimonial-text">
+"honestly this comps have made my life so much easier!"  
+    </div>
+    <div class="testimonial-author">
+      <div>@shivamdhuria27</div>
+    </div>
+  </div>
+</div>
+
+<div class="testimonial-container">
+  <div class="testimonial-image">
     <img src="/testimonials/alexstyl.jpg" alt="Alex Styl">
   </div>
   <div class="testimonial-content">
