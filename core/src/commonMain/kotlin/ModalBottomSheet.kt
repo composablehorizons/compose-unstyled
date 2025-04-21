@@ -82,19 +82,33 @@ class ModalBottomSheetState internal constructor(
         get() {
             return modalDetent
         }
+        @Deprecated(
+            message = "This setter will go away in a future version of the library. Set the value to targetDetent instead",
+            replaceWith = ReplaceWith("targetDetent")
+        )
         set(value) {
             val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
                     || bottomSheetState.targetDetent != SheetDetent.Hidden
 
             if (isBottomSheetVisible) {
-                bottomSheetState.currentDetent = value
+                bottomSheetState.targetDetent = value
             } else {
                 modalDetent = value
             }
         }
-    val targetDetent: SheetDetent by derivedStateOf {
-        bottomSheetState.targetDetent
-    }
+    var targetDetent: SheetDetent
+        get() = bottomSheetState.targetDetent
+        set(value) {
+            val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
+                    || bottomSheetState.targetDetent != SheetDetent.Hidden
+
+            if (isBottomSheetVisible) {
+                bottomSheetState.targetDetent = value
+            } else {
+                modalDetent = value
+            }
+        }
+
     val isIdle: Boolean by derivedStateOf {
         bottomSheetState.isIdle
     }
@@ -163,7 +177,7 @@ fun ModalBottomSheet(
                         && (event.key == Key.Back || event.key == Key.Escape)
                         && state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)
                     ) {
-                        scope.sheetState.currentDetent = SheetDetent.Hidden
+                        scope.sheetState.targetDetent = SheetDetent.Hidden
                         true
                     } else false
                 }
@@ -180,7 +194,7 @@ fun ModalBottomSheet(
                                 it.pointerInput(Unit) {
                                     detectTapGestures {
                                         if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                                            state.currentDetent = SheetDetent.Hidden
+                                            state.targetDetent = SheetDetent.Hidden
                                         }
                                     }
                                 }
@@ -221,7 +235,7 @@ fun ModalBottomSheetScope.Sheet(
     LaunchedEffect(Unit) {
         // waiting for the dialog to settle: can't just start animation here
         delay(50)
-        sheetState.currentDetent = modalState.modalDetent
+        sheetState.targetDetent = modalState.modalDetent
         hasBeenIntroduced = true
     }
 
@@ -229,7 +243,7 @@ fun ModalBottomSheetScope.Sheet(
         val context = LocalModalContext.current
         LaunchedEffect(sheetState.isIdle) {
             if (sheetState.isIdle) {
-                if (sheetState.currentDetent == SheetDetent.Hidden) {
+                if (sheetState.targetDetent == SheetDetent.Hidden) {
                     context.onDismissRequest()
                     modalState.modalDetent = SheetDetent.Hidden
                 } else {

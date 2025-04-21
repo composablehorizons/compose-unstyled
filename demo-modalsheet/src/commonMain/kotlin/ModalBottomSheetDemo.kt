@@ -43,7 +43,7 @@ fun ModalBottomSheetDemo() {
                 .align(Alignment.Center)
                 .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                 .clip(RoundedCornerShape(6.dp))
-                .clickable(role = Role.Button) { modalSheetState.currentDetent = Peek }
+                .clickable(role = Role.Button) { modalSheetState.targetDetent = Peek }
                 .background(Color.White)
                 .padding(horizontal = 14.dp, vertical = 10.dp)
         ) {
