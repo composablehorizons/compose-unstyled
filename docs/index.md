@@ -4,7 +4,7 @@ hide: -navigation -toc
 
 # Compose Unstyled
 
-Unstyled, fully accessible components for Jetpack Compose & Compose Multiplatform that you can customize to your heart's content.
+Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.
 
 Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and any other platform Compose can run on.
 
@@ -74,6 +74,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
       </a>
       <div>Progress Indicator</div>
   </div>
+
+    <div>
+        <a href="radiogroup">
+          <img src="preview_radio_group.png" alt="Radio Group Preview">
+        </a>
+        <div>Radio Group</div>
+    </div>
 
   <div>
       <a href="scrollarea">

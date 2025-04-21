@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: Unstyled, fully accessible components for Compose Multiplatform that you can customize to your heart's desire
+description: Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.
 ---
 
 Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.

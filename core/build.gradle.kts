@@ -126,7 +126,7 @@ afterEvaluate {
 
                 pom {
                     name.set("Compose Unstyled")
-                    description.set("Unstyled, fully accessible Compose Multiplatform components that you can customize to your heart's desire.")
+                    description.set("Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
                     url.set("https://${githubUrl}")
                     licenses {
                         license {

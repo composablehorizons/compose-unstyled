@@ -1,5 +1,5 @@
 site_name: 'Compose Unstyled'
-site_description: "Unstyled, fully accessible Jetpack Compose & Compose Multiplatform components that you can customize to your heart's desire."
+site_description: "Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform."
 site_url: https://composeunstyled.com
 docs_dir: 'docs'
 
@@ -48,6 +48,7 @@ nav:
     - 'Dropdown (Menu)' : dropdown-menu.md
     - 'Icon' : icon.md
     - 'Progress Indicator' : progressindicator.md
+    - 'Radio Group' : radiogroup.md
     - 'Scroll Area (Scrollbars)' : scrollarea.md
     - 'Separators' : separators.md
     - 'Slider' : slider.md

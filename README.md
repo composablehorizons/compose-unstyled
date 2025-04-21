@@ -1,6 +1,6 @@
 # Compose Unstyled
 
-Unstyled, fully accessible Jetpack Compose and Compose Multiplatform UI components that you can customize to your heart's content.
+Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.
 
 ## Installation
 
