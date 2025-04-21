@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.compose.material3.internal
+package com.composeunstyled
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
