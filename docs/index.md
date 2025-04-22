@@ -116,6 +116,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
         </a>
         <div>Tab Group</div>
     </div>
+
+    <div>
+        <a href="toggleswitch">
+          <img src="preview_toggle_switch.png" alt="Toggle Switch Preview">
+        </a>
+        <div>Toggle Switch</div>
+    </div>
 </div>
 
 ## What developers say
