@@ -69,7 +69,7 @@ public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
 }
 
 @Composable
-public fun Dialog(
+fun Dialog(
     state: DialogState,
     properties: DialogProperties = DialogProperties(),
     onDismiss: () -> Unit = DoNothing,

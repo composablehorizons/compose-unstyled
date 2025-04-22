@@ -43,7 +43,7 @@ import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 
 @Composable
-fun MenuDemo() {
+fun DropdownMenuDemo() {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))

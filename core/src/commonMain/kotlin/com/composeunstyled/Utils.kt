@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
 
 internal val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 internal val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))

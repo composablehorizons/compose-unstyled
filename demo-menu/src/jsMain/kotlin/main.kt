@@ -5,6 +5,6 @@ import org.jetbrains.skiko.wasm.onWasmReady
 
 fun main() {
     onWasmReady {
-        CanvasBasedWindow(canvasElementId = "ComposeTarget") { MenuDemo() }
+        CanvasBasedWindow(canvasElementId = "ComposeTarget") { DropdownMenuDemo() }
     }
 }

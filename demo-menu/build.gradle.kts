@@ -17,7 +17,7 @@ kotlin {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(17)
     }
-    js(IR){
+    js(IR) {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
@@ -76,8 +76,8 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation ("androidx.compose.ui:ui:1.6.6")
-                implementation ("androidx.activity:activity-compose:1.9.0")
+                implementation("androidx.compose.ui:ui:1.6.6")
+                implementation("androidx.activity:activity-compose:1.9.0")
             }
         }
     }

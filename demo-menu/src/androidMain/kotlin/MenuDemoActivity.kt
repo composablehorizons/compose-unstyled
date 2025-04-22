@@ -12,7 +12,7 @@ class MenuDemoActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            MenuDemo()
+            DropdownMenuDemo()
         }
     }
 }
