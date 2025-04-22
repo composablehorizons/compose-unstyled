@@ -47,33 +47,40 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
         <div>Bottom Sheet (Modal)</div>
     </div>
 
-  <div>
-    <a href="dialog">
-      <img src="preview_dialog.png" alt="Dialog Preview">
-    </a>
-    <div>Dialog</div>
-  </div>
+    <div>
+        <a href="checkbox">
+          <img src="preview_checkbox.png" alt="Checkbox Preview">
+        </a>
+        <div>Checkbox</div>
+    </div>
 
-  <div>
-    <a href="dropdown-menu">
-      <img src="preview_menu.png" alt="Menu Preview">
-    </a>
-    <div>Dropdown Menu</div>
-  </div>
+    <div>
+        <a href="dialog">
+          <img src="preview_dialog.png" alt="Dialog Preview">
+        </a>
+        <div>Dialog</div>
+    </div>
 
-  <div>
-    <a href="icon">
-      <img src="preview_icon.png" alt="Icon Preview">
-    </a>
-    <div>Icon</div>
-  </div>
+    <div>
+        <a href="dropdown-menu">
+          <img src="preview_menu.png" alt="Menu Preview">
+        </a>
+        <div>Dropdown Menu</div>
+    </div>
 
-  <div>
-      <a href="progressindicator">
-        <img src="preview_progress_indicator.png" alt="Progress Indicator Preview">
-      </a>
-      <div>Progress Indicator</div>
-  </div>
+    <div>
+        <a href="icon">
+          <img src="preview_icon.png" alt="Icon Preview">
+        </a>
+        <div>Icon</div>
+    </div>
+
+    <div>
+        <a href="progressindicator">
+          <img src="preview_progress_indicator.png" alt="Progress Indicator Preview">
+        </a>
+        <div>Progress Indicator</div>
+    </div>
 
     <div>
         <a href="radiogroup">
@@ -82,25 +89,26 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
         <div>Radio Group</div>
     </div>
 
-  <div>
-      <a href="scrollarea">
-        <img src="preview_scrollarea.png" alt="Scroll Area Preview">
-      </a>
-      <div>Scroll Area</div>
-  </div>
+    <div>
+        <a href="scrollarea">
+          <img src="preview_scrollarea.png" alt="Scroll Area Preview">
+        </a>
+        <div>Scroll Area</div>
+    </div>
 
-  <div>
-      <a href="separators">
-        <img src="preview_separators.png" alt="Separators Preview">
-      </a>
-      <div>Separators</div>
-  </div>
-  <div>
-      <a href="slider">
-        <img src="preview_slider.png" alt="Slider Preview">
-      </a>
-      <div>Slider</div>
-  </div>
+    <div>
+        <a href="separators">
+          <img src="preview_separators.png" alt="Separators Preview">
+        </a>
+        <div>Separators</div>
+    </div>
+
+    <div>
+        <a href="slider">
+          <img src="preview_slider.png" alt="Slider Preview">
+        </a>
+        <div>Slider</div>
+    </div>
 
     <div>
         <a href="tabgroup">

@@ -44,6 +44,7 @@ nav:
   - Components:
     - 'Bottom Sheet' : bottom-sheet.md
     - 'Bottom Sheet (Modal)' : modal-bottom-sheet.md
+    - 'Checkbox' : checkbox.md
     - 'Dialog' : dialog.md
     - 'Dropdown (Menu)' : dropdown-menu.md
     - 'Icon' : icon.md
