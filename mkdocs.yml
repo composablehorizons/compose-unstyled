@@ -54,6 +54,7 @@ nav:
     - 'Separators' : separators.md
     - 'Slider' : slider.md
     - 'Tab Group' : tabgroup.md
+    - 'Text' : text.md
     - 'Toggle Switch' : toggle-switch.md
 
 plugins:

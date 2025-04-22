@@ -118,6 +118,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
 
     <div>
+        <a href="text">
+          <img src="preview_text.png" alt="Text Preview">
+        </a>
+        <div>Text</div>
+    </div>
+
+    <div>
         <a href="toggleswitch">
           <img src="preview_toggle_switch.png" alt="Toggle Switch Preview">
         </a>
