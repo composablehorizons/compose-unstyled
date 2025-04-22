@@ -36,6 +36,7 @@ dependencyResolutionManagement {
 }
 
 include(":core")
+include(":demo-button")
 include(":demo-checkbox")
 include(":demo-dialog")
 include(":demo-icon")

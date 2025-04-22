@@ -130,6 +130,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
         </a>
         <div>Toggle Switch</div>
     </div>
+
+    <div>
+        <a href="button">
+          <img src="preview_button.png" alt="Button Preview">
+        </a>
+        <div>Button</div>
+    </div>
 </div>
 
 ## What developers say
