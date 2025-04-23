@@ -7,7 +7,7 @@ description: A stackable, renderless, highly performant foundational component t
 
 An unstyled Dialog component that can be used to implement Dialogs with the styling of your choice.
 
-Fully accessible, supports animations, offers consistent behavior across platforms and an optional background scrim.
+Supports edge-to-edge rendering, enter/exit transitions and keyboard interactions out of the box.
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid #777;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../dialog-demo/index.html" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
