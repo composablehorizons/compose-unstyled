@@ -46,10 +46,8 @@ fun SliderDemo() {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth()
         ) {
-            Button(
-                onClick = { state.value -= 0.1f },
-            ) {
-                Icon(VolumeDown, "Decrease", tint = Color.Black)
+            Button(onClick = { state.value -= 0.1f },) {
+                Icon(VolumeDown, "Decrease")
             }
 
             Slider(
@@ -105,10 +103,8 @@ fun SliderDemo() {
                 }
             )
 
-            Button(
-                onClick = { state.value += 0.1f },
-            ) {
-                Icon(VolumeUp, "Increase", tint = Color.Black)
+            Button(onClick = { state.value += 0.1f }) {
+                Icon(VolumeUp, "Increase")
             }
         }
     }

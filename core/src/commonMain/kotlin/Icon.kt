@@ -9,9 +9,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.composeunstyled.LocalContentColor
 
 @Composable
-public fun Icon(painter: Painter, contentDescription: String?, tint: Color, modifier: Modifier = Modifier) {
+fun Icon(
+    painter: Painter,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    tint: Color = LocalContentColor.current
+) {
     val colorFilter = remember(tint) {
         if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
     }
@@ -19,7 +25,12 @@ public fun Icon(painter: Painter, contentDescription: String?, tint: Color, modi
 }
 
 @Composable
-public fun Icon(imageBitmap: ImageBitmap, contentDescription: String?, tint: Color, modifier: Modifier = Modifier) {
+fun Icon(
+    imageBitmap: ImageBitmap,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    tint: Color = LocalContentColor.current
+) {
     val colorFilter = remember(tint) {
         if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
     }
@@ -27,7 +38,12 @@ public fun Icon(imageBitmap: ImageBitmap, contentDescription: String?, tint: Col
 }
 
 @Composable
-public fun Icon(imageVector: ImageVector, contentDescription: String?, tint: Color, modifier: Modifier = Modifier) {
+fun Icon(
+    imageVector: ImageVector,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    tint: Color = LocalContentColor.current
+) {
     val colorFilter = remember(tint) {
         if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
     }

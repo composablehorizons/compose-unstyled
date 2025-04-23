@@ -51,7 +51,6 @@ fun IconDemo() {
                 modifier = Modifier.requiredSize(84.dp)
             )
             if (isCompact.not()) {
-
                 Icon(
                     Person,
                     contentDescription = null,
