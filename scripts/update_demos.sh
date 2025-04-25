@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 ## Build the project
 ./gradlew jsBrowserDevelopmentExecutableDistribution
 
