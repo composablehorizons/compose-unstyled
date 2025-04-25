@@ -1,5 +1,5 @@
-# Script that builds the JS version of the demo and moves it to the docs resources
-
+#!/bin/bash
+set -e
 ## Build the project
 ./gradlew jsBrowserDevelopmentExecutableDistribution
 
