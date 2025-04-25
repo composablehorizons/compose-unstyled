@@ -45,7 +45,7 @@ val sheetState = rememberBottomSheetState(
 )
 
 Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
-    BasicText("Show Sheet")
+    Text("Show Sheet")
 }
 
 BottomSheet(
@@ -116,7 +116,7 @@ val sheetState = rememberBottomSheetState(
 )
 
 Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
-    BasicText("Show Sheet")
+    Text("Show Sheet")
 }
 
 BottomSheet(
@@ -128,7 +128,7 @@ BottomSheet(
         contentAlignment = Alignment.TopCenter
     ) {
         Box(Modifier.clickable { sheetState.currentDetent = Hidden }) {
-            BasicText("Hide Sheet")
+            Text("Hide Sheet")
         }
     }
 }
@@ -214,7 +214,7 @@ BottomSheet(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         DragIndication()
-        BasicText("Here is some content")
+        Text("Here is some content")
     }
 }
 ```
@@ -263,7 +263,7 @@ BottomSheet(
                 .clickable { /* TODO */ }
                 .padding(4.dp)
                 .align(Alignment.End)) {
-            BasicText(
+            Text(
                 text = "Save note",
                 style = TextStyle.Default.copy(color = Color.White)
             )
@@ -294,7 +294,7 @@ BottomSheet(
         DragIndication(Modifier.width(32.dp).height(4.dp))
         LazyColumn {
             repeat(50) {
-                item { BasicText("Item #${(it + 1)}", modifier = Modifier.padding(10.dp)) }
+                item { Text("Item #${(it + 1)}", modifier = Modifier.padding(10.dp)) }
             }
         }
     }
@@ -351,8 +351,8 @@ BottomSheet(
         .height(1200.dp),
 ) {
     Column {
-        BasicText("Current Detent = ${sheetState.currentDetent.identifier}")
-        BasicText("Target Detent = ${sheetState.targetDetent.identifier}")
+        Text("Current Detent = ${sheetState.currentDetent.identifier}")
+        Text("Target Detent = ${sheetState.targetDetent.identifier}")
     }
 }
 ```
@@ -395,7 +395,7 @@ val sheetState = rememberBottomSheetState(
 )
 
 Box(Modifier.clickable { sheetState.jumpTo(FullyExpanded) }) {
-    BasicText("Show Sheet")
+    Text("Show Sheet")
 }
 
 BottomSheet(
@@ -407,7 +407,7 @@ BottomSheet(
         contentAlignment = Alignment.TopCenter
     ) {
         Box(Modifier.clickable { sheetState.jumpTo(Hidden) }) {
-            BasicText("Hide Sheet")
+            Text("Hide Sheet")
         }
     }
 }

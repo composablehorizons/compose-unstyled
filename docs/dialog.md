@@ -40,7 +40,7 @@ val dialogState = rememberDialogState()
 
 Box {
     Box(Modifier.clickable { dialogState.visible = true }) {
-        BasicText("Show Dialog")
+        Text("Show Dialog")
     }
     Dialog(state = dialogState) {
         DialogPanel(
@@ -55,12 +55,12 @@ Box {
         ) {
             Column {
                 Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-                    BasicText(
+                    Text(
                         text = "Update Available",
                         style = TextStyle(fontWeight = FontWeight.Medium)
                     )
                     Spacer(Modifier.height(8.dp))
-                    BasicText(
+                    Text(
                         text = "A new version of the app is available. Please update to the latest version.",
                         style = TextStyle(color = Color(0xFF474747))
                     )
@@ -71,7 +71,7 @@ Box {
                     .clip(RoundedCornerShape(4.dp))
                     .clickable(role = Role.Button) { /* TODO */ }
                     .padding(horizontal = 12.dp, vertical = 8.dp)) {
-                    BasicText(
+                    Text(
                         text = "Update",
                         style = TextStyle(color = Color(0xFF6699FF))
                     )
@@ -99,9 +99,9 @@ Dialog(state = rememberDialogState(visible = true)) {
             .background(Color.White)
     ) {
         Column {
-            BasicText("Something important happened")
+            Text("Something important happened")
             Box(Modifier.clickable { /* TODO */ }) {
-                BasicText("Got it")
+                Text("Got it")
             }
         }
     }
@@ -118,14 +118,14 @@ Pass your own `DialogState` to the `Dialog` and change the *visible* property ac
 val state = rememberDialogState()
 
 Box(Modifier.clickable { state.visible = true }) {
-    BasicText("Show dialog")
+    Text("Show dialog")
 }
 Dialog(state = state) {
     DialogPanel {
         Column {
-            BasicText("Something important happened")
+            Text("Something important happened")
             Box(Modifier.clickable { state.visible = false }) {
-                BasicText("Got it")
+                Text("Got it")
             }
         }
     }
@@ -154,15 +154,15 @@ Use the `Scrim` component within your `Dialog`:
 val state = rememberDialogState()
 
 Box(Modifier.clickable { state.visible = true }) {
-    BasicText("Show dialog")
+    Text("Show dialog")
 }
 Dialog(state = state) {
     Scrim()
     DialogPanel {
         Column {
-            BasicText("Something important happened")
+            Text("Something important happened")
             Box(Modifier.clickable { state.visible = false }) {
-                BasicText("Got it")
+                Text("Got it")
             }
         }
     }
@@ -180,19 +180,19 @@ Add any scrollable component such as `LazyColumn` to the contents of your dialog
 val state = rememberDialogState()
 
 Box(Modifier.clickable { state.visible = true }) {
-    BasicText("Show dialog")
+    Text("Show dialog")
 }
 Dialog(state = state) {
     DialogPanel {
         Column {
             LazyColumn(Modifier.height(320.dp)) {
-                item { BasicText("Something important happened") }
+                item { Text("Something important happened") }
                 repeat(100) { i ->
-                    item { BasicText("Update number ${i}") }
+                    item { Text("Update number ${i}") }
                 }
             }
             Box(Modifier.clickable { state.visible = false }) {
-                BasicText("Got it")
+                Text("Got it")
             }
         }
     }
@@ -215,9 +215,9 @@ Dialog(state = rememberDialogState(visible = true)) {
             .fillMaxSize()
     ) {
         Column {
-            BasicText("This is a full screen dialog")
+            Text("This is a full screen dialog")
             Box(Modifier.clickable { state.visible = false }) {
-                BasicText("Got it")
+                Text("Got it")
             }
         }
     }
@@ -263,7 +263,7 @@ Dialog(rememberDialogState()) {
             windowInsetsControllerCompat.isAppearanceLightStatusBars = true
             windowInsetsControllerCompat.isAppearanceLightNavigationBars = true
         }
-        BasicText("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
+        Text("Transparent bars. So cool 😎 ", modifier = Modifier.navigationBarsPadding())
     }
 }
 ```

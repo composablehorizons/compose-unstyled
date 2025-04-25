@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +34,7 @@ import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberBottomSheetState
+import com.composeunstyled.Text
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
@@ -64,7 +64,7 @@ fun BottomSheetDemo() {
                 .background(Color.White)
                 .padding(horizontal = 14.dp, vertical = 10.dp)
         ) {
-            BasicText("Show Sheet", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
+            Text("Show Sheet", fontWeight = FontWeight(500))
         }
 
         BottomSheet(

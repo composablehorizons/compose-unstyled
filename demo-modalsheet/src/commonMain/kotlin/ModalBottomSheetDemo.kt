@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.core.*
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
+import com.composeunstyled.Text
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
@@ -47,7 +47,7 @@ fun ModalBottomSheetDemo() {
                 .background(Color.White)
                 .padding(horizontal = 14.dp, vertical = 10.dp)
         ) {
-            BasicText("Show Sheet", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
+            Text("Show Sheet", fontWeight = FontWeight(500))
         }
 
         val isCompact = maxWidth < 600.dp

@@ -6,7 +6,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,12 +13,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.core.*
+import com.composeunstyled.Text
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -82,14 +81,10 @@ fun VerticalScrollAreaDemo() {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                BasicText(
-                    text = "Deserts",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(4.dp)
-                )
+                Text("Deserts", Modifier.padding(4.dp), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(12.dp))
                 desserts.forEach { i ->
-                    BasicText(i, modifier = Modifier.padding(4.dp).fillMaxWidth())
+                    Text(i, Modifier.padding(4.dp).fillMaxWidth())
                     Spacer(Modifier.height(12.dp))
                 }
             }

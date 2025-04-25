@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Radio
 import com.composeunstyled.RadioGroup
+import com.composeunstyled.Text
 import com.composeunstyled.rememberRadioGroupState
 
 @Composable
@@ -72,7 +72,7 @@ fun RadioGroupDemo() {
                                 )
                             }
                             Spacer(Modifier.width(16.dp))
-                            BasicText(text)
+                            Text(text)
                         }
                     }
                 }

@@ -51,7 +51,7 @@ val sheetState = rememberModalBottomSheetState(
 )
 
 Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
-    BasicText("Show Sheet")
+    Text("Show Sheet")
 }
 
 ModalBottomSheet(state = sheetState) {
@@ -122,7 +122,7 @@ val sheetState = rememberModalBottomSheetState(
 )
 
 Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
-    BasicText("Show Sheet")
+    Text("Show Sheet")
 }
 
 ModalBottomSheet(state = sheetState) {
@@ -135,7 +135,7 @@ ModalBottomSheet(state = sheetState) {
             contentAlignment = Alignment.TopCenter
         ) {
             Box(Modifier.clickable { sheetState.currentDetent = Hidden }) {
-                BasicText("Hide Sheet")
+                Text("Hide Sheet")
             }
         }
     }
@@ -243,7 +243,7 @@ ModalBottomSheet(state = sheetState) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 DragIndication()
-                BasicText("Here is some content")
+                Text("Here is some content")
             }
         }
     }
@@ -294,7 +294,7 @@ ModalBottomSheet(state = sheetState) {
                     .clickable { /* TODO */ }
                     .padding(4.dp)
                     .align(Alignment.End)) {
-                    BasicText(
+                    Text(
                         text = "Save note",
                         style = TextStyle.Default.copy(color = Color.White)
                     )
@@ -324,7 +324,7 @@ ModalBottomSheet(state = sheetState) {
             DragIndication(Modifier.width(32.dp).height(4.dp))
             LazyColumn {
                 repeat(50) {
-                    item { BasicText("Item #${(it + 1)}", modifier = Modifier.padding(10.dp)) }
+                    item { Text("Item #${(it + 1)}", modifier = Modifier.padding(10.dp)) }
                 }
             }
         }
@@ -381,8 +381,8 @@ ModalBottomSheet(state = sheetState) {
             .height(1200.dp),
     ) {
         Column {
-            BasicText("Current Detent = ${sheetState.currentDetent.identifier}")
-            BasicText("Target Detent = ${sheetState.targetDetent.identifier}")
+            Text("Current Detent = ${sheetState.currentDetent.identifier}")
+            Text("Target Detent = ${sheetState.targetDetent.identifier}")
         }
     }
 }
@@ -435,7 +435,7 @@ ModalBottomSheet(state = sheetState) {
             contentAlignment = Alignment.TopCenter
         ) {
             Box(Modifier.clickable { sheetState.jumpTo(Hidden) }) {
-                BasicText("Hide Sheet")
+                Text("Hide Sheet")
             }
         }
     }
@@ -464,7 +464,7 @@ ModalBottomSheet(rememberModalBottomSheetState(initialDetent = SheetDetent.Fully
             windowInsetsController.isAppearanceLightStatusBars = true
             windowInsetsController.isAppearanceLightNavigationBars = false
         }
-        BasicText(
+        Text(
             "Transparent status bar, darkened navbars. Easy-peasy 😎 ",
             modifier = Modifier.navigationBarsPadding()
         )

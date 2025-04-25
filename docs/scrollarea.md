@@ -52,7 +52,7 @@ ScrollArea(state = state) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }
@@ -80,7 +80,7 @@ ScrollArea(state = state) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }
@@ -114,7 +114,7 @@ ScrollArea(state = state) {
                     Modifier.padding(4.dp).size(48.dp).background(Color.LightGray, RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    BasicText(i.toString())
+                    Text(i.toString())
                 }
             }
         }
@@ -141,7 +141,7 @@ ScrollArea(state = state) {
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
     ) {
         repeat(50) { i ->
-            BasicText(i.toString())
+            Text(i.toString())
         }
     }
     VerticalScrollbar(
@@ -172,7 +172,7 @@ ScrollArea(state = state) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }
@@ -204,7 +204,7 @@ ScrollArea(state = state) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }
@@ -237,7 +237,7 @@ ScrollArea(
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }
@@ -265,7 +265,7 @@ ScrollArea(state = state) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         repeat(50) { i ->
             item {
-                BasicText("Item #${i}")
+                Text("Item #${i}")
             }
         }
     }

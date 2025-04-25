@@ -12,12 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 internal val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 internal val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 internal val NoPadding = PaddingValues(0.dp)
+
 val LocalContentColor = compositionLocalOf { Color.Black }
+val LocalTextStyle = compositionLocalOf { TextStyle.Default }
 
 internal val KeyEvent.isKeyDown: Boolean
     get() = type == KeyEventType.KeyDown

@@ -10,7 +10,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +34,7 @@ import com.composables.composetheme.textStyles
 import com.composables.core.Dialog
 import com.composables.core.DialogPanel
 import com.composables.core.rememberDialogState
+import com.composeunstyled.Text
 
 val AppTheme = buildComposeTheme { }
 
@@ -53,7 +53,7 @@ fun DialogDemo() {
                 .clickable(role = Role.Button) { dialogState.visible = true }
                 .background(Color.White)
                 .padding(horizontal = 14.dp, vertical = 10.dp)) {
-                BasicText("Show dialog", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
+                Text("Show dialog", style = TextStyle.Default.copy(fontWeight = FontWeight(500)))
             }
             Dialog(state = dialogState) {
                 DialogPanel(
@@ -70,14 +70,11 @@ fun DialogDemo() {
                 ) {
                     Column {
                         Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-                            BasicText(
-                                text = "Update Available",
-                                style = ComposeTheme.textStyles.base.copy(fontWeight = FontWeight.Medium)
-                            )
+                            Text("Update Available", fontWeight = FontWeight.Medium)
                             Spacer(Modifier.height(8.dp))
-                            BasicText(
-                                text = "A new version of the app is available. Please update to the latest version.",
-                                style = ComposeTheme.textStyles.base.copy(color = ComposeTheme.colors.gray900)
+                            Text(
+                                "A new version of the app is available. Please update to the latest version.",
+                                color = ComposeTheme.colors.gray900
                             )
                         }
                         Spacer(Modifier.height(24.dp))
@@ -86,10 +83,7 @@ fun DialogDemo() {
                             .clip(ComposeTheme.shapes.round)
                             .clickable(role = Role.Button) { /* TODO */ }
                             .padding(horizontal = 12.dp, vertical = 8.dp)) {
-                            BasicText(
-                                text = "Update",
-                                style = ComposeTheme.textStyles.base.copy(color = ComposeTheme.colors.blue500)
-                            )
+                            Text("Update", color = ComposeTheme.colors.blue500)
                         }
                     }
                 }

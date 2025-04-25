@@ -52,7 +52,7 @@ Column(Modifier.fillMaxSize()) {
                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                BasicText("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
+                Text("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
                 Spacer(Modifier.width(4.dp))
                 Image(ChevronDown, null)
             }
@@ -70,12 +70,12 @@ Column(Modifier.fillMaxSize()) {
                     modifier = Modifier.clip(RoundedCornerShape(4.dp)),
                     onClick = { selected = index }
                 ) {
-                    BasicText(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
+                    Text(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
                 }
             }
         }
     }
-    BasicText("Selected = ${options[selected]}")
+    Text("Selected = ${options[selected]}")
 }
 ```
 
@@ -90,12 +90,12 @@ val state = rememberMenuState(expanded = true)
 
 Menu(state = state) {
     MenuButton {
-        BasicText("Toggle the menu")
+        Text("Toggle the menu")
     }
 
     MenuContent {
         MenuItem(onClick = { state.expanded = false }) {
-            BasicText("Close this menu")
+            Text("Close this menu")
         }
     }
 }
@@ -108,12 +108,12 @@ This option is useful if you want to left align, center align or right align the
 ```kotlin
 Menu {
     MenuButton {
-        BasicText("Toggle the menu")
+        Text("Toggle the menu")
     }
 
     MenuContent(alignment = Alignment.End) {
         MenuItem(onClick = { /* TODO */ }) {
-            BasicText("Option")
+            Text("Option")
         }
     }
 }
@@ -134,18 +134,18 @@ The following sample shows the minimum setup you need to display something on th
 ```kotlin
 Menu {
     MenuButton {
-        BasicText("Show Options")
+        Text("Show Options")
     }
 
     MenuContent {
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 1")
+            Text("Option 1")
         }
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 2")
+            Text("Option 2")
         }
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 3")
+            Text("Option 3")
         }
     }
 }
@@ -164,18 +164,18 @@ Instead, provide any content padding to the contents of the button instead:
 ```kotlin hl_lines="2 3 4"
 Menu {
     MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))) {
-        BasicText("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
+        Text("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
     }
 
     MenuContent {
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 1")
+            Text("Option 1")
         }
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 2")
+            Text("Option 2")
         }
         MenuItem(onClick = { /* TODO handle click */ }) {
-            BasicText("Option 3")
+            Text("Option 3")
         }
     }
 }
@@ -189,7 +189,7 @@ Design this is often a card.
 ```kotlin hl_lines="6 7 8 9 10"
 Menu {
     MenuButton(Modifier.clip(RoundedCornerShape(6.dp)).border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))) {
-        BasicText("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
+        Text("Options", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp))
     }
 
     MenuContent(Modifier.width(320.dp).border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp)).background(Color.White).padding(4.dp)) {
@@ -221,10 +221,10 @@ MenuContent(
     exit = scaleOut(tween(durationMillis = 1, delayMillis = 75), targetScale = 1f) + fadeOut(tween(durationMillis = 75))
 ) {
     MenuItem(onClick = { /* TODO */ }) {
-        BasicText("Option 1")
+        Text("Option 1")
     }
     MenuItem(onClick = { /* TODO */ }) {
-        BasicText("Option 2")
+        Text("Option 2")
     }
 }
 
@@ -237,7 +237,7 @@ macOS shows the menu instantly on click, and quickly fades the menu out when dis
 ```kotlin  hl_lines="1"
 MenuContent(exit = fadeOut(tween(durationMillis = 100, easing = LinearEasing))) {
     MenuItem(onClick = { /* TODO */ }) {
-        BasicText("Option 1")
+        Text("Option 1")
     }
 }
 ```

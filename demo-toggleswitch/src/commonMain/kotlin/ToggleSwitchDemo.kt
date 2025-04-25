@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +18,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.Text
 import com.composeunstyled.Thumb
 import com.composeunstyled.ToggleSwitch
 
@@ -46,7 +46,7 @@ fun ToggleSwitchDemo() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BasicText("Airplane Mode", style = TextStyle(fontSize = 18.sp))
+                Text("Airplane Mode", fontSize = 18.sp)
                 val animatedColor by animateColorAsState(
                     if (toggled) Color(0xFF4A7023) else Color(0xFFE0E0E0)
                 )
