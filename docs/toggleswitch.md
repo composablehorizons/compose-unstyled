@@ -141,6 +141,3 @@ Row(
 | `enabled`         | Whether the switch is enabled.                         |
 | `shape`           | Shape of the switch.                                   |
 
-## Styled Examples
-
-Explore a rich collection of production-ready examples at [ComposablesUi.com](https://composablesui.com). 

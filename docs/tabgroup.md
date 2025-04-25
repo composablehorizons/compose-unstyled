@@ -277,15 +277,3 @@ For the tab list:
 |----------------------|-------------------------------------------------------------|
 | `key`                | The unique key for the tab panel.                           |
 | `content`            | Composable function to define the content of the tab panel. |
-
-## Styled Examples
-
-<a href="https://composablesui.com?ref=core">
-
-Looking for styled components for Jetpack Compose or Compose Multiplatform?
-
-Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">
-ComposablesUi.com</span>
-
-<img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
-</a> 

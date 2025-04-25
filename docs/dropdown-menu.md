@@ -279,14 +279,3 @@ CompositionLocalProvider(LocalIndication provides rememberRipple()) {
 | <div class="keyboard-key">⬇</div>     | Opens the Menu, if the `MenuButton` is focused. Moves focus to the next `MenuItem` if the `Menu` is expanded.               |
 | <div class="keyboard-key">⬆</div>     | Moves focus to the previous `MenuItem` if the `Menu` is expanded.                                                           |
 | <div class="keyboard-key">Esc</div>   | Closes the Menu, if the Menu is expanded and moves focus to the `MenuButton`. Removes focus if the `MenuButton` is focused. |
-
-## Styled Examples
-
-<a href="https://composablesui.com?ref=core">
-
-Looking for styled components for Jetpack Compose or Compose Multiplatform?
-
-Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">ComposablesUi.com</span>
-
-<img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
-</a>

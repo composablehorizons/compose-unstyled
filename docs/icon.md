@@ -56,15 +56,3 @@ Icon(
 ## Where to find icons
 
 Great apps require great iconography. Visit [composeicons.com](https://composeicons.com) for a collection of over 7,000+ icons ready to be used in Jetpack Compose and Compose Multiplatform.
-
-## Styled Examples
-
-<a href="https://composablesui.com?ref=core">
-
-Looking for styled components for Jetpack Compose or Compose Multiplatform?
-
-Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">
-ComposablesUi.com</span>
-
-<img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
-</a>

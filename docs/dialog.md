@@ -335,15 +335,3 @@ Our Dialog is designed to be customizable inside out and work the same way on ev
 behaves like any other component. If for example you need a full
 screen dialog, all you have to do is pass `Modifier.fillMaxSize()` to the `DialogPanel`, without having to worry about
 platform flags.
-
-## Styled Examples
-
-<a href="https://composablesui.com?ref=core">
-
-Looking for styled components for Jetpack Compose or Compose Multiplatform?
-
-Explore a rich collection of production ready examples at <span style="color: #E91E63; font-weight: 500">
-ComposablesUi.com</span>
-
-<img src="../composablesui-banner.jpg" alt="Composables UI" style="width: 100%; max-width: 800px">
-</a>
