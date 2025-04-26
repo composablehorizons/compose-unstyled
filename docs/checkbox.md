@@ -18,7 +18,7 @@ Accessible out of the box and fully renderless, so that you can apply any stylin
 
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("com.composables:core:1.27.1")
+    implementation("com.composables:core:1.28.0")
 }
 ```
 

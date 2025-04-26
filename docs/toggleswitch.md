@@ -17,7 +17,7 @@ Comes with accessibility features baked in and full styling options.
 
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("com.composables:core:1.27.1")
+    implementation("com.composables:core:1.28.0")
 }
 ```
 
