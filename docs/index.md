@@ -48,6 +48,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
 
     <div>
+        <a href="button">
+          <img src="preview_button.png" alt="Button Preview">
+        </a>
+        <div>Button</div>
+    </div>
+
+    <div>
         <a href="checkbox">
           <img src="preview_checkbox.png" alt="Checkbox Preview">
         </a>
@@ -129,13 +136,6 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
           <img src="preview_toggle_switch.png" alt="Toggle Switch Preview">
         </a>
         <div>Toggle Switch</div>
-    </div>
-
-    <div>
-        <a href="button">
-          <img src="preview_button.png" alt="Button Preview">
-        </a>
-        <div>Button</div>
     </div>
 </div>
 
