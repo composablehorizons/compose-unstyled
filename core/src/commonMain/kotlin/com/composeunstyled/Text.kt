@@ -137,7 +137,7 @@ fun Text(
             )
         )
     }
-    Text(
+    BasicText(
         text = text,
         modifier = modifier,
         style = currentStyle,
