@@ -3,7 +3,6 @@ package com.composeunstyled.demo
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -24,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import com.composables.core.Icon
+import com.composeunstyled.Button
 import com.composeunstyled.Slider
 import com.composeunstyled.Thumb
 import com.composeunstyled.rememberSliderState
@@ -46,7 +46,13 @@ fun SliderDemo() {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth()
         ) {
-            Button(onClick = { state.value -= 0.1f },) {
+            Button(
+                onClick = { state.value -= 0.1f },
+                modifier = Modifier.shadow(4.dp, CircleShape),
+                shape = CircleShape,
+                backgroundColor = Color.White,
+                contentPadding = PaddingValues(8.dp),
+            ) {
                 Icon(VolumeDown, "Decrease")
             }
 
@@ -103,7 +109,13 @@ fun SliderDemo() {
                 }
             )
 
-            Button(onClick = { state.value += 0.1f }) {
+            Button(
+                onClick = { state.value += 0.1f },
+                modifier = Modifier.shadow(4.dp, CircleShape),
+                shape = CircleShape,
+                backgroundColor = Color.White,
+                contentPadding = PaddingValues(8.dp),
+            ) {
                 Icon(VolumeUp, "Increase")
             }
         }
@@ -228,14 +240,3 @@ val VolumeUp: ImageVector
     }
 
 private var _VolumeUp: ImageVector? = null
-
-@Composable
-private fun Button(onClick: () -> Unit, content: @Composable () -> Unit) {
-    Box(
-        Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White).clickable(onClick = onClick)
-            .padding(8.dp)
-    ) {
-        content()
-    }
-}
-

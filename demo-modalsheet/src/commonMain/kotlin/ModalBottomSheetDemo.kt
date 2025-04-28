@@ -3,7 +3,6 @@ package com.composeunstyled.demo
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -13,13 +12,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composables.core.*
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
+import com.composeunstyled.Button
 import com.composeunstyled.Text
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -38,18 +36,18 @@ fun ModalBottomSheetDemo() {
             detents = listOf(Hidden, Peek, FullyExpanded)
         )
 
-        Box(
+        Button(
+            onClick = { modalSheetState.targetDetent = Peek },
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-                .clip(RoundedCornerShape(6.dp))
-                .clickable(role = Role.Button) { modalSheetState.targetDetent = Peek }
-                .background(Color.White)
-                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
+            shape = RoundedCornerShape(6.dp),
+            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+            backgroundColor = Color.White
         ) {
             Text("Show Sheet", fontWeight = FontWeight(500))
         }
-
+        
         val isCompact = maxWidth < 600.dp
 
         ModalBottomSheet(state = modalSheetState) {

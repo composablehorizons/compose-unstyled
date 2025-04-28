@@ -50,7 +50,7 @@ val sheetState = rememberModalBottomSheetState(
     initialDetent = Hidden,
 )
 
-Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
+Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
     Text("Show Sheet")
 }
 

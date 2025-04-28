@@ -1,18 +1,15 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.*
@@ -73,8 +70,10 @@ fun TabGroupDemo() {
 
     Box(
         modifier = Modifier.fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5)))),
-        contentAlignment = Alignment.Center
+            .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5))))
+            .padding(16.dp)
+            .padding(top = 90.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
 
         TabGroup(state = state, modifier = Modifier.width(500.dp)) {
@@ -128,7 +127,11 @@ fun TabGroupDemo() {
                     TabPanel(key = key) {
                         Column {
                             items.forEach { item ->
-                                Button(onClick = { /* TODO */ }) {
+                                Button(
+                                    onClick = { /* TODO */ },
+                                    shape = RoundedCornerShape(8.dp),
+                                    contentPadding = PaddingValues(12.dp)
+                                ) {
                                     Column {
                                         Text(item.title, fontWeight = FontWeight.Medium)
                                         Spacer(Modifier.height(4.dp))
@@ -154,14 +157,3 @@ fun TabGroupDemo() {
     }
 }
 
-@Composable
-private fun Button(onClick: () -> Unit, content: @Composable () -> Unit) {
-    Box(Modifier.clip(RoundedCornerShape(8.dp)).clickable { onClick() }.padding(12.dp)) {
-        content()
-    }
-}
-
-@Composable
-private fun Text(text: String, fontWeight: FontWeight = FontWeight.Normal, color: Color = Color.Unspecified) {
-    Text(text, style = TextStyle(fontWeight = fontWeight, color = color))
-}

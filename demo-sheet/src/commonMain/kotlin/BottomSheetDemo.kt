@@ -1,21 +1,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,8 +10,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composables.core.BottomSheet
@@ -34,6 +18,7 @@ import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberBottomSheetState
+import com.composeunstyled.Button
 import com.composeunstyled.Text
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -55,14 +40,14 @@ fun BottomSheetDemo() {
             detents = listOf(Hidden, Peek, FullyExpanded)
         )
 
-        Box(
+        Button(
+            onClick = { sheetState.targetDetent = Peek },
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-                .clip(RoundedCornerShape(6.dp))
-                .clickable(role = Role.Button) { sheetState.targetDetent = Peek }
-                .background(Color.White)
-                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
+            shape = RoundedCornerShape(6.dp),
+            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+            backgroundColor = Color.White
         ) {
             Text("Show Sheet", fontWeight = FontWeight(500))
         }
