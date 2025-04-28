@@ -44,7 +44,7 @@ val sheetState = rememberBottomSheetState(
     initialDetent = Hidden,
 )
 
-Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
+Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
     Text("Show Sheet")
 }
 
@@ -115,7 +115,7 @@ val sheetState = rememberBottomSheetState(
     initialDetent = Hidden,
 )
 
-Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
+Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
     Text("Show Sheet")
 }
 
@@ -127,7 +127,7 @@ BottomSheet(
         modifier = Modifier.fillMaxWidth().height(1200.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        Box(Modifier.clickable { sheetState.currentDetent = Hidden }) {
+        Button(onClick = { sheetState.currentDetent = Hidden }) {
             Text("Hide Sheet")
         }
     }
@@ -251,18 +251,17 @@ BottomSheet(
         DragIndication(Modifier.align(Alignment.CenterHorizontally))
 
         var text by remember { mutableStateOf("") }
-        BasicTextField(
+        TextField(
             value = text,
             onValueChange = { text = it },
             modifier = Modifier.fillMaxWidth()
         )
-        Box(
-            Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color.Blue)
-                .clickable { /* TODO */ }
-                .padding(4.dp)
-                .align(Alignment.End)) {
+        Button(
+            onClick = { /* TODO */ },
+            shape = RoundedCornerShape(4.dp),
+            contentPadding = PaddingValues(4.dp),
+            modifier = Modifier.align(Alignment.End)
+        ) {
             Text(
                 text = "Save note",
                 style = TextStyle.Default.copy(color = Color.White)
@@ -394,7 +393,7 @@ val sheetState = rememberBottomSheetState(
     initialDetent = Hidden,
 )
 
-Box(Modifier.clickable { sheetState.jumpTo(FullyExpanded) }) {
+Button(onClick = { sheetState.jumpTo(FullyExpanded) }) {
     Text("Show Sheet")
 }
 
@@ -406,7 +405,7 @@ BottomSheet(
         modifier = Modifier.fillMaxWidth().height(1200.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        Box(Modifier.clickable { sheetState.jumpTo(Hidden) }) {
+        Button(onClick = { sheetState.jumpTo(Hidden) }) {
             Text("Hide Sheet")
         }
     }

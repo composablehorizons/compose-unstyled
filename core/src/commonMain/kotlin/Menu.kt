@@ -6,14 +6,15 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -23,7 +24,10 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.composeunstyled.AppearInstantly
+import com.composeunstyled.Button
 import com.composeunstyled.DisappearInstantly
+import com.composeunstyled.LocalContentColor
+import com.composeunstyled.NoPadding
 
 @Deprecated("This signature is going away in a future version", ReplaceWith("Menu(state,modifier,contents)"))
 @Composable
@@ -78,13 +82,33 @@ public fun MenuScope.MenuButton(
     modifier: Modifier = Modifier,
     mutableInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication = LocalIndication.current,
+    enabled: Boolean = true,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = NoPadding,
+    borderColor: Color = Color.Unspecified,
+    borderWidth: Dp = 0.dp,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     contents: @Composable () -> Unit
 ) {
-    Box(modifier.clickable(
-        role = Role.DropdownList, interactionSource = mutableInteractionSource, indication = indication
+    Button(
+        onClick = { menuState.expanded = menuState.expanded.not() },
+        role = Role.DropdownList,
+        enabled = enabled,
+        contentColor = contentColor,
+        contentPadding = contentPadding,
+        borderColor = borderColor,
+        borderWidth = borderWidth,
+        interactionSource = mutableInteractionSource,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment,
+        indication = indication,
+        modifier = modifier,
+        shape = shape,
+        backgroundColor = backgroundColor,
     ) {
-        menuState.expanded = menuState.expanded.not()
-    }) {
         contents()
     }
 }
@@ -217,16 +241,26 @@ public fun MenuScope.MenuItem(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication = LocalIndication.current,
-    contents: @Composable () -> Unit
+    contentPadding: PaddingValues = NoPadding,
+    shape: Shape = RectangleShape,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    contents: @Composable RowScope.() -> Unit
 ) {
-    Box(
-        modifier.clickable(
-            enabled = enabled, interactionSource = interactionSource, onClick = {
-                onClick()
-                menuState.expanded = false
-                menuState.currentFocusManager?.clearFocus()
-            }, indication = indication
-        )
+    Button(
+        onClick = {
+            onClick()
+            menuState.expanded = false
+            menuState.currentFocusManager?.clearFocus()
+        },
+        modifier = modifier,
+        enabled = enabled,
+        interactionSource = interactionSource,
+        indication = indication,
+        shape = shape,
+        contentPadding = contentPadding,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment
     ) {
         contents()
     }

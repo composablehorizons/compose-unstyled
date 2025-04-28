@@ -439,7 +439,7 @@ fun BottomSheetScope.DragIndication(
         if (goUp) detentIndex++ else detentIndex--
 
         val detent = state.detents[detentIndex]
-        state.currentDetent = detent
+        state.targetDetent = detent
     }
 
     Box(

@@ -121,7 +121,7 @@ val sheetState = rememberModalBottomSheetState(
     initialDetent = Hidden,
 )
 
-Box(Modifier.clickable { sheetState.currentDetent = FullyExpanded }) {
+Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
     Text("Show Sheet")
 }
 
@@ -134,7 +134,7 @@ ModalBottomSheet(state = sheetState) {
             modifier = Modifier.fillMaxWidth().height(1200.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            Box(Modifier.clickable { sheetState.currentDetent = Hidden }) {
+            Button(onClick = { sheetState.currentDetent = Hidden }) {
                 Text("Hide Sheet")
             }
         }
@@ -282,18 +282,17 @@ ModalBottomSheet(state = sheetState) {
                 DragIndication(Modifier.align(Alignment.CenterHorizontally))
 
                 var text by remember { mutableStateOf("") }
-                BasicTextField(
+                TextField(
                     value = text,
                     onValueChange = { text = it },
                     modifier = Modifier.fillMaxWidth()
                 )
-                Box(
-                    Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(Color.Blue)
-                    .clickable { /* TODO */ }
-                    .padding(4.dp)
-                    .align(Alignment.End)) {
+                Button(
+                    onClick = { /* TODO */ },
+                    shape = RoundedCornerShape(4.dp),
+                    contentPadding = PaddingValues(4.dp),
+                    modifier = Modifier.align(Alignment.End)
+                ) {
                     Text(
                         text = "Save note",
                         style = TextStyle.Default.copy(color = Color.White)
@@ -434,7 +433,7 @@ ModalBottomSheet(state = sheetState) {
             modifier = Modifier.fillMaxWidth().height(1200.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            Box(Modifier.clickable { sheetState.jumpTo(Hidden) }) {
+            Button(onClick = { sheetState.jumpTo(Hidden) }) {
                 Text("Hide Sheet")
             }
         }

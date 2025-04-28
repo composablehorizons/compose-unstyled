@@ -39,7 +39,7 @@ The optional `Scrim` component is used to add layer behind the dialog and dim th
 val dialogState = rememberDialogState()
 
 Box {
-    Box(Modifier.clickable { dialogState.visible = true }) {
+    Button(onClick= { dialogState.visible = true }) {
         Text("Show Dialog")
     }
     Dialog(state = dialogState) {
@@ -66,14 +66,15 @@ Box {
                     )
                 }
                 Spacer(Modifier.height(24.dp))
-                Box(Modifier.padding(12.dp)
-                    .align(Alignment.End)
-                    .clip(RoundedCornerShape(4.dp))
-                    .clickable(role = Role.Button) { /* TODO */ }
-                    .padding(horizontal = 12.dp, vertical = 8.dp)) {
+                Button(
+                    onClick = { /* TODO */ },
+                    modifier = Modifier.padding(12.dp).align(Alignment.End),
+                    shape = RoundedCornerShape(4.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                ) {
                     Text(
                         text = "Update",
-                        style = TextStyle(color = Color(0xFF6699FF))
+                        color = Color(0xFF6699FF)
                     )
                 }
             }
@@ -100,7 +101,7 @@ Dialog(state = rememberDialogState(visible = true)) {
     ) {
         Column {
             Text("Something important happened")
-            Box(Modifier.clickable { /* TODO */ }) {
+            Button(onClick = { /* TODO */ }) {
                 Text("Got it")
             }
         }
@@ -117,14 +118,14 @@ Pass your own `DialogState` to the `Dialog` and change the *visible* property ac
 ```kotlin
 val state = rememberDialogState()
 
-Box(Modifier.clickable { state.visible = true }) {
+Button(onClick = { state.visible = true }) {
     Text("Show dialog")
 }
 Dialog(state = state) {
     DialogPanel {
         Column {
             Text("Something important happened")
-            Box(Modifier.clickable { state.visible = false }) {
+            Button(onClick = { state.visible = false }) {
                 Text("Got it")
             }
         }
@@ -153,7 +154,7 @@ Use the `Scrim` component within your `Dialog`:
 ```kotlin
 val state = rememberDialogState()
 
-Box(Modifier.clickable { state.visible = true }) {
+Button(onClick = { state.visible = true }) {
     Text("Show dialog")
 }
 Dialog(state = state) {
@@ -161,7 +162,7 @@ Dialog(state = state) {
     DialogPanel {
         Column {
             Text("Something important happened")
-            Box(Modifier.clickable { state.visible = false }) {
+            Button(onClick = { state.visible = false }) {
                 Text("Got it")
             }
         }
@@ -179,7 +180,7 @@ Add any scrollable component such as `LazyColumn` to the contents of your dialog
 ```kotlin
 val state = rememberDialogState()
 
-Box(Modifier.clickable { state.visible = true }) {
+Button(onClick = { state.visible = true }) {
     Text("Show dialog")
 }
 Dialog(state = state) {
@@ -191,7 +192,7 @@ Dialog(state = state) {
                     item { Text("Update number ${i}") }
                 }
             }
-            Box(Modifier.clickable { state.visible = false }) {
+            Button(onClick = { state.visible = false }) {
                 Text("Got it")
             }
         }
@@ -216,7 +217,7 @@ Dialog(state = rememberDialogState(visible = true)) {
     ) {
         Column {
             Text("This is a full screen dialog")
-            Box(Modifier.clickable { state.visible = false }) {
+            Button(onClick = { state.visible = false }) {
                 Text("Got it")
             }
         }
