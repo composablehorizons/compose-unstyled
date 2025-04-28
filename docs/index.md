@@ -69,6 +69,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
     </div>
 
     <div>
+        <a href="disclosure">
+          <img src="preview_disclosure.png" alt="Disclosure Preview">
+        </a>
+        <div>Disclosure</div>
+    </div>
+
+    <div>
         <a href="dropdown-menu">
           <img src="preview_menu.png" alt="Menu Preview">
         </a>
@@ -129,6 +136,13 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
           <img src="preview_text.png" alt="Text Preview">
         </a>
         <div>Text</div>
+    </div>
+
+    <div>
+        <a href="textfield">
+          <img src="preview_textfield.png" alt="Textfield Preview">
+        </a>
+        <div>Textfield</div>
     </div>
 
     <div>

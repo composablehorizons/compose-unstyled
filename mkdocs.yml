@@ -47,6 +47,7 @@ nav:
     - 'Button' : button.md
     - 'Checkbox' : checkbox.md
     - 'Dialog' : dialog.md
+    - 'Disclosure' : disclosure.md
     - 'Dropdown (Menu)' : dropdown-menu.md
     - 'Icon' : icon.md
     - 'Progress Indicator' : progressindicator.md
@@ -56,6 +57,7 @@ nav:
     - 'Slider' : slider.md
     - 'Tab Group' : tabgroup.md
     - 'Text' : text.md
+    - 'Textfield' : textfield.md
     - 'Toggle Switch' : toggle-switch.md
 
 plugins:
