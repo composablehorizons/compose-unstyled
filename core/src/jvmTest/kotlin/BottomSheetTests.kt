@@ -53,7 +53,7 @@ class BottomSheetTests {
             )
 
             LaunchedEffect(Unit) {
-                state.currentDetent = SheetDetent.FullyExpanded
+                state.targetDetent = SheetDetent.FullyExpanded
             }
             BottomSheet(state) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
