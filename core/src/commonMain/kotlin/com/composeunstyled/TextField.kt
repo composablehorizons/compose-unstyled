@@ -60,6 +60,7 @@ fun TextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     spacing: Dp = 8.dp,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
     val overrideContentColor = if (contentColor.isSpecified) {
         contentColor
@@ -122,7 +123,7 @@ fun TextField(
             visualTransformation = visualTransformation
         ) { innerTextField ->
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = verticalAlignment,
                 modifier = buildModifier {
                     if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
                         add(Modifier.border(borderWidth, borderColor, shape))
@@ -162,7 +163,7 @@ fun TextField(
         }
     } else {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = verticalAlignment,
             modifier = modifier then buildModifier {
                 if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
                     add(Modifier.border(borderWidth, borderColor, shape))
