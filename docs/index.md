@@ -34,7 +34,7 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 
 <div class="image-grid">
     <div>
-        <a href="bottom-sheet.md">
+        <a href="bottom-sheet">
           <img src="preview_bottomsheet.png" alt="Bottom Sheet Preview">
         </a>
         <div>Bottom Sheet</div>
