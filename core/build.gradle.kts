@@ -18,12 +18,6 @@ val publishArtifactId = "core"
 val publishVersion = "1.31.0"
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 
-composeCompiler {
-    featureFlags.set(
-        setOf(ComposeFeatureFlag.StrongSkipping.disabled())
-    )
-}
-
 java {
     toolchain {
         vendor = JvmVendorSpec.JETBRAINS
