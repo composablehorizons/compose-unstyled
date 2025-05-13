@@ -64,7 +64,6 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(project(":core"))
-            implementation(libs.composetheme)
         }
 
         val desktopMain by getting {
