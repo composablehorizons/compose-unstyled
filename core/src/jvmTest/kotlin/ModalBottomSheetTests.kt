@@ -42,11 +42,12 @@ class ModalBottomSheetTests {
 
     @Test
     fun settingDetentToFullyDetent_whenInitialIsDetentHidden_isDisplayed() = runComposeUiTest {
+        var state: ModalBottomSheetState? = null
         setContent {
-            val state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
+            state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
 
             LaunchedEffect(Unit) {
-                state.currentDetent = SheetDetent.FullyExpanded
+                state.targetDetent = SheetDetent.FullyExpanded
             }
             ModalBottomSheet(state) {
                 Sheet {
@@ -54,7 +55,7 @@ class ModalBottomSheetTests {
                 }
             }
         }
-
+        waitUntil { requireNotNull(state).isIdle }
         onNodeWithTag("sheet_contents").assertIsDisplayed()
     }
 
@@ -78,7 +79,7 @@ class ModalBottomSheetTests {
             }
         }
 
-        waitForIdle()
+        mainClock.advanceTimeBy(50)
 
         onNodeWithTag("sheet").assertWidthIsEqualTo(150.dp)
         onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)

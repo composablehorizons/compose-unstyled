@@ -82,7 +82,7 @@ class BottomSheetTests {
             }
         }
 
-        waitForIdle()
+        mainClock.advanceTimeBy(50)
         onNodeWithTag("sheet").assertWidthIsEqualTo(150.dp)
         onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
     }
