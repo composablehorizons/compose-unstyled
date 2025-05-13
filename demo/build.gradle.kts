@@ -25,15 +25,6 @@ kotlin {
         }
         binaries.executable()
     }
-    wasmJs {
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-            }
-        }
-        binaries.executable()
-    }
-
     jvm("desktop")
 
     androidTarget {
