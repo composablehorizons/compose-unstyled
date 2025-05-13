@@ -110,7 +110,7 @@ class ModalBottomSheetState internal constructor(
         }
 
     val isIdle: Boolean by derivedStateOf {
-        bottomSheetState.isIdle
+        (progress == 1f || progress == 0f) && currentDetent == targetDetent && bottomSheetState.anchoredDraggableState.isAnimationRunning.not()
     }
     val progress: Float by derivedStateOf {
         bottomSheetState.progress
