@@ -58,7 +58,7 @@ nav:
     - 'Tab Group' : tabgroup.md
     - 'Text' : text.md
     - 'Textfield' : textfield.md
-    - 'Toggle Switch' : toggle-switch.md
+    - 'Toggle Switch' : toggleswitch.md
 
 plugins:
   - social
