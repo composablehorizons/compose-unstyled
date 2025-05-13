@@ -9,7 +9,7 @@ import org.w3c.dom.url.URLSearchParams
 
 fun main() {
     val iFrameParams = URLSearchParams(document.location?.search)
-    val id = iFrameParams.get("id") ?: error("Required id is missing")
+    val id = iFrameParams.get("id")
     onWasmReady {
         CanvasBasedWindow(canvasElementId = "ComposeTarget") {
             CompositionLocalProvider(LocalIndication provides NoIndication) {
