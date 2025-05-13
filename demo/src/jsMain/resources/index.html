@@ -4,9 +4,36 @@
     <meta charset="UTF-8">
     <title>KotlinProject</title>
     <script type="application/javascript" src="skiko.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #ComposeTarget {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
 <canvas id="ComposeTarget"></canvas>
 <script type="application/javascript" src="composeApp.js"></script>
+<script>
+    // Prevent scroll events on the canvas
+    const canvas = document.getElementById('ComposeTarget');
+    
+    // Prevent wheel events (mouse wheel)
+    canvas.addEventListener('wheel', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+    
+    // Prevent touchmove events (touch scrolling)
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+</script>
 </body>
+
 </html>
