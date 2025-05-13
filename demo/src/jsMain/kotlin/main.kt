@@ -1,5 +1,7 @@
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.CanvasBasedWindow
 import kotlinx.browser.document
 import org.jetbrains.skiko.wasm.onWasmReady
@@ -9,6 +11,10 @@ fun main() {
     val iFrameParams = URLSearchParams(document.location?.search)
     val id = iFrameParams.get("id") ?: error("Required id is missing")
     onWasmReady {
-        CanvasBasedWindow(canvasElementId = "ComposeTarget") { Demo(demoId = id) }
+        CanvasBasedWindow(canvasElementId = "ComposeTarget") {
+            CompositionLocalProvider(LocalIndication provides NoIndication) {
+                Demo(demoId = id)
+            }
+        }
     }
 }
