@@ -71,7 +71,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/composablehorizons/
     - icon: fontawesome/brands/x-twitter
-      link: https://x.com/alexstyl
+      link: https://x.com/ComposeUnstyled
 
 markdown_extensions:
   - toc:
