@@ -19,6 +19,42 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
+
+/**
+ * A foundational component used to build toggle switches.
+ *
+ * For interactive preview & code examples, visit [Toggle Switch Documentation](https://composeunstyled.com/toggleswitch).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * var toggled by remember { mutableStateOf(false) }
+ *
+ * ToggleSwitch(
+ *     toggled = toggled,
+ *     onToggled = { toggled = it },
+ *     backgroundColor = Color.Gray,
+ *     thumb = {
+ *         Box(
+ *             modifier = Modifier
+ *                 .size(24.dp)
+ *                 .background(Color.White, CircleShape)
+ *         )
+ *     }
+ * )
+ * ```
+ *
+ * @param toggled Whether the switch is currently toggled on.
+ * @param modifier Modifier to be applied to the switch.
+ * @param onToggled Callback that is called when the switch is toggled.
+ * @param enabled Whether the switch is enabled.
+ * @param shape The shape of the switch's track.
+ * @param backgroundColor The background color of the switch's track.
+ * @param contentPadding The padding to be applied to the switch's content.
+ * @param interactionSource The [MutableInteractionSource] that will be used to dispatch interaction events.
+ * @param indication The indication to be shown when the switch is interacted with.
+ * @param thumb The composable that represents the thumb of the switch.
+ */
 @Composable
 fun ToggleSwitch(
     toggled: Boolean,

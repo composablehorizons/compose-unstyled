@@ -18,6 +18,31 @@ class ProgressIndicatorScope {
         internal set
 }
 
+/**
+ * A foundational component used to build progress indicators.
+ *
+ * For interactive preview & code examples, visit [Progress Indicator Documentation](https://composeunstyled.com/progressindicator).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * ProgressIndicator(
+ *     progress = 0.5f,
+ *     shape = RoundedCornerShape(4.dp),
+ *     backgroundColor = Color(0xFFE4E4E4),
+ *     contentColor = Color(0xFF6699FF)
+ * ) {
+ *     ProgressBar()
+ * }
+ * ```
+ *
+ * @param progress The progress value between 0.0 and 1.0.
+ * @param modifier Modifier to be applied to the progress indicator.
+ * @param shape The shape of the progress indicator.
+ * @param backgroundColor The background color of the progress indicator.
+ * @param contentColor The color of the content.
+ * @param content The content of the progress indicator. For a batteries included component see [ProgressBar].
+ */
 @Composable
 fun ProgressIndicator(
     @FloatRange(from = 0.0, to = 1.0) progress: Float,
@@ -44,6 +69,30 @@ fun ProgressIndicator(
     }
 }
 
+/**
+ * A foundational component used to build progress indicators.
+ *
+ * For interactive preview & code examples, visit [Progress Indicator Documentation](https://composeunstyled.com/progressindicator).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * ProgressIndicator(
+ *     progress = 0.5f,
+ *     shape = RoundedCornerShape(4.dp),
+ *     backgroundColor = Color(0xFFE4E4E4),
+ *     contentColor = Color(0xFF6699FF)
+ * ) {
+ *     ProgressBar()
+ * }
+ * ```
+ *
+ * @param modifier Modifier to be applied to the progress indicator.
+ * @param shape The shape of the progress indicator.
+ * @param backgroundColor The background color of the progress indicator.
+ * @param contentColor The color of the content.
+ * @param content The content of the progress indicator.
+ */
 @Composable
 fun ProgressIndicator(
     modifier: Modifier = Modifier,
@@ -65,6 +114,12 @@ fun ProgressIndicator(
     }
 }
 
+/**
+ * A progress bar component that automatically fills the width of its parent based on the progress value.
+ *
+ * @param shape The shape of the progress bar.
+ * @param color The color of the progress bar.
+ */
 @Composable
 fun ProgressIndicatorScope.ProgressBar(
     shape: Shape = RectangleShape,

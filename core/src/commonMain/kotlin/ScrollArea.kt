@@ -38,17 +38,53 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/**
+ * A foundational component used to build scrollable areas in Compose Multiplatform.
+ * Accessible out of the box and fully renderless, so that you can apply any styling you like.
+ *
+ * For interactive preview & code examples, visit [Scroll Area Documentation](https://composeunstyled.com/scrollarea).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val scrollState = rememberScrollState()
+ * val scrollAreaState = rememberScrollAreaState(scrollState)
+ *
+ * ScrollArea(state = scrollAreaState) {
+ *     Column {
+ *         repeat(100) { index ->
+ *             Text("Item $index")
+ *         }
+ *     }
+ * }
+ * ```
+ */
 
+/**
+ * Creates a [ScrollAreaState] from a [ScrollState].
+ *
+ * @param scrollState The scroll state to create the scroll area state from.
+ */
 @Composable
 fun rememberScrollAreaState(scrollState: ScrollState): ScrollAreaState = remember(scrollState) {
     ScrollStateScrollAreaState(scrollState)
 }
 
+/**
+ * Creates a [ScrollAreaState] from a [LazyListState].
+ *
+ * @param lazyListState The lazy list state to create the scroll area state from.
+ */
 @Composable
 fun rememberScrollAreaState(lazyListState: LazyListState): ScrollAreaState = remember(lazyListState) {
     LazyListScrollAreaState(lazyListState)
 }
 
+/**
+ * Creates a [ScrollAreaState] from a [LazyGridState].
+ *
+ * @param lazyGridState The lazy grid state to create the scroll area state from.
+ */
 @Composable
 fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState = remember(lazyGridState) {
     LazyGridScrollAreaScrollAreaState(lazyGridState)
@@ -67,6 +103,14 @@ value class OverscrollSides private constructor(private val id: Int) {
     }
 }
 
+/**
+ * A foundational component used to build scrollable areas in Compose Multiplatform.
+ * The scroll area consists of a content area and optional scrollbars.
+ *
+ * @param state The [ScrollAreaState] that controls the scroll area.
+ * @param modifier Modifier to be applied to the scroll area.
+ * @param content The content of the scroll area.
+ */
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,
@@ -83,6 +127,16 @@ fun ScrollArea(
     )
 }
 
+/**
+ * A foundational component used to build scrollable areas in Compose Multiplatform.
+ * The scroll area consists of a content area and optional scrollbars.
+ *
+ * @param state The [ScrollAreaState] that controls the scroll area.
+ * @param modifier Modifier to be applied to the scroll area.
+ * @param overscrollEffect The overscroll effect to be applied to the scroll area.
+ * @param overscrollEffectSides The sides where the overscroll effect should be applied.
+ * @param content The content of the scroll area.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScrollArea(
@@ -228,6 +282,9 @@ fun ScrollArea(
 @Composable
 internal expect fun NoOverscroll(content: @Composable () -> Unit)
 
+/**
+ * Scope for the content of a [ScrollArea].
+ */
 class ScrollAreaScope internal constructor(
     private val boxScope: BoxScope,
     internal val scrollAreaState: ScrollAreaState,
@@ -240,6 +297,9 @@ class ScrollAreaScope internal constructor(
     }
 }
 
+/**
+ * Scope for the scrollbars of a [ScrollArea].
+ */
 class ScrollbarScope internal constructor(
     internal val dragInteraction: MutableState<DragInteraction.Start?>,
     internal val sliderAdapter: SliderAdapter,

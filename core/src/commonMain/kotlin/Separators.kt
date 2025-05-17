@@ -9,6 +9,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.composeunstyled.LocalContentColor
 
+/**
+ * Creates a horizontal separator line.
+ *
+ * For interactive preview & code examples, visit [Separators Documentation](https://composeunstyled.com/separators).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Column {
+ *     Text("Item 1")
+ *     Separator() // Horizontal separator in Column
+ *     Text("Item 2")
+ * }
+ *
+ * Row {
+ *     Text("Item 1")
+ *     Separator() // Vertical separator in Row
+ *     Text("Item 2")
+ * }
+ * ```
+ *
+ * @param color The color of the separator line.
+ * @param modifier Modifier to be applied to the separator.
+ * @param thickness The thickness of the separator line.
+ */
 @Composable
 fun HorizontalSeparator(
     color: Color,
@@ -25,9 +50,34 @@ fun HorizontalSeparator(
     }
 }
 
+/**
+ * Creates a vertical separator line.
+ *
+ * For interactive preview & code examples, visit [Separators Documentation](https://composeunstyled.com/separators).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Column {
+ *     Text("Item 1")
+ *     Separator() // Horizontal separator in Column
+ *     Text("Item 2")
+ * }
+ *
+ * Row {
+ *     Text("Item 1")
+ *     Separator() // Vertical separator in Row
+ *     Text("Item 2")
+ * }
+ * ```
+ *
+ * @param color The color of the separator line.
+ * @param modifier Modifier to be applied to the separator.
+ * @param thickness The thickness of the separator line.
+ */
 @Composable
 fun VerticalSeparator(
-    color: Color ,
+    color: Color,
     modifier: Modifier = Modifier,
     thickness: Dp = Dp.Hairline
 ) {
@@ -41,6 +91,31 @@ fun VerticalSeparator(
     }
 }
 
+/**
+ * Creates a horizontal separator line within a [ColumnScope].
+ *
+ * For interactive preview & code examples, visit [Separators Documentation](https://composeunstyled.com/separators).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Column {
+ *     Text("Item 1")
+ *     Separator() // Horizontal separator in Column
+ *     Text("Item 2")
+ * }
+ *
+ * Row {
+ *     Text("Item 1")
+ *     Separator() // Vertical separator in Row
+ *     Text("Item 2")
+ * }
+ * ```
+ *
+ * @param modifier Modifier to be applied to the separator.
+ * @param color The color of the separator line. Defaults to the current content color.
+ * @param thickness The thickness of the separator line.
+ */
 @Composable
 fun ColumnScope.Separator(
     modifier: Modifier = Modifier,
@@ -50,6 +125,31 @@ fun ColumnScope.Separator(
     HorizontalSeparator(color = color, modifier = modifier, thickness = thickness)
 }
 
+/**
+ * Creates a vertical separator line within a [RowScope].
+ *
+ * For interactive preview & code examples, visit [Separators Documentation](https://composeunstyled.com/separators).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Column {
+ *     Text("Item 1")
+ *     Separator() // Horizontal separator in Column
+ *     Text("Item 2")
+ * }
+ *
+ * Row {
+ *     Text("Item 1")
+ *     Separator() // Vertical separator in Row
+ *     Text("Item 2")
+ * }
+ * ```
+ *
+ * @param modifier Modifier to be applied to the separator.
+ * @param color The color of the separator line. Defaults to the current content color.
+ * @param thickness The thickness of the separator line.
+ */
 @Composable
 fun RowScope.Separator(
     modifier: Modifier = Modifier,

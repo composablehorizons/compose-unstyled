@@ -30,6 +30,11 @@ class RadioGroupState(selectedOption: String? = null) {
     var selectedOption by mutableStateOf(selectedOption)
 }
 
+/**
+ * Creates a [RadioGroupState] that can be used to manually control a [RadioGroup].
+ *
+ * @param initialValue The initially selected option.
+ */
 @Composable
 fun rememberRadioGroupState(initialValue: String): RadioGroupState {
     return remember {
@@ -37,9 +42,45 @@ fun rememberRadioGroupState(initialValue: String): RadioGroupState {
     }
 }
 
-
 class RadioGroupScope(val state: RadioGroupState)
 
+/**
+ * A foundational component used to build radio groups.
+ *
+ * For interactive preview & code examples, visit [Radio Group Documentation](https://composeunstyled.com/radiogroup).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val radioGroupState = rememberRadioGroupState("option1")
+ *
+ * RadioGroup(state = radioGroupState, contentDescription = "Options") {
+ *     Radio(
+ *         value = "option1",
+ *         shape = CircleShape,
+ *         backgroundColor = Color.White,
+ *         borderColor = Color(0xFFE4E4E4),
+ *         borderWidth = 1.dp
+ *     ) {
+ *         Text("Option 1")
+ *     }
+ *     Radio(
+ *         value = "option2",
+ *         shape = CircleShape,
+ *         backgroundColor = Color.White,
+ *         borderColor = Color(0xFFE4E4E4),
+ *         borderWidth = 1.dp
+ *     ) {
+ *         Text("Option 2")
+ *     }
+ * }
+ * ```
+ *
+ * @param state The [RadioGroupState] that controls the selected option.
+ * @param contentDescription The content description for accessibility.
+ * @param modifier Modifier to be applied to the radio group.
+ * @param content The content of the radio group, which should contain multiple [Radio] components.
+ */
 @Composable
 fun RadioGroup(
     state: RadioGroupState,
@@ -79,6 +120,29 @@ fun RadioGroup(
     }
 }
 
+/**
+ * A radio button component that can be selected within a [RadioGroup].
+ *
+ * This is a managed version of this component. It will automatically handle the state for you.
+ *
+ * A stateless version is also available within a different overload.
+ *
+ * @param value The value of this radio button.
+ * @param modifier Modifier to be applied to the radio button.
+ * @param backgroundColor The background color of the radio button.
+ * @param contentColor The color of the content when selected.
+ * @param selectedColor The color of the content when not selected.
+ * @param enabled Whether the radio button is enabled.
+ * @param shape The shape of the radio button.
+ * @param borderColor The color of the border.
+ * @param borderWidth The width of the border.
+ * @param contentPadding Padding values for the content.
+ * @param interactionSource The interaction source for the radio button.
+ * @param indication The indication to be shown when the radio button is interacted with.
+ * @param horizontalArrangement The horizontal arrangement of the content.
+ * @param verticalAlignment The vertical alignment of the content.
+ * @param content The content of the radio button.
+ */
 @Composable
 fun RadioGroupScope.Radio(
     value: String,
@@ -119,6 +183,28 @@ fun RadioGroupScope.Radio(
     )
 }
 
+/**
+ * A stateless version of [Radio] component.
+ *
+ * There is also a managed version of this component, that will automatically manage its state within a [RadioGroup].
+ *
+ * @param selected Whether the radio button is selected.
+ * @param onSelectedChange Callback when the selected state changes.
+ * @param modifier Modifier to be applied to the radio button.
+ * @param backgroundColor The background color of the radio button.
+ * @param contentColor The color of the content when selected.
+ * @param selectedColor The color of the content when not selected.
+ * @param enabled Whether the radio button is enabled.
+ * @param shape The shape of the radio button.
+ * @param borderColor The color of the border.
+ * @param borderWidth The width of the border.
+ * @param contentPadding Padding values for the content.
+ * @param interactionSource The interaction source for the radio button.
+ * @param indication The indication to be shown when the radio button is interacted with.
+ * @param horizontalArrangement The horizontal arrangement of the content.
+ * @param verticalAlignment The vertical alignment of the content.
+ * @param content The content of the radio button.
+ */
 @Composable
 fun Radio(
     selected: Boolean,

@@ -27,11 +27,29 @@ import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.Modal
 import kotlinx.coroutines.delay
 
+/**
+ * Properties that control the behavior of a [ModalBottomSheet].
+ *
+ * @param dismissOnBackPress Whether the sheet should be dismissed when the back button is pressed.
+ * @param dismissOnClickOutside Whether the sheet should be dismissed when clicking outside of it.
+ */
 data class ModalSheetProperties(
     val dismissOnBackPress: Boolean = true,
     val dismissOnClickOutside: Boolean = true,
 )
 
+/**
+ * Creates a [ModalBottomSheetState] that is remembered across compositions.
+ *
+ * @param initialDetent The initial detent of the sheet.
+ * @param detents The list of detents that the sheet can snap to.
+ * @param animationSpec The animation spec to use for animating between detents.
+ * @param velocityThreshold The velocity threshold for determining whether to snap to the next detent.
+ * @param positionalThreshold The positional threshold for determining whether to snap to the next detent.
+ * @param confirmDetentChange Callback to confirm whether a detent change should be allowed.
+ * @param decayAnimationSpec The animation spec to use for decay animations.
+ * @return A remembered [ModalBottomSheetState] instance.
+ */
 @Composable
 fun rememberModalBottomSheetState(
     initialDetent: SheetDetent,
@@ -156,6 +174,39 @@ private val LocalModalContext = compositionLocalOf<ModalContext> {
 }
 val DoNothing: () -> Unit = {}
 
+/**
+ * A foundational component used to build modal bottom sheets.
+ *
+ * For interactive preview & code examples, visit [Modal Bottom Sheet Documentation](https://composeunstyled.com/modalbottomsheet).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val sheetState = rememberModalBottomSheetState(
+ *     initialDetent = Hidden,
+ * )
+ *
+ * Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
+ *     Text("Show Sheet")
+ * }
+ *
+ * ModalBottomSheet(state = sheetState) {
+ *     Sheet(modifier = Modifier.fillMaxWidth().background(Color.White)) {
+ *         Box(
+ *             modifier = Modifier.fillMaxWidth().height(1200.dp),
+ *             contentAlignment = Alignment.TopCenter
+ *         ) {
+ *             DragIndication()
+ *         }
+ *     }
+ * }
+ * ```
+ *
+ * @param state The [ModalBottomSheetState] that controls the sheet.
+ * @param properties The [ModalSheetProperties] that control the behavior of the sheet.
+ * @param onDismiss Callback that is called when the sheet is dismissed.
+ * @param content The content of the modal
+ */
 @Composable
 fun ModalBottomSheet(
     state: ModalBottomSheetState,
@@ -208,6 +259,14 @@ fun ModalBottomSheet(
     }
 }
 
+/**
+ * A scrim is used to darken the content behind the sheet in order to signify that the rest of the screen is not interactive.
+ *
+ * @param modifier Modifier to be applied to the scrim.
+ * @param scrimColor The color of the scrim.
+ * @param enter The enter transition for the scrim.
+ * @param exit The exit transition for the scrim.
+ */
 @Composable
 fun ModalBottomSheetScope.Scrim(
     modifier: Modifier = Modifier,
@@ -224,6 +283,13 @@ fun ModalBottomSheetScope.Scrim(
     }
 }
 
+/**
+ * The main content area of the modal bottom sheet.
+ *
+ * @param modifier Modifier to be applied to the sheet.
+ * @param enabled Whether the sheet is enabled.
+ * @param content The content of the sheet.
+ */
 @Composable
 fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,

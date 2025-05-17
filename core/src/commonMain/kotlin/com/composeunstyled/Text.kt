@@ -12,6 +12,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 
+/**
+ * A themable composable that displays text.
+ *
+ * For interactive preview & code examples, visit [Text Documentation](https://composeunstyled.com/text).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+ *
+ * ```
+ *
+ * @param text The text to be displayed.
+ * @param modifier Modifier to be applied to the text.
+ * @param style The style to be applied to the text.
+ * @param textAlign The alignment of the text.
+ * @param lineHeight The height of each line of text.
+ * @param fontSize The size of the text.
+ * @param letterSpacing The spacing between letters.
+ * @param fontWeight The weight of the text.
+ * @param color The color of the text.
+ * @param fontFamily The font family to be used.
+ * @param singleLine Whether the text should be displayed in a single line.
+ * @param minLines The minimum number of lines to display.
+ * @param maxLines The maximum number of lines to display.
+ * @param overflow How to handle text overflow.
+ */
 @Composable
 fun Text(
     text: String,
@@ -79,6 +106,33 @@ fun Text(
     )
 }
 
+/**
+ * A themable composable that displays text.
+ *
+ * For interactive preview & code examples, visit [Text Documentation](https://composeunstyled.com/text).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+ *
+ * ```
+ *
+ * @param text The annotated text to be displayed.
+ * @param modifier Modifier to be applied to the text.
+ * @param style The style to be applied to the text.
+ * @param textAlign The alignment of the text.
+ * @param fontSize The size of the text.
+ * @param letterSpacing The spacing between letters.
+ * @param fontWeight The weight of the text.
+ * @param color The color of the text.
+ * @param lineHeight The height of each line of text.
+ * @param fontFamily The font family to be used.
+ * @param singleLine Whether the text should be displayed in a single line.
+ * @param minLines The minimum number of lines to display.
+ * @param maxLines The maximum number of lines to display.
+ * @param overflow How to handle text overflow.
+ */
 @Composable
 fun Text(
     text: AnnotatedString,

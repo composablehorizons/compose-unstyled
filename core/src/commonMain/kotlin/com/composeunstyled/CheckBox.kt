@@ -24,6 +24,42 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
+/**
+ * A foundational component used to build checkboxes.
+ *
+ * For interactive preview & code examples, visit [Checkbox Documentation](https://composeunstyled.com/checkbox).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * var checked by remember { mutableStateOf(false) }
+ *
+ * Checkbox(
+ *     checked = checked,
+ *     onCheckedChange = { checked = it },
+ *     shape = RoundedCornerShape(4.dp),
+ *     backgroundColor = Color.White,
+ *     contentColor = Color.Black
+ * ) {
+ *     // will be shown if checked
+ *     Icon(Check, contentDescription = null)
+ * }
+ * ```
+ *
+ * @param checked Whether the checkbox is checked.
+ * @param modifier Modifier to be applied to the checkbox.
+ * @param backgroundColor Background color of the checkbox.
+ * @param contentColor Color of the content inside the checkbox.
+ * @param enabled Whether the checkbox is enabled.
+ * @param onCheckedChange Callback when the checked state changes.
+ * @param shape Shape of the checkbox.
+ * @param borderColor Color of the border.
+ * @param borderWidth Width of the border.
+ * @param interactionSource The interaction source for the checkbox.
+ * @param indication The indication to be shown when the checkbox is interacted with.
+ * @param contentDescription Accessibility description of the checkbox.
+ * @param checkIcon Composable function to define the check icon.
+ */
 @Composable
 fun Checkbox(
     checked: Boolean,

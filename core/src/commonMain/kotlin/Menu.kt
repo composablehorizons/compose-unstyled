@@ -29,6 +29,60 @@ import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.NoPadding
 
+/**
+ * An unstyled component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
+ * of your choice. Fully accessible, supports keyboard navigation and open/close animations.
+ *
+ * For interactive preview & code examples, visit [Dropdown Menu Documentation](https://composeunstyled.com/dropdown-menu).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val options = listOf("United States", "Greece", "Indonesia", "United Kingdom")
+ * var selected by remember { mutableStateOf(0) }
+ * val state = rememberMenuState(expanded = true)
+ *
+ * Column(Modifier.fillMaxSize()) {
+ *     Menu(state, modifier = Modifier.align(Alignment.End)) {
+ *         MenuButton(
+ *             Modifier.clip(RoundedCornerShape(6.dp))
+ *                 .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(6.dp))
+ *         ) {
+ *             Row(
+ *                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+ *                 verticalAlignment = Alignment.CenterVertically,
+ *             ) {
+ *                 Text("Options", style = defaultTextStyle.copy(fontWeight = FontWeight(500)))
+ *                 Spacer(Modifier.width(4.dp))
+ *                 Image(ChevronDown, null)
+ *             }
+ *         }
+ *
+ *         MenuContent(
+ *             modifier = Modifier.width(320.dp)
+ *                 .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(4.dp))
+ *                 .background(Color.White)
+ *                 .padding(4.dp),
+ *             exit = fadeOut()
+ *         ) {
+ *             options.forEachIndexed { index, option ->
+ *                 MenuItem(
+ *                     modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+ *                     onClick = { selected = index }
+ *                 ) {
+ *                     Text(option, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
+ *                 }
+ *             }
+ *         }
+ *     }
+ *     Text("Selected = ${options[selected]}")
+ * }
+ * ```
+ *
+ * @param state The state object to be used to control the menu's expanded state.
+ * @param modifier Modifier to be applied to the menu container.
+ * @param content The content of the menu, typically containing a MenuButton and MenuContent.
+ */
 @Deprecated("This signature is going away in a future version", ReplaceWith("Menu(state,modifier,contents)"))
 @Composable
 public fun Menu(
@@ -77,6 +131,23 @@ public fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
 }
 
+/**
+ * A button component that triggers the menu's expanded state when clicked.
+ *
+ * @param modifier Modifier to be applied to the button.
+ * @param mutableInteractionSource The interaction source for the button.
+ * @param indication The indication to be shown when the button is interacted with.
+ * @param enabled Whether the button is enabled.
+ * @param shape The shape of the button.
+ * @param backgroundColor The background color of the button.
+ * @param contentColor The color to apply to the contents of the button.
+ * @param contentPadding Padding values for the content.
+ * @param borderColor The color of the border.
+ * @param borderWidth The width of the border.
+ * @param horizontalArrangement The horizontal arrangement of the button's children.
+ * @param verticalAlignment The vertical alignment of the button's children.
+ * @param contents A composable function that defines the content of the button.
+ */
 @Composable
 public fun MenuScope.MenuButton(
     modifier: Modifier = Modifier,
@@ -168,6 +239,16 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
     }
 }
 
+/**
+ * The content container for the menu items. This composable handles the positioning and animation
+ * of the menu content when it is expanded.
+ *
+ * @param modifier Modifier to be applied to the content container.
+ * @param enter The enter transition for the content.
+ * @param exit The exit transition for the content.
+ * @param alignment The horizontal alignment of the content relative to the menu button.
+ * @param contents A composable function that defines the content of the menu.
+ */
 @Composable
 public fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
@@ -234,6 +315,20 @@ public fun MenuScope.MenuContent(
     }
 }
 
+/**
+ * A menu item that can be clicked to perform an action and dismiss the menu.
+ *
+ * @param onClick The callback to be invoked when the menu item is clicked.
+ * @param modifier Modifier to be applied to the menu item.
+ * @param enabled Whether the menu item is enabled.
+ * @param interactionSource The interaction source for the menu item.
+ * @param indication The indication to be shown when the menu item is interacted with.
+ * @param contentPadding Padding values for the content.
+ * @param shape The shape of the menu item.
+ * @param horizontalArrangement The horizontal arrangement of the menu item's children.
+ * @param verticalAlignment The vertical alignment of the menu item's children.
+ * @param contents A composable function that defines the content of the menu item.
+ */
 @Composable
 public fun MenuScope.MenuItem(
     onClick: () -> Unit,

@@ -31,6 +31,56 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
+/**
+ * A foundational component used to build text fields.
+ *
+ * For interactive preview & code examples, visit [Text Field Documentation](https://composeunstyled.com/textfield).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * var text by remember { mutableStateOf("") }
+ *
+ * TextField(
+ *     value = text,
+ *     onValueChange = { text = it },
+ *     placeholder = "Enter text",
+ *     shape = RoundedCornerShape(8.dp),
+ *     backgroundColor = Color.White,
+ *     borderColor = Color(0xFFE4E4E4),
+ *     borderWidth = 1.dp
+ * )
+ * ```
+ *
+ * @param value The input text to be shown in the text field.
+ * @param onValueChange The callback that is triggered when the input service updates the text.
+ * @param editable Whether the text field is editable.
+ * @param modifier Modifier to be applied to the text field.
+ * @param contentPadding Padding values for the content.
+ * @param leadingIcon Optional composable to be shown at the start of the text field.
+ * @param trailingIcon Optional composable to be shown at the end of the text field.
+ * @param placeholder The placeholder composable to be shown when the text field is empty.
+ * @param contentColor The color of the text.
+ * @param disabledColor The color of the text when the text field is disabled.
+ * @param backgroundColor The background color of the text field.
+ * @param borderWidth The width of the border.
+ * @param borderColor The color of the border.
+ * @param shape The shape of the text field.
+ * @param textStyle The style of the text.
+ * @param textAlign The alignment of the text.
+ * @param fontSize The size of the text.
+ * @param fontWeight The weight of the text.
+ * @param fontFamily The font family of the text.
+ * @param singleLine Whether the text field should be constrained to a single line.
+ * @param minLines The minimum number of lines to be shown.
+ * @param maxLines The maximum number of lines to be shown.
+ * @param keyboardOptions The keyboard options for the text field.
+ * @param keyboardActions The keyboard actions for the text field.
+ * @param interactionSource The interaction source for the text field.
+ * @param spacing The spacing between the leading icon, text, and trailing icon.
+ * @param visualTransformation The visual transformation to be applied to the text.
+ * @param verticalAlignment The vertical alignment of the content.
+ */
 @Composable
 fun TextField(
     value: String,

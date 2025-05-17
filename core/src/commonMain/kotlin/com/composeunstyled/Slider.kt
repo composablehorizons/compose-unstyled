@@ -69,6 +69,14 @@ class SliderState(
         }
 }
 
+/**
+ * Creates a [SliderState] that is remembered across compositions.
+ *
+ * @param initialValue The initial value of the slider.
+ * @param valueRange The range of values that the slider can take.
+ * @param steps The number of discrete steps in the slider. If 0, the slider is continuous.
+ * @return A remembered [SliderState] instance.
+ */
 @Composable
 fun rememberSliderState(
     initialValue: Float = 0.0f,
@@ -113,6 +121,45 @@ suspend fun AwaitPointerEventScope.waitRelease(
 }
 
 
+/**
+ * A foundational component used to build sliders.
+ *
+ * For interactive preview & code examples, visit [Slider Documentation](https://composeunstyled.com/slider).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val sliderState = rememberSliderState(initialValue = 0.5f)
+ *
+ * Slider(
+ *     state = sliderState,
+ *     track = {
+ *         Box(
+ *             modifier = Modifier
+ *                 .fillMaxWidth()
+ *                 .height(4.dp)
+ *                 .background(Color.Gray)
+ *         )
+ *     },
+ *     thumb = {
+ *         Box(
+ *             modifier = Modifier
+ *                 .size(24.dp)
+ *                 .background(Color.Blue, CircleShape)
+ *         )
+ *     }
+ * )
+ * ```
+ *
+ * @param state The [SliderState] that controls the slider.
+ * @param modifier Modifier to be applied to the slider.
+ * @param enabled Whether the slider is enabled.
+ * @param interactionSource The [MutableInteractionSource] that will be used to dispatch drag events.
+ * @param valueRange The range of values that the slider can take.
+ * @param orientation The orientation of the slider.
+ * @param track The composable that represents the track of the slider.
+ * @param thumb The composable that represents the thumb of the slider.
+ */
 @Composable
 fun Slider(
     state: SliderState,
@@ -337,6 +384,9 @@ private fun calcFraction(a: Float, b: Float, pos: Float) =
 // Scale x1 from a1..b1 range to a2..b2 range
 private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) = lerp(a2, b2, calcFraction(a1, b1, x1))
 
+/**
+ * A simple "Thumb" component. Intended to be used in [Slider]s and [ToggleSwitch]s but it is not tied to them.
+ */
 @Composable
 fun Thumb(
     modifier: Modifier = Modifier, shape: Shape = RectangleShape, color: Color = Color.Unspecified

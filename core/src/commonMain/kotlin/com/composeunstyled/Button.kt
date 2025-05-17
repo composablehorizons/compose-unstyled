@@ -18,6 +18,42 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * An accessible clickable component used to create buttons with the styling of your choice.
+ *
+ * For interactive preview & code examples, visit [Button Documentation](https://composeunstyled.com/button).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * Button(
+ *     onClick = { /* TODO */ },
+ *     backgroundColor = Color(0xFFFFFFFF),
+ *     contentColor = Color(0xFF020817),
+ *     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+ *     shape = RoundedCornerShape(12.dp),
+ * ) {
+ *     Text("Submit")
+ * }
+ * ```
+ *
+ * @param onClick    The callback to be invoked when the button is clicked.
+ * @param modifier    Modifier to be applied to the button.
+ * @param enabled    Whether the button is enabled.
+ * @param shape    The shape of the button.
+ * @param backgroundColor    The background color of the button.
+ * @param contentColor    The color to apply to the contents of the button.
+ * @param contentPadding    Padding values for the content.
+ * @param borderColor    The color of the border. Applied only if both borderColor is specified and borderWidth is > `0.dp`
+ * @param borderWidth    The width of the border. Applied only if both borderColor is specified and borderWidth is > `0.dp`
+ * @param role    The role of the button for accessibility purposes.
+ * @param indication    The indication to be shown when the button is interacted with.
+ * @param interactionSource    The interaction source for the button.
+ * @param verticalAlignment The vertical alignment of the button's children.
+ * @param horizontalArrangement The horizontal arrangement of the button's children.
+ * @param content    A composable function that defines the content of the button.
+ *
+ */
 @Composable
 fun Button(
     onClick: () -> Unit,

@@ -27,6 +27,9 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 
+/**
+ * A unique identifier for a tab in a [TabGroup].
+ */
 typealias TabKey = String
 
 class TabGroupState(initialTab: TabKey, internal val tabs: List<TabKey>) {
@@ -34,6 +37,12 @@ class TabGroupState(initialTab: TabKey, internal val tabs: List<TabKey>) {
     var focusedTab by mutableStateOf<TabKey?>(null)
 }
 
+/**
+ * Creates a [TabGroupState].
+ *
+ * @param selectedTab The initially selected tab.
+ * @param orderedTabs The list of tabs in the order they should appear.
+ */
 @Composable
 fun rememberTabGroupState(selectedTab: TabKey, orderedTabs: List<TabKey>): TabGroupState {
     return remember {
@@ -49,6 +58,38 @@ class TabGroupScope(val state: TabGroupState) {
     internal val panelFocusRequesters = mutableMapOf<TabKey, FocusRequester>()
 }
 
+/**
+ * A foundational component used to build tabbed interfaces.
+ *
+ * For interactive preview & code examples, visit [Tab Group Documentation](https://composeunstyled.com/tabgroup).
+ *
+ * ## Basic Example
+ *
+ * ```kotlin
+ * val tabState = rememberTabGroupState("tab1", listOf("tab1", "tab2", "tab3"))
+ *
+ * TabGroup(state = tabState) {
+ *     TabList {
+ *         Tab(key = "tab1") {
+ *             Text("Tab 1")
+ *         }
+ *         Tab(key = "tab2") {
+ *             Text("Tab 2")
+ *         }
+ *     }
+ *     TabPanel(key = "tab1") {
+ *         Text("Content 1")
+ *     }
+ *     TabPanel(key = "tab2") {
+ *         Text("Content 2")
+ *     }
+ * }
+ * ```
+ *
+ * @param state The [TabGroupState] that controls the tab group.
+ * @param modifier Modifier to be applied to the tab group.
+ * @param content The content of the tab group.
+ */
 @Composable
 fun TabGroup(
     state: TabGroupState,
@@ -64,6 +105,16 @@ fun TabGroup(
     }
 }
 
+/**
+ * A container holding all [Tab]s that can be selected withing a [TabGroup].
+ *
+ * @param modifier Modifier to be applied to the tab list.
+ * @param shape The shape of the tab list.
+ * @param backgroundColor The background color of the tab list.
+ * @param orientation The orientation of the tab list.
+ * @param activateOnFocus Whether to activate a tab when it receives focus.
+ * @param content The content of the tab list.
+ */
 @Composable
 fun TabGroupScope.TabList(
     modifier: Modifier = Modifier,
@@ -200,6 +251,16 @@ fun TabGroupScope.TabList(
     }
 }
 
+/**
+ * A single tab in a [TabList].
+ *
+ * @param key The unique identifier for this tab.
+ * @param modifier Modifier to be applied to the tab.
+ * @param enabled Whether the tab is enabled.
+ * @param indication The indication to be shown when the tab is interacted with.
+ * @param interactionSource The interaction source for the tab.
+ * @param content The content of the tab.
+ */
 @Composable
 fun TabGroupScope.Tab(
     key: TabKey,
@@ -239,6 +300,12 @@ fun TabGroupScope.Tab(
     }
 }
 
+/**
+ * The content panel for a tab.
+ *
+ * @param key The unique identifier for the tab this panel belongs to.
+ * @param content The content of the panel.
+ */
 @Composable
 fun TabGroupScope.TabPanel(key: TabKey, content: @Composable () -> Unit) {
     val focusRequester = remember(key) { FocusRequester() }
