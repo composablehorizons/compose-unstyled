@@ -247,7 +247,7 @@ class BottomSheetState internal constructor(
      */
     val offset: Float by derivedStateOf {
         if (anchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
-            1f
+            0f
         } else {
             val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
             fullContentHeight - offsetFromTop
