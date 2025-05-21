@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalTestApi::class)
-class ModalBottomSheetTests {
+class ModalBottomSheetTest {
 
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {

@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalTestApi::class)
-class BottomSheetTests {
+class BottomSheetTest {
 
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {
