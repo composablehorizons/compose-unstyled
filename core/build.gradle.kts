@@ -85,6 +85,7 @@ kotlin {
                 exclude("org.jetbrains.compose.material")
                 exclude("org.jetbrains.compose.material3")
             }
+            implementation("org.assertj:assertj-core:3.27.3")
         }
     }
 }

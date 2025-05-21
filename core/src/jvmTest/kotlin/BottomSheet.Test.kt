@@ -10,6 +10,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlinx.coroutines.delay
+import org.assertj.core.api.Assertions.assertThat
 
 @OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
@@ -103,5 +104,37 @@ class BottomSheetTest {
                 initialDetent = SheetDetent.FullyExpanded, detents = listOf(SheetDetent.Hidden)
             )
         }
+    }
+
+    @Test
+    fun hiddenOffsetIsZero() = runComposeUiTest {
+        var state: BottomSheetState? = null
+        setContent {
+            state = rememberBottomSheetState(
+                initialDetent = SheetDetent.Hidden
+            )
+            BottomSheet(
+                state
+            ) {
+                Box(Modifier.testTag("sheet_contents").size(40.dp))
+            }
+        }
+
+        assertThat(state!!.offset).isEqualTo(0f)
+    }
+
+    @Test
+    fun fullyExpandedOffsetIsEqualToTheHeightOfTheItem() = runComposeUiTest {
+        var state: BottomSheetState? = null
+        setContent {
+            state = rememberBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded
+            )
+            BottomSheet(state) {
+                Box(Modifier.testTag("sheet_contents").size(40.dp))
+            }
+        }
+
+        assertThat(state!!.offset).isEqualTo(40f)
     }
 }

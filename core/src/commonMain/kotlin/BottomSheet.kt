@@ -332,13 +332,45 @@ fun BottomSheet(
     scope.enabled = enabled
 
     val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
+    var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-        var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
-        state.fullContentHeight = Float.NaN
+    fun calculateDetents(containerHeightPx: Float, sheetHeightPx: Float) {
+        val containerHeight = with(density) { containerHeightPx.toDp() }
+        val sheetHeight = with(density) { sheetHeightPx.toDp() }
 
-        val density = LocalDensity.current
+        val anchors = UnstyledDraggableAnchors {
+            with(density) {
+                state.closestDentToTop = Float.NaN
 
+                state.detents.forEach { detent ->
+                    val contentHeight = detent
+                        .calculateDetentHeight(containerHeight, sheetHeight)
+                        .coerceIn(0.dp, sheetHeight)
+
+                    val offsetDp = containerHeight - contentHeight
+                    val offset = offsetDp.toPx()
+                    if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
+                        state.closestDentToTop = offset
+                    }
+                    detent at offset
+                }
+            }
+        }
+        val newTarget = if (state.isIdle) {
+            state.anchoredDraggableState.currentValue
+        } else {
+            state.anchoredDraggableState.targetValue
+        }
+
+        state.anchoredDraggableState.updateAnchors(anchors, newTarget)
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+            .onSizeChanged { calculateDetents(it.height.toFloat(), state.fullContentHeight) },
+        contentAlignment = Alignment.TopCenter
+    ) {
         Box(
             modifier = Modifier.matchParentSize()
                 .onSizeChanged { containerHeight = with(density) { it.height.toDp() } }
@@ -346,38 +378,9 @@ fun BottomSheet(
             Box(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
-                    .let {
-                        if (containerHeight != Dp.Unspecified) {
-                            it.onSizeChanged { sheetSize ->
-                                val sheetHeight = with(density) { sheetSize.height.toDp() }
-                                state.fullContentHeight = sheetSize.height.toFloat()
-                                val anchors = UnstyledDraggableAnchors {
-                                    with(density) {
-                                        state.closestDentToTop = Float.NaN
-
-                                        state.detents.forEach { detent ->
-                                            val contentHeight = detent
-                                                .calculateDetentHeight(containerHeight, sheetHeight)
-                                                .coerceIn(0.dp, sheetHeight)
-
-                                            val offsetDp = containerHeight - contentHeight
-                                            val offset = offsetDp.toPx()
-                                            if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
-                                                state.closestDentToTop = offset
-                                            }
-                                            detent at offset
-                                        }
-                                    }
-                                }
-                                val newTarget = if (state.isIdle) {
-                                    state.anchoredDraggableState.currentValue
-                                } else {
-                                    state.anchoredDraggableState.targetValue
-                                }
-
-                                state.anchoredDraggableState.updateAnchors(anchors, newTarget)
-                            }
-                        } else it
+                    .onSizeChanged {
+                        state.fullContentHeight = it.height.toFloat()
+                        calculateDetents(with(density) { containerHeight.toPx() }, it.height.toFloat())
                     }
                     .layout { measurable, constraints ->
                         val maxDetentHeight = if (containerHeight == Dp.Unspecified) {
