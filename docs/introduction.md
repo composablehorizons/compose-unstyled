@@ -81,4 +81,6 @@ Have an idea for a component to be added or a component is not just right? [**Op
 
 Want to say thanks? Tell your friends and [**star the repo**](https://github.com/composablehorizons/compose-unstyled)
 
+Come hang in the [**community Discord**](https://discord.gg/AZ4X7vEr5p)
+
 Want to reach out to me? [**Ping me on X**](https://x.com/alexstyl)

@@ -72,6 +72,8 @@ extra:
       link: https://github.com/composablehorizons/
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/ComposeUnstyled
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/AZ4X7vEr5p
 
 markdown_extensions:
   - toc:
