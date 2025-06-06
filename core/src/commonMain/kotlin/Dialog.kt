@@ -67,20 +67,6 @@ private val DialogStateSaver = run {
  * @param initiallyVisible Whether the dialog should be initially visible.
  */
 @Composable
-@Deprecated(
-    "This function is going away soon. Use the updated function with renamed parameters",
-    ReplaceWith("rememberDialogState(initiallyVisible = visible)")
-)
-public fun rememberDialogState(visible: Boolean = false, ____deprecated_constructor: Unit = Unit): DialogState {
-    return rememberDialogState(initiallyVisible = visible)
-}
-
-/**
- * Creates a [DialogState] that can be used to control the visibility of a [Dialog].
- *
- * @param initiallyVisible Whether the dialog should be initially visible.
- */
-@Composable
 public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
