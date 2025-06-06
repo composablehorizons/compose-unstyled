@@ -67,7 +67,7 @@ private val DialogStateSaver = run {
  * @param initiallyVisible Whether the dialog should be initially visible.
  */
 @Composable
-public fun rememberDialogState(initiallyVisible: Boolean): DialogState {
+fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
 
@@ -141,13 +141,13 @@ fun Dialog(
                 modifier = Modifier.fillMaxSize()
                     .then(
                         if (properties.dismissOnClickOutside) {
-                        Modifier.pointerInput(Unit) {
-                            detectTapGestures {
-                                currentDismiss()
-                                scope.dialogState.visible = false
+                            Modifier.pointerInput(Unit) {
+                                detectTapGestures {
+                                    currentDismiss()
+                                    scope.dialogState.visible = false
+                                }
                             }
-                        }
-                    } else Modifier
+                        } else Modifier
                     ),
                 contentAlignment = Alignment.Center
             ) {
