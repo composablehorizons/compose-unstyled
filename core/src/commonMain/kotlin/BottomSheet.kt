@@ -424,7 +424,7 @@ fun BottomSheet(
                     .unstyledAnchoredDraggable(
                         state = state.anchoredDraggableState,
                         orientation = Orientation.Vertical,
-                        enabled = scope.enabled
+                        enabled = scope.enabled && state.detents.size > 1
                     )
                     .pointerInput(Unit) { detectTapGestures { } }
                     .align(Alignment.TopCenter)
