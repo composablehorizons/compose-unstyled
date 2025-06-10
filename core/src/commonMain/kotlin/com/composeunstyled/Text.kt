@@ -56,46 +56,16 @@ fun Text(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip
 ) {
-    val currentColor = listOf(
-        color, style.color, LocalContentColor.current
-    ).firstOrNull { it != Color.Unspecified } ?: Color.Unspecified
+    val currentStyle = style.override(
+        textAlign = textAlign,
+        fontSize = fontSize,
+        color = color,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing
+    )
 
-    val currentTextAlign = listOf(
-        textAlign,
-        style.textAlign,
-    ).firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified
-
-    val currentLineHeight = listOf(
-        lineHeight,
-        style.lineHeight,
-    ).firstOrNull { it != TextUnit.Unspecified } ?: TextUnit.Unspecified
-
-    val currentLetterSpacing = listOf(
-        letterSpacing,
-        style.letterSpacing,
-    ).firstOrNull { it != TextUnit.Unspecified } ?: TextUnit.Unspecified
-
-    val currentStyle by remember(
-        style,
-        currentTextAlign,
-        fontSize,
-        currentColor,
-        fontWeight,
-        fontFamily,
-        currentLineHeight
-    ) {
-        mutableStateOf(
-            style.copy(
-                textAlign = currentTextAlign,
-                fontSize = fontSize,
-                color = currentColor,
-                fontWeight = fontWeight,
-                fontFamily = fontFamily,
-                lineHeight = currentLineHeight,
-                letterSpacing = currentLetterSpacing
-            )
-        )
-    }
     BasicText(
         text = text,
         modifier = modifier,
@@ -150,47 +120,17 @@ fun Text(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip
 ) {
-    val currentColor = listOf(
-        color, style.color, LocalContentColor.current
-    ).firstOrNull { it != Color.Unspecified } ?: Color.Unspecified
 
-    val currentTextAlign = listOf(
-        textAlign,
-        style.textAlign,
-    ).firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified
+    val currentStyle = style.override(
+        textAlign = textAlign,
+        fontSize = fontSize,
+        color = color,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing
+    )
 
-    val currentLetterSpacing = listOf(
-        letterSpacing,
-        style.letterSpacing,
-    ).firstOrNull { it != TextUnit.Unspecified } ?: TextUnit.Unspecified
-
-    val currentLineHeight = listOf(
-        lineHeight,
-        style.lineHeight,
-    ).firstOrNull { it != TextUnit.Unspecified } ?: TextUnit.Unspecified
-
-    val currentStyle by remember(
-        style,
-        currentTextAlign,
-        fontSize,
-        currentColor,
-        fontWeight,
-        fontFamily,
-        currentLineHeight,
-        currentLetterSpacing
-    ) {
-        mutableStateOf(
-            style.copy(
-                textAlign = currentTextAlign,
-                fontSize = fontSize,
-                color = currentColor,
-                fontWeight = fontWeight,
-                fontFamily = fontFamily,
-                lineHeight = currentLineHeight,
-                letterSpacing = currentLetterSpacing
-            )
-        )
-    }
     BasicText(
         text = text,
         modifier = modifier,

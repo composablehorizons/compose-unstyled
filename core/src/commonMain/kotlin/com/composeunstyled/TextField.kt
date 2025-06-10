@@ -2,22 +2,23 @@ package com.composeunstyled
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -112,31 +113,12 @@ fun TextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
-    val overrideContentColor = if (contentColor.isSpecified) {
-        contentColor
-    } else if (textStyle.color.isSpecified) {
-        textStyle.color
-    } else {
-        LocalContentColor.current
-    }
-
-    val overrideTextAlign = if (textAlign != TextAlign.Unspecified) {
-        textAlign
-    } else textStyle.textAlign
-
-    val overrideFontSize = if (fontSize != TextUnit.Unspecified) {
-        fontSize
-    } else textStyle.fontSize
-
-    val overrideFontWeight = fontWeight ?: textStyle.fontWeight
-    val overrideFontFamily = fontFamily ?: textStyle.fontFamily
-
-    val overriddenStyle = textStyle.merge(
-        fontWeight = overrideFontWeight,
-        fontSize = overrideFontSize,
-        fontFamily = overrideFontFamily,
-        textAlign = overrideTextAlign,
-        color = overrideContentColor
+    val overriddenStyle = textStyle.override(
+        textAlign = textAlign,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        color = contentColor,
     )
 
     var wasEditable by remember { mutableStateOf(editable) }
@@ -200,7 +182,7 @@ fun TextField(
                             style = overriddenStyle,
                             minLines = minLines,
                             maxLines = maxLines,
-                            color = overrideContentColor.copy(alpha = 0.66f)
+                            color = overriddenStyle.color.copy(alpha = 0.66f)
                         )
                     }
                 }
@@ -236,6 +218,189 @@ fun TextField(
             )
             if (trailingIcon != null) {
                 trailingIcon()
+            }
+        }
+    }
+}
+
+@Composable
+fun TextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    editable: Boolean = true,
+    cursorBrush: Brush = SolidColor(Color.Black),
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable TextFieldScope.() -> Unit,
+) {
+    val scope = remember { TextFieldScope() }
+
+    scope.text = value
+    scope.editable = editable
+
+    val newTextStyle = textStyle.override(
+        textAlign = textAlign,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing,
+    )
+    scope.textAlignment = newTextStyle.textAlign
+    scope.minLines = minLines
+    scope.maxLines = maxLines
+
+    var textRange by remember { mutableStateOf(TextRange(value.length, value.length)) }
+    val textFieldValue by derivedStateOf { TextFieldValue(value, textRange) }
+
+    CompositionLocalProvider(
+        LocalTextStyle provides newTextStyle
+    ) {
+        if (editable) {
+            BasicTextField(
+                minLines = minLines,
+                maxLines = maxLines,
+                value = textFieldValue,
+                onValueChange = { it ->
+                    if (scope.isTrailingFocused.not() && scope.isLeadingFocused.not()) {
+                        // block any value changes, unless the actual text input is focused
+                        // this guards for cases where the
+                        onValueChange(it.text)
+                        textRange = it.selection
+                    }
+                },
+                interactionSource = interactionSource,
+                textStyle = newTextStyle,
+                modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
+                cursorBrush = cursorBrush,
+                singleLine = singleLine,
+                enabled = editable,
+                keyboardActions = keyboardActions,
+                keyboardOptions = keyboardOptions,
+                visualTransformation = visualTransformation,
+            ) { innerTextField ->
+                scope.innerTextField = innerTextField
+                Column(
+                    Modifier
+                        // we are handling pointerIcons in TextInput()
+                        .pointerHoverIcon(PointerIcon.Default)
+                ) {
+                    scope.content()
+                }
+            }
+        } else {
+            Column(modifier) {
+                scope.content()
+            }
+        }
+    }
+}
+
+@Composable
+internal fun TextStyle.override(
+    textAlign: TextAlign,
+    fontSize: TextUnit,
+    color: Color = Color.Unspecified,
+    fontWeight: FontWeight?,
+    fontFamily: FontFamily?,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+): TextStyle {
+    val contentColor = LocalContentColor.current
+
+    return this.copy(textAlign = listOf(textAlign, this.textAlign).firstOrNull { it != TextAlign.Unspecified }
+        ?: TextAlign.Unspecified,
+        fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
+        color = listOf(color, contentColor, this.color).firstOrNull { it.isSpecified } ?: Color.Unspecified,
+        fontWeight = fontWeight ?: this.fontWeight,
+        fontFamily = fontFamily ?: this.fontFamily,
+        lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
+        letterSpacing = listOf(letterSpacing, this.letterSpacing).firstOrNull { it.isSpecified }
+            ?: TextUnit.Unspecified)
+
+}
+
+
+class TextFieldScope {
+    internal var innerTextField: (@Composable () -> Unit)? = null
+    internal var text: String by mutableStateOf("")
+    internal var editable: Boolean by mutableStateOf(true)
+    internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
+
+    internal var minLines: Int by mutableStateOf(1)
+    internal var maxLines: Int by mutableStateOf(Int.MAX_VALUE)
+
+    internal var isLeadingFocused by mutableStateOf(false)
+    internal var isTrailingFocused by mutableStateOf(false)
+}
+
+@Composable
+fun TextFieldScope.TextInput(
+    modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    label: String? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    leading: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
+) {
+    Row(
+        modifier = modifier.clip(shape).background(backgroundColor)
+            .pointerHoverIcon(PointerIcon.Text) then buildModifier {
+            if (label != null) {
+                add(Modifier.semantics { contentDescription = label })
+            }
+        }, verticalAlignment = verticalAlignment, horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            if (leading != null) {
+                Box(
+                    Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged {
+                        isLeadingFocused = it.hasFocus
+                    }) {
+                    leading()
+                }
+            }
+            val contentAlignment: Alignment = when (textAlignment) {
+                TextAlign.End -> Alignment.TopEnd
+                TextAlign.Center -> Alignment.Center
+                else -> Alignment.TopStart
+            }
+            Box(contentAlignment = contentAlignment, modifier = Modifier.weight(1f)) {
+                if (editable) {
+                    innerTextField!!.invoke()
+                } else {
+                    SelectionContainer {
+                        Text(text)
+                    }
+                }
+
+                if (placeholder != null && text.isBlank()) {
+                    Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
+                        placeholder()
+                    }
+                }
+            }
+            if (trailing != null) {
+                Box(
+                    Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged { isTrailingFocused = it.hasFocus }) {
+                    trailing()
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +21,7 @@ import com.composables.core.Icon
 import com.composeunstyled.Button
 import com.composeunstyled.Text
 import com.composeunstyled.TextField
+import com.composeunstyled.TextInput
 
 
 @Composable
@@ -52,44 +54,54 @@ fun TextFieldDemo() {
                     value = username,
                     onValueChange = { username = it },
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    placeholder = "Email",
-                    borderWidth = 1.dp,
-                    borderColor = Color(0xFFBDBDBD),
-                    shape = RoundedCornerShape(8.dp),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email
                     ),
-                )
-
+                ) {
+                    Text("Email", modifier = Modifier.padding(bottom = 8.dp), fontWeight = FontWeight.SemiBold)
+                    TextInput(
+                        Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        placeholder = { Text("email@example.com", color = Color.Black.copy(0.6f)) },
+                    )
+                }
 
                 TextField(
                     value = password,
                     onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-                    placeholder = "Password",
-                    borderWidth = 1.dp,
-                    borderColor = Color(0xFFBDBDBD),
-                    shape = RoundedCornerShape(8.dp),
-                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                     singleLine = true,
-                    trailingIcon = {
-                        Button(
-                            onClick = { showPassword = !showPassword },
-                            backgroundColor = Color.Transparent,
-                            contentPadding = PaddingValues(4.dp),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (showPassword) EyeOff else Eye,
-                                contentDescription = if (showPassword) "Hide password" else "Show password",
-                                tint = Color(0xFF757575)
-                            )
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
+                ) {
+                    Text("Password", modifier = Modifier.padding(bottom = 8.dp), fontWeight = FontWeight.SemiBold)
+                    TextInput(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .padding(vertical = 4.dp)
+                            .padding(start = 16.dp, end = 4.dp),
+                        placeholder = { Text("8-12 characters", color = Color.Black.copy(0.6f)) },
+                        trailing = {
+                            Button(
+                                onClick = { showPassword = !showPassword },
+                                backgroundColor = Color.Transparent,
+                                contentPadding = PaddingValues(4.dp),
+                                shape = RoundedCornerShape(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (showPassword) EyeOff else Eye,
+                                    contentDescription = if (showPassword) "Hide password" else "Show password",
+                                    tint = Color(0xFF757575)
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
 
                 Button(
                     onClick = { /* TODO */ },
