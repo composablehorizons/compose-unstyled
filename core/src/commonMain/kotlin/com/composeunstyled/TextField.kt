@@ -108,7 +108,7 @@ fun TextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     spacing: Dp = 8.dp,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,

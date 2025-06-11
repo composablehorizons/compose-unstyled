@@ -109,7 +109,7 @@ fun DisclosureScope.DisclosureHeading(
     borderColor: Color = Color.Unspecified,
     borderWidth: Dp = 0.dp,
     indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     content: @Composable () -> Unit
@@ -158,7 +158,7 @@ fun DisclosureScope.DisclosureHeading(
     borderColor: Color = Color.Unspecified,
     borderWidth: Dp = 0.dp,
     indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     content: @Composable () -> Unit

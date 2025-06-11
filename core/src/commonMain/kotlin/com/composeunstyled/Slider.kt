@@ -165,7 +165,7 @@ fun Slider(
     state: SliderState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     orientation: Orientation = Orientation.Horizontal,
     track: @Composable () -> Unit,
@@ -249,13 +249,17 @@ fun Slider(
                     while (currentContext.isActive) {
                         val down = awaitFirstDown()
 
-                        var press = Press(down.position)
-                        scope.launch { interactionSource.emit(press) }
+                        val press = Press(down.position)
+                        if (interactionSource != null) {
+                            scope.launch { interactionSource.emit(press) }
+                        }
                         try {
                             waitRelease()
                         } catch (_: Exception) {
                         }
-                        scope.launch { interactionSource.emit(Release(press)) }
+                        if (interactionSource != null) {
+                            scope.launch { interactionSource.emit(Release(press)) }
+                        }
                     }
                 }
             }

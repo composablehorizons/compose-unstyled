@@ -513,7 +513,7 @@ fun BottomSheetScope.DragIndication(
         paddingValues = PaddingValues(horizontal = 8.dp, vertical = 14.dp),
         cornerRadius = 8.dp
     ),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     onClickLabel: String? = "Toggle sheet"
 ) {
     var detentIndex by rememberSaveable { mutableStateOf(-1) }

@@ -71,7 +71,7 @@ fun Checkbox(
     shape: Shape = RectangleShape,
     borderColor: Color = Color.Unspecified,
     borderWidth: Dp = 1.dp,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     indication: Indication? = LocalIndication.current,
     contentDescription: String? = null,
     checkIcon: @Composable () -> Unit,

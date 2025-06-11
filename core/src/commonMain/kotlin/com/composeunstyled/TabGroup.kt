@@ -267,7 +267,7 @@ fun TabGroupScope.Tab(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit
 ) {
     val focusRequester = remember(key) { FocusRequester() }

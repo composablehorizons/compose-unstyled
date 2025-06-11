@@ -64,7 +64,7 @@ fun ToggleSwitch(
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
     contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     indication: Indication = LocalIndication.current,
     thumb: @Composable () -> Unit,
 ) {

@@ -151,7 +151,7 @@ public fun rememberMenuState(expanded: Boolean = false): MenuState {
 @Composable
 public fun MenuScope.MenuButton(
     modifier: Modifier = Modifier,
-    mutableInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    mutableInteractionSource: MutableInteractionSource? = null,
     indication: Indication = LocalIndication.current,
     enabled: Boolean = true,
     shape: Shape = RectangleShape,
@@ -334,7 +334,7 @@ public fun MenuScope.MenuItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     indication: Indication = LocalIndication.current,
     contentPadding: PaddingValues = NoPadding,
     shape: Shape = RectangleShape,

@@ -41,7 +41,7 @@ fun ToggleSwitchDemo() {
                         selected = toggled,
                         onClick = { toggled = !toggled },
                         indication = LocalIndication.current,
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         role = Role.Switch
                     ).padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
