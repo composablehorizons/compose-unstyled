@@ -121,7 +121,7 @@ fun ScrollArea(
     ScrollArea(
         state = state,
         modifier = modifier,
-        overscrollEffect = ScrollableDefaults.overscrollEffect(),
+        overscrollEffect = rememberOverscrollEffect(),
         overscrollEffectSides = listOf(OverscrollSides.Vertical, OverscrollSides.Horizontal),
         content = content
     )
@@ -142,7 +142,7 @@ fun ScrollArea(
 fun ScrollArea(
     state: ScrollAreaState,
     modifier: Modifier = Modifier,
-    overscrollEffect: OverscrollEffect? = ScrollableDefaults.overscrollEffect(),
+    overscrollEffect: OverscrollEffect? = rememberOverscrollEffect(),
     overscrollEffectSides: List<OverscrollSides> = listOf(
         OverscrollSides.Vertical, OverscrollSides.Horizontal
     ),
