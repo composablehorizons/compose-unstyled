@@ -26,7 +26,7 @@ import com.composeunstyled.TextInput
 
 @Composable
 fun TextFieldDemo() {
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
 
@@ -51,8 +51,8 @@ fun TextFieldDemo() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
-                    value = username,
-                    onValueChange = { username = it },
+                    value = email,
+                    onValueChange = { email = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -67,6 +67,33 @@ fun TextFieldDemo() {
                             .background(Color.White, RoundedCornerShape(8.dp))
                             .padding(horizontal = 16.dp, vertical = 12.dp),
                         placeholder = { Text("email@example.com", color = Color.Black.copy(0.6f)) },
+                    )
+                }
+
+                var password by remember { mutableStateOf("") }
+                var showPassword by remember { mutableStateOf(false) }
+
+                TextField(
+                    value = password,
+                    onValueChange = { /* TODO */ },
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                ) {
+                    TextInput(
+                        placeholder = { Text("Password") },
+                        trailing = {
+                            Button(
+                                onClick = { showPassword = !showPassword },
+                                backgroundColor = Color.Transparent,
+                                contentPadding = PaddingValues(4.dp),
+                                shape = RoundedCornerShape(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (showPassword) EyeOff else Eye,
+                                    contentDescription = if (showPassword) "Hide password" else "Show password",
+                                    tint = Color(0xFF757575)
+                                )
+                            }
+                        }
                     )
                 }
 

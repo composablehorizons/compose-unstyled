@@ -44,7 +44,7 @@ For such cases we provide specific styling parameters or optional components.
 
 ## Code Examples
 
-### Consistent typography through the app
+### Consistent typography through your app
 
 It is recommended to use the provided `LocalTextStyle` in order to maintain consistent text styling across your app.
 
@@ -56,7 +56,7 @@ CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fon
         Text("This text will use the provided LocalTextStyle")
         Text("So will this text")
         
-        Text("This text is also styled, but slighly modified", letterSpacing = 2.sp)
+        Text("This text is also styled, but slightly modified", letterSpacing = 2.sp)
 
         Text("This text is completely different", style = TextStyle())
     }

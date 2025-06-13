@@ -5,7 +5,9 @@ description: A component for user input through text fields.
 
 # Text Field
 
-A themable component to build text fields with the styling of your choise.
+A themable component to build text fields with the styling of your choice.
+
+Supports placeholders, leading and trailing slots out of the box along with accessibility labels (visual or not).
 
 <div style="position: relative; max-width: 800px; height: 340px; border-radius: 20px; overflow: hidden; border: 1px solid #777;">
     <iframe id="demoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="../demo/index.html?id=textfield" title="Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -21,28 +23,45 @@ dependencies {
 
 ## Basic Example
 
-To create a text field, use the `TextField` component. It handles its own state and sets important accessibility semantics.
+To create a text field, use the `TextField` component and use the `TextInput()` component within its content scope.
+
+The `TextField` itself groups together every part of the text field in order to make sense for screen reader technology.
+
+Other than the `TextInput` which handles the part of the text field the user can enter text at, it can contain elements
+such as `Text` for a visual label.
 
 ```kotlin
+var text by remember { mutableStateOf("") }
+
 TextField(
-    value = "",
-    onValueChange = { /* TODO */ },
-    modifier = Modifier.fillMaxWidth(),
-    placeholder = "Enter text here",
-    borderWidth = 1.dp,
-    borderColor = Color.Gray,
-    shape = RoundedCornerShape(8.dp),
+    value = text,
+    onValueChange = { text = it },
     singleLine = true
-)
+) {
+    TextInput()
+}
 ```
+
+## Styling
+
+Every component in Compose Unstyled is renderless. They handle all UX pattern logic, internal state, accessibility (
+according to ARIA standards), and keyboard interactions for you, but they do not render any UI to the screen.
+
+This is by design so that you can style your components exactly to your needs.
+
+Most of the time, styling is done using `Modifiers` of your choice. However, sometimes this is not enough due to the
+order of the `Modifier`s affecting the visual outcome.
+
+For such cases we provide specific styling parameters.
 
 ## Code Examples
 
-### Consistent typography through the app
+### Consistent typography through your app
 
 It is recommended to use the provided `LocalTextStyle` in order to maintain consistent text styling across your app.
 
-If you need to override a text style for specific cases, you can either override a specific parameter via the `Text` modifier or pass an entire different style via the `style` parameter:
+If you need to override a text style for specific cases, you can either override a specific parameter via the `Text`
+modifier or pass an entire different style via the `style` parameter:
 
 ```kotlin
 CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)) {
@@ -51,10 +70,13 @@ CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fon
         TextField(
             value = "",
             onValueChange = { /* TODO */ },
-        )
+        ) {
+            // the provided text style will be used in the text input 
+            TextInput()
+        }
         Text("So will this text")
-        
-        Text("This text is also styled, but slighly modified", letterSpacing = 2.sp)
+
+        Text("This text is also styled, but slightly modified", letterSpacing = 2.sp)
 
         Text("This text is completely different", style = TextStyle())
     }
@@ -63,7 +85,8 @@ CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fon
 
 ### Specifying Input Type
 
-You can specify the input type for the `TextField` using the `keyboardOptions` parameter. For example, to specify an email input type:
+You can specify the input type for the `TextField` using the `keyboardOptions` parameter. For example, to specify an
+email input type:
 
 ```kotlin
 TextField(
@@ -72,37 +95,42 @@ TextField(
     modifier = Modifier.fillMaxWidth(),
     placeholder = "Email",
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-)
+) {
+    InputText()
+}
 ```
 
 ### Adding a Trailing Icon
 
-You can add a trailing icon to the `TextField` to provide additional functionality, such as toggling password visibility:
+You can add a trailing icon to the `TextField` to provide additional functionality, such as toggling password
+visibility:
 
 ```kotlin
+var password by remember { mutableStateOf("") }
 var showPassword by remember { mutableStateOf(false) }
 
 TextField(
-    value = "",
-    onValueChange = { /* TODO */ },
-    modifier = Modifier.fillMaxWidth(),
-    placeholder = "Password",
-    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-    trailingIcon = {
-        Button(
-            onClick = { showPassword = !showPassword },
-            backgroundColor = Color.Transparent,
-            contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(4.dp)
-        ) {
-            Icon(
-                imageVector = if (showPassword) EyeOff else Eye,
-                contentDescription = if (showPassword) "Hide password" else "Show password",
-                tint = Color(0xFF757575)
-            )
+    value = password,
+    onValueChange = { password = it },
+) {
+    TextInput(
+        placeholder = { Text("Password") },
+        trailing = {
+            Button(
+                onClick = { showPassword = !showPassword },
+                backgroundColor = Color.Transparent,
+                contentPadding = PaddingValues(4.dp),
+                shape = RoundedCornerShape(4.dp)
+            ) {
+                Icon(
+                    imageVector = if (showPassword) EyeOff else Eye,
+                    contentDescription = if (showPassword) "Hide password" else "Show password",
+                    tint = Color(0xFF757575)
+                )
+            }
         }
-    }
-)
+    )
+}
 ```
 
 ### Handling Password Input
@@ -110,71 +138,92 @@ TextField(
 To handle password input, you can use the `visualTransformation` parameter to obscure the text:
 
 ```kotlin
+var password by remember { mutableStateOf("") }
+var showPassword by remember { mutableStateOf(false) }
+
+TextField(
+    value = password,
+    onValueChange = { password = it },
+    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+) {
+    TextInput(
+        placeholder = { Text("Password") },
+        trailing = {
+            Button(
+                onClick = { showPassword = !showPassword },
+                backgroundColor = Color.Transparent,
+                contentPadding = PaddingValues(4.dp),
+                shape = RoundedCornerShape(4.dp)
+            ) {
+                Icon(
+                    imageVector = if (showPassword) EyeOff else Eye,
+                    contentDescription = if (showPassword) "Hide password" else "Show password",
+                    tint = Color(0xFF757575)
+                )
+            }
+        }
+    )
+}
+```
+
+### Adding an Invisible Label
+
+You can add an invisible label to your text field for accessibility purposes. 
+
+This is particularly useful when you want to provide context for screen readers without showing a visual label:
+
+```kotlin
 TextField(
     value = "",
     onValueChange = { /* TODO */ },
-    modifier = Modifier.fillMaxWidth(),
-    placeholder = "Password",
-    visualTransformation = PasswordVisualTransformation(),
-    trailingIcon = {
-        Button(
-            onClick = { /* Toggle password visibility */ },
-            backgroundColor = Color.Transparent,
-            contentPadding = PaddingValues(4.dp),
-            shape = RoundedCornerShape(4.dp)
-        ) {
-            Icon(
-                imageVector = if (/* condition */) EyeOff else Eye,
-                contentDescription = if (/* condition */) "Hide password" else "Show password",
-                tint = Color(0xFF757575)
-            )
-        }
-    }
-)
+) {
+    TextInput(
+        label = "Email address", // This label is only visible to screen readers
+        placeholder = { Text("Enter your email") }
+    )
+}
 ```
-## Styling
-
-Every component in Compose Unstyled is renderless. They handle all UX pattern logic, internal state, accessibility (according to ARIA standards), and keyboard interactions for you, but they do not render any UI to the screen.
-
-This is by design so that you can style your components exactly to your needs.
-
-Most of the time, styling is done using `Modifiers` of your choice. However, sometimes this is not enough due to the order of the `Modifier`s affecting the visual outcome.
-
-For such cases we provide specific styling parameters.
 
 ## Component API
 
 ### TextField
 
-| Parameter                               | Description                      |
-|-----------------------------------------|----------------------------------|
-| `value`                                 | The current text in the text field. |
-| `onValueChange`                         | Callback when the text changes.  |
-| `editable`                              | Whether the text field is editable. |
-| `modifier`                              | Modifier to be applied to the text field. |
-| `contentPadding`                        | Padding inside the text field.   |
-| `leadingIcon`                           | Leading icon to display inside the text field. |
-| `trailingIcon`                          | Trailing icon to display inside the text field. |
-| `placeholder`                           | Placeholder text when the field is empty. |
-| `contentColor`                          | Color of the text content.       |
-| `disabledColor`                         | Color when the text field is disabled. |
-| `backgroundColor`                       | Background color of the text field. |
-| `borderWidth`                           | Width of the border.             |
-| `borderColor`                           | Color of the border.             |
-| `shape`                                 | Shape of the text field.         |
-| `textStyle`                             | Style to apply to the text.      |
-| `textAlign`                             | Alignment of the text.           |
-| `fontSize`                              | Size of the font.                |
-| `fontWeight`                            | Weight of the font.              |
-| `fontFamily`                            | Family of the font.              |
-| `singleLine`                            | Whether the text field is single line. |
-| `minLines`                              | Minimum number of lines to display. |
-| `maxLines`                              | Maximum number of lines to display. |
-| `keyboardOptions`                       | Options for the keyboard.        |
-| `keyboardActions`                       | Actions for the keyboard.        |
-| `interactionSource`                     | Interaction source for the text field. |
-| `spacing`                               | Spacing between elements inside the text field. |
-| `visualTransformation`                  | Visual transformation for the text. |
+| Parameter              | Description                                     |
+|------------------------|-------------------------------------------------|
+| `value`                | The current text in the text field.             |
+| `onValueChange`        | Callback when the text changes.                 |
+| `modifier`             | Modifier to be applied to the text field.       |
+| `editable`             | Whether the text field is editable.             |
+| `cursorBrush`          | The brush to use for the cursor.                |
+| `textStyle`            | Style to apply to the text.                     |
+| `textAlign`            | Alignment of the text.                          |
+| `lineHeight`           | Height of each line of text.                    |
+| `fontSize`             | Size of the font.                               |
+| `letterSpacing`        | Spacing between letters.                        |
+| `fontWeight`           | Weight of the font.                             |
+| `fontFamily`           | Family of the font.                             |
+| `singleLine`           | Whether the text field is single line.          |
+| `minLines`             | Minimum number of lines to display.             |
+| `maxLines`             | Maximum number of lines to display.             |
+| `keyboardActions`      | Actions for the keyboard.                       |
+| `keyboardOptions`      | Options for the keyboard.                       |
+| `visualTransformation` | Visual transformation for the text.             |
+| `interactionSource`    | Interaction source for the text field.          |
+| `content`              | Content composable that defines the text field's appearance. |
+
+### TextFieldScope.TextInput
+
+| Parameter              | Description                                     |
+|------------------------|-------------------------------------------------|
+| `modifier`             | Modifier to be applied to the text input.       |
+| `shape`                | Shape of the text input.                        |
+| `backgroundColor`      | Background color of the text input.             |
+| `contentColor`         | Color of the text content.                      |
+| `label`                | Accessibility label for the text input.         |
+| `placeholder`          | Placeholder composable when the field is empty. |
+| `leading`              | Leading composable to display.                  |
+| `trailing`             | Trailing composable to display.                 |
+| `verticalAlignment`    | Vertical alignment of the content.              |
 
 ## Icons and other icons
 

@@ -140,9 +140,9 @@ Available for 🖥️ Desktop, 🌐 Web (Js/WASM), 🤖 Android, 🍎 iOS, and a
 
     <div>
         <a href="textfield">
-          <img src="preview_textfield.png" alt="Textfield Preview">
+          <img src="preview_textfield.png" alt="Text Field Preview">
         </a>
-        <div>Textfield</div>
+        <div>Text Field</div>
     </div>
 
     <div>
