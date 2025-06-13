@@ -82,6 +82,7 @@ import androidx.compose.ui.unit.isSpecified
  * @param visualTransformation The visual transformation to be applied to the text.
  * @param verticalAlignment The vertical alignment of the content.
  */
+@Deprecated("Use the overload of TextField that provides slots for better styling capabilities")
 @Composable
 fun TextField(
     value: String,
