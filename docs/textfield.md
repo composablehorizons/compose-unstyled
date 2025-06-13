@@ -15,7 +15,7 @@ A themable component to build text fields with the styling of your choise.
 
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("com.composables:core:1.31.1")
+    implementation("com.composables:core:1.32.0")
 }
 ```
 
