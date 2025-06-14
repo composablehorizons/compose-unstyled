@@ -353,6 +353,7 @@ fun TextFieldScope.TextInput(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     contentColor: Color = Color.Unspecified,
     label: String? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -361,12 +362,16 @@ fun TextFieldScope.TextInput(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically
 ) {
     Row(
-        modifier = modifier.clip(shape).background(backgroundColor)
+        modifier = modifier
+            .clip(shape)
+            .background(backgroundColor)
             .pointerHoverIcon(PointerIcon.Text) then buildModifier {
             if (label != null) {
                 add(Modifier.semantics { contentDescription = label })
             }
-        }, verticalAlignment = verticalAlignment, horizontalArrangement = Arrangement.SpaceBetween
+        }.padding(contentPadding),
+        verticalAlignment = verticalAlignment,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
             if (leading != null) {
