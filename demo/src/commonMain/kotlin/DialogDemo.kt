@@ -45,13 +45,14 @@ fun DialogDemo() {
         Dialog(state = dialogState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
             DialogPanel(
+                backgroundColor = Color.White,
+                contentColor = Color.Black,
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .displayCutoutPadding()
                     .systemBarsPadding()
                     .widthIn(min = 280.dp, max = 560.dp)
-                    .padding(20.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White),
+                    .padding(20.dp),
                 enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
                 exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
             ) {

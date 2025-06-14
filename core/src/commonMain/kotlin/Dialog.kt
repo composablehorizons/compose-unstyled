@@ -8,19 +8,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import com.composeunstyled.AppearInstantly
 import com.composeunstyled.DisappearInstantly
+import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Modal
 
 
@@ -166,10 +173,14 @@ fun Dialog(
  * @param content The content of the dialog panel.
  */
 @Composable
-public fun DialogScope.DialogPanel(
+fun DialogScope.DialogPanel(
     modifier: Modifier = Modifier,
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: @Composable () -> Unit
 ) {
     AnimatedVisibility(
@@ -177,9 +188,16 @@ public fun DialogScope.DialogPanel(
         enter = enter,
         exit = exit,
     ) {
-        Box(modifier.semantics { dialog() }
-            .pointerInput(Unit) { detectTapGestures { } }) {
-            content()
+        Box(modifier
+            .semantics { dialog() }
+            .clip(shape)
+            .background(backgroundColor)
+            .pointerInput(Unit) { detectTapGestures { } }
+            .padding(contentPadding)
+        ) {
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                content()
+            }
         }
     }
 }
