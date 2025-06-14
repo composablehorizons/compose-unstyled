@@ -66,7 +66,7 @@ internal class FocusRingIndicationNodeFactory internal constructor(
                         }
 
                         is FocusInteraction.Unfocus -> {
-                            if (isFocused.not()) {
+                            if (isFocused) {
                                 isFocused = false
                                 invalidateDraw()
                             }
