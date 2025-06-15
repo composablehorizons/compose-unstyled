@@ -203,19 +203,9 @@ class BottomSheetState internal constructor(
         confirmValueChange = confirmDetentChange,
     )
 
-    var currentDetent: SheetDetent
-        get() = anchoredDraggableState.settledValue
-        @Deprecated(
-            message = "This setter will go away in a future version of the library. Set the value to targetDetent instead",
-            replaceWith = ReplaceWith("targetDetent")
-        )
-        set(value) {
-            check(detents.contains(value)) {
-                "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
-            }
-            coroutineScope.launch {
-                anchoredDraggableState.animateTo(value)
-            }
+    val currentDetent: SheetDetent
+        get() {
+            return anchoredDraggableState.settledValue
         }
 
     /**
@@ -256,11 +246,6 @@ class BottomSheetState internal constructor(
             val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
             fullContentHeight - offsetFromTop
         }
-    }
-
-    @Deprecated("Velocity can no longer be set", ReplaceWith("animateTo(value)"))
-    suspend fun animateTo(value: SheetDetent, velocity: Float = anchoredDraggableState.lastVelocity) {
-        animateTo(value)
     }
 
     /**
