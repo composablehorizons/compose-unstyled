@@ -665,7 +665,7 @@ class UnstyledAnchoredDraggableState<T>(
     var lastVelocity: Float by mutableFloatStateOf(0f)
         private set
 
-    private var dragTarget: T? by mutableStateOf(null)
+    internal var dragTarget: T? by mutableStateOf(null)
 
     var anchors: UnstyledDraggableAnchors<T> by mutableStateOf(emptyDraggableAnchors())
         private set

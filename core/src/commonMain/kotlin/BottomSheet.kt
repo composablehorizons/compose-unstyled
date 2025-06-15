@@ -212,7 +212,19 @@ class BottomSheetState internal constructor(
      * The [SheetDetent] that the sheet is heading towards, in case of an animation or drag events.
      */
     var targetDetent: SheetDetent
-        get() = anchoredDraggableState.targetValue
+        get() {
+            // If we have a drag target, use that
+            if (anchoredDraggableState.dragTarget != null) {
+                return anchoredDraggableState.dragTarget as SheetDetent
+            }
+            // Otherwise determine target based on current offset and direction
+            val currentOffset = anchoredDraggableState.offset
+            if (currentOffset.isNaN()) return currentDetent
+            
+            val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
+            val isMovingUp = currentOffset < currentPosition
+            return anchoredDraggableState.anchors.closestAnchor(currentOffset, !isMovingUp) ?: currentDetent
+        }
         set(value) {
             check(detents.contains(value)) {
                 "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -231,10 +243,10 @@ class BottomSheetState internal constructor(
     }
 
     /**
-     * A 0 to 1 value representing the progress of a sheet between its first and last detent.
+     * A 0 to 1 value representing the progress of a sheet between its [currentDetent] and the [targetDetent].
      */
     val progress: Float
-        get() = anchoredDraggableState.progress(detents.first(), detents.last())
+        get() = anchoredDraggableState.progress(currentDetent, targetDetent)
 
     /**
      * How far the sheet has moved from the bottom of its container.
