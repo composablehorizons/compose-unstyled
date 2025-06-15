@@ -12,18 +12,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.AppearInstantly
 import com.composeunstyled.DisappearInstantly
+import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Modal
 import kotlinx.coroutines.delay
 
@@ -294,6 +298,10 @@ fun ModalBottomSheetScope.Scrim(
 fun ModalBottomSheetScope.Sheet(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: @Composable (BottomSheetScope.() -> Unit)
 ) {
     var hasBeenIntroduced by remember { mutableStateOf(false) }
@@ -322,6 +330,10 @@ fun ModalBottomSheetScope.Sheet(
         state = sheetState,
         enabled = enabled,
         modifier = modifier,
-        content = content
+        content = content,
+        contentPadding = contentPadding,
+        shape = shape,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
     )
 }

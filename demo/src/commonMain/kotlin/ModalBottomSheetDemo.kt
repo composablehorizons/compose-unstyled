@@ -63,11 +63,12 @@ fun ModalBottomSheetDemo() {
                 Sheet(
                     modifier = Modifier
                         .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                        .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                        .background(Color.White)
                         .widthIn(max = 640.dp)
-                        .fillMaxWidth()
-                        .imePadding(),
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                    contentPadding = WindowInsets.ime.asPaddingValues(),
+                    backgroundColor = Color.White,
+                    contentColor = Color.Black
                 ) {
                     Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
                         DragIndication(

@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -19,8 +20,11 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -31,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
+import com.composeunstyled.LocalContentColor
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -220,7 +225,7 @@ class BottomSheetState internal constructor(
             // Otherwise determine target based on current offset and direction
             val currentOffset = anchoredDraggableState.offset
             if (currentOffset.isNaN()) return currentDetent
-            
+
             val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
             val isMovingUp = currentOffset < currentPosition
             return anchoredDraggableState.anchors.closestAnchor(currentOffset, !isMovingUp) ?: currentDetent
@@ -327,6 +332,10 @@ fun BottomSheet(
     state: BottomSheetState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: @Composable (BottomSheetScope.() -> Unit),
 ) {
     val scope = remember { BottomSheetScope(state, enabled) }
@@ -430,8 +439,13 @@ fun BottomSheet(
                     .pointerInput(Unit) { detectTapGestures { } }
                     .align(Alignment.TopCenter)
                     .then(modifier)
+                    .clip(shape)
+                    .background(backgroundColor)
+                    .padding(contentPadding)
             ) {
-                scope.content()
+                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                    scope.content()
+                }
             }
         }
     }

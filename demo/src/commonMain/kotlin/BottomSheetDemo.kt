@@ -54,13 +54,14 @@ fun BottomSheetDemo() {
 
         BottomSheet(
             state = sheetState,
+            backgroundColor = Color.White,
+            contentColor = Color.Black,
+            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+            contentPadding = WindowInsets.ime.asPaddingValues(),
             modifier = Modifier
                 .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                .background(Color.White)
                 .widthIn(max = 640.dp)
-                .fillMaxWidth()
-                .imePadding(),
+                .fillMaxWidth(),
         ) {
             Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
                 DragIndication(
