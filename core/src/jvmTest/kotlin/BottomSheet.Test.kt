@@ -1,5 +1,6 @@
 package com.composables.core
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -9,7 +10,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 
 @OptIn(ExperimentalTestApi::class)
@@ -136,5 +139,47 @@ class BottomSheetTest {
         }
 
         assertThat(state!!.offset).isEqualTo(40f)
+    }
+
+    @Test
+    fun currentAndTargetDetentsUpdateAccordingToSheetPosition() = runComposeUiTest {
+        var state: BottomSheetState? = null
+        var scope: CoroutineScope? = null
+        val settleDuration = 5000
+
+        setContent {
+            scope = rememberCoroutineScope()
+            state = rememberBottomSheetState(
+                initialDetent = SheetDetent.Hidden,
+                decayAnimationSpec = rememberSplineBasedDecay(),
+                animationSpec = tween(settleDuration),
+                detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
+            )
+            BottomSheet(state) {
+                Box(Modifier.testTag("sheet_contents").size(40.dp))
+            }
+        }
+
+        requireNotNull(state)
+
+        // sheet is idle at Hidden
+        assertThat(state.isIdle).isTrue
+        assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+        assertThat(state.targetDetent).isEqualTo(SheetDetent.Hidden)
+
+        // sheet is moving towards at FullyExpanded
+        scope!!.launch {
+            state.animateTo(SheetDetent.FullyExpanded)
+        }
+        mainClock.advanceTimeBy(1000)
+        assertThat(state.isIdle).isFalse
+        assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+        assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+
+        // sheet is arrived at FullyExpanded
+        mainClock.advanceTimeBy(4000)
+        assertThat(state.isIdle).isTrue
+        assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+        assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
 }

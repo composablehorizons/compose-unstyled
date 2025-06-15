@@ -1,5 +1,7 @@
 package com.composeunstyled.demo
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +39,9 @@ fun BottomSheetDemo() {
     ) {
         val sheetState = rememberBottomSheetState(
             initialDetent = Peek,
-            detents = listOf(Hidden, Peek, FullyExpanded)
+            detents = listOf(Hidden, Peek, FullyExpanded),
+            animationSpec = tween(5000)
+
         )
 
         Button(
