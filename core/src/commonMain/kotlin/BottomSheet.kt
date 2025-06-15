@@ -157,6 +157,10 @@ class SheetDetent(
     override fun hashCode(): Int {
         return identifier.hashCode()
     }
+
+    override fun toString(): String {
+        return "SheetDetent(identifier='$identifier')"
+    }
 }
 
 class BottomSheetState internal constructor(
