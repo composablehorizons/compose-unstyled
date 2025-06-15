@@ -13,6 +13,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 
 @OptIn(ExperimentalTestApi::class)
@@ -143,43 +144,55 @@ class BottomSheetTest {
 
     @Test
     fun currentAndTargetDetentsUpdateAccordingToSheetPosition() = runComposeUiTest {
-        var state: BottomSheetState? = null
-        var scope: CoroutineScope? = null
-        val settleDuration = 5000
+        runBlocking {
 
-        setContent {
-            scope = rememberCoroutineScope()
-            state = rememberBottomSheetState(
-                initialDetent = SheetDetent.Hidden,
-                decayAnimationSpec = rememberSplineBasedDecay(),
-                animationSpec = tween(settleDuration),
-                detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
-            )
-            BottomSheet(state) {
-                Box(Modifier.testTag("sheet_contents").size(40.dp))
+            var state: BottomSheetState? = null
+            var scope: CoroutineScope? = null
+            val settleDuration = 5000L
+
+            setContent {
+                scope = rememberCoroutineScope()
+                state = rememberBottomSheetState(
+                    initialDetent = SheetDetent.Hidden,
+                    animationSpec = tween(settleDuration.toInt()),
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
+                )
+                BottomSheet(state) {
+                    Box(Modifier.testTag("sheet_contents").size(40.dp))
+                }
             }
+
+            requireNotNull(state)
+            requireNotNull(scope)
+
+            // sheet is idle at Hidden
+            assertThat(state.isIdle).isTrue
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertThat(state.targetDetent).isEqualTo(SheetDetent.Hidden)
+
+            // sheet starting moving towards at FullyExpanded
+            scope.launch {
+                println("animating sheet")
+                state.animateTo(SheetDetent.FullyExpanded)
+                println("I have officially done moving")
+            }
+            mainClock.advanceTimeBy(1000L)
+
+            assertThat(state.isIdle).isFalse
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+
+            // sheet is close towards at FullyExpanded
+            mainClock.advanceTimeBy(3000L)
+            assertThat(state.isIdle).isFalse
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+
+            // Wait for sheet to settle
+            awaitIdle()
+            assertThat(state.isIdle).isTrue
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
         }
-
-        requireNotNull(state)
-
-        // sheet is idle at Hidden
-        assertThat(state.isIdle).isTrue
-        assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-        assertThat(state.targetDetent).isEqualTo(SheetDetent.Hidden)
-
-        // sheet is moving towards at FullyExpanded
-        scope!!.launch {
-            state.animateTo(SheetDetent.FullyExpanded)
-        }
-        mainClock.advanceTimeBy(1000)
-        assertThat(state.isIdle).isFalse
-        assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-        assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
-
-        // sheet is arrived at FullyExpanded
-        mainClock.advanceTimeBy(4000)
-        assertThat(state.isIdle).isTrue
-        assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-        assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
 }

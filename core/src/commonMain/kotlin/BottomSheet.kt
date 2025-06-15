@@ -204,7 +204,7 @@ class BottomSheetState internal constructor(
     )
 
     var currentDetent: SheetDetent
-        get() = anchoredDraggableState.currentValue
+        get() = anchoredDraggableState.settledValue
         @Deprecated(
             message = "This setter will go away in a future version of the library. Set the value to targetDetent instead",
             replaceWith = ReplaceWith("targetDetent")
