@@ -17,7 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.isSpecified
-import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -36,7 +38,7 @@ class RadioGroupState(selectedOption: String? = null) {
  * @param initialValue The initially selected option.
  */
 @Composable
-fun rememberRadioGroupState(initialValue: String): RadioGroupState {
+fun rememberRadioGroupState(initialValue: String? = null): RadioGroupState {
     return remember {
         RadioGroupState(selectedOption = initialValue)
     }
