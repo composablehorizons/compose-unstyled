@@ -89,9 +89,9 @@ kotlin {
 
 android {
     namespace = "com.composables.core"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 21
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
 

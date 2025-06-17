@@ -4,6 +4,8 @@ unstyled = "1.33.0"
 kotlin = "2.1.21"
 compose = "1.8.1"
 agp = "8.6.1"
+android-compileSdk = "35"
+android-minSdk = "21"
 
 [plugins]
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
