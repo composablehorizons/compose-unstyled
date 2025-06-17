@@ -12,10 +12,10 @@ echo "All tests passed..."
 # Define the root directory as the current directory
 root_dir=$(pwd)
 
-# Read the docs version from the keyboard
-previous_version=$(grep '^val publishVersion =' "$root_dir/core/build.gradle.kts" | sed 's/^val publishVersion = "\([^\"]*\)"/\1/')
+# Read the docs version from libs.versions.toml
+previous_version=$(grep '^unstyled =' "$root_dir/gradle/libs.versions.toml" | sed 's/^unstyled = "\([^\"]*\)"/\1/')
 
-read -p "🚢 Current version is $previous_version – read from gradle. Ship it? (y/n):" confirm
+read -p "🚢 Current version is $previous_version – read from libs.versions.toml. Ship it? (y/n):" confirm
 if [[ "$confirm" != "y" ]]; then
     echo "Aborted."
     exit 1
@@ -36,12 +36,11 @@ last_commit=$(git rev-parse HEAD)
 # Tag the last commit with the last version
 git tag "$previous_version" $last_commit
 
-
 # Find and update the version in .md files
 find "$root_dir" -type f -name "*.md" -exec sed -i '' "s/implementation(\"com\.composables:core:[^\"]*\")/implementation(\"com.composables:core:$previous_version\")/g" {} +
 
-# Update the publishVersion value in build.gradle.kts
-sed -i '' "s/^val publishVersion = \".*\"/val publishVersion = \"$wip_version\"/" "$root_dir/core/build.gradle.kts"
+# Update the version in libs.versions.toml
+sed -i '' "s/^unstyled = \".*\"/unstyled = \"$wip_version\"/" "$root_dir/gradle/libs.versions.toml"
 
 # Add all changes to git
 git add .
