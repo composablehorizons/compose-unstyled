@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import org.jetbrains.compose.internal.utils.getLocalProperty
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
     alias(libs.plugins.compose)
@@ -14,8 +13,7 @@ plugins {
 }
 
 val publishGroupId = "com.composables"
-val publishArtifactId = "core"
-val publishVersion = "1.33.0"
+val publishVersion = libs.versions.unstyled.get()
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 
 java {

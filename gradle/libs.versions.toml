@@ -1,4 +1,6 @@
 [versions]
+unstyled = "1.33.0"
+
 kotlin = "2.1.21"
 compose = "1.8.1"
 agp = "8.6.1"
