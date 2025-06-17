@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
@@ -28,10 +30,8 @@ kotlin {
     jvm("desktop")
 
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
         }
     }
 
@@ -89,7 +89,6 @@ android {
     compileSdk = 35
     defaultConfig {
         minSdk = 21
-        targetSdk = 35
 
         applicationId = "com.composeunstyled.demo"
         versionCode = 1
