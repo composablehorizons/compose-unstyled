@@ -26,6 +26,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
 
 /**
  * A unique identifier for a tab in a [TabGroup].
@@ -120,6 +121,8 @@ fun TabGroupScope.TabList(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     orientation: Orientation = Orientation.Horizontal,
     activateOnFocus: Boolean = true,
     content: @Composable RowScope.() -> Unit
@@ -243,11 +246,14 @@ fun TabGroupScope.TabList(
                 }
             }
             .clip(shape)
-            .background(backgroundColor),
+            .background(backgroundColor)
+            .padding(contentPadding),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        content()
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
+        }
     }
 }
 
@@ -268,6 +274,10 @@ fun TabGroupScope.Tab(
     enabled: Boolean = true,
     indication: Indication = LocalIndication.current,
     interactionSource: MutableInteractionSource? = null,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    shape: Shape = RectangleShape,
     content: @Composable () -> Unit
 ) {
     val focusRequester = remember(key) { FocusRequester() }
@@ -287,6 +297,8 @@ fun TabGroupScope.Tab(
                     state.focusedTab = key
                 }
             }
+            .clip(shape)
+            .background(backgroundColor)
             .selectable(
                 selected = state.selectedTab == key,
                 onClick = { state.selectedTab = key },
@@ -294,9 +306,11 @@ fun TabGroupScope.Tab(
                 interactionSource = interactionSource,
                 enabled = enabled,
                 role = Role.Tab
-            )
+            ).padding(contentPadding)
     ) {
-        content()
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
+        }
     }
 }
 
