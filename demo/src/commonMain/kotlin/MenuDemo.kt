@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -60,11 +59,11 @@ fun DropdownMenuDemo() {
             }
 
             MenuContent(
+                backgroundColor = Color.White,
+                shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.padding(vertical = 4.dp)
                     .width(240.dp)
-                    .shadow(4.dp, RoundedCornerShape(8.dp))
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White),
+                    .shadow(4.dp, RoundedCornerShape(8.dp)),
                 enter = scaleIn(
                     animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
                     initialScale = 0.8f,
@@ -76,7 +75,8 @@ fun DropdownMenuDemo() {
                 ) + fadeOut(tween(durationMillis = 75))
             ) {
                 MenuItem(
-                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.padding(4.dp),
+                    shape = RoundedCornerShape(8.dp),
                     onClick = { /* TODO */ },
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                 ) {
@@ -86,7 +86,8 @@ fun DropdownMenuDemo() {
                 }
                 HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
-                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.padding(4.dp),
+                    shape = RoundedCornerShape(8.dp),
                     onClick = { /* TODO */ },
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                 ) {
@@ -95,7 +96,8 @@ fun DropdownMenuDemo() {
                     Text("Copy", modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp))
                 }
                 MenuItem(
-                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.padding(4.dp),
+                    shape = RoundedCornerShape(8.dp),
                     enabled = false,
                     onClick = { /* TODO */ },
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
@@ -109,27 +111,24 @@ fun DropdownMenuDemo() {
                     )
                 }
                 MenuItem(
-                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.padding(4.dp),
+                    shape = RoundedCornerShape(8.dp),
                     enabled = false,
                     onClick = { /* TODO */ },
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(Clipboard, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = "Paste",
-                            style = TextStyle.Default.copy(color = Color(0xFF9E9E9E)),
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
-                        )
-                    }
+                    Image(Clipboard, null, colorFilter = ColorFilter.tint(Color(0xFF9E9E9E)))
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "Paste",
+                        style = TextStyle.Default.copy(color = Color(0xFF9E9E9E)),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
+                    )
                 }
                 HorizontalSeparator(color = Color(0xFFBDBDBD))
                 MenuItem(
-                    modifier = Modifier.padding(4.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.padding(4.dp),
+                    shape = RoundedCornerShape(8.dp),
                     onClick = { /* TODO */ }) {
                     Row(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),

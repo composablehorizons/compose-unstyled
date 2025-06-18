@@ -6,11 +6,13 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -23,11 +25,7 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
-import com.composeunstyled.AppearInstantly
-import com.composeunstyled.Button
-import com.composeunstyled.DisappearInstantly
-import com.composeunstyled.LocalContentColor
-import com.composeunstyled.NoPadding
+import com.composeunstyled.*
 
 /**
  * An unstyled component for Compose Multiplatform that can be used to implement Dropdown Menus with the styling
@@ -239,11 +237,15 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
  * @param contents A composable function that defines the content of the menu.
  */
 @Composable
-public fun MenuScope.MenuContent(
+fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
     alignment: Alignment.Horizontal = Alignment.Start,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = NoPadding,
     contents: @Composable () -> Unit
 ) {
     val density = LocalDensity.current
@@ -293,11 +295,19 @@ public fun MenuScope.MenuContent(
                     }
                 }
             ) {
-                Column(modifier.focusRequester(menuState.menuFocusRequester)) {
+                Column(
+                    modifier
+                        .focusRequester(menuState.menuFocusRequester)
+                        .clip(shape)
+                        .background(backgroundColor)
+                        .padding(contentPadding)
+                ) {
                     LaunchedEffect(Unit) {
                         menuState.menuFocusRequester.requestFocus()
                     }
-                    contents()
+                    CompositionLocalProvider(LocalContentColor provides contentColor) {
+                        contents()
+                    }
                 }
             }
         }
