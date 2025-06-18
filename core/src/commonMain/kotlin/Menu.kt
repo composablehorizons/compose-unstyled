@@ -83,19 +83,8 @@ import com.composeunstyled.NoPadding
  * @param modifier Modifier to be applied to the menu container.
  * @param content The content of the menu, typically containing a MenuButton and MenuContent.
  */
-@Deprecated("This signature is going away in a future version", ReplaceWith("Menu(state,modifier,contents)"))
 @Composable
-public fun Menu(
-    modifier: Modifier = Modifier,
-    state: MenuState = rememberMenuState(),
-    ______deprecated: Unit,
-    contents: @Composable MenuScope.() -> Unit
-) {
-    Menu(state, modifier, contents)
-}
-
-@Composable
-public fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
+fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
     val scope = remember(state.expanded) { MenuScope(state) }
 
     Box(modifier.onKeyEvent { event ->
