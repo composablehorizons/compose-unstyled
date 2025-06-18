@@ -106,15 +106,15 @@ fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable M
 }
 
 @Stable
-public class MenuState(expanded: Boolean = false) {
-    public var expanded: Boolean by mutableStateOf(expanded)
+ class MenuState(expanded: Boolean = false) {
+    var expanded: Boolean by mutableStateOf(expanded)
     internal val menuFocusRequester = FocusRequester()
     internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
     internal var hasMenuFocus by mutableStateOf(false)
 }
 
 @Composable
-public fun rememberMenuState(expanded: Boolean = false): MenuState {
+fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
 }
 
@@ -136,7 +136,7 @@ public fun rememberMenuState(expanded: Boolean = false): MenuState {
  * @param contents A composable function that defines the content of the button.
  */
 @Composable
-public fun MenuScope.MenuButton(
+fun MenuScope.MenuButton(
     modifier: Modifier = Modifier,
     mutableInteractionSource: MutableInteractionSource? = null,
     indication: Indication = LocalIndication.current,
@@ -172,7 +172,7 @@ public fun MenuScope.MenuButton(
 }
 
 @Stable
-public class MenuScope internal constructor(state: MenuState) {
+class MenuScope internal constructor(state: MenuState) {
     internal var menuState by mutableStateOf(state)
 }
 
@@ -329,7 +329,7 @@ fun MenuScope.MenuContent(
  * @param contents A composable function that defines the content of the menu item.
  */
 @Composable
-public fun MenuScope.MenuItem(
+fun MenuScope.MenuItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -339,9 +339,13 @@ public fun MenuScope.MenuItem(
     shape: Shape = RectangleShape,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
     contents: @Composable RowScope.() -> Unit
 ) {
     Button(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
         onClick = {
             onClick()
             menuState.expanded = false

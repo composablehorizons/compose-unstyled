@@ -1,0 +1,164 @@
+package com.composables.core.com.composeunstyled
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.window.PopupProperties
+
+@Composable
+fun DropdownMenu(onExpandRequest: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Box(
+        modifier.onKeyEvent { event ->
+            if (event.key == Key.DirectionDown) {
+                if (event.type == KeyEventType.KeyDown) {
+                    onExpandRequest()
+                }
+                true
+            } else {
+                false
+            }
+        }
+    ) {
+        content()
+    }
+}
+
+
+sealed interface DropdownPanelAnchor {
+    object TopStart : DropdownPanelAnchor
+    object TopEnd : DropdownPanelAnchor
+    object BottomStart : DropdownPanelAnchor
+    object BottomEnd : DropdownPanelAnchor
+    object CenterStart : DropdownPanelAnchor
+    object CenterEnd : DropdownPanelAnchor
+}
+
+@Composable
+fun DropdownMenuPanel(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    anchor: DropdownPanelAnchor = DropdownPanelAnchor.BottomStart,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = NoPadding,
+    enter: EnterTransition = AppearInstantly,
+    exit: ExitTransition = DisappearInstantly,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val density = LocalDensity.current
+    val positionProvider = MenuContentPositionProvider(density, anchor)
+    val transitionState = remember { MutableTransitionState(expanded) }
+
+    transitionState.targetState = expanded
+
+    if (transitionState.currentState || transitionState.targetState || !transitionState.isIdle) {
+        val menuFocusRequester = remember { FocusRequester() }
+
+        Popup(
+            properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = true),
+            onDismissRequest = onDismissRequest,
+            popupPositionProvider = positionProvider,
+        ) {
+            val currentFocusManager = LocalFocusManager.current
+
+            AnimatedVisibility(
+                visibleState = transitionState,
+                enter = enter,
+                exit = exit,
+                modifier = Modifier.onKeyEvent { event ->
+                    when (event.key) {
+                        Key.DirectionDown -> {
+                            if (event.isKeyDown) {
+                                currentFocusManager.moveFocus(FocusDirection.Next)
+                            }
+                            true
+                        }
+
+                        Key.DirectionUp -> {
+                            if (event.isKeyDown) {
+                                currentFocusManager.moveFocus(FocusDirection.Previous)
+                            }
+                            true
+                        }
+
+                        Key.Escape -> {
+                            if (event.isKeyDown) {
+                                onDismissRequest()
+                            }
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+            ) {
+                Column(
+                    modifier
+                        .focusRequester(menuFocusRequester)
+                        .clip(shape)
+                        .background(backgroundColor)
+                        .padding(contentPadding)
+                ) {
+                    // Request focus when the menu becomes visible
+                    if (transitionState.currentState) {
+                        LaunchedEffect(Unit) {
+                            menuFocusRequester.requestFocus()
+                        }
+                    }
+                    CompositionLocalProvider(LocalContentColor provides contentColor) {
+                        content()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Immutable
+internal data class MenuContentPositionProvider(
+    val density: Density,
+    val anchor: DropdownPanelAnchor
+) : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize
+    ): IntOffset {
+        val x = when (anchor) {
+            DropdownPanelAnchor.TopStart, DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.BottomStart -> anchorBounds.left
+            DropdownPanelAnchor.TopEnd, DropdownPanelAnchor.CenterEnd, DropdownPanelAnchor.BottomEnd -> anchorBounds.right - popupContentSize.width
+        }
+
+        val y = when (anchor) {
+            DropdownPanelAnchor.TopStart, DropdownPanelAnchor.TopEnd -> anchorBounds.top - popupContentSize.height
+            DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.CenterEnd -> anchorBounds.top - popupContentSize.height / 2
+            DropdownPanelAnchor.BottomStart, DropdownPanelAnchor.BottomEnd -> anchorBounds.bottom
+        }
+
+        val clampedX = x.coerceIn(0, windowSize.width - popupContentSize.width)
+        val clampedY = y.coerceIn(0, windowSize.height - popupContentSize.height)
+
+        return IntOffset(clampedX, clampedY)
+    }
+}
