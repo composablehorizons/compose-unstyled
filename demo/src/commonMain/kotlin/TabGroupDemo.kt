@@ -3,7 +3,7 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -18,7 +18,7 @@ import com.composeunstyled.*
 fun TabGroupDemo() {
     class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)
 
-    val categories = mapOf(
+    val categories = mapOf<String, List<Article>>(
         "Trending" to listOf(
             Article(
                 title = "I hosted my startup's backend on a Tamagotchi – AMA",
@@ -63,10 +63,8 @@ fun TabGroupDemo() {
         )
     )
 
-    val state = rememberTabGroupState(
-        selectedTab = categories.keys.first(),
-        orderedTabs = categories.map { it.key }
-    )
+
+    var selectedTab by remember { mutableStateOf(categories.keys.first()) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -75,26 +73,31 @@ fun TabGroupDemo() {
             .padding(top = 90.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-
-        TabGroup(state = state, modifier = Modifier.width(500.dp)) {
+        TabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
             TabList(
                 modifier = Modifier.fillMaxWidth().height(48.dp).shadow(4.dp, RoundedCornerShape(8.dp)),
                 shape = RoundedCornerShape(8.dp),
                 backgroundColor = Color.White,
             ) {
-                categories.forEach { (key, value) ->
-                    Tab(key = key, modifier = Modifier.weight(1f).fillMaxHeight()) {
+                categories.forEach { (key, articles) ->
+                    val selected = key == selectedTab
+                    Tab(
+                        key = key,
+                        selected = selected,
+                        onSelected = { selectedTab = key },
+                        modifier = Modifier.weight(1f).fillMaxHeight()
+                    ) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(
                                 text = key,
-                                fontWeight = if (state.selectedTab == key) FontWeight.Bold else FontWeight.Normal,
-                                color = if (state.selectedTab == key) {
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (selected) {
                                     Color(0xFF2196F3)
                                 } else {
                                     Color(0xFF757575)
                                 }
                             )
-                            if (state.selectedTab == key) {
+                            if (selected) {
                                 Box(
                                     modifier = Modifier
                                         .background(
@@ -112,7 +115,6 @@ fun TabGroupDemo() {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
