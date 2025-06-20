@@ -172,9 +172,7 @@ class BottomSheetTest {
 
             // sheet starting moving towards at FullyExpanded
             scope.launch {
-                println("animating sheet")
                 state.animateTo(SheetDetent.FullyExpanded)
-                println("I have officially done moving")
             }
             mainClock.advanceTimeBy(1000L)
 
