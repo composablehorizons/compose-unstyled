@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 
 internal val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 internal val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
@@ -26,9 +26,7 @@ internal val KeyEvent.isKeyDown: Boolean
     get() = type == KeyEventType.KeyDown
 
 internal inline fun buildModifier(builder: MutableList<Modifier>.() -> Unit): Modifier {
-    val list = mutableListOf<Modifier>()
-    builder(list)
-    return list.fold(Modifier as Modifier) { acc, modifier ->
+    return buildList(builder).fold(Modifier as Modifier) { acc, modifier ->
         acc then modifier
     }
 }
