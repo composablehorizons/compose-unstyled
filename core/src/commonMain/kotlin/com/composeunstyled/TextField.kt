@@ -114,7 +114,7 @@ fun TextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
-    val overriddenStyle = textStyle.override(
+    val overriddenStyle = textStyle.mergeThemed(
         textAlign = textAlign,
         fontSize = fontSize,
         fontWeight = fontWeight,
@@ -252,7 +252,7 @@ fun TextField(
     scope.text = value
     scope.editable = editable
 
-    val newTextStyle = textStyle.override(
+    val newTextStyle = textStyle.mergeThemed(
         textAlign = textAlign,
         fontSize = fontSize,
         fontWeight = fontWeight,
@@ -309,31 +309,6 @@ fun TextField(
         }
     }
 }
-
-@Composable
-internal fun TextStyle.override(
-    textAlign: TextAlign,
-    fontSize: TextUnit,
-    color: Color = Color.Unspecified,
-    fontWeight: FontWeight?,
-    fontFamily: FontFamily?,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    letterSpacing: TextUnit = TextUnit.Unspecified,
-): TextStyle {
-    val contentColor = LocalContentColor.current
-
-    return this.copy(textAlign = listOf(textAlign, this.textAlign).firstOrNull { it != TextAlign.Unspecified }
-        ?: TextAlign.Unspecified,
-        fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        color = listOf(color, contentColor, this.color).firstOrNull { it.isSpecified } ?: Color.Unspecified,
-        fontWeight = fontWeight ?: this.fontWeight,
-        fontFamily = fontFamily ?: this.fontFamily,
-        lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        letterSpacing = listOf(letterSpacing, this.letterSpacing).firstOrNull { it.isSpecified }
-            ?: TextUnit.Unspecified)
-
-}
-
 
 class TextFieldScope {
     internal var innerTextField: (@Composable () -> Unit)? = null

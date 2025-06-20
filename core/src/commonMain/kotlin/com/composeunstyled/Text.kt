@@ -1,9 +1,10 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -11,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.isSpecified
 
 /**
  * A themable composable that displays text.
@@ -56,7 +58,7 @@ fun Text(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip
 ) {
-    val currentStyle = style.override(
+    val currentStyle = style.mergeThemed(
         textAlign = textAlign,
         fontSize = fontSize,
         color = color,
@@ -121,7 +123,7 @@ fun Text(
     overflow: TextOverflow = TextOverflow.Clip
 ) {
 
-    val currentStyle = style.override(
+    val currentStyle = style.mergeThemed(
         textAlign = textAlign,
         fontSize = fontSize,
         color = color,
@@ -139,4 +141,28 @@ fun Text(
         maxLines = maxLines,
         overflow = overflow,
     )
+}
+
+@Composable
+internal fun TextStyle.mergeThemed(
+    textAlign: TextAlign,
+    fontSize: TextUnit,
+    color: Color = Color.Unspecified,
+    fontWeight: FontWeight?,
+    fontFamily: FontFamily?,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+): TextStyle {
+    val contentColor = LocalContentColor.current
+
+    return this.merge(
+        textAlign = listOf(textAlign, this.textAlign).firstOrNull { it != TextAlign.Unspecified }
+            ?: TextAlign.Unspecified,
+        fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
+        color = listOf(color, contentColor, this.color).firstOrNull { it.isSpecified } ?: Color.Unspecified,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
+        letterSpacing = listOf(letterSpacing, this.letterSpacing).firstOrNull { it.isSpecified }
+            ?: TextUnit.Unspecified)
 }
