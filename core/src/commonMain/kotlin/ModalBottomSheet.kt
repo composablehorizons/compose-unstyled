@@ -132,11 +132,21 @@ class ModalBottomSheetState internal constructor(
         }
 
     val isIdle: Boolean by derivedStateOf {
-        (progress == 1f || progress == 0f) && currentDetent == targetDetent && bottomSheetState.anchoredDraggableState.isAnimationRunning.not()
+        currentDetent == targetDetent && bottomSheetState.anchoredDraggableState.isAnimationRunning.not()
     }
+
+    @Deprecated("Use the progress function and provide the detents you need instead.")
     val progress: Float by derivedStateOf {
         bottomSheetState.progress
     }
+
+    /**
+     * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
+     */
+    fun progress(from: SheetDetent, to: SheetDetent): Float {
+        return bottomSheetState.progress(from, to)
+    }
+
     val offset: Float by derivedStateOf {
         bottomSheetState.offset
     }

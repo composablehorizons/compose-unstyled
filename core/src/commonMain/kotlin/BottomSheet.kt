@@ -244,14 +244,22 @@ class BottomSheetState internal constructor(
      * Whether the sheet is currently rested at a detent.
      */
     val isIdle: Boolean by derivedStateOf {
-        (progress == 1f || progress == 0f) && currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
+        currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
     }
 
     /**
      * A 0 to 1 value representing the progress of a sheet between its [currentDetent] and the [targetDetent].
      */
+    @Deprecated("Use the progress function and provide the detents you need instead.")
     val progress: Float
         get() = anchoredDraggableState.progress(currentDetent, targetDetent)
+
+    /**
+     * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
+     */
+    fun progress(from: SheetDetent, to: SheetDetent): Float {
+        return anchoredDraggableState.progress(from, to)
+    }
 
     /**
      * How far the sheet has moved from the bottom of its container.
