@@ -98,8 +98,8 @@ value class OverscrollSides private constructor(private val id: Int) {
         val Bottom = OverscrollSides(1)
         val Left = OverscrollSides(2)
         val Right = OverscrollSides(3)
-        val Vertical = OverscrollSides(3)
-        val Horizontal = OverscrollSides(3)
+        val Vertical = OverscrollSides(4)
+        val Horizontal = OverscrollSides(5)
     }
 }
 
