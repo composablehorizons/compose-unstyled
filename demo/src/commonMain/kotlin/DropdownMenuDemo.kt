@@ -20,11 +20,11 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.core.Icon
 import com.composables.core.Separator
-import com.composables.core.com.composeunstyled.DropdownMenu
-import com.composables.core.com.composeunstyled.DropdownMenuPanel
+import com.composeunstyled.DropdownMenu
+import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.Button
+import com.composeunstyled.Icon
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
 
@@ -97,7 +97,7 @@ fun DropdownMenuDemo() {
                             .copy(alpha = if (option.enabled) 1f else 0.5f),
                         shape = RoundedCornerShape(8.dp),
                     ) {
-                        Icon(option.icon, null)
+                        Icon(option.icon, null, Modifier, LocalContentColor.current)
                         Spacer(Modifier.width(4.dp))
                         Text(
                             text = option.text,

@@ -81,6 +81,7 @@ import com.composeunstyled.*
  * @param modifier Modifier to be applied to the menu container.
  * @param content The content of the menu, typically containing a MenuButton and MenuContent.
  */
+@Deprecated("Switch to DropdownMenu")
 @Composable
 fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
     val scope = remember(state.expanded) { MenuScope(state) }
@@ -105,6 +106,7 @@ fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable M
     }
 }
 
+@Deprecated("Switch to DropdownMenu")
 @Stable
  class MenuState(expanded: Boolean = false) {
     var expanded: Boolean by mutableStateOf(expanded)
@@ -114,6 +116,7 @@ fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable M
 }
 
 @Composable
+@Deprecated("Switch to DropdownMenu")
 fun rememberMenuState(expanded: Boolean = false): MenuState {
     return remember { MenuState(expanded) }
 }
@@ -135,6 +138,7 @@ fun rememberMenuState(expanded: Boolean = false): MenuState {
  * @param verticalAlignment The vertical alignment of the button's children.
  * @param contents A composable function that defines the content of the button.
  */
+@Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuButton(
     modifier: Modifier = Modifier,
@@ -171,6 +175,7 @@ fun MenuScope.MenuButton(
     }
 }
 
+@Deprecated("Switch to DropdownMenu")
 @Stable
 class MenuScope internal constructor(state: MenuState) {
     internal var menuState by mutableStateOf(state)
@@ -236,6 +241,7 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
  * @param alignment The horizontal alignment of the content relative to the menu button.
  * @param contents A composable function that defines the content of the menu.
  */
+@Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuContent(
     modifier: Modifier = Modifier,
@@ -328,6 +334,7 @@ fun MenuScope.MenuContent(
  * @param verticalAlignment The vertical alignment of the menu item's children.
  * @param contents A composable function that defines the content of the menu item.
  */
+@Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuItem(
     onClick: () -> Unit,

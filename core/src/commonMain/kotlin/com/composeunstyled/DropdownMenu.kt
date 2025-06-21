@@ -1,4 +1,4 @@
-package com.composables.core.com.composeunstyled
+package com.composeunstyled
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
