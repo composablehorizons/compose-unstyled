@@ -1,6 +1,8 @@
 @file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import org.jetbrains.compose.internal.utils.getLocalProperty
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -43,7 +45,7 @@ kotlin {
         browser()
     }
 
-    js(IR) {
+    js {
         browser()
     }
 
@@ -60,14 +62,27 @@ kotlin {
                 implementation(compose.foundation)
             }
         }
+
         androidMain.dependencies {
             implementation("androidx.activity:activity-compose:1.9.0")
         }
+
+
+        applyDefaultHierarchyTemplate {
+            common {
+                group("cmp") {
+                    withJvm()
+                    withIos()
+                    withWasmJs()
+                    withJs()
+                }
+            }
+        }
+
         jvmMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
         }
 
-        val jvmTest by getting
 
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -75,6 +90,8 @@ kotlin {
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
         }
+
+        val jvmTest by getting
 
         jvmTest.dependencies {
             implementation(compose.desktop.uiTestJUnit4)

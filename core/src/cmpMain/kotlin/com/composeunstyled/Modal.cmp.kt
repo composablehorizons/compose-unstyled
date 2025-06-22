@@ -12,6 +12,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -19,7 +20,7 @@ import androidx.compose.ui.window.DialogProperties
 actual fun Modal(
     onKeyEvent: (KeyEvent) -> Boolean,
     content: @Composable () -> Unit
-) = androidx.compose.ui.window.Dialog(
+) = Dialog(
     onDismissRequest = {},
     properties = DialogProperties(
         dismissOnBackPress = false,
