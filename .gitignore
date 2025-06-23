@@ -27,3 +27,4 @@ cmake-build-*/
 
 # IntelliJ
 out/
+scripts/release_version2.sh
