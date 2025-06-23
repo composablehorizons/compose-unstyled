@@ -18,22 +18,8 @@
     </style>
 </head>
 <body>
-<canvas id="ComposeTarget"></canvas>
-<script type="application/javascript" src="composeApp.js"></script>
-<script>
-    // Prevent scroll events on the canvas
-    const canvas = document.getElementById('ComposeTarget');
-    
-    // Prevent wheel events (mouse wheel)
-    canvas.addEventListener('wheel', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-    
-    // Prevent touchmove events (touch scrolling)
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-</script>
+    <canvas id="ComposeTarget"></canvas>
+    <script type="application/javascript" src="composeApp.js"></script>
 </body>
 
 </html>
