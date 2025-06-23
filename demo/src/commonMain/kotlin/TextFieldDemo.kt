@@ -70,33 +70,6 @@ fun TextFieldDemo() {
                     )
                 }
 
-                var password by remember { mutableStateOf("") }
-                var showPassword by remember { mutableStateOf(false) }
-
-                TextField(
-                    value = password,
-                    onValueChange = { /* TODO */ },
-                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                ) {
-                    TextInput(
-                        placeholder = { Text("Password") },
-                        trailing = {
-                            Button(
-                                onClick = { showPassword = !showPassword },
-                                backgroundColor = Color.Transparent,
-                                contentPadding = PaddingValues(4.dp),
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (showPassword) EyeOff else Eye,
-                                    contentDescription = if (showPassword) "Hide password" else "Show password",
-                                    tint = Color(0xFF757575)
-                                )
-                            }
-                        }
-                    )
-                }
-
                 TextField(
                     value = password,
                     onValueChange = { password = it },
