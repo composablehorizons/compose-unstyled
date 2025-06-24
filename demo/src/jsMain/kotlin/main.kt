@@ -12,7 +12,7 @@ fun main() {
     val id = iFrameParams.get("id")
     onWasmReady {
         CanvasBasedWindow(canvasElementId = "ComposeTarget") {
-            CompositionLocalProvider(LocalIndication provides NoIndication) {
+            CompositionLocalProvider(LocalIndication provides LightIndication) {
                 Demo(demoId = id)
             }
         }
