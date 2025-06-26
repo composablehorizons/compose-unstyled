@@ -17,7 +17,7 @@ Supports placeholders, leading and trailing slots out of the box along with acce
 
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("com.composables:core:1.34.0")
+    implementation("com.composables:core:1.35.0")
 }
 ```
 
