@@ -36,6 +36,10 @@ Components come with zero styling. They render nothing on the screen by design a
 
 If there is something you cannot style, that is considered a bug (kindly file an issue).
 
+### Fully themable
+
+Create themes from your own design system's tokens, that you can extend and customize at any point of development. 
+
 ### Fully accessible
 
 Components are fully accessible and support keyboard navigation out of the box. Semantics implementation is based on

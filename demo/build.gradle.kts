@@ -67,6 +67,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
+            implementation(compose.material3)
         }
 
         val desktopMain by getting {

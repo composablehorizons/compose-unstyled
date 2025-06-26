@@ -1,7 +1,5 @@
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.CanvasBasedWindow
 import kotlinx.browser.document
 import org.jetbrains.skiko.wasm.onWasmReady
@@ -12,9 +10,7 @@ fun main() {
     val id = iFrameParams.get("id")
     onWasmReady {
         CanvasBasedWindow(canvasElementId = "ComposeTarget") {
-            CompositionLocalProvider(LocalIndication provides LightIndication) {
-                Demo(demoId = id)
-            }
+            Demo(demoId = id)
         }
     }
 }

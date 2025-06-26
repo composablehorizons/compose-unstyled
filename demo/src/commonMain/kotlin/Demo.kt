@@ -11,12 +11,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,13 +33,32 @@ import androidx.navigation.compose.rememberNavController
 import com.composables.core.Icon
 import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.rememberColoredIndication
+import composeunstyled.demo.generated.resources.Inter
+import composeunstyled.demo.generated.resources.Res
+import org.jetbrains.compose.resources.Font
+
+val DemoTheme = buildTheme {
+    defaultIndication = rememberColoredIndication(
+        hoveredColor = Color.White.copy(alpha = 0.3f),
+        pressedColor = Color.White.copy(alpha = 0.5f),
+        focusedColor = Color.Black.copy(alpha = 0.1f),
+    )
+
+    defaultTextStyle = TextStyle(
+        fontFamily = FontFamily(Font(Res.font.Inter)),
+    )
+}
 
 @Composable
 fun Demo(demoId: String? = null) {
-    if (demoId == null) {
-        DemoSelection()
-    } else {
-        availableComponents.first { it.id == demoId }.demo()
+    DemoTheme {
+        if (demoId == null) {
+            DemoSelection()
+        } else {
+            availableComponents.first { it.id == demoId }.demo()
+        }
     }
 }
 
@@ -107,11 +133,20 @@ private fun DemoSelection() {
         availableComponents.forEach { component ->
             composable(component.id) {
                 Column {
-                    AppBar(
-                        onUpClick = { navController.navigateUp() },
-                        title = component.name
-                    )
-                    component.demo()
+                    AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+                    val focusRequester = remember { FocusRequester() }
+
+                    LaunchedEffect(Unit) {
+                        focusRequester.requestFocus()
+                    }
+                    Box(
+                        Modifier
+                            .focusRequester(focusRequester)
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        component.demo()
+                    }
                 }
             }
         }

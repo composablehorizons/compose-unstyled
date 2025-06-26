@@ -41,6 +41,8 @@ theme:
 nav:
   - Overview:
       - Introduction: introduction.md
+  - Theming:
+      - Theming: theme.md
   - Components:
     - 'Bottom Sheet' : bottom-sheet.md
     - 'Bottom Sheet (Modal)' : modal-bottom-sheet.md

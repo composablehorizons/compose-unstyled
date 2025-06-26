@@ -1,10 +1,12 @@
-package com.composeunstyled.demo
+package com.composeunstyled.theme
 
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
@@ -13,20 +15,45 @@ import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.invalidateDraw
 import kotlinx.coroutines.launch
 
-object LightIndication : IndicationNodeFactory {
+@Composable
+fun rememberColoredIndication(
+    hoveredColor: Color = Color.Unspecified,
+    pressedColor: Color = Color.Unspecified,
+    focusedColor: Color = Color.Unspecified,
+): IndicationNodeFactory {
+    return remember {
+        ColoredIndication(
+            hoveredColor = hoveredColor,
+            pressedColor = pressedColor,
+            focusedColor = focusedColor,
+        )
+    }
+}
+
+class ColoredIndication(
+    private val hoveredColor: Color,
+    private val pressedColor: Color,
+    private val focusedColor: Color,
+) : IndicationNodeFactory {
 
     override fun create(interactionSource: InteractionSource): DelegatableNode =
-        DefaultDebugIndicationInstance(interactionSource)
+        ColoredIndicationInstance(interactionSource, hoveredColor, pressedColor, focusedColor)
 
     override fun hashCode(): Int = -1
 
     override fun equals(other: Any?) = other === this
 
-    private class DefaultDebugIndicationInstance(private val interactionSource: InteractionSource) : Modifier.Node(),
-        DrawModifierNode {
+    private class ColoredIndicationInstance(
+        private val interactionSource: InteractionSource,
+        private val hoveredColor: Color,
+        private val pressedColor: Color,
+        private val focusedColor: Color,
+    ) :
+        Modifier.Node(), DrawModifierNode {
         private var isPressed = false
         private var isHovered = false
         private var isFocused = false
+
         override fun onAttach() {
             coroutineScope.launch {
                 var pressCount = 0
@@ -45,6 +72,7 @@ object LightIndication : IndicationNodeFactory {
                     val pressed = pressCount > 0
                     val hovered = hoverCount > 0
                     val focused = focusCount > 0
+
                     var invalidateNeeded = false
                     if (isPressed != pressed) {
                         isPressed = pressed
@@ -63,12 +91,17 @@ object LightIndication : IndicationNodeFactory {
             }
         }
 
+
         override fun ContentDrawScope.draw() {
             drawContent()
             if (isPressed) {
-                drawRect(color = Color.Companion.White.copy(alpha = 0.5f), size = size)
-            } else if (isHovered || isFocused) {
-                drawRect(color = Color.Companion.White.copy(alpha = 0.3f), size = size)
+                drawRect(color = pressedColor, size = size)
+            }
+            if (isHovered) {
+                drawRect(color = hoveredColor, size = size)
+            }
+            if (isFocused) {
+                drawRect(color = focusedColor, size = size)
             }
         }
     }
