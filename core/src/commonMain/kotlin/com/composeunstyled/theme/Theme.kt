@@ -26,8 +26,8 @@ object Theme {
 }
 
 class ThemeValues<T> internal constructor(
-    private val propertyName: String,
-    private val values: Map<ThemeToken<T>, T>
+    internal val propertyName: String,
+    internal val values: Map<ThemeToken<T>, T>
 ) {
     @Composable
     operator fun get(token: ThemeToken<T>): T {
@@ -37,6 +37,11 @@ class ThemeValues<T> internal constructor(
         }
     }
 
+    internal fun copyWithUpdatedValue(token: ThemeToken<T>, newValue: T): ThemeValues<T> {
+        val updatedValues = values.toMutableMap()
+        updatedValues[token] = newValue
+        return ThemeValues(propertyName, updatedValues)
+    }
 }
 
 typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
@@ -101,5 +106,41 @@ class MutableThemeProperties internal constructor() {
 
     operator fun <T> set(property: ThemeProperty<T>, values: Map<ThemeToken<T>, T>) {
         entries[property] = ThemeValues(property.name, values)
+    }
+}
+
+data class OverriddenValue<T>(val token: ThemeToken<T>, val value: T)
+
+infix fun <T> ThemeToken<T>.provides(value: T): OverriddenValue<T> {
+    return OverriddenValue(this, value)
+}
+
+@Composable
+fun ThemeOverride(
+    vararg overriddenValues: OverriddenValue<*>,
+    content: @Composable () -> Unit
+) {
+    val currentTheme = LocalTheme.current
+    val updatedProperties = currentTheme.properties.toMutableMap()
+    overriddenValues.forEach { overriddenValue ->
+        val propertyEntry = updatedProperties.entries.find { (_, themeValues) ->
+            themeValues.values.containsKey(overriddenValue.token)
+        }
+        
+        if (propertyEntry != null) {
+            val (property, themeValues) = propertyEntry
+            @Suppress("UNCHECKED_CAST")
+            val updatedThemeValues = (themeValues as ThemeValues<Any>).copyWithUpdatedValue(
+                overriddenValue.token as ThemeToken<Any>,
+                overriddenValue.value as Any
+            )
+            updatedProperties[property] = updatedThemeValues
+        }
+    }
+    
+    val updatedTheme = ResolvedTheme(currentTheme.name, updatedProperties)
+
+    CompositionLocalProvider(LocalTheme provides updatedTheme) {
+        content()
     }
 }
