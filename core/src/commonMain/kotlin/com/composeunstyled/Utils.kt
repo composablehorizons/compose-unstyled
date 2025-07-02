@@ -19,7 +19,7 @@ internal val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(dur
 internal val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 internal val NoPadding = PaddingValues(0.dp)
 
-val LocalContentColor = compositionLocalOf { Color.Black }
+val LocalContentColor = compositionLocalOf { Color.Unspecified }
 val LocalTextStyle = compositionLocalOf { TextStyle.Default }
 
 internal val KeyEvent.isKeyDown: Boolean
