@@ -14,6 +14,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.mapSaver
@@ -422,6 +423,8 @@ fun BottomSheet(
                             val requireOffset = state.anchoredDraggableState.requireOffset()
                             val y = requireOffset.toInt()
                             IntOffset(x = 0, y = y)
+                        } else if (containerHeight == Dp.Unspecified) {
+                            IntOffset(x = 0, y = 0)
                         } else {
                             IntOffset(x = 0, y = containerHeight.roundToPx())
                         }

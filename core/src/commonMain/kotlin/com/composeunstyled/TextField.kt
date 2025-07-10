@@ -245,6 +245,7 @@ fun TextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource? = null,
+    textColor: Color = Color.Unspecified,
     content: @Composable TextFieldScope.() -> Unit,
 ) {
     val scope = remember { TextFieldScope() }
@@ -259,6 +260,7 @@ fun TextField(
         fontFamily = fontFamily,
         lineHeight = lineHeight,
         letterSpacing = letterSpacing,
+        color = textColor
     )
     scope.textAlignment = newTextStyle.textAlign
     scope.minLines = minLines
