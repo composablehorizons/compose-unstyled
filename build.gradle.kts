@@ -12,9 +12,9 @@ plugins {
 nexusPublishing {
     repositories {
         sonatype {
-            stagingProfileId.set(
-                getLocalProperty("sonatype.stagingProfileId") ?: System.getenv("SONATYPE_STAGING_PROFILE_ID")
-            )
+//            stagingProfileId.set(
+//                getLocalProperty("sonatype.stagingProfileId") ?: System.getenv("SONATYPE_STAGING_PROFILE_ID")
+//            )
             username.set(getLocalProperty("sonatype.username") ?: System.getenv("OSSRH_USERNAME"))
             password.set(getLocalProperty("sonatype.password") ?: System.getenv("OSSRH_PASSWORD"))
             nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
