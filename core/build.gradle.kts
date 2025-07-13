@@ -18,6 +18,7 @@ plugins {
 val publishGroupId = "com.composables"
 val publishVersion = libs.versions.unstyled.get()
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
+val projectUrl = "https://composeunstyled.com"
 
 java {
     toolchain {
@@ -135,7 +136,7 @@ afterEvaluate {
                 pom {
                     name.set("Compose Unstyled")
                     description.set("Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
-                    url.set("https://${githubUrl}")
+                    url.set(projectUrl)
                     licenses {
                         license {
                             name.set("MIT License")
