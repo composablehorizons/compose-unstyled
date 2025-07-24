@@ -66,7 +66,6 @@ fun ModalBottomSheetDemo() {
                         .widthIn(max = 640.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-                    contentPadding = WindowInsets.ime.asPaddingValues(),
                     backgroundColor = Color.White,
                     contentColor = Color.Black
                 ) {

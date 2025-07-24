@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -57,7 +56,6 @@ fun BottomSheetDemo() {
             backgroundColor = Color.White,
             contentColor = Color.Black,
             shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-            contentPadding = WindowInsets.ime.asPaddingValues(),
             modifier = Modifier
                 .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .widthIn(max = 640.dp)
