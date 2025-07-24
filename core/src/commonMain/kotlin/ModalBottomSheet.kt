@@ -172,6 +172,10 @@ class ModalBottomSheetState internal constructor(
             modalDetent = value
         }
     }
+
+    fun invalidateDetents() {
+        bottomSheetState.invalidateDetents()
+    }
 }
 
 class ModalBottomSheetScope internal constructor(

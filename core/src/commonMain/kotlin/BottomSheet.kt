@@ -14,7 +14,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.mapSaver
@@ -49,6 +48,7 @@ private fun Saver(
     positionalThreshold: (totalDistance: Float) -> Float,
     decayAnimationSpec: DecayAnimationSpec<Float>,
     confirmDetentChange: (SheetDetent) -> Boolean,
+    localDensity: () -> Density,
 ): Saver<BottomSheetState, *> = mapSaver(save = { mapOf("detent" to it.currentDetent.identifier) }, restore = { map ->
     val selectedDetentName = map["detent"]
     BottomSheetState(
@@ -60,6 +60,7 @@ private fun Saver(
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
         confirmDetentChange = confirmDetentChange,
+        localDensity = localDensity
     )
 })
 
@@ -104,6 +105,7 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
+            localDensity = { density }
         )
     ) {
         BottomSheetState(
@@ -122,7 +124,8 @@ fun rememberBottomSheetState(
                 }
             },
             decayAnimationSpec = decayAnimationSpec,
-            confirmDetentChange = confirmDetentChange
+            confirmDetentChange = confirmDetentChange,
+            localDensity = { density }
         )
     }
 }
@@ -178,6 +181,7 @@ class BottomSheetState internal constructor(
     positionalThreshold: (totalDistance: Float) -> Float,
     decayAnimationSpec: DecayAnimationSpec<Float>,
     internal val confirmDetentChange: (SheetDetent) -> Boolean,
+    private val localDensity: () -> Density
 ) {
     init {
         check(detents.isNotEmpty()) {
@@ -197,8 +201,8 @@ class BottomSheetState internal constructor(
     }
 
     internal var closestDentToTop: Float by mutableStateOf(Float.NaN)
-
-    internal var fullContentHeight = Float.NaN
+    internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
+    internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
 
     internal val anchoredDraggableState = UnstyledAnchoredDraggableState(
         initialValue = initialDetent,
@@ -270,7 +274,7 @@ class BottomSheetState internal constructor(
             0f
         } else {
             val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
-            fullContentHeight - offsetFromTop
+            contentHeightPx - offsetFromTop
         }
     }
 
@@ -292,6 +296,39 @@ class BottomSheetState internal constructor(
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
         coroutineScope.launch { anchoredDraggableState.snapTo(value) }
+    }
+
+    fun invalidateDetents() {
+        val density = localDensity()
+        val containerHeight = with(density) { containerHeightPx.toDp() }
+        val sheetHeight = with(density) { contentHeightPx.toDp() }
+
+        val anchors = UnstyledDraggableAnchors {
+            with(density) {
+                closestDentToTop = Float.NaN
+
+                detents.forEach { detent ->
+                    val contentHeight = detent
+                        .calculateDetentHeight(containerHeight, sheetHeight)
+                        .coerceIn(0.dp, sheetHeight)
+
+                    val offsetDp = containerHeight - contentHeight
+                    val offset = offsetDp.toPx()
+                    if (closestDentToTop.isNaN() || closestDentToTop > offset) {
+                        closestDentToTop = offset
+                    }
+                    detent at offset
+                    println("${detent} at ${offset}")
+                }
+            }
+        }
+        val newTarget = if (isIdle) {
+            anchoredDraggableState.currentValue
+        } else {
+            anchoredDraggableState.targetValue
+        }
+
+        anchoredDraggableState.updateAnchors(anchors, newTarget)
     }
 }
 
@@ -354,40 +391,12 @@ fun BottomSheet(
     val density = LocalDensity.current
     var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
 
-    fun calculateDetents(containerHeightPx: Float, sheetHeightPx: Float) {
-        val containerHeight = with(density) { containerHeightPx.toDp() }
-        val sheetHeight = with(density) { sheetHeightPx.toDp() }
-
-        val anchors = UnstyledDraggableAnchors {
-            with(density) {
-                state.closestDentToTop = Float.NaN
-
-                state.detents.forEach { detent ->
-                    val contentHeight = detent
-                        .calculateDetentHeight(containerHeight, sheetHeight)
-                        .coerceIn(0.dp, sheetHeight)
-
-                    val offsetDp = containerHeight - contentHeight
-                    val offset = offsetDp.toPx()
-                    if (state.closestDentToTop.isNaN() || state.closestDentToTop > offset) {
-                        state.closestDentToTop = offset
-                    }
-                    detent at offset
-                }
-            }
-        }
-        val newTarget = if (state.isIdle) {
-            state.anchoredDraggableState.currentValue
-        } else {
-            state.anchoredDraggableState.targetValue
-        }
-
-        state.anchoredDraggableState.updateAnchors(anchors, newTarget)
-    }
-
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
-            .onSizeChanged { calculateDetents(it.height.toFloat(), state.fullContentHeight) },
+            .onSizeChanged {
+                state.containerHeightPx = it.height.toFloat()
+                state.invalidateDetents()
+            },
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
@@ -398,8 +407,8 @@ fun BottomSheet(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .onSizeChanged {
-                        state.fullContentHeight = it.height.toFloat()
-                        calculateDetents(with(density) { containerHeight.toPx() }, it.height.toFloat())
+                        state.contentHeightPx = it.height.toFloat()
+                        state.invalidateDetents()
                     }
                     .layout { measurable, constraints ->
                         val maxDetentHeight = if (containerHeight == Dp.Unspecified) {
@@ -428,7 +437,8 @@ fun BottomSheet(
                         } else {
                             IntOffset(x = 0, y = containerHeight.roundToPx())
                         }
-                    }.then(
+                    }
+                    .then(
                         if (scope.enabled) {
                             Modifier.nestedScroll(
                                 remember(state.anchoredDraggableState, Orientation.Vertical) {

@@ -25,8 +25,8 @@ val LocalTextStyle = compositionLocalOf { TextStyle.Default }
 internal val KeyEvent.isKeyDown: Boolean
     get() = type == KeyEventType.KeyDown
 
-internal inline fun buildModifier(builder: MutableList<Modifier>.() -> Unit): Modifier {
-    return buildList(builder).fold(Modifier as Modifier) { acc, modifier ->
+internal inline fun buildModifier(builderAction: MutableList<Modifier>.() -> Unit): Modifier {
+    return buildList(builderAction).fold(Modifier as Modifier) { acc, modifier ->
         acc then modifier
     }
 }

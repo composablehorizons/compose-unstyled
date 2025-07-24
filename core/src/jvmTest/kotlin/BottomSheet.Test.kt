@@ -3,12 +3,15 @@ package com.composables.core
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Text
 import kotlin.test.Test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -193,4 +196,31 @@ class BottomSheetTest {
             assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
         }
     }
+
+    @Test
+    fun invalidateDetentsUpdatesDetents() = runComposeUiTest {
+        var state: BottomSheetState? = null
+        var detentHeight by mutableStateOf(50.dp)
+        val dynamicDetent = SheetDetent("dynamic") { _, _ ->
+            detentHeight
+        }
+        setContent {
+            state = rememberBottomSheetState(
+                initialDetent = dynamicDetent,
+                detents = listOf(dynamicDetent)
+            )
+            BottomSheet(state) {
+                Column(Modifier.testTag("sheet_contents").size(100.dp)) {
+                    Text("Top")
+                    Spacer(Modifier.weight(1f))
+                    Text("Bottom")
+                }
+            }
+        }
+        onNodeWithText("Bottom").assertIsNotDisplayed()
+        detentHeight += 50.dp
+        state!!.invalidateDetents()
+        onNodeWithText("Bottom").assertIsDisplayed()
+    }
+
 }
