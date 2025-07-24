@@ -306,6 +306,7 @@ fun ModalBottomSheetScope.Scrim(
  *
  * @param modifier Modifier to be applied to the sheet.
  * @param enabled Whether the sheet is enabled.
+ * @param imeAware Automatically move the sheet according to the soft keyboard's height.
  * @param content The content of the sheet.
  */
 @Composable
@@ -316,6 +317,7 @@ fun ModalBottomSheetScope.Sheet(
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = LocalContentColor.current,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    imeAware: Boolean = false,
     content: @Composable (BottomSheetScope.() -> Unit)
 ) {
     var hasBeenIntroduced by remember { mutableStateOf(false) }
@@ -349,5 +351,6 @@ fun ModalBottomSheetScope.Sheet(
         shape = shape,
         backgroundColor = backgroundColor,
         contentColor = contentColor,
+        imeAware = imeAware
     )
 }

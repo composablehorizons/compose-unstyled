@@ -372,6 +372,7 @@ class BottomSheetScope internal constructor(
  * @param state The [BottomSheetState] that controls the sheet.
  * @param modifier Modifier to be applied to the sheet.
  * @param enabled Whether the sheet is enabled.
+ * @param imeAware Automatically move the sheet according to the soft keyboard's height.
  * @param content The content of the sheet.
  */
 @Composable
@@ -383,6 +384,7 @@ fun BottomSheet(
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = LocalContentColor.current,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    imeAware: Boolean = false,
     content: @Composable (BottomSheetScope.() -> Unit),
 ) {
     val scope = remember { BottomSheetScope(state, enabled) }
@@ -406,18 +408,7 @@ fun BottomSheet(
                     state.contentHeightPx = it.height.toFloat()
                     state.invalidateDetents()
                 }
-                .offset {
-                    when {
-                        state.anchoredDraggableState.offset.isNaN().not() -> {
-                            val requireOffset = state.anchoredDraggableState.requireOffset()
-                            val y = requireOffset.toInt()
-                            IntOffset(x = 0, y = y)
-                        }
-
-                        state.containerHeightPx.isNaN() -> IntOffset(x = 0, y = 0)
-                        else -> IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
-                    }
-                }
+                .offset(state = state, imeAware = imeAware)
                     then buildModifier {
                 if (scope.enabled) {
                     add(
@@ -448,6 +439,40 @@ fun BottomSheet(
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
                 scope.content()
+            }
+        }
+    }
+}
+
+@Composable
+private fun Modifier.offset(state: BottomSheetState, imeAware: Boolean): Modifier {
+    val density = LocalDensity.current
+    val ime = WindowInsets.ime
+    val imeHeight by remember {
+        derivedStateOf {
+            if (imeAware) ime.getBottom(density) else 0
+        }
+    }
+
+    return this then Modifier.offset {
+        when {
+            state.containerHeightPx.isNaN() || state.containerHeightPx.isNaN() -> {
+                // hasn't been initialized
+                IntOffset(x = 0, y = 0)
+            }
+
+            state.anchoredDraggableState.offset.isNaN() -> {
+                // draggable state is not ready
+                // let the sheet take the height of the container
+                IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
+            }
+
+            else -> {
+                val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
+                // do not let the sheet's top go out of screen bounds
+                val y = calculatedOffset.coerceAtLeast(0f)
+
+                IntOffset(x = 0, y = y.toInt())
             }
         }
     }
