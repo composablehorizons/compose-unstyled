@@ -410,23 +410,6 @@ fun BottomSheet(
                         state.contentHeightPx = it.height.toFloat()
                         state.invalidateDetents()
                     }
-                    .layout { measurable, constraints ->
-                        val maxDetentHeight = if (containerHeight == Dp.Unspecified) {
-                            constraints.maxHeight
-                        } else {
-                            state.detents.maxOf { detent ->
-                                detent.calculateDetentHeight(containerHeight, with(density) {
-                                    constraints.maxHeight.toDp()
-                                })
-                            }.roundToPx()
-                        }
-                        val placeable = measurable.measure(
-                            constraints.copy(maxHeight = maxDetentHeight)
-                        )
-                        layout(placeable.width, placeable.height) {
-                            placeable.place(0, 0)
-                        }
-                    }
                     .offset {
                         if (state.anchoredDraggableState.offset.isNaN().not()) {
                             val requireOffset = state.anchoredDraggableState.requireOffset()
