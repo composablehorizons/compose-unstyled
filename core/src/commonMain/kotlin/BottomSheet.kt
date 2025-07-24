@@ -29,14 +29,15 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.buildModifier
 import kotlin.jvm.JvmName
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -388,11 +389,10 @@ fun BottomSheet(
     scope.enabled = enabled
 
     val coroutineScope = rememberCoroutineScope()
-    val density = LocalDensity.current
-    var containerHeight by remember { mutableStateOf(Dp.Unspecified) }
 
     BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .onSizeChanged {
                 state.containerHeightPx = it.height.toFloat()
                 state.invalidateDetents()
@@ -400,56 +400,54 @@ fun BottomSheet(
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
-            modifier = Modifier.matchParentSize()
-                .onSizeChanged { containerHeight = with(density) { it.height.toDp() } }
-        ) {
-            Box(
-                contentAlignment = Alignment.TopCenter,
-                modifier = Modifier
-                    .onSizeChanged {
-                        state.contentHeightPx = it.height.toFloat()
-                        state.invalidateDetents()
-                    }
-                    .offset {
-                        if (state.anchoredDraggableState.offset.isNaN().not()) {
+            contentAlignment = Alignment.TopCenter,
+            modifier = Modifier
+                .onSizeChanged {
+                    state.contentHeightPx = it.height.toFloat()
+                    state.invalidateDetents()
+                }
+                .offset {
+                    when {
+                        state.anchoredDraggableState.offset.isNaN().not() -> {
                             val requireOffset = state.anchoredDraggableState.requireOffset()
                             val y = requireOffset.toInt()
                             IntOffset(x = 0, y = y)
-                        } else if (containerHeight == Dp.Unspecified) {
-                            IntOffset(x = 0, y = 0)
-                        } else {
-                            IntOffset(x = 0, y = containerHeight.roundToPx())
                         }
+
+                        state.containerHeightPx.isNaN() -> IntOffset(x = 0, y = 0)
+                        else -> IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
                     }
-                    .then(
-                        if (scope.enabled) {
-                            Modifier.nestedScroll(
-                                remember(state.anchoredDraggableState, Orientation.Vertical) {
-                                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                                        orientation = Orientation.Vertical,
-                                        sheetState = state.anchoredDraggableState,
-                                        onFling = {
-                                            coroutineScope.launch { state.anchoredDraggableState.settle(it) }
-                                        }
-                                    )
-                                })
-                        } else Modifier
-                    )
-                    .unstyledAnchoredDraggable(
-                        state = state.anchoredDraggableState,
-                        orientation = Orientation.Vertical,
-                        enabled = scope.enabled && state.detents.size > 1
-                    )
-                    .pointerInput(Unit) { detectTapGestures { } }
-                    .align(Alignment.TopCenter)
-                    .then(modifier)
-                    .clip(shape)
-                    .background(backgroundColor)
-                    .padding(contentPadding)
-            ) {
-                CompositionLocalProvider(LocalContentColor provides contentColor) {
-                    scope.content()
                 }
+                    then buildModifier {
+                if (scope.enabled) {
+                    add(
+                        Modifier.nestedScroll(
+                            remember(state.anchoredDraggableState, Orientation.Vertical) {
+                                ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                                    orientation = Orientation.Vertical,
+                                    sheetState = state.anchoredDraggableState,
+                                    onFling = {
+                                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                                    }
+                                )
+                            })
+                    )
+                }
+            }
+                .unstyledAnchoredDraggable(
+                    state = state.anchoredDraggableState,
+                    orientation = Orientation.Vertical,
+                    enabled = scope.enabled && state.detents.size > 1
+                )
+                .pointerInput(Unit) { detectTapGestures { } }
+                .align(Alignment.TopCenter)
+                .then(modifier)
+                .clip(shape)
+                .background(backgroundColor)
+                .padding(contentPadding)
+        ) {
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                scope.content()
             }
         }
     }
