@@ -454,26 +454,31 @@ private fun Modifier.offset(state: BottomSheetState, imeAware: Boolean): Modifie
         }
     }
 
-    return this then Modifier.offset {
-        when {
-            state.containerHeightPx.isNaN() || state.containerHeightPx.isNaN() -> {
-                // hasn't been initialized
-                IntOffset(x = 0, y = 0)
-            }
+    return this then buildModifier {
+        add(Modifier.offset {
+            when {
+                state.containerHeightPx.isNaN() || state.containerHeightPx.isNaN() -> {
+                    // hasn't been initialized
+                    IntOffset(x = 0, y = 0)
+                }
 
-            state.anchoredDraggableState.offset.isNaN() -> {
-                // draggable state is not ready
-                // let the sheet take the height of the container
-                IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
-            }
+                state.anchoredDraggableState.offset.isNaN() -> {
+                    // draggable state is not ready
+                    // let the sheet take the height of the container
+                    IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
+                }
 
-            else -> {
-                val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
-                // do not let the sheet's top go out of screen bounds
-                val y = calculatedOffset.coerceAtLeast(0f)
+                else -> {
+                    val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
+                    // do not let the sheet's top go out of screen bounds
+                    val y = calculatedOffset.coerceAtLeast(0f)
 
-                IntOffset(x = 0, y = y.toInt())
+                    IntOffset(x = 0, y = y.toInt())
+                }
             }
+        })
+        if (imeAware) {
+            add(Modifier.consumeWindowInsets(ime))
         }
     }
 }
