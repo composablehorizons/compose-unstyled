@@ -1,22 +1,16 @@
 # Compose Unstyled
 
-Compose Unstyled is a set of foundational components for building high-quality, accessible design systems in Compose Multiplatform.
-
-## Installation
-
-```kotlin
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("com.composables:core:1.38.1")
-}
-```
+Compose Unstyled is a library built on top of Compose Foundation that provides fully-renderless, fully accessible components like Bottom Sheets, Dropdown Menus, and Animated Dialogs, plus a flexible theming system – so you can build any design system on every platform, not just Android.
 
 ## Documentation
 
-For full documentation, checkout: https://composeunstyled.com/
+For full documentation, checkout: https://composables.com/
+
+## Community
+
+For help, discussions and feature ideas:
+
+[Discuss Compose Unstyled on Github](https://github.com/composablehorizons/compose-unstyled/discussions)
 
 ## Contributing
 
