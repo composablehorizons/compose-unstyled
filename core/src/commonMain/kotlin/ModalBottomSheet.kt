@@ -105,7 +105,7 @@ class ModalBottomSheetState(
             return modalDetent
         }
         @Deprecated(
-            message = "This setter will go away in a future version of the library. Set the value to targetDetent instead",
+            message = "This will go away in 2.0. Set the value to targetDetent instead",
             replaceWith = ReplaceWith("targetDetent")
         )
         set(value) {
@@ -135,7 +135,7 @@ class ModalBottomSheetState(
         currentDetent == targetDetent && bottomSheetState.anchoredDraggableState.isAnimationRunning.not()
     }
 
-    @Deprecated("Use the progress function and provide the detents you need instead.")
+    @Deprecated("This will go away in 2.0. Use the progress function and provide the detents you need instead.")
     val progress: Float by derivedStateOf {
         bottomSheetState.progress
     }

@@ -61,7 +61,7 @@ private fun Saver(
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
         confirmDetentChange = confirmDetentChange,
-        localDensity = localDensity
+        density = localDensity
     )
 })
 
@@ -126,7 +126,7 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
-            localDensity = { density }
+            density = { density }
         )
     }
 }
@@ -173,7 +173,7 @@ class SheetDetent(
     }
 }
 
-class BottomSheetState internal constructor(
+class BottomSheetState(
     initialDetent: SheetDetent,
     internal val detents: List<SheetDetent>,
     private val coroutineScope: CoroutineScope,
@@ -182,7 +182,7 @@ class BottomSheetState internal constructor(
     positionalThreshold: (totalDistance: Float) -> Float,
     decayAnimationSpec: DecayAnimationSpec<Float>,
     internal val confirmDetentChange: (SheetDetent) -> Boolean,
-    private val localDensity: () -> Density
+    private val density: () -> Density
 ) {
     init {
         check(detents.isNotEmpty()) {
@@ -256,7 +256,7 @@ class BottomSheetState internal constructor(
     /**
      * A 0 to 1 value representing the progress of a sheet between its [currentDetent] and the [targetDetent].
      */
-    @Deprecated("Use the progress function and provide the detents you need instead.")
+    @Deprecated("This will go away in 2.0. Use the progress function and provide the detents you need instead.")
     val progress: Float
         get() = anchoredDraggableState.progress(currentDetent, targetDetent)
 
@@ -300,7 +300,7 @@ class BottomSheetState internal constructor(
     }
 
     fun invalidateDetents() {
-        val density = localDensity()
+        val density = density()
         val containerHeight = with(density) { containerHeightPx.toDp() }
         val sheetHeight = with(density) { contentHeightPx.toDp() }
 

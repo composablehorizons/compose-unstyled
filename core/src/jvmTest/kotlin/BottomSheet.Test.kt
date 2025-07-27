@@ -22,6 +22,58 @@ import org.assertj.core.api.Assertions.assertThat
 @OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
 
+    @Test(expected = IllegalStateException::class)
+    fun throwsException_whenCreatingState_withoutDetents() = runComposeUiTest {
+        setContent {
+            BottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded,
+                detents = emptyList(),
+                coroutineScope = rememberCoroutineScope(),
+                animationSpec = tween(),
+                density = { density },
+                velocityThreshold = { 0f },
+                positionalThreshold = { 0f },
+                confirmDetentChange = { true },
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )
+        }
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun throwsException_whenCreatingState_andInitialDetentIsNotPartOfDetents() = runComposeUiTest {
+        val customDetent = SheetDetent("custom") { _, _ -> 0.dp }
+        setContent {
+            BottomSheetState(
+                initialDetent = customDetent,
+                detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+                coroutineScope = rememberCoroutineScope(),
+                animationSpec = tween(),
+                density = { density },
+                velocityThreshold = { 0f },
+                positionalThreshold = { 0f },
+                confirmDetentChange = { true },
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )
+        }
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun throwsException_whenCreatingState_andHasDuplicateDetents() = runComposeUiTest {
+        setContent {
+            BottomSheetState(
+                initialDetent = SheetDetent.Hidden,
+                detents = listOf(SheetDetent.Hidden, SheetDetent.Hidden),
+                coroutineScope = rememberCoroutineScope(),
+                animationSpec = tween(),
+                density = { density },
+                velocityThreshold = { 0f },
+                positionalThreshold = { 0f },
+                confirmDetentChange = { true },
+                decayAnimationSpec = rememberSplineBasedDecay()
+            )
+        }
+    }
+
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {
         setContent {
