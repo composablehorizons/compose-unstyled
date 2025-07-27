@@ -36,7 +36,7 @@ fun Modifier.outline(width: Dp, color: Color, shape: Shape = RectangleShape, off
             }
 
             is Outline.Rectangle -> {
-                val inset = offset.toPx()
+                val inset = -offset.toPx()
 
                 val path = Path().apply {
                     addRect(
@@ -62,7 +62,7 @@ fun Modifier.outline(width: Dp, color: Color, shape: Shape = RectangleShape, off
             }
 
             is Outline.Rounded -> {
-                val inset = offset.toPx()
+                val inset = -offset.toPx()
                 val roundRect = outline.roundRect
 
                 val topLeftRadius = roundRect.topLeftCornerRadius.x
