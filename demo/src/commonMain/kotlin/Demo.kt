@@ -69,6 +69,7 @@ private val availableComponents = listOf(
     AvailableComponent("Bottom Sheet", "bottom-sheet", { BottomSheetDemo() }),
     AvailableComponent("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
     AvailableComponent("Checkbox", "checkbox", { CheckboxDemo() }),
+    AvailableComponent("TriState Checkbox", "checkbox", { TriStateCheckboxDemo() }),
     AvailableComponent("Dialog", "dialog", { DialogDemo() }),
     AvailableComponent("Disclosure", "disclosure", { DisclosureDemo() }),
     AvailableComponent("Dropdown Menu", "dropdown-menu", { DropdownMenuDemo() }),
