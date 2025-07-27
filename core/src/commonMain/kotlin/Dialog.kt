@@ -48,13 +48,22 @@ class DialogState internal constructor(initiallyVisible: Boolean = false) {
     )
     constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
 
-    var visible: Boolean by mutableStateOf(initiallyVisible)
+    internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
+    internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
+
+    var visible: Boolean
+        set(value) {
+            panelVisibilityState.targetState = value
+            scrimVisibilityState.targetState = value
+        }
+        get() {
+            return panelVisibilityState.currentState || scrimVisibilityState.currentState
+        }
 }
 
 @Stable
 class DialogScope internal constructor(state: DialogState) {
-    internal var dialogState by mutableStateOf(state)
-    internal val visibleState = MutableTransitionState(false)
+    internal var state by mutableStateOf(state)
 }
 
 private val DialogStateSaver = run {
@@ -63,7 +72,7 @@ private val DialogStateSaver = run {
             mapOf("visible" to it.visible)
         },
         restore = {
-            DialogState(it["visible"] as Boolean)
+            DialogState(initiallyVisible = it["visible"] as Boolean)
         }
     )
 }
@@ -127,16 +136,19 @@ fun Dialog(
     content: @Composable (DialogScope.() -> Unit)
 ) {
     val scope = remember { DialogScope(state) }
-    scope.visibleState.targetState = state.visible
+//    scope.state.panelVisibilityState.targetState = state.panelVisibilityState
+//    scope.state.scrimVisibilityState.targetState = state.panelVisibilityState
 
     val currentDismiss by rememberUpdatedState(onDismiss)
 
-    if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
+    val isPanelVisible = state.panelVisibilityState.isIdle.not() || state.panelVisibilityState.currentState
+    val isScrimVisible = state.scrimVisibilityState.isIdle.not() || state.scrimVisibilityState.currentState
+    if (isScrimVisible || isPanelVisible) {
         val onKeyEvent = if (properties.dismissOnBackPress) {
             { event: KeyEvent ->
                 if (event.type == KeyEventType.KeyDown && (event.key == Key.Back || event.key == Key.Escape)) {
                     currentDismiss()
-                    scope.dialogState.visible = false
+                    state.visible = false
                     true
                 } else false
             }
@@ -151,7 +163,7 @@ fun Dialog(
                             Modifier.pointerInput(Unit) {
                                 detectTapGestures {
                                     currentDismiss()
-                                    scope.dialogState.visible = false
+                                    state.visible = false
                                 }
                             }
                         } else Modifier
@@ -184,17 +196,17 @@ fun DialogScope.DialogPanel(
     content: @Composable () -> Unit
 ) {
     AnimatedVisibility(
-        visibleState = visibleState,
+        visibleState = state.panelVisibilityState,
         enter = enter,
         exit = exit,
     ) {
         Box(
             modifier
-            .semantics { dialog() }
-            .clip(shape)
-            .background(backgroundColor)
-            .pointerInput(Unit) { detectTapGestures { } }
-            .padding(contentPadding)
+                .semantics { dialog() }
+                .clip(shape)
+                .background(backgroundColor)
+                .pointerInput(Unit) { detectTapGestures { } }
+                .padding(contentPadding)
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
                 content()
@@ -219,7 +231,7 @@ fun DialogScope.Scrim(
     exit: ExitTransition = DisappearInstantly,
 ) {
     AnimatedVisibility(
-        visibleState = visibleState,
+        visibleState = state.scrimVisibilityState,
         enter = enter,
         exit = exit
     ) {
