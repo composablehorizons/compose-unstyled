@@ -37,10 +37,10 @@ import com.composeunstyled.Modal
  * @param dismissOnBackPress Whether the dialog should be dismissed when the back button is pressed.
  * @param dismissOnClickOutside Whether the dialog should be dismissed when clicking outside the dialog panel.
  */
-public data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
+data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
 @Stable
-public class DialogState internal constructor(initiallyVisible: Boolean = false) {
+class DialogState internal constructor(initiallyVisible: Boolean = false) {
 
     @Deprecated(
         "This constructor will go away in future versions of the library. Use the respective remember function instead",
@@ -48,11 +48,11 @@ public class DialogState internal constructor(initiallyVisible: Boolean = false)
     )
     constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
 
-    public var visible: Boolean by mutableStateOf(initiallyVisible)
+    var visible: Boolean by mutableStateOf(initiallyVisible)
 }
 
 @Stable
-public class DialogScope internal constructor(state: DialogState) {
+class DialogScope internal constructor(state: DialogState) {
     internal var dialogState by mutableStateOf(state)
     internal val visibleState = MutableTransitionState(false)
 }
@@ -188,7 +188,8 @@ fun DialogScope.DialogPanel(
         enter = enter,
         exit = exit,
     ) {
-        Box(modifier
+        Box(
+            modifier
             .semantics { dialog() }
             .clip(shape)
             .background(backgroundColor)
@@ -211,7 +212,7 @@ fun DialogScope.DialogPanel(
  * @param exit The exit transition for the scrim.
  */
 @Composable
-public fun DialogScope.Scrim(
+fun DialogScope.Scrim(
     modifier: Modifier = Modifier,
     scrimColor: Color = Color.Black.copy(0.6f),
     enter: EnterTransition = AppearInstantly,
