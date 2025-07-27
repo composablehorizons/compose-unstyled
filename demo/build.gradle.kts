@@ -68,7 +68,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
-            implementation(compose.material3)
+            implementation(libs.composables.icons.lucide)
         }
 
         val desktopMain by getting {
@@ -83,7 +83,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(compose.material3)
-                implementation("androidx.activity:activity-compose:1.10.1")
+                implementation(libs.androidx.activitycompose)
             }
         }
     }

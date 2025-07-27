@@ -66,7 +66,7 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation("androidx.activity:activity-compose:1.9.0")
+            implementation(libs.androidx.activitycompose)
         }
 
 
@@ -98,8 +98,8 @@ kotlin {
         jvmTest.dependencies {
             implementation(compose.desktop.uiTestJUnit4)
             implementation(compose.desktop.currentOs) {
-                exclude("org.jetbrains.compose.material")
-                exclude("org.jetbrains.compose.material3")
+                exclude(compose.material)
+                exclude(compose.material)
             }
             implementation("org.assertj:assertj-core:3.27.3")
         }
