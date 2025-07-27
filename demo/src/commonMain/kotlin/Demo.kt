@@ -65,11 +65,11 @@ fun Demo(demoId: String? = null) {
 private data class AvailableComponent(val name: String, val id: String, val demo: @Composable () -> Unit)
 
 private val availableComponents = listOf(
-    AvailableComponent("Button", "button", { ButtonDemo() }),
     AvailableComponent("Bottom Sheet", "bottom-sheet", { BottomSheetDemo() }),
-    AvailableComponent("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
+    AvailableComponent("Bottom Sheet (Modal)", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
+    AvailableComponent("Button", "button", { ButtonDemo() }),
     AvailableComponent("Checkbox", "checkbox", { CheckboxDemo() }),
-    AvailableComponent("TriState Checkbox", "checkbox", { TriStateCheckboxDemo() }),
+    AvailableComponent("Checkbox (TriState)", "checkbox", { TriStateCheckboxDemo() }),
     AvailableComponent("Dialog", "dialog", { DialogDemo() }),
     AvailableComponent("Disclosure", "disclosure", { DisclosureDemo() }),
     AvailableComponent("Dropdown Menu", "dropdown-menu", { DropdownMenuDemo() }),
