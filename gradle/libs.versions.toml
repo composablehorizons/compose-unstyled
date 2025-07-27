@@ -1,8 +1,8 @@
 [versions]
 unstyled = "1.39.0"
 
-kotlin = "2.1.21"
-compose = "1.8.1"
+kotlin = "2.2.0"
+compose = "1.8.2"
 agp = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "21"
