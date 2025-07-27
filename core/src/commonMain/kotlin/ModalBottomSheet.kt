@@ -297,7 +297,7 @@ fun ModalBottomSheetScope.Scrim(
         enter = enter,
         exit = exit
     ) {
-        Box(Modifier.fillMaxSize().focusable(false).background(scrimColor).then(modifier))
+        Box(modifier.fillMaxSize().focusable(false).background(scrimColor))
     }
 }
 
