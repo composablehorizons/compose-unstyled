@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.multiplatform)
     id("com.android.library")
     id("org.jetbrains.dokka")

@@ -6,9 +6,11 @@ compose = "1.8.1"
 agp = "8.6.1"
 android-compileSdk = "35"
 android-minSdk = "21"
+hotreload = "1.0.0-beta02"
 
 [plugins]
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-hotreload = { id = "org.jetbrains.compose.hot-reload", version.ref = "hotreload" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }

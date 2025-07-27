@@ -15,7 +15,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="demo:run" />
+          <option value="demo:hotRunDesktop" />
         </list>
       </option>
       <option name="vmOptions" />
