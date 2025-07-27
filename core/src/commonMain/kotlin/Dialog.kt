@@ -40,10 +40,10 @@ import com.composeunstyled.Modal
 data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
 @Stable
-class DialogState internal constructor(initiallyVisible: Boolean = false) {
+class DialogState(initiallyVisible: Boolean = false) {
 
     @Deprecated(
-        "This constructor will go away in future versions of the library. Use the respective remember function instead",
+        "This will go away in 2.0. Use rememberDialogState(visible)",
         ReplaceWith("rememberDialogState(visible)")
     )
     constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
