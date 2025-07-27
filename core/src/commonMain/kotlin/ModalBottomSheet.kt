@@ -79,26 +79,26 @@ fun rememberModalBottomSheetState(
             restore = { map ->
                 val restoredDetent = detents.first { it.identifier == map["detent"] }
                 ModalBottomSheetState(
-                    bottomSheetDetent = restoredDetent,
+                    initialDetent = restoredDetent,
                     bottomSheetState = sheetState
                 )
             }
         ),
         init = {
             ModalBottomSheetState(
-                bottomSheetDetent = initialDetent,
+                initialDetent = initialDetent,
                 bottomSheetState = sheetState
             )
         }
     )
 }
 
-class ModalBottomSheetState internal constructor(
-    internal val bottomSheetDetent: SheetDetent,
+class ModalBottomSheetState(
+    internal val initialDetent: SheetDetent,
     internal val bottomSheetState: BottomSheetState
 ) {
 
-    internal var modalDetent by mutableStateOf(bottomSheetDetent)
+    internal var modalDetent by mutableStateOf(initialDetent)
 
     var currentDetent: SheetDetent
         get() {
