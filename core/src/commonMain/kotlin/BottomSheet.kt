@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -550,6 +551,7 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
  * @param interactionSource The interaction source for the drag indication.
  * @param onClickLabel The label for the click action.
  */
+@Deprecated("This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().")
 @Composable
 fun BottomSheetScope.DragIndication(
     modifier: Modifier = Modifier,
@@ -585,6 +587,39 @@ fun BottomSheetScope.DragIndication(
             interactionSource = interactionSource,
             indication = indication,
             onClickLabel = onClickLabel,
+            onClick = onIndicationClicked
+        )
+    )
+}
+
+@Composable
+fun BottomSheetScope.DragIndication(
+    modifier: Modifier = Modifier,
+    indication: Indication = LocalIndication.current,
+    interactionSource: MutableInteractionSource? = null,
+) {
+    var detentIndex by rememberSaveable { mutableStateOf(-1) }
+    var goUp by rememberSaveable { mutableStateOf(true) }
+
+    val onIndicationClicked: () -> Unit = {
+        if (detentIndex == -1) {
+            detentIndex = state.detents.indexOf(state.currentDetent)
+        }
+        if (detentIndex == state.detents.size - 1) goUp = false
+        if (detentIndex == 0) goUp = true
+
+        if (goUp) detentIndex++ else detentIndex--
+
+        val detent = state.detents[detentIndex]
+        state.targetDetent = detent
+    }
+
+    Box(
+        modifier = modifier.clickable(
+            role = Role.Button,
+            enabled = enabled && state.detents.size > 1,
+            interactionSource = interactionSource,
+            indication = indication,
             onClick = onIndicationClicked
         )
     )

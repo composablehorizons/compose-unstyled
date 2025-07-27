@@ -1,9 +1,11 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -16,6 +18,7 @@ import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
+import com.composables.core.com.composeunstyled.focusRing
 import com.composables.core.rememberBottomSheetState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
@@ -62,11 +65,15 @@ fun BottomSheetDemo() {
                 .fillMaxWidth(),
         ) {
             Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+                val interactionSource = remember { MutableInteractionSource() }
+
                 DragIndication(
-                    modifier = Modifier.padding(top = 22.dp)
+                    interactionSource = interactionSource,
+                    modifier = Modifier
+                        .padding(top = 22.dp)
+                        .focusRing(interactionSource, width = 2.dp, Color(0XFF2563EB), RoundedCornerShape(100), offset = 4.dp)
                         .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-                        .width(32.dp)
-                        .height(4.dp)
+                        .size(32.dp, 4.dp)
                 )
             }
         }

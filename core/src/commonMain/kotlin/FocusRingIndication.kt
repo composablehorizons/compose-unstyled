@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 
 
+@Deprecated("This will go away in 2.0. Use the new focusRing() modifier instead that does not force you to override your theme's indication")
 @Composable
 public fun rememberFocusRingIndication(
     ringColor: Color = Color.Unspecified,
