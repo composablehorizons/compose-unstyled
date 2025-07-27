@@ -10,8 +10,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.multiplatform)
-    id("com.android.library")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.dokka)
     id("maven-publish")
     id("signing")
 }

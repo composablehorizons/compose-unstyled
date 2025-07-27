@@ -4,10 +4,10 @@ plugins {
     alias(libs.plugins.multiplatform).apply(false)
     alias(libs.plugins.compose).apply(false)
     alias(libs.plugins.android.application).apply(false)
+    alias(libs.plugins.android.library).apply(false)
     alias(libs.plugins.compose.hotreload) apply false
-    id("com.android.library") version "8.2.0" apply false
-    id("org.jetbrains.dokka").version("1.9.10").apply(false)
-    id("io.github.gradle-nexus.publish-plugin").version("2.0.0-rc-1")
+    alias(libs.plugins.jetbrains.dokka) apply false
+    alias(libs.plugins.nexus.publish)
 }
 
 nexusPublishing {
