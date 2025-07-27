@@ -25,6 +25,16 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.composables.core.R
 import java.util.*
 
+/**
+ * Modals are the building blocks for components such as dialogs, alerts and modal bottom sheets.
+ *
+ * They create their own window and block interaction with the rest of the interface until removed from the composition.
+ *
+ * Modals in Android create their own [Window]. To access it use [LocalModalWindow].current.
+ *
+ * @param onKeyEvent Allows the caller to intercept [KeyEvent]s happening within the contents of the modal. Return `true` if you handled the event.
+ * @param content The content of the modal
+ */
 @Composable
 actual fun Modal(
     onKeyEvent: (KeyEvent) -> Boolean,
@@ -95,6 +105,9 @@ actual fun Modal(
     }
 }
 
+/**
+ * The CompositionLocal containing the current [Window].
+ */
 val LocalModalWindow = staticCompositionLocalOf<Window> {
     error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")
 }
