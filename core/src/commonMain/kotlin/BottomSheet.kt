@@ -319,7 +319,6 @@ class BottomSheetState internal constructor(
                         closestDentToTop = offset
                     }
                     detent at offset
-                    println("${detent} at ${offset}")
                 }
             }
         }
