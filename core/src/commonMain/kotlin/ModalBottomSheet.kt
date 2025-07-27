@@ -182,7 +182,7 @@ class ModalBottomSheetScope internal constructor(
     internal val modalState: ModalBottomSheetState,
     internal val sheetState: BottomSheetState,
 ) {
-    internal val visibleState = MutableTransitionState(false)
+    internal val scrimVisibilityState = MutableTransitionState(false)
 }
 
 private class ModalContext(val onDismissRequest: () -> Unit)
@@ -236,9 +236,9 @@ fun ModalBottomSheet(
 
     CompositionLocalProvider(LocalModalContext provides ModalContext(currentCallback)) {
         val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
-        scope.visibleState.targetState = state.currentDetent != SheetDetent.Hidden
+        scope.scrimVisibilityState.targetState = state.currentDetent != SheetDetent.Hidden
 
-        if (scope.visibleState.currentState || scope.visibleState.targetState || scope.visibleState.isIdle.not()) {
+        if (state.isIdle.not() || state.targetDetent != SheetDetent.Hidden || scope.scrimVisibilityState.isIdle.not()) {
             val onKeyEvent = if (properties.dismissOnBackPress) {
                 { event: KeyEvent ->
                     if (
@@ -293,7 +293,7 @@ fun ModalBottomSheetScope.Scrim(
     exit: ExitTransition = DisappearInstantly,
 ) {
     AnimatedVisibility(
-        visibleState = visibleState,
+        visibleState = scrimVisibilityState,
         enter = enter,
         exit = exit
     ) {
