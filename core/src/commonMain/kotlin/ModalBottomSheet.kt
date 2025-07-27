@@ -236,9 +236,26 @@ fun ModalBottomSheet(
 
     CompositionLocalProvider(LocalModalContext provides ModalContext(currentCallback)) {
         val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
-        scope.scrimVisibilityState.targetState = state.currentDetent != SheetDetent.Hidden
 
-        if (state.isIdle.not() || state.targetDetent != SheetDetent.Hidden || scope.scrimVisibilityState.isIdle.not()) {
+        val isSheetVisible = state.isIdle.not() || state.targetDetent != SheetDetent.Hidden
+
+        val isScrimVisible = scope.scrimVisibilityState.isIdle.not() || scope.scrimVisibilityState.currentState
+
+        if (isSheetVisible || isScrimVisible) {
+            if (scope.sheetState.isIdle) {
+                LaunchedEffect(Unit) {
+                    // the sheet got dismissed by a gesture
+                    // dismiss the scrim
+                    if (scope.sheetState.currentDetent == SheetDetent.Hidden) {
+                        scope.scrimVisibilityState.targetState = false
+                    }
+                }
+            }
+            fun onDismissRequest() {
+                scope.scrimVisibilityState.targetState = false
+                scope.sheetState.targetDetent = SheetDetent.Hidden
+            }
+
             val onKeyEvent = if (properties.dismissOnBackPress) {
                 { event: KeyEvent ->
                     if (
@@ -246,7 +263,7 @@ fun ModalBottomSheet(
                         && (event.key == Key.Back || event.key == Key.Escape)
                         && state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)
                     ) {
-                        scope.sheetState.targetDetent = SheetDetent.Hidden
+                        onDismissRequest()
                         true
                     } else false
                 }
@@ -255,6 +272,11 @@ fun ModalBottomSheet(
             }
 
             Modal(onKeyEvent = onKeyEvent) {
+                LaunchedEffect(Unit) {
+                    // modal entered the composition
+                    // start the scrim animation
+                    scope.scrimVisibilityState.targetState = true
+                }
                 Box(
                     Modifier
                         .fillMaxSize()
@@ -263,7 +285,7 @@ fun ModalBottomSheet(
                                 it.pointerInput(Unit) {
                                     detectTapGestures {
                                         if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                                            state.targetDetent = SheetDetent.Hidden
+                                            onDismissRequest()
                                         }
                                     }
                                 }
