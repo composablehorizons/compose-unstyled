@@ -36,9 +36,3 @@ fun ProvideTextStyle(textStyle: TextStyle, content: @Composable () -> Unit) {
 
 internal val KeyEvent.isKeyDown: Boolean
     get() = type == KeyEventType.KeyDown
-
-internal inline fun buildModifier(builderAction: MutableList<Modifier>.() -> Unit): Modifier {
-    return buildList(builderAction).fold(Modifier as Modifier) { acc, modifier ->
-        acc then modifier
-    }
-}
