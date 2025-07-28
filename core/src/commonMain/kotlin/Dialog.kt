@@ -136,8 +136,6 @@ fun Dialog(
     content: @Composable (DialogScope.() -> Unit)
 ) {
     val scope = remember { DialogScope(state) }
-//    scope.state.panelVisibilityState.targetState = state.panelVisibilityState
-//    scope.state.scrimVisibilityState.targetState = state.panelVisibilityState
 
     val currentDismiss by rememberUpdatedState(onDismiss)
 

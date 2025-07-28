@@ -32,10 +32,16 @@ actual fun Modal(
     ),
     content = {
         val focusRequester = remember { FocusRequester() }
-        Box(Modifier.focusRequester(focusRequester).fillMaxSize().onKeyEvent(onKeyEvent)) {
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-            }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
+        Box(
+            Modifier.focusRequester(focusRequester)
+                .fillMaxSize()
+                .onKeyEvent(onKeyEvent)
+        ) {
             content()
         }
     }

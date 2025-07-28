@@ -6,9 +6,12 @@ import android.view.WindowManager
 import androidx.activity.ComponentDialog
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.NativeKeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
@@ -55,17 +58,27 @@ actual fun Modal(
                 setContent {
                     val localWindow = window
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
-                    CompositionLocalProvider(LocalModalWindow provides localWindow) {
-                        Box(Modifier.onKeyEvent(onKeyEvent)) {
-                            BackHandler(
-                                onBack = {
-                                    val backKeyDown = NativeKeyEvent(
-                                        NativeKeyEvent.ACTION_DOWN, NativeKeyEvent.KEYCODE_BACK
-                                    )
-                                    val backPress = KeyEvent(backKeyDown)
-                                    onKeyEvent(backPress)
-                                }
+                    val focusRequester = remember { FocusRequester() }
+
+                    BackHandler(
+                        onBack = {
+                            val backKeyDown = NativeKeyEvent(
+                                NativeKeyEvent.ACTION_DOWN, NativeKeyEvent.KEYCODE_BACK
                             )
+                            val backPress = KeyEvent(backKeyDown)
+                            onKeyEvent(backPress)
+                        }
+                    )
+
+                    LaunchedEffect(Unit) {
+                        focusRequester.requestFocus()
+                    }
+
+                    Box(Modifier
+                        .focusRequester(focusRequester)
+                        .fillMaxSize()
+                        .onKeyEvent(onKeyEvent)) {
+                        CompositionLocalProvider(LocalModalWindow provides localWindow) {
                             content()
                         }
                     }
