@@ -1,4 +1,4 @@
-package com.composables.core.com.composeunstyled
+package com.composeunstyled
 
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.outline
 
 /**
  * Draws an outline around the composable's bound when the component is focused.
