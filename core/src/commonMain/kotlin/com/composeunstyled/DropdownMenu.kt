@@ -6,7 +6,11 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
@@ -63,7 +67,9 @@ fun DropdownMenuPanel(
     contentPadding: PaddingValues = NoPadding,
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
-    content: @Composable ColumnScope.() -> Unit
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val density = LocalDensity.current
     val positionProvider = MenuContentPositionProvider(density, anchor)
@@ -117,7 +123,9 @@ fun DropdownMenuPanel(
                         .focusRequester(menuFocusRequester)
                         .clip(shape)
                         .background(backgroundColor)
-                        .padding(contentPadding)
+                        .padding(contentPadding),
+                    horizontalAlignment = horizontalAlignment,
+                    verticalArrangement = verticalArrangement,
                 ) {
                     // Request focus when the menu becomes visible
                     if (transitionState.currentState) {
@@ -125,7 +133,7 @@ fun DropdownMenuPanel(
                             menuFocusRequester.requestFocus()
                         }
                     }
-                    CompositionLocalProvider(LocalContentColor provides contentColor) {
+                    ProvideContentColor(contentColor) {
                         content()
                     }
                 }
