@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -82,7 +81,8 @@ private val availableComponents = listOf(
     AvailableComponent("Tab Group", "tabgroup", { TabGroupDemo() }),
     AvailableComponent("Text", "text", { TextDemo() }),
     AvailableComponent("Text Field", "textfield", { TextFieldDemo() }),
-    AvailableComponent("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() })
+    AvailableComponent("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
+    AvailableComponent("TopAppBar", "topappbar", { TopAppBarDemo() })
 )
 
 @Composable
