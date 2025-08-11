@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="NoDecor">
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="DemoTheme" parent="Theme.Material3.DayNight">
+        <item name="backgroundColor">#FAFAFA</item>
+        <item name="onBackgroundColor">#262626</item>
+        <item name="primary">#E91E63</item>
+        <item name="onPrimary">#FFFFFF</item>
+
+        <item name="header">@style/Mono</item>
+        <item name="body">@style/Sans</item>
+
+        <item name="isGoat">true</item>
+
+        <item name="demoDimension">4pt</item>
+        <item name="demoTextSize">4pt</item>
+
+        <item name="demoFloat">1.5</item>
+        <item name="demoInt">42</item>
+        <item name="demoString">Hello World</item>
+        <item name="demoBoolean">true</item>
+
+        <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Sans">
+<!--        <item name="android:fontFamily">@font/lobster</item>-->
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Mono" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">monospace</item>
+    </style>
+
+    <attr name="backgroundColor" format="color"/>
+    <attr name="isGoat" format="boolean"/>
+    <attr name="onBackgroundColor" format="color"/>
+    <attr name="demoDimension" format="dimension"/>
+    <attr name="demoTextSize" format="dimension"/>
+    <attr name="demoFloat" format="float"/>
+    <attr name="demoInt" format="integer"/>
+    <attr name="demoString" format="string"/>
+    <attr name="demoBoolean" format="boolean"/>
+    <attr name="demoDrawable" format="reference"/>
+    <attr name="header" format="reference"/>
+    <attr name="body" format="reference"/>
+    <attr name="primary" format="color"/>
+    <attr name="onPrimary" format="color"/>
 
 </resources>

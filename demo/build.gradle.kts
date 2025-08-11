@@ -69,6 +69,7 @@ kotlin {
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
             implementation(libs.composables.icons.lucide)
+
         }
 
         val desktopMain by getting {
@@ -82,8 +83,11 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(compose.material3)
                 implementation(libs.androidx.activitycompose)
+                // Material 3 XML themes
+                implementation("com.google.android.material:material:1.12.0")
+                // Material 3 compose used for the ripple effect
+                implementation(compose.material3)
             }
         }
     }
