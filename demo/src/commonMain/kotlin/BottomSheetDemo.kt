@@ -18,7 +18,7 @@ import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
-import com.composables.core.com.composeunstyled.focusRing
+import com.composeunstyled.focusRing
 import com.composables.core.rememberBottomSheetState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
