@@ -20,7 +20,7 @@ object Theme {
         val resolvedValue = theme.properties[property] as? ThemeValues<T>
 
         return resolvedValue ?: error(
-            "There is no ${property.name} property in the ${theme.name} theme. To fix this: 1. Create a design property: val ${property.name} = ThemeProperty<Type>(${property.name}), 2. Pass it to your theme definition: buildTheme { properties -> properties[${property.name}] = TODO(\"Populate token values\") }"
+            "There is no ${property.name} property in the ${theme.name} theme. To fix this: 1. Create a design property: val ${property.name} = ThemeProperty<Type>(\"${property.name}\"), 2. Pass it to your theme definition: buildTheme { properties[${property.name}] = mapOf(${property.name} to TODO(\"Give ${property.name} a value\")) }"
         )
     }
 }

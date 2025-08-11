@@ -18,38 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.composables.core.Icon
+import com.composables.icons.lucide.ArrowLeft
+import com.composables.icons.lucide.Lucide
 import com.composeunstyled.Button
+import com.composeunstyled.Icon
 import com.composeunstyled.Text
-import com.composeunstyled.theme.buildTheme
-import com.composeunstyled.theme.rememberColoredIndication
-import composeunstyled.demo.generated.resources.Inter
-import composeunstyled.demo.generated.resources.Res
-import org.jetbrains.compose.resources.Font
-
-val DemoTheme = buildTheme {
-    defaultIndication = rememberColoredIndication(
-        hoveredColor = Color.White.copy(alpha = 0.3f),
-        pressedColor = Color.White.copy(alpha = 0.5f),
-        focusedColor = Color.Black.copy(alpha = 0.1f),
-    )
-
-    defaultTextStyle = TextStyle(
-        fontFamily = FontFamily(Font(Res.font.Inter)),
-    )
-}
 
 @Composable
 fun Demo(demoId: String? = null) {
@@ -169,7 +149,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
             shape = CircleShape,
             contentPadding = PaddingValues(12.dp),
         ) {
-            Icon(ArrowLeft, contentDescription = "Go back")
+            Icon(Lucide.ArrowLeft, contentDescription = "Go back")
         }
         Spacer(Modifier.width(8.dp))
         Text(title, fontWeight = FontWeight.Medium, fontSize = 18.sp)
@@ -195,51 +175,3 @@ private fun OutlinedButton(
         content()
     }
 }
-
-
-private val ArrowLeft: ImageVector
-    get() {
-        if (_ArrowLeft != null) {
-            return _ArrowLeft!!
-        }
-        _ArrowLeft = ImageVector.Builder(
-            name = "ArrowLeft",
-            defaultWidth = 24.dp,
-            defaultHeight = 24.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(12f, 19f)
-                lineToRelative(-7f, -7f)
-                lineToRelative(7f, -7f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(19f, 12f)
-                horizontalLineTo(5f)
-            }
-        }.build()
-        return _ArrowLeft!!
-    }
-
-private var _ArrowLeft: ImageVector? = null

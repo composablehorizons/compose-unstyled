@@ -37,3 +37,4 @@ dependencyResolutionManagement {
 
 include(":core")
 include(":demo")
+include(":demo-xml-theme")
