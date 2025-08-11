@@ -153,16 +153,23 @@ internal fun TextStyle.mergeThemed(
     lineHeight: TextUnit = TextUnit.Unspecified,
     letterSpacing: TextUnit = TextUnit.Unspecified,
 ): TextStyle {
+    val textStyleColor = this.color
     val contentColor = LocalContentColor.current
 
+    val finalColor = if (ComposeUnstyledFlags.strictTextColorResolutionOrder) {
+        listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
+    } else {
+        listOf(color, contentColor, textStyleColor).firstOrNull { it.isSpecified } ?: Color.Unspecified
+    }
+
     return this.merge(
-        textAlign = listOf(textAlign, this.textAlign).firstOrNull { it != TextAlign.Unspecified }
-            ?: TextAlign.Unspecified,
+        textAlign = listOf(textAlign, this.textAlign)
+            .firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified,
         fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        color = listOf(color, contentColor, this.color).firstOrNull { it.isSpecified } ?: Color.Unspecified,
+        color = finalColor,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
         lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        letterSpacing = listOf(letterSpacing, this.letterSpacing).firstOrNull { it.isSpecified }
-            ?: TextUnit.Unspecified)
+        letterSpacing = listOf(letterSpacing, this.letterSpacing)
+            .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified)
 }
