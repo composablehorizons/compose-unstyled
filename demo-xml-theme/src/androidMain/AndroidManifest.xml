@@ -5,7 +5,7 @@
 
     <application>
         <activity
-                android:name="com.composeunstyled.demo.DemoActivity"
+                android:name="com.composeunstyled.demo.AndroidXmlDemoActivity"
                 android:windowSoftInputMode="adjustResize"
                 android:theme="@style/AppTheme"
                 android:exported="true">

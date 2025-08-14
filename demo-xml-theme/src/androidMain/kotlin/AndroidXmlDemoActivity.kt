@@ -24,7 +24,7 @@ import com.composeunstyled.ProvideTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.theme.*
 
-class DemoActivity : ComponentActivity() {
+class AndroidXmlDemoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
