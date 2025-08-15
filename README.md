@@ -4,7 +4,7 @@ Compose Unstyled is a library built on top of Compose Foundation that provides f
 
 ## Documentation
 
-For full documentation, checkout: https://composables.com/
+For full documentation, checkout: https://composables.com/compose-unstyled
 
 ## Community
 
