@@ -115,6 +115,7 @@ infix fun <T> ThemeToken<T>.provides(value: T): OverriddenValue<T> {
     return OverriddenValue(this, value)
 }
 
+@Deprecated("This function will go away in 2.0. Use ProvideTextStyle or ProvideContentColor instead which affects themable components instead of overriding your theme")
 @Composable
 fun ThemeOverride(
     vararg overriddenValues: OverriddenValue<*>,
@@ -126,7 +127,7 @@ fun ThemeOverride(
         val propertyEntry = updatedProperties.entries.find { (_, themeValues) ->
             themeValues.values.containsKey(overriddenValue.token)
         }
-        
+
         if (propertyEntry != null) {
             val (property, themeValues) = propertyEntry
             @Suppress("UNCHECKED_CAST")
@@ -137,7 +138,7 @@ fun ThemeOverride(
             updatedProperties[property] = updatedThemeValues
         }
     }
-    
+
     val updatedTheme = ResolvedTheme(currentTheme.name, updatedProperties)
 
     CompositionLocalProvider(LocalTheme provides updatedTheme) {
