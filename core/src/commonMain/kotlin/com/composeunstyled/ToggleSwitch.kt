@@ -1,6 +1,7 @@
 package com.composeunstyled
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -9,14 +10,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 
@@ -70,7 +73,6 @@ fun ToggleSwitch(
 ) {
     var trackWidth by remember { mutableStateOf(0.dp) }
     var thumbWidth by remember { mutableStateOf(0.dp) }
-
     val layoutDirection = LocalLayoutDirection.current
 
     val paddingStart = contentPadding.calculateStartPadding(layoutDirection)
@@ -79,7 +81,17 @@ fun ToggleSwitch(
     val actualTrackWidth by derivedStateOf {
         trackWidth - paddingStart - paddingEnd
     }
-    val offset by animateDpAsState(if (toggled) actualTrackWidth - thumbWidth else 0.dp)
+
+    val hasMeasured by derivedStateOf {
+        trackWidth > 0.dp && thumbWidth > 0.dp
+    }
+
+    val targetOffset = if (toggled) actualTrackWidth - thumbWidth else 0.dp
+    val offset by if (hasMeasured) {
+        animateDpAsState(targetValue = targetOffset, animationSpec = tween())
+    } else {
+        remember { mutableStateOf(0.dp) }
+    }
 
     val density = LocalDensity.current
 
@@ -88,7 +100,7 @@ fun ToggleSwitch(
             .widthIn(min = 48.dp)
             .clip(shape)
             .background(backgroundColor, shape)
-            .onPlaced { trackWidth = with(density) { it.size.width.toDp() } }
+            .onSizeChanged { trackWidth = with(density) { it.width.toDp() } }
                 then buildModifier {
             if (onToggled != null) {
                 add(
@@ -107,8 +119,9 @@ fun ToggleSwitch(
     ) {
         Box(
             Modifier
-                .offset(x = offset)
-                .onPlaced { thumbWidth = with(density) { it.size.width.toDp() } }
+                .offset { IntOffset(offset.roundToPx(), 0) }
+                .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
+                .alpha(if (hasMeasured) 1f else 0f)
         ) {
             thumb()
         }
