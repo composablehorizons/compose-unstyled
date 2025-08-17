@@ -3,7 +3,6 @@ package com.composeunstyled.demo
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
@@ -16,16 +15,21 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
 import com.composeunstyled.Thumb
 import com.composeunstyled.ToggleSwitch
+import kotlinx.coroutines.delay
 
 @Composable
 fun ToggleSwitchDemo() {
     var toggled by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(500)
+        toggled = true
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
