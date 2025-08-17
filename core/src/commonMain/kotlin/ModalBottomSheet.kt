@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.AppearInstantly
@@ -277,6 +278,9 @@ fun ModalBottomSheet(
                     // start the scrim animation
                     scope.scrimVisibilityState.targetState = true
                 }
+
+                val softwareKeyboard = LocalSoftwareKeyboardController.current
+
                 Box(
                     Modifier
                         .fillMaxSize()
@@ -285,6 +289,7 @@ fun ModalBottomSheet(
                                 it.pointerInput(Unit) {
                                     detectTapGestures {
                                         if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
+                                            softwareKeyboard?.hide()
                                             onDismissRequest()
                                         }
                                     }
