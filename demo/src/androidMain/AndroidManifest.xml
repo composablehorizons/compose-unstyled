@@ -7,7 +7,7 @@
         <activity
                 android:name="com.composeunstyled.demo.DemoActivity"
                 android:windowSoftInputMode="adjustResize"
-                android:theme="@style/DemoTheme"
+                android:theme="@style/Theme.FullScreen"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

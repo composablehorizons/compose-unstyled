@@ -93,7 +93,7 @@ private fun DemoSelection() {
                 Column(
                     Modifier
                         .verticalScroll(rememberScrollState())
-                        .systemBarsPadding()
+                        .safeContentPadding()
                         .padding(16.dp)
                         .widthIn(max = 600.dp)
                         .fillMaxWidth(),
@@ -140,7 +140,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
         modifier = Modifier.fillMaxWidth()
             .shadow(12.dp)
             .background(Color.White)
-            .padding(WindowInsets.statusBars.asPaddingValues())
+            .padding(WindowInsets.safeContent.only(WindowInsetsSides.Top).asPaddingValues())
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
