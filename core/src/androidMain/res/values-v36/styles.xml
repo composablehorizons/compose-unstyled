@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Modal" parent="Modal.Base">
+        <item name="android:windowAnimationStyle">@style/Animation.HideIme</item>
+    </style>
+
+    <style name="Animation.HideIme" parent="">
+        <!--
+            On Android 36 the IME exit animation seems to be linked to the windowAnimationStyle.
+            If we do not set it, the ime just disappears instantly.
+            However, the windowExitAnimation seems to be applied to the IME as well, creating a ghosting effect.
+            To remove the ghosting, we set an animation with alpha 0 and some duration
+         -->
+        <item name="android:windowExitAnimation">@anim/no_animation</item>
+    </style>
+</resources>

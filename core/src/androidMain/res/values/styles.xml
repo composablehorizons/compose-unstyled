@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="TranslucentDialog">
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="Modal.Base" parent="">
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
 
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowEnterAnimation">@null</item>
-        <item name="android:windowExitAnimation">@null</item>
-
-        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -19,15 +14,17 @@
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
-    <declare-styleable name="TextAppearance" >
-        <attr name="android:textColor" />
-        <attr name="android:textSize" />
-        <attr name="android:textStyle" />
-        <attr name="android:typeface" />
-        <attr name="android:fontFamily" />
-        <attr name="android:shadowColor" />
-        <attr name="android:shadowDx" />
-        <attr name="android:shadowDy" />
-        <attr name="android:shadowRadius" />
+    <style name="Modal" parent="Modal.Base"/>
+
+    <declare-styleable name="TextAppearance">
+        <attr name="android:textColor"/>
+        <attr name="android:textSize"/>
+        <attr name="android:textStyle"/>
+        <attr name="android:typeface"/>
+        <attr name="android:fontFamily"/>
+        <attr name="android:shadowColor"/>
+        <attr name="android:shadowDx"/>
+        <attr name="android:shadowDy"/>
+        <attr name="android:shadowRadius"/>
     </declare-styleable>
 </resources>

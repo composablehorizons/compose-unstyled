@@ -51,7 +51,7 @@ actual fun Modal(
     DisposableEffect(parentView) {
         val contentView: ComposeView
 
-        val dialog = ComponentDialog(context, R.style.TranslucentDialog).apply {
+        val dialog = ComponentDialog(context, R.style.Modal).apply {
             contentView = ComposeView(context).apply {
                 setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
                 setParentCompositionContext(composition)
@@ -74,10 +74,12 @@ actual fun Modal(
                         focusRequester.requestFocus()
                     }
 
-                    Box(Modifier
-                        .focusRequester(focusRequester)
-                        .fillMaxSize()
-                        .onKeyEvent(onKeyEvent)) {
+                    Box(
+                        Modifier
+                            .focusRequester(focusRequester)
+                            .fillMaxSize()
+                            .onKeyEvent(onKeyEvent)
+                    ) {
                         CompositionLocalProvider(LocalModalWindow provides localWindow) {
                             content()
                         }
@@ -105,9 +107,6 @@ actual fun Modal(
             @Suppress("DEPRECATION")
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
-
-        window.setDimAmount(0f)
-        window.setWindowAnimations(-1)
 
         dialog.show()
 
