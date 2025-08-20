@@ -222,7 +222,7 @@ val DoNothing: () -> Unit = {}
  *
  * @param state The [ModalBottomSheetState] that controls the sheet.
  * @param properties The [ModalSheetProperties] that control the behavior of the sheet.
- * @param onDismiss Callback that is called when the sheet is dismissed.
+ * @param onDismiss Callback that is called right before the sheet is about to be dismissed.
  * @param content The content of the modal
  */
 @Composable
@@ -232,9 +232,9 @@ fun ModalBottomSheet(
     onDismiss: () -> Unit = DoNothing,
     content: @Composable (ModalBottomSheetScope.() -> Unit),
 ) {
-    val currentCallback by rememberUpdatedState(onDismiss)
+    val currentDismissCallback by rememberUpdatedState(onDismiss)
 
-    CompositionLocalProvider(LocalModalContext provides ModalContext(currentCallback)) {
+    CompositionLocalProvider(LocalModalContext provides ModalContext(currentDismissCallback)) {
         val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
 
         val isSheetVisible = state.isIdle.not() || state.targetDetent != SheetDetent.Hidden
@@ -252,6 +252,7 @@ fun ModalBottomSheet(
                 }
             }
             fun onDismissRequest() {
+                currentDismissCallback()
                 scope.scrimVisibilityState.targetState = false
                 scope.sheetState.targetDetent = SheetDetent.Hidden
             }
