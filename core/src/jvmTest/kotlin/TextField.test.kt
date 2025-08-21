@@ -73,4 +73,24 @@ class TextFieldTest {
         onNodeWithTag("textfield").performTextInput("A")
         onNodeWithTag("textfield").assertTextEquals("A")
     }
+
+    @Test
+    fun changingValueUpdatesRenderedText() = runComposeUiTest {
+        var text by mutableStateOf("initial")
+        setContent {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                modifier = Modifier.testTag("textfield")
+            ) {
+                TextInput()
+            }
+        }
+
+        onNodeWithTag("textfield").assertTextEquals("initial")
+
+        text = "updated"
+
+        onNodeWithTag("textfield").assertTextEquals("updated")
+    }
 }
