@@ -175,8 +175,8 @@ class SheetDetent(
 }
 
 class BottomSheetState(
-    initialDetent: SheetDetent,
-    internal val detents: List<SheetDetent>,
+    val initialDetent: SheetDetent,
+    val detents: List<SheetDetent>,
     private val coroutineScope: CoroutineScope,
     animationSpec: AnimationSpec<Float>,
     velocityThreshold: () -> Float,
