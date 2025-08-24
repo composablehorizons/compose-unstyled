@@ -1,9 +1,9 @@
 package com.composables.core
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
@@ -20,8 +20,7 @@ class TextFieldTest {
     fun movesFocusToInputWhenTextFieldIsFocused() = runComposeUiTest {
         setContent {
             TextField(
-                value = "",
-                onValueChange = {},
+                state = rememberTextFieldState(),
                 modifier = Modifier.testTag("textfield"),
             ) {
                 TextInput()
@@ -35,8 +34,7 @@ class TextFieldTest {
     fun keepsFocusWhenTextFieldIsFocusedAndTrailingIsSpecified() = runComposeUiTest {
         setContent {
             TextField(
-                value = "",
-                onValueChange = {},
+                state = rememberTextFieldState(),
                 modifier = Modifier.testTag("textfield"),
             ) {
                 TextInput(
@@ -56,12 +54,10 @@ class TextFieldTest {
 
     @Test
     fun typingTextWhileTextFieldIsFocused_entersText() = runComposeUiTest {
-        var text by mutableStateOf("")
+        val state = TextFieldState("")
         setContent {
-
             TextField(
-                value = text,
-                onValueChange = { text = it },
+                state = state,
                 modifier = Modifier.testTag("textfield")
                     // setting size as test can't click otherwise
                     .size(50.dp),
@@ -76,11 +72,10 @@ class TextFieldTest {
 
     @Test
     fun changingValueUpdatesRenderedText() = runComposeUiTest {
-        var text by mutableStateOf("initial")
+        val state = TextFieldState("initial")
         setContent {
             TextField(
-                value = text,
-                onValueChange = { text = it },
+                state = state,
                 modifier = Modifier.testTag("textfield")
             ) {
                 TextInput()
@@ -89,7 +84,7 @@ class TextFieldTest {
 
         onNodeWithTag("textfield").assertTextEquals("initial")
 
-        text = "updated"
+        state.setTextAndPlaceCursorAtEnd("updated")
 
         onNodeWithTag("textfield").assertTextEquals("updated")
     }

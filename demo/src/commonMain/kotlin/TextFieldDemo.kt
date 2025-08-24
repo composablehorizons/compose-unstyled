@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +27,8 @@ import com.composeunstyled.TextInput
 
 @Composable
 fun TextFieldDemo() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email = rememberTextFieldState()
+    val password = rememberTextFieldState()
     var showPassword by remember { mutableStateOf(false) }
 
     Box(
@@ -51,8 +52,7 @@ fun TextFieldDemo() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    state = email,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -71,8 +71,7 @@ fun TextFieldDemo() {
                 }
 
                 TextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    state = password,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()

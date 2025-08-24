@@ -1,14 +1,12 @@
 package com.composeunstyled
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +18,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -224,6 +223,7 @@ fun TextField(
     }
 }
 
+@Deprecated("This will go to 2.0. Stateless TextFields in Compose do not work correctly in all languages and cause duplication characters and unexpected behaviors")
 @Composable
 fun TextField(
     value: String,
@@ -384,6 +384,96 @@ fun TextFieldScope.TextInput(
                     Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged { isTrailingFocused = it.hasFocus }) {
                     trailing()
                 }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun TextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    editable: Boolean = true,
+    cursorBrush: Brush = SolidColor(Color.Black),
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onKeyboardAction: KeyboardActionHandler? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    interactionSource: MutableInteractionSource? = null,
+    textColor: Color = Color.Unspecified,
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable TextFieldScope.() -> Unit,
+) {
+    val scope = remember { TextFieldScope() }
+
+    scope.text = state.text.toString()
+    scope.editable = editable
+
+    val newTextStyle = textStyle.mergeThemed(
+        textAlign = textAlign,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        lineHeight = lineHeight,
+        letterSpacing = letterSpacing,
+        color = textColor
+    )
+    scope.textAlignment = newTextStyle.textAlign
+    scope.minLines = minLines
+    scope.maxLines = maxLines
+
+    ProvideTextStyle(newTextStyle) {
+        if (editable) {
+            val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
+
+            BasicTextField(
+                scrollState = scrollState,
+                state = state,
+                interactionSource = interactionSource,
+                textStyle = newTextStyle,
+                outputTransformation = {
+                    val transformedText = visualTransformation.filter(AnnotatedString(originalText.toString()))
+                    replace(0, length, transformedText.text)
+                },
+                inputTransformation = InputTransformation {
+                    // block any value changes, unless the actual text input is focused
+                    if (inputIsFocused.not()) {
+                        revertAllChanges()
+                    }
+                },
+                modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
+                cursorBrush = cursorBrush,
+                lineLimits = if (singleLine) {
+                    TextFieldLineLimits.SingleLine
+                } else {
+                    TextFieldLineLimits.MultiLine(minLines, maxLines)
+                },
+                keyboardOptions = keyboardOptions,
+                onKeyboardAction = onKeyboardAction,
+                decorator = { innerTextField ->
+                    scope.innerTextField = innerTextField
+                    Column(
+                        Modifier
+                            // we are handling pointerIcons in TextInput()
+                            .pointerHoverIcon(PointerIcon.Default)
+                    ) {
+                        scope.content()
+                    }
+                }
+            )
+        } else {
+            Column(modifier) {
+                scope.content()
             }
         }
     }
