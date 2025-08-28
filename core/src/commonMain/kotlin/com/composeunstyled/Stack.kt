@@ -22,7 +22,7 @@ fun Stack(
     modifier: Modifier = Modifier,
     orientation: StackOrientation = StackOrientation.Horizontal,
     mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
-    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Center,
+    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
     spacing: Dp = 0.dp,
     content: @Composable StackScope.() -> Unit,
 ) {
