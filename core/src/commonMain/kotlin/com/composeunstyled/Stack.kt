@@ -1,5 +1,6 @@
 package com.composeunstyled
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -83,7 +84,10 @@ private fun rememberVerticalArrangement(mainAxisAlignment: MainAxisArrangement, 
     }
 }
 
-private fun mainAxisToHorizontalArrangement(mainAxisAlignment: MainAxisArrangement, spacing: Dp): Arrangement.Horizontal {
+private fun mainAxisToHorizontalArrangement(
+    mainAxisAlignment: MainAxisArrangement,
+    spacing: Dp
+): Arrangement.Horizontal {
     return when (mainAxisAlignment) {
         MainAxisArrangement.Start -> Arrangement.spacedBy(spacing)
         MainAxisArrangement.Center -> Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
@@ -136,7 +140,19 @@ private fun crossAxisToVerticalAlignment(crossAxisAlignment: CrossAxisAlignment)
 }
 
 interface StackScope {
-    fun Modifier.weight(weight: Float, fill: Boolean): Modifier
+    /**
+     * Size the element's main axis dimension proportional to its [weight] relative to other weighted sibling
+     * elements in the [Stack]. The parent will divide the space remaining after measuring
+     * unweighted child elements and distribute it according to this weight. When [fill] is true,
+     * the element will be forced to occupy the whole space allocated to it. Otherwise, the element
+     * is allowed to be smaller - this will result in [Stack] being smaller, as the unused allocated
+     * space will not be redistributed to other siblings.
+     *
+     * @param weight The proportional space to give to this element, as related to the total of all
+     *   weighted siblings. Must be positive.
+     * @param fill When `true`, the element will occupy the whole space allocated.
+     */
+    fun Modifier.weight(@FloatRange(from = 0.0, fromInclusive = false) weight: Float, fill: Boolean = true): Modifier
 }
 
 private class RowStackScope(private val rowScope: RowScope) : StackScope {
