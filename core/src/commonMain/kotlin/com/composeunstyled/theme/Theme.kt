@@ -7,7 +7,9 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.LocalMinimumComponentInteractiveSize
 import com.composeunstyled.LocalTextStyle
 
 
@@ -60,6 +62,7 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 
         val indication = builder.defaultIndication ?: LocalIndication.current
         val textSelectionColors = builder.defaultTextSelectionColors ?: LocalTextSelectionColors.current
+        val minimumComponentInteractiveSize = builder.defaultMinimumComponentInteractiveSize
 
         val theme = ResolvedTheme(builder.name, allProperties)
 
@@ -68,7 +71,8 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
             LocalIndication provides indication,
             LocalTextStyle provides builder.defaultTextStyle,
             LocalContentColor provides builder.defaultContentColor,
-            LocalTextSelectionColors provides textSelectionColors
+            LocalTextSelectionColors provides textSelectionColors,
+            LocalMinimumComponentInteractiveSize provides minimumComponentInteractiveSize,
         ) {
             content()
         }
@@ -91,12 +95,10 @@ class ThemeBuilder internal constructor() {
     var name: String = "Theme"
 
     var defaultIndication: Indication? by mutableStateOf(null)
-
     var defaultTextStyle: TextStyle by mutableStateOf(TextStyle.Default)
-
     var defaultContentColor: Color by mutableStateOf(Color.Unspecified)
-
     var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
+    var defaultMinimumComponentInteractiveSize: Dp by mutableStateOf(Dp.Unspecified)
 
     val properties = MutableThemeProperties()
 }
