@@ -67,6 +67,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.androidx.activitycompose)
+            implementation(libs.androidx.window)
         }
 
 
