@@ -8,6 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Stack places its children either horizontally or vertically depending on the given [orientation].
+ *
+ * In other words, it works as a [Row] or [Column] depending on the [orientation].
+ *
+ * @param mainAxisArrangement controls the arrangement of the stack's children on the main axis. ie if the [orientation] is Horizontal, this will control the children on the **horizontal** axis.
+ * @param crossAxisAlignment controls the arrangement of the stack's children on the opposite axis of [orientation]. ie if the [orientation] is Horizontal, this will control the children on the **vertical** axis.
+ * @param spacing Spacing between the children. **This does nothing if** the given [mainAxisArrangement] is [MainAxisArrangement.SpaceEvenly], [MainAxisArrangement.SpaceBetween] or [MainAxisArrangement.SpaceAround]
+ */
 @Composable
 fun Stack(
     modifier: Modifier = Modifier,
