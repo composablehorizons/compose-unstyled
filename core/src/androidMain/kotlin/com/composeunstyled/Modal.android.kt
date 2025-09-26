@@ -58,7 +58,6 @@ actual fun Modal(
                 setContent {
                     val localWindow = window
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
-                    val focusRequester = remember { FocusRequester() }
 
                     BackHandler(
                         onBack = {
@@ -70,16 +69,7 @@ actual fun Modal(
                         }
                     )
 
-                    LaunchedEffect(Unit) {
-                        focusRequester.requestFocus()
-                    }
-
-                    Box(
-                        Modifier
-                            .focusRequester(focusRequester)
-                            .fillMaxSize()
-                            .onKeyEvent(onKeyEvent)
-                    ) {
+                    Box(Modifier.fillMaxSize().onKeyEvent(onKeyEvent)) {
                         CompositionLocalProvider(LocalModalWindow provides localWindow) {
                             content()
                         }

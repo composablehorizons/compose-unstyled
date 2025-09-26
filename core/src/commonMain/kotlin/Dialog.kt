@@ -17,6 +17,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -154,8 +156,14 @@ fun Dialog(
             { false }
         }
         Modal(onKeyEvent = onKeyEvent) {
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .focusRequester(focusRequester)
                     .then(
                         if (properties.dismissOnClickOutside) {
                             Modifier.pointerInput(Unit) {
