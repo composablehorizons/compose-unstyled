@@ -274,8 +274,8 @@ fun ModalBottomSheet(
 
             Modal(onKeyEvent = onKeyEvent) {
                 LaunchedEffect(Unit) {
-                    // modal entered the composition
-                    // start the scrim animation
+                    // wait for the dialog to settle. can't start animation immediately
+                    delay(50)
                     scope.scrimVisibilityState.targetState = true
                 }
                 Box(
