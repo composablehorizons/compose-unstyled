@@ -84,4 +84,28 @@ class ModalBottomSheetTest {
         onNodeWithTag("sheet").assertWidthIsEqualTo(150.dp)
         onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
     }
+
+    @Test
+    fun scrimAnimatesInWhenSheetIsShown() = runComposeUiTest {
+        var state: ModalBottomSheetState? = null
+        setContent {
+            state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
+
+            ModalBottomSheet(state) {
+                Scrim(Modifier.testTag("scrim"))
+                Sheet {
+                    Box(Modifier.testTag("sheet_contents").size(40.dp))
+                }
+            }
+        }
+
+        onNodeWithTag("scrim").assertDoesNotExist()
+
+        runOnIdle {
+            requireNotNull(state).targetDetent = SheetDetent.FullyExpanded
+        }
+
+        waitUntil { requireNotNull(state).isIdle }
+        onNodeWithTag("scrim").assertIsDisplayed()
+    }
 }
