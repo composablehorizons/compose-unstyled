@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.*
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -443,7 +446,14 @@ fun TextField(
                 textStyle = newTextStyle,
                 outputTransformation = {
                     val transformedText = visualTransformation.filter(AnnotatedString(originalText.toString()))
-                    replace(0, length, transformedText.text)
+                    val newText = transformedText.text.text
+
+                    val originalString = originalText.toString()
+                    for (i in originalString.indices) {
+                        if (i < newText.length) {
+                            replace(i, i + 1, newText[i].toString())
+                        }
+                    }
                 },
                 inputTransformation = InputTransformation {
                     // block any value changes, unless the actual text input is focused

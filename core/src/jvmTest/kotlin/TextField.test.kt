@@ -4,9 +4,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Button
 import com.composeunstyled.Text
@@ -87,5 +92,26 @@ class TextFieldTest {
         state.setTextAndPlaceCursorAtEnd("updated")
 
         onNodeWithTag("textfield").assertTextEquals("updated")
+    }
+
+    @Test
+    fun visualTransformationTransformText() = runComposeUiTest {
+        val state = TextFieldState("secret")
+        var visualTransformation by mutableStateOf(VisualTransformation.None)
+        setContent {
+            TextField(
+                state = state,
+                modifier = Modifier.testTag("textfield"),
+                visualTransformation = visualTransformation
+            ) {
+                TextInput()
+            }
+        }
+
+        onNodeWithTag("textfield").assertTextEquals("secret")
+
+        visualTransformation = PasswordVisualTransformation()
+
+        onNodeWithTag("textfield").assertTextEquals("••••••")
     }
 }
