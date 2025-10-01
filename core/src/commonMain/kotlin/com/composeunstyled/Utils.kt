@@ -36,3 +36,6 @@ fun ProvideTextStyle(textStyle: TextStyle, content: @Composable () -> Unit) {
 
 internal val KeyEvent.isKeyDown: Boolean
     get() = type == KeyEventType.KeyDown
+
+
+internal expect val isTouchDevice: Boolean

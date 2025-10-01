@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.isSpecified
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.LocalMinimumComponentInteractiveSize
 import com.composeunstyled.LocalTextStyle
@@ -62,7 +63,21 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 
         val indication = builder.defaultIndication ?: LocalIndication.current
         val textSelectionColors = builder.defaultTextSelectionColors ?: LocalTextSelectionColors.current
-        val minimumComponentInteractiveSize = builder.defaultMinimumComponentInteractiveSize
+
+        val legacyTouchInteractiveSize = builder.defaultMinimumComponentInteractiveSize
+        val minInteractiveSize = builder.defaultComponentInteractiveSize
+
+        val finalInteractiveSize = if (legacyTouchInteractiveSize.isSpecified) {
+            ComponentInteractiveSize(
+                nonTouchInteractionSize = legacyTouchInteractiveSize,
+                touchInteractionSize = legacyTouchInteractiveSize
+            )
+        } else {
+            ComponentInteractiveSize(
+                nonTouchInteractionSize = minInteractiveSize.touchInteractionSize,
+                touchInteractionSize = minInteractiveSize.nonTouchInteractionSize
+            )
+        }
 
         val theme = ResolvedTheme(builder.name, allProperties)
 
@@ -72,7 +87,7 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
             LocalTextStyle provides builder.defaultTextStyle,
             LocalContentColor provides builder.defaultContentColor,
             LocalTextSelectionColors provides textSelectionColors,
-            LocalMinimumComponentInteractiveSize provides minimumComponentInteractiveSize,
+            LocalMinimumComponentInteractiveSize provides finalInteractiveSize,
         ) {
             content()
         }
@@ -90,6 +105,17 @@ internal val LocalTheme =
 @DslMarker
 annotation class ThemeBuilderMarker
 
+/**
+ * The preferred minimum size of components for interactivity purposes.
+ *
+ * @param [nonTouchInteractionSize] the size to be applied to components when running on a non-touch device (such as Desktop and Web)
+ * @param [touchInteractionSize] the size to be applied to components when running on a touch based device (such as Android and iOS)
+ */
+data class ComponentInteractiveSize(
+    val nonTouchInteractionSize: Dp = Dp.Unspecified,
+    val touchInteractionSize: Dp = Dp.Unspecified
+)
+
 @ThemeBuilderMarker
 class ThemeBuilder internal constructor() {
     var name: String = "Theme"
@@ -98,7 +124,18 @@ class ThemeBuilder internal constructor() {
     var defaultTextStyle: TextStyle by mutableStateOf(TextStyle.Default)
     var defaultContentColor: Color by mutableStateOf(Color.Unspecified)
     var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
+
+    @Deprecated("This will go away in 2.0. Use defaultComponentInteractiveSize instead for specifying the size for touch and non-touch targets instead.")
     var defaultMinimumComponentInteractiveSize: Dp by mutableStateOf(Dp.Unspecified)
+
+    /**
+     * Specifies the minimum size of components.
+     *
+     * To apply the sizing to your composables, use the `Modifier.minimumInteractiveComponentSize()`.
+     */
+    var defaultComponentInteractiveSize: ComponentInteractiveSize by mutableStateOf(
+        ComponentInteractiveSize(Dp.Unspecified, Dp.Unspecified)
+    )
 
     val properties = MutableThemeProperties()
 }
