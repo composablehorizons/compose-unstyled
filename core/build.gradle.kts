@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.dokka)
     id("maven-publish")
     id("signing")
 }
@@ -115,14 +114,9 @@ android {
     }
 }
 
-val dokkaOutputDir = buildDir.resolve("dokka")
-tasks.dokkaHtml { outputDirectory.set(file(dokkaOutputDir)) }
-val deleteDokkaOutputDir by tasks.register<Delete>("deleteDokkaOutputDirectory") { delete(dokkaOutputDir) }
 val javadocJar = tasks.create<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    dependsOn(deleteDokkaOutputDir, tasks.dokkaHtml)
-    from(dokkaOutputDir)
 }
 
 group = publishGroupId
