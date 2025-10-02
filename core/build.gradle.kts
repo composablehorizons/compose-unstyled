@@ -28,11 +28,6 @@ java {
 }
 
 kotlin {
-    jvmToolchain {
-        vendor = JvmVendorSpec.JETBRAINS
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-
     androidTarget {
         publishLibraryVariants("release", "debug")
         compilerOptions {
