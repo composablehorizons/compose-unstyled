@@ -31,6 +31,7 @@ import com.composeunstyled.AppearInstantly
 import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Modal
+import com.composeunstyled.NoPadding
 
 
 /**
@@ -198,7 +199,7 @@ fun DialogScope.DialogPanel(
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = NoPadding,
     content: @Composable () -> Unit
 ) {
     AnimatedVisibility(

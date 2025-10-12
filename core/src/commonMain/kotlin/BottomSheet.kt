@@ -36,6 +36,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.NoPadding
 import com.composeunstyled.buildModifier
 import kotlin.jvm.JvmName
 import kotlin.math.roundToInt
@@ -383,7 +384,7 @@ fun BottomSheet(
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = NoPadding,
     imeAware: Boolean = false,
     content: @Composable (BottomSheetScope.() -> Unit),
 ) {

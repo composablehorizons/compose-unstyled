@@ -120,7 +120,7 @@ fun TabGroupScope.TabList(
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = NoPadding,
     orientation: Orientation = Orientation.Horizontal,
     activateOnFocus: Boolean = true,
     content: @Composable RowScope.() -> Unit
@@ -273,7 +273,7 @@ fun TabGroupScope.Tab(
     enabled: Boolean = true,
     indication: Indication = LocalIndication.current,
     interactionSource: MutableInteractionSource? = null,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = NoPadding,
     backgroundColor: Color = Color.Unspecified,
     contentColor: Color = Color.Unspecified,
     shape: Shape = RectangleShape,

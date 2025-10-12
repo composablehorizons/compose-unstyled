@@ -333,7 +333,7 @@ fun TextFieldScope.TextInput(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = NoPadding,
     contentColor: Color = Color.Unspecified,
     label: String? = null,
     placeholder: (@Composable () -> Unit)? = null,
