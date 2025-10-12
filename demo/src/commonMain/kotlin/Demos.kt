@@ -11,13 +11,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,6 +56,7 @@ private val availableComponents = listOf(
     AvailableComponent("Separators", "separators", { SeparatorsDemo() }),
     AvailableComponent("Slider", "slider", { SliderDemo() }),
     AvailableComponent("Tab Group", "tabgroup", { TabGroupDemo() }),
+    AvailableComponent("Tooltip", "tooltip", { TooltipDemo() }),
     AvailableComponent("Text", "text", { TextDemo() }),
     AvailableComponent("Text Field", "textfield", { TextFieldDemo() }),
     AvailableComponent("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() })
@@ -115,17 +112,8 @@ private fun DemoSelection() {
             composable(component.id) {
                 Column {
                     AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
-                    val focusRequester = remember { FocusRequester() }
 
-                    LaunchedEffect(Unit) {
-                        focusRequester.requestFocus()
-                    }
-                    Box(
-                        Modifier
-                            .focusRequester(focusRequester)
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
+                    Box(Modifier.fillMaxWidth().weight(1f)) {
                         component.demo()
                     }
                 }

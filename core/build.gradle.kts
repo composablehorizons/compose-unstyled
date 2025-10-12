@@ -4,6 +4,7 @@
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     alias(libs.plugins.compose)
@@ -33,6 +34,7 @@ kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
     jvm()
@@ -64,12 +66,21 @@ kotlin {
             implementation(libs.androidx.window)
         }
 
+        androidInstrumentedTest.dependencies {
+            implementation("androidx.compose.ui:ui-test-junit4-android:1.8.2")
+            implementation("androidx.compose.ui:ui-test-manifest:1.8.2")
+        }
 
         applyDefaultHierarchyTemplate {
             common {
                 group("cmp") {
                     withJvm()
                     withIos()
+                    withWasmJs()
+                    withJs()
+                }
+
+                group("web") {
                     withWasmJs()
                     withJs()
                 }
@@ -80,6 +91,9 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
         }
 
+        webMain.dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
+        }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -106,6 +120,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
