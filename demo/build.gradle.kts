@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.hotreload)
-    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
 }
 
@@ -21,13 +21,16 @@ kotlin {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(17)
     }
-    js(IR) {
+    js {
         browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            distribution {
+                outputDirectory = File("$rootDirPath/dist/${project.name}")
+            }
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
-                val rootDirPath = project.rootDir.path
-                val projectDirPath = project.projectDir.path
-                outputPath = File("$rootDirPath/docs/demo")
+
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
@@ -35,7 +38,6 @@ kotlin {
                         add(projectDirPath)
                     }
                 }
-
             }
         }
         binaries.executable()
@@ -64,15 +66,12 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
             implementation(libs.composables.icons.lucide)
 
-            // Material 3 compose used for the ripple effect
-            implementation(compose.material3)
-
+            implementation(libs.alexstyl.coil)
         }
 
         val desktopMain by getting {
@@ -86,6 +85,7 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
+                implementation(compose.material3)
                 implementation(libs.androidx.activitycompose)
             }
         }
@@ -104,10 +104,10 @@ compose.desktop {
 
 android {
     namespace = "com.composeunstyled.demo"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = libs.versions.android.compileSDK.get().toInt()
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSDK.get().toInt()
+        targetSdk = libs.versions.android.compileSDK.get().toInt()
         applicationId = "com.composeunstyled.demo"
         versionCode = 1
         versionName = "1.0.0"

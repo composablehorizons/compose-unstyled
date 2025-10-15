@@ -1,10 +1,19 @@
 package com.composeunstyled.demo
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,15 +23,17 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.composables.core.*
+import com.composables.core.Separator
+import com.composables.icons.lucide.ChevronDown
+import com.composables.icons.lucide.Lucide
 import com.composeunstyled.Disclosure
 import com.composeunstyled.DisclosureHeading
 import com.composeunstyled.DisclosurePanel
+import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.rememberDisclosureState
 
@@ -69,7 +80,7 @@ fun DisclosureDemo() {
 
                         val degrees by animateFloatAsState(if (state.expanded) -180f else 0f, tween())
                         Icon(
-                            imageVector = ChevronDown,
+                            imageVector = Lucide.ChevronDown,
                             contentDescription = null,
                             modifier = Modifier.rotate(degrees)
                         )
@@ -90,36 +101,3 @@ fun DisclosureDemo() {
         }
     }
 }
-
-val ChevronDown: ImageVector
-    get() {
-        if (_ChevronDown != null) {
-            return _ChevronDown!!
-        }
-        _ChevronDown = ImageVector.Builder(
-            name = "ChevronDown",
-            defaultWidth = 24.dp,
-            defaultHeight = 24.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color.Black.copy(0.66f)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(6f, 9f)
-                lineToRelative(6f, 6f)
-                lineToRelative(6f, -6f)
-            }
-        }.build()
-        return _ChevronDown!!
-    }
-
-private var _ChevronDown: ImageVector? = null

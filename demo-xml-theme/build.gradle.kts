@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.hotreload)
-    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
 }
 
@@ -105,10 +105,10 @@ compose.desktop {
 
 android {
     namespace = "com.composeunstyled.demo"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = libs.versions.android.compileSDK.get().toInt()
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSDK.get().toInt()
+        targetSdk = libs.versions.android.compileSDK.get().toInt()
         applicationId = "com.composeunstyled.demo"
         versionCode = 1
         versionName = "1.0.0"

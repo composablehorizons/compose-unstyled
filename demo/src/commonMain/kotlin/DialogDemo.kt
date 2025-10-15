@@ -6,7 +6,16 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +47,7 @@ fun DialogDemo() {
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
             shape = RoundedCornerShape(6.dp)
         ) {
-            Text("Show dialog", fontWeight = FontWeight(500),color = Color(0xFF1A1A1A))
+            Text("Show dialog", fontWeight = FontWeight(500), color = Color(0xFF1A1A1A))
         }
         Dialog(state = dialogState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
@@ -47,9 +56,10 @@ fun DialogDemo() {
                 contentColor = Color.Black,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
+                    .padding(20.dp)
                     .displayCutoutPadding()
                     .systemBarsPadding()
-                    .widthIn(min = 280.dp, max = 560.dp)
+                    .widthIn(max = 560.dp)
                     .padding(20.dp),
                 enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
                 exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
@@ -69,7 +79,7 @@ fun DialogDemo() {
                         shape = RoundedCornerShape(6.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                     ) {
-                        Text("Update", color = Color(0xFF0D99FF),fontWeight = FontWeight.Medium)
+                        Text("Update", color = Color(0xFF0D99FF), fontWeight = FontWeight.Medium)
                     }
                 }
             }

@@ -8,7 +8,17 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -18,12 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composables.core.Icon
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Volume1
+import com.composables.icons.lucide.Volume2
 import com.composeunstyled.Button
+import com.composeunstyled.Icon
 import com.composeunstyled.Slider
 import com.composeunstyled.Thumb
 import com.composeunstyled.rememberSliderState
@@ -39,7 +51,7 @@ fun SliderDemo() {
         val isFocused by interactionSource.collectIsFocusedAsState()
         val isPressed by interactionSource.collectIsPressedAsState()
 
-        val state = rememberSliderState(0.7f)
+        val state = rememberSliderState(initialValue = 0.7f)
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -53,7 +65,7 @@ fun SliderDemo() {
                 backgroundColor = Color.White,
                 contentPadding = PaddingValues(8.dp),
             ) {
-                Icon(VolumeDown, "Decrease")
+                Icon(Lucide.Volume1, "Decrease")
             }
 
             Slider(
@@ -116,127 +128,8 @@ fun SliderDemo() {
                 backgroundColor = Color.White,
                 contentPadding = PaddingValues(8.dp),
             ) {
-                Icon(VolumeUp, "Increase")
+                Icon(Lucide.Volume2, "Increase")
             }
         }
     }
 }
-
-private val VolumeDown: ImageVector
-    get() {
-        if (_VolumeDown != null) {
-            return _VolumeDown!!
-        }
-        _VolumeDown = ImageVector.Builder(
-            name = "Volume1",
-            defaultWidth = 24.dp,
-            defaultHeight = 24.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(11f, 5f)
-                lineTo(6f, 9f)
-                lineTo(2f, 9f)
-                lineTo(2f, 15f)
-                lineTo(6f, 15f)
-                lineTo(11f, 19f)
-                lineTo(11f, 5f)
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(15.54f, 8.46f)
-                arcToRelative(5f, 5f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, 7.07f)
-            }
-        }.build()
-        return _VolumeDown!!
-    }
-
-private var _VolumeDown: ImageVector? = null
-
-
-val VolumeUp: ImageVector
-    get() {
-        if (_VolumeUp != null) {
-            return _VolumeUp!!
-        }
-        _VolumeUp = ImageVector.Builder(
-            name = "Volume2",
-            defaultWidth = 24.dp,
-            defaultHeight = 24.dp,
-            viewportWidth = 24f,
-            viewportHeight = 24f
-        ).apply {
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(11f, 5f)
-                lineTo(6f, 9f)
-                lineTo(2f, 9f)
-                lineTo(2f, 15f)
-                lineTo(6f, 15f)
-                lineTo(11f, 19f)
-                lineTo(11f, 5f)
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(15.54f, 8.46f)
-                arcToRelative(5f, 5f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, 7.07f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 2f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(19.07f, 4.93f)
-                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, 14.14f)
-            }
-        }.build()
-        return _VolumeUp!!
-    }
-
-private var _VolumeUp: ImageVector? = null

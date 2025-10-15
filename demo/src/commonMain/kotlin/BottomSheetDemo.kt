@@ -2,8 +2,24 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -18,10 +34,10 @@ import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
-import com.composeunstyled.focusRing
 import com.composables.core.rememberBottomSheetState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.focusRing
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
@@ -71,7 +87,13 @@ fun BottomSheetDemo() {
                     interactionSource = interactionSource,
                     modifier = Modifier
                         .padding(top = 22.dp)
-                        .focusRing(interactionSource, width = 2.dp, Color(0XFF2563EB), RoundedCornerShape(100), offset = 4.dp)
+                        .focusRing(
+                            interactionSource,
+                            width = 2.dp,
+                            Color(0XFF2563EB),
+                            RoundedCornerShape(100),
+                            offset = 4.dp
+                        )
                         .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
                         .size(32.dp, 4.dp)
                 )
