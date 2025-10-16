@@ -31,6 +31,7 @@ import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Modal
 import com.composeunstyled.NoPadding
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Properties that control the behavior of a [ModalBottomSheet].
@@ -100,6 +101,8 @@ class ModalBottomSheetState(
 ) {
 
     internal var modalDetent by mutableStateOf(initialDetent)
+
+    val containerHeightFlow: Flow<Dp> = bottomSheetState.containerHeightFlow
 
     var currentDetent: SheetDetent
         get() {

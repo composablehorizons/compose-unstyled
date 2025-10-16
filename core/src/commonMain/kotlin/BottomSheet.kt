@@ -41,6 +41,9 @@ import com.composeunstyled.buildModifier
 import kotlin.jvm.JvmName
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 private fun Saver(
@@ -207,6 +210,11 @@ class BottomSheetState(
     internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
     internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
 
+    private val _containerHeightFlow = MutableSharedFlow<Dp>(
+        replay = 1,
+    )
+    val containerHeightFlow: Flow<Dp> = _containerHeightFlow.asSharedFlow()
+
     internal val anchoredDraggableState = UnstyledAnchoredDraggableState(
         initialValue = initialDetent,
         positionalThreshold = positionalThreshold,
@@ -308,18 +316,25 @@ class BottomSheetState(
 
         val anchors = UnstyledDraggableAnchors {
             with(density) {
-                closestDentToTop = Float.NaN
-
-                detents.forEach { detent ->
+                val processedDetents = detents.map { detent ->
                     val contentHeight = detent
                         .calculateDetentHeight(containerHeight, sheetHeight)
                         .coerceIn(0.dp, sheetHeight)
 
-                    val offsetDp = containerHeight - contentHeight
-                    val offset = offsetDp.toPx()
-                    if (closestDentToTop.isNaN() || closestDentToTop > offset) {
-                        closestDentToTop = offset
-                    }
+                    val offset = (containerHeight - contentHeight).toPx()
+
+                    Triple(detent, contentHeight, offset)
+                }
+
+                val maximumContentHeight = processedDetents.maxOfOrNull { it.second } ?: 0.dp
+
+                closestDentToTop = processedDetents.minOfOrNull { it.third } ?: Float.NaN
+
+                coroutineScope.launch {
+                    _containerHeightFlow.emit(maximumContentHeight)
+                }
+
+                processedDetents.forEach { (detent, _, offset) ->
                     detent at offset
                 }
             }
