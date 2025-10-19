@@ -11,4 +11,16 @@ object ComposeUnstyledFlags {
      * Will be enabled by default in 2.0
      */
     var strictTextColorResolutionOrder = false
+
+    /**
+     * Controls the default [androidx.compose.foundation.Indication] in [com.composeunstyled.theme.Theme]s created by the [com.composeunstyled.theme.buildTheme] function.
+     *
+     * When set to true, the default indication becomes [com.composeunstyled.theme.NoIndication]
+     *
+     * When false, the default indication is the current value of [androidx.compose.foundation.LocalIndication].
+     *
+     *
+     * Will be enabled by default in 2.0
+     */
+    var noDefaultThemeIndication = false
 }
