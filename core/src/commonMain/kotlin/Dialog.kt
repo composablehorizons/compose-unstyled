@@ -209,7 +209,6 @@ fun DialogScope.DialogPanel(
     ) {
         Box(
             modifier
-                .semantics { dialog() }
                 .clip(shape)
                 .background(backgroundColor)
                 .pointerInput(Unit) { detectTapGestures { } }
