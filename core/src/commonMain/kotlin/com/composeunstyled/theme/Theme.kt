@@ -79,8 +79,8 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
             )
         } else {
             ComponentInteractiveSize(
-                nonTouchInteractionSize = minInteractiveSize.touchInteractionSize,
-                touchInteractionSize = minInteractiveSize.nonTouchInteractionSize
+                touchInteractionSize = minInteractiveSize.touchInteractionSize,
+                nonTouchInteractionSize = minInteractiveSize.nonTouchInteractionSize,
             )
         }
 
