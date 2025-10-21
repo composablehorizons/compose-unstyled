@@ -121,6 +121,10 @@ data class ComponentInteractiveSize(
     val touchInteractionSize: Dp = Dp.Unspecified
 )
 
+fun ComponentInteractiveSize(size: Dp): ComponentInteractiveSize {
+    return ComponentInteractiveSize(size, size)
+}
+
 @ThemeBuilderMarker
 class ThemeBuilder internal constructor() {
     var name: String = "Theme"

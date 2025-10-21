@@ -7,8 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.composeunstyled.theme.ComponentInteractiveSize
 
-internal val LocalMinimumComponentInteractiveSize =
-    compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified, Dp.Unspecified) }
+internal val LocalMinimumComponentInteractiveSize = compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified) }
 
 /**
  * Sets the minimum size of the composable according to the currently resolved [com.composeunstyled.theme.Theme]
