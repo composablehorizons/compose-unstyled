@@ -29,6 +29,24 @@ fun rememberColoredIndication(
     }
 }
 
+@Composable
+fun rememberColoredIndication(
+    color: Color,
+    draggedAlpha: Float = 0.16f,
+    focusedAlpha: Float = 0.1f,
+    hoveredAlpha: Float = 0.08f,
+    pressedAlpha: Float = 0.1f,
+): IndicationNodeFactory {
+    return remember {
+        ColoredIndication(
+            hoveredColor = color.copy(alpha = hoveredAlpha),
+            pressedColor = color.copy(alpha = pressedAlpha),
+            focusedColor = color.copy(alpha = focusedAlpha),
+            draggedColor = color.copy(alpha = draggedAlpha)
+        )
+    }
+}
+
 class ColoredIndication(
     private val hoveredColor: Color,
     private val pressedColor: Color,
