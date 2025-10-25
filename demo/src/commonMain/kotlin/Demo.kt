@@ -11,15 +11,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -35,7 +32,6 @@ import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.rememberColoredIndication
-import org.jetbrains.compose.resources.Font
 
 val DemoTheme = buildTheme {
     defaultIndication = rememberColoredIndication(
@@ -48,7 +44,6 @@ val DemoTheme = buildTheme {
 //        fontFamily = FontFamily(Font(Res.font.Inter)),
 //    )
 }
-
 
 @Composable
 fun Demo(demoId: String? = null) {

@@ -6,11 +6,7 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,6 +34,7 @@ import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.NoPadding
+import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.buildModifier
 import kotlin.jvm.JvmName
 import kotlin.math.roundToInt
@@ -109,8 +106,7 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
-            localDensity = { density }
-        )
+            localDensity = { density })
     ) {
         BottomSheetState(
             initialDetent = initialDetent,
@@ -129,8 +125,7 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
-            density = { density }
-        )
+            density = { density })
     }
 }
 
@@ -142,15 +137,13 @@ fun rememberBottomSheetState(
  */
 @Immutable
 class SheetDetent(
-    val identifier: String,
-    val calculateDetentHeight: (containerHeight: Dp, sheetHeight: Dp) -> Dp
+    val identifier: String, val calculateDetentHeight: (containerHeight: Dp, sheetHeight: Dp) -> Dp
 ) {
     companion object {
         /**
          * A detent that expands the sheet to its full height.
          */
-        val FullyExpanded: SheetDetent =
-            SheetDetent("fully-expanded") { containerHeight, sheetHeight -> sheetHeight }
+        val FullyExpanded: SheetDetent = SheetDetent("fully-expanded") { containerHeight, sheetHeight -> sheetHeight }
 
         /**
          * A detent that hides the sheet.
@@ -195,16 +188,14 @@ class BottomSheetState(
             "The initialDetent ${initialDetent.identifier} was not part of the included detents while creating the sheet's state."
         }
 
-        val duplicates = detents.groupBy { it.identifier }
-            .filter { it.value.size > 1 }
-            .map { it.key }
+        val duplicates = detents.groupBy { it.identifier }.filter { it.value.size > 1 }.map { it.key }
 
         check(duplicates.isEmpty()) {
             "Detent identifiers need to be unique, but you passed the following detents multiple times: ${duplicates.joinToString { it }}."
         }
     }
 
-    internal var closestDentToTop: Float by mutableStateOf(Float.NaN)
+    internal var closestDetentToTopPx: Float by mutableStateOf(Float.NaN)
     internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
     internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
 
@@ -271,14 +262,16 @@ class BottomSheetState(
     }
 
     /**
-     * How far the sheet has moved from the bottom of its container.
+     * The amount the sheet has travelled from the bottom of its container in pixels.
+     *
      */
     val offset: Float by derivedStateOf {
-        if (anchoredDraggableState.offset.isNaN() || closestDentToTop.isNaN()) {
+        if (anchoredDraggableState.offset.isNaN() || closestDetentToTopPx.isNaN()) {
             0f
         } else {
-            val offsetFromTop = anchoredDraggableState.offset - closestDentToTop
-            contentHeightPx - offsetFromTop
+            val offsetFromTop = anchoredDraggableState.offset
+            val diff = containerHeightPx - offsetFromTop
+            diff.coerceAtLeast(0f)
         }
     }
 
@@ -309,17 +302,16 @@ class BottomSheetState(
 
         val anchors = UnstyledDraggableAnchors {
             with(density) {
-                closestDentToTop = Float.NaN
+                closestDetentToTopPx = Float.NaN
 
                 detents.forEach { detent ->
-                    val contentHeight = detent
-                        .calculateDetentHeight(containerHeight, sheetHeight)
-                        .coerceIn(0.dp, sheetHeight)
+                    val contentHeight =
+                        detent.calculateDetentHeight(containerHeight, sheetHeight).coerceIn(0.dp, sheetHeight)
 
                     val offsetDp = containerHeight - contentHeight
                     val offset = offsetDp.toPx()
-                    if (closestDentToTop.isNaN() || closestDentToTop > offset) {
-                        closestDentToTop = offset
+                    if (closestDetentToTopPx.isNaN() || closestDetentToTopPx > offset) {
+                        closestDetentToTopPx = offset
                     }
                     detent at offset
                 }
@@ -336,8 +328,7 @@ class BottomSheetState(
 }
 
 class BottomSheetScope internal constructor(
-    internal val state: BottomSheetState,
-    enabled: Boolean
+    internal val state: BottomSheetState, enabled: Boolean
 ) {
     internal var enabled by mutableStateOf(enabled)
 }
@@ -389,57 +380,60 @@ fun BottomSheet(
     imeAware: Boolean = false,
     content: @Composable (BottomSheetScope.() -> Unit),
 ) {
+
     val scope = remember { BottomSheetScope(state, enabled) }
-    scope.enabled = enabled
+    SideEffect { scope.enabled = enabled }
 
     val coroutineScope = rememberCoroutineScope()
 
     BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .onSizeChanged {
-                state.containerHeightPx = it.height.toFloat()
-                state.invalidateDetents()
-            },
+        modifier = Modifier.fillMaxSize().onSizeChanged {
+            state.containerHeightPx = it.height.toFloat()
+            state.invalidateDetents()
+        },
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
-            contentAlignment = Alignment.TopCenter,
-            modifier = Modifier
-                .onSizeChanged {
-                    state.contentHeightPx = it.height.toFloat()
-                    state.invalidateDetents()
-                }
-                .offset(state = state, imeAware = imeAware)
-                    then buildModifier {
-                if (scope.enabled) {
+            modifier = buildModifier {
+                add(
+                    Modifier
+                        .onSizeChanged {
+                            state.contentHeightPx = it.height.toFloat()
+                            state.invalidateDetents()
+                        }
+                        .sheetOffset(state = state, imeAware = imeAware)
+                )
+                if (scope.enabled && state.detents.size > 1) {
                     add(
-                        Modifier.nestedScroll(
-                            remember(state.anchoredDraggableState, Orientation.Vertical) {
-                                ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                                    orientation = Orientation.Vertical,
-                                    sheetState = state.anchoredDraggableState,
-                                    onFling = {
-                                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
-                                    }
-                                )
-                            })
+                        Modifier
+                            .unstyledAnchoredDraggable(
+                                state = state.anchoredDraggableState,
+                                orientation = Orientation.Vertical,
+                                enabled = scope.enabled
+                            )
+                            .nestedScroll(
+                                remember(state.anchoredDraggableState, Orientation.Vertical) {
+                                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                                        orientation = Orientation.Vertical,
+                                        sheetState = state.anchoredDraggableState,
+                                        onFling = {
+                                            coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                                        }
+                                    )
+                                }
+                            )
                     )
                 }
-            }
-                .unstyledAnchoredDraggable(
-                    state = state.anchoredDraggableState,
-                    orientation = Orientation.Vertical,
-                    enabled = scope.enabled && state.detents.size > 1
+                add(
+                    modifier
+                        .pointerInput(Unit) { detectTapGestures { } }
+                        .clip(shape)
+                        .background(backgroundColor)
+                        .padding(contentPadding)
                 )
-                .pointerInput(Unit) { detectTapGestures { } }
-                .align(Alignment.TopCenter)
-                .then(modifier)
-                .clip(shape)
-                .background(backgroundColor)
-                .padding(contentPadding)
+            }
         ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
+            ProvideContentColor(contentColor) {
                 scope.content()
             }
 
@@ -469,7 +463,7 @@ private fun OutOfBoundsSpacer(state: BottomSheetState) {
 }
 
 @Composable
-private fun Modifier.offset(state: BottomSheetState, imeAware: Boolean): Modifier {
+private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Modifier {
     val density = LocalDensity.current
     val ime = WindowInsets.ime
     val imeHeight by remember {
@@ -489,15 +483,15 @@ private fun Modifier.offset(state: BottomSheetState, imeAware: Boolean): Modifie
                 state.anchoredDraggableState.offset.isNaN() -> {
                     // draggable state is not ready
                     // let the sheet take the height of the container
-                    IntOffset(x = 0, y = state.containerHeightPx.roundToInt())
+                    val y = state.containerHeightPx.roundToInt()
+                    IntOffset(x = 0, y = y)
                 }
 
                 else -> {
                     val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
                     // do not let the sheet's top go out of screen bounds
-                    val y = calculatedOffset.coerceAtLeast(0f)
-
-                    IntOffset(x = 0, y = y.toInt())
+                    val y = calculatedOffset.coerceAtLeast(0f).toInt()
+                    IntOffset(x = 0, y = y)
                 }
             }
         })
@@ -507,63 +501,57 @@ private fun Modifier.offset(state: BottomSheetState, imeAware: Boolean): Modifie
     }
 }
 
-internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     sheetState: UnstyledAnchoredDraggableState<SheetDetent>,
     orientation: Orientation,
     onFling: (velocity: Float) -> Unit
-): NestedScrollConnection =
-    object : NestedScrollConnection {
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            val delta = available.toFloat()
-            return if (delta < 0 && source == NestedScrollSource.UserInput) {
-                sheetState.dispatchRawDelta(delta).toOffset()
-            } else {
-                Offset.Zero
-            }
+): NestedScrollConnection = object : NestedScrollConnection {
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val delta = available.toFloat()
+        return if (delta < 0 && source == NestedScrollSource.UserInput) {
+            sheetState.dispatchRawDelta(delta).toOffset()
+        } else {
+            Offset.Zero
         }
-
-        override fun onPostScroll(
-            consumed: Offset,
-            available: Offset,
-            source: NestedScrollSource
-        ): Offset {
-            return if (source == NestedScrollSource.UserInput) {
-                sheetState.dispatchRawDelta(available.toFloat()).toOffset()
-            } else {
-                Offset.Zero
-            }
-        }
-
-        override suspend fun onPreFling(available: Velocity): Velocity {
-            val toFling = available.toFloat()
-            val currentOffset = sheetState.requireOffset()
-            val minAnchor = sheetState.anchors.minAnchor()
-            return if (toFling < 0 && currentOffset > minAnchor) {
-                onFling(toFling)
-                // since we go to the anchor with tween settling, consume all for the best UX
-                available
-            } else {
-                Velocity.Zero
-            }
-        }
-
-        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-            onFling(available.toFloat())
-            return available
-        }
-
-        private fun Float.toOffset(): Offset =
-            Offset(
-                x = if (orientation == Orientation.Horizontal) this else 0f,
-                y = if (orientation == Orientation.Vertical) this else 0f
-            )
-
-        @JvmName("velocityToFloat")
-        private fun Velocity.toFloat() = if (orientation == Orientation.Horizontal) x else y
-
-        @JvmName("offsetToFloat")
-        private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
     }
+
+    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+        return if (source == NestedScrollSource.UserInput) {
+            sheetState.dispatchRawDelta(available.toFloat()).toOffset()
+        } else {
+            Offset.Zero
+        }
+    }
+
+    override suspend fun onPreFling(available: Velocity): Velocity {
+        val toFling = available.toFloat()
+        val currentOffset = sheetState.requireOffset()
+        val minAnchor = sheetState.anchors.minAnchor()
+        return if (toFling < 0 && currentOffset > minAnchor) {
+            onFling(toFling)
+            // since we go to the anchor with tween settling, consume all for the best UX
+            available
+        } else {
+            Velocity.Zero
+        }
+    }
+
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+        onFling(available.toFloat())
+        return available
+    }
+
+    private fun Float.toOffset(): Offset = Offset(
+        x = if (orientation == Orientation.Horizontal) this else 0f,
+        y = if (orientation == Orientation.Vertical) this else 0f
+    )
+
+    @JvmName("velocityToFloat")
+    private fun Velocity.toFloat() = if (orientation == Orientation.Horizontal) x else y
+
+    @JvmName("offsetToFloat")
+    private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
+}
 
 /**
  * A drag indication that can be used to control the bottom sheet.
@@ -578,15 +566,12 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 @Deprecated("This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().")
 @Composable
 fun BottomSheetScope.DragIndication(
-    modifier: Modifier = Modifier,
-    indication: Indication = rememberFocusRingIndication(
+    modifier: Modifier = Modifier, indication: Indication = rememberFocusRingIndication(
         ringColor = Color.Blue,
         ringWidth = 4.dp,
         paddingValues = PaddingValues(horizontal = 8.dp, vertical = 14.dp),
         cornerRadius = 8.dp
-    ),
-    interactionSource: MutableInteractionSource? = null,
-    onClickLabel: String? = "Toggle sheet"
+    ), interactionSource: MutableInteractionSource? = null, onClickLabel: String? = "Toggle sheet"
 ) {
     var detentIndex by rememberSaveable { mutableStateOf(-1) }
     var goUp by rememberSaveable { mutableStateOf(true) }
