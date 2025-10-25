@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
@@ -17,7 +20,6 @@ import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
 import kotlin.test.Test
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -78,9 +80,27 @@ class BottomSheetTest {
         }
     }
 
-    //
-    //
+    // remember version
+    @Test(expected = IllegalStateException::class)
+    fun creatingStateWithNoDetents_throws_exception() = runComposeUiTest {
+        setContent {
+            rememberBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded, detents = emptyList()
+            )
+        }
+    }
 
+    @Test(expected = IllegalStateException::class)
+    fun creating_stateWithoutInitialDetent_throws_exception() = runComposeUiTest {
+        setContent {
+            rememberBottomSheetState(
+                initialDetent = SheetDetent.FullyExpanded, detents = listOf(SheetDetent.Hidden)
+            )
+        }
+    }
+
+    /// -----------------------------------
+    // initial detent
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {
         setContent {
@@ -101,7 +121,7 @@ class BottomSheetTest {
         setContent {
             BottomSheet(
                 rememberBottomSheetState(
-                    initialDetent = SheetDetent.FullyExpanded, 
+                    initialDetent = SheetDetent.FullyExpanded,
                 )
             ) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
@@ -114,34 +134,27 @@ class BottomSheetTest {
 
     @Test
     fun settingDetentToFullyDetent_whenInitialIsDetentHidden_isDisplayed() = runComposeUiTest {
+        lateinit var state: BottomSheetState
         setContent {
-            val state = rememberBottomSheetState(
-                initialDetent = SheetDetent.Hidden, 
+            state = rememberBottomSheetState(
+                initialDetent = SheetDetent.Hidden,
             )
 
-            LaunchedEffect(Unit) {
-                state.targetDetent = SheetDetent.FullyExpanded
-            }
             BottomSheet(state) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
             }
         }
-
+        state.targetDetent = SheetDetent.FullyExpanded
         onNodeWithTag("sheet_contents").assertIsDisplayed()
     }
 
     @Test
     fun modifyingTheSheetsContent_updatesTheSheetsHeight() = runComposeUiTest {
+        var contentSize by mutableStateOf(40.dp)
+
         setContent {
-            var contentSize by remember { mutableStateOf(40.dp) }
-
-            LaunchedEffect(Unit) {
-                delay(50)
-                contentSize = 150.dp
-            }
-
             val state = rememberBottomSheetState(
-                initialDetent = SheetDetent.FullyExpanded, 
+                initialDetent = SheetDetent.FullyExpanded,
             )
 
             BottomSheet(state, Modifier.testTag("sheet")) {
@@ -150,26 +163,11 @@ class BottomSheetTest {
         }
 
         mainClock.advanceTimeBy(50)
+        contentSize = 150.dp
+        mainClock.advanceTimeByFrame()
+
         onNodeWithTag("sheet").assertWidthIsEqualTo(150.dp)
         onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun creatingStateWithNoDetents_throws_exception() = runComposeUiTest {
-        setContent {
-            rememberBottomSheetState(
-                initialDetent = SheetDetent.FullyExpanded, detents = emptyList()
-            )
-        }
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun creating_stateWithoutInitialDetent_throws_exception() = runComposeUiTest {
-        setContent {
-            rememberBottomSheetState(
-                initialDetent = SheetDetent.FullyExpanded, detents = listOf(SheetDetent.Hidden)
-            )
-        }
     }
 
     @Test
