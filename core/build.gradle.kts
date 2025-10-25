@@ -67,8 +67,8 @@ kotlin {
         }
 
         androidInstrumentedTest.dependencies {
-            implementation("androidx.compose.ui:ui-test-junit4-android:1.8.2")
-            implementation("androidx.compose.ui:ui-test-manifest:1.8.2")
+            implementation(libs.androidx.compose.test)
+            implementation(libs.androidx.compose.test.manifest)
         }
 
         applyDefaultHierarchyTemplate {
@@ -106,11 +106,11 @@ kotlin {
 
         jvmTest.dependencies {
             implementation(compose.desktop.uiTestJUnit4)
+            implementation(libs.assertj.core)
             implementation(compose.desktop.currentOs) {
                 exclude(compose.material)
                 exclude(compose.material)
             }
-            implementation("org.assertj:assertj-core:3.27.3")
         }
     }
 }

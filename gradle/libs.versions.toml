@@ -11,17 +11,23 @@ lucide = "1.0.0"
 window = "1.4.0"
 coil = "3.0.0-rc01"
 
-# Android SDK
+# Android
 android-compileSDK = "35"
 android-minSDK = "21"
-activityCompose = "1.10.1"
-agp = "8.6.1"
+agp = "8.10.1"
+
+# testing
+assertj = "3.24.2"
+junitAndroid = "1.8.2"
 
 [libraries]
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 androidx-activitycompose = { module = "androidx.activity:activity-compose", version.ref = "activity-core" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 composables-icons-lucide = { module = "com.composables:icons-lucide", version.ref = "lucide" }
 alexstyl-coil = { module = "com.alexstyl:addcoilmultiplatform", version.ref = "coil" }
+androidx-compose-test = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "junitAndroid" }
+androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "junitAndroid" }
 
 [plugins]
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
