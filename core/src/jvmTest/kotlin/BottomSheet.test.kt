@@ -25,6 +25,7 @@ import org.assertj.core.api.Assertions.assertThat
 @OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
 
+    // invalid state cases
     @Test(expected = IllegalStateException::class)
     fun throwsException_whenCreatingState_withoutDetents() = runComposeUiTest {
         setContent {
@@ -77,12 +78,15 @@ class BottomSheetTest {
         }
     }
 
+    //
+    //
+
     @Test
     fun sheetWithInitialDetentHidden_isNotDisplayed() = runComposeUiTest {
         setContent {
             BottomSheet(
                 rememberBottomSheetState(
-                    initialDetent = SheetDetent.Hidden, decayAnimationSpec = rememberSplineBasedDecay()
+                    initialDetent = SheetDetent.Hidden
                 )
             ) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
@@ -97,7 +101,7 @@ class BottomSheetTest {
         setContent {
             BottomSheet(
                 rememberBottomSheetState(
-                    initialDetent = SheetDetent.FullyExpanded, decayAnimationSpec = rememberSplineBasedDecay()
+                    initialDetent = SheetDetent.FullyExpanded, 
                 )
             ) {
                 Box(Modifier.testTag("sheet_contents").size(40.dp))
@@ -112,7 +116,7 @@ class BottomSheetTest {
     fun settingDetentToFullyDetent_whenInitialIsDetentHidden_isDisplayed() = runComposeUiTest {
         setContent {
             val state = rememberBottomSheetState(
-                initialDetent = SheetDetent.Hidden, decayAnimationSpec = rememberSplineBasedDecay()
+                initialDetent = SheetDetent.Hidden, 
             )
 
             LaunchedEffect(Unit) {
@@ -137,7 +141,7 @@ class BottomSheetTest {
             }
 
             val state = rememberBottomSheetState(
-                initialDetent = SheetDetent.FullyExpanded, decayAnimationSpec = rememberSplineBasedDecay()
+                initialDetent = SheetDetent.FullyExpanded, 
             )
 
             BottomSheet(state, Modifier.testTag("sheet")) {
