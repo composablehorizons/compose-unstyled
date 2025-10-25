@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

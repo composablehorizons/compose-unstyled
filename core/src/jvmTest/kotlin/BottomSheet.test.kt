@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
@@ -11,7 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Text
+import com.composables.core.BottomSheet
+import com.composables.core.BottomSheetState
+import com.composables.core.SheetDetent
+import com.composables.core.rememberBottomSheetState
 import kotlin.test.Test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

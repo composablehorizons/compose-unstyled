@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntRect

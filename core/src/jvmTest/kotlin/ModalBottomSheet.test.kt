@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -7,6 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
+import com.composables.core.ModalBottomSheet
+import com.composables.core.ModalBottomSheetState
+import com.composables.core.Scrim
+import com.composables.core.Sheet
+import com.composables.core.SheetDetent
+import com.composables.core.rememberModalBottomSheetState
 import kotlin.test.Test
 import kotlinx.coroutines.delay
 

@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.ui.unit.LayoutDirection
 import com.composeunstyled.RelativeAlignment

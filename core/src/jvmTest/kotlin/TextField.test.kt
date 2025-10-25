@@ -1,4 +1,4 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState

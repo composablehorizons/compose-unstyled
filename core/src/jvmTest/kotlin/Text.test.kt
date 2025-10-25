@@ -1,14 +1,10 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import com.composeunstyled.ComposeUnstyledFlags
-import com.composeunstyled.ProvideContentColor
-import com.composeunstyled.ProvideTextStyle
-import com.composeunstyled.Text
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
