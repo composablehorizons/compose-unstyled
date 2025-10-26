@@ -252,6 +252,7 @@ private class AnchoredDraggableNode<T>(
 
     override suspend fun drag(forEachDelta: suspend ((dragDelta: DragEvent.DragDelta) -> Unit) -> Unit) {
         state.anchoredDrag {
+            state.isDragging = true
             forEachDelta { dragDelta ->
                 if (overscrollEffect == null) {
                     dragTo(state.newOffsetForDelta(dragDelta.delta.reverseIfNeeded().toFloat()))
@@ -267,6 +268,7 @@ private class AnchoredDraggableNode<T>(
                     }
                 }
             }
+            state.isDragging = false
         }
     }
 
@@ -551,6 +553,9 @@ class UnstyledAnchoredDraggableState<T>(
     }
 
     private val dragMutex = MutatorMutex()
+
+    var isDragging by mutableStateOf(false)
+        internal set
 
     /**
      * The current value of the [UnstyledAnchoredDraggableState].

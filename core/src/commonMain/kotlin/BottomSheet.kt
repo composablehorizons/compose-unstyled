@@ -171,7 +171,7 @@ class SheetDetent(
 
 class BottomSheetState(
     initialDetent: SheetDetent,
-    internal val detents: List<SheetDetent>,
+    detents: List<SheetDetent>,
     private val coroutineScope: CoroutineScope,
     animationSpec: AnimationSpec<Float>,
     velocityThreshold: () -> Float,
@@ -181,11 +181,15 @@ class BottomSheetState(
     private val density: () -> Density
 ) {
     init {
-        check(detents.isNotEmpty()) {
-            "Tried to create a bottom sheet without any detents. Make sure to pass at least one detent when creating your sheet's state."
-        }
+        checkValidDetents(detents)
         check(detents.contains(initialDetent)) {
             "The initialDetent ${initialDetent.identifier} was not part of the included detents while creating the sheet's state."
+        }
+    }
+
+    private fun checkValidDetents(detents: List<SheetDetent>) {
+        check(detents.isNotEmpty()) {
+            "Tried to create a bottom sheet without any detents. Make sure to pass at least one detent when creating your sheet's state."
         }
 
         val duplicates = detents.groupBy { it.identifier }.filter { it.value.size > 1 }.map { it.key }
@@ -194,6 +198,19 @@ class BottomSheetState(
             "Detent identifiers need to be unique, but you passed the following detents multiple times: ${duplicates.joinToString { it }}."
         }
     }
+
+    private var innerDetents: List<SheetDetent> by mutableStateOf(detents)
+
+    var detents: List<SheetDetent>
+        get() {
+            return innerDetents
+        }
+        set(value) {
+            _detents = value
+            checkValidDetents(value)
+            innerDetents = value
+            invalidateDetents()
+        }
 
     internal var closestDetentToTopPx: Float by mutableStateOf(Float.NaN)
     internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
@@ -213,38 +230,42 @@ class BottomSheetState(
             return anchoredDraggableState.settledValue
         }
 
+    private val derivedTargetDetent: SheetDetent by derivedStateOf {
+        // If we have a drag target, use that
+        if (anchoredDraggableState.dragTarget != null) {
+            return@derivedStateOf anchoredDraggableState.dragTarget as SheetDetent
+        }
+        // Otherwise determine target based on current offset and direction
+        val currentOffset = anchoredDraggableState.offset
+        if (currentOffset.isNaN()) return@derivedStateOf currentDetent
+
+        val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
+        val isMovingUp = currentOffset < currentPosition
+
+        return@derivedStateOf anchoredDraggableState.anchors.closestAnchor(currentOffset, !isMovingUp) ?: currentDetent
+    }
+
     /**
      * The [SheetDetent] that the sheet is heading towards, in case of an animation or drag events.
      */
     var targetDetent: SheetDetent
         get() {
-            // If we have a drag target, use that
-            if (anchoredDraggableState.dragTarget != null) {
-                return anchoredDraggableState.dragTarget as SheetDetent
-            }
-            // Otherwise determine target based on current offset and direction
-            val currentOffset = anchoredDraggableState.offset
-            if (currentOffset.isNaN()) return currentDetent
-
-            val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
-            val isMovingUp = currentOffset < currentPosition
-            return anchoredDraggableState.anchors.closestAnchor(currentOffset, !isMovingUp) ?: currentDetent
+            return derivedTargetDetent
         }
         set(value) {
-            check(detents.contains(value)) {
-                "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
+            check(innerDetents.contains(value)) {
+                "Cannot set targetDetent to a detent (${value.identifier}) that is not part of the detents of the sheet's state. Current detents are: ${innerDetents.joinToString()}"
             }
             coroutineScope.launch {
                 anchoredDraggableState.animateTo(value)
             }
         }
 
-
     /**
      * Whether the sheet is currently rested at a detent.
      */
     val isIdle: Boolean by derivedStateOf {
-        currentDetent == targetDetent && anchoredDraggableState.isAnimationRunning.not()
+        anchoredDraggableState.isDragging.not() && anchoredDraggableState.isAnimationRunning.not()
     }
 
     /**
@@ -279,7 +300,7 @@ class BottomSheetState(
      * Animates the sheet to the given [SheetDetent]
      */
     suspend fun animateTo(value: SheetDetent) {
-        check(detents.contains(value)) {
+        check(innerDetents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
         anchoredDraggableState.animateTo(value)
@@ -289,7 +310,7 @@ class BottomSheetState(
      * Instantly moves the sheet to the given [SheetDetent] without any animations.
      */
     fun jumpTo(value: SheetDetent) {
-        check(detents.contains(value)) {
+        check(innerDetents.contains(value)) {
             "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
         }
         coroutineScope.launch { anchoredDraggableState.snapTo(value) }
@@ -300,11 +321,29 @@ class BottomSheetState(
         val containerHeight = with(density) { containerHeightPx.toDp() }
         val sheetHeight = with(density) { contentHeightPx.toDp() }
 
+        // We are about to update detents, and we need to figure out the new target for the sheet
+        // If we were moving towards a new target (animation or drag), use that as the new target. Otherwise, use the settled target
+        val newTarget = if (isIdle) {
+            currentDetent
+        } else {
+            targetDetent
+        }
+
+        // Capture the direction we were moving BEFORE updating anchors
+        // We determine this by comparing the target position to the current detent position
+        val wasMovingUp = if (!isIdle && newTarget != currentDetent) {
+            val targetPosition = anchoredDraggableState.anchors.positionOf(newTarget)
+            val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
+            targetPosition < currentPosition
+        } else {
+            false
+        }
+
         val anchors = UnstyledDraggableAnchors {
             with(density) {
                 closestDetentToTopPx = Float.NaN
 
-                detents.forEach { detent ->
+                innerDetents.forEach { detent ->
                     val contentHeight =
                         detent.calculateDetentHeight(containerHeight, sheetHeight).coerceIn(0.dp, sheetHeight)
 
@@ -317,18 +356,72 @@ class BottomSheetState(
                 }
             }
         }
-        val newTarget = if (isIdle) {
-            anchoredDraggableState.currentValue
+
+        val overridden = if (innerDetents.contains(newTarget)) {
+            newTarget
         } else {
-            anchoredDraggableState.targetValue
+            // Find the closest detent in the direction of movement
+            val currentOffset = anchoredDraggableState.offset
+            val closestDetent = anchors.closestDetent(currentOffset, searchUpwards = wasMovingUp)
+
+            (closestDetent ?: innerDetents.first()).also {
+                // the anchored draggable state does not update its target value
+                // so we have to force it in order to update
+                targetDetent = it
+            }
         }
 
-        anchoredDraggableState.updateAnchors(anchors, newTarget)
+        anchoredDraggableState.updateAnchors(anchors, newTarget = overridden)
     }
 }
 
+/**
+ * Finds the closest detent to the given offset in the specified direction.
+ *
+ * For bottom sheets:
+ * - Moving up means we want smaller offset values (closer to top of screen)
+ * - Moving down means we want larger offset values (closer to bottom of screen)
+ *
+ * @param offset The current offset position
+ * @param searchUpwards Whether to search upwards (true) or downwards (false)
+ * @return The closest detent in the specified direction, or null if none found
+ */
+private fun UnstyledDraggableAnchors<SheetDetent>.closestDetent(
+    offset: Float,
+    searchUpwards: Boolean
+): SheetDetent? {
+    var closestDetent: SheetDetent? = null
+    var closestDistance = Float.POSITIVE_INFINITY
+
+    forEach { detent, position ->
+        if (searchUpwards) {
+            // Moving up: we want positions smaller than current offset
+            if (position < offset) {
+                val distance = offset - position
+                if (distance < closestDistance) {
+                    closestDetent = detent
+                    closestDistance = distance
+                }
+            }
+        } else {
+            // Moving down: we want positions larger than current offset
+            if (position > offset) {
+                val distance = position - offset
+                if (distance < closestDistance) {
+                    closestDetent = detent
+                    closestDistance = distance
+                }
+            }
+        }
+    }
+
+    return closestDetent
+}
+
+
 class BottomSheetScope internal constructor(
-    internal val state: BottomSheetState, enabled: Boolean
+    internal val state: BottomSheetState,
+    enabled: Boolean
 ) {
     internal var enabled by mutableStateOf(enabled)
 }

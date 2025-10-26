@@ -29,6 +29,27 @@ import org.assertj.core.api.Assertions.assertThat
 
 @OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
+    // TODO: Ensure the following are tested
+    // # Test cases
+    // - [x] invalid state creation
+    // - [x] creating sheet with specific detents (hidden detent, fully visible, custom detent)
+    // - [x] creating sheet with hidden and then specific detent (full visible, custom detent)
+    // - [x] scrollable content (full detent, custom detent)
+
+    // ## scrollable content
+    // - [x] when only one detent, scrolling just scrolls the content, fully
+    // - [x] first move sheet, then content (from half expanded, move sheet to expanded, then start scrolling)
+
+    // ## state management
+    // - [x] enabled/disable
+    // - [x] dynamic detent support (state.detents = newList)
+    // - [x] isIdle correctly reflects dragging and animation state
+    // - [ ] dynamic sizing
+
+    // ## other
+    // - [ ] test cases that the contents are not messed up (needs clarification)
+    // - [ ] ime aware on Android
+
     // invalid state cases
     @Test(expected = IllegalStateException::class)
     fun `given state without detents when creating state then throws exception`() = runComposeUiTest {
@@ -318,6 +339,119 @@ class BottomSheetTest {
         onNodeWithText("Bottom").assertIsDisplayed()
     }
 
+    @Test
+    fun `given sheet at a detent when that detent is removed from detents list then sheet moves to closest available detent`() = runComposeUiTest {
+        val detent0 = SheetDetent("0") { containerHeight, _ -> containerHeight * 0f }
+        val detent25 = SheetDetent("25") { containerHeight, _ -> containerHeight * 0.25f }
+        val detent50 = SheetDetent("50") { containerHeight, _ -> containerHeight * 0.5f }
+        val detent75 = SheetDetent("75") { containerHeight, _ -> containerHeight * 0.75f }
+        val detent100 = SheetDetent("100") { containerHeight, _ -> containerHeight * 1f }
+
+        lateinit var state: BottomSheetState
+
+        setContent {
+            Box(Modifier.requiredSize(100.dp)) {
+                state = rememberBottomSheetState(
+                    initialDetent = detent50,
+                    detents = listOf(detent0, detent25, detent50, detent75, detent100)
+                )
+
+                BottomSheet(state) {
+                    Box(
+                        Modifier
+                            .testTag("sheet_contents")
+                            .fillMaxWidth()
+                            .height(100.dp)
+                    )
+                }
+            }
+        }
+
+        // Remove 50% detent while we're currently at 50%
+        // The sheet should automatically move to the closest available detent
+        waitUntil { state.isIdle }
+        state.detents = listOf(detent0, detent25, detent75, detent100)
+        awaitIdle()
+        waitUntil { state.isIdle }
+
+        // Detents list should be updated to 4 detents
+        assertThat(state.detents).hasSize(4)
+        assertThat(state.detents).contains(detent0, detent25, detent75, detent100)
+        assertThat(state.detents).doesNotContain(detent50)
+    }
+
+    @Test
+    fun `given sheet when settling at detents then isIdle correctly reflects animation state`() = runComposeUiTest {
+        lateinit var state: BottomSheetState
+
+        setContent {
+            Box(Modifier.requiredSize(100.dp)) {
+                state = rememberBottomSheetState(
+                    initialDetent = SheetDetent.Hidden,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
+                )
+
+                BottomSheet(state) {
+                    Box(Modifier.fillMaxWidth().height(100.dp))
+                }
+            }
+        }
+
+        // Initially should be idle at Hidden
+        waitUntil { state.isIdle }
+        assertThat(state.isIdle).isTrue
+        assertEquals(SheetDetent.Hidden, state.currentDetent)
+
+        // Start animation to FullyExpanded
+        state.targetDetent = SheetDetent.FullyExpanded
+
+        // Should not be idle during animation
+        mainClock.advanceTimeBy(50)
+        assertThat(state.isIdle).isFalse
+
+        // Wait for animation to complete
+        waitUntil { state.isIdle }
+        assertThat(state.isIdle).isTrue
+        assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+    }
+
+    @Test
+    fun `given sheet when detents are updated then isIdle becomes true after settling`() = runComposeUiTest {
+        val detent25 = SheetDetent("25") { containerHeight, _ -> containerHeight * 0.25f }
+        val detent50 = SheetDetent("50") { containerHeight, _ -> containerHeight * 0.5f }
+        val detent75 = SheetDetent("75") { containerHeight, _ -> containerHeight * 0.75f }
+
+        lateinit var state: BottomSheetState
+
+        setContent {
+            Box(Modifier.requiredSize(100.dp)) {
+                state = rememberBottomSheetState(
+                    initialDetent = detent50,
+                    detents = listOf(detent25, detent50, detent75)
+                )
+
+                BottomSheet(state) {
+                    Box(Modifier.fillMaxWidth().height(100.dp))
+                }
+            }
+        }
+
+        // Wait for initial idle state
+        waitUntil { state.isIdle }
+        assertThat(state.isIdle).isTrue
+        assertEquals(detent50, state.currentDetent)
+
+        // Update detents while at 50% - removing the current detent
+        state.detents = listOf(detent25, detent75)
+
+        // Should eventually settle and become idle
+        waitUntil { state.isIdle }
+        assertThat(state.isIdle).isTrue
+
+        // Should be at one of the remaining detents
+        assertThat(state.currentDetent).isIn(detent25, detent75)
+    }
+
     /// -----------------------------------
     // custom detents
 
@@ -573,9 +707,64 @@ class BottomSheetTest {
         onNodeWithTag("sheet").performTouchInput {
             swipeUp()
         }
-        waitUntil { state.isIdle }
+        awaitIdle()
         assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
         onNodeWithTag("item_1").assertIsDisplayed()
+    }
+
+    @Test
+    fun `given enabled false when swiping sheet then sheet does not move`() = runComposeUiTest {
+        val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
+            containerHeight * 0.5f
+        }
+
+        lateinit var state: BottomSheetState
+
+        setContent {
+            Box(Modifier.fillMaxSize()) {
+                state = rememberBottomSheetState(
+                    initialDetent = halfExpandedDetent,
+                    detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded)
+                )
+
+                BottomSheet(
+                    state = state,
+                    enabled = false,
+                    modifier = Modifier.testTag("sheet")
+                ) {
+                    Box(
+                        Modifier
+                            .testTag("sheet_contents")
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
+            }
+        }
+
+        // Initially at half expanded
+        val initialOffset = state.offset
+        assertEquals(halfExpandedDetent, state.currentDetent)
+
+        // Try to swipe up - should not move the sheet
+        onNodeWithTag("sheet").performTouchInput {
+            swipeUp()
+        }
+        waitForIdle()
+
+        // Sheet should remain at the same detent and offset
+        assertEquals(halfExpandedDetent, state.currentDetent)
+        assertThat(state.offset).isEqualTo(initialOffset)
+
+        // Try to swipe down - should also not move the sheet
+        onNodeWithTag("sheet").performTouchInput {
+            swipeDown()
+        }
+        waitForIdle()
+
+        // Sheet should still be at the same detent
+        assertEquals(halfExpandedDetent, state.currentDetent)
+        assertThat(state.offset).isEqualTo(initialOffset)
     }
 
 }
