@@ -29,7 +29,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
 import com.composeunstyled.LocalContentColor
@@ -206,7 +206,6 @@ class BottomSheetState(
             return innerDetents
         }
         set(value) {
-            _detents = value
             checkValidDetents(value)
             innerDetents = value
             invalidateDetents()
@@ -659,38 +658,20 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 @Deprecated("This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().")
 @Composable
 fun BottomSheetScope.DragIndication(
-    modifier: Modifier = Modifier, indication: Indication = rememberFocusRingIndication(
+    modifier: Modifier = Modifier,
+    indication: Indication = rememberFocusRingIndication(
         ringColor = Color.Blue,
         ringWidth = 4.dp,
         paddingValues = PaddingValues(horizontal = 8.dp, vertical = 14.dp),
         cornerRadius = 8.dp
-    ), interactionSource: MutableInteractionSource? = null, onClickLabel: String? = "Toggle sheet"
+    ),
+    interactionSource: MutableInteractionSource? = null,
+    onClickLabel: String? = "Toggle sheet"
 ) {
-    var detentIndex by rememberSaveable { mutableStateOf(-1) }
-    var goUp by rememberSaveable { mutableStateOf(true) }
-
-    val onIndicationClicked: () -> Unit = {
-        if (detentIndex == -1) {
-            detentIndex = state.detents.indexOf(state.currentDetent)
-        }
-        if (detentIndex == state.detents.size - 1) goUp = false
-        if (detentIndex == 0) goUp = true
-
-        if (goUp) detentIndex++ else detentIndex--
-
-        val detent = state.detents[detentIndex]
-        state.targetDetent = detent
-    }
-
-    Box(
-        modifier = modifier.clickable(
-            role = Role.Button,
-            enabled = enabled && state.detents.size > 1,
-            interactionSource = interactionSource,
-            indication = indication,
-            onClickLabel = onClickLabel,
-            onClick = onIndicationClicked
-        )
+    DragIndication(
+        modifier = modifier,
+        indication = indication,
+        interactionSource = interactionSource
     )
 }
 
@@ -703,6 +684,42 @@ fun BottomSheetScope.DragIndication(
     var detentIndex by rememberSaveable { mutableStateOf(-1) }
     var goUp by rememberSaveable { mutableStateOf(true) }
 
+    val canExpand by remember {
+        derivedStateOf {
+            if (state.detents.size <= 1) return@derivedStateOf false
+
+            val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
+            if (currentPosition.isNaN()) return@derivedStateOf false
+
+            state.detents.any { detent ->
+                val position = state.anchoredDraggableState.anchors.positionOf(detent)
+                position.isNaN().not() && position < currentPosition
+            }
+        }
+    }
+
+    val canCollapse by remember {
+        derivedStateOf {
+            if (state.detents.size <= 1) return@derivedStateOf false
+
+            val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
+            if (currentPosition.isNaN()) return@derivedStateOf false
+
+            state.detents.any { detent ->
+                val position = state.anchoredDraggableState.anchors.positionOf(detent)
+                position.isNaN().not() && position > currentPosition
+            }
+        }
+    }
+
+    val canDismiss by remember {
+        derivedStateOf {
+            state.detents.contains(SheetDetent.Hidden) && state.currentDetent != SheetDetent.Hidden
+        }
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
     val onIndicationClicked: () -> Unit = {
         if (detentIndex == -1) {
             detentIndex = state.detents.indexOf(state.currentDetent)
@@ -717,12 +734,71 @@ fun BottomSheetScope.DragIndication(
     }
 
     Box(
-        modifier = modifier.clickable(
-            role = Role.Button,
-            enabled = enabled && state.detents.size > 1,
-            interactionSource = interactionSource,
-            indication = indication,
-            onClick = onIndicationClicked
-        )
+        modifier = modifier
+            .semantics(mergeDescendants = false) {
+                if (canExpand) {
+                    expand {
+                        // Find next detent with LOWER position value (more expanded = higher on screen)
+                        val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
+                        val nextDetent = state.detents
+                            .filter { detent ->
+                                val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                pos < currentPosition
+                            }
+                            .maxByOrNull { detent ->
+                                // Get the closest one (highest position that's still < current)
+                                state.anchoredDraggableState.anchors.positionOf(detent)
+                            }
+
+                        if (nextDetent != null) {
+                            coroutineScope.launch {
+                                state.animateTo(nextDetent)
+                            }
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                }
+                if (canCollapse) {
+                    collapse {
+                        // Find next detent with HIGHER position value (less expanded = lower on screen)
+                        val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
+                        val nextDetent = state.detents
+                            .filter { detent ->
+                                val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                pos > currentPosition
+                            }
+                            .minByOrNull { detent ->
+                                // Get the closest one (lowest position that's still > current)
+                                state.anchoredDraggableState.anchors.positionOf(detent)
+                            }
+
+                        if (nextDetent != null) {
+                            coroutineScope.launch {
+                                state.animateTo(nextDetent)
+                            }
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                }
+                if (canDismiss) {
+                    dismiss {
+                        coroutineScope.launch {
+                            state.animateTo(SheetDetent.Hidden)
+                        }
+                        true
+                    }
+                }
+            }
+            .clickable(
+                role = Role.Button,
+                enabled = enabled && state.detents.size > 1,
+                interactionSource = interactionSource,
+                indication = indication,
+                onClick = onIndicationClicked
+            )
     )
 }
