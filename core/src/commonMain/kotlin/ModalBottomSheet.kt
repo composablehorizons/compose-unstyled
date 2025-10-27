@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -265,6 +263,7 @@ fun ModalBottomSheet(
         scope.sheetState.targetDetent = SheetDetent.Hidden
     }
 
+
     if (isSheetVisible || isScrimVisible) {
         Modal {
             DisposableEffect(Unit) {
@@ -290,10 +289,8 @@ fun ModalBottomSheet(
                 }
             }
             if (properties.dismissOnBackPress) {
-                KeyEventObserver { event ->
-                    if (event.key == Key.Escape || event.key == Key.Back) {
-                        onDismissRequest()
-                    }
+                EscapeHandler {
+                    onDismissRequest()
                 }
             }
             Box(

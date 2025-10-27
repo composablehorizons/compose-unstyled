@@ -12,7 +12,7 @@ import java.awt.KeyboardFocusManager
 
 @OptIn(InternalComposeUiApi::class)
 @Composable
-internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Unit) {
+internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
     DisposableEffect(Unit) {
         val dispatcher = KeyEventDispatcher { awtEvent ->
             // we are getting
@@ -25,7 +25,6 @@ internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Unit) {
                 },
             )
             onEvent(composeKeyEvent)
-            false
         }
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher)

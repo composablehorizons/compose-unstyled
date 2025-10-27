@@ -12,11 +12,11 @@ import org.w3c.dom.events.KeyboardEvent
 
 @OptIn(InternalComposeUiApi::class)
 @Composable
-internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Unit) {
+internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
     DisposableEffect(Unit) {
         val listener: (Event) -> Unit = { event ->
             event as KeyboardEvent
-            onEvent(
+            val consumed = onEvent(
                 KeyEvent(
                     key = Key(event.keyCode.toLong()),
                     type = when (event.type) {
@@ -26,6 +26,10 @@ internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Unit) {
                     },
                 )
             )
+            if (consumed) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
         }
 
         document.addEventListener("keydown", listener)

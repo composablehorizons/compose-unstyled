@@ -72,6 +72,7 @@ fun Tooltip(
             entered = false
             focused = false
         }
+        false // never consume
     }
 
     SideEffect {
