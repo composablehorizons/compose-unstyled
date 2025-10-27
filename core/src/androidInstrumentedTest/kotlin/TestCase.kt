@@ -1,4 +1,4 @@
-package com.composeunstyled
+package com.composables.core
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi

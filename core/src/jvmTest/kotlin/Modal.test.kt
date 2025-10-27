@@ -9,27 +9,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.isDialog
-import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Modal
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class ModalTest {
 
     @Test
-    fun isModal() = runComposeUiTest {
-        var showModal by mutableStateOf(false)
+    fun semantics() = runTestSuite {
+        testCase("add isDialog semantic") {
+            var showModal by mutableStateOf(false)
 
-        setContent {
-            if (showModal) {
-                Modal(onKeyEvent = { false }) {
-                    Box(Modifier.testTag("modal_contents").size(40.dp))
+            setContent {
+                if (showModal) {
+                    Modal(onKeyEvent = { false }) {
+                        Box(Modifier.testTag("modal_contents").size(40.dp))
+                    }
                 }
             }
+            onNode(isDialog()).assertDoesNotExist()
+            showModal = true
+            onNode(isDialog()).assertExists()
         }
-        onNode(isDialog()).assertDoesNotExist()
-        showModal = true
-        onNode(isDialog()).assertExists()
     }
+
 }

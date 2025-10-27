@@ -321,8 +321,12 @@ class BottomSheetState(
         val sheetHeight = with(density) { contentHeightPx.toDp() }
 
         // We are about to update detents, and we need to figure out the new target for the sheet
-        // If we were moving towards a new target (animation or drag), use that as the new target. Otherwise, use the settled target
-        val newTarget = if (isIdle) {
+        // If anchors haven't been initialized yet (offset is NaN), always use currentDetent to establish the starting position
+        // Otherwise, if we're idle, use currentDetent to maintain position
+        // If we're animating/dragging, use targetDetent
+        val newTarget = if (anchoredDraggableState.offset.isNaN()) {
+            currentDetent
+        } else if (isIdle) {
             currentDetent
         } else {
             targetDetent

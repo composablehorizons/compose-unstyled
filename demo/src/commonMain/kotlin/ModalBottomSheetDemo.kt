@@ -3,25 +3,12 @@ package com.composeunstyled.demo
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.displayCutoutPadding
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -29,16 +16,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composables.core.DragIndication
-import com.composables.core.ModalBottomSheet
-import com.composables.core.Scrim
-import com.composables.core.Sheet
-import com.composables.core.SheetDetent
+import com.composables.core.*
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
-import com.composables.core.rememberModalBottomSheetState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.currentWindowContainerSize
+import com.composeunstyled.focusRing
 import kotlinx.coroutines.delay
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -47,7 +31,7 @@ private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
 
 @Composable
 fun ModalBottomSheetDemo() {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6))))
@@ -56,7 +40,6 @@ fun ModalBottomSheetDemo() {
             initialDetent = Hidden,
             detents = listOf(Hidden, Peek, FullyExpanded)
         )
-
 
         LaunchedEffect(Unit) {
             delay(500)
@@ -75,7 +58,7 @@ fun ModalBottomSheetDemo() {
             Text("Show Sheet", fontWeight = FontWeight(500))
         }
 
-        val isCompact = maxWidth < 600.dp
+        val isCompact = currentWindowContainerSize().width < 600.dp
 
         ModalBottomSheet(state = modalSheetState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
@@ -97,11 +80,21 @@ fun ModalBottomSheetDemo() {
                     contentColor = Color.Black
                 ) {
                     Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+                        val interactionSource = remember { MutableInteractionSource() }
+
                         DragIndication(
-                            modifier = Modifier.padding(top = 22.dp)
+                            interactionSource = interactionSource,
+                            modifier = Modifier
+                                .padding(top = 22.dp)
+                                .focusRing(
+                                    interactionSource,
+                                    width = 2.dp,
+                                    Color(0XFF2563EB),
+                                    RoundedCornerShape(100),
+                                    offset = 4.dp
+                                )
                                 .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-                                .width(32.dp)
-                                .height(4.dp)
+                                .size(32.dp, 4.dp)
                         )
                     }
                 }
