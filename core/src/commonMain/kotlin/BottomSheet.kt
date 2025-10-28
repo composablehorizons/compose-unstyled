@@ -26,7 +26,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.*
@@ -532,30 +531,8 @@ fun BottomSheet(
             ProvideContentColor(contentColor) {
                 scope.content()
             }
-
-            OutOfBoundsSpacer(state)
         }
     }
-}
-
-@Composable
-private fun OutOfBoundsSpacer(state: BottomSheetState) {
-    Spacer(
-        Modifier.layout { measurable, constraints ->
-            val placeable = measurable.measure(constraints)
-
-            // Calculate the amount of content that's outside the container
-            val height = if (state.contentHeightPx.isNaN()) {
-                placeable.height
-            } else {
-                (state.contentHeightPx - state.offset).coerceAtLeast(0f).roundToInt()
-            }
-
-            layout(placeable.width, height) {
-                placeable.place(0, 0)
-            }
-        }
-    )
 }
 
 @Composable
