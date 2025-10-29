@@ -504,7 +504,6 @@ fun BottomSheet(
                         .sheetOffset(state = state, imeAware = imeAware)
                 )
                 if (scope.enabled && state.detents.size > 1) {
-                    println("SHEET GOT enabled = ${scope.enabled}")
                     add(
                         Modifier
                             .unstyledAnchoredDraggable(
