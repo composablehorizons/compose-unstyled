@@ -2,7 +2,7 @@ name: PR Unit Tests
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
@@ -12,7 +12,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +38,6 @@ jobs:
       - name: Run unit tests
         run: ./gradlew --no-daemon test
 
-      # Optional guard: fail if no test reports were generated (prevents "green with zero tests").
       - name: Verify test reports exist
         run: |
           set -e
@@ -61,39 +59,40 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  comment_and_close_pr:
+  comment_and_close_on_failure:
     needs: test
-    # Only run if tests failed and PR is still open
-    if: ${{ needs.test.result == 'failure' && github.event.pull_request.state == 'open' }}
+    # Run this job regardless, then gate steps by needs.test.result
+    if: ${{ always() && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       issues: write
     steps:
-      - name: Comment and close PR
+      - name: Comment and close PR when tests failed
+        if: ${{ needs.test.result == 'failure' && github.event.pull_request.state == 'open' }}
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const {owner, repo} = context.repo;
             const pr = context.payload.pull_request;
-            const prNumber = pr.number;
 
-            const body = `
-            ❌ **Unit tests failed in CI.**
-            
-            Please run the tests locally (\`./gradlew test\`), fix any failures, and then reopen this PR once everything passes.
-            `;
+            // Only act on same-repo PRs (GITHUB_TOKEN is read-only for forks)
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) {
+              core.info('PR is from a fork; skipping comment/close.');
+              return;
+            }
+
+            const body = [
+              "❌ **CI failed due to failing unit tests.**",
+              "",
+              "Please re-run unit tests locally (e.g., `./gradlew test`), push fixes, and then **re-open this PR**."
+            ].join("\n");
 
             await github.rest.issues.createComment({
-              owner,
-              repo,
-              issue_number: prNumber,
-              body
+              owner, repo, issue_number: pr.number, body
             });
 
             await github.rest.pulls.update({
-              owner,
-              repo,
-              pull_number: prNumber,
-              state: "closed"
+              owner, repo, pull_number: pr.number, state: "closed"
             });
