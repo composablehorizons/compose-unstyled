@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  checks: write
   pull-requests: write
   issues: write
 
@@ -59,8 +60,8 @@ jobs:
           files: |
             **/build/test-results/**/TEST-*.xml
         
-          check_name: "Unit Test Results"
-          # comment_mode: failures   # only comment when there are failures
+          check_name: "Unit Test Results"        
+          comment_mode: always # more details here: https://github.com/marketplace/actions/publish-test-results#configuration
           job_summary: true 
           
       - name: Upload test reports
