@@ -16,6 +16,11 @@ import kotlin.test.Test
 class ModalTest {
 
     @Test
+    fun `test that fails`() = runTestSuite {
+        error("This test fails")
+    }
+
+    @Test
     fun semantics() = runTestSuite {
         testCase("add isDialog semantic") {
             var showModal by mutableStateOf(false)
