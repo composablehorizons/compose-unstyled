@@ -2,7 +2,21 @@
 set -e
 
 echo "Pulling changes..."
-git pull
+git fetch origin
+
+# Get current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$current_branch" = "main" ]; then
+    echo "On main branch, pulling latest changes..."
+    git pull
+else
+    echo "On branch $current_branch, rebasing from latest tag..."
+    # Get the latest tag
+    latest_tag=$(git describe --tags --abbrev=0)
+    echo "Latest tag: $latest_tag"
+    git rebase "$latest_tag"
+fi
 
 echo "Compiling Kotlin..."
 ./gradlew core:assemble
