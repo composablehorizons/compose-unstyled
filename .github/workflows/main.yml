@@ -36,7 +36,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Run unit tests
-        run: ./gradlew --no-daemon test
+        run: ./gradlew --no-daemon jvmTest
 
       - name: Verify test reports exist
         run: |
@@ -86,7 +86,7 @@ jobs:
             const body = [
               "❌ **CI failed due to failing unit tests.**",
               "",
-              "Please re-run unit tests locally (e.g., `./gradlew test`), push fixes, and then **re-open this PR**."
+              "Please re-run unit tests locally (e.g., `./gradlew jvmTest`), push fixes, and then **re-open this PR**."
             ].join("\n");
 
             await github.rest.issues.createComment({
