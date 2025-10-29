@@ -51,6 +51,18 @@ jobs:
             exit 1
           fi
 
+      - name: Publish Unit Test Results (PR comment + Check)
+
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            **/build/test-results/**/TEST-*.xml
+        
+          check_name: "Unit Test Results"
+          # comment_mode: failures   # only comment when there are failures
+          job_summary: true 
+          
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
