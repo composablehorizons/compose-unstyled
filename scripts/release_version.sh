@@ -93,6 +93,13 @@ git add .
 # Commit with the provided version in the message
 git commit -m "Prepare version $wip_version"
 
+# If we're not on main, merge changes to main first
+if [ "$current_branch" != "main" ]; then
+    echo "Merging $current_branch to main..."
+    git checkout main
+    git merge "$current_branch"
+fi
+
 git push origin
 git push origin $previous_version
 
