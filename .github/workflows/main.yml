@@ -37,7 +37,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Run unit tests
-        run: ./gradlew --no-daemon test
+        run: ./gradlew --no-daemon jvmTest
 
       - name: Upload test reports (always)
         if: always()
@@ -50,27 +50,16 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      # - name: Close PR on failure with guidance
-      #   if: failure()
-      #   uses: peter-evans/close-pull-request@v3
-      #   with:
-      #       comment: |
-      #         ❌ Tests failed in CI.
+      - name: Comment & close PR on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          BODY=$(cat <<'EOF'
+          ❌ CI unit tests failed.
 
-      #         Please run the tests locally before reopening:
+          Please run the tests locally before reopening:
 
-      #         ```bash
-      #         ./gradlew clean test
-      #         ```
-
-      #         Typical fixes:
-      #         - Re-run flaky tests locally multiple times.
-      #         - Ensure any new code has deterministic tests.
-      #         - Keep each test focused: "expected outcome, when setup condition".
-
-      #         After fixing:
-      #         1. Commit & push to the same branch.
-      #         2. Re-open this PR.
-      #         3. CI will run the tests again.
-
-      #         If you believe this was closed in error, you can still reopen it manually.
+          ```bash
+          ./gradlew clean test
