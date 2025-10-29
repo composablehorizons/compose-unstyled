@@ -50,27 +50,27 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      - name: Close PR on failure with guidance
-        if: failure()
-        uses: peter-evans/close-pull-request@v3
-        with:
-            comment: |
-              ❌ Tests failed in CI.
+      # - name: Close PR on failure with guidance
+      #   if: failure()
+      #   uses: peter-evans/close-pull-request@v3
+      #   with:
+      #       comment: |
+      #         ❌ Tests failed in CI.
 
-              Please run the tests locally before reopening:
+      #         Please run the tests locally before reopening:
 
-              ```bash
-              ./gradlew clean test
-              ```
+      #         ```bash
+      #         ./gradlew clean test
+      #         ```
 
-              Typical fixes:
-              - Re-run flaky tests locally multiple times.
-              - Ensure any new code has deterministic tests.
-              - Keep each test focused: "expected outcome, when setup condition".
+      #         Typical fixes:
+      #         - Re-run flaky tests locally multiple times.
+      #         - Ensure any new code has deterministic tests.
+      #         - Keep each test focused: "expected outcome, when setup condition".
 
-              After fixing:
-              1. Commit & push to the same branch.
-              2. Re-open this PR.
-              3. CI will run the tests again.
+      #         After fixing:
+      #         1. Commit & push to the same branch.
+      #         2. Re-open this PR.
+      #         3. CI will run the tests again.
 
-              If you believe this was closed in error, you can still reopen it manually.
+      #         If you believe this was closed in error, you can still reopen it manually.
