@@ -1,0 +1,98 @@
+name: PR Unit Tests
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Run unit tests
+        run: ./gradlew --no-daemon jvmTest
+
+      - name: Verify test reports exist
+        run: |
+          set -e
+          count=$(find . -type f -path '*build/test-results/*/TEST-*.xml' 2>/dev/null | wc -l || true)
+          echo "Discovered $count test report files."
+          if [ "$count" -eq 0 ]; then
+            echo "Check locally that all works okay, you can use this command to check ./gradlew jvmTest"
+            exit 1
+          fi
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/test-results
+            **/build/reports/tests
+          if-no-files-found: ignore
+          retention-days: 7
+
+  close_pr_on_failure:
+    needs: pr_checks
+    # Run this job regardless, then gate steps by needs.test.result
+    if: ${{ always() && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Close PR when tests failed
+        if: ${{ needs.pr_checks.result == 'failure' && github.event.pull_request.state == 'open' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const {owner, repo} = context.repo;
+            const pr = context.payload.pull_request;
+
+            // Only act on same-repo PRs (GITHUB_TOKEN is read-only for forks)
+            if (pr.head.repo.full_name !== pr.base.repo.full_name) {
+              core.info('PR is from a fork; skipping comment/close.');
+              return;
+            }
+
+            const body = [
+              "❌ **Some tests failed.**",
+              "",
+              "Please re-run unit tests locally (e.g., `./gradlew jvmTest`), push fixes, and then **re-open this PR**."
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: pr.number, body
+            });
+
+            await github.rest.pulls.update({
+              owner, repo, pull_number: pr.number, state: "closed"
+            });
