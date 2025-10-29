@@ -10,7 +10,7 @@ permissions:
   issues: write
 
 jobs:
-  test:
+  pr_checks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
             exit 1
           fi
 
-      - name: Upload test reports (always)
+      - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -59,8 +59,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  comment_and_close_on_failure:
-    needs: test
+  close_pr_on_failure:
+    needs: pr_checks
     # Run this job regardless, then gate steps by needs.test.result
     if: ${{ always() && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
@@ -68,7 +68,7 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - name: Comment and close PR when tests failed
+      - name: Close PR when tests failed
         if: ${{ needs.test.result == 'failure' && github.event.pull_request.state == 'open' }}
         uses: actions/github-script@v7
         with:
@@ -84,7 +84,7 @@ jobs:
             }
 
             const body = [
-              "❌ **CI failed due to failing unit tests.**",
+              "❌ **Some tests failed.**",
               "",
               "Please re-run unit tests locally (e.g., `./gradlew jvmTest`), push fixes, and then **re-open this PR**."
             ].join("\n");
