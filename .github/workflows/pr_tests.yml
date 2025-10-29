@@ -1,7 +1,10 @@
 name: PR Unit Tests
 
 on:
+  workflow_dispatch:
   pull_request:
+    branches:
+      - main
     types: [opened, reopened, synchronize]
 
 permissions:
