@@ -66,11 +66,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -e
           PR_NUMBER=${{ github.event.pull_request.number }}
-          BODY=$(cat <<'EOF'
-          ❌ CI unit tests failed.
 
-          Please run the tests locally before reopening:
+          cat > pr_failure_body.md <<'EOF'
+❌ CI unit tests failed.
 
-          ```bash
-          ./gradlew clean test
+Please run the tests locally before reopening:
+
+```bash
+./gradlew clean jvmTest
