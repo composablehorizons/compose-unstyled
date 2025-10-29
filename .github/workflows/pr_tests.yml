@@ -77,38 +77,33 @@ jobs:
 
   close_pr_on_failure:
     needs: pr_checks
-    # Run this job regardless, then gate steps by needs.test.result
     if: ${{ always() && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       issues: write
     steps:
-      - name: Close PR when tests failed
+      - name: Close PR when tests failed (same-repo PRs)
         if: ${{ needs.pr_checks.result == 'failure' && github.event.pull_request.state == 'open' }}
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const {owner, repo} = context.repo;
             const pr = context.payload.pull_request;
 
-            // Only act on same-repo PRs (GITHUB_TOKEN is read-only for forks)
+            // Skip forks here; companion workflow will close those.
             if (pr.head.repo.full_name !== pr.base.repo.full_name) {
-              core.info('PR is from a fork; skipping comment/close.');
+              core.info('PR is from a fork; skipping close here.');
               return;
             }
 
             const body = [
-              "❌ **Some tests failed.**",
+              "❌ **CI failed.**",
               "",
-              "Please re-run unit tests locally (e.g., `./gradlew jvmTest`), push fixes, and then **re-open this PR**."
+              "A detailed test summary has been posted (see Checks / PR comment).",
+              "",
+              "Please run locally (`./gradlew jvmTest`), push fixes, and then **re-open this PR**."
             ].join("\n");
 
-            await github.rest.issues.createComment({
-              owner, repo, issue_number: pr.number, body
-            });
-
-            await github.rest.pulls.update({
-              owner, repo, pull_number: pr.number, state: "closed"
-            });
+            await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+            await github.rest.pulls.update({ owner, repo, pull_number: pr.number, state: "closed" });
