@@ -37,7 +37,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Run unit tests
-        run: ./gradlew --no-daemon jvmTest
+        run: ./gradlew --no-daemon test
 
       # Optional guard: fail if no test reports were generated (prevents "green with zero tests").
       - name: Verify test reports exist
