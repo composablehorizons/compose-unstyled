@@ -1,0 +1,76 @@
+name: PR Unit Tests
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Run unit tests
+        run: ./gradlew --no-daemon test
+
+      - name: Upload test reports (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/test-results/test
+            **/build/reports/tests/test
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Close PR on failure with guidance
+        if: failure()
+        uses: peter-evans/close-pull-request@v3
+        with:
+            comment: |
+              ❌ Tests failed in CI.
+
+              Please run the tests locally before reopening:
+
+              ```bash
+              ./gradlew clean test
+              ```
+
+              Typical fixes:
+              - Re-run flaky tests locally multiple times.
+              - Ensure any new code has deterministic tests.
+              - Keep each test focused: "expected outcome, when setup condition".
+
+              After fixing:
+              1. Commit & push to the same branch.
+              2. Re-open this PR.
+              3. CI will run the tests again.
+
+              If you believe this was closed in error, you can still reopen it manually.
