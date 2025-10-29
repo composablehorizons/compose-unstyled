@@ -254,6 +254,11 @@ class BottomSheetState(
             check(innerDetents.contains(value)) {
                 "Cannot set targetDetent to a detent (${value.identifier}) that is not part of the detents of the sheet's state. Current detents are: ${innerDetents.joinToString()}"
             }
+            // do not start another animation if we are already heading to the requested detent
+            // starting another animation, causes the sheet to pause for a split second, which is annoying for UX
+            if (targetDetent == value) {
+                return
+            }
             coroutineScope.launch {
                 anchoredDraggableState.animateTo(value)
             }
@@ -499,6 +504,7 @@ fun BottomSheet(
                         .sheetOffset(state = state, imeAware = imeAware)
                 )
                 if (scope.enabled && state.detents.size > 1) {
+                    println("SHEET GOT enabled = ${scope.enabled}")
                     add(
                         Modifier
                             .unstyledAnchoredDraggable(
@@ -518,6 +524,8 @@ fun BottomSheet(
                                 }
                             )
                     )
+                } else {
+                    println("NO DRAG")
                 }
                 add(
                     modifier
