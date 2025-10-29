@@ -69,7 +69,7 @@ jobs:
       issues: write
     steps:
       - name: Close PR when tests failed
-        if: ${{ needs.test.result == 'failure' && github.event.pull_request.state == 'open' }}
+        if: ${{ needs.pr_checks.result == 'failure' && github.event.pull_request.state == 'open' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
