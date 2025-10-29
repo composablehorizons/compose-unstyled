@@ -44,7 +44,7 @@ jobs:
           count=$(find . -type f -path '*build/test-results/*/TEST-*.xml' 2>/dev/null | wc -l || true)
           echo "Discovered $count test report files."
           if [ "$count" -eq 0 ]; then
-            echo "No test reports found. Failing."
+            echo "Check locally that all works okay, you can use this command to check ./gradlew jvmTest"
             exit 1
           fi
 
