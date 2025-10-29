@@ -39,14 +39,25 @@ jobs:
       - name: Run unit tests
         run: ./gradlew --no-daemon jvmTest
 
+      # Optional guard: fail if no test reports were generated (prevents "green with zero tests").
+      - name: Verify test reports exist
+        run: |
+          set -e
+          count=$(find . -type f -path '*build/test-results/*/TEST-*.xml' 2>/dev/null | wc -l || true)
+          echo "Discovered $count test report files."
+          if [ "$count" -eq 0 ]; then
+            echo "No test reports found. Failing."
+            exit 1
+          fi
+
       - name: Upload test reports (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
-            **/build/test-results/test
-            **/build/reports/tests/test
+            **/build/test-results
+            **/build/reports/tests
           if-no-files-found: ignore
           retention-days: 7
 
