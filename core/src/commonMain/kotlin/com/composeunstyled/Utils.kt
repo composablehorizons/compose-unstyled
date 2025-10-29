@@ -14,6 +14,7 @@ import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 internal val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
@@ -22,6 +23,7 @@ internal val NoPadding = PaddingValues(0.dp)
 
 val LocalContentColor = compositionLocalOf { Color.Unspecified }
 val LocalTextStyle = compositionLocalOf { TextStyle.Default }
+val LocalVisibleSheetHeight = compositionLocalOf { Dp.Unspecified }
 
 @Composable
 fun ProvideContentColor(color: Color, content: @Composable () -> Unit) {
@@ -31,6 +33,11 @@ fun ProvideContentColor(color: Color, content: @Composable () -> Unit) {
 @Composable
 fun ProvideTextStyle(textStyle: TextStyle, content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalTextStyle provides textStyle, content = content)
+}
+
+@Composable
+fun ProvideVisibleSheetHeight(visibleHeight: Dp, content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalVisibleSheetHeight provides visibleHeight, content = content)
 }
 
 internal val KeyEvent.isKeyDown: Boolean

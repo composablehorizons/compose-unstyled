@@ -1225,7 +1225,7 @@ class BottomSheetTest {
                 ) {
                     state = rememberBottomSheetState(
                         initialDetent = halfExpandedDetent,
-                        detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded)
+                        detents = listOf(SheetDetent.Hidden, halfExpandedDetent)
                     )
 
                     BottomSheet(
@@ -1233,10 +1233,10 @@ class BottomSheetTest {
                         modifier = Modifier
                             .background(Color.White)
                             .testTag("sheet")
-                            .verticalScroll(rememberScrollState())
+                            .fillMaxHeight()
                     ) {
-                        Column {
-                            repeat(5) { index ->
+                        Column(Modifier.height(visibleHeight).verticalScroll(rememberScrollState())) {
+                            repeat(20) { index ->
                                 Text(
                                     text = "item_$index",
                                     modifier = Modifier
@@ -1250,12 +1250,10 @@ class BottomSheetTest {
                 }
             }
 
-            // Swipe up on the sheet - this should move the sheet to FullyExpanded first
-            onNodeWithTag("sheet").performTouchInput {
-                swipeUp()
-            }
+            // Swipe up to the last element of the sheet
+            onNodeWithTag("sheet").performScrollToNode(hasTestTag("item_19"))
             awaitIdle()
-            onNodeWithTag("item_4").assertIsDisplayed()
+            onNodeWithTag("item_19").assertIsDisplayed()
         }
     }
 

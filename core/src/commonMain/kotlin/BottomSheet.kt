@@ -32,8 +32,10 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.*
 import com.composables.core.androidx.compose.foundation.gestures.*
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.LocalVisibleSheetHeight
 import com.composeunstyled.NoPadding
 import com.composeunstyled.ProvideContentColor
+import com.composeunstyled.ProvideVisibleSheetHeight
 import com.composeunstyled.buildModifier
 import kotlin.jvm.JvmName
 import kotlin.math.roundToInt
@@ -426,6 +428,10 @@ class BottomSheetScope internal constructor(
     enabled: Boolean
 ) {
     internal var enabled by mutableStateOf(enabled)
+
+    val visibleHeight: Dp
+        @Composable
+        get() = LocalVisibleSheetHeight.current
 }
 
 /**
@@ -479,6 +485,49 @@ fun BottomSheet(
     val scope = remember { BottomSheetScope(state, enabled) }
     SideEffect { scope.enabled = enabled }
 
+    val density = LocalDensity.current
+    val ime = WindowInsets.ime
+    val imeHeight by remember {
+        derivedStateOf {
+            if (imeAware) ime.getBottom(density) else 0
+        }
+    }
+
+    // Calculate the visible height of the sheet, accounting for the keyboard
+    val visibleHeight by remember {
+        derivedStateOf {
+            // The sheet's current Y position from the top of the screen
+            val sheetOffsetPx = state.anchoredDraggableState.offset
+            val containerHeightPx = state.containerHeightPx
+
+            if (sheetOffsetPx.isNaN() || containerHeightPx.isNaN()) {
+                0.dp
+            } else {
+                // Step 1: Calculate available screen space (excluding keyboard area)
+                // When keyboard is visible, it reduces the usable vertical space
+                val availableScreenSpacePx = containerHeightPx - imeHeight
+
+                // Step 2: Calculate where the sheet's top edge appears visually
+                // When the keyboard pushes up by N pixels, it's as if the sheet moved up by N pixels
+                // Example: sheet at 600px with 300px keyboard → visually appears at 300px
+                // This is because the keyboard occupies the bottom 300px, shifting our reference frame
+                val visualSheetTopPositionPx = sheetOffsetPx - imeHeight
+
+                // Step 3: Prevent the sheet from being positioned above the screen
+                // Even if the keyboard pushes hard, the sheet can't go above pixel 0
+                val clampedSheetTopPx = visualSheetTopPositionPx.coerceAtLeast(0f)
+
+                // Step 4: Calculate how much of the sheet is actually visible
+                // This is the space from the sheet's top to the bottom of available space (top of keyboard)
+                // Example: available space = 700px, sheet top = 300px → visible height = 400px
+                val visibleSheetHeightPx = (availableScreenSpacePx - clampedSheetTopPx)
+                    .coerceAtLeast(0f)
+
+                with(density) { visibleSheetHeightPx.toDp() }
+            }
+        }
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     BoxWithConstraints(
@@ -529,7 +578,9 @@ fun BottomSheet(
             }
         ) {
             ProvideContentColor(contentColor) {
-                scope.content()
+                ProvideVisibleSheetHeight(visibleHeight) {
+                    scope.content()
+                }
             }
         }
     }
