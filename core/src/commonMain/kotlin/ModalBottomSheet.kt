@@ -108,7 +108,7 @@ class ModalBottomSheetState(
     internal val scrimState = MutableTransitionState(initialState = initialDetent != SheetDetent.Hidden)
 
     internal var modalIsAdded by mutableStateOf(false)
-    internal var pendingForward: Job? = null
+    internal var pendingDetentChange: Job? = null
 
     var currentDetent: SheetDetent
         get() {
@@ -124,31 +124,8 @@ class ModalBottomSheetState(
     var targetDetent: SheetDetent
         get() = bottomSheetState.targetDetent
         set(value) {
-            val isBottomSheetVisible =
-                bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.isIdle.not()
-
-            modalDetent = value
-            if (isBottomSheetVisible) {
-                // sheet is visible, forward the detent directly to the sheet
-                bottomSheetState.targetDetent = value
-            } else {
-                // otherwise, wait until the modal is attached
-                pendingForward?.cancel()
-                pendingForward = scope.launch {
-                    snapshotFlow { modalIsAdded }
-                        .distinctUntilChanged()
-                        .filter { modalIsAdded }
-                        .first()
-
-                    scrimState.targetState = true
-
-                    // Wait for anchors to be initialized before animating
-                    snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }
-                        .filter { it }
-                        .first()
-
-                    bottomSheetState.targetDetent = value
-                }
+            scope.launch {
+                animateTo(value)
             }
         }
 
@@ -183,6 +160,13 @@ class ModalBottomSheetState(
             bottomSheetState.animateTo(value)
         } else {
             modalDetent = value
+            pendingDetentChange?.cancel()
+            pendingDetentChange = scope.launch {
+                awaitModal()
+                scrimState.targetState = true
+                bottomSheetState.animateTo(value)
+            }
+            pendingDetentChange?.join()
         }
     }
 
@@ -190,11 +174,26 @@ class ModalBottomSheetState(
         val isBottomSheetVisible =
             bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
 
+        modalDetent = value
+
         if (isBottomSheetVisible) {
             bottomSheetState.jumpTo(value)
         } else {
-            modalDetent = value
+            pendingDetentChange?.cancel()
+            pendingDetentChange = scope.launch {
+                awaitModal()
+                scrimState.targetState = true
+                bottomSheetState.jumpTo(value)
+            }
         }
+    }
+
+    private suspend fun awaitModal() {
+        // Workaround until https://github.com/composablehorizons/compose-unstyled/issues/89 is unblocked
+        snapshotFlow { modalIsAdded }.distinctUntilChanged().filter { modalIsAdded }.first()
+
+        // wait until the anchored state is used and is measured
+        snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }.filter { it }.first()
     }
 
     fun invalidateDetents() {
@@ -270,16 +269,14 @@ fun ModalBottomSheet(
                 state.modalIsAdded = true
                 onDispose {
                     state.modalIsAdded = false
-                    state.pendingForward?.cancel()
-                    state.pendingForward = null
+                    state.pendingDetentChange?.cancel()
+                    state.pendingDetentChange = null
                 }
             }
             var hasBeenShown by remember { mutableStateOf(false) }
             if (hasBeenShown.not()) {
-                LaunchedEffect(state.bottomSheetState.isIdle, state.bottomSheetState.currentDetent) {
-                    if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent != SheetDetent.Hidden) {
-                        hasBeenShown = true
-                    }
+                LaunchedEffect(state.offset > 0f) {
+                    hasBeenShown = true
                 }
             } else {
                 LaunchedEffect(state.bottomSheetState.isIdle) {
@@ -288,6 +285,7 @@ fun ModalBottomSheet(
                     }
                 }
             }
+
             if (properties.dismissOnBackPress) {
                 EscapeHandler {
                     onDismissRequest()

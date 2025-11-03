@@ -523,8 +523,6 @@ fun BottomSheet(
                                 }
                             )
                     )
-                } else {
-                    println("NO DRAG")
                 }
                 add(
                     modifier
