@@ -333,6 +333,105 @@ class ModalBottomSheetTest {
             onNode(isDialog()).assertDoesNotExist()
             onNodeWithTag("scrim").assertDoesNotExist()
         }
+    }
 
+    @Test
+    fun `state changes during interactions`() = runTestSuite {
+        testCase("currentDetent updates to Hidden, when targetDetent changes to Hidden during opening animation") {
+            lateinit var state: ModalBottomSheetState
+            setContent {
+                state = rememberModalBottomSheetState(
+                    initialDetent = SheetDetent.Hidden,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+                    animationSpec = tween(2000)
+                )
+                ModalBottomSheet(state) {
+                    Scrim()
+                    Sheet { Box(Modifier.testTag("sheet").size(100.dp)) }
+                }
+            }
+
+            waitForIdle()
+            mainClock.autoAdvance = false
+
+            // Start opening animation
+            state.targetDetent = SheetDetent.FullyExpanded
+            mainClock.advanceTimeBy(500)
+
+            // Change target to Hidden mid-animation
+            state.targetDetent = SheetDetent.Hidden
+
+            mainClock.autoAdvance = true
+            waitForIdle()
+
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+        }
+
+        testCase("isIdle becomes true, when animation to Hidden completes") {
+            lateinit var state: ModalBottomSheetState
+            setContent {
+                state = rememberModalBottomSheetState(
+                    initialDetent = SheetDetent.FullyExpanded,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+                    animationSpec = tween(1000)
+                )
+                ModalBottomSheet(state) {
+                    Scrim()
+                    Sheet { Box(Modifier.size(100.dp)) }
+                }
+            }
+
+            waitForIdle()
+            assertThat(state.isIdle).isTrue()
+
+            mainClock.autoAdvance = false
+
+            // Start closing animation
+            state.targetDetent = SheetDetent.Hidden
+            mainClock.advanceTimeBy(500)
+
+            // Should not be idle during animation
+            assertThat(state.isIdle).isFalse()
+
+            // Complete animation
+            mainClock.autoAdvance = true
+            waitForIdle()
+
+            // Should be idle after animation completes
+            assertThat(state.isIdle).isTrue()
+        }
+
+        testCase("currentDetent updates to Hidden, when sheet caught and dismissed with gesture during opening animation") {
+            lateinit var state: ModalBottomSheetState
+            setContent {
+                state = rememberModalBottomSheetState(
+                    initialDetent = SheetDetent.Hidden,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+                    animationSpec = tween(2000)
+                )
+                ModalBottomSheet(state) {
+                    Scrim()
+                    Sheet { Box(Modifier.testTag("sheet").size(300.dp)) }
+                }
+            }
+
+            waitForIdle()
+            mainClock.autoAdvance = false
+
+            // Start opening animation programmatically
+            state.targetDetent = SheetDetent.FullyExpanded
+            mainClock.advanceTimeBy(500)
+
+            // Catch the sheet mid-animation and swipe it down to dismiss (gesture-driven)
+            onNodeWithTag("sheet").performTouchInput {
+                swipeDown()
+            }
+
+            mainClock.autoAdvance = true
+            waitForIdle()
+
+            // currentDetent should update to Hidden immediately after gesture completes
+            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+        }
     }
 }

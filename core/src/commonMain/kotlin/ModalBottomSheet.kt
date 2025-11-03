@@ -276,10 +276,8 @@ fun ModalBottomSheet(
             }
             var hasBeenShown by remember { mutableStateOf(false) }
             if (hasBeenShown.not()) {
-                LaunchedEffect(state.bottomSheetState.isIdle, state.bottomSheetState.currentDetent) {
-                    if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent != SheetDetent.Hidden) {
-                        hasBeenShown = true
-                    }
+                LaunchedEffect(state.offset > 0f) {
+                    hasBeenShown = true
                 }
             } else {
                 LaunchedEffect(state.bottomSheetState.isIdle) {
@@ -288,6 +286,7 @@ fun ModalBottomSheet(
                     }
                 }
             }
+
             if (properties.dismissOnBackPress) {
                 EscapeHandler {
                     onDismissRequest()
