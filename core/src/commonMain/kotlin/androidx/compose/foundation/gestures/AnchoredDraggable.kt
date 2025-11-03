@@ -723,6 +723,7 @@ class UnstyledAnchoredDraggableState<T>(
      * @return The velocity consumed in the animation
      */
     suspend fun settle(velocity: Float): Float {
+        isDragging = false
         val previousValue = this.currentValue
         val targetValue = computeTarget(
             offset = requireOffset(),
@@ -923,6 +924,7 @@ class UnstyledAnchoredDraggableState<T>(
         val newOffset = newOffsetForDelta(delta)
         val oldOffset = if (offset.isNaN()) 0f else offset
         offset = newOffset
+        isDragging = true
         return newOffset - oldOffset
     }
 
