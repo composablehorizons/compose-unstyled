@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -12,6 +13,8 @@ plugins {
     alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.detekt)
+
     id("maven-publish")
     id("signing")
 }
@@ -124,7 +127,33 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
+val detektSourceDirs = listOf(
+    "src/commonMain/kotlin",
+    "src/cmpMain/kotlin",
+    "src/androidMain/kotlin",
+    "src/jvmMain/kotlin",
+    "src/iosMain/kotlin",
+    "src/webMain/kotlin"
+).map(::file).filter(File::exists)
 
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files(rootProject.file("detekt.yml")))
+    ignoreFailures = true
+    parallel = true
+    source.setFrom(detektSourceDirs)
+    baseline = file("$projectDir/detekt-baseline.xml")
+}
+//
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = JvmTarget.JVM_17.target
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(false)
+    }
+}
 val javadocJar = tasks.create<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

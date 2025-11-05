@@ -2,7 +2,7 @@ name: PR Unit Tests
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [ opened, reopened, synchronize ]
 
 permissions:
   contents: read
@@ -35,6 +35,23 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew --no-daemon jvmTest
+      - name: Run Detekt (core module)
+        run: ./gradlew --no-daemon --console=plain :core:detekt
+
+      - name: Show Detekt summary
+        if: always()
+        run: |
+          SUMMARY_MD=core/build/reports/detekt/detekt.md
+          SUMMARY_TXT=core/build/reports/detekt/detekt.txt
+          if [ -f "$SUMMARY_MD" ]; then
+            echo "Detekt summary (markdown):"
+            cat "$SUMMARY_MD"
+          elif [ -f "$SUMMARY_TXT" ]; then
+            echo "Detekt summary (text):"
+            cat "$SUMMARY_TXT"
+          else
+            echo "Detekt report not found."
+          fi
 
       - name: Verify test reports exist
         run: |

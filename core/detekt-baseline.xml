@@ -1,0 +1,249 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:ScrollArea.kt$&lt;no name provided&gt;$isOverscrollTop || isOverscrollBottom || isOverscrollLeft || isOverscrollRight</ID>
+    <ID>ConstructorParameterNaming:Dialog.kt$DialogState$____deprecated_constructor: Unit</ID>
+    <ID>CyclomaticComplexMethod:BottomSheet.kt$@Composable fun BottomSheetScope.DragIndication( modifier: Modifier = Modifier, indication: Indication = LocalIndication.current, interactionSource: MutableInteractionSource? = null, )</ID>
+    <ID>CyclomaticComplexMethod:ColoredIndication.kt$ColoredIndication.ColoredIndicationInstance$override fun onAttach()</ID>
+    <ID>CyclomaticComplexMethod:Slider.kt$private fun Modifier.sliderKeyboardInteractions(enabled: Boolean, state: SliderState): Modifier</ID>
+    <ID>CyclomaticComplexMethod:TabGroup.kt$@Composable fun TabList( modifier: Modifier = Modifier, shape: Shape = RectangleShape, backgroundColor: Color = Color.Unspecified, contentColor: Color = Color.Unspecified, contentPadding: PaddingValues = NoPadding, orientation: Orientation = Orientation.Horizontal, horizontalArrangement: Arrangement.Horizontal = Arrangement.Start, verticalAlignment: Alignment.Vertical = Alignment.Top, content: @Composable RowScope.() -&gt; Unit )</ID>
+    <ID>CyclomaticComplexMethod:TextField.kt$@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities") @Composable fun TextField( value: String, onValueChange: (String) -&gt; Unit, editable: Boolean = true, modifier: Modifier = Modifier, contentPadding: PaddingValues = NoPadding, leadingIcon: @Composable (() -&gt; Unit)? = null, trailingIcon: @Composable (() -&gt; Unit)? = null, placeholder: String = "", contentColor: Color = LocalContentColor.current, disabledColor: Color = contentColor.copy(0.66f), backgroundColor: Color = Color.Unspecified, borderWidth: Dp = 1.dp, borderColor: Color = Color.Unspecified, shape: Shape = RectangleShape, textStyle: TextStyle = LocalTextStyle.current, textAlign: TextAlign = TextAlign.Unspecified, fontSize: TextUnit = TextUnit.Unspecified, fontWeight: FontWeight? = null, fontFamily: FontFamily? = null, singleLine: Boolean = false, minLines: Int = 1, maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE, keyboardOptions: KeyboardOptions = KeyboardOptions.Default, keyboardActions: KeyboardActions = KeyboardActions.Default, interactionSource: MutableInteractionSource? = null, spacing: Dp = 8.dp, visualTransformation: VisualTransformation = VisualTransformation.None, verticalAlignment: Alignment.Vertical = Alignment.CenterVertically, )</ID>
+    <ID>CyclomaticComplexMethod:Tooltip.kt$@Composable fun TooltipPanel( modifier: Modifier = Modifier, arrow: @Composable (TooltipArrowDirection) -&gt; Unit, enter: EnterTransition = AppearInstantly, exit: ExitTransition = DisappearInstantly, content: @Composable () -&gt; Unit )</ID>
+    <ID>CyclomaticComplexMethod:deprecated.TabGroup.kt$@Composable fun TabGroupScope.TabList( modifier: Modifier = Modifier, shape: Shape = RectangleShape, backgroundColor: Color = Color.Unspecified, contentColor: Color = Color.Unspecified, contentPadding: PaddingValues = NoPadding, orientation: Orientation = Orientation.Horizontal, activateOnFocus: Boolean = true, content: @Composable RowScope.() -&gt; Unit )</ID>
+    <ID>EmptyFunctionBlock:AnchoredDraggable.kt$AnchoredDraggableNode${ }</ID>
+    <ID>ExplicitItLambdaParameter:TextField.kt${ it -&gt; if (scope.isTrailingFocused.not() &amp;&amp; scope.isLeadingFocused.not()) { // block any value changes, unless the actual text input is focused // this guards for cases where the onValueChange(it.text) textRange = it.selection } }</ID>
+    <ID>ForbiddenComment:ObjectFloatMap.kt$MutableObjectFloatMap$// TODO: We could just mark the entry as empty if there's a group</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$// TODO: We could further reduce the work we do by always copying index 0 to</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$MutableScatterMap$// TODO: We could just mark the entry as empty if there's a group</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$MutableScatterMap.MutableMapWrapper$// TODO: See TODO on `MapWrapper`</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$ScatterMap.MapWrapper$// TODO: @Suppress required because of a lint check issue (b/294130025)</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$ScatterMap.MapWrapper$// TODO: While not mandatory, it would be pertinent to throw a</ID>
+    <ID>ForbiddenComment:ScatterMap.kt$ScatterMap.MapWrapper$// TODO: the proliferation of inner classes causes unnecessary code to be</ID>
+    <ID>ForbiddenComment:ScatterSet.kt$MutableScatterSet$// TODO: We could just mark the element as empty if there's a group</ID>
+    <ID>InvalidPackageDeclaration:AnchoredDraggable.kt$package com.composables.core.androidx.compose.foundation.gestures</ID>
+    <ID>InvalidPackageDeclaration:BottomSheet.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:ContainerHelpers.kt$package com.composables.core.androidx.collection.internal</ID>
+    <ID>InvalidPackageDeclaration:Dialog.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:DragGestureDetector.kt$package com.composables.core.androidx.compose.foundation.gestures</ID>
+    <ID>InvalidPackageDeclaration:Draggable.kt$package com.composables.core.androidx.compose.foundation.gestures</ID>
+    <ID>InvalidPackageDeclaration:FloatRange.kt$package com.composables.core.androidx.annotation</ID>
+    <ID>InvalidPackageDeclaration:FloatSet.kt$package com.composables.core.androidx.collection</ID>
+    <ID>InvalidPackageDeclaration:FocusRingIndication.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:Icon.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:IntRange.kt$package com.composables.core.androidx.annotation</ID>
+    <ID>InvalidPackageDeclaration:LongClickable.android.kt$package core.com.composeunstyled</ID>
+    <ID>InvalidPackageDeclaration:LongClickable.cmp.kt$package core.com.composeunstyled</ID>
+    <ID>InvalidPackageDeclaration:LongClickable.kt$package core.com.composeunstyled</ID>
+    <ID>InvalidPackageDeclaration:ModalBottomSheet.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:ObjectFloatMap.kt$package com.composables.core.androidx.collection</ID>
+    <ID>InvalidPackageDeclaration:RuntimeHelpers.kt$package com.composables.core.androidx.collection.internal</ID>
+    <ID>InvalidPackageDeclaration:ScatterMap.kt$package com.composables.core.androidx.collection</ID>
+    <ID>InvalidPackageDeclaration:ScatterSet.kt$package com.composables.core.androidx.collection</ID>
+    <ID>InvalidPackageDeclaration:ScrollArea.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:Separators.kt$package com.composables.core</ID>
+    <ID>InvalidPackageDeclaration:deprecated.Menu.kt$package com.composables.core</ID>
+    <ID>LongMethod:BottomSheet.kt$@Composable fun BottomSheetScope.DragIndication( modifier: Modifier = Modifier, indication: Indication = LocalIndication.current, interactionSource: MutableInteractionSource? = null, )</ID>
+    <ID>LongMethod:TextField.kt$@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities") @Composable fun TextField( value: String, onValueChange: (String) -&gt; Unit, editable: Boolean = true, modifier: Modifier = Modifier, contentPadding: PaddingValues = NoPadding, leadingIcon: @Composable (() -&gt; Unit)? = null, trailingIcon: @Composable (() -&gt; Unit)? = null, placeholder: String = "", contentColor: Color = LocalContentColor.current, disabledColor: Color = contentColor.copy(0.66f), backgroundColor: Color = Color.Unspecified, borderWidth: Dp = 1.dp, borderColor: Color = Color.Unspecified, shape: Shape = RectangleShape, textStyle: TextStyle = LocalTextStyle.current, textAlign: TextAlign = TextAlign.Unspecified, fontSize: TextUnit = TextUnit.Unspecified, fontWeight: FontWeight? = null, fontFamily: FontFamily? = null, singleLine: Boolean = false, minLines: Int = 1, maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE, keyboardOptions: KeyboardOptions = KeyboardOptions.Default, keyboardActions: KeyboardActions = KeyboardActions.Default, interactionSource: MutableInteractionSource? = null, spacing: Dp = 8.dp, visualTransformation: VisualTransformation = VisualTransformation.None, verticalAlignment: Alignment.Vertical = Alignment.CenterVertically, )</ID>
+    <ID>LoopWithTooManyJumpStatements:LongClickable.kt$while</ID>
+    <ID>LoopWithTooManyJumpStatements:ObjectFloatMap.kt$MutableObjectFloatMap$while</ID>
+    <ID>LoopWithTooManyJumpStatements:ScatterMap.kt$MutableScatterMap$while</ID>
+    <ID>LoopWithTooManyJumpStatements:ScatterSet.kt$MutableScatterSet$while</ID>
+    <ID>LoopWithTooManyJumpStatements:ScrollArea.kt$while</ID>
+    <ID>MatchingDeclarationName:ProgressIndicator.kt$ProgressIndicatorScope</ID>
+    <ID>MatchingDeclarationName:Slider.kt$SliderState</ID>
+    <ID>MaxLineLength:BottomSheet.kt$*</ID>
+    <ID>MaxLineLength:BottomSheet.kt$@Deprecated("This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().")</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Cannot set targetDetent to a detent (${value.identifier}) that is not part of the detents of the sheet's state. Current detents are: ${innerDetents.joinToString()}"</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Detent identifiers need to be unique, but you passed the following detents multiple times: ${duplicates.joinToString { it }}."</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"The initialDetent ${initialDetent.identifier} was not part of the included detents while creating the sheet's state."</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Tried to create a bottom sheet without any detents. Make sure to pass at least one detent when creating your sheet's state."</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."</ID>
+    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$// If anchors haven't been initialized yet (offset is NaN), always use currentDetent to establish the starting position</ID>
+    <ID>MaxLineLength:BottomSheet.kt$SheetDetent$*</ID>
+    <ID>MaxLineLength:Button.kt$*</ID>
+    <ID>MaxLineLength:ComposeUnstyledFlags.kt$ComposeUnstyledFlags$*</ID>
+    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.CenterEnd -&gt; anchorBounds.top - popupContentSize.height / 2</ID>
+    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.TopEnd, DropdownPanelAnchor.CenterEnd, DropdownPanelAnchor.BottomEnd -&gt; anchorBounds.right - popupContentSize.width</ID>
+    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.TopStart, DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.BottomStart -&gt; anchorBounds.left</ID>
+    <ID>MaxLineLength:FloatingContent.kt$*</ID>
+    <ID>MaxLineLength:FocusRingIndication.kt$@Deprecated("This will go away in 2.0. Use the new focusRing() modifier instead that does not force you to override your theme's indication")</ID>
+    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageBitmap,contentDescription,modifier,tint)"))</ID>
+    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageVector,contentDescription,modifier,tint)"))</ID>
+    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(painter,contentDescription,modifier,tint)"))</ID>
+    <ID>MaxLineLength:MinimumComponentInteractiveSize.kt$*</ID>
+    <ID>MaxLineLength:Modal.android.kt$*</ID>
+    <ID>MaxLineLength:Modal.android.kt$?:</ID>
+    <ID>MaxLineLength:Modal.android.kt$error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")</ID>
+    <ID>MaxLineLength:Modal.kt$*</ID>
+    <ID>MaxLineLength:ModalBottomSheet.kt$*</ID>
+    <ID>MaxLineLength:ProgressIndicator.kt$*</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.x) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.x) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.y) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.y) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.x) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.x) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.y) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.y) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$LazyGridScrollAreaScrollAreaState$scrollState.layoutInfo.visibleItemsInfo.distinctBy { if (orientation == Orientation.Vertical) it.column else it.row }</ID>
+    <ID>MaxLineLength:ScrollArea.kt$LazyLineContentScrollAreaState$return averageVisibleLineSize * totalLineCount + lineSpacing * (totalLineCount - 1).coerceAtLeast(0) + contentPadding()</ID>
+    <ID>MaxLineLength:Stack.kt$*</ID>
+    <ID>MaxLineLength:TabGroup.kt$&amp;&amp;</ID>
+    <ID>MaxLineLength:TabGroup.kt$?:</ID>
+    <ID>MaxLineLength:TextField.kt$@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities")</ID>
+    <ID>MaxLineLength:TextField.kt$@Deprecated("This will go to 2.0. Stateless TextFields in Compose do not work correctly in all languages and cause duplication characters and unexpected behaviors")</ID>
+    <ID>MaxLineLength:Theme.kt$@Deprecated("This function will go away in 2.0. Use ProvideTextStyle or ProvideContentColor instead which affects themable components instead of overriding your theme")</ID>
+    <ID>MaxLineLength:Theme.kt$ComponentInteractiveSize$*</ID>
+    <ID>MaxLineLength:Theme.kt$Theme$"There is no ${property.name} property in the ${theme.name} theme. To fix this: 1. Create a design property: val ${property.name} = ThemeProperty&lt;Type&gt;(\"${property.name}\"), 2. Pass it to your theme definition: buildTheme { properties[${property.name}] = mapOf(${property.name} to TODO(\"Give ${property.name} a value\")) }"</ID>
+    <ID>MaxLineLength:Theme.kt$ThemeBuilder$@Deprecated("This will go away in 2.0. Use defaultComponentInteractiveSize instead for specifying the size for touch and non-touch targets instead.")</ID>
+    <ID>MaxLineLength:Theme.kt$ThemeValues$error("Tried to access the value of the token called ${token.name}, but no tokens with that name are defined within the $propertyName property. You probably forgot to set a ${token.name} token in your theme definition. The resolved theme was $themeName")</ID>
+    <ID>MaxLineLength:Theme.kt$staticCompositionLocalOf&lt;ResolvedTheme&gt; { error("No theme was set. In order to use the Theme object you need to wrap your content with a theme @Composable returned by the buildTheme {} function.") }</ID>
+    <ID>MaxLineLength:ToggleSwitch.kt$*</ID>
+    <ID>MaxLineLength:deprecated.Menu.kt$*</ID>
+    <ID>NestedBlockDepth:BottomSheet.kt$private fun UnstyledDraggableAnchors&lt;SheetDetent&gt;.closestDetent( offset: Float, searchUpwards: Boolean ): SheetDetent?</ID>
+    <ID>NestedBlockDepth:DragGestureDetector.kt$private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation( pointerId: PointerId, pointerType: PointerType, orientation: Orientation?, onPointerSlopReached: (PointerInputChange, Offset) -&gt; Unit, ): PointerInputChange?</ID>
+    <ID>NestedBlockDepth:ObjectFloatMap.kt$ObjectFloatMap$@PublishedApi internal inline fun forEachIndexed(block: (index: Int) -&gt; Unit)</ID>
+    <ID>NestedBlockDepth:ScatterMap.kt$ScatterMap$@PublishedApi internal inline fun forEachIndexed(block: (index: Int) -&gt; Unit)</ID>
+    <ID>NestedBlockDepth:ScatterSet.kt$ScatterSet$@PublishedApi internal inline fun forEachIndex(block: (index: Int) -&gt; Unit)</ID>
+    <ID>NewLineAtEndOfFile:BuildModifier.kt$com.composeunstyled.BuildModifier.kt</ID>
+    <ID>NewLineAtEndOfFile:Button.kt$com.composeunstyled.Button.kt</ID>
+    <ID>NewLineAtEndOfFile:ColoredIndication.kt$com.composeunstyled.theme.ColoredIndication.kt</ID>
+    <ID>NewLineAtEndOfFile:ComposeUnstyledFlags.kt$com.composeunstyled.ComposeUnstyledFlags.kt</ID>
+    <ID>NewLineAtEndOfFile:ContainerSize.cmp.kt$com.composeunstyled.ContainerSize.cmp.kt</ID>
+    <ID>NewLineAtEndOfFile:EscapeHandler.android.kt$com.composeunstyled.EscapeHandler.android.kt</ID>
+    <ID>NewLineAtEndOfFile:EscapeHandler.cmp.kt$com.composeunstyled.EscapeHandler.cmp.kt</ID>
+    <ID>NewLineAtEndOfFile:EscapeHandler.kt$com.composeunstyled.EscapeHandler.kt</ID>
+    <ID>NewLineAtEndOfFile:KeyEventObserver.ios.kt$com.composeunstyled.KeyEventObserver.ios.kt</ID>
+    <ID>NewLineAtEndOfFile:KeyEventObserver.kt$com.composeunstyled.KeyEventObserver.kt</ID>
+    <ID>NewLineAtEndOfFile:LongClickable.cmp.kt$core.com.composeunstyled.LongClickable.cmp.kt</ID>
+    <ID>NewLineAtEndOfFile:Modal.android.kt$com.composeunstyled.Modal.android.kt</ID>
+    <ID>NewLineAtEndOfFile:Modal.kt$com.composeunstyled.Modal.kt</ID>
+    <ID>NewLineAtEndOfFile:ModalBottomSheet.kt$com.composables.core.ModalBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:NoIndication.kt$com.composeunstyled.theme.NoIndication.kt</ID>
+    <ID>NewLineAtEndOfFile:ScrollArea.android.kt$com.composables.core.ScrollArea.android.kt</ID>
+    <ID>NewLineAtEndOfFile:ScrollArea.cmp.kt$com.composables.core.ScrollArea.cmp.kt</ID>
+    <ID>NewLineAtEndOfFile:Separators.kt$com.composables.core.Separators.kt</ID>
+    <ID>NewLineAtEndOfFile:Theme.kt$com.composeunstyled.theme.Theme.kt</ID>
+    <ID>NewLineAtEndOfFile:Utils.android.kt$com.composeunstyled.Utils.android.kt</ID>
+    <ID>NewLineAtEndOfFile:Utils.apple.kt$com.composeunstyled.Utils.apple.kt</ID>
+    <ID>NewLineAtEndOfFile:Utils.jvm.kt$com.composeunstyled.Utils.jvm.kt</ID>
+    <ID>NewLineAtEndOfFile:Utils.kt$com.composeunstyled.Utils.kt</ID>
+    <ID>NewLineAtEndOfFile:Utils.web .kt$com.composeunstyled.Utils.web .kt</ID>
+    <ID>ReturnCount:DragGestureDetector.kt$internal suspend inline fun AwaitPointerEventScope.drag( pointerId: PointerId, onDrag: (PointerInputChange) -&gt; Unit, orientation: Orientation?, motionConsumed: (PointerInputChange) -&gt; Boolean ): PointerInputChange?</ID>
+    <ID>ReturnCount:DragGestureDetector.kt$private suspend inline fun AwaitPointerEventScope.awaitDragOrUp( pointerId: PointerId, hasDragged: (PointerInputChange) -&gt; Boolean ): PointerInputChange?</ID>
+    <ID>ReturnCount:DragGestureDetector.kt$private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation( pointerId: PointerId, pointerType: PointerType, orientation: Orientation?, onPointerSlopReached: (PointerInputChange, Offset) -&gt; Unit, ): PointerInputChange?</ID>
+    <ID>ReturnCount:DragGestureDetector.kt$suspend fun AwaitPointerEventScope.awaitLongPressOrCancellation( pointerId: PointerId ): PointerInputChange?</ID>
+    <ID>SwallowedException:AnchoredDraggable.kt$anchoredDragFinished: AnchoredDragFinishedSignal</ID>
+    <ID>SwallowedException:Draggable.kt$DragGestureNode$c: CancellationException</ID>
+    <ID>TooManyFunctions:AnchoredDraggable.kt$AnchoredDraggableNode&lt;T&gt; : DragGestureNode</ID>
+    <ID>TooManyFunctions:AnchoredDraggable.kt$com.composables.core.androidx.compose.foundation.gestures.AnchoredDraggable.kt</ID>
+    <ID>TooManyFunctions:DragGestureDetector.kt$com.composables.core.androidx.compose.foundation.gestures.DragGestureDetector.kt</ID>
+    <ID>TooManyFunctions:Draggable.kt$DragGestureNode : DelegatingNodePointerInputModifierNodeCompositionLocalConsumerModifierNode</ID>
+    <ID>TooManyFunctions:ObjectFloatMap.kt$MutableObjectFloatMap&lt;K&gt; : ObjectFloatMap</ID>
+    <ID>TooManyFunctions:ObjectFloatMap.kt$ObjectFloatMap&lt;K&gt;</ID>
+    <ID>TooManyFunctions:ObjectFloatMap.kt$com.composables.core.androidx.collection.ObjectFloatMap.kt</ID>
+    <ID>TooManyFunctions:ScatterMap.kt$MutableScatterMap&lt;K, V&gt; : ScatterMap</ID>
+    <ID>TooManyFunctions:ScatterMap.kt$ScatterMap&lt;K, V&gt;</ID>
+    <ID>TooManyFunctions:ScatterMap.kt$com.composables.core.androidx.collection.ScatterMap.kt</ID>
+    <ID>TooManyFunctions:ScatterSet.kt$MutableScatterSet&lt;E&gt; : ScatterSet</ID>
+    <ID>TooManyFunctions:ScatterSet.kt$ScatterSet&lt;E&gt;</ID>
+    <ID>TooManyFunctions:ScatterSet.kt$com.composables.core.androidx.collection.ScatterSet.kt</ID>
+    <ID>TooManyFunctions:ScrollArea.kt$LazyGridScrollAreaScrollAreaState : LazyLineContentScrollAreaState</ID>
+    <ID>TooManyFunctions:ScrollArea.kt$com.composables.core.ScrollArea.kt</ID>
+    <ID>TooManyFunctions:XmlTheme.kt$com.composeunstyled.theme.XmlTheme.kt</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// C1 constant from MurmurHash implementation: https://en.wikipedia.org/wiki/MurmurHash#Algorithm internal const val MurmurHashC1: Int = 0xcc9e2d51.toInt()</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Capacity to use as the first bump when capacity is initially 0 // We choose 6 so that the "unloaded" capacity maps to 7 internal const val DefaultScatterCapacity = 6</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Indicates that all the slot in a [Group] are empty // 0x8080808080808080UL, see explanation in [BitmaskMsb] internal const val AllEmpty = -0x7f7f7f7f_7f7f7f80L</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Least significant bits in the bitmask, one for each metadata in the group @PublishedApi internal const val BitmaskLsb: Long = 0x01010101_01010101L</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Most significant bits in the bitmask, one for each metadata in the group // // NOTE: Ideally we'd use a ULong here, defined as 0x8080808080808080UL but // using ULong/UByte makes us take a ~10% performance hit on get/set compared to // a Long. And since Kotlin hates signed constants, we have to use // -0x7f7f7f7f7f7f7f80L instead of the more sensible 0x8080808080808080L (and // 0x8080808080808080UL.toLong() isn't considered a constant) @PublishedApi internal const val BitmaskMsb: Long = -0x7f7f7f7f_7f7f7f80L // srsly Kotlin @#!</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Number of metadata present both at the beginning and at the end of // the metadata array so we can use a [GroupWidth] probing window from // any index in the table. internal const val ClonedMetadataCount = GroupWidth - 1</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Used to mark the end of the actual storage, used to end iterations @PublishedApi internal const val Sentinel: Long = 0b11111111L</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Width of a group, in bytes. Since we can only use types as large as // Long we must fit our metadata bytes in a 64-bit word or smaller, which // means we can only store up to 8 slots in a group. Ideally we could use // 128-bit data types to benefit from NEON/SSE instructions and manipulate // groups of 16 slots at a time. internal const val GroupWidth = 8</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$internal const val Deleted = 0b11111110L</ID>
+    <ID>TopLevelPropertyNaming:ScatterMap.kt$internal const val Empty = 0b10000000L</ID>
+    <ID>TopLevelPropertyNaming:ScrollArea.kt$/** * The delay between each subsequent (after the 2nd) scroll while the scrollbar track is pressed * outside the thumb. */ internal const val DelayBetweenScrollsOnTrackPress: Long = 100L</ID>
+    <ID>TopLevelPropertyNaming:ScrollArea.kt$/** * The delay between the 1st and 2nd scroll while the scrollbar track is pressed outside the thumb. */ internal const val DelayBeforeSecondScrollOnTrackPress: Long = 300L</ID>
+    <ID>UnusedImports:CheckBox.kt$import androidx.compose.runtime.remember</ID>
+    <ID>UnusedImports:Dialog.kt$import androidx.compose.ui.semantics.dialog</ID>
+    <ID>UnusedImports:Dialog.kt$import androidx.compose.ui.semantics.semantics</ID>
+    <ID>UnusedImports:Dialog.kt$import androidx.compose.ui.unit.dp</ID>
+    <ID>UnusedImports:Icon.kt$import com.composeunstyled.LocalContentColor</ID>
+    <ID>UnusedImports:KeyEventObserver.jvm.kt$import androidx.compose.runtime.currentComposer</ID>
+    <ID>UnusedImports:deprecated.TabGroup.kt$import androidx.compose.ui.unit.dp</ID>
+    <ID>UnusedParameter:BottomSheet.kt$onClickLabel: String? = "Toggle sheet"</ID>
+    <ID>UnusedPrivateMember:LongClickable.kt$private suspend fun AwaitPointerEventScope.awaitSecondDown( firstUp: PointerInputChange ): PointerInputChange?</ID>
+    <ID>UnusedPrivateProperty:Dialog.kt$DialogState$____deprecated_constructor: Unit</ID>
+    <ID>UnusedPrivateProperty:Draggable.kt$DragGestureNode$// Use wrapper lambdas here to make sure that if these properties are updated while we suspend, // we point to the new reference when we invoke them. startDragImmediately is a lambda since we // need the most recent value passed to it from Scrollable. private val _canDrag: (PointerInputChange) -&gt; Boolean = { this.canDrag(it) }</ID>
+    <ID>UnusedPrivateProperty:LongClickable.kt$private val NoPressGesture: suspend PressGestureScope.(Offset) -&gt; Unit = {}</ID>
+    <ID>UnusedPrivateProperty:LongClickable.kt$val cancelOrReleaseJob: Job?</ID>
+    <ID>VariableNaming:ObjectFloatMap.kt$ObjectFloatMap$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the capacity @Suppress("PropertyName") @JvmField internal var _capacity: Int = 0</ID>
+    <ID>VariableNaming:ObjectFloatMap.kt$ObjectFloatMap$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the size @Suppress("PropertyName") @JvmField internal var _size: Int = 0</ID>
+    <ID>VariableNaming:ScatterMap.kt$ScatterMap$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the capacity @JvmField internal var _capacity: Int = 0</ID>
+    <ID>VariableNaming:ScatterMap.kt$ScatterMap$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the size @JvmField internal var _size: Int = 0</ID>
+    <ID>VariableNaming:ScatterSet.kt$ScatterSet$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the capacity @JvmField internal var _capacity: Int = 0</ID>
+    <ID>VariableNaming:ScatterSet.kt$ScatterSet$// We use a backing field for capacity to avoid invokevirtual calls // every time we need to look at the size @JvmField internal var _size: Int = 0</ID>
+    <ID>WildcardImport:BottomSheet.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:BottomSheet.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:BottomSheet.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:BottomSheet.kt$import androidx.compose.ui.semantics.*</ID>
+    <ID>WildcardImport:BottomSheet.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:BottomSheet.kt$import com.composables.core.androidx.compose.foundation.gestures.*</ID>
+    <ID>WildcardImport:Button.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:Button.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:ColoredIndication.kt$import androidx.compose.foundation.interaction.*</ID>
+    <ID>WildcardImport:Dialog.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:Dialog.kt$import androidx.compose.ui.input.key.*</ID>
+    <ID>WildcardImport:Disclosure.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:Disclosure.kt$import androidx.compose.ui.semantics.*</ID>
+    <ID>WildcardImport:DropdownMenu.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:DropdownMenu.kt$import androidx.compose.ui.input.key.*</ID>
+    <ID>WildcardImport:DropdownMenu.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:FloatingContent.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:FocusRingIndication.kt$import androidx.compose.ui.geometry.*</ID>
+    <ID>WildcardImport:LongClickable.kt$import androidx.compose.ui.input.pointer.*</ID>
+    <ID>WildcardImport:LongClickable.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:Modal.android.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ModalBottomSheet.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ModalBottomSheet.kt$import com.composeunstyled.*</ID>
+    <ID>WildcardImport:Outline.kt$import androidx.compose.ui.graphics.*</ID>
+    <ID>WildcardImport:ProgressIndicator.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:RadioGroup.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:RadioGroup.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import androidx.compose.foundation.gestures.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import androidx.compose.foundation.interaction.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:ScrollArea.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:Separators.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:Slider.kt$import androidx.compose.foundation.gestures.*</ID>
+    <ID>WildcardImport:Slider.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:Slider.kt$import androidx.compose.ui.input.pointer.*</ID>
+    <ID>WildcardImport:Stack.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TabGroup.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TabGroup.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TabGroup.kt$import androidx.compose.ui.focus.*</ID>
+    <ID>WildcardImport:TextField.kt$import androidx.compose.foundation.*</ID>
+    <ID>WildcardImport:TextField.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TextField.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TextField.kt$import androidx.compose.ui.graphics.*</ID>
+    <ID>WildcardImport:Theme.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ToggleSwitch.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:ToggleSwitch.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:Tooltip.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:Tooltip.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:XmlTheme.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import androidx.compose.ui.focus.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import androidx.compose.ui.input.key.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import androidx.compose.ui.unit.*</ID>
+    <ID>WildcardImport:deprecated.Menu.kt$import com.composeunstyled.*</ID>
+    <ID>WildcardImport:deprecated.RadioGroup.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:deprecated.RadioGroup.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:deprecated.TabGroup.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:deprecated.TabGroup.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:deprecated.TabGroup.kt$import androidx.compose.ui.focus.*</ID>
+  </CurrentIssues>
+</SmellBaseline>
