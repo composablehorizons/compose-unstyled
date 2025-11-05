@@ -2,22 +2,11 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -31,17 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Button
-import com.composeunstyled.Icon
-import com.composeunstyled.Text
-import com.composeunstyled.TextField
-import com.composeunstyled.TextInput
+import com.composeunstyled.*
 
 
 @Composable
 fun TextFieldDemo() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email = rememberTextFieldState()
+    var password = rememberTextFieldState()
     var showPassword by remember { mutableStateOf(false) }
 
     Box(
@@ -65,8 +50,7 @@ fun TextFieldDemo() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    state = email,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
@@ -85,8 +69,7 @@ fun TextFieldDemo() {
                 }
 
                 TextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    state = password,
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
