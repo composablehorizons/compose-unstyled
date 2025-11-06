@@ -33,9 +33,6 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Run unit tests
-        run: ./gradlew --no-daemon jvmTest
-
       - name: Run Detekt
         run: ./gradlew --no-daemon --console=plain :core:detekt
       - name: Show Detekt summary
@@ -48,6 +45,9 @@ jobs:
           else
             echo "Detekt report not found."
           fi
+
+      - name: Run unit tests
+        run: ./gradlew --no-daemon jvmTest
 
       - name: Verify test reports exist
         run: |
