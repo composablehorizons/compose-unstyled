@@ -35,20 +35,16 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew --no-daemon jvmTest
-      - name: Run Detekt (core module)
-        run: ./gradlew --no-daemon --console=plain :core:detekt
 
+      - name: Run Detekt
+        run: ./gradlew --no-daemon --console=plain :core:detekt
       - name: Show Detekt summary
         if: always()
         run: |
           SUMMARY_MD=core/build/reports/detekt/detekt.md
-          SUMMARY_TXT=core/build/reports/detekt/detekt.txt
           if [ -f "$SUMMARY_MD" ]; then
             echo "Detekt summary (markdown):"
             cat "$SUMMARY_MD"
-          elif [ -f "$SUMMARY_TXT" ]; then
-            echo "Detekt summary (text):"
-            cat "$SUMMARY_TXT"
           else
             echo "Detekt report not found."
           fi

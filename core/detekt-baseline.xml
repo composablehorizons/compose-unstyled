@@ -43,41 +43,67 @@
     <ID>InvalidPackageDeclaration:ScrollArea.kt$package com.composables.core</ID>
     <ID>InvalidPackageDeclaration:Separators.kt$package com.composables.core</ID>
     <ID>InvalidPackageDeclaration:deprecated.Menu.kt$package com.composables.core</ID>
-    <ID>LongMethod:BottomSheet.kt$@Composable fun BottomSheetScope.DragIndication( modifier: Modifier = Modifier, indication: Indication = LocalIndication.current, interactionSource: MutableInteractionSource? = null, )</ID>
-    <ID>LongMethod:TextField.kt$@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities") @Composable fun TextField( value: String, onValueChange: (String) -&gt; Unit, editable: Boolean = true, modifier: Modifier = Modifier, contentPadding: PaddingValues = NoPadding, leadingIcon: @Composable (() -&gt; Unit)? = null, trailingIcon: @Composable (() -&gt; Unit)? = null, placeholder: String = "", contentColor: Color = LocalContentColor.current, disabledColor: Color = contentColor.copy(0.66f), backgroundColor: Color = Color.Unspecified, borderWidth: Dp = 1.dp, borderColor: Color = Color.Unspecified, shape: Shape = RectangleShape, textStyle: TextStyle = LocalTextStyle.current, textAlign: TextAlign = TextAlign.Unspecified, fontSize: TextUnit = TextUnit.Unspecified, fontWeight: FontWeight? = null, fontFamily: FontFamily? = null, singleLine: Boolean = false, minLines: Int = 1, maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE, keyboardOptions: KeyboardOptions = KeyboardOptions.Default, keyboardActions: KeyboardActions = KeyboardActions.Default, interactionSource: MutableInteractionSource? = null, spacing: Dp = 8.dp, visualTransformation: VisualTransformation = VisualTransformation.None, verticalAlignment: Alignment.Vertical = Alignment.CenterVertically, )</ID>
     <ID>LoopWithTooManyJumpStatements:LongClickable.kt$while</ID>
     <ID>LoopWithTooManyJumpStatements:ObjectFloatMap.kt$MutableObjectFloatMap$while</ID>
     <ID>LoopWithTooManyJumpStatements:ScatterMap.kt$MutableScatterMap$while</ID>
     <ID>LoopWithTooManyJumpStatements:ScatterSet.kt$MutableScatterSet$while</ID>
     <ID>LoopWithTooManyJumpStatements:ScrollArea.kt$while</ID>
+    <ID>MagicNumber:AnchoredDraggable.kt$UnstyledAnchoredDraggableState$0.5f</ID>
+    <ID>MagicNumber:AnchoredDraggable.kt$UnstyledAnchoredDraggableState$1e-6f</ID>
+    <ID>MagicNumber:ContainerHelpers.kt$12</ID>
+    <ID>MagicNumber:ContainerHelpers.kt$31</ID>
+    <ID>MagicNumber:ContainerHelpers.kt$4</ID>
+    <ID>MagicNumber:ContainerHelpers.kt$8</ID>
+    <ID>MagicNumber:Dialog.kt$0.6f</ID>
+    <ID>MagicNumber:ModalBottomSheet.kt$0.6f</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$MutableObjectFloatMap$0x00ffffff_ffffffffL</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$MutableObjectFloatMap$3</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$MutableObjectFloatMap$56</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$MutableObjectFloatMap$7</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$ObjectFloatMap$0xFFL</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$ObjectFloatMap$3</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$ObjectFloatMap$31</ID>
+    <ID>MagicNumber:ObjectFloatMap.kt$ObjectFloatMap$8</ID>
+    <ID>MagicNumber:ScatterMap.kt$0x00ffffff_ffffffffL</ID>
+    <ID>MagicNumber:ScatterMap.kt$0x7</ID>
+    <ID>MagicNumber:ScatterMap.kt$0x7f</ID>
+    <ID>MagicNumber:ScatterMap.kt$0x80L</ID>
+    <ID>MagicNumber:ScatterMap.kt$0xff</ID>
+    <ID>MagicNumber:ScatterMap.kt$0xffL</ID>
+    <ID>MagicNumber:ScatterMap.kt$16</ID>
+    <ID>MagicNumber:ScatterMap.kt$3</ID>
+    <ID>MagicNumber:ScatterMap.kt$56</ID>
+    <ID>MagicNumber:ScatterMap.kt$6</ID>
+    <ID>MagicNumber:ScatterMap.kt$63</ID>
+    <ID>MagicNumber:ScatterMap.kt$64</ID>
+    <ID>MagicNumber:ScatterMap.kt$7</ID>
+    <ID>MagicNumber:ScatterMap.kt$8</ID>
+    <ID>MagicNumber:ScatterMap.kt$MutableScatterMap$3</ID>
+    <ID>MagicNumber:ScatterMap.kt$MutableScatterMap$7</ID>
+    <ID>MagicNumber:ScatterMap.kt$ScatterMap$0xffL</ID>
+    <ID>MagicNumber:ScatterMap.kt$ScatterMap$3</ID>
+    <ID>MagicNumber:ScatterMap.kt$ScatterMap$31</ID>
+    <ID>MagicNumber:ScatterMap.kt$ScatterMap$8</ID>
+    <ID>MagicNumber:ScatterSet.kt$3</ID>
+    <ID>MagicNumber:ScatterSet.kt$MutableScatterSet$0x00ffffff_ffffffffL</ID>
+    <ID>MagicNumber:ScatterSet.kt$MutableScatterSet$3</ID>
+    <ID>MagicNumber:ScatterSet.kt$MutableScatterSet$56</ID>
+    <ID>MagicNumber:ScatterSet.kt$MutableScatterSet$7</ID>
+    <ID>MagicNumber:ScatterSet.kt$ScatterSet$0xFFL</ID>
+    <ID>MagicNumber:ScatterSet.kt$ScatterSet$3</ID>
+    <ID>MagicNumber:ScatterSet.kt$ScatterSet$31</ID>
+    <ID>MagicNumber:ScatterSet.kt$ScatterSet$8</ID>
+    <ID>MagicNumber:Slider.kt$0.01f</ID>
+    <ID>MagicNumber:Slider.kt$1000</ID>
+    <ID>MagicNumber:TextField.kt$0.66f</ID>
     <ID>MatchingDeclarationName:ProgressIndicator.kt$ProgressIndicatorScope</ID>
     <ID>MatchingDeclarationName:Slider.kt$SliderState</ID>
     <ID>MaxLineLength:BottomSheet.kt$*</ID>
     <ID>MaxLineLength:BottomSheet.kt$@Deprecated("This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().")</ID>
     <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Cannot set targetDetent to a detent (${value.identifier}) that is not part of the detents of the sheet's state. Current detents are: ${innerDetents.joinToString()}"</ID>
-    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Detent identifiers need to be unique, but you passed the following detents multiple times: ${duplicates.joinToString { it }}."</ID>
-    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"The initialDetent ${initialDetent.identifier} was not part of the included detents while creating the sheet's state."</ID>
-    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Tried to create a bottom sheet without any detents. Make sure to pass at least one detent when creating your sheet's state."</ID>
     <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$"Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."</ID>
-    <ID>MaxLineLength:BottomSheet.kt$BottomSheetState$// If anchors haven't been initialized yet (offset is NaN), always use currentDetent to establish the starting position</ID>
-    <ID>MaxLineLength:BottomSheet.kt$SheetDetent$*</ID>
-    <ID>MaxLineLength:Button.kt$*</ID>
     <ID>MaxLineLength:ComposeUnstyledFlags.kt$ComposeUnstyledFlags$*</ID>
-    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.CenterEnd -&gt; anchorBounds.top - popupContentSize.height / 2</ID>
-    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.TopEnd, DropdownPanelAnchor.CenterEnd, DropdownPanelAnchor.BottomEnd -&gt; anchorBounds.right - popupContentSize.width</ID>
-    <ID>MaxLineLength:DropdownMenu.kt$MenuContentPositionProvider$DropdownPanelAnchor.TopStart, DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.BottomStart -&gt; anchorBounds.left</ID>
-    <ID>MaxLineLength:FloatingContent.kt$*</ID>
-    <ID>MaxLineLength:FocusRingIndication.kt$@Deprecated("This will go away in 2.0. Use the new focusRing() modifier instead that does not force you to override your theme's indication")</ID>
-    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageBitmap,contentDescription,modifier,tint)"))</ID>
-    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageVector,contentDescription,modifier,tint)"))</ID>
-    <ID>MaxLineLength:Icon.kt$@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(painter,contentDescription,modifier,tint)"))</ID>
-    <ID>MaxLineLength:MinimumComponentInteractiveSize.kt$*</ID>
-    <ID>MaxLineLength:Modal.android.kt$*</ID>
     <ID>MaxLineLength:Modal.android.kt$?:</ID>
-    <ID>MaxLineLength:Modal.android.kt$error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")</ID>
-    <ID>MaxLineLength:Modal.kt$*</ID>
-    <ID>MaxLineLength:ModalBottomSheet.kt$*</ID>
-    <ID>MaxLineLength:ProgressIndicator.kt$*</ID>
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.x) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Left || it == OverscrollSides.Horizontal }</ID>
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.x) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }</ID>
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingBackwards(available.y) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }</ID>
@@ -86,21 +112,13 @@
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.x) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Right || it == OverscrollSides.Horizontal }</ID>
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.y) &amp;&amp; canScrollBackwards.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Top || it == OverscrollSides.Vertical }</ID>
     <ID>MaxLineLength:ScrollArea.kt$&lt;no name provided&gt;$isMovingForward(available.y) &amp;&amp; canScrollForward.not() &amp;&amp; overscrollEffectSides.any { it == OverscrollSides.Bottom || it == OverscrollSides.Vertical }</ID>
-    <ID>MaxLineLength:ScrollArea.kt$LazyGridScrollAreaScrollAreaState$scrollState.layoutInfo.visibleItemsInfo.distinctBy { if (orientation == Orientation.Vertical) it.column else it.row }</ID>
-    <ID>MaxLineLength:ScrollArea.kt$LazyLineContentScrollAreaState$return averageVisibleLineSize * totalLineCount + lineSpacing * (totalLineCount - 1).coerceAtLeast(0) + contentPadding()</ID>
     <ID>MaxLineLength:Stack.kt$*</ID>
-    <ID>MaxLineLength:TabGroup.kt$&amp;&amp;</ID>
-    <ID>MaxLineLength:TabGroup.kt$?:</ID>
-    <ID>MaxLineLength:TextField.kt$@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities")</ID>
     <ID>MaxLineLength:TextField.kt$@Deprecated("This will go to 2.0. Stateless TextFields in Compose do not work correctly in all languages and cause duplication characters and unexpected behaviors")</ID>
     <ID>MaxLineLength:Theme.kt$@Deprecated("This function will go away in 2.0. Use ProvideTextStyle or ProvideContentColor instead which affects themable components instead of overriding your theme")</ID>
-    <ID>MaxLineLength:Theme.kt$ComponentInteractiveSize$*</ID>
     <ID>MaxLineLength:Theme.kt$Theme$"There is no ${property.name} property in the ${theme.name} theme. To fix this: 1. Create a design property: val ${property.name} = ThemeProperty&lt;Type&gt;(\"${property.name}\"), 2. Pass it to your theme definition: buildTheme { properties[${property.name}] = mapOf(${property.name} to TODO(\"Give ${property.name} a value\")) }"</ID>
     <ID>MaxLineLength:Theme.kt$ThemeBuilder$@Deprecated("This will go away in 2.0. Use defaultComponentInteractiveSize instead for specifying the size for touch and non-touch targets instead.")</ID>
     <ID>MaxLineLength:Theme.kt$ThemeValues$error("Tried to access the value of the token called ${token.name}, but no tokens with that name are defined within the $propertyName property. You probably forgot to set a ${token.name} token in your theme definition. The resolved theme was $themeName")</ID>
     <ID>MaxLineLength:Theme.kt$staticCompositionLocalOf&lt;ResolvedTheme&gt; { error("No theme was set. In order to use the Theme object you need to wrap your content with a theme @Composable returned by the buildTheme {} function.") }</ID>
-    <ID>MaxLineLength:ToggleSwitch.kt$*</ID>
-    <ID>MaxLineLength:deprecated.Menu.kt$*</ID>
     <ID>NestedBlockDepth:BottomSheet.kt$private fun UnstyledDraggableAnchors&lt;SheetDetent&gt;.closestDetent( offset: Float, searchUpwards: Boolean ): SheetDetent?</ID>
     <ID>NestedBlockDepth:DragGestureDetector.kt$private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation( pointerId: PointerId, pointerType: PointerType, orientation: Orientation?, onPointerSlopReached: (PointerInputChange, Offset) -&gt; Unit, ): PointerInputChange?</ID>
     <ID>NestedBlockDepth:ObjectFloatMap.kt$ObjectFloatMap$@PublishedApi internal inline fun forEachIndexed(block: (index: Int) -&gt; Unit)</ID>
@@ -137,33 +155,16 @@
     <ID>SwallowedException:AnchoredDraggable.kt$anchoredDragFinished: AnchoredDragFinishedSignal</ID>
     <ID>SwallowedException:Draggable.kt$DragGestureNode$c: CancellationException</ID>
     <ID>TooManyFunctions:AnchoredDraggable.kt$AnchoredDraggableNode&lt;T&gt; : DragGestureNode</ID>
-    <ID>TooManyFunctions:AnchoredDraggable.kt$com.composables.core.androidx.compose.foundation.gestures.AnchoredDraggable.kt</ID>
     <ID>TooManyFunctions:DragGestureDetector.kt$com.composables.core.androidx.compose.foundation.gestures.DragGestureDetector.kt</ID>
     <ID>TooManyFunctions:Draggable.kt$DragGestureNode : DelegatingNodePointerInputModifierNodeCompositionLocalConsumerModifierNode</ID>
     <ID>TooManyFunctions:ObjectFloatMap.kt$MutableObjectFloatMap&lt;K&gt; : ObjectFloatMap</ID>
     <ID>TooManyFunctions:ObjectFloatMap.kt$ObjectFloatMap&lt;K&gt;</ID>
-    <ID>TooManyFunctions:ObjectFloatMap.kt$com.composables.core.androidx.collection.ObjectFloatMap.kt</ID>
     <ID>TooManyFunctions:ScatterMap.kt$MutableScatterMap&lt;K, V&gt; : ScatterMap</ID>
     <ID>TooManyFunctions:ScatterMap.kt$ScatterMap&lt;K, V&gt;</ID>
     <ID>TooManyFunctions:ScatterMap.kt$com.composables.core.androidx.collection.ScatterMap.kt</ID>
     <ID>TooManyFunctions:ScatterSet.kt$MutableScatterSet&lt;E&gt; : ScatterSet</ID>
     <ID>TooManyFunctions:ScatterSet.kt$ScatterSet&lt;E&gt;</ID>
-    <ID>TooManyFunctions:ScatterSet.kt$com.composables.core.androidx.collection.ScatterSet.kt</ID>
     <ID>TooManyFunctions:ScrollArea.kt$LazyGridScrollAreaScrollAreaState : LazyLineContentScrollAreaState</ID>
-    <ID>TooManyFunctions:ScrollArea.kt$com.composables.core.ScrollArea.kt</ID>
-    <ID>TooManyFunctions:XmlTheme.kt$com.composeunstyled.theme.XmlTheme.kt</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// C1 constant from MurmurHash implementation: https://en.wikipedia.org/wiki/MurmurHash#Algorithm internal const val MurmurHashC1: Int = 0xcc9e2d51.toInt()</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Capacity to use as the first bump when capacity is initially 0 // We choose 6 so that the "unloaded" capacity maps to 7 internal const val DefaultScatterCapacity = 6</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Indicates that all the slot in a [Group] are empty // 0x8080808080808080UL, see explanation in [BitmaskMsb] internal const val AllEmpty = -0x7f7f7f7f_7f7f7f80L</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Least significant bits in the bitmask, one for each metadata in the group @PublishedApi internal const val BitmaskLsb: Long = 0x01010101_01010101L</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Most significant bits in the bitmask, one for each metadata in the group // // NOTE: Ideally we'd use a ULong here, defined as 0x8080808080808080UL but // using ULong/UByte makes us take a ~10% performance hit on get/set compared to // a Long. And since Kotlin hates signed constants, we have to use // -0x7f7f7f7f7f7f7f80L instead of the more sensible 0x8080808080808080L (and // 0x8080808080808080UL.toLong() isn't considered a constant) @PublishedApi internal const val BitmaskMsb: Long = -0x7f7f7f7f_7f7f7f80L // srsly Kotlin @#!</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Number of metadata present both at the beginning and at the end of // the metadata array so we can use a [GroupWidth] probing window from // any index in the table. internal const val ClonedMetadataCount = GroupWidth - 1</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Used to mark the end of the actual storage, used to end iterations @PublishedApi internal const val Sentinel: Long = 0b11111111L</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$// Width of a group, in bytes. Since we can only use types as large as // Long we must fit our metadata bytes in a 64-bit word or smaller, which // means we can only store up to 8 slots in a group. Ideally we could use // 128-bit data types to benefit from NEON/SSE instructions and manipulate // groups of 16 slots at a time. internal const val GroupWidth = 8</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$internal const val Deleted = 0b11111110L</ID>
-    <ID>TopLevelPropertyNaming:ScatterMap.kt$internal const val Empty = 0b10000000L</ID>
-    <ID>TopLevelPropertyNaming:ScrollArea.kt$/** * The delay between each subsequent (after the 2nd) scroll while the scrollbar track is pressed * outside the thumb. */ internal const val DelayBetweenScrollsOnTrackPress: Long = 100L</ID>
-    <ID>TopLevelPropertyNaming:ScrollArea.kt$/** * The delay between the 1st and 2nd scroll while the scrollbar track is pressed outside the thumb. */ internal const val DelayBeforeSecondScrollOnTrackPress: Long = 300L</ID>
     <ID>UnusedImports:CheckBox.kt$import androidx.compose.runtime.remember</ID>
     <ID>UnusedImports:Dialog.kt$import androidx.compose.ui.semantics.dialog</ID>
     <ID>UnusedImports:Dialog.kt$import androidx.compose.ui.semantics.semantics</ID>

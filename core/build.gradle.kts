@@ -144,7 +144,7 @@ detekt {
     source.setFrom(detektSourceDirs)
     baseline = file("$projectDir/detekt-baseline.xml")
 }
-//
+
 tasks.withType<Detekt>().configureEach {
     jvmTarget = JvmTarget.JVM_17.target
     reports {
