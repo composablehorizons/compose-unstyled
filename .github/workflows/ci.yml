@@ -40,8 +40,8 @@ jobs:
         run: |
           SUMMARY_MD=core/build/reports/detekt/detekt.md
           if [ -f "$SUMMARY_MD" ]; then
-            echo "Detekt summary (markdown):"
-            cat "```markdown\n$SUMMARY_MD\n```"
+            echo -e "## Detekt Report\n" >> "$GITHUB_STEP_SUMMARY"
+            cat "$SUMMARY_MD" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Detekt report not found."
           fi
