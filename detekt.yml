@@ -1,70 +1,35 @@
 build:
-  maxIssues: 10 # Change number of issues allowed as per need
-  excludeCorrectable: false
-  weights:
-    complexity: 2
-    LongParameterList: 1
+  maxIssues: 500  # Change number of issues allowed as per need
 
 config:
   validation: true
   warningsAsErrors: false
   checkExhaustiveness: false
-  excludes: ''
+  # when writing own rules with new properties, exclude the property path e.g.: ['my_rule_set', '.*>.*>[my_property]']
 
 processors:
   active: true
   exclude:
     - 'DetektProgressListener'
+  # - 'KtFileCountProcessor'
+  # - 'PackageCountProcessor'
+  # - 'ClassCountProcessor'
+  # - 'FunctionCountProcessor'
+  # - 'PropertyCountProcessor'
+  # - 'ProjectComplexityProcessor'
+  # - 'ProjectCognitiveComplexityProcessor'
+  # - 'ProjectLLOCProcessor'
+  # - 'ProjectCLOCProcessor'
+  # - 'ProjectLOCProcessor'
+  # - 'ProjectSLOCProcessor'
+  # - 'LicenseHeaderLoaderExtension'
 
 console-reports:
   active: true
-  exclude:
-    - 'ProjectStatisticsReport'
-    - 'ComplexityReport'
-
-output-reports:
-  active: true
-
-style:
-  MaxLineLength:
-    active: true
-    maxLineLength: 150
-  WildcardImport:
-    active: true
-  UnusedImports:
-    active: true
-  NewLineAtEndOfFile:
-    active: true
-
-naming:
-  PackageNaming:
-    active: true
-  FunctionNaming:
-    active: false  # Composables often start with uppercase
-  TopLevelPropertyNaming:
-    active: false
-  ObjectPropertyNaming:
-    active: true
-
-complexity:
-  LongMethod:
-    active: false   # Disable, Compose UIs can be long
-  LongParameterList:
-    active: false   # Compose often uses many params
-  TooManyFunctions:
-    active: true
-    thresholdInFiles: 20
-
-performance:
-  ForEachOnRange:
-    active: true
-  SpreadOperator:
-    active: true
-
-potential-bugs:
-  EqualsAlwaysReturnsTrueOrFalse:
-    active: true
-  IteratorHasNextCallsNextMethod:
-    active: true
-  UnsafeCast:
-    active: true
+  #  exclude:
+  #    - 'ProjectStatisticsReport'
+  #    - 'ComplexityReport'
+  #    - 'NotificationReport'
+  #    - 'IssuesReport'
+  #    - 'FileBasedIssuesReport'
+  #  - 'LiteIssuesReport'
