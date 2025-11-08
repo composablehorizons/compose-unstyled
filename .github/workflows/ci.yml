@@ -2,7 +2,7 @@ name: PR Unit Tests
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [ opened, reopened, synchronize ]
 
 permissions:
   contents: read
@@ -32,6 +32,19 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
+
+      - name: Run Detekt
+        run: ./gradlew --no-daemon --console=plain :core:detekt
+      - name: Show Detekt summary
+        if: always()
+        run: |
+          SUMMARY_MD=core/build/reports/detekt/detekt.md
+          if [ -f "$SUMMARY_MD" ]; then
+            echo -e "## Detekt Report\n" >> "$GITHUB_STEP_SUMMARY"
+            cat "$SUMMARY_MD" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Detekt report not found."
+          fi
 
       - name: Run unit tests
         run: ./gradlew --no-daemon jvmTest
