@@ -68,8 +68,6 @@ kotlin {
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
             implementation(libs.composables.icons.lucide)
-
-            implementation(libs.alexstyl.coil)
         }
 
         val desktopMain by getting {
