@@ -6,6 +6,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.composeunstyled.theme.ComponentInteractiveSize
+import com.composeunstyled.theme.isTouchDevice
 
 internal val LocalMinimumComponentInteractiveSize = compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified) }
 
