@@ -1,4 +1,4 @@
-rootProject.name = "ComposeUnstyled"
+rootProject.name = "unstyled"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -36,5 +36,6 @@ dependencyResolutionManagement {
 }
 
 include(":core")
+include(":composeunstyled")
 include(":demo")
 include(":demo-xml-theme")
