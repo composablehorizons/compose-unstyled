@@ -36,6 +36,7 @@ kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
     jvm()
@@ -65,6 +66,30 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.androidx.activitycompose)
+        }
+
+        androidInstrumentedTest.dependencies {
+            implementation(libs.androidx.compose.test)
+            implementation(libs.androidx.compose.test.manifest)
+            implementation(libs.androidx.espresso)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        val jvmTest by getting
+
+        jvmTest.dependencies {
+            implementation(compose.desktop.uiTestJUnit4)
+            implementation(libs.assertj.core)
+            implementation(compose.desktop.currentOs) {
+                exclude(compose.material)
+                exclude(compose.material)
+            }
         }
 
         applyDefaultHierarchyTemplate {

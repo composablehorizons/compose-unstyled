@@ -61,7 +61,6 @@ kotlin {
             dependencies {
                 implementation(compose.foundation)
                 api(projects.internalShared)
-                api(projects.composeunstyledTheming)
             }
         }
 

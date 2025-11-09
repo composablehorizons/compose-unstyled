@@ -6,6 +6,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
 }
@@ -38,6 +40,13 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeUnstyledInternalShared"
             isStatic = true
+        }
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(compose.foundation)
+            }
         }
     }
 }
