@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
 
