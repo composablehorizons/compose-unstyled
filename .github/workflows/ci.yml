@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  pr_checks:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
