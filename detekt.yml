@@ -1,5 +1,5 @@
 build:
-  maxIssues: 500  # Change number of issues allowed as per need
+  maxIssues: 477  # Do not increase - fix issues instead!
 
 config:
   validation: true

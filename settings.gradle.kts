@@ -38,6 +38,7 @@ dependencyResolutionManagement {
 include(":core")
 include(":internal-shared")
 include(":composeunstyled")
+include(":composeunstyled-primitives")
 include(":composeunstyled-theming")
 include(":demo")
 include(":demo-xml-theme")
