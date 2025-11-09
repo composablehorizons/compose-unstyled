@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -61,22 +60,6 @@ kotlin {
             dependencies {
                 // Core module is now just an alias for composeunstyled
                 api(project(":composeunstyled"))
-            }
-        }
-
-        applyDefaultHierarchyTemplate {
-            common {
-                group("cmp") {
-                    withJvm()
-                    withIos()
-                    withWasmJs()
-                    withJs()
-                }
-
-                group("web") {
-                    withWasmJs()
-                    withJs()
-                }
             }
         }
     }
