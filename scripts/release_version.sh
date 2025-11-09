@@ -19,10 +19,10 @@ else
 fi
 
 echo "Running detekt..."
-./gradlew core:detekt
+./gradlew detekt
 
 echo "Compiling Kotlin..."
-./gradlew core:assemble
+./gradlew :composeunstyled:assemble
 
 
 echo "Starting Android emulator..."
@@ -47,7 +47,7 @@ echo "Waiting for emulator to boot..."
 echo "Emulator booted successfully"
 
 echo "Running tests..."
-./gradlew core:jvmTest core:connectedAndroidTest
+./gradlew jvmTest connectedAndroidTest
 
 # Kill the emulator after tests
 echo "Shutting down emulator..."
