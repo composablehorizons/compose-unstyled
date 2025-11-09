@@ -97,7 +97,6 @@ fun Button(
         horizontalArrangement = horizontalArrangement
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
-            thisWillBreakTheCompilation()
             content()
         }
     }
