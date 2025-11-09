@@ -85,7 +85,7 @@ last_commit=$(git rev-parse HEAD)
 git tag "$previous_version" $last_commit
 
 # Find and update the version in .md files
-find "$root_dir" -type f -name "*.md" -exec sed -i '' "s/implementation(\"com\.composables:core:[^\"]*\")/implementation(\"com.composables:core:$previous_version\")/g" {} +
+find "$root_dir" -type f -name "*.md" -exec sed -i '' "s/implementation(\"com\.composables:composeunstyled:[^\"]*\")/implementation(\"com.composables:composeunstyled:$previous_version\")/g" {} +
 
 # Update the version in libs.versions.toml
 sed -i '' "s/^unstyled = \".*\"/unstyled = \"$wip_version\"/" "$root_dir/gradle/libs.versions.toml"
@@ -156,7 +156,7 @@ $formatted_commits
 ## Installation
 
 \`\`\`kotlin
-implementation(\"com.composables:core:$previous_version\")
+implementation(\"com.composables:composeunstyled:$previous_version\")
 \`\`\`"
     
     # URL encode the release text for GitHub

@@ -62,9 +62,6 @@ kotlin {
             languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")

@@ -61,11 +61,11 @@ import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
-import composeunstyled.demo.generated.resources.BebasNeue
-import composeunstyled.demo.generated.resources.Inter
-import composeunstyled.demo.generated.resources.Res
-import composeunstyled.demo.generated.resources.Roboto
-import composeunstyled.demo.generated.resources.just_hoist_it_cover
+import unstyled.demo.generated.resources.BebasNeue
+import unstyled.demo.generated.resources.Inter
+import unstyled.demo.generated.resources.Res
+import unstyled.demo.generated.resources.Roboto
+import unstyled.demo.generated.resources.just_hoist_it_cover
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 

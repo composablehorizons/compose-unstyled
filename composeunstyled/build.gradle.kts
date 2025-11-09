@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.detekt)
 
     id("maven-publish")
     id("signing")
@@ -59,9 +60,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // Core module is now just an alias for composeunstyled
-                api(project(":composeunstyled"))
+                implementation(compose.foundation)
             }
+        }
+
+        androidMain.dependencies {
+            implementation(libs.androidx.activitycompose)
+            implementation(libs.androidx.window)
+        }
+
+        androidInstrumentedTest.dependencies {
+            implementation(libs.androidx.compose.test)
+            implementation(libs.androidx.compose.test.manifest)
+            implementation(libs.androidx.espresso)
         }
 
         applyDefaultHierarchyTemplate {
@@ -79,6 +90,32 @@ kotlin {
                 }
             }
         }
+
+        jvmMain.dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
+        }
+
+        webMain.dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        val jvmTest by getting
+
+        jvmTest.dependencies {
+            implementation(compose.desktop.uiTestJUnit4)
+            implementation(libs.assertj.core)
+            implementation(compose.desktop.currentOs) {
+                exclude(compose.material)
+                exclude(compose.material)
+            }
+        }
     }
 }
 
@@ -90,7 +127,31 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
+val detektSourceDirs = listOf(
+    "src/commonMain/kotlin",
+    "src/cmpMain/kotlin",
+    "src/androidMain/kotlin",
+    "src/jvmMain/kotlin",
+    "src/iosMain/kotlin",
+    "src/webMain/kotlin"
+).map(::file).filter(File::exists)
 
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files(rootProject.file("detekt.yml")))
+    parallel = true
+    source.setFrom(detektSourceDirs)
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = JvmTarget.JVM_17.target
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(false)
+    }
+}
 val javadocJar = tasks.create<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
