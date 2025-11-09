@@ -1,19 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-    alias(libs.plugins.compose)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.detekt)
 
     id("maven-publish")
     id("signing")
@@ -37,7 +31,6 @@ kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
     jvm()
@@ -60,62 +53,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(compose.foundation)
-                api(projects.internalShared)
+                api(projects.composeunstyledPrimitives)
                 api(projects.composeunstyledTheming)
-            }
-        }
-
-        androidMain.dependencies {
-            implementation(libs.androidx.activitycompose)
-            implementation(libs.androidx.window)
-        }
-
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.compose.test)
-            implementation(libs.androidx.compose.test.manifest)
-            implementation(libs.androidx.espresso)
-        }
-
-        applyDefaultHierarchyTemplate {
-            common {
-                group("cmp") {
-                    withJvm()
-                    withIos()
-                    withWasmJs()
-                    withJs()
-                }
-
-                group("web") {
-                    withWasmJs()
-                    withJs()
-                }
-            }
-        }
-
-        jvmMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-        }
-
-        webMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-
-            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
-        }
-
-        val jvmTest by getting
-
-        jvmTest.dependencies {
-            implementation(compose.desktop.uiTestJUnit4)
-            implementation(libs.assertj.core)
-            implementation(compose.desktop.currentOs) {
-                exclude(compose.material)
-                exclude(compose.material)
             }
         }
     }
@@ -126,34 +65,9 @@ android {
     compileSdk = libs.versions.android.compileSDK.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSDK.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
-val detektSourceDirs = listOf(
-    "src/commonMain/kotlin",
-    "src/cmpMain/kotlin",
-    "src/androidMain/kotlin",
-    "src/jvmMain/kotlin",
-    "src/iosMain/kotlin",
-    "src/webMain/kotlin"
-).map(::file).filter(File::exists)
 
-detekt {
-    buildUponDefaultConfig = true
-    config.setFrom(files(rootProject.file("detekt.yml")))
-    parallel = true
-    source.setFrom(detektSourceDirs)
-}
-
-tasks.withType<Detekt>().configureEach {
-    jvmTarget = JvmTarget.JVM_17.target
-    reports {
-        html.required.set(true)
-        xml.required.set(true)
-        txt.required.set(true)
-        sarif.required.set(false)
-    }
-}
 val javadocJar = tasks.create<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
