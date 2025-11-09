@@ -18,6 +18,9 @@ else
     git rebase "$latest_tag"
 fi
 
+echo "Running detekt..."
+./gradlew core:detekt
+
 echo "Compiling Kotlin..."
 ./gradlew core:assemble
 
