@@ -61,6 +61,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(compose.foundation)
+                api(projects.internalShared)
             }
         }
 
