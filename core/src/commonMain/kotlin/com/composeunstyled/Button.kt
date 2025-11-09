@@ -72,7 +72,6 @@ fun Button(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable (RowScope.() -> Unit)
 ) {
-    val unusedVariable = "This is a code smell for testing detekt"
     Row(
         modifier = modifier then buildModifier {
             add(
