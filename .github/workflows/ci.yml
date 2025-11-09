@@ -35,4 +35,4 @@ jobs:
         run: ./gradlew --no-daemon --console=plain :core:detekt
 
       - name: Test
-        run: ./gradlew --no-daemon jvmTest
+        run: ./gradlew --no-daemon :core:jvmTest
