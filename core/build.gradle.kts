@@ -139,10 +139,8 @@ val detektSourceDirs = listOf(
 detekt {
     buildUponDefaultConfig = true
     config.setFrom(files(rootProject.file("detekt.yml")))
-    ignoreFailures = true
     parallel = true
     source.setFrom(detektSourceDirs)
-    baseline = file("$projectDir/detekt-baseline.xml")
 }
 
 tasks.withType<Detekt>().configureEach {
