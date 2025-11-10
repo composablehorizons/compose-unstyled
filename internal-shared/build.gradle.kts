@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
+import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -10,7 +11,15 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+
+    id("maven-publish")
+    id("signing")
 }
+
+val publishGroupId = "com.composables"
+val publishVersion = libs.versions.unstyled.get()
+val githubUrl = "github.com/composablehorizons/compose-unstyled"
+val projectUrl = "https://composeunstyled.com"
 
 java {
     toolchain {
@@ -21,6 +30,7 @@ java {
 
 kotlin {
     androidTarget {
+        publishLibraryVariants("release", "debug")
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
         }
@@ -57,4 +67,65 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSDK.get().toInt()
     }
+}
+
+val javadocJar = tasks.create<Jar>("javadocJar") {
+    archiveClassifier.set("javadoc")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+group = publishGroupId
+version = publishVersion
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            withType<MavenPublication> {
+                artifact(javadocJar)
+
+                pom {
+                    name.set("Compose Unstyled Internal Shared")
+                    description.set("Internal shared utilities for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+                    url.set(projectUrl)
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://${githubUrl}/blob/main/LICENSE")
+                        }
+                    }
+                    issueManagement {
+                        system.set("GitHub Issues")
+                        url.set("https://${githubUrl}/issues")
+                    }
+                    developers {
+                        developer {
+                            id.set("composablehorizons")
+                            name.set("Composable Horizons")
+                            email.set("alex@composablesui.com")
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:${githubUrl}.git")
+                        developerConnection.set("scm:git:ssh://${githubUrl}.git")
+                        url.set("https://${githubUrl}/tree/main")
+                    }
+                }
+            }
+        }
+        // TODO: remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
+        project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
+            dependsOn(project.tasks.withType(Sign::class.java))
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+        getLocalProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID"),
+        getLocalProperty("signing.key") ?: System.getenv("SIGNING_KEY"),
+        getLocalProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD"),
+    )
+    sign(publishing.publications)
 }
