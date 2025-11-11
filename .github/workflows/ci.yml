@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew --no-daemon --console=plain :composeunstyled:assemble
 
       - name: Detekt
-        run: ./gradlew --no-daemon --console=plain detekt
+        run: ./gradlew --no-daemon --console=plain detekt --info
 
       - name: Test
         run: ./gradlew --no-daemon --console=plain jvmTest
