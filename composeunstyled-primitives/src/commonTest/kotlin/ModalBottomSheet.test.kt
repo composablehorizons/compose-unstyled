@@ -215,51 +215,33 @@ class ModalBottomSheetTest {
     @Test
     fun dismiss_interactions() = runTestSuite {
         testCase("sheet is dismissed, when tapping outside with dismissOnClickOutside true") {
-            var dismissCalled = false
             setContent {
                 ModalBottomSheet(
                     state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
-                    properties = ModalSheetProperties(dismissOnClickOutside = true),
-                    onDismiss = { dismissCalled = true }
+                    properties = ModalSheetProperties(dismissOnClickOutside = true)
                 ) {
                     Scrim(Modifier.testTag("scrim"))
                     Sheet { Box(Modifier.size(40.dp)) }
                 }
             }
             onNodeWithTag("scrim").performClick()
-            assertTrue(dismissCalled)
+            waitForIdle()
+            onNode(isDialog()).assertDoesNotExist()
         }
 
         testCase("sheet is not dismissed, when tapping outside with dismissOnClickOutside false") {
-            var dismissCalled = false
             setContent {
                 ModalBottomSheet(
                     rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
-                    properties = ModalSheetProperties(dismissOnClickOutside = false),
-                    onDismiss = { dismissCalled = true }
+                    properties = ModalSheetProperties(dismissOnClickOutside = false)
                 ) {
                     Scrim(Modifier.testTag("scrim"))
                     Sheet { Box(Modifier.size(40.dp)) }
                 }
             }
             onNodeWithTag("scrim").performClick()
-            assertFalse(dismissCalled)
-        }
-
-        testCase("modal is dismissed, when clicking outside") {
-            var dismissCalled = false
-            setContent {
-                ModalBottomSheet(
-                    state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
-                    properties = ModalSheetProperties(dismissOnClickOutside = true),
-                    onDismiss = { dismissCalled = true }
-                ) {
-                    Scrim(Modifier.testTag("scrim"))
-                    Sheet { Box(Modifier.size(40.dp)) }
-                }
-            }
-            onNodeWithTag("scrim").performClick()
-            assertTrue(dismissCalled)
+            waitForIdle()
+            onNode(isDialog()).assertExists()
         }
 
         testCase("modal is dismissed, when sheet is dismissed programmatically") {
@@ -274,40 +256,11 @@ class ModalBottomSheetTest {
             onNodeWithTag("scrim").assertExists()
             onNode(isDialog()).assertExists()
 
-            // Dismiss the sheet programmatically by setting target to Hidden
             state.targetDetent = SheetDetent.Hidden
             waitForIdle()
 
-            // Modal should be removed once sheet reaches Hidden and is idle
             onNode(isDialog()).assertDoesNotExist()
             onNodeWithTag("scrim").assertDoesNotExist()
-        }
-
-        testCase("onDismiss is called, when sheet is swiped to hidden") {
-            lateinit var state: ModalBottomSheetState
-            var dismissCalled = false
-            setContent {
-                state = rememberModalBottomSheetState(
-                    initialDetent = SheetDetent.FullyExpanded,
-                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
-                )
-                ModalBottomSheet(state = state, onDismiss = { dismissCalled = true }) {
-                    Scrim(Modifier.testTag("scrim"))
-                    Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
-                }
-            }
-            onNodeWithTag("scrim").assertExists()
-            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-
-            // Swipe the sheet down to dismiss
-            onNodeWithTag("sheet").performTouchInput {
-                swipeDown()
-            }
-            waitForIdle()
-
-            // Verify onDismiss was called when sheet reached Hidden
-            assertEquals(SheetDetent.Hidden, state.currentDetent)
-            assertTrue(dismissCalled)
         }
 
         testCase("modal is dismissed, when sheet is swiped to hidden") {
@@ -325,13 +278,11 @@ class ModalBottomSheetTest {
             onNode(isDialog()).assertExists()
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
 
-            // Swipe the sheet down to dismiss
             onNodeWithTag("sheet").performTouchInput {
                 swipeDown()
             }
             waitForIdle()
 
-            // Verify sheet reached Hidden and modal was removed
             assertEquals(SheetDetent.Hidden, state.currentDetent)
             onNode(isDialog()).assertDoesNotExist()
             onNodeWithTag("scrim").assertDoesNotExist()
@@ -590,6 +541,101 @@ class ModalBottomSheetTest {
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
             assertEquals(600f, state.offset)
             onNode(isDialog()).assertExists()
+        }
+    }
+
+    @Test
+    fun onDismiss() = runTestSuite {
+        testCase("given sheet is fully expanded and dismissOnClickOutside is true, when tapping outside, then onDismiss is called") {
+            var dismissCallCount = 0
+            setContent {
+                ModalBottomSheet(
+                    state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+                    properties = ModalSheetProperties(dismissOnClickOutside = true),
+                    onDismiss = { dismissCallCount++ }
+                ) {
+                    Scrim(Modifier.testTag("scrim"))
+                    Sheet { Box(Modifier.size(40.dp)) }
+                }
+            }
+            onNodeWithTag("scrim").performClick()
+            waitForIdle()
+            assertEquals(1, dismissCallCount)
+        }
+
+        testCase("given sheet is fully expanded and dismissOnClickOutside is false, when tapping outside, then onDismiss is not called") {
+            var dismissCallCount = 0
+            setContent {
+                ModalBottomSheet(
+                    state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+                    properties = ModalSheetProperties(dismissOnClickOutside = false),
+                    onDismiss = { dismissCallCount++ }
+                ) {
+                    Scrim(Modifier.testTag("scrim"))
+                    Sheet { Box(Modifier.size(40.dp)) }
+                }
+            }
+            onNodeWithTag("scrim").performClick()
+            waitForIdle()
+            assertEquals(0, dismissCallCount)
+        }
+
+        testCase("given sheet is fully expanded, when sheet is swiped to hidden, then onDismiss is called") {
+            lateinit var state: ModalBottomSheetState
+            var dismissCallCount = 0
+            setContent {
+                state = rememberModalBottomSheetState(
+                    initialDetent = SheetDetent.FullyExpanded,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
+                )
+                ModalBottomSheet(state = state, onDismiss = { dismissCallCount++ }) {
+                    Scrim(Modifier.testTag("scrim"))
+                    Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+                }
+            }
+            onNodeWithTag("scrim").assertExists()
+
+            onNodeWithTag("sheet").performTouchInput {
+                swipeDown()
+            }
+
+            waitForIdle()
+
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
+            assertEquals(1, dismissCallCount)
+        }
+
+        testCase("given sheet started hidden and was shown, when clicking outside, then onDismiss is called") {
+            lateinit var state: ModalBottomSheetState
+            var dismissCallCount = 0
+            setContent {
+                state = rememberModalBottomSheetState(
+                    initialDetent = SheetDetent.Hidden,
+                    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded)
+                )
+                ModalBottomSheet(
+                    state = state,
+                    properties = ModalSheetProperties(dismissOnClickOutside = true),
+                    onDismiss = { dismissCallCount++ }
+                ) {
+                    Scrim(Modifier.testTag("scrim"))
+                    Sheet { Box(Modifier.size(40.dp)) }
+                }
+            }
+
+            // Show the sheet
+            state.targetDetent = SheetDetent.FullyExpanded
+            waitForIdle()
+            onNode(isDialog()).assertExists()
+
+            // Dismiss by clicking outside
+            println("--- CLICKING OUTSIDE")
+            onNodeWithTag("scrim").performClick()
+
+            waitForIdle()
+            println("--- ASSERTING")
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
+            assertEquals(1, dismissCallCount)
         }
     }
 
