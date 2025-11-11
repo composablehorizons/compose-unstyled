@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.48.3] - 2025-11-11
+
 ### Fixed
 
 - Ensure modal is added before monitoring its state (fixes https://github.com/composablehorizons/compose-unstyled/issues/151)
