@@ -3,11 +3,10 @@ package com.composeunstyled
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.FloatingContent
-import com.composeunstyled.RelativeAlignment
-import com.composeunstyled.Text
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 

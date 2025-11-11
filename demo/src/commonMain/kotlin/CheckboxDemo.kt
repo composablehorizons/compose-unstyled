@@ -23,7 +23,8 @@ import com.composeunstyled.Icon
 @Composable
 fun CheckboxDemo() {
     Box(
-        modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
+        modifier = Modifier.fillMaxSize()
+            .background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
         contentAlignment = Alignment.Center
     ) {
         var checked by remember { mutableStateOf(false) }

@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.composeunstyled.LocalContentColor
 
 /**
  * A foundational component used to display icons.

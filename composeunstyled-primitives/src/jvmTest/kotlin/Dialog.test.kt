@@ -2,10 +2,17 @@ package com.composeunstyled
 
 import androidx.compose.foundation.focusable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.*
-import com.composables.core.*
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
+import com.composables.core.Dialog
+import com.composables.core.DialogPanel
+import com.composables.core.DialogState
+import com.composables.core.Scrim
+import com.composables.core.rememberDialogState
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

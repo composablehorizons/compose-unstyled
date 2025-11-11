@@ -72,7 +72,7 @@ class StackTest {
     @Test
     fun changingOrientationChangesPlacement() = runComposeUiTest {
         var orientation by mutableStateOf(StackOrientation.Horizontal)
-        
+
         setContent {
             Stack(orientation = orientation, modifier = Modifier.testTag("stack")) {
                 Box(

@@ -1,0 +1,11 @@
+<code_scheme name="Kotlin code style" version="173">
+    <option name="AUTODETECT_INDENTS" value="false"/>
+    <JetCodeStyleSettings>
+        <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647"/>
+        <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647"/>
+        <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL"/>
+    </JetCodeStyleSettings>
+    <codeStyleSettings language="kotlin">
+        <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL"/>
+    </codeStyleSettings>
+</code_scheme>

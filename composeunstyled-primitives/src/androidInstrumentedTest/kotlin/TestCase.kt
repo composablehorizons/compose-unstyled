@@ -3,11 +3,11 @@ package com.composables.core
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
-import kotlin.reflect.KClass
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume.assumeTrue
+import kotlin.reflect.KClass
 
 internal data class TestResult(
     val name: String,

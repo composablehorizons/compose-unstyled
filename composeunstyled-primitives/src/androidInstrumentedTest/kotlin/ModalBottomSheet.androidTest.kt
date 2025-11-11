@@ -29,7 +29,11 @@ class ModalBottomSheet {
                     onDismiss = { dismissCalled = true }
                 ) {
                     Scrim()
-                    Sheet(Modifier.fillMaxWidth().background(Color.White)) {
+                    Sheet(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    ) {
                         Box(
                             Modifier
                                 .testTag("sheet")
@@ -54,9 +58,13 @@ class ModalBottomSheet {
                     onDismiss = { dismissCalled = true }
                 ) {
                     Scrim()
-                    Sheet { Box(Modifier
-                        .testTag("sheet")
-                        .size(40.dp)) }
+                    Sheet {
+                        Box(
+                            Modifier
+                                .testTag("sheet")
+                                .size(40.dp)
+                        )
+                    }
                 }
             }
             onNodeWithTag("sheet").assertExists()

@@ -2,7 +2,12 @@ package com.composeunstyled
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.SemanticsActions
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import kotlin.test.BeforeTest
@@ -141,7 +146,6 @@ class TextTest {
         onNodeWithText("Hello World")
             .assertTextStyle { it.color == Color.Red }
     }
-
 
 
     private fun SemanticsNodeInteraction.assertTextStyle(matcher: (TextStyle) -> Boolean): SemanticsNodeInteraction {

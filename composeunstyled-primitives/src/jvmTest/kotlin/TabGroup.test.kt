@@ -7,10 +7,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.*
-import com.composeunstyled.*
-import kotlin.test.Test
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.KeyInjectionScope
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.requestFocus
+import androidx.compose.ui.test.runComposeUiTest
 import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class TabGroupTest {

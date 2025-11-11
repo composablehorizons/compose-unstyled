@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -61,13 +60,13 @@ import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
+import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.painterResource
 import unstyled.demo.generated.resources.BebasNeue
 import unstyled.demo.generated.resources.Inter
 import unstyled.demo.generated.resources.Res
 import unstyled.demo.generated.resources.Roboto
 import unstyled.demo.generated.resources.just_hoist_it_cover
-import org.jetbrains.compose.resources.Font
-import org.jetbrains.compose.resources.painterResource
 
 private val colors = ThemeProperty<Color>("colors")
 private val typography = ThemeProperty<TextStyle>("typography")

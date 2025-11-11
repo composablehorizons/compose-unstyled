@@ -6,7 +6,12 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -28,9 +33,7 @@ import androidx.compose.ui.unit.dp
 fun Modifier.outline(width: Dp, color: Color, shape: Shape = RectangleShape, offset: Dp = 0.dp): Modifier {
     return drawBehind {
         val strokeWidth = width.toPx()
-        val outline = shape.createOutline(size, layoutDirection, this)
-
-        when (outline) {
+        when (val outline = shape.createOutline(size, layoutDirection, this)) {
             is Outline.Generic -> {
                 // not supported
             }

@@ -32,7 +32,10 @@ import com.composeunstyled.LocalContentColor
  * @param tint The tint color to be applied to the icon.
  */
 @Composable
-@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(painter,contentDescription,modifier,tint)"))
+@Deprecated(
+    "Use Icon from the com.composeunstyled package",
+    ReplaceWith("com.composeunstyled.Icon(painter,contentDescription,modifier,tint)")
+)
 fun Icon(
     painter: Painter,
     contentDescription: String?,
@@ -65,7 +68,10 @@ fun Icon(
  * @param modifier Modifier to be applied to the icon.
  * @param tint The tint color to be applied to the icon.
  */
-@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageBitmap,contentDescription,modifier,tint)"))
+@Deprecated(
+    "Use Icon from the com.composeunstyled package",
+    ReplaceWith("com.composeunstyled.Icon(imageBitmap,contentDescription,modifier,tint)")
+)
 @Composable
 fun Icon(
     imageBitmap: ImageBitmap,
@@ -100,7 +106,10 @@ fun Icon(
  * @param tint The tint color to be applied to the icon.
  */
 @Composable
-@Deprecated("Use Icon from the com.composeunstyled package", ReplaceWith("com.composeunstyled.Icon(imageVector,contentDescription,modifier,tint)"))
+@Deprecated(
+    "Use Icon from the com.composeunstyled package",
+    ReplaceWith("com.composeunstyled.Icon(imageVector,contentDescription,modifier,tint)")
+)
 fun Icon(
     imageVector: ImageVector,
     contentDescription: String?,

@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.*
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
@@ -24,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @Deprecated("This will go away in 2.0. Use the new focusRing() modifier instead that does not force you to override your theme's indication")
 @Composable
-public fun rememberFocusRingIndication(
+fun rememberFocusRingIndication(
     ringColor: Color = Color.Unspecified,
     ringWidth: Dp = Dp.Unspecified,
     paddingValues: PaddingValues = PaddingValues(),

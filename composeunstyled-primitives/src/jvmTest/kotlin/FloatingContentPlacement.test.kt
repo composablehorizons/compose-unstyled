@@ -1,7 +1,6 @@
 package com.composeunstyled
 
 import androidx.compose.ui.unit.LayoutDirection
-import com.composeunstyled.RelativeAlignment
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -430,17 +429,21 @@ private fun calculateX(
         RelativeAlignment.TopStart, RelativeAlignment.BottomStart -> {
             if (layoutDirection == LayoutDirection.Ltr) 0 else anchorWidth - contentWidth
         }
+
         RelativeAlignment.TopEnd, RelativeAlignment.BottomEnd -> {
             if (layoutDirection == LayoutDirection.Ltr) anchorWidth - contentWidth else 0
         }
+
         RelativeAlignment.CenterStart -> {
             // CenterStart: content positioned to the LEFT of anchor
             if (layoutDirection == LayoutDirection.Ltr) -contentWidth else anchorWidth
         }
+
         RelativeAlignment.CenterEnd -> {
             // CenterEnd: content positioned to the RIGHT of anchor
             if (layoutDirection == LayoutDirection.Ltr) anchorWidth else -contentWidth
         }
+
         RelativeAlignment.TopCenter, RelativeAlignment.BottomCenter -> {
             (anchorWidth - contentWidth) / 2
         }
@@ -456,9 +459,11 @@ private fun calculateY(
         RelativeAlignment.TopStart, RelativeAlignment.TopEnd, RelativeAlignment.TopCenter -> {
             -contentHeight
         }
+
         RelativeAlignment.CenterStart, RelativeAlignment.CenterEnd -> {
             (anchorHeight - contentHeight) / 2
         }
+
         RelativeAlignment.BottomStart, RelativeAlignment.BottomEnd, RelativeAlignment.BottomCenter -> {
             anchorHeight
         }

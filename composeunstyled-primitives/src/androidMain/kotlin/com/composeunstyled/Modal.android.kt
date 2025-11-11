@@ -6,8 +6,12 @@ import android.view.WindowManager
 import androidx.activity.ComponentDialog
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
@@ -55,9 +59,11 @@ actual fun Modal(
                     val localWindow = window
                         ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
 
-                    Box(Modifier
-                        .fillMaxSize()
-                        .onKeyEvent(onKeyEvent)) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .onKeyEvent(onKeyEvent)
+                    ) {
                         CompositionLocalProvider(LocalModalWindow provides localWindow) {
                             content()
                         }

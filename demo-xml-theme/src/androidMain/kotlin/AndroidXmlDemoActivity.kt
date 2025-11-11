@@ -6,7 +6,12 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -22,7 +27,13 @@ import com.composeunstyled.Button
 import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.ProvideTextStyle
 import com.composeunstyled.Text
-import com.composeunstyled.theme.*
+import com.composeunstyled.theme.Theme
+import com.composeunstyled.theme.ThemeProperty
+import com.composeunstyled.theme.ThemeToken
+import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.resolveThemeColor
+import com.composeunstyled.theme.resolveThemeDp
+import com.composeunstyled.theme.resolveThemeTextAppearance
 
 class AndroidXmlDemoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
