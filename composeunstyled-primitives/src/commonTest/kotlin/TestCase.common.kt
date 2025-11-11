@@ -6,8 +6,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlin.reflect.KClass
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
-import org.junit.Assume.assumeTrue
+import kotlinx.coroutines.test.runTest
 
 internal data class TestResult(
     val name: String,
@@ -28,7 +27,6 @@ internal fun testCase(
     // For tests within runTestSuite, the testCase function in TestSuiteScope should be used
     if (ignored) {
         println("👋 Ignoring '$name'")
-        assumeTrue(false)
         return TestResult(name, passed = true, ignored = true)
     }
     val result = runCatching { runComposeUiTest { assertions() } }
@@ -75,7 +73,7 @@ internal fun testCase(
 internal fun runTestSuite(block: TestSuiteScope.() -> Unit) {
     val scope = TestSuiteScope()
     scope.block()
-    runBlocking {
+    runTest {
         val results = scope.testCases.map { testCase ->
             async {
                 if (testCase.ignored) {

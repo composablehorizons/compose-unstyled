@@ -10,13 +10,15 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
 import com.composables.core.*
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.launch
-import org.assertj.core.api.Assertions.assertThat
 
 @OptIn(ExperimentalTestApi::class)
 class ModalBottomSheetTest {
     @Test
-    fun `initial state`() = runTestSuite {
+    fun initial_state() = runTestSuite {
         testCase("sheet is visible, when initial detent is fully expanded") {
             lateinit var state: ModalBottomSheetState
             setContent {
@@ -49,7 +51,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("sheet").assertExists()
-            assertThat(state.offset).isEqualTo(40f)
+            assertEquals(40f, state.offset)
         }
 
 
@@ -94,7 +96,7 @@ class ModalBottomSheetTest {
 
             state.targetDetent = SheetDetent.FullyExpanded
             waitForIdle()
-            assertThat(state.offset).isEqualTo(40f)
+            assertEquals(40f, state.offset)
         }
 
         testCase("animates sheet in, when entering") {
@@ -115,13 +117,13 @@ class ModalBottomSheetTest {
             // we should now be in motion
             state.targetDetent = SheetDetent.FullyExpanded
             mainClock.advanceTimeBy(1)
-            assertThat(state.isIdle).isFalse
+            assertFalse(state.isIdle)
             onNodeWithTag("sheet").assertExists()
 
             // finish animation. we should be resting
             mainClock.autoAdvance = true
             awaitIdle()
-            assertThat(state.bottomSheetState.isIdle).isTrue
+            assertTrue(state.bottomSheetState.isIdle)
         }
 
         testCase("animates scrim in, when entering") {
@@ -148,17 +150,17 @@ class ModalBottomSheetTest {
 
             // Check that the scrim animation is running (not instantly completed)
             onNodeWithTag("scrim").assertExists()
-            assertThat(state.scrimState.isIdle).isFalse()
+            assertFalse(state.scrimState.isIdle)
 
             // Advance halfway through animation
             mainClock.advanceTimeBy(150)
-            assertThat(state.scrimState.isIdle).isFalse()
+            assertFalse(state.scrimState.isIdle)
 
             // Complete the animation
             mainClock.advanceTimeBy(150)
             waitForIdle()
-            assertThat(state.scrimState.isIdle).isTrue()
-            assertThat(state.scrimState.currentState).isTrue()
+            assertTrue(state.scrimState.isIdle)
+            assertTrue(state.scrimState.currentState)
         }
     }
 
@@ -211,7 +213,7 @@ class ModalBottomSheetTest {
     }
 
     @Test
-    fun `dismiss interactions`() = runTestSuite {
+    fun dismiss_interactions() = runTestSuite {
         testCase("sheet is dismissed, when tapping outside with dismissOnClickOutside true") {
             var dismissCalled = false
             setContent {
@@ -225,7 +227,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("scrim").performClick()
-            assertThat(dismissCalled).isTrue
+            assertTrue(dismissCalled)
         }
 
         testCase("sheet is not dismissed, when tapping outside with dismissOnClickOutside false") {
@@ -241,7 +243,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("scrim").performClick()
-            assertThat(dismissCalled).isFalse
+            assertFalse(dismissCalled)
         }
 
         testCase("modal is dismissed, when clicking outside") {
@@ -257,7 +259,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("scrim").performClick()
-            assertThat(dismissCalled).isTrue
+            assertTrue(dismissCalled)
         }
 
         testCase("modal is dismissed, when sheet is dismissed programmatically") {
@@ -295,7 +297,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("scrim").assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
 
             // Swipe the sheet down to dismiss
             onNodeWithTag("sheet").performTouchInput {
@@ -304,8 +306,8 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             // Verify onDismiss was called when sheet reached Hidden
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-            assertThat(dismissCalled).isTrue()
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
+            assertTrue(dismissCalled)
         }
 
         testCase("modal is dismissed, when sheet is swiped to hidden") {
@@ -321,7 +323,7 @@ class ModalBottomSheetTest {
                 }
             }
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
 
             // Swipe the sheet down to dismiss
             onNodeWithTag("sheet").performTouchInput {
@@ -330,14 +332,14 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             // Verify sheet reached Hidden and modal was removed
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
             onNode(isDialog()).assertDoesNotExist()
             onNodeWithTag("scrim").assertDoesNotExist()
         }
     }
 
     @Test
-    fun `state changes during interactions`() = runTestSuite {
+    fun state_changes_during_interactions() = runTestSuite {
         testCase("currentDetent updates to Hidden, when targetDetent changes to Hidden during opening animation") {
             lateinit var state: ModalBottomSheetState
             setContent {
@@ -365,7 +367,7 @@ class ModalBottomSheetTest {
             mainClock.autoAdvance = true
             waitForIdle()
 
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
         }
 
         testCase("isIdle becomes true, when animation to Hidden completes") {
@@ -383,7 +385,7 @@ class ModalBottomSheetTest {
             }
 
             waitForIdle()
-            assertThat(state.isIdle).isTrue()
+            assertTrue(state.isIdle)
 
             mainClock.autoAdvance = false
 
@@ -392,14 +394,14 @@ class ModalBottomSheetTest {
             mainClock.advanceTimeBy(500)
 
             // Should not be idle during animation
-            assertThat(state.isIdle).isFalse()
+            assertFalse(state.isIdle)
 
             // Complete animation
             mainClock.autoAdvance = true
             waitForIdle()
 
             // Should be idle after animation completes
-            assertThat(state.isIdle).isTrue()
+            assertTrue(state.isIdle)
         }
 
         testCase("currentDetent updates to Hidden, when sheet caught and dismissed with gesture during opening animation") {
@@ -432,7 +434,7 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             // currentDetent should update to Hidden immediately after gesture completes
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
         }
     }
 
@@ -456,7 +458,7 @@ class ModalBottomSheetTest {
 
             waitForIdle()
             onNode(isDialog()).assertDoesNotExist()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
 
             scope.launch {
                 state.animateTo(SheetDetent.FullyExpanded)
@@ -465,8 +467,8 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertExists()
             onNodeWithTag("sheet").assertIsDisplayed()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-            assertThat(state.offset).isEqualTo(600f)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+            assertEquals(600f, state.offset)
         }
 
         testCase("modal disappears and sheet collapses to Hidden, when animating from FullyExpanded") {
@@ -487,7 +489,7 @@ class ModalBottomSheetTest {
 
             waitForIdle()
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
 
             scope.launch {
                 state.animateTo(SheetDetent.Hidden)
@@ -496,7 +498,7 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertDoesNotExist()
             onNodeWithTag("sheet").assertDoesNotExist()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
         }
 
         testCase("sheet moves to custom detent, when animating from Hidden to custom detent") {
@@ -517,7 +519,7 @@ class ModalBottomSheetTest {
             }
 
             waitForIdle()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
 
             scope.launch {
                 state.animateTo(customDetent)
@@ -525,8 +527,8 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(customDetent)
-            assertThat(state.offset).isEqualTo(300f)
+            assertEquals(customDetent, state.currentDetent)
+            assertEquals(300f, state.offset)
         }
 
         testCase("target detent updates during animation, when animating to FullyExpanded") {
@@ -556,8 +558,8 @@ class ModalBottomSheetTest {
             mainClock.advanceTimeBy(1000L)
 
             // During animation, target should be FullyExpanded
-            assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
-            assertThat(state.isIdle).isFalse()
+            assertEquals(SheetDetent.FullyExpanded, state.targetDetent)
+            assertFalse(state.isIdle)
         }
 
         testCase("animateTo behaves like targetDetent setter, when animating from Hidden to FullyExpanded") {
@@ -577,7 +579,7 @@ class ModalBottomSheetTest {
             }
 
             waitForIdle()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
 
             scope.launch {
                 state.animateTo(SheetDetent.FullyExpanded)
@@ -585,8 +587,8 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             // Should reach FullyExpanded
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-            assertThat(state.offset).isEqualTo(600f)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+            assertEquals(600f, state.offset)
             onNode(isDialog()).assertExists()
         }
     }
@@ -611,8 +613,8 @@ class ModalBottomSheetTest {
 
             waitForIdle()
             onNode(isDialog()).assertDoesNotExist()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-            assertThat(state.offset).isEqualTo(0f)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
+            assertEquals(0f, state.offset)
 
             scope.launch {
                 state.jumpTo(SheetDetent.FullyExpanded)
@@ -620,9 +622,9 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-            assertThat(state.offset).isEqualTo(600f)
-            assertThat(state.isIdle).isTrue()
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+            assertEquals(600f, state.offset)
+            assertTrue(state.isIdle)
             onNodeWithTag("sheet").assertIsDisplayed()
         }
 
@@ -644,7 +646,7 @@ class ModalBottomSheetTest {
 
             waitForIdle()
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
 
             scope.launch {
                 state.jumpTo(SheetDetent.Hidden)
@@ -652,9 +654,9 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             onNode(isDialog()).assertDoesNotExist()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-            assertThat(state.offset).isEqualTo(0f)
-            assertThat(state.isIdle).isTrue()
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
+            assertEquals(0f, state.offset)
+            assertTrue(state.isIdle)
         }
 
         testCase("sheet jumps to custom detent immediately, when jumping from Hidden") {
@@ -675,7 +677,7 @@ class ModalBottomSheetTest {
             }
 
             waitForIdle()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+            assertEquals(SheetDetent.Hidden, state.currentDetent)
 
             scope.launch {
                 state.jumpTo(customDetent)
@@ -683,9 +685,9 @@ class ModalBottomSheetTest {
             waitForIdle()
 
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(customDetent)
-            assertThat(state.offset).isEqualTo(300f)
-            assertThat(state.isIdle).isTrue()
+            assertEquals(customDetent, state.currentDetent)
+            assertEquals(300f, state.offset)
+            assertTrue(state.isIdle)
         }
 
         testCase("jumpTo changes state without animation, when jumping between detents") {
@@ -715,9 +717,9 @@ class ModalBottomSheetTest {
             mainClock.advanceTimeByFrame()
 
             // Should be at FullyExpanded immediately, without animation
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-            assertThat(state.offset).isEqualTo(600f)
-            assertThat(state.isIdle).isTrue()
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+            assertEquals(600f, state.offset)
+            assertTrue(state.isIdle)
         }
 
         testCase("modal remains visible, when jumping between non-Hidden detents") {
@@ -739,7 +741,7 @@ class ModalBottomSheetTest {
 
             waitForIdle()
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(halfDetent)
+            assertEquals(halfDetent, state.currentDetent)
 
             scope.launch {
                 state.jumpTo(SheetDetent.FullyExpanded)
@@ -748,7 +750,7 @@ class ModalBottomSheetTest {
 
             // Modal should still be visible
             onNode(isDialog()).assertExists()
-            assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+            assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
         }
     }
 }
