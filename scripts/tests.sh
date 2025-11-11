@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
 
 echo "Running detekt..."
 ./gradlew detekt
