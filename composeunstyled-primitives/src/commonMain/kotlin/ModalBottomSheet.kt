@@ -273,15 +273,17 @@ fun ModalBottomSheet(
                     state.pendingDetentChange = null
                 }
             }
-            var hasBeenShown by remember { mutableStateOf(false) }
-            if (hasBeenShown.not()) {
-                LaunchedEffect(state.offset > 0f) {
-                    hasBeenShown = true
-                }
-            } else {
-                LaunchedEffect(state.bottomSheetState.isIdle) {
-                    if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
-                        onDismissRequest()
+            if (state.modalIsAdded) {
+                var hasBeenShown by remember { mutableStateOf(false) }
+                if (hasBeenShown.not()) {
+                    LaunchedEffect(state.offset > 0f) {
+                        hasBeenShown = true
+                    }
+                } else {
+                    LaunchedEffect(state.bottomSheetState.isIdle) {
+                        if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
+                            onDismissRequest()
+                        }
                     }
                 }
             }
