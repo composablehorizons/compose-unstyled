@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- ColoredIndication can now animate it's state changes. See `showAnimationSpec` and `hideAnimationSpec` parameters
+  during construction.
+
 ## [1.48.3] - 2025-11-11
 
 ### Fixed
 
-- Ensure modal is added before monitoring its state (fixes https://github.com/composablehorizons/compose-unstyled/issues/151)
+- Ensure modal is added before monitoring its state (
+  fixes https://github.com/composablehorizons/compose-unstyled/issues/151)
