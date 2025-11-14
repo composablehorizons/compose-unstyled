@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 permissions:
   contents: write
@@ -55,29 +55,22 @@ jobs:
       - name: Test
         run: ./gradlew --no-daemon --console=plain jvmTest
 
-      - name: Update CHANGELOG.md
+      - name: Generate CHANGELOG content
         run: |
           chmod +x ./scripts/update_changelog.sh
           ./scripts/update_changelog.sh $VERSION
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Extract the changelog content for this version, excluding the version header
+          CHANGELOG_CONTENT=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$ d' | tail -n +2)
 
-      - name: Commit and push CHANGELOG
-        run: |
-          git add CHANGELOG.md
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update CHANGELOG for $VERSION"
-            git push origin HEAD:main
-          fi
+          # Store in environment file for the release step
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           tag_name: ${{ env.TAG_NAME }}
-          generate_release_notes: true
+          body: ${{ env.CHANGELOG_CONTENT }}
