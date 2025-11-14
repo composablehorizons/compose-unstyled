@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ColoredIndication can now animate it's state changes. See `showAnimationSpec` and `hideAnimationSpec` parameters
   during construction.
+- You can now `get` a theme property while creating a theme via the `buildTheme {}` function. (ie.
+  `defaultIndication = properties[indications][bright]`)
 
 ## [1.48.3] - 2025-11-11
 

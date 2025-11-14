@@ -155,6 +155,10 @@ class MutableThemeProperties internal constructor() {
     operator fun <T> set(property: ThemeProperty<T>, values: Map<ThemeToken<T>, T>) {
         entries[property] = ThemeValues(property.name, values)
     }
+
+    operator fun <T> get(property: ThemeProperty<T>): ThemeValues<T> {
+        return entries[property] as? ThemeValues<T> ?: error("No theme was set. In order to use the theme @Composable function.")
+    }
 }
 
 data class OverriddenValue<T>(val token: ThemeToken<T>, val value: T)
