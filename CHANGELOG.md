@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Added
+### Added
 
 - Introduce Platform Themes. Platform Themes provide a native look and feel depending on the platform you are running on, such as platform fonts, text sizes, emojis on Web, touch indications, and interactive sizing for controls.
 - Add option to animate `ColoredIndication`'s color changes
 - Add getter to MutableThemeProperties
 
-## Changed
+### Changed
 - Updated demos to use Platform Theme instead of hardcoded styles
 
 ## [1.48.3] - 2025-11-11
