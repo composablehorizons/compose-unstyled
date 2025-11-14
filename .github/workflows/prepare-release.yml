@@ -12,7 +12,6 @@ permissions:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    environment: maven-central
     steps:
       - uses: actions/checkout@v4
         with:
