@@ -56,8 +56,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(compose.foundation)
+                api(projects.composeunstyledPlatformtheme)
                 api(projects.composeunstyledPrimitives)
-                api(projects.composeunstyledTheming)
             }
         }
     }

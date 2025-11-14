@@ -9,6 +9,7 @@ nexusPublishPlugin = "2.0.0-rc-1"
 detekt = "1.23.8"
 activity-core = "1.10.1"
 lucide = "1.0.0"
+ripple = "1.1.0"
 window = "1.4.0"
 
 # Android
@@ -26,6 +27,7 @@ assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 androidx-activitycompose = { module = "androidx.activity:activity-compose", version.ref = "activity-core" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 composables-icons-lucide = { module = "com.composables:icons-lucide", version.ref = "lucide" }
+composables-ripple = { module = "com.composables:ripple-indication", version.ref = "ripple" }
 
 androidx-compose-test = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "junitAndroid" }
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "junitAndroid" }
