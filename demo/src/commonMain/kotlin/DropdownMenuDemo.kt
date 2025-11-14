@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -28,8 +29,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composables.core.Separator
 import com.composables.icons.lucide.ChevronDown
@@ -45,6 +44,12 @@ import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.Icon
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.platformtheme.interactiveSize
+import com.composeunstyled.platformtheme.interactiveSizes
+import com.composeunstyled.platformtheme.sizeDefault
+import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -82,12 +87,11 @@ fun DropdownMenuDemo() {
                 shape = RoundedCornerShape(6.dp),
                 backgroundColor = Color.White,
                 onClick = { expanded = true },
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                indication = Theme[indications][dimmed],
+                modifier = Modifier.interactiveSize(Theme[interactiveSizes][sizeDefault])
             ) {
-                Text(
-                    text = "Options",
-                    style = TextStyle.Default.copy(fontWeight = FontWeight(500))
-                )
+                Text("Options")
                 Spacer(Modifier.width(8.dp))
                 Icon(Lucide.ChevronDown, null)
             }
@@ -115,18 +119,20 @@ fun DropdownMenuDemo() {
                     Button(
                         onClick = { expanded = false },
                         enabled = option.enabled,
-                        modifier = Modifier.padding(4.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .interactiveSize(Theme[interactiveSizes][sizeDefault])
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
                         contentColor = (if (option.dangerous) Color(0xFFC62828) else LocalContentColor.current)
                             .copy(alpha = if (option.enabled) 1f else 0.5f),
                         shape = RoundedCornerShape(8.dp),
+                        indication = Theme[indications][dimmed],
+                        horizontalArrangement = Arrangement.Start,
                     ) {
-                        Icon(option.icon, null, tint = LocalContentColor.current)
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = option.text,
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 4.dp)
-                        )
+                        Icon(option.icon, null)
+                        Spacer(Modifier.width(12.dp))
+                        Text(option.text)
                     }
                 }
             }

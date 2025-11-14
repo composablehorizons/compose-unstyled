@@ -39,6 +39,9 @@ import com.composeunstyled.Tooltip
 import com.composeunstyled.TooltipArrowDirection
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.focusRing
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun TooltipDemo() {
@@ -93,7 +96,8 @@ fun TooltipDemo() {
                     shape = CircleShape,
                     modifier = Modifier.focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
                     interactionSource = interactionSource,
-                    backgroundColor = Color.White
+                    backgroundColor = Color.White,
+                    indication = Theme[indications][dimmed]
                 ) {
                     Icon(Lucide.BellDot, contentDescription = null)
                 }

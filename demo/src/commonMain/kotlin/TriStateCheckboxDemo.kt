@@ -31,6 +31,9 @@ import com.composeunstyled.Checkbox
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.TriStateCheckbox
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun TriStateCheckboxDemo() {
@@ -71,7 +74,8 @@ fun TriStateCheckboxDemo() {
                     borderWidth = 1.dp,
                     borderColor = Color.Black.copy(0.33f),
                     modifier = Modifier.size(24.dp),
-                    contentDescription = "Select all options"
+                    contentDescription = "Select all options",
+                    indication = Theme[indications][dimmed]
                 ) {
                     when (triState) {
                         ToggleableState.On -> Icon(Lucide.Check, contentDescription = null)

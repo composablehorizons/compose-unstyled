@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -45,30 +44,37 @@ import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
-import com.composeunstyled.theme.buildTheme
-import com.composeunstyled.theme.rememberColoredIndication
+import com.composeunstyled.focusRing
+import com.composeunstyled.outline
+import com.composeunstyled.platformtheme.EmojiVariant
+import com.composeunstyled.platformtheme.WebFontOptions
+import com.composeunstyled.platformtheme.buildPlatformTheme
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.platformtheme.interactiveSize
+import com.composeunstyled.platformtheme.interactiveSizes
+import com.composeunstyled.platformtheme.sizeDefault
+import com.composeunstyled.platformtheme.text5
+import com.composeunstyled.platformtheme.textStyles
+import com.composeunstyled.theme.Theme
 
-val DemoTheme = buildTheme {
-    defaultIndication = rememberColoredIndication(
-        hoveredColor = Color.LightGray.copy(alpha = 0.3f),
-        pressedColor = Color.LightGray.copy(alpha = 0.5f),
-        focusedColor = Color.LightGray.copy(alpha = 0.1f),
+private val DemoTheme = buildPlatformTheme(
+    webFontOptions = WebFontOptions(
+        emojiVariant = EmojiVariant.None
     )
-
-//    defaultTextStyle = TextStyle(
-//        fontFamily = FontFamily(Font(Res.font.Inter)),
-//    )
-}
+)
 
 @Composable
 fun Demo(demoId: String? = null) {
     DemoTheme {
-        if (demoId == null) {
-            DemoSelection()
-        } else {
-            (availableDemos.firstOrNull { it.id == demoId }
-                ?: error("Demo not found: $demoId"))
-                .demo()
+        Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
+            if (demoId == null) {
+                DemoSelection()
+            } else {
+                (availableDemos.firstOrNull { it.id == demoId }
+                    ?: error("Demo not found: $demoId"))
+                    .demo()
+            }
         }
     }
 }
@@ -116,9 +122,12 @@ private val availableModifiers = listOf(
     })
 }
 
-private val availableDemos: List<DemoItem> = availableComponents + availableModifiers + DemoItem("Theme", "theme") {
-    ThemeDemo()
-}
+private val themingDemos = listOf(
+    DemoItem("Theming", "theme") { ThemingDemo() },
+    DemoItem("Platform Theme", "platform-theme") { PlatformThemeDemo() },
+)
+private val availableDemos: List<DemoItem> =
+    availableComponents + availableModifiers + themingDemos
 
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
@@ -137,43 +146,31 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 @Composable
 private fun DemoSelection() {
     val navController = rememberNavController()
-    NavHost(
-        navController = navController,
-        startDestination = "home",
-        enterTransition = {
-            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeIn(tween(150))
-        },
-        exitTransition = {
-            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeOut(tween(150))
-        },
-        popEnterTransition = {
-            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeIn(tween(150))
-        },
-        popExitTransition = {
-            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeOut(tween(150))
-        }
-    ) {
+    NavHost(navController = navController, startDestination = "home", enterTransition = {
+        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeIn(tween(150))
+    }, exitTransition = {
+        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeOut(tween(150))
+    }, popEnterTransition = {
+        slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeIn(tween(150))
+    }, popExitTransition = {
+        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeOut(tween(150))
+    }) {
         composable("home") {
             Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(Color(0xFFFAFAFAFA)),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 Column(
-                    Modifier
-                        .verticalScroll(rememberScrollState())
-                        .systemBarsPadding()
-                        .padding(16.dp)
-                        .widthIn(max = 600.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    Modifier.verticalScroll(rememberScrollState()).systemBarsPadding().padding(16.dp)
+                        .widthIn(max = 600.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Title("Theme")
-                    OutlinedButton(
-                        onClick = { navController.navigate("theme") },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Theme", fontWeight = FontWeight.Medium)
+                    themingDemos.forEach { demo ->
+                        OutlinedButton(
+                            onClick = { navController.navigate(demo.id) },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(demo.name)
+                        }
                     }
                     Spacer(Modifier.height(8.dp))
                     Title("Components")
@@ -182,65 +179,67 @@ private fun DemoSelection() {
                             onClick = { navController.navigate(demo.id) },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(demo.name, fontWeight = FontWeight.Medium)
+                            Text(demo.name)
                         }
                     }
                     Spacer(Modifier.height(8.dp))
                     Title("Modifiers")
                     availableModifiers.forEach { demo ->
                         OutlinedButton(
-                            onClick = { navController.navigate(demo.id) },
-                            modifier = Modifier.fillMaxWidth()
+                            onClick = { navController.navigate(demo.id) }, modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(demo.name, fontWeight = FontWeight.Medium)
+                            Text(demo.name)
                         }
                     }
                 }
             }
         }
 
-        availableDemos
-            .forEach { component ->
-                composable(component.id) {
-                    Column {
-                        AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                        ) {
-                            component.demo()
-                        }
+        availableDemos.forEach { component ->
+            composable(component.id) {
+                Column {
+                    AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+                    Box(
+                        Modifier.fillMaxWidth().weight(1f)
+                    ) {
+                        component.demo()
                     }
                 }
             }
+        }
     }
 }
 
 @Composable
 private fun Title(text: String) {
-    Text(text, modifier = Modifier.padding(bottom = 8.dp))
+    Text(text, modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text5])
 }
 
 @Composable
 private fun AppBar(onUpClick: () -> Unit, title: String) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .shadow(12.dp)
             .background(Color.White)
             .padding(WindowInsets.statusBars.asPaddingValues())
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val interactionSource = remember { MutableInteractionSource() }
         Button(
             onClick = onUpClick,
+            interactionSource = interactionSource,
             shape = CircleShape,
             contentPadding = PaddingValues(12.dp),
+            indication = Theme[indications][dimmed],
+            modifier = Modifier
+                .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape)
         ) {
             Icon(Lucide.ArrowLeft, contentDescription = "Go back")
         }
         Spacer(Modifier.width(8.dp))
-        Text(title, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+        Text(title, style = Theme[textStyles][text5])
     }
 }
 
@@ -248,17 +247,22 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
 private fun OutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = RoundedCornerShape(8.dp),
     content: @Composable () -> Unit,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Button(
         onClick = onClick,
-        modifier = modifier.shadow(2.dp, shape),
-        shape = shape,
+        interactionSource = interactionSource,
+        modifier = modifier
+            .focusRing(interactionSource, 1.dp, Color.Blue, RoundedCornerShape(8.dp))
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .interactiveSize(Theme[interactiveSizes][sizeDefault])
+            .outline(1.dp, Color.Black.copy(0.1f)),
+        shape = RoundedCornerShape(8.dp),
         backgroundColor = Color.White,
-        borderWidth = 1.dp,
         contentColor = Color(0xFF1A1A1A),
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        indication = Theme[indications][dimmed]
     ) {
         content()
     }

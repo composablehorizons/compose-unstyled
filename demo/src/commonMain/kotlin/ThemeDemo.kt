@@ -538,7 +538,7 @@ private val availableThemes = listOf(
 )
 
 @Composable
-fun ThemeDemo() {
+fun ThemingDemo() {
     var selectedTheme by remember { mutableStateOf(0) }
     val currentTheme = availableThemes[selectedTheme].theme
 

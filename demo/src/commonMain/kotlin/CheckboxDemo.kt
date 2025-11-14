@@ -19,6 +19,9 @@ import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.Checkbox
 import com.composeunstyled.Icon
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun CheckboxDemo() {
@@ -36,7 +39,8 @@ fun CheckboxDemo() {
             borderWidth = 1.dp,
             borderColor = Color.Black.copy(0.33f),
             modifier = Modifier.size(24.dp),
-            contentDescription = "Add olives"
+            contentDescription = "Add olives",
+            indication = Theme[indications][dimmed]
         ) {
             Icon(Lucide.Check, contentDescription = null)
         }

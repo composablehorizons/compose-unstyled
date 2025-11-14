@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composables.core.Dialog
 import com.composables.core.DialogPanel
@@ -30,6 +29,11 @@ import com.composables.core.Scrim
 import com.composables.core.rememberDialogState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.platformtheme.text5
+import com.composeunstyled.platformtheme.textStyles
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun DialogDemo() {
@@ -45,9 +49,10 @@ fun DialogDemo() {
             onClick = { dialogState.visible = true },
             backgroundColor = Color.White,
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
-            shape = RoundedCornerShape(6.dp)
+            shape = RoundedCornerShape(6.dp),
+            indication = Theme[indications][dimmed]
         ) {
-            Text("Show dialog", fontWeight = FontWeight(500), color = Color(0xFF1A1A1A))
+            Text("Show dialog")
         }
         Dialog(state = dialogState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
@@ -66,7 +71,7 @@ fun DialogDemo() {
             ) {
                 Column {
                     Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-                        Text("Update Available", fontWeight = FontWeight.Medium)
+                        Text("Update Available", style = Theme[textStyles][text5])
                         Spacer(Modifier.height(8.dp))
                         Text(
                             "A new version of the app is available. Please update to the latest version.",
@@ -78,8 +83,9 @@ fun DialogDemo() {
                         onClick = { /* TODO */ }, modifier = Modifier.padding(12.dp).align(Alignment.End),
                         shape = RoundedCornerShape(6.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                        indication = Theme[indications][dimmed]
                     ) {
-                        Text("Update", color = Color(0xFF0D99FF), fontWeight = FontWeight.Medium)
+                        Text("Update", color = Color(0xFF0D99FF))
                     }
                 }
             }

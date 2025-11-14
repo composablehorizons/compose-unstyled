@@ -32,6 +32,9 @@ import com.composeunstyled.TabGroup
 import com.composeunstyled.TabList
 import com.composeunstyled.TabPanel
 import com.composeunstyled.Text
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun TabGroupDemo() {
@@ -104,7 +107,8 @@ fun TabGroupDemo() {
                         key = key,
                         selected = selected,
                         onSelected = { selectedTab = key },
-                        modifier = Modifier.weight(1f).fillMaxHeight()
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        indication = Theme[indications][dimmed]
                     ) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(

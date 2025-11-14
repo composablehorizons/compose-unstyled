@@ -37,6 +37,12 @@ import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.TextField
 import com.composeunstyled.TextInput
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.platformtheme.text3
+import com.composeunstyled.platformtheme.text4
+import com.composeunstyled.platformtheme.textStyles
+import com.composeunstyled.theme.Theme
 
 
 @Composable
@@ -73,14 +79,20 @@ fun TextFieldDemo() {
                         keyboardType = KeyboardType.Email
                     ),
                 ) {
-                    Text("Email", modifier = Modifier.padding(bottom = 8.dp), fontWeight = FontWeight.SemiBold)
+                    Text("Email", modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text4])
                     TextInput(
                         Modifier
                             .fillMaxWidth()
                             .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
                             .background(Color.White, RoundedCornerShape(8.dp))
                             .padding(horizontal = 16.dp, vertical = 12.dp),
-                        placeholder = { Text("email@example.com", color = Color.Black.copy(0.6f)) },
+                        placeholder = {
+                            Text(
+                                "email@example.com",
+                                color = Color.Black.copy(0.6f),
+                                style = Theme[textStyles][text3]
+                            )
+                        },
                     )
                 }
 
@@ -90,7 +102,7 @@ fun TextFieldDemo() {
                     singleLine = true,
                     visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
                 ) {
-                    Text("Password", modifier = Modifier.padding(bottom = 8.dp), fontWeight = FontWeight.SemiBold)
+                    Text("Password", modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text4])
                     TextInput(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -98,13 +110,20 @@ fun TextFieldDemo() {
                             .background(Color.White, RoundedCornerShape(8.dp))
                             .padding(vertical = 4.dp)
                             .padding(start = 16.dp, end = 4.dp),
-                        placeholder = { Text("8-12 characters", color = Color.Black.copy(0.6f)) },
+                        placeholder = {
+                            Text(
+                                text = "8-12 characters",
+                                color = Color.Black.copy(0.6f),
+                                style = Theme[textStyles][text3]
+                            )
+                        },
                         trailing = {
                             Button(
                                 onClick = { showPassword = !showPassword },
                                 backgroundColor = Color.Transparent,
                                 contentPadding = PaddingValues(4.dp),
-                                shape = RoundedCornerShape(4.dp)
+                                shape = RoundedCornerShape(4.dp),
+                                indication = Theme[indications][dimmed]
                             ) {
                                 Icon(
                                     imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,

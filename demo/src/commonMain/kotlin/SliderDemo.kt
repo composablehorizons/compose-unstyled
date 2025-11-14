@@ -38,7 +38,10 @@ import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.Slider
 import com.composeunstyled.Thumb
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberSliderState
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun SliderDemo() {
@@ -64,6 +67,7 @@ fun SliderDemo() {
                 shape = CircleShape,
                 backgroundColor = Color.White,
                 contentPadding = PaddingValues(8.dp),
+                indication = Theme[indications][dimmed]
             ) {
                 Icon(Lucide.Volume1, "Decrease")
             }
@@ -127,6 +131,7 @@ fun SliderDemo() {
                 shape = CircleShape,
                 backgroundColor = Color.White,
                 contentPadding = PaddingValues(8.dp),
+                indication = Theme[indications][dimmed]
             ) {
                 Icon(Lucide.Volume2, "Increase")
             }

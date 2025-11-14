@@ -35,6 +35,9 @@ import com.composables.core.rememberBottomSheetState
 import com.composeunstyled.Button
 import com.composeunstyled.Text
 import com.composeunstyled.focusRing
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
+import com.composeunstyled.theme.Theme
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
@@ -62,9 +65,10 @@ fun BottomSheetDemo() {
                 .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
             shape = RoundedCornerShape(6.dp),
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
-            backgroundColor = Color.White
+            backgroundColor = Color.White,
+            indication = Theme[indications][dimmed]
         ) {
-            Text("Show Sheet", fontWeight = FontWeight(500))
+            Text("Show Sheet")
         }
 
         BottomSheet(

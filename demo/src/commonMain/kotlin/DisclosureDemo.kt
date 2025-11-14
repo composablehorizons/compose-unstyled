@@ -35,7 +35,10 @@ import com.composeunstyled.DisclosureHeading
 import com.composeunstyled.DisclosurePanel
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
+import com.composeunstyled.platformtheme.dimmed
+import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberDisclosureState
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun DisclosureDemo() {
@@ -74,7 +77,8 @@ fun DisclosureDemo() {
                 val state = rememberDisclosureState(initiallyExpanded = i == 0)
                 Disclosure(state = state) {
                     DisclosureHeading(
-                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+                        indication = Theme[indications][dimmed]
                     ) {
                         Text(faq.question, modifier = Modifier.weight(1f))
 
