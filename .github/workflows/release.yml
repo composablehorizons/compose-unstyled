@@ -31,7 +31,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Compile
-        run: ./gradlew --no-daemon --console=plain :composeunstyled:assemble
+        run: ./gradlew --no-daemon --console=plain assemble
 
       - name: Detekt
         run: ./gradlew --no-daemon --console=plain detekt
