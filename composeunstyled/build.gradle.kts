@@ -64,7 +64,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.composables.core"
+    namespace = "com.composables.composeunstyled"
     compileSdk = libs.versions.android.compileSDK.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSDK.get().toInt()
