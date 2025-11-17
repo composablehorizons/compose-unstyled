@@ -47,4 +47,4 @@ jobs:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew --no-daemon --console=plain publishToSonatype closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew --no-daemon --console=plain publishToSonatype --max-workers 1 closeAndReleaseSonatypeStagingRepository
