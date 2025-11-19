@@ -2,7 +2,6 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -14,9 +13,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.detekt)
-
-    id("maven-publish")
-    id("signing")
+    alias(libs.plugins.maven.publish)
 }
 
 val publishGroupId = "com.composables"
@@ -135,63 +132,44 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
-val javadocJar = tasks.create<Jar>("javadocJar") {
-    archiveClassifier.set("javadoc")
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 group = publishGroupId
 version = publishVersion
 
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 
-afterEvaluate {
-    publishing {
-        publications {
-            withType<MavenPublication> {
-                artifact(javadocJar)
+    coordinates(publishGroupId, "compose-unstyled-platformtheme", publishVersion)
 
-                pom {
-                    name.set("Compose Unstyled Platform Theme")
-                    description.set("Theme with native look and feel for Compose Multiplatform.")
-                    url.set(projectUrl)
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://${githubUrl}/blob/main/LICENSE")
-                        }
-                    }
-                    issueManagement {
-                        system.set("GitHub Issues")
-                        url.set("https://${githubUrl}/issues")
-                    }
-                    developers {
-                        developer {
-                            id.set("composablehorizons")
-                            name.set("Composable Horizons")
-                            email.set("alex@composablesui.com")
-                        }
-                    }
+    pom {
+        name.set("Compose Unstyled Platform Theme")
+        description.set("Theme with native look and feel for Compose Multiplatform.")
+        url.set(projectUrl)
 
-                    scm {
-                        connection.set("scm:git:${githubUrl}.git")
-                        developerConnection.set("scm:git:ssh://${githubUrl}.git")
-                        url.set("https://${githubUrl}/tree/main")
-                    }
-                }
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://${githubUrl}/blob/main/LICENSE")
             }
         }
-        // TODO: remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
-        project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-            dependsOn(project.tasks.withType(Sign::class.java))
+
+        issueManagement {
+            system.set("GitHub Issues")
+            url.set("https://${githubUrl}/issues")
+        }
+
+        developers {
+            developer {
+                id.set("composablehorizons")
+                name.set("Composable Horizons")
+                email.set("alex@composablesui.com")
+            }
+        }
+
+        scm {
+            connection.set("scm:git:${githubUrl}.git")
+            developerConnection.set("scm:git:ssh://${githubUrl}.git")
+            url.set("https://${githubUrl}/tree/main")
         }
     }
-}
-
-signing {
-    useInMemoryPgpKeys(
-        getLocalProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID"),
-        getLocalProperty("signing.key") ?: System.getenv("SIGNING_KEY"),
-        getLocalProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD"),
-    )
-    sign(publishing.publications)
 }

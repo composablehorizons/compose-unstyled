@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
-import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -11,9 +10,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-
-    id("maven-publish")
-    id("signing")
+    alias(libs.plugins.maven.publish)
 }
 
 val publishGroupId = "com.composables"
@@ -69,63 +66,44 @@ android {
     }
 }
 
-val javadocJar = tasks.create<Jar>("javadocJar") {
-    archiveClassifier.set("javadoc")
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 group = publishGroupId
 version = publishVersion
 
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 
-afterEvaluate {
-    publishing {
-        publications {
-            withType<MavenPublication> {
-                artifact(javadocJar)
+    coordinates(publishGroupId, "compose-unstyled-internal-shared", publishVersion)
 
-                pom {
-                    name.set("Compose Unstyled Internal Shared")
-                    description.set("Internal shared utilities for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
-                    url.set(projectUrl)
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://${githubUrl}/blob/main/LICENSE")
-                        }
-                    }
-                    issueManagement {
-                        system.set("GitHub Issues")
-                        url.set("https://${githubUrl}/issues")
-                    }
-                    developers {
-                        developer {
-                            id.set("composablehorizons")
-                            name.set("Composable Horizons")
-                            email.set("alex@composablesui.com")
-                        }
-                    }
+    pom {
+        name.set("Compose Unstyled Internal Shared")
+        description.set("Internal shared utilities for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+        url.set(projectUrl)
 
-                    scm {
-                        connection.set("scm:git:${githubUrl}.git")
-                        developerConnection.set("scm:git:ssh://${githubUrl}.git")
-                        url.set("https://${githubUrl}/tree/main")
-                    }
-                }
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://${githubUrl}/blob/main/LICENSE")
             }
         }
-        // TODO: remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
-        project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-            dependsOn(project.tasks.withType(Sign::class.java))
+
+        issueManagement {
+            system.set("GitHub Issues")
+            url.set("https://${githubUrl}/issues")
+        }
+
+        developers {
+            developer {
+                id.set("composablehorizons")
+                name.set("Composable Horizons")
+                email.set("alex@composablesui.com")
+            }
+        }
+
+        scm {
+            connection.set("scm:git:${githubUrl}.git")
+            developerConnection.set("scm:git:ssh://${githubUrl}.git")
+            url.set("https://${githubUrl}/tree/main")
         }
     }
-}
-
-signing {
-    useInMemoryPgpKeys(
-        getLocalProperty("signing.keyId") ?: System.getenv("SIGNING_KEY_ID"),
-        getLocalProperty("signing.key") ?: System.getenv("SIGNING_KEY"),
-        getLocalProperty("signing.password") ?: System.getenv("SIGNING_PASSWORD"),
-    )
-    sign(publishing.publications)
 }
