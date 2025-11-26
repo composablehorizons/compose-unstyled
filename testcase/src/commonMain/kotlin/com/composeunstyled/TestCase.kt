@@ -1,15 +1,14 @@
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
-import org.junit.Assume.assumeTrue
+import kotlinx.coroutines.test.runTest
 import kotlin.reflect.KClass
 
-internal data class TestResult(
+data class TestResult(
     val name: String,
     val passed: Boolean,
     val error: Throwable? = null,
@@ -18,7 +17,7 @@ internal data class TestResult(
 
 
 @OptIn(ExperimentalTestApi::class)
-internal fun testCase(
+fun testCase(
     name: String,
     expected: KClass<out Throwable>? = null,
     ignored: Boolean = false,
@@ -28,7 +27,6 @@ internal fun testCase(
     // For tests within runTestSuite, the testCase function in TestSuiteScope should be used
     if (ignored) {
         println("👋 Ignoring '$name'")
-        assumeTrue(false)
         return TestResult(name, passed = true, ignored = true)
     }
     val result = runCatching { runComposeUiTest { assertions() } }
@@ -72,10 +70,10 @@ internal fun testCase(
 }
 
 @OptIn(ExperimentalTestApi::class)
-internal fun runTestSuite(block: TestSuiteScope.() -> Unit) {
+fun runTestSuite(block: TestSuiteScope.() -> Unit) {
     val scope = TestSuiteScope()
     scope.block()
-    runBlocking {
+    runTest {
         val results = scope.testCases.map { testCase ->
             async {
                 if (testCase.ignored) {
