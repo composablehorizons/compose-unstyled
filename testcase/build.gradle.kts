@@ -52,6 +52,9 @@ kotlin {
                 implementation(compose.uiTest)
             }
         }
+        all {
+            languageSettings.enableLanguageFeature("ContextParameters")
+        }
     }
 }
 

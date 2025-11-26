@@ -32,5 +32,4 @@ class ModalTest {
             onNode(isDialog()).assertExists()
         }
     }
-
 }

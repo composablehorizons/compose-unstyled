@@ -28,6 +28,9 @@ java {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
     androidTarget {
         publishLibraryVariants("release", "debug")
         compilerOptions {

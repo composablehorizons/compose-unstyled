@@ -3,6 +3,7 @@ package com.composeunstyled
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
@@ -127,11 +128,12 @@ fun runTestSuite(block: TestSuiteScope.() -> Unit) {
 
         if (failedTests.isNotEmpty()) {
             val errorMessage = buildString {
-                append("Test suite failed with ${failedTests.size} failure(s):\n")
+                appendLine("Test suite failed with ${failedTests.size} failure(s):")
                 failedTests.forEach { result ->
-                    append("  ❌ ${result.name}: ${result.error?.message}\n")
+                    appendLine("  ❌ ${result.name}: ${result.error?.message}")
+                    appendLine("Stack Trace: ${result.error?.stackTraceToString()}")
                 }
-                append("---")
+                appendLine("---")
             }
             throw AssertionError(errorMessage)
         }
@@ -160,3 +162,12 @@ internal data class TestCase(
     val ignored: Boolean = false,
     val assertions: suspend ComposeUiTest.() -> Unit
 )
+
+@OptIn(ExperimentalTestApi::class)
+context(uiTest: ComposeUiTest)
+fun Dp.toPx(): Float {
+    val dpValue = this
+    return with(uiTest.density) {
+        dpValue.toPx()
+    }
+}

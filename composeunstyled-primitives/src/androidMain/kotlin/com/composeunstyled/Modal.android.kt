@@ -18,6 +18,8 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.semantics.dialog
+import androidx.compose.ui.semantics.semantics
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
@@ -63,6 +65,7 @@ actual fun Modal(
                         Modifier
                             .fillMaxSize()
                             .onKeyEvent(onKeyEvent)
+                            .semantics { dialog() }
                     ) {
                         CompositionLocalProvider(LocalModalWindow provides localWindow) {
                             content()
