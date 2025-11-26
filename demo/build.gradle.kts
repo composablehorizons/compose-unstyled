@@ -43,6 +43,29 @@ kotlin {
         binaries.executable()
     }
 
+    wasmJs {
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            distribution {
+                outputDirectory = File("$rootDirPath/dist/${project.name}")
+            }
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+        }
+        binaries.executable()
+    }
+
+
     jvm("desktop")
 
     androidTarget {
