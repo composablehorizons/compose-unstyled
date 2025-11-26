@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+Allow customization of Platform Themes (b2c2a26d)
+
+### Fixed
+
+- Tint TextField's contents according to LocalContentColor (1b3fb2bd)
+- Fix a crash when updating BottomSheet's detents (7961afd1)
+- Fix bug where Modifier.onFocusChanged wouldn't work with TextField (e3f0bd6c)
+
 ## [1.49.0] - 2025-11-14
 
 ### Added
