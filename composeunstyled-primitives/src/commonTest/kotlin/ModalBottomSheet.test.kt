@@ -3,6 +3,7 @@ package com.composeunstyled
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -21,6 +22,7 @@ import com.composables.core.Scrim
 import com.composables.core.Sheet
 import com.composables.core.SheetDetent
 import com.composables.core.rememberModalBottomSheetState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,6 +31,8 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class ModalBottomSheetTest {
+    private val DensityTolerance = 0.1.dp
+
     @Test
     fun initial_state() = runTestSuite {
         testCase("sheet is visible, when initial detent is fully expanded") {
@@ -55,6 +59,7 @@ class ModalBottomSheetTest {
 
         testCase("sheet is rested at the height of its content, when initial detent is fully expanded") {
             lateinit var state: ModalBottomSheetState
+
             setContent {
                 state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
                 ModalBottomSheet(state) {
@@ -63,9 +68,8 @@ class ModalBottomSheetTest {
                 }
             }
             onNodeWithTag("sheet").assertExists()
-            assertEquals(40f, state.offset)
+            assertEquals(40.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
         }
-
 
         testCase("scrim is visible, when initial detent is fully expanded") {
             setContent {
@@ -77,7 +81,6 @@ class ModalBottomSheetTest {
             onNodeWithTag("scrim").assertExists()
         }
     }
-
 
     @Test
     fun enters() = runTestSuite {
@@ -108,7 +111,7 @@ class ModalBottomSheetTest {
 
             state.targetDetent = SheetDetent.FullyExpanded
             waitForIdle()
-            assertEquals(40f, state.offset)
+            assertEquals(40.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
         }
 
         testCase("animates sheet in, when entering") {
@@ -118,16 +121,19 @@ class ModalBottomSheetTest {
                 ModalBottomSheet(state) {
                     Scrim()
                     Sheet {
-                        Box(Modifier.testTag("sheet").size(5000.dp))
+                        Box(Modifier.testTag("sheet").fillMaxSize())
                     }
                 }
             }
-            mainClock.autoAdvance = false
             onNodeWithTag("sheet").assertDoesNotExist()
 
             // start animation
             // we should now be in motion
             state.targetDetent = SheetDetent.FullyExpanded
+
+            // wait for modal to be added first
+            waitUntil { state.modalIsAdded }
+            mainClock.autoAdvance = false
             mainClock.advanceTimeBy(1)
             assertFalse(state.isIdle)
             onNodeWithTag("sheet").assertExists()
@@ -405,7 +411,7 @@ class ModalBottomSheetTest {
     fun animateTo() = runTestSuite {
         testCase("modal appears and sheet expands to FullyExpanded, when animating from Hidden") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -431,12 +437,12 @@ class ModalBottomSheetTest {
             onNode(isDialog()).assertExists()
             onNodeWithTag("sheet").assertIsDisplayed()
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-            assertEquals(600f, state.offset)
+            assertEquals(600.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
         }
 
         testCase("modal disappears and sheet collapses to Hidden, when animating from FullyExpanded") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -467,7 +473,7 @@ class ModalBottomSheetTest {
         testCase("sheet moves to custom detent, when animating from Hidden to custom detent") {
             val customDetent = SheetDetent("custom") { _, _ -> 300.dp }
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -491,12 +497,12 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertExists()
             assertEquals(customDetent, state.currentDetent)
-            assertEquals(300f, state.offset)
+            assertEquals(300.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
         }
 
         testCase("target detent updates during animation, when animating to FullyExpanded") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
             val settleDuration = 5000L
 
             setContent {
@@ -513,11 +519,14 @@ class ModalBottomSheetTest {
             }
 
             waitForIdle()
-            mainClock.autoAdvance = false
 
             scope.launch {
                 state.animateTo(SheetDetent.FullyExpanded)
             }
+
+            // wait for modal to be added first
+            waitUntil { state.modalIsAdded }
+            mainClock.autoAdvance = false
             mainClock.advanceTimeBy(1000L)
 
             // During animation, target should be FullyExpanded
@@ -527,7 +536,7 @@ class ModalBottomSheetTest {
 
         testCase("animateTo behaves like targetDetent setter, when animating from Hidden to FullyExpanded") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -551,7 +560,7 @@ class ModalBottomSheetTest {
 
             // Should reach FullyExpanded
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-            assertEquals(600f, state.offset)
+            assertEquals(600.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
             onNode(isDialog()).assertExists()
         }
     }
@@ -655,7 +664,7 @@ class ModalBottomSheetTest {
     fun jumpTo() = runTestSuite {
         testCase("modal appears and sheet jumps to FullyExpanded immediately, when jumping from Hidden") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -672,7 +681,7 @@ class ModalBottomSheetTest {
             waitForIdle()
             onNode(isDialog()).assertDoesNotExist()
             assertEquals(SheetDetent.Hidden, state.currentDetent)
-            assertEquals(0f, state.offset)
+            assertEquals(0.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
 
             scope.launch {
                 state.jumpTo(SheetDetent.FullyExpanded)
@@ -681,14 +690,14 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertExists()
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-            assertEquals(600f, state.offset)
+            assertEquals(600.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
             assertTrue(state.isIdle)
             onNodeWithTag("sheet").assertIsDisplayed()
         }
 
         testCase("modal disappears and sheet jumps to Hidden immediately, when jumping from FullyExpanded") {
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -713,14 +722,14 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertDoesNotExist()
             assertEquals(SheetDetent.Hidden, state.currentDetent)
-            assertEquals(0f, state.offset)
+            assertEquals(0.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
             assertTrue(state.isIdle)
         }
 
         testCase("sheet jumps to custom detent immediately, when jumping from Hidden") {
             val customDetent = SheetDetent("custom") { _, _ -> 300.dp }
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -744,14 +753,14 @@ class ModalBottomSheetTest {
 
             onNode(isDialog()).assertExists()
             assertEquals(customDetent, state.currentDetent)
-            assertEquals(300f, state.offset)
+            assertEquals(300.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
             assertTrue(state.isIdle)
         }
 
         testCase("jumpTo changes state without animation, when jumping between detents") {
             val halfDetent = SheetDetent("half") { _, _ -> 300.dp }
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -776,14 +785,14 @@ class ModalBottomSheetTest {
 
             // Should be at FullyExpanded immediately, without animation
             assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-            assertEquals(600f, state.offset)
+            assertEquals(600.dp.toPx(), state.offset, absoluteTolerance = DensityTolerance.toPx())
             assertTrue(state.isIdle)
         }
 
         testCase("modal remains visible, when jumping between non-Hidden detents") {
             val halfDetent = SheetDetent("half") { _, _ -> 300.dp }
             lateinit var state: ModalBottomSheetState
-            lateinit var scope: kotlinx.coroutines.CoroutineScope
+            lateinit var scope: CoroutineScope
 
             setContent {
                 scope = androidx.compose.runtime.rememberCoroutineScope()
