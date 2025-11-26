@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.theme.ThemeBuilder
 import com.composeunstyled.theme.ThemeComposable
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -61,7 +62,8 @@ val sizeDefault = ThemeToken<Dp>("size_default")
 val sizeMinimum = ThemeToken<Dp>("size_minimum")
 
 fun buildPlatformTheme(
-    webFontOptions: WebFontOptions = WebFontOptions()
+    webFontOptions: WebFontOptions = WebFontOptions(),
+    themeAction: @Composable ThemeBuilder.() -> Unit = {}
 ): ThemeComposable {
     return buildTheme {
         properties[indications] = mapOf(
@@ -161,6 +163,8 @@ fun buildPlatformTheme(
             roundedLarge to RoundedCornerShape(8.dp),
             roundedFull to RoundedCornerShape(100),
         )
+
+        themeAction()
     }
 }
 

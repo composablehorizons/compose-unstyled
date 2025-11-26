@@ -95,6 +95,22 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.composables.ripple)
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        val jvmTest by getting
+
+        jvmTest.dependencies {
+            implementation(compose.desktop.uiTestJUnit4)
+            implementation(compose.desktop.currentOs) {
+                exclude(compose.material)
+            }
+        }
     }
 }
 
