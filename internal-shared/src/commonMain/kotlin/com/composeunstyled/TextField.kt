@@ -485,7 +485,7 @@ fun TextField(
                             revertAllChanges()
                         }
                     },
-                    modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
+                    modifier = modifier.semantics(mergeDescendants = true) {},
                     cursorBrush = cursorBrush,
                     lineLimits = if (singleLine) {
                         TextFieldLineLimits.SingleLine

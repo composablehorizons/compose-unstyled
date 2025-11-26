@@ -22,8 +22,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.ui.focus.onFocusChanged
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class TextFieldTest {
@@ -137,5 +141,50 @@ class TextFieldTest {
 
         waitForIdle()
         assertEquals(expectedColor, actualColor)
+    }
+
+    @Test
+    fun focusDetected_whenFocusedAndUsingOnFocusChangedModifier() = runComposeUiTest {
+        var focused by mutableStateOf(false)
+
+        setContent {
+            TextField(
+                state = rememberTextFieldState(),
+                modifier = Modifier
+                    .testTag("textfield")
+                    .onFocusChanged { focusState ->
+                        focused = focusState.isFocused
+                    }
+            ) {
+                TextInput()
+            }
+        }
+
+        onNodeWithTag("textfield").requestFocus()
+        waitForIdle()
+        assertTrue(focused, "Focus should be detected via Modifier.onFocusChanged")
+    }
+
+    @Test
+    fun focusDetected_whenFocusedAndUsingInteractionSource() = runComposeUiTest {
+        val interactionSource = MutableInteractionSource()
+
+        setContent {
+            val isFocused by interactionSource.collectIsFocusedAsState()
+            TextField(
+                state = rememberTextFieldState(),
+                modifier = Modifier.testTag("textfield"),
+                interactionSource = interactionSource
+            ) {
+                TextInput()
+                if (isFocused) {
+                    Text("focused", modifier = Modifier.testTag("focus-indicator"))
+                }
+            }
+        }
+
+        onNodeWithTag("textfield").requestFocus()
+        waitForIdle()
+        onNodeWithTag("focus-indicator", useUnmergedTree = true).assertExists()
     }
 }
