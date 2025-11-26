@@ -20,8 +20,10 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalTestApi::class)
 class TextFieldTest {
@@ -117,5 +119,23 @@ class TextFieldTest {
         visualTransformation = PasswordVisualTransformation()
 
         onNodeWithTag("textfield").assertTextEquals("••••••")
+    }
+
+    @Test
+    fun givenTextColor_thenColorIsProvidedAsLocalContentColor() = runComposeUiTest {
+        val expectedColor = Color.Blue
+        var actualColor: Color? = null
+
+        setContent {
+            TextField(
+                state = rememberTextFieldState(),
+                textColor = expectedColor
+            ) {
+                actualColor = LocalContentColor.current
+            }
+        }
+
+        waitForIdle()
+        assertEquals(expectedColor, actualColor)
     }
 }

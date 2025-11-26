@@ -357,7 +357,7 @@ fun TextFieldScope.TextInput(
     shape: Shape = RectangleShape,
     backgroundColor: Color = Color.Unspecified,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    contentColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
     label: String? = null,
     placeholder: (@Composable () -> Unit)? = null,
     leading: (@Composable () -> Unit)? = null,
@@ -436,7 +436,7 @@ fun TextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource? = null,
-    textColor: Color = Color.Unspecified,
+    textColor: Color = LocalContentColor.current,
     scrollState: ScrollState = rememberScrollState(),
     content: @Composable TextFieldScope.() -> Unit,
 ) {
@@ -458,55 +458,57 @@ fun TextField(
     scope.minLines = minLines
     scope.maxLines = maxLines
 
-    ProvideTextStyle(newTextStyle) {
-        if (editable) {
-            val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
+    ProvideContentColor(textColor) {
+        ProvideTextStyle(newTextStyle) {
+            if (editable) {
+                val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
 
-            BasicTextField(
-                scrollState = scrollState,
-                state = state,
-                interactionSource = interactionSource,
-                textStyle = newTextStyle,
-                outputTransformation = {
-                    val transformedText = visualTransformation.filter(AnnotatedString(originalText.toString()))
-                    val newText = transformedText.text.text
+                BasicTextField(
+                    scrollState = scrollState,
+                    state = state,
+                    interactionSource = interactionSource,
+                    textStyle = newTextStyle,
+                    outputTransformation = {
+                        val transformedText = visualTransformation.filter(AnnotatedString(originalText.toString()))
+                        val newText = transformedText.text.text
 
-                    val originalString = originalText.toString()
-                    for (i in originalString.indices) {
-                        if (i < newText.length) {
-                            replace(i, i + 1, newText[i].toString())
+                        val originalString = originalText.toString()
+                        for (i in originalString.indices) {
+                            if (i < newText.length) {
+                                replace(i, i + 1, newText[i].toString())
+                            }
+                        }
+                    },
+                    inputTransformation = InputTransformation {
+                        // block any value changes, unless the actual text input is focused
+                        if (inputIsFocused.not()) {
+                            revertAllChanges()
+                        }
+                    },
+                    modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
+                    cursorBrush = cursorBrush,
+                    lineLimits = if (singleLine) {
+                        TextFieldLineLimits.SingleLine
+                    } else {
+                        TextFieldLineLimits.MultiLine(minLines, maxLines)
+                    },
+                    keyboardOptions = keyboardOptions,
+                    onKeyboardAction = onKeyboardAction,
+                    decorator = { innerTextField ->
+                        scope.innerTextField = innerTextField
+                        Column(
+                            Modifier
+                                // we are handling pointerIcons in TextInput()
+                                .pointerHoverIcon(PointerIcon.Default)
+                        ) {
+                            scope.content()
                         }
                     }
-                },
-                inputTransformation = InputTransformation {
-                    // block any value changes, unless the actual text input is focused
-                    if (inputIsFocused.not()) {
-                        revertAllChanges()
-                    }
-                },
-                modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
-                cursorBrush = cursorBrush,
-                lineLimits = if (singleLine) {
-                    TextFieldLineLimits.SingleLine
-                } else {
-                    TextFieldLineLimits.MultiLine(minLines, maxLines)
-                },
-                keyboardOptions = keyboardOptions,
-                onKeyboardAction = onKeyboardAction,
-                decorator = { innerTextField ->
-                    scope.innerTextField = innerTextField
-                    Column(
-                        Modifier
-                            // we are handling pointerIcons in TextInput()
-                            .pointerHoverIcon(PointerIcon.Default)
-                    ) {
-                        scope.content()
-                    }
+                )
+            } else {
+                Column(modifier) {
+                    scope.content()
                 }
-            )
-        } else {
-            Column(modifier) {
-                scope.content()
             }
         }
     }
