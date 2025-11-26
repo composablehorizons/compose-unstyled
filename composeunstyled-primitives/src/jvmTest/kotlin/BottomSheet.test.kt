@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
@@ -1059,6 +1060,43 @@ class BottomSheetTest {
 
             // Should move to first detent (detent400)
             assertThat(state.currentDetent).isEqualTo(detent400)
+        }
+
+        testCase("detents update successfully, when new list has same length but different detents") {
+            val Header = SheetDetent(identifier = "Header") { _, _ -> 150.dp }
+            val Middle = SheetDetent(identifier = "Middle") { _, _ -> 500.dp }
+            val Tall = SheetDetent(identifier = "Tall") { _, _ -> 1000.dp }
+
+            lateinit var sheetState: BottomSheetState
+            setContent {
+                sheetState = rememberBottomSheetState(
+                    initialDetent = Header,
+                    detents = listOf(Header, Middle)
+                )
+
+                BottomSheet(
+                    state = sheetState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().height(1200.dp)) {
+                        Text("Test")
+                    }
+                }
+            }
+
+            waitForIdle()
+
+            // Update detents to same length but with different detents
+            sheetState.detents = listOf(Header, Tall)
+
+            waitForIdle()
+
+            // If we reach here without crashing, the test passes
+            assertEquals(2, sheetState.detents.size)
+            assertTrue(sheetState.detents.contains(Header))
+            assertTrue(sheetState.detents.contains(Tall))
         }
     }
 

@@ -1,3 +1,4 @@
+@file:JvmName("BottomSheetAndroidTest")
 package com.composables.core
 
 import androidx.compose.foundation.background
@@ -18,8 +19,11 @@ import com.composeunstyled.runTestSuite
 import kotlin.test.Test
 import kotlin.test.assertFalse
 
+/**
+ * We keep this test in Android source set as we cannot 'expand' the sheet using a mouse scroll
+ */
 @OptIn(ExperimentalTestApi::class)
-class BottomSheet {
+class BottomSheetTest {
 
     @Test
     fun stateChangesDuringInteractions() = runTestSuite {

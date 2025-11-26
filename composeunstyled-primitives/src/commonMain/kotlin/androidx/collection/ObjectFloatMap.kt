@@ -596,7 +596,7 @@ public sealed class ObjectFloatMap<K> {
         val o = other as ObjectFloatMap<Any?>
 
         forEach { key, value ->
-            if (value != o[key]) {
+            if (value != o.getOrDefault(key, Float.NaN)) {
                 return false
             }
         }
