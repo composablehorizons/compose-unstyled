@@ -34,6 +34,17 @@ jobs:
       - name: Detekt
         run: ./gradlew --no-daemon --console=plain detekt --info
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-outputs
+          path: |
+            **/build/classes
+            **/build/libs
+            **/build/generated
+            **/build/kotlin
+          retention-days: 1
+
   desktop-tests:
     needs: build
     strategy:
@@ -56,6 +67,11 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-outputs
+
       - name: Desktop Tests
         run: ./gradlew --no-daemon --console=plain jvmTest
 
@@ -69,6 +85,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
       - uses: actions/cache@v4
         with:
           path: |
@@ -77,6 +96,11 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-outputs
 
       - name: Enable Hardware Acceleration
         run: |
@@ -91,7 +115,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: testing_cache_option_25
+          key: avd-25-no-options
 
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -99,6 +123,4 @@ jobs:
           api-level: 25
           profile: 'pixel_4'
           arch: 'x86_64'
-          force-avd-creation: false
-          disable-animations: false
-          script: ./gradlew composeunstyled-primitives:connectedAndroidTest
+          script: ./gradlew composeunstyled-primitives:connectedAndroidTest composeunstyled-theming:connectedAndroidTest
