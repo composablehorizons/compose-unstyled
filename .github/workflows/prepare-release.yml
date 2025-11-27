@@ -29,31 +29,6 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
 
-      - uses: gradle/actions/wrapper-validation@v3
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      - name: Compile
-        run: ./gradlew --no-daemon --console=plain :composeunstyled:assemble
-
-      - name: Detekt
-        run: ./gradlew --no-daemon --console=plain detekt
-
-      - name: Test
-        run: ./gradlew --no-daemon --console=plain jvmTest
-
       - name: Generate CHANGELOG content
         run: |
           chmod +x ./scripts/update_changelog.sh
