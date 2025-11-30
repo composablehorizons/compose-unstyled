@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -53,14 +53,15 @@ import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastCoerceIn
 import androidx.compose.ui.util.lerp
 import com.composables.core.androidx.annotation.IntRange
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
+@Stable
 class SliderState(
     initialValue: Float,
     internal val valueRange: ClosedFloatingPointRange<Float>,
@@ -70,7 +71,7 @@ class SliderState(
         require(steps >= 0) { "steps must be >= 0" }
     }
 
-    private var innerValue by mutableStateOf(initialValue)
+    private var innerValue by mutableFloatStateOf(initialValue)
 
     var value: Float
         get() = innerValue
@@ -181,22 +182,22 @@ fun Slider(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    valueRange: ClosedFloatingPointRange<Float> = state.valueRange,
     orientation: Orientation = Orientation.Horizontal,
     track: @Composable () -> Unit,
     thumb: @Composable () -> Unit
 ) {
-    var thumbWidthPx by remember { mutableStateOf(0f) }
+    var thumbWidthPx by remember { mutableFloatStateOf(0f) }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
-    var rawOffset by remember { mutableStateOf(0f) }
+    var rawOffset by remember { mutableFloatStateOf(0f) }
     var pressOffset by remember { mutableFloatStateOf(0f) }
 
     val coerced = state.value.coerceIn(valueRange.start, valueRange.endInclusive)
     val fraction = calcFraction(valueRange.start, valueRange.endInclusive, coerced)
 
     val focusRequester = remember { FocusRequester() }
-    var sliderWidth by remember { mutableStateOf(0f) }
+    var sliderWidth by remember { mutableFloatStateOf(0f) }
 
     val scope = rememberCoroutineScope()
 
@@ -281,7 +282,9 @@ fun Slider(
         }
 
     Box(
-        modifier = modifier then dragOnTap.focusRequester(focusRequester)
+        modifier = modifier
+            .then(dragOnTap)
+            .focusRequester(focusRequester)
             .focusable(enabled, interactionSource = interactionSource)
             .sliderKeyboardInteractions(enabled = enabled, state = state)
             .draggable(
@@ -295,8 +298,11 @@ fun Slider(
     ) {
         track()
 
-        Box(Modifier.onSizeChanged { thumbWidthPx = it.width.toFloat() }
-            .offset { IntOffset(x = offset.roundToInt(), 0) }) {
+        Box(
+            Modifier
+                .onSizeChanged { thumbWidthPx = it.width.toFloat() }
+                .offset { IntOffset(x = offset.roundToInt(), y = 0) },
+        ) {
             thumb()
         }
     }
