@@ -107,18 +107,17 @@ fun rememberSliderState(
 @Composable
 private fun CorrectValueSideEffect(
     scaleToOffset: (Float) -> Float,
+    scaleToValue: (Float) -> Float,
     correctValue: (Float) -> Unit,
-    valueRange: ClosedFloatingPointRange<Float>,
     trackRange: ClosedFloatingPointRange<Float>,
     value: Float,
 ) {
     SideEffect {
-        val error = (valueRange.endInclusive - valueRange.start) / 1000
-        val newOffset = scaleToOffset(value)
-        if (abs(newOffset - value) > error) {
-            if (value in trackRange) {
-                correctValue(newOffset)
-            }
+        val offset = scaleToOffset(value)
+        val clampedOffset = offset.coerceIn(trackRange.start, trackRange.endInclusive)
+        val error = (trackRange.endInclusive - trackRange.start) / 1000
+        if (abs(clampedOffset - offset) > error) {
+            correctValue(scaleToValue(clampedOffset))
         }
     }
 }
@@ -221,8 +220,8 @@ fun Slider(
 
     CorrectValueSideEffect(
         scaleToOffset = ::scaleToOffset,
+        scaleToValue = ::scaleToUserValue,
         correctValue = { state.value = it },
-        valueRange = valueRange,
         trackRange = minPx..maxPx,
         value = state.value
     )
