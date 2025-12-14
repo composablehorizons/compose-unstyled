@@ -133,7 +133,7 @@ fun RadioButton(
         verticalAlignment = verticalAlignment,
         horizontalArrangement = horizontalArrangement
     ) {
-        CompositionLocalProvider(LocalContentColor provides if (selected) contentColor else selectedColor) {
+        CompositionLocalProvider(LocalContentColor provides if (selected) selectedColor else contentColor) {
             this@Row.content()
         }
     }
