@@ -147,7 +147,9 @@ version = publishVersion
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true, validateDeployment = false)
-    signAllPublications()
+    if (project.hasProperty("SIGNING_KEY_ID")) {
+        signAllPublications()
+    }
 
     coordinates(publishGroupId, "composeunstyled-theming", publishVersion)
 
