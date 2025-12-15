@@ -31,9 +31,6 @@ jobs:
 
       - name: Generate CHANGELOG content
         run: |
-          chmod +x ./scripts/update_changelog.sh
-          ./scripts/update_changelog.sh $VERSION
-
           # Extract the changelog content for this version, excluding the version header
           CHANGELOG_CONTENT=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$ d' | tail -n +2)
 
