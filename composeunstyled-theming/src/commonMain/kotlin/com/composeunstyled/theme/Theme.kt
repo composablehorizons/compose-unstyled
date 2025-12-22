@@ -100,8 +100,8 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 }
 
 internal class ResolvedTheme(
-    internal val name: String = "ComposeTheme",
-    internal val properties: Map<ThemeProperty<*>, ThemeValues<*>> = emptyMap(),
+    internal val name: String,
+    internal val properties: Map<ThemeProperty<*>, ThemeValues<*>>,
 )
 
 internal val LocalTheme =
