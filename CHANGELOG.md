@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.4] - 2025-12-24
+
+### Added
+
+- Add `autoSize` parameter to Text
+
+### Fixed
+
+- Fix a bug where ScrollArea would trigger overscroll effect to the wrong axis 
+- Remove TextField placeholder on any character entered including space
+- Change token names of PlatformTheme so that they do not override user's
+- Fix inverted colors for RadioGroup
+- Fix a Slider bug where Thumb would immediately jump while dragged
+
+### Changed
+
+- Deprecate ScrollArea with overscroll effect parameter
+
+
 ## [1.49.3] - 2025-11-27
 
 ### Added
