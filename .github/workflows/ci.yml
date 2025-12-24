@@ -120,7 +120,7 @@ jobs:
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 21
+          api-level: 22
           profile: 'pixel_4'
           arch: 'x86_64'
           script: ./gradlew connectedAndroidTest
