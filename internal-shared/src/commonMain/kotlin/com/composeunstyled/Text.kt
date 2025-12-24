@@ -41,8 +41,6 @@ import androidx.compose.ui.unit.isSpecified
  * @param minLines The minimum number of lines to display.
  * @param maxLines The maximum number of lines to display.
  * @param overflow How to handle text overflow.
- * @param autoSize Enable auto-sizing for text between the specified values.
- * Overrides [fontSize]. Can be slower than a fixed size.
  */
 @Composable
 fun Text(
@@ -109,8 +107,6 @@ fun Text(
  * @param minLines The minimum number of lines to display.
  * @param maxLines The maximum number of lines to display.
  * @param overflow How to handle text overflow.
- * @param autoSize Enable auto-sizing for text between the specified values.
- * Overrides [fontSize]. Can be slower than a fixed size.
  */
 @Composable
 fun Text(
