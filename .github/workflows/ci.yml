@@ -123,4 +123,4 @@ jobs:
           api-level: 21
           profile: 'pixel_4'
           arch: 'x86_64'
-          script: ./gradlew composeunstyled-primitives:connectedAndroidTest composeunstyled-theming:connectedAndroidTest
+          script: ./gradlew connectedAndroidTest
