@@ -1,6 +1,7 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,7 +57,8 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    autoSize: TextAutoSize? = null
 ) {
     val currentStyle = style.mergeThemed(
         textAlign = textAlign,
@@ -75,6 +77,7 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
+        autoSize = autoSize,
     )
 }
 
@@ -120,7 +123,8 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    autoSize: TextAutoSize? = null
 ) {
 
     val currentStyle = style.mergeThemed(
@@ -140,6 +144,7 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
+        autoSize = autoSize
     )
 }
 
