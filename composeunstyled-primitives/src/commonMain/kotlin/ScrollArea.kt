@@ -138,17 +138,8 @@ value class OverscrollSides private constructor(private val id: Int) {
     }
 }
 
-/**
- * A foundational component used to build scrollable areas in Compose Multiplatform.
- * The scroll area consists of a content area and optional scrollbars.
- *
- * @param state The [ScrollAreaState] that controls the scroll area.
- * @param modifier Modifier to be applied to the scroll area.
- * @param overscrollEffect The overscroll effect to be applied to the scroll area.
- * @param overscrollEffectSides The sides where the overscroll effect should be applied.
- * @param content The content of the scroll area.
- */
 @OptIn(ExperimentalFoundationApi::class)
+@Deprecated("This will be removed in 2.0. Use the ScrollArea() overload without the overscroll effect parameter")
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,
@@ -168,14 +159,6 @@ fun ScrollArea(
 }
 
 
-/**
- * A foundational component used to build scrollable areas in Compose Multiplatform.
- * The scroll area consists of a content area and optional scrollbars.
- *
- * @param state The [ScrollAreaState] that controls the scroll area.
- * @param modifier Modifier to be applied to the scroll area.
- * @param content The content of the scroll area.
- */
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,
