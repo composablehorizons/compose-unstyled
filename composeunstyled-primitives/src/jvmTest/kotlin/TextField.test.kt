@@ -1,5 +1,7 @@
 package com.composeunstyled
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -8,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsFocused
@@ -20,11 +24,7 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.ui.focus.onFocusChanged
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -186,5 +186,62 @@ class TextFieldTest {
         onNodeWithTag("textfield").requestFocus()
         waitForIdle()
         onNodeWithTag("focus-indicator", useUnmergedTree = true).assertExists()
+    }
+
+    @Test
+    fun placeholderIsVisibleWhenTextIsEmpty() = runComposeUiTest {
+        val state = TextFieldState("")
+        setContent {
+            TextField(state = state, modifier = Modifier.testTag("textfield")) {
+                TextInput(
+                    placeholder = {
+                        Text("Search", modifier = Modifier.testTag("placeholder"))
+                    }
+                )
+            }
+        }
+
+        onNodeWithTag("placeholder", useUnmergedTree = true).assertExists()
+    }
+
+    @Test
+    fun placeholderHidesWhenNonWhitespaceTextIsEntered() = runComposeUiTest {
+        val state = TextFieldState("")
+        setContent {
+            TextField(
+                state = state,
+                modifier = Modifier
+                    .testTag("textfield")
+                    .size(100.dp)
+            ) {
+                TextInput(
+                    placeholder = {
+                        Text("Search", modifier = Modifier.testTag("placeholder"))
+                    }
+                )
+            }
+        }
+
+        onNodeWithTag("textfield").performClick()
+        onNodeWithTag("textfield").performTextInput("a")
+        onNodeWithTag("placeholder", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun placeholderHidesWhenWhitespaceOnlyTextIsEntered() = runComposeUiTest {
+        val state = TextFieldState("")
+        setContent {
+            TextField(state = state, modifier = Modifier.testTag("textfield")) {
+                TextInput(
+                    placeholder = {
+                        Text("Search", modifier = Modifier.testTag("placeholder"))
+                    }
+                )
+            }
+        }
+
+        onNodeWithTag("textfield").performClick()
+        onNodeWithTag("textfield").performTextInput(" ")
+        onNodeWithTag("placeholder", useUnmergedTree = true).assertDoesNotExist()
     }
 }

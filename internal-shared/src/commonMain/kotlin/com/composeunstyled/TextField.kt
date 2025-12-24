@@ -399,7 +399,7 @@ fun TextFieldScope.TextInput(
                     }
                 }
 
-                if (placeholder != null && text.isBlank()) {
+                if (placeholder != null && text.isEmpty()) {
                     Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
                         placeholder()
                     }
