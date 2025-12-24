@@ -25,11 +25,11 @@ import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.rememberColoredIndication
 
-val indications = ThemeProperty<Indication>("indications")
+val indications = ThemeProperty<Indication>("platform_indications")
 val bright = ThemeToken<Indication>("bright")
 val dimmed = ThemeToken<Indication>("dimmed")
 
-val textStyles = ThemeProperty<TextStyle>("textStyles")
+val textStyles = ThemeProperty<TextStyle>("platform_text_styles")
 val text1 = ThemeToken<TextStyle>("text1")
 val text2 = ThemeToken<TextStyle>("text2")
 val text3 = ThemeToken<TextStyle>("text3")
@@ -50,14 +50,14 @@ val heading7 = ThemeToken<TextStyle>("heading7")
 val heading8 = ThemeToken<TextStyle>("heading8")
 val heading9 = ThemeToken<TextStyle>("heading9")
 
-val shapes = ThemeProperty<Shape>("shapes")
+val shapes = ThemeProperty<Shape>("platform_shapes")
 val roundedNone = ThemeToken<Shape>("rounded_none")
 val roundedSmall = ThemeToken<Shape>("rounded_small")
 val roundedMedium = ThemeToken<Shape>("rounded_medium")
 val roundedLarge = ThemeToken<Shape>("rounded_large")
 val roundedFull = ThemeToken<Shape>("rounded_full")
 
-val interactiveSizes = ThemeProperty<Dp>("interactive_sizes")
+val interactiveSizes = ThemeProperty<Dp>("platform_interactive_sizes")
 val sizeDefault = ThemeToken<Dp>("size_default")
 val sizeMinimum = ThemeToken<Dp>("size_minimum")
 
