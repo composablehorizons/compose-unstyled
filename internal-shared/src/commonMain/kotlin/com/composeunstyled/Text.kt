@@ -1,6 +1,7 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +41,8 @@ import androidx.compose.ui.unit.isSpecified
  * @param minLines The minimum number of lines to display.
  * @param maxLines The maximum number of lines to display.
  * @param overflow How to handle text overflow.
+ * @param autoSize Enable auto-sizing for text between the specified values.
+ * Overrides [fontSize]. Can be slower than a fixed size.
  */
 @Composable
 fun Text(
@@ -56,7 +59,8 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    autoSize: TextAutoSize? = null
 ) {
     val currentStyle = style.mergeThemed(
         textAlign = textAlign,
@@ -75,6 +79,7 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
+        autoSize = autoSize,
     )
 }
 
@@ -104,6 +109,8 @@ fun Text(
  * @param minLines The minimum number of lines to display.
  * @param maxLines The maximum number of lines to display.
  * @param overflow How to handle text overflow.
+ * @param autoSize Enable auto-sizing for text between the specified values.
+ * Overrides [fontSize]. Can be slower than a fixed size.
  */
 @Composable
 fun Text(
@@ -120,7 +127,8 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    autoSize: TextAutoSize? = null
 ) {
 
     val currentStyle = style.mergeThemed(
@@ -140,6 +148,7 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
+        autoSize = autoSize
     )
 }
 
