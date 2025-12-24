@@ -125,7 +125,7 @@ jobs:
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 22
+          api-level: 23
           profile: 'pixel_4'
           arch: 'x86_64'
           script: ./gradlew composeunstyled-primitives:connectedAndroidTest composeunstyled-theming:connectedAndroidTest
