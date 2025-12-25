@@ -11,17 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,34 +22,18 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
-import com.composeunstyled.AppearInstantly
-import com.composeunstyled.DisappearInstantly
-import com.composeunstyled.LocalContentColor
-import com.composeunstyled.Modal
-import com.composeunstyled.NoPadding
+import com.composeunstyled.*
 
 
-/**
- * Properties that can be used to configure the behavior of a [Dialog].
- *
- * @param dismissOnBackPress Whether the dialog should be dismissed when the back button is pressed.
- * @param dismissOnClickOutside Whether the dialog should be dismissed when clicking outside the dialog panel.
- */
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
 @Stable
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 class DialogState(initiallyVisible: Boolean = false) {
 
-    @Deprecated(
-        "This will go away in 2.0. Use rememberDialogState(visible)",
-        ReplaceWith("rememberDialogState(visible)")
-    )
     constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
 
     internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
@@ -74,6 +50,7 @@ class DialogState(initiallyVisible: Boolean = false) {
 }
 
 @Stable
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 class DialogScope internal constructor(state: DialogState) {
     internal var state by mutableStateOf(state)
 }
@@ -89,59 +66,13 @@ private val DialogStateSaver = run {
     )
 }
 
-/**
- * Creates a [DialogState] that can be used to control the visibility of a [Dialog].
- *
- * @param initiallyVisible Whether the dialog should be initially visible.
- */
-@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 @Composable
 fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
 
-/**
- * A stackable, renderless, highly performant foundational component to build dialogs with.
- *
- * For interactive preview & code examples, visit [Dialog Documentation](https://composeunstyled.com/dialog).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val dialogState = rememberDialogState()
- *
- * Box {
- *     Button(onClick = { dialogState.visible = true }) {
- *         Text("Show Dialog")
- *     }
- *     Dialog(state = dialogState) {
- *         DialogPanel(
- *             modifier = Modifier
- *                 .displayCutoutPadding()
- *                 .systemBarsPadding()
- *                 .widthIn(min = 280.dp, max = 560.dp)
- *                 .padding(20.dp)
- *                 .clip(RoundedCornerShape(12.dp))
- *                 .border(1.dp, Color(0xFFE4E4E4), RoundedCornerShape(12.dp))
- *                 .background(Color.White)
- *         ) {
- *             Column {
- *                 Text("Something important happened")
- *                 Button(onClick = { dialogState.visible = false }) {
- *                     Text("Got it")
- *                 }
- *             }
- *         }
- *     }
- * }
- * ```
- *
- * @param state The [DialogState] that controls the visibility of the dialog.
- * @param properties The [DialogProperties] that configure the behavior of the dialog.
- * @param onDismiss Callback that is called when the dialog is dismissed.
- * @param content The content of the dialog, which should contain a [DialogPanel] and optionally a [Scrim].
- */
-@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 @Composable
 fun Dialog(
     state: DialogState,
@@ -194,15 +125,7 @@ fun Dialog(
     }
 }
 
-/**
- * A container component that renders the dialog's panel and its contents.
- *
- * @param modifier Modifier to be applied to the dialog panel.
- * @param enter The enter transition for the dialog panel.
- * @param exit The exit transition for the dialog panel.
- * @param content The content of the dialog panel.
- */
-@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 @Composable
 fun DialogScope.DialogPanel(
     modifier: Modifier = Modifier,
@@ -233,15 +156,7 @@ fun DialogScope.DialogPanel(
     }
 }
 
-/**
- * A component that renders a scrim behind the dialog panel.
- *
- * @param modifier Modifier to be applied to the scrim.
- * @param scrimColor The color of the scrim.
- * @param enter The enter transition for the scrim.
- * @param exit The exit transition for the scrim.
- */
-@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package")
 @Composable
 fun DialogScope.Scrim(
     modifier: Modifier = Modifier,
