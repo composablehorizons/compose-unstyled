@@ -34,8 +34,7 @@ class DialogState(initiallyVisible: Boolean = false) {
     internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
     internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
 
-    var innerVisible by mutableStateOf(initiallyVisible)
-        private set
+    private var innerVisible by mutableStateOf(initiallyVisible)
 
     var visible: Boolean = innerVisible
         set(value) {
