@@ -23,16 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composables.core.Dialog
-import com.composables.core.DialogPanel
-import com.composables.core.Scrim
-import com.composables.core.rememberDialogState
 import com.composeunstyled.Button
+import com.composeunstyled.Dialog
+import com.composeunstyled.DialogPanel
+import com.composeunstyled.Scrim
 import com.composeunstyled.Text
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.text5
 import com.composeunstyled.platformtheme.textStyles
+import com.composeunstyled.rememberDialogState
 import com.composeunstyled.theme.Theme
 
 @Composable

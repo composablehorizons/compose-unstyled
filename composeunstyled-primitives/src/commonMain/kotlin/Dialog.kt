@@ -94,6 +94,7 @@ private val DialogStateSaver = run {
  *
  * @param initiallyVisible Whether the dialog should be initially visible.
  */
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
@@ -140,6 +141,7 @@ fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
  * @param onDismiss Callback that is called when the dialog is dismissed.
  * @param content The content of the dialog, which should contain a [DialogPanel] and optionally a [Scrim].
  */
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun Dialog(
     state: DialogState,
@@ -200,6 +202,7 @@ fun Dialog(
  * @param exit The exit transition for the dialog panel.
  * @param content The content of the dialog panel.
  */
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun DialogScope.DialogPanel(
     modifier: Modifier = Modifier,
@@ -238,6 +241,7 @@ fun DialogScope.DialogPanel(
  * @param enter The enter transition for the scrim.
  * @param exit The exit transition for the scrim.
  */
+@Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun DialogScope.Scrim(
     modifier: Modifier = Modifier,
