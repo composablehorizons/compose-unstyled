@@ -58,9 +58,9 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null
+    autoSize: TextAutoSize? = null
 ) {
     val currentStyle = style.mergeThemed(
         textAlign = textAlign,
@@ -126,9 +126,9 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null
+    autoSize: TextAutoSize? = null
 ) {
 
     val currentStyle = style.mergeThemed(
