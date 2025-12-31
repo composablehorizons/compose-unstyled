@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -58,7 +59,8 @@ fun Text(
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+    autoSize: TextAutoSize? = null,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null
 ) {
     val currentStyle = style.mergeThemed(
         textAlign = textAlign,
@@ -78,6 +80,7 @@ fun Text(
         maxLines = maxLines,
         overflow = overflow,
         autoSize = autoSize,
+        onTextLayout = onTextLayout
     )
 }
 
@@ -124,7 +127,8 @@ fun Text(
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+    autoSize: TextAutoSize? = null,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null
 ) {
 
     val currentStyle = style.mergeThemed(
@@ -144,7 +148,8 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
-        autoSize = autoSize
+        autoSize = autoSize,
+        onTextLayout = onTextLayout
     )
 }
 
