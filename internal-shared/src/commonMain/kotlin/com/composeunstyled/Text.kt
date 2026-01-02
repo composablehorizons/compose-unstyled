@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +58,7 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     overflow: TextOverflow = TextOverflow.Clip,
     autoSize: TextAutoSize? = null
 ) {
@@ -78,6 +80,7 @@ fun Text(
         maxLines = maxLines,
         overflow = overflow,
         autoSize = autoSize,
+        onTextLayout = onTextLayout
     )
 }
 
@@ -123,6 +126,7 @@ fun Text(
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     overflow: TextOverflow = TextOverflow.Clip,
     autoSize: TextAutoSize? = null
 ) {
@@ -144,7 +148,8 @@ fun Text(
         minLines = minLines,
         maxLines = maxLines,
         overflow = overflow,
-        autoSize = autoSize
+        autoSize = autoSize,
+        onTextLayout = onTextLayout
     )
 }
 
