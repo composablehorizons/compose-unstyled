@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.composables.core.Separator
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Disclosure
-import com.composeunstyled.DisclosureHeading
-import com.composeunstyled.DisclosurePanel
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledDisclosure
+import com.composeunstyled.UnstyledDisclosureHeading
+import com.composeunstyled.UnstyledDisclosurePanel
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberDisclosureState
@@ -75,8 +75,8 @@ fun DisclosureDemo() {
                 }
 
                 val state = rememberDisclosureState(initiallyExpanded = i == 0)
-                Disclosure(state = state) {
-                    DisclosureHeading(
+                UnstyledDisclosure(state = state) {
+                    UnstyledDisclosureHeading(
                         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
                         indication = Theme[indications][dimmed]
                     ) {
@@ -89,7 +89,7 @@ fun DisclosureDemo() {
                             modifier = Modifier.rotate(degrees)
                         )
                     }
-                    DisclosurePanel(
+                    UnstyledDisclosurePanel(
                         enter = expandVertically(
                             spring(
                                 stiffness = Spring.StiffnessMediumLow,
