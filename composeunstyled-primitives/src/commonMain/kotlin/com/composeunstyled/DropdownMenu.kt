@@ -1,5 +1,10 @@
 package com.composeunstyled
 
+import com.composeunstyled.AppearInstantly
+import com.composeunstyled.DisappearInstantly
+import com.composeunstyled.LocalContentColor
+import com.composeunstyled.NoPadding
+import com.composeunstyled.ProvideContentColor
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -40,8 +45,14 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
+@Deprecated("Use UnstyledDropdownMenu instead", ReplaceWith("UnstyledDropdownMenu(onExpandRequest, modifier, content)"))
 @Composable
 fun DropdownMenu(onExpandRequest: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    UnstyledDropdownMenu(onExpandRequest, modifier, content)
+}
+
+@Composable
+fun UnstyledDropdownMenu(onExpandRequest: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Box(
         modifier.onKeyEvent { event ->
             if (event.key == Key.DirectionDown) {
@@ -68,8 +79,42 @@ sealed interface DropdownPanelAnchor {
     object CenterEnd : DropdownPanelAnchor
 }
 
+@Deprecated("Use UnstyledDropdownMenuPanel instead", ReplaceWith("UnstyledDropdownMenuPanel(expanded, onDismissRequest, modifier, anchor, shape, backgroundColor, contentColor, contentPadding, enter, exit, verticalArrangement, horizontalAlignment, content)"))
 @Composable
 fun DropdownMenuPanel(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    anchor: DropdownPanelAnchor = DropdownPanelAnchor.BottomStart,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = LocalContentColor.current,
+    contentPadding: PaddingValues = NoPadding,
+    enter: EnterTransition = AppearInstantly,
+    exit: ExitTransition = DisappearInstantly,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    UnstyledDropdownMenuPanel(
+        expanded,
+        onDismissRequest,
+        modifier,
+        anchor,
+        shape,
+        backgroundColor,
+        contentColor,
+        contentPadding,
+        enter,
+        exit,
+        verticalArrangement,
+        horizontalAlignment,
+        content
+    )
+}
+
+@Composable
+fun UnstyledDropdownMenuPanel(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,

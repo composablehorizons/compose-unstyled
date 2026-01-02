@@ -39,11 +39,11 @@ import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.Button
-import com.composeunstyled.DropdownMenu
-import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.Icon
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledDropdownMenu
+import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.interactiveSize
@@ -82,7 +82,7 @@ fun DropdownMenuDemo() {
             expanded = true
         }
 
-        DropdownMenu(onExpandRequest = { expanded = true }) {
+        UnstyledDropdownMenu(onExpandRequest = { expanded = true }) {
             Button(
                 shape = RoundedCornerShape(6.dp),
                 backgroundColor = Color.White,
@@ -96,7 +96,7 @@ fun DropdownMenuDemo() {
                 Icon(Lucide.ChevronDown, null)
             }
 
-            DropdownMenuPanel(
+            UnstyledDropdownMenuPanel(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 backgroundColor = Color.White,
