@@ -59,8 +59,42 @@ import androidx.compose.ui.unit.isSpecified
  * @param contentDescription Accessibility description of the checkbox.
  * @param checkIcon Composable function to define the check icon.
  */
+@Deprecated("Use UnstyledCheckbox instead", ReplaceWith("UnstyledCheckbox(checked, modifier, backgroundColor, contentColor, enabled, onCheckedChange, shape, borderColor, borderWidth, interactionSource, indication, contentDescription, checkIcon)"))
 @Composable
 fun Checkbox(
+    checked: Boolean,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Transparent,
+    contentColor: Color = LocalContentColor.current,
+    enabled: Boolean = true,
+    onCheckedChange: ((Boolean) -> Unit)? = null,
+    shape: Shape = RectangleShape,
+    borderColor: Color = Color.Unspecified,
+    borderWidth: Dp = 1.dp,
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = LocalIndication.current,
+    contentDescription: String? = null,
+    checkIcon: @Composable () -> Unit,
+) {
+    UnstyledCheckbox(
+        checked,
+        modifier,
+        backgroundColor,
+        contentColor,
+        enabled,
+        onCheckedChange,
+        shape,
+        borderColor,
+        borderWidth,
+        interactionSource,
+        indication,
+        contentDescription,
+        checkIcon
+    )
+}
+
+@Composable
+fun UnstyledCheckbox(
     checked: Boolean,
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Transparent,
