@@ -147,7 +147,7 @@ version = publishVersion
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true, validateDeployment = false)
-    if (project.hasProperty("SIGNING_KEY_ID")) {
+    if (project.hasProperty("signingInMemoryKeyId")) {
         signAllPublications()
     }
 
