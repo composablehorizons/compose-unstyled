@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: actions/cache@v4
         with:
@@ -59,7 +59,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: actions/cache@v4
         with:
@@ -81,6 +81,14 @@ jobs:
   android-tests:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      API_LEVEL: 23
+      ARCH: x86_64
+      DISK_SIZE: 2048M
+    strategy:
+      matrix:
+        module: [ primitives, theming, platformtheme ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,7 +96,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
@@ -107,6 +115,18 @@ jobs:
         with:
           name: build-outputs
 
+      - name: Create AVD
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
+          disk-size: ${{ env.DISK_SIZE }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
       - name: Enable Hardware Acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -120,15 +140,18 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-25-no-options
+          key: avd-${{ env.API_LEVEL }}-${{ env.ARCH }}-${{ env.DISK_SIZE }}
 
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 23
-          profile: 'pixel_4'
-          arch: 'x86_64'
-          script: ./gradlew composeunstyled-primitives:connectedAndroidTest composeunstyled-theming:connectedAndroidTest
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
+          disk-size: ${{ env.DISK_SIZE }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew composeunstyled-${{ matrix.module }}:connectedDebugAndroidTest
 
   publish:
     needs: [build, desktop-tests, android-tests]
@@ -142,7 +165,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - uses: actions/cache@v4
         with:
