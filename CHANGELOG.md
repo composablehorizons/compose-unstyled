@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.5] - 2025-01-03
+
+### Added
+
+- Add onTextLayout parameter to Text (#185)
+- Begin of prefixing all components with `Unstyled-` prefix, so it's simpler to differenciate with other design systems components.
+
+### Fixed
+
+- Dialog's enter animations now work correctly on iOS.
+
 ## [1.49.4] - 2025-12-24
 
 ### Added
 
-- Add `autoSize` parameter to Text
+- Add `autoSize` parameter to Text (#183)
 
 ### Fixed
 
