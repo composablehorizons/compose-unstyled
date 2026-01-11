@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.6] - 2025-01-11
+
+### Added
+
+- ScrollAreaState now exposes a new `isScrollInProgress` property
+
+### Fixed
+
+- Scrollbars Thumb HideWhileIdle hides while scrolling #114
+
 ## [1.49.5] - 2025-01-03
 
 ### Added
