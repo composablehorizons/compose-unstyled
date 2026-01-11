@@ -91,14 +91,16 @@ kotlin {
             implementation(project(":core"))
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
             implementation(libs.composables.icons.lucide)
+            implementation(compose.material3)
         }
 
         val desktopMain by getting {
             dependencies {
-                implementation(compose.desktop.currentOs) {
-                    exclude("org.jetbrains.compose.material")
-                    exclude("org.jetbrains.compose.material3")
-                }
+                implementation(compose.desktop.currentOs)
+//                {
+//                    exclude("org.jetbrains.compose.material")
+//                    exclude("org.jetbrains.compose.material3")
+//                }
             }
         }
 

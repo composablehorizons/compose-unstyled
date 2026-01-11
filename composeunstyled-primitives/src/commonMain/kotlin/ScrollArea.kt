@@ -15,16 +15,14 @@ import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.DragInteraction
+import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -42,9 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
@@ -54,24 +49,22 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import com.composeunstyled.buildModifier
 import kotlin.js.JsName
 import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Duration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * A foundational component used to build scrollable areas in Compose Multiplatform.
@@ -165,11 +158,10 @@ fun ScrollArea(
     modifier: Modifier = Modifier,
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
-    val scrollEvents = remember { MutableSharedFlow<Unit>() }
     Box(modifier) {
         val boxScope = this
         val scrollAreaScope = remember {
-            ScrollAreaScope(boxScope, state, scrollEvents)
+            ScrollAreaScope(boxScope, state)
         }
 
         scrollAreaScope.content()
@@ -185,7 +177,6 @@ internal expect fun NoOverscroll(content: @Composable () -> Unit)
 class ScrollAreaScope internal constructor(
     private val boxScope: BoxScope,
     internal val scrollAreaState: ScrollAreaState,
-    internal val onScrolledEvents: Flow<Unit>
 ) {
     fun Modifier.align(alignment: Alignment): Modifier {
         return with(boxScope) {
@@ -202,7 +193,6 @@ class ScrollbarScope internal constructor(
     internal val sliderAdapter: SliderAdapter,
     internal val mutableInteractionSource: MutableInteractionSource,
     internal val scrollAreaState: ScrollAreaState,
-    internal val onScrolledEvents: Flow<Unit>
 )
 
 sealed class ThumbVisibility {
@@ -267,7 +257,7 @@ private fun ScrollAreaScope.ScrollBar(
 
     val scrollbarScope = remember(sliderAdapter, containerSize) {
         ScrollbarScope(
-            dragInteraction, sliderAdapter, interactionSource, scrollAreaState, onScrolledEvents
+            dragInteraction, sliderAdapter, interactionSource, scrollAreaState
         )
     }
     val scrollThickness = 8.dp.roundToPx()
@@ -301,45 +291,103 @@ fun ScrollbarScope.Thumb(
     thumbVisibility: ThumbVisibility = ThumbVisibility.AlwaysVisible,
     enabled: Boolean = true,
 ) {
-    val content = @Composable {
-        Box(modifier.let {
-            if (enabled) {
-                it.scrollbarDrag(
+    if (thumbVisibility == ThumbVisibility.AlwaysVisible) {
+        ThumbContent(modifier = modifier, enabled = enabled)
+    } else {
+        if (thumbVisibility is ThumbVisibility.HideWhileIdle) {
+            var showThumb by remember { mutableStateOf(false) }
+
+            val scope = rememberCoroutineScope()
+            var thumbVisibilityJob: Job? by remember { mutableStateOf(null) }
+
+            fun showThumbPermanently() {
+                thumbVisibilityJob?.cancel()
+                thumbVisibilityJob = null
+                showThumb = true
+            }
+
+            fun hideThumbDelayed() {
+                thumbVisibilityJob?.cancel()
+                thumbVisibilityJob = scope.launch {
+                    delay(thumbVisibility.hideDelay)
+                    showThumb = false
+                }
+            }
+
+            LaunchedEffect(scrollAreaState.isScrollInProgress) {
+                if (scrollAreaState.isScrollInProgress) {
+                    showThumbPermanently()
+                } else {
+                    hideThumbDelayed()
+                }
+            }
+
+            LaunchedEffect(Unit) {
+                scrollAreaState.interactionSource.interactions
+                    .collect { interaction ->
+                        if (interaction is DragInteraction.Start) {
+                            showThumbPermanently()
+                        } else if (interaction is DragInteraction.Stop || interaction is DragInteraction.Cancel) {
+                            hideThumbDelayed()
+                        }
+                    }
+            }
+
+            LaunchedEffect(Unit) {
+                mutableInteractionSource.interactions
+                    .collect { interaction ->
+                        if (interaction is DragInteraction.Start) {
+                            showThumbPermanently()
+                        } else
+                            if (interaction is DragInteraction.Stop || interaction is DragInteraction.Cancel) {
+                                hideThumbDelayed()
+                            }
+                    }
+            }
+
+            if (showThumb) {
+                LaunchedEffect(Unit) {
+                    mutableInteractionSource.interactions
+                        .collect { interaction ->
+                            if (interaction is HoverInteraction.Enter) {
+                                showThumbPermanently()
+                            } else
+                                if (interaction is HoverInteraction.Exit) {
+                                    hideThumbDelayed()
+                                }
+                        }
+                }
+            }
+
+
+            AnimatedVisibility(
+                visible = showThumb,
+                enter = thumbVisibility.enter,
+                exit = thumbVisibility.exit
+            ) {
+                ThumbContent(modifier = modifier, enabled = enabled)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ScrollbarScope.ThumbContent(
+    modifier: Modifier,
+    enabled: Boolean
+) {
+    Box(modifier then buildModifier {
+        if (enabled) {
+            add(
+                Modifier.scrollbarDrag(
                     interactionSource = mutableInteractionSource,
                     draggedInteraction = dragInteraction,
                     sliderAdapter = sliderAdapter,
                 )
-            } else it
-        })
-
-    }
-    if (thumbVisibility == ThumbVisibility.AlwaysVisible) {
-        content()
-    } else if (thumbVisibility is ThumbVisibility.HideWhileIdle) {
-        var show by remember { mutableStateOf(false) }
-
-        val isHovered by mutableInteractionSource.collectIsHoveredAsState()
-        val isDraggingList by scrollAreaState.interactionSource.collectIsDraggedAsState()
-
-        LaunchedEffect(show, isDraggingList, isHovered) {
-            if (isDraggingList || isHovered) {
-                show = true
-            }
-            if (show && !isHovered) {
-                delay(thumbVisibility.hideDelay)
-                show = false
-            }
-        }
-        LaunchedEffect(Unit) {
-            onScrolledEvents.collect {
-                show = true
-            }
-        }
-
-        AnimatedVisibility(show, enter = thumbVisibility.enter, exit = thumbVisibility.exit) {
-            content()
+            )
         }
     }
+    )
 }
 
 private val SliderAdapter.thumbPixelRange: IntRange
@@ -624,6 +672,8 @@ interface ScrollAreaState {
     suspend fun scrollTo(scrollOffset: Double)
 
     val interactionSource: InteractionSource
+
+    val isScrollInProgress: Boolean
 }
 
 /**
@@ -635,6 +685,9 @@ val ScrollAreaState.maxScrollOffset: Double
 internal class ScrollStateScrollAreaState(
     private val scrollState: ScrollState
 ) : ScrollAreaState {
+
+    override val isScrollInProgress: Boolean
+        get() = scrollState.isScrollInProgress
 
     override val interactionSource: InteractionSource
         get() = scrollState.interactionSource
@@ -770,6 +823,9 @@ internal class LazyListScrollAreaState(
     override val interactionSource: InteractionSource
         get() = scrollState.interactionSource
 
+    override val isScrollInProgress: Boolean
+        get() = scrollState.isScrollInProgress
+
     override val viewportSize: Double
         get() = with(scrollState.layoutInfo) {
             if (orientation == Orientation.Vertical) viewportSize.height
@@ -844,6 +900,9 @@ internal class LazyListScrollAreaState(
 internal class LazyGridScrollAreaScrollAreaState(
     private val scrollState: LazyGridState
 ) : LazyLineContentScrollAreaState() {
+
+    override val isScrollInProgress: Boolean
+        get() = scrollState.isScrollInProgress
 
     override val interactionSource: InteractionSource
         get() = scrollState.interactionSource

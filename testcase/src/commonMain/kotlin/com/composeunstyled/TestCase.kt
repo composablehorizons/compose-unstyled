@@ -8,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
 import kotlin.reflect.KClass
+import kotlin.time.Duration
 
 data class TestResult(
     val name: String,
@@ -170,4 +171,9 @@ fun Dp.toPx(): Float {
     return with(uiTest.density) {
         dpValue.toPx()
     }
+}
+
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.advanceTimeBy(duration: Duration) {
+    mainClock.advanceTimeBy(duration.inWholeMilliseconds)
 }
