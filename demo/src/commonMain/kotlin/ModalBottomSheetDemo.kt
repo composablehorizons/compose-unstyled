@@ -34,6 +34,7 @@ import com.composables.core.DragIndication
 import com.composables.core.ModalBottomSheet
 import com.composables.core.Scrim
 import com.composables.core.Sheet
+import com.composables.core.SheetAnchor
 import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
@@ -52,7 +53,12 @@ private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
 }
 
 @Composable
-fun ModalBottomSheetDemo() {
+fun TopModalBottomSheetDemo() {
+    ModalBottomSheetDemo(SheetAnchor.Top)
+}
+
+@Composable
+fun ModalBottomSheetDemo(anchor: SheetAnchor = SheetAnchor.Bottom) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +66,8 @@ fun ModalBottomSheetDemo() {
     ) {
         val modalSheetState = rememberModalBottomSheetState(
             initialDetent = Hidden,
-            detents = listOf(Hidden, Peek, FullyExpanded)
+            detents = listOf(Hidden, Peek, FullyExpanded),
+            anchor = anchor
         )
 
         LaunchedEffect(Unit) {
@@ -86,29 +93,51 @@ fun ModalBottomSheetDemo() {
         ModalBottomSheet(state = modalSheetState) {
             Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
 
-            Box(
-                Modifier.fillMaxSize()
-                    .padding(top = 12.dp)
-                    .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
+            val sheetShape = when (anchor) {
+                SheetAnchor.Bottom -> RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+                SheetAnchor.Top -> RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+            }
+            val sheetAlignment = when (anchor) {
+                SheetAnchor.Bottom -> Alignment.BottomCenter
+                SheetAnchor.Top -> Alignment.TopCenter
+            }
+            val contentAlignment = when (anchor) {
+                SheetAnchor.Bottom -> Alignment.TopCenter
+                SheetAnchor.Top -> Alignment.BottomCenter
+            }
+            val paddingModifier = when (anchor) {
+                SheetAnchor.Top -> Modifier
                     .displayCutoutPadding()
                     .statusBarsPadding()
-                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())) {
+                SheetAnchor.Bottom -> Modifier
+            }
+
+            Box(
+                Modifier.fillMaxSize()
+                    .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
+                    .then(paddingModifier)
+                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
+                contentAlignment = sheetAlignment
+            ) {
                 Sheet(
                     modifier = Modifier
-                        .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                        .shadow(4.dp, sheetShape)
                         .widthIn(max = 640.dp)
                         .fillMaxWidth(),
-                    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                    shape = sheetShape,
                     backgroundColor = Color.White,
                     contentColor = Color.Black
                 ) {
-                    Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+                    Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = contentAlignment) {
                         val interactionSource = remember { MutableInteractionSource() }
 
                         DragIndication(
                             interactionSource = interactionSource,
                             modifier = Modifier
-                                .padding(top = 22.dp)
+                                .padding(
+                                    top = if (anchor == SheetAnchor.Bottom) 22.dp else 0.dp,
+                                    bottom = if (anchor == SheetAnchor.Top) 22.dp else 0.dp
+                                )
                                 .focusRing(
                                     interactionSource,
                                     width = 2.dp,

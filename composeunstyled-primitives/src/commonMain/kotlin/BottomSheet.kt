@@ -82,6 +82,7 @@ private fun Saver(
     decayAnimationSpec: DecayAnimationSpec<Float>,
     confirmDetentChange: (SheetDetent) -> Boolean,
     localDensity: () -> Density,
+    anchor: SheetAnchor,
 ): Saver<BottomSheetState, *> = mapSaver(save = { mapOf("detent" to it.currentDetent.identifier) }, restore = { map ->
     val selectedDetentName = map["detent"]
     BottomSheetState(
@@ -93,7 +94,8 @@ private fun Saver(
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
         confirmDetentChange = confirmDetentChange,
-        density = localDensity
+        density = localDensity,
+        anchor = anchor
     )
 })
 
@@ -107,6 +109,7 @@ private fun Saver(
  * @param decayAnimationSpec The animation spec to use for decay animations.
  * @param velocityThreshold The velocity threshold for determining whether to snap to the next detent.
  * @param positionalThreshold The positional threshold for determining whether to snap to the next detent.
+ * @param anchor The edge from which the sheet appears ([SheetAnchor.Bottom] by default, or [SheetAnchor.Top] for top sheets).
  * @return A remembered [BottomSheetState] instance.
  */
 @Composable
@@ -118,6 +121,7 @@ fun rememberBottomSheetState(
     decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
     velocityThreshold: () -> Dp = { 125.dp },
     positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
+    anchor: SheetAnchor = SheetAnchor.Bottom,
 ): BottomSheetState {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
@@ -138,7 +142,8 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
-            localDensity = { density })
+            localDensity = { density },
+            anchor = anchor)
     ) {
         BottomSheetState(
             initialDetent = initialDetent,
@@ -157,7 +162,8 @@ fun rememberBottomSheetState(
             },
             decayAnimationSpec = decayAnimationSpec,
             confirmDetentChange = confirmDetentChange,
-            density = { density })
+            density = { density },
+            anchor = anchor)
     }
 }
 
@@ -201,6 +207,23 @@ class SheetDetent(
     }
 }
 
+/**
+ * An anchor, which defines where the sheet appears.
+ */
+enum class SheetAnchor {
+    /**
+     * Sheet appears from the bottom and expands upward (default behavior).
+     * Swipe down to dismiss.
+     */
+    Bottom,
+
+    /**
+     * Sheet appears from the top and expands downward.
+     * Swipe up to dismiss.
+     */
+    Top
+}
+
 class BottomSheetState(
     initialDetent: SheetDetent,
     detents: List<SheetDetent>,
@@ -210,7 +233,8 @@ class BottomSheetState(
     positionalThreshold: (totalDistance: Float) -> Float,
     decayAnimationSpec: DecayAnimationSpec<Float>,
     internal val confirmDetentChange: (SheetDetent) -> Boolean,
-    private val density: () -> Density
+    private val density: () -> Density,
+    val anchor: SheetAnchor = SheetAnchor.Bottom
 ) {
     init {
         checkValidDetents(detents)
@@ -319,16 +343,27 @@ class BottomSheetState(
     }
 
     /**
-     * The amount the sheet has travelled from the bottom of its container in pixels.
-     *
+     * The amount the sheet has travelled from [anchor] of its container in pixels.
+     * 
+     * For [SheetAnchor.Bottom] the distance from the bottom of the container.
+     * For [SheetAnchor.Top] the distance from the top of the container.
      */
     val offset: Float by derivedStateOf {
         if (anchoredDraggableState.offset.isNaN() || closestDetentToTopPx.isNaN()) {
             0f
         } else {
-            val offsetFromTop = anchoredDraggableState.offset
-            val diff = containerHeightPx - offsetFromTop
-            diff.coerceAtLeast(0f)
+            when (anchor) {
+                SheetAnchor.Bottom -> {
+                    val offsetFromTop = anchoredDraggableState.offset
+                    val diff = containerHeightPx - offsetFromTop
+                    diff.coerceAtLeast(0f)
+                }
+                SheetAnchor.Top -> {
+                    val offsetFromBottom = anchoredDraggableState.offset
+                    val sum = contentHeightPx + offsetFromBottom
+                    sum.coerceAtLeast(0f)
+                }
+            }
         }
     }
 
@@ -371,10 +406,13 @@ class BottomSheetState(
 
         // Capture the direction we were moving BEFORE updating anchors
         // We determine this by comparing the target position to the current detent position
-        val wasMovingUp = if (!isIdle && newTarget != currentDetent) {
+        val wasMovingTowardsExpanded = if (!isIdle && newTarget != currentDetent) {
             val targetPosition = anchoredDraggableState.anchors.positionOf(newTarget)
             val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
-            targetPosition < currentPosition
+            when (anchor) {
+                SheetAnchor.Bottom -> targetPosition < currentPosition
+                SheetAnchor.Top -> targetPosition > currentPosition
+            }
         } else {
             false
         }
@@ -387,7 +425,14 @@ class BottomSheetState(
                     val contentHeight =
                         detent.calculateDetentHeight(containerHeight, sheetHeight).coerceIn(0.dp, sheetHeight)
 
-                    val offsetDp = containerHeight - contentHeight
+                    val offsetDp = when (anchor) {
+                        SheetAnchor.Bottom -> {
+                            containerHeight - contentHeight
+                        }
+                        SheetAnchor.Top -> {
+                            contentHeight - sheetHeight
+                        }
+                    }
                     val offset = offsetDp.toPx()
                     if (closestDetentToTopPx.isNaN() || closestDetentToTopPx > offset) {
                         closestDetentToTopPx = offset
@@ -402,7 +447,11 @@ class BottomSheetState(
         } else {
             // Find the closest detent in the direction of movement
             val currentOffset = anchoredDraggableState.offset
-            val closestDetent = anchors.closestDetent(currentOffset, searchUpwards = wasMovingUp)
+            val searchUpwards = when (anchor) {
+                SheetAnchor.Bottom -> wasMovingTowardsExpanded
+                SheetAnchor.Top -> !wasMovingTowardsExpanded
+            }
+            val closestDetent = anchors.closestDetent(currentOffset, searchUpwards = searchUpwards)
 
             (closestDetent ?: innerDetents.first()).also {
                 // the anchored draggable state does not update its target value
@@ -545,10 +594,15 @@ fun BottomSheet(
                                 enabled = scope.enabled
                             )
                             .nestedScroll(
-                                remember(state.anchoredDraggableState, Orientation.Vertical) {
+                                remember(
+                                    state.anchoredDraggableState,
+                                    Orientation.Vertical,
+                                    state.anchor
+                                ) {
                                     ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
                                         orientation = Orientation.Vertical,
                                         sheetState = state.anchoredDraggableState,
+                                        anchor = state.anchor,
                                         onFling = {
                                             coroutineScope.launch { state.anchoredDraggableState.settle(it) }
                                         }
@@ -594,19 +648,31 @@ private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Mo
                 state.anchoredDraggableState.offset.isNaN() -> {
                     // draggable state is not ready
                     // let the sheet take the height of the container
-                    val y = state.containerHeightPx.roundToInt()
+                    val sign = when (state.anchor) {
+                        SheetAnchor.Bottom -> 1
+                        SheetAnchor.Top -> -1
+                    }
+                    val y = sign * state.containerHeightPx.roundToInt()
                     IntOffset(x = 0, y = y)
                 }
 
                 else -> {
-                    val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
-                    // do not let the sheet's top go out of screen bounds
-                    val y = calculatedOffset.coerceAtLeast(0f).toInt()
+                    val y = when (state.anchor) {
+                        SheetAnchor.Bottom -> {
+                            val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
+                            calculatedOffset.coerceAtLeast(0f).toInt()
+                        }
+
+                        SheetAnchor.Top -> {
+                            val calculatedOffset = state.anchoredDraggableState.requireOffset()
+                            calculatedOffset.coerceAtMost(0f).toInt()
+                        }
+                    }
                     IntOffset(x = 0, y = y)
                 }
             }
         })
-        if (imeAware) {
+        if (imeAware && state.anchor == SheetAnchor.Bottom) {
             add(Modifier.consumeWindowInsets(ime))
         }
     }
@@ -615,11 +681,16 @@ private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Mo
 private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     sheetState: UnstyledAnchoredDraggableState<SheetDetent>,
     orientation: Orientation,
+    anchor: SheetAnchor,
     onFling: (velocity: Float) -> Unit
 ): NestedScrollConnection = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.toFloat()
-        return if (delta < 0 && source == NestedScrollSource.UserInput) {
+        val shouldConsume = when (anchor) {
+            SheetAnchor.Bottom -> delta < 0
+            SheetAnchor.Top -> delta > 0
+        }
+        return if (shouldConsume && source == NestedScrollSource.UserInput) {
             sheetState.dispatchRawDelta(delta).toOffset()
         } else {
             Offset.Zero
@@ -637,8 +708,17 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     override suspend fun onPreFling(available: Velocity): Velocity {
         val toFling = available.toFloat()
         val currentOffset = sheetState.requireOffset()
-        val minAnchor = sheetState.anchors.minAnchor()
-        return if (toFling < 0 && currentOffset > minAnchor) {
+        val shouldFling = when (anchor) {
+            SheetAnchor.Bottom -> {
+                val minAnchor = sheetState.anchors.minAnchor()
+                toFling < 0 && currentOffset > minAnchor
+            }
+            SheetAnchor.Top -> {
+                val maxAnchor = sheetState.anchors.maxAnchor()
+                toFling > 0 && currentOffset < maxAnchor
+            }
+        }
+        return if (shouldFling) {
             onFling(toFling)
             // since we go to the anchor with tween settling, consume all for the best UX
             available
@@ -712,7 +792,11 @@ fun BottomSheetScope.DragIndication(
 
             state.detents.any { detent ->
                 val position = state.anchoredDraggableState.anchors.positionOf(detent)
-                position.isNaN().not() && position < currentPosition
+                if (position.isNaN()) return@any false
+                when (state.anchor) {
+                    SheetAnchor.Bottom -> position < currentPosition
+                    SheetAnchor.Top -> position > currentPosition
+                }
             }
         }
     }
@@ -726,7 +810,11 @@ fun BottomSheetScope.DragIndication(
 
             state.detents.any { detent ->
                 val position = state.anchoredDraggableState.anchors.positionOf(detent)
-                position.isNaN().not() && position > currentPosition
+                if (position.isNaN()) return@any false
+                when (state.anchor) {
+                    SheetAnchor.Bottom -> position > currentPosition
+                    SheetAnchor.Top -> position < currentPosition
+                }
             }
         }
     }
@@ -757,17 +845,30 @@ fun BottomSheetScope.DragIndication(
             .semantics(mergeDescendants = false) {
                 if (canExpand) {
                     expand {
-                        // Find next detent with LOWER position value (more expanded = higher on screen)
                         val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
-                        val nextDetent = state.detents
-                            .filter { detent ->
-                                val pos = state.anchoredDraggableState.anchors.positionOf(detent)
-                                pos < currentPosition
+                        val nextDetent = when (state.anchor) {
+                            SheetAnchor.Bottom -> {
+                                state.detents
+                                    .filter { detent ->
+                                        val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                        pos < currentPosition
+                                    }
+                                    .maxByOrNull { detent ->
+                                        // Get the closest one (highest position that's still < current)
+                                        state.anchoredDraggableState.anchors.positionOf(detent)
+                                    }
                             }
-                            .maxByOrNull { detent ->
-                                // Get the closest one (highest position that's still < current)
-                                state.anchoredDraggableState.anchors.positionOf(detent)
+                            SheetAnchor.Top -> {
+                                state.detents
+                                    .filter { detent ->
+                                        val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                        pos > currentPosition
+                                    }
+                                    .minByOrNull { detent ->
+                                        state.anchoredDraggableState.anchors.positionOf(detent)
+                                    }
                             }
+                        }
 
                         if (nextDetent != null) {
                             coroutineScope.launch {
@@ -781,17 +882,31 @@ fun BottomSheetScope.DragIndication(
                 }
                 if (canCollapse) {
                     collapse {
-                        // Find next detent with HIGHER position value (less expanded = lower on screen)
                         val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
-                        val nextDetent = state.detents
-                            .filter { detent ->
-                                val pos = state.anchoredDraggableState.anchors.positionOf(detent)
-                                pos > currentPosition
+                        val nextDetent = when (state.anchor) {
+                            SheetAnchor.Bottom -> {
+                                state.detents
+                                    .filter { detent ->
+                                        val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                        pos > currentPosition
+                                    }
+                                    .minByOrNull { detent ->
+                                        // Get the closest one (lowest position that's still > current)
+                                        state.anchoredDraggableState.anchors.positionOf(detent)
+                                    }
                             }
-                            .minByOrNull { detent ->
-                                // Get the closest one (lowest position that's still > current)
-                                state.anchoredDraggableState.anchors.positionOf(detent)
+
+                            SheetAnchor.Top -> {
+                                state.detents
+                                    .filter { detent ->
+                                        val pos = state.anchoredDraggableState.anchors.positionOf(detent)
+                                        pos < currentPosition
+                                    }
+                                    .maxByOrNull { detent ->
+                                        state.anchoredDraggableState.anchors.positionOf(detent)
+                                    }
                             }
+                        }
 
                         if (nextDetent != null) {
                             coroutineScope.launch {
