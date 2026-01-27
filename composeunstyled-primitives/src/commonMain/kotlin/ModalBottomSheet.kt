@@ -70,6 +70,7 @@ data class ModalSheetProperties(
  * @param positionalThreshold The positional threshold for determining whether to snap to the next detent.
  * @param confirmDetentChange Callback to confirm whether a detent change should be allowed.
  * @param decayAnimationSpec The animation spec to use for decay animations.
+ * @param anchor The edge from which the sheet appears ([SheetAnchor.Bottom] by default, or [SheetAnchor.Top] for top sheets).
  * @return A remembered [ModalBottomSheetState] instance.
  */
 @Composable
@@ -80,7 +81,8 @@ fun rememberModalBottomSheetState(
     velocityThreshold: () -> Dp = { 125.dp },
     positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
     confirmDetentChange: (SheetDetent) -> Boolean = { true },
-    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
+    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
+    anchor: SheetAnchor = SheetAnchor.Bottom,
 ): ModalBottomSheetState {
     val sheetState = rememberBottomSheetState(
         initialDetent = initialDetent,
@@ -90,6 +92,7 @@ fun rememberModalBottomSheetState(
         positionalThreshold = positionalThreshold,
         decayAnimationSpec = decayAnimationSpec,
         confirmDetentChange = confirmDetentChange,
+        anchor = anchor,
     )
     val scope = rememberCoroutineScope()
     return rememberSaveable(
@@ -125,6 +128,9 @@ class ModalBottomSheetState(
 
     internal var modalIsAdded by mutableStateOf(false)
     internal var pendingDetentChange: Job? = null
+
+    val anchor: SheetAnchor
+        get() = bottomSheetState.anchor
 
     var currentDetent: SheetDetent
         get() {

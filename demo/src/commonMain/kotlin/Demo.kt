@@ -55,6 +55,7 @@ private data class DemoItem(val name: String, val id: String, val demo: @Composa
 private val availableComponents = listOf(
     DemoItem("Bottom Sheet", "bottom-sheet", { BottomSheetDemo() }),
     DemoItem("Bottom Sheet (Modal)", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
+    DemoItem("Top Bottom Sheet (Modal)", "modal-bottom-sheet-top", { TopModalBottomSheetDemo() }),
     DemoItem("Button", "button", { ButtonDemo() }),
     DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
     DemoItem("Checkbox (TriState)", "tristatecheckbox", { TriStateCheckboxDemo() }),
