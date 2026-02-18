@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.TextField
 import com.composeunstyled.TextInput
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.text3
@@ -118,7 +118,7 @@ fun TextFieldDemo() {
                             )
                         },
                         trailing = {
-                            Button(
+                            UnstyledButton(
                                 onClick = { showPassword = !showPassword },
                                 backgroundColor = Color.Transparent,
                                 contentPadding = PaddingValues(4.dp),
@@ -135,7 +135,7 @@ fun TextFieldDemo() {
                     )
                 }
 
-                Button(
+                UnstyledButton(
                     onClick = { /* TODO */ },
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = Color(0xFF8E44AD),

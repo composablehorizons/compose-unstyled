@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Checkbox
 import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -31,7 +31,7 @@ fun CheckboxDemo() {
         contentAlignment = Alignment.Center
     ) {
         var checked by remember { mutableStateOf(false) }
-        Checkbox(
+        UnstyledCheckbox(
             checked = checked,
             onCheckedChange = { checked = it },
             shape = RoundedCornerShape(4.dp),

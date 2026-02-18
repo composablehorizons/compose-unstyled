@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.RelativeAlignment
@@ -38,6 +37,7 @@ import com.composeunstyled.Text
 import com.composeunstyled.Tooltip
 import com.composeunstyled.TooltipArrowDirection
 import com.composeunstyled.TooltipPanel
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
@@ -90,7 +90,7 @@ fun TooltipDemo() {
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
 
-                Button(
+                UnstyledButton(
                     onClick = { },
                     contentPadding = PaddingValues(8.dp),
                     shape = CircleShape,

@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
-import com.composeunstyled.Checkbox
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.TriStateCheckbox
+import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -93,7 +93,7 @@ fun TriStateCheckboxDemo() {
                     modifier = Modifier.fillMaxWidth().padding(start = 36.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Checkbox(
+                    UnstyledCheckbox(
                         checked = selected[index],
                         onCheckedChange = { checked ->
                             selected = selected.toMutableList().apply {

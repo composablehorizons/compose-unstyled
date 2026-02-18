@@ -16,10 +16,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Button
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.outline
 import com.composeunstyled.platformtheme.EmojiVariant
@@ -126,7 +126,7 @@ private fun MaterialButtons() {
         ) {
             // Filled Button (Material 3 Filled)
             val filledInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFF6750A4),
                 contentColor = Color.White,
@@ -141,7 +141,7 @@ private fun MaterialButtons() {
 
             // Outlined Button (Material 3 Outlined)
             val outlinedInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF6750A4),
@@ -163,7 +163,7 @@ private fun MaterialButtons() {
 
             // Text Button (Material 3 Text)
             val textInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF6750A4),
@@ -179,7 +179,7 @@ private fun MaterialButtons() {
 
             // Tonal Button (Material 3 Filled Tonal)
             val tonalInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFFE8DEF8),
                 contentColor = Color(0xFF1D192B),
@@ -215,7 +215,7 @@ private fun IosButtons() {
             val prominentInteraction = remember { MutableInteractionSource() }
             val interactiveSize = Theme[interactiveSizes][sizeMinimum]
 
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = iosAccent,
                 contentColor = Color.White,
@@ -231,7 +231,7 @@ private fun IosButtons() {
 
             // Bordered Button (SwiftUI .bordered - iOS 15+)
             val borderedInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFFE9E9EB), // iOS system gray 6
                 contentColor = iosAccent,
@@ -249,7 +249,7 @@ private fun IosButtons() {
             // Borderless Button (SwiftUI .borderless)
             // Default style on iOS - applies tint color
             val borderlessInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = iosAccent,
@@ -265,7 +265,7 @@ private fun IosButtons() {
 
             // Plain Button (SwiftUI .plain)
             val plainInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color.Black,
@@ -297,7 +297,7 @@ private fun MacOsButtons() {
 
             // Bordered Prominent Button (SwiftUI .borderedProminent)
             val prominentInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFF007AFF),
                 contentColor = Color.White,
@@ -312,7 +312,7 @@ private fun MacOsButtons() {
 
             // Bordered Button (SwiftUI .bordered)
             val borderedInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = macSecondary,
                 contentColor = Color.Black,
@@ -328,7 +328,7 @@ private fun MacOsButtons() {
 
             // Borderless Button (SwiftUI .borderless)
             val borderlessInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF8E8E93), // iOS/macOS system gray
@@ -344,7 +344,7 @@ private fun MacOsButtons() {
 
             // Plain Button (SwiftUI .plain)
             val plainInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF272727),
@@ -376,7 +376,7 @@ private fun ShadcnButtons() {
 
             // Primary Button
             val primaryInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFF0F172A), // slate-900
                 contentColor = Color(0xFFF8FAFC), // slate-50
@@ -391,7 +391,7 @@ private fun ShadcnButtons() {
 
             // Secondary Button
             val secondaryInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFFF1F5F9), // slate-100
                 contentColor = Color(0xFF0F172A), // slate-900
@@ -407,7 +407,7 @@ private fun ShadcnButtons() {
 
             // Outline Button
             val outlineInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF0F172A), // slate-900
@@ -429,7 +429,7 @@ private fun ShadcnButtons() {
 
             // Ghost Button
             val ghostInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color.Transparent,
                 contentColor = Color(0xFF0F172A), // slate-900
@@ -445,7 +445,7 @@ private fun ShadcnButtons() {
 
             // Destructive Button
             val destructiveInteraction = remember { MutableInteractionSource() }
-            Button(
+            UnstyledButton(
                 onClick = {},
                 backgroundColor = Color(0xFFEF4444), // red-500
                 contentColor = Color.White,

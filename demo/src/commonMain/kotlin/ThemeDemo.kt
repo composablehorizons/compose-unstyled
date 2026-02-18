@@ -48,12 +48,12 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pause
 import com.composables.icons.lucide.SkipBack
 import com.composables.icons.lucide.SkipForward
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.Slider
 import com.composeunstyled.Text
 import com.composeunstyled.Thumb
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.outline
 import com.composeunstyled.rememberSliderState
 import com.composeunstyled.theme.Theme
@@ -651,7 +651,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(
+                    UnstyledButton(
                         onClick = { },
                         contentPadding = PaddingValues(12.dp),
                         shape = Theme[shapes][buttonShape]
@@ -663,7 +663,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
                         )
                     }
 
-                    Button(
+                    UnstyledButton(
                         onClick = { },
                         backgroundColor = Theme[colors][primary],
                         contentColor = Theme[colors][onPrimary],
@@ -677,7 +677,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
                         )
                     }
 
-                    Button(
+                    UnstyledButton(
                         onClick = { },
                         contentPadding = PaddingValues(12.dp),
                         shape = Theme[shapes][buttonShape]
@@ -716,7 +716,7 @@ private fun SimpleThemeCard(
     val outlineThickness by animateDpAsState(if (isSelected) 2.dp else 1.dp)
     val offset by animateDpAsState(if (isSelected) 2.dp else 0.dp)
 
-    Button(
+    UnstyledButton(
         onClick = onClick,
         backgroundColor = themeColor,
         contentColor = Color.Transparent,

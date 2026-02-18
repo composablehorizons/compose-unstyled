@@ -38,10 +38,10 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.platformtheme.dimmed
@@ -83,7 +83,7 @@ fun DropdownMenuDemo() {
         }
 
         UnstyledDropdownMenu(onExpandRequest = { expanded = true }) {
-            Button(
+            UnstyledButton(
                 shape = RoundedCornerShape(6.dp),
                 backgroundColor = Color.White,
                 onClick = { expanded = true },
@@ -116,7 +116,7 @@ fun DropdownMenuDemo() {
                     if (index == 1 || index == options.lastIndex) {
                         Separator(color = Color(0xFFBDBDBD))
                     }
-                    Button(
+                    UnstyledButton(
                         onClick = { expanded = false },
                         enabled = option.enabled,
                         modifier = Modifier
