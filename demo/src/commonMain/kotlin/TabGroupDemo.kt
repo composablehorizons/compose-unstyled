@@ -26,12 +26,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Button
 import com.composeunstyled.Tab
 import com.composeunstyled.TabGroup
 import com.composeunstyled.TabList
 import com.composeunstyled.TabPanel
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -152,7 +152,7 @@ fun TabGroupDemo() {
                     TabPanel(key = key) {
                         Column {
                             items.forEach { item ->
-                                Button(
+                                UnstyledButton(
                                     onClick = { /* TODO */ },
                                     shape = RoundedCornerShape(8.dp),
                                     contentPadding = PaddingValues(12.dp)

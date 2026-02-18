@@ -2,13 +2,9 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -20,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -35,7 +31,7 @@ fun ButtonDemo() {
             .background(Brush.linearGradient(listOf(Color(0xFFFF6F61), Color(0xFFFF8A65)))),
         contentAlignment = Alignment.Center
     ) {
-        Button(
+        UnstyledButton(
             onClick = { },
             backgroundColor = Color.White,
             contentColor = Color(0xFF020817),

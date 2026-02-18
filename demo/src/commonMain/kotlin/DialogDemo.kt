@@ -24,10 +24,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Button
-import com.composeunstyled.Dialog
-import com.composeunstyled.DialogPanel
-import com.composeunstyled.Scrim
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledDialog
+import com.composeunstyled.UnstyledDialogPanel
+import com.composeunstyled.UnstyledScrim
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.text5
@@ -45,7 +46,7 @@ fun DialogDemo() {
             .padding(vertical = 40.dp),
         contentAlignment = Alignment.Center
     ) {
-        Button(
+        UnstyledButton(
             onClick = { dialogState.visible = true },
             backgroundColor = Color.White,
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
@@ -54,9 +55,9 @@ fun DialogDemo() {
         ) {
             Text("Show dialog")
         }
-        Dialog(state = dialogState) {
-            Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-            DialogPanel(
+        UnstyledDialog(state = dialogState) {
+            UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+            UnstyledDialogPanel(
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
                 shape = RoundedCornerShape(12.dp),
@@ -79,7 +80,7 @@ fun DialogDemo() {
                         )
                     }
                     Spacer(Modifier.height(24.dp))
-                    Button(
+                    UnstyledButton(
                         onClick = { /* TODO */ }, modifier = Modifier.padding(12.dp).align(Alignment.End),
                         shape = RoundedCornerShape(6.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),

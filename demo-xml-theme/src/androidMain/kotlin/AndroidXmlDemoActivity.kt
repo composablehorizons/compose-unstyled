@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Button
 import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.ProvideTextStyle
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -109,7 +109,7 @@ fun App() {
 
                     Spacer(Modifier.height(Theme[spacing][large]))
 
-                    Button(
+                    UnstyledButton(
                         onClick = {},
                         backgroundColor = Theme[colors][primary],
                         contentColor = Theme[colors][onPrimary],

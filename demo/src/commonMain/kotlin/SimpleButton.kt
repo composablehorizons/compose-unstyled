@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 
 @Composable
 internal fun SimpleButton(
@@ -15,7 +15,7 @@ internal fun SimpleButton(
     shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp),
     interactionSource: androidx.compose.foundation.interaction.MutableInteractionSource? = null,
 ) {
-    Button(
+    UnstyledButton(
         onClick = {},
         shape = shape,
         modifier = modifier,

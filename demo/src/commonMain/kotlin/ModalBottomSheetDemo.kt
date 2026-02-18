@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composables.core.DragIndication
 import com.composables.core.ModalBottomSheet
@@ -38,8 +37,8 @@ import com.composables.core.SheetDetent
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberModalBottomSheetState
-import com.composeunstyled.Button
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.platformtheme.dimmed
@@ -68,7 +67,7 @@ fun ModalBottomSheetDemo() {
             modalSheetState.targetDetent = Peek
         }
 
-        Button(
+        UnstyledButton(
             onClick = { modalSheetState.targetDetent = Peek },
             modifier = Modifier
                 .align(Alignment.Center)

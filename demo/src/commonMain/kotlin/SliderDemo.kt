@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Volume1
 import com.composables.icons.lucide.Volume2
-import com.composeunstyled.Button
 import com.composeunstyled.Icon
 import com.composeunstyled.Slider
 import com.composeunstyled.Thumb
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberSliderState
@@ -61,7 +61,7 @@ fun SliderDemo() {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth()
         ) {
-            Button(
+            UnstyledButton(
                 onClick = { state.value -= 0.1f },
                 modifier = Modifier.shadow(4.dp, CircleShape),
                 shape = CircleShape,
@@ -125,7 +125,7 @@ fun SliderDemo() {
                 }
             )
 
-            Button(
+            UnstyledButton(
                 onClick = { state.value += 0.1f },
                 modifier = Modifier.shadow(4.dp, CircleShape),
                 shape = CircleShape,
