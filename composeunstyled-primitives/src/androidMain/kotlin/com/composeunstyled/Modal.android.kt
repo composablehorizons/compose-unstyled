@@ -1,5 +1,8 @@
 package com.composeunstyled
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
 import android.view.Window
 import android.view.WindowManager
@@ -87,12 +90,19 @@ actual fun Modal(
         val window = requireNotNull(dialog.window) {
             "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
         }
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        window.setDimAmount(0f)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         } else {
             @Suppress("DEPRECATION")
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+
+        val hostWindow = context.findActivity()?.window
+        if (hostWindow != null) {
+            syncSystemUiAppearance(from = hostWindow, to = window)
         }
 
         dialog.show()
@@ -109,4 +119,17 @@ actual fun Modal(
  */
 val LocalModalWindow = staticCompositionLocalOf<Window> {
     error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
+private fun syncSystemUiAppearance(from: Window, to: Window) {
+    val hostController = WindowCompat.getInsetsController(from, from.decorView)
+    val modalController = WindowCompat.getInsetsController(to, to.decorView)
+    modalController.isAppearanceLightStatusBars = hostController.isAppearanceLightStatusBars
+    modalController.isAppearanceLightNavigationBars = hostController.isAppearanceLightNavigationBars
 }
