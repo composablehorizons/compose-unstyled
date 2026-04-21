@@ -131,11 +131,9 @@ fun UnstyledDropdownMenuPanel(
 ) {
     val density = LocalDensity.current
     val positionProvider = MenuContentPositionProvider(density, anchor)
-    val transitionState = remember { MutableTransitionState(expanded) }
+    val transitionState = remember { MutableTransitionState(false) }
 
-    transitionState.targetState = expanded
-
-    if (transitionState.currentState || transitionState.targetState || !transitionState.isIdle) {
+    if (expanded || transitionState.currentState || !transitionState.isIdle) {
         val menuFocusRequester = remember { FocusRequester() }
 
         Popup(
@@ -143,6 +141,9 @@ fun UnstyledDropdownMenuPanel(
             onDismissRequest = onDismissRequest,
             popupPositionProvider = positionProvider,
         ) {
+            LaunchedEffect(expanded) {
+                transitionState.targetState = expanded
+            }
             val currentFocusManager = LocalFocusManager.current
 
             AnimatedVisibility(
