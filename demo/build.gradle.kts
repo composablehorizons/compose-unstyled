@@ -112,10 +112,6 @@ kotlin {
     }
 }
 
-compose.experimental {
-    web.application {}
-}
-
 compose.desktop {
     application {
         mainClass = "com.composeunstyled.demo.MainKt"
