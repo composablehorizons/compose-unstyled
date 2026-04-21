@@ -37,7 +37,7 @@ android {
 
     defaultConfig {
         applicationId = "com.composeunstyled.demo.systemui"
-        minSdk = libs.versions.android.minSDK.get().toInt()
+        minSdk = 23
         targetSdk = libs.versions.android.compileSDK.get().toInt()
         versionCode = 1
         versionName = "1.0.0"

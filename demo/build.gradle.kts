@@ -122,7 +122,7 @@ android {
     namespace = "com.composeunstyled.demo"
     compileSdk = libs.versions.android.compileSDK.get().toInt()
     defaultConfig {
-        minSdk = libs.versions.android.minSDK.get().toInt()
+        minSdk = 23
         targetSdk = libs.versions.android.compileSDK.get().toInt()
         applicationId = "com.composeunstyled.demo"
         versionCode = 1
