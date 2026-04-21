@@ -1,7 +1,6 @@
 package com.composeunstyled
 
 import androidx.compose.ui.test.ComposeUiTest
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.async
@@ -18,7 +17,6 @@ data class TestResult(
 )
 
 
-@OptIn(ExperimentalTestApi::class)
 fun testCase(
     name: String,
     expected: KClass<out Throwable>? = null,
@@ -71,7 +69,6 @@ fun testCase(
     }
 }
 
-@OptIn(ExperimentalTestApi::class)
 fun runTestSuite(block: TestSuiteScope.() -> Unit) {
     val scope = TestSuiteScope()
     scope.block()
@@ -141,7 +138,6 @@ fun runTestSuite(block: TestSuiteScope.() -> Unit) {
     }
 }
 
-@OptIn(ExperimentalTestApi::class)
 class TestSuiteScope {
     internal val testCases = mutableListOf<TestCase>()
 
@@ -156,7 +152,6 @@ class TestSuiteScope {
     }
 }
 
-@OptIn(ExperimentalTestApi::class)
 internal data class TestCase(
     val name: String,
     val expected: KClass<out Throwable>? = null,
@@ -164,7 +159,6 @@ internal data class TestCase(
     val assertions: suspend ComposeUiTest.() -> Unit
 )
 
-@OptIn(ExperimentalTestApi::class)
 context(uiTest: ComposeUiTest)
 fun Dp.toPx(): Float {
     val dpValue = this
@@ -173,7 +167,6 @@ fun Dp.toPx(): Float {
     }
 }
 
-@OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.advanceTimeBy(duration: Duration) {
     mainClock.advanceTimeBy(duration.inWholeMilliseconds)
 }

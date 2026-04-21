@@ -20,6 +20,10 @@ java {
 }
 
 kotlin {
+    compilerOptions {
+        optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17

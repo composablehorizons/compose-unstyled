@@ -2,7 +2,6 @@ package com.composeunstyled
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.SemanticsActions
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
@@ -13,7 +12,6 @@ import androidx.compose.ui.text.TextStyle
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-@OptIn(ExperimentalTestApi::class)
 class TextTest {
 
     @BeforeTest

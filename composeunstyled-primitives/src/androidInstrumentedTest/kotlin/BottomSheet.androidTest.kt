@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
@@ -22,7 +21,6 @@ import kotlin.test.assertFalse
 /**
  * We keep this test in Android source set as we cannot 'expand' the sheet using a mouse scroll
  */
-@OptIn(ExperimentalTestApi::class)
 class BottomSheetTest {
 
     @Test

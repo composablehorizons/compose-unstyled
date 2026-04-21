@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.longClick
@@ -21,7 +20,6 @@ import com.composeunstyled.Tooltip
 import com.composeunstyled.TooltipPanel
 import kotlin.test.Test
 
-@OptIn(ExperimentalTestApi::class)
 class TooltipTest {
 
     /**

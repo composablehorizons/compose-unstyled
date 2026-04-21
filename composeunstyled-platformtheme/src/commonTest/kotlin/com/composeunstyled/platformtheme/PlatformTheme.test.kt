@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.theme.*
 import kotlin.test.Test
 
-@OptIn(ExperimentalTestApi::class)
 class PlatformThemeTest {
 
     @Test

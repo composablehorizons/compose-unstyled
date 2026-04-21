@@ -118,6 +118,12 @@ kotlin {
                 }
             }
         }
+
+        all {
+            if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
+                languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
+            }
+        }
     }
 }
 

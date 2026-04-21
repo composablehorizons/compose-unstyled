@@ -14,7 +14,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
-@OptIn(ExperimentalTestApi::class)
 class DialogTest {
 
     @Test

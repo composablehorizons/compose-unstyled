@@ -10,7 +10,6 @@ import com.composeunstyled.theme.ComponentInteractiveSize
 import com.composeunstyled.theme.buildTheme
 import kotlin.test.Test
 
-@OptIn(ExperimentalTestApi::class)
 class ThemeTest {
     @Test
     fun defaultComponentInteractiveSizeIsPropagatedToModifier() = runComposeUiTest {
