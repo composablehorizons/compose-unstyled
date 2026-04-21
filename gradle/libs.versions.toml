@@ -14,7 +14,7 @@ window = "1.4.0"
 
 # Android
 android-compileSDK = "35"
-android-minSDK = "21"
+android-minSDK = "23"
 agp = "8.10.1"
 
 # testing
