@@ -223,9 +223,51 @@ fun RadioGroupScope.Radio(
  * @param verticalAlignment The vertical alignment of the content.
  * @param content The content of the radio button.
  */
-@Deprecated("Replace with RadioButton")
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledRadio(selected, onSelectedChange, modifier, backgroundColor, contentColor, selectedColor, enabled, shape, borderColor, borderWidth, contentPadding, interactionSource, indication, horizontalArrangement, verticalAlignment, content)")
+)
 @Composable
 fun Radio(
+    selected: Boolean,
+    onSelectedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    selectedColor: Color = Color.Unspecified,
+    enabled: Boolean = true,
+    shape: Shape = RectangleShape,
+    borderColor: Color = Color.Unspecified,
+    borderWidth: Dp = Dp.Unspecified,
+    contentPadding: PaddingValues = NoPadding,
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = LocalIndication.current,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    content: @Composable (RowScope.() -> Unit),
+) {
+    UnstyledRadio(
+        selected = selected,
+        onSelectedChange = onSelectedChange,
+        modifier = modifier,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        selectedColor = selectedColor,
+        enabled = enabled,
+        shape = shape,
+        borderColor = borderColor,
+        borderWidth = borderWidth,
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        indication = indication,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment,
+        content = content
+    )
+}
+
+@Composable
+fun UnstyledRadio(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -270,4 +312,3 @@ fun Radio(
         }
     }
 }
-
