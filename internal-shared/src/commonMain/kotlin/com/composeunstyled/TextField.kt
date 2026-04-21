@@ -107,9 +107,75 @@ import androidx.compose.ui.unit.isSpecified
  * @param visualTransformation The visual transformation to be applied to the text.
  * @param verticalAlignment The vertical alignment of the content.
  */
-@Deprecated("This overload will go away in 2.0. Use the overload of TextField that provides slots for better styling capabilities")
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledTextField(value, onValueChange, editable, modifier, contentPadding, leadingIcon, trailingIcon, placeholder, contentColor, disabledColor, backgroundColor, borderWidth, borderColor, shape, textStyle, textAlign, fontSize, fontWeight, fontFamily, singleLine, minLines, maxLines, keyboardOptions, keyboardActions, interactionSource, spacing, visualTransformation, verticalAlignment)")
+)
 @Composable
 fun TextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    editable: Boolean = true,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    placeholder: String = "",
+    contentColor: Color = LocalContentColor.current,
+    disabledColor: Color = contentColor.copy(0.66f),
+    backgroundColor: Color = Color.Unspecified,
+    borderWidth: Dp = 1.dp,
+    borderColor: Color = Color.Unspecified,
+    shape: Shape = RectangleShape,
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    interactionSource: MutableInteractionSource? = null,
+    spacing: Dp = 8.dp,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+) {
+    UnstyledTextField(
+        value = value,
+        onValueChange = onValueChange,
+        editable = editable,
+        modifier = modifier,
+        contentPadding = contentPadding,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        placeholder = placeholder,
+        contentColor = contentColor,
+        disabledColor = disabledColor,
+        backgroundColor = backgroundColor,
+        borderWidth = borderWidth,
+        borderColor = borderColor,
+        shape = shape,
+        textStyle = textStyle,
+        textAlign = textAlign,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        singleLine = singleLine,
+        minLines = minLines,
+        maxLines = maxLines,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        interactionSource = interactionSource,
+        spacing = spacing,
+        visualTransformation = visualTransformation,
+        verticalAlignment = verticalAlignment
+    )
+}
+
+@Composable
+fun UnstyledTextField(
     value: String,
     onValueChange: (String) -> Unit,
     editable: Boolean = true,
@@ -203,7 +269,7 @@ fun TextField(
                 Box(Modifier.weight(1f).semantics(mergeDescendants = true) { }) {
                     innerTextField()
                     if (value.isEmpty()) {
-                        Text(
+                        UnstyledText(
                             text = placeholder,
                             style = overriddenStyle,
                             minLines = minLines,
@@ -234,7 +300,7 @@ fun TextField(
             if (leadingIcon != null) {
                 leadingIcon()
             }
-            Text(
+            UnstyledText(
                 text = value.ifBlank { placeholder },
                 style = overriddenStyle,
                 color = disabledColor,
@@ -249,9 +315,61 @@ fun TextField(
     }
 }
 
-@Deprecated("This will go to 2.0. Stateless TextFields in Compose do not work correctly in all languages and cause duplication characters and unexpected behaviors")
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledTextField(value, onValueChange, modifier, editable, cursorBrush, textStyle, textAlign, lineHeight, fontSize, letterSpacing, fontWeight, fontFamily, singleLine, minLines, maxLines, keyboardActions, keyboardOptions, visualTransformation, interactionSource, textColor, content)")
+)
 @Composable
 fun TextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    editable: Boolean = true,
+    cursorBrush: Brush = SolidColor(Color.Black),
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    interactionSource: MutableInteractionSource? = null,
+    textColor: Color = Color.Unspecified,
+    content: @Composable TextFieldScope.() -> Unit,
+) {
+    UnstyledTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        editable = editable,
+        cursorBrush = cursorBrush,
+        textStyle = textStyle,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        fontSize = fontSize,
+        letterSpacing = letterSpacing,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        singleLine = singleLine,
+        minLines = minLines,
+        maxLines = maxLines,
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation,
+        interactionSource = interactionSource,
+        textColor = textColor,
+        content = content
+    )
+}
+
+@Composable
+fun UnstyledTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -395,7 +513,7 @@ fun TextFieldScope.TextInput(
                     innerTextField!!.invoke()
                 } else {
                     SelectionContainer {
-                        Text(text)
+                        UnstyledText(text)
                     }
                 }
 
@@ -415,9 +533,61 @@ fun TextFieldScope.TextInput(
     }
 }
 
-
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledTextField(state, modifier, editable, cursorBrush, textStyle, textAlign, lineHeight, fontSize, letterSpacing, fontWeight, fontFamily, singleLine, minLines, maxLines, onKeyboardAction, keyboardOptions, visualTransformation, interactionSource, textColor, scrollState, content)")
+)
 @Composable
 fun TextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    editable: Boolean = true,
+    cursorBrush: Brush = SolidColor(Color.Black),
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    singleLine: Boolean = false,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    onKeyboardAction: KeyboardActionHandler? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    interactionSource: MutableInteractionSource? = null,
+    textColor: Color = LocalContentColor.current,
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable TextFieldScope.() -> Unit,
+) {
+    UnstyledTextField(
+        state = state,
+        modifier = modifier,
+        editable = editable,
+        cursorBrush = cursorBrush,
+        textStyle = textStyle,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        fontSize = fontSize,
+        letterSpacing = letterSpacing,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        singleLine = singleLine,
+        minLines = minLines,
+        maxLines = maxLines,
+        onKeyboardAction = onKeyboardAction,
+        keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation,
+        interactionSource = interactionSource,
+        textColor = textColor,
+        scrollState = scrollState,
+        content = content
+    )
+}
+
+@Composable
+fun UnstyledTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
     editable: Boolean = true,
