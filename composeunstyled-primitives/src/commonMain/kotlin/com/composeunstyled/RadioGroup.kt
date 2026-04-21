@@ -39,7 +39,22 @@ import androidx.compose.ui.semantics.semantics
 private val LocalInnerRadioGroupState = staticCompositionLocalOf { InnerRadioGroupState() }
 
 @Composable
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledRadioGroup(value, onValueChange, contentDescription, modifier, content)")
+)
 fun RadioGroup(
+    value: String?,
+    onValueChange: (String) -> Unit,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    UnstyledRadioGroup(value, onValueChange, contentDescription, modifier, content)
+}
+
+@Composable
+fun UnstyledRadioGroup(
     value: String?,
     onValueChange: (String) -> Unit,
     contentDescription: String?,
@@ -94,7 +109,44 @@ private class InnerRadioGroupState {
 }
 
 @Composable
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledRadioButton(value, modifier, shape, backgroundColor, contentColor, selectedColor, enabled, contentPadding, interactionSource, indication, horizontalArrangement, verticalAlignment, content)")
+)
 fun RadioButton(
+    value: String,
+    modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Unspecified,
+    contentColor: Color = Color.Unspecified,
+    selectedColor: Color = Color.Unspecified,
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = NoPadding,
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = LocalIndication.current,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    content: @Composable (RowScope.() -> Unit),
+) {
+    UnstyledRadioButton(
+        value = value,
+        modifier = modifier,
+        shape = shape,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        selectedColor = selectedColor,
+        enabled = enabled,
+        contentPadding = contentPadding,
+        interactionSource = interactionSource,
+        indication = indication,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment,
+        content = content
+    )
+}
+
+@Composable
+fun UnstyledRadioButton(
     value: String,
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
@@ -138,4 +190,3 @@ fun RadioButton(
         }
     }
 }
-
