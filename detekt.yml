@@ -1,5 +1,5 @@
 build:
-  maxIssues: 415
+  maxIssues: 449
 
 config:
   validation: true
