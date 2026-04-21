@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -195,6 +196,7 @@ fun UnstyledTextField(
     fontSize: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
+    textDecoration: TextDecoration? = textStyle.textDecoration,
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -210,6 +212,7 @@ fun UnstyledTextField(
         fontSize = fontSize,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration,
         color = contentColor,
     )
 
@@ -382,6 +385,7 @@ fun UnstyledTextField(
     letterSpacing: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
+    textDecoration: TextDecoration? = textStyle.textDecoration,
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -402,6 +406,7 @@ fun UnstyledTextField(
         fontSize = fontSize,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration,
         lineHeight = lineHeight,
         letterSpacing = letterSpacing,
         color = textColor
@@ -599,6 +604,7 @@ fun UnstyledTextField(
     letterSpacing: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
+    textDecoration: TextDecoration? = textStyle.textDecoration,
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -620,6 +626,7 @@ fun UnstyledTextField(
         fontSize = fontSize,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration,
         lineHeight = lineHeight,
         letterSpacing = letterSpacing,
         color = textColor
