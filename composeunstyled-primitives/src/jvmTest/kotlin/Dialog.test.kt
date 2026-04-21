@@ -1,7 +1,12 @@
 package com.composeunstyled
 
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import kotlin.test.Test
@@ -13,8 +18,8 @@ class DialogTest {
     fun isModal() = runComposeUiTest {
         val state = DialogState(initiallyVisible = false)
         setContent {
-            Dialog(state) {
-                DialogPanel {
+            UnstyledDialog(state) {
+                UnstyledDialogPanel {
                 }
             }
         }
@@ -28,8 +33,8 @@ class DialogTest {
         val dialogState = DialogState(initiallyVisible = false)
 
         setContent {
-            Dialog(state = dialogState) {
-                DialogPanel(Modifier.testTag("dialog_content")) {
+            UnstyledDialog(state = dialogState) {
+                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
                 }
             }
         }
@@ -46,8 +51,8 @@ class DialogTest {
         val dialogState = DialogState(initiallyVisible = false)
 
         setContent {
-            Dialog(state = dialogState) {
-                Scrim(Modifier.testTag("scrim"))
+            UnstyledDialog(state = dialogState) {
+                UnstyledScrim(Modifier.testTag("scrim"))
             }
         }
 
@@ -62,12 +67,81 @@ class DialogTest {
     @Test
     fun autoFocusesOnDialog() = runComposeUiTest {
         setContent {
-            Dialog(rememberDialogState(initiallyVisible = true)) {
-                DialogPanel(Modifier.testTag("dialog_content").focusable()) {
+            UnstyledDialog(rememberDialogState(initiallyVisible = true)) {
+                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+                    BasicTextField(
+                        value = "",
+                        onValueChange = {},
+                        modifier = Modifier.testTag("dialog_focus_target")
+                    )
                 }
             }
         }
 
-        onNodeWithTag("dialog_content").assertIsFocused()
+        onNodeWithTag("dialog_focus_target").assertIsFocused()
+    }
+
+    @Test
+    fun pressingEscapeDismissesDialogWhenDismissOnBackPressIsTrue() = runComposeUiTest {
+        val dialogState = DialogState(initiallyVisible = true)
+
+        setContent {
+            var value by remember { mutableStateOf("") }
+            UnstyledDialog(
+                state = dialogState,
+                properties = DialogProperties(dismissOnBackPress = true)
+            ) {
+                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+                    BasicTextField(
+                        value = value,
+                        onValueChange = { value = it },
+                        modifier = Modifier.testTag("dialog_input")
+                    )
+                }
+            }
+        }
+
+        onNodeWithTag("dialog_content").assertExists()
+        onNodeWithTag("dialog_input").performClick()
+        onNodeWithTag("dialog_input").assertIsFocused()
+
+        onNodeWithTag("dialog_input").performKeyInput {
+            pressKey(Key.Escape)
+        }
+        waitForIdle()
+
+        onNodeWithTag("dialog_content").assertDoesNotExist()
+    }
+
+    @Test
+    fun pressingEscapeDoesNotDismissDialogWhenDismissOnBackPressIsFalse() = runComposeUiTest {
+        val dialogState = DialogState(initiallyVisible = true)
+
+        setContent {
+            var value by remember { mutableStateOf("") }
+            UnstyledDialog(
+                state = dialogState,
+                properties = DialogProperties(dismissOnBackPress = false)
+            ) {
+                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+                    BasicTextField(
+                        value = value,
+                        onValueChange = { value = it },
+                        modifier = Modifier.testTag("dialog_input")
+                    )
+                }
+            }
+        }
+
+        onNodeWithTag("dialog_content").assertExists()
+        onNodeWithTag("dialog_input").performClick()
+        onNodeWithTag("dialog_input").assertIsFocused()
+
+        onNodeWithTag("dialog_input").performKeyInput {
+            pressKey(Key.Escape)
+        }
+        waitForIdle()
+
+        onNodeWithTag("dialog_content").assertExists()
     }
 }

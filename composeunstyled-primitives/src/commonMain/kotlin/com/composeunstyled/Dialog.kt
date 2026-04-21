@@ -105,16 +105,13 @@ fun UnstyledDialog(
                 { false }
             }
             Modal(onKeyEvent = onKeyEvent) {
-                val focusRequester = remember { FocusRequester() }
                 LaunchedEffect(Unit) {
-                    focusRequester.requestFocus()
                     state.panelVisibilityState.targetState = true
                     state.scrimVisibilityState.targetState = true
                 }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .focusRequester(focusRequester)
                         .then(
                             if (properties.dismissOnClickOutside) {
                                 Modifier.pointerInput(Unit) {
@@ -161,20 +158,25 @@ fun UnstyledDialogPanel(
     content: @Composable () -> Unit
 ) {
     val state = LocalDialogState.current
+    val panelFocusRequester = remember { FocusRequester() }
 
     AnimatedVisibility(
         visibleState = state.panelVisibilityState,
         enter = enter,
         exit = exit,
     ) {
+        LaunchedEffect(Unit) {
+            panelFocusRequester.requestFocus()
+        }
         Box(
             modifier
+                .focusRequester(panelFocusRequester)
                 .clip(shape)
                 .background(backgroundColor)
                 .pointerInput(Unit) { detectTapGestures { } }
                 .padding(contentPadding)
         ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
+            ProvideContentColor(contentColor) {
                 content()
             }
         }
