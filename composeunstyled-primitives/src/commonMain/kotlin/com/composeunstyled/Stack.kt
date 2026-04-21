@@ -23,7 +23,23 @@ import androidx.compose.ui.unit.dp
  * @param spacing Spacing between the children. **This does nothing if** the given [mainAxisArrangement] is [MainAxisArrangement.SpaceEvenly], [MainAxisArrangement.SpaceBetween] or [MainAxisArrangement.SpaceAround]
  */
 @Composable
+@Deprecated(
+    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+    ReplaceWith("UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)")
+)
 fun Stack(
+    modifier: Modifier = Modifier,
+    orientation: StackOrientation = StackOrientation.Horizontal,
+    mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
+    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
+    spacing: Dp = 0.dp,
+    content: @Composable StackScope.() -> Unit,
+) {
+    UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)
+}
+
+@Composable
+fun UnstyledStack(
     modifier: Modifier = Modifier,
     orientation: StackOrientation = StackOrientation.Horizontal,
     mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
