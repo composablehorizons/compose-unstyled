@@ -28,3 +28,6 @@ cmake-build-*/
 # IntelliJ
 out/
 .idea/
+
+# Local iOS signing overrides
+iosApp/Configuration/ExternalDeveloper.xcconfig

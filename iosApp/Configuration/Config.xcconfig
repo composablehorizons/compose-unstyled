@@ -1,3 +1,5 @@
 TEAM_ID=
 BUNDLE_ID=com.composeunstyled.demo
 APP_NAME=ComposablesCore
+
+#include? "ExternalDeveloper.xcconfig"

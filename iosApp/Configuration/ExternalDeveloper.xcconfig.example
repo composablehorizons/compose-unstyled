@@ -1,0 +1,4 @@
+// Copy this file to ExternalDeveloper.xcconfig and set local values.
+// This file is intentionally generic and safe to commit.
+
+TEAM_ID=YOUR_APPLE_TEAM_ID
