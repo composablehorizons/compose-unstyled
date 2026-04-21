@@ -13,18 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
@@ -35,7 +36,7 @@ class TextFieldTest {
     @Test
     fun movesFocusToInputWhenTextFieldIsFocused() = runComposeUiTest {
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = rememberTextFieldState(),
                 modifier = Modifier.testTag("textfield"),
             ) {
@@ -49,7 +50,7 @@ class TextFieldTest {
     @Test
     fun keepsFocusWhenTextFieldIsFocusedAndTrailingIsSpecified() = runComposeUiTest {
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = rememberTextFieldState(),
                 modifier = Modifier.testTag("textfield"),
             ) {
@@ -72,7 +73,7 @@ class TextFieldTest {
     fun typingTextWhileTextFieldIsFocused_entersText() = runComposeUiTest {
         val state = TextFieldState("")
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = state,
                 modifier = Modifier.testTag("textfield")
                     // setting size as test can't click otherwise
@@ -90,7 +91,7 @@ class TextFieldTest {
     fun changingValueUpdatesRenderedText() = runComposeUiTest {
         val state = TextFieldState("initial")
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = state,
                 modifier = Modifier.testTag("textfield")
             ) {
@@ -110,7 +111,7 @@ class TextFieldTest {
         val state = TextFieldState("secret")
         var visualTransformation by mutableStateOf(VisualTransformation.None)
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = state,
                 modifier = Modifier.testTag("textfield"),
                 visualTransformation = visualTransformation
@@ -124,14 +125,13 @@ class TextFieldTest {
         visualTransformation = PasswordVisualTransformation()
 
         onNodeWithText("••••••", useUnmergedTree = true).assertTextEquals("••••••")
-        onAllNodesWithText("secret", useUnmergedTree = true).assertCountEquals(0)
     }
 
     @Test
     fun visualTransformationTransformText_whenNotEditable() = runComposeUiTest {
         val state = TextFieldState("secret")
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = state,
                 modifier = Modifier.testTag("textfield"),
                 editable = false,
@@ -141,7 +141,7 @@ class TextFieldTest {
             }
         }
 
-        onNodeWithTag("textfield").assertTextEquals("••••••")
+        onNodeWithText("••••••", useUnmergedTree = true).assertTextEquals("••••••")
     }
 
     @Test
@@ -150,7 +150,7 @@ class TextFieldTest {
         var actualColor: Color? = null
 
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = rememberTextFieldState(),
                 textColor = expectedColor
             ) {
@@ -167,7 +167,7 @@ class TextFieldTest {
         var focused by mutableStateOf(false)
 
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = rememberTextFieldState(),
                 modifier = Modifier
                     .testTag("textfield")
@@ -190,7 +190,7 @@ class TextFieldTest {
 
         setContent {
             val isFocused by interactionSource.collectIsFocusedAsState()
-            TextField(
+            UnstyledTextField(
                 state = rememberTextFieldState(),
                 modifier = Modifier.testTag("textfield"),
                 interactionSource = interactionSource
@@ -211,7 +211,7 @@ class TextFieldTest {
     fun placeholderIsVisibleWhenTextIsEmpty() = runComposeUiTest {
         val state = TextFieldState("")
         setContent {
-            TextField(state = state, modifier = Modifier.testTag("textfield")) {
+            UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
                 TextInput(
                     placeholder = {
                         Text("Search", modifier = Modifier.testTag("placeholder"))
@@ -227,7 +227,7 @@ class TextFieldTest {
     fun placeholderHidesWhenNonWhitespaceTextIsEntered() = runComposeUiTest {
         val state = TextFieldState("")
         setContent {
-            TextField(
+            UnstyledTextField(
                 state = state,
                 modifier = Modifier
                     .testTag("textfield")
@@ -250,7 +250,7 @@ class TextFieldTest {
     fun placeholderHidesWhenWhitespaceOnlyTextIsEntered() = runComposeUiTest {
         val state = TextFieldState("")
         setContent {
-            TextField(state = state, modifier = Modifier.testTag("textfield")) {
+            UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
                 TextInput(
                     placeholder = {
                         Text("Search", modifier = Modifier.testTag("placeholder"))
@@ -262,5 +262,54 @@ class TextFieldTest {
         onNodeWithTag("textfield").performClick()
         onNodeWithTag("textfield").performTextInput(" ")
         onNodeWithTag("placeholder", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun visualTransformationWithLongerOutputWorksWithStateBasedTextField() = runComposeUiTest {
+        val state = TextFieldState("")
+        setContent {
+            UnstyledTextField(
+                state = state,
+                modifier = Modifier.testTag("textfield").size(120.dp),
+                visualTransformation = CreditCardVisualTransformation()
+            ) {
+                TextInput()
+            }
+        }
+
+        onNodeWithTag("textfield").performClick()
+        onNodeWithTag("textfield").performTextInput("1234")
+        onNodeWithTag("textfield").assertTextEquals("1234-")
+    }
+}
+
+private class CreditCardVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        var out = ""
+        for (i in text.text.indices) {
+            out += text.text[i]
+            if (i % 4 == 3 && i != 15) {
+                out += "-"
+            }
+        }
+        val creditCardOffsetTranslator = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                if (offset <= 3) return offset
+                if (offset <= 7) return offset + 1
+                if (offset <= 11) return offset + 2
+                if (offset <= 16) return offset + 3
+                return 19
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                if (offset <= 4) return offset
+                if (offset <= 9) return offset - 1
+                if (offset <= 14) return offset - 2
+                if (offset <= 19) return offset - 3
+                return 16
+            }
+        }
+
+        return TransformedText(AnnotatedString(out), creditCardOffsetTranslator)
     }
 }

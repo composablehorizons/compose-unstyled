@@ -653,12 +653,20 @@ fun UnstyledTextField(
                     outputTransformation = {
                         val transformedText = visualTransformation.filter(AnnotatedString(originalText.toString()))
                         val newText = transformedText.text.text
+                        val mapping = transformedText.offsetMapping
+                        val originalLength = originalText.length
 
-                        val originalString = originalText.toString()
-                        for (i in originalString.indices) {
-                            if (i < newText.length) {
-                                replace(i, i + 1, newText[i].toString())
-                            }
+                        // Apply edits from end to start so index shifts don't affect upcoming edits.
+                        for (index in originalLength - 1 downTo 0) {
+                            val transformedStart = mapping.originalToTransformed(index)
+                            val transformedEnd = mapping.originalToTransformed(index + 1)
+                            val replacement = newText.substring(transformedStart, transformedEnd)
+                            replace(index, index + 1, replacement)
+                        }
+
+                        val suffixStart = mapping.originalToTransformed(originalLength)
+                        if (suffixStart < newText.length) {
+                            replace(length, length, newText.substring(suffixStart))
                         }
                     },
                     inputTransformation = InputTransformation {
