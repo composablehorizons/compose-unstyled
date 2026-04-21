@@ -12,6 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.isSpecified
@@ -98,6 +99,7 @@ fun UnstyledText(
     fontWeight: FontWeight? = style.fontWeight,
     color: Color = Color.Unspecified,
     fontFamily: FontFamily? = style.fontFamily,
+    textDecoration: TextDecoration? = style.textDecoration,
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -111,8 +113,9 @@ fun UnstyledText(
         color = color,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration,
         lineHeight = lineHeight,
-        letterSpacing = letterSpacing
+        letterSpacing = letterSpacing,
     )
 
     BasicText(
@@ -209,6 +212,7 @@ fun UnstyledText(
     color: Color = Color.Unspecified,
     lineHeight: TextUnit = TextUnit.Unspecified,
     fontFamily: FontFamily? = style.fontFamily,
+    textDecoration: TextDecoration? = style.textDecoration,
     singleLine: Boolean = false,
     minLines: Int = 1,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -223,6 +227,7 @@ fun UnstyledText(
         color = color,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration,
         lineHeight = lineHeight,
         letterSpacing = letterSpacing
     )
@@ -246,6 +251,7 @@ internal fun TextStyle.mergeThemed(
     color: Color = Color.Unspecified,
     fontWeight: FontWeight?,
     fontFamily: FontFamily?,
+    textDecoration: TextDecoration? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
     letterSpacing: TextUnit = TextUnit.Unspecified,
 ): TextStyle {
@@ -265,6 +271,7 @@ internal fun TextStyle.mergeThemed(
         color = finalColor,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
+        textDecoration = textDecoration ?: this.textDecoration,
         lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
         letterSpacing = listOf(letterSpacing, this.letterSpacing)
             .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified)
