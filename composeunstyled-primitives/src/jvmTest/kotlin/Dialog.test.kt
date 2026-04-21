@@ -1,14 +1,17 @@
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
+import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -139,6 +142,56 @@ class DialogTest {
 
         onNodeWithTag("dialog_input").performKeyInput {
             pressKey(Key.Escape)
+        }
+        waitForIdle()
+
+        onNodeWithTag("dialog_content").assertExists()
+    }
+
+    @Test
+    fun clickingOutsideDismissesDialogWhenDismissOnClickOutsideIsTrue() = runComposeUiTest {
+        val dialogState = DialogState(initiallyVisible = true)
+
+        setContent {
+            UnstyledDialog(
+                state = dialogState,
+                properties = DialogProperties(dismissOnClickOutside = true)
+            ) {
+                UnstyledScrim(Modifier.testTag("dialog_scrim"))
+                UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+            }
+        }
+
+        waitForIdle()
+        onNodeWithTag("dialog_content").assertExists()
+
+        onNodeWithTag("dialog_scrim").performTouchInput {
+            click(Offset(1f, 1f))
+        }
+        waitForIdle()
+
+        onNodeWithTag("dialog_content").assertDoesNotExist()
+    }
+
+    @Test
+    fun clickingOutsideDoesNotDismissDialogWhenDismissOnClickOutsideIsFalse() = runComposeUiTest {
+        val dialogState = DialogState(initiallyVisible = true)
+
+        setContent {
+            UnstyledDialog(
+                state = dialogState,
+                properties = DialogProperties(dismissOnClickOutside = false)
+            ) {
+                UnstyledScrim(Modifier.testTag("dialog_scrim"))
+                UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+            }
+        }
+
+        waitForIdle()
+        onNodeWithTag("dialog_content").assertExists()
+
+        onNodeWithTag("dialog_scrim").performTouchInput {
+            click(Offset(1f, 1f))
         }
         waitForIdle()
 
