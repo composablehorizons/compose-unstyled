@@ -13,7 +13,7 @@ ripple = "1.1.0"
 window = "1.4.0"
 
 # Android
-android-compileSDK = "35"
+android-compileSDK = "36"
 android-minSDK = "23"
 agp = "8.10.1"
 
