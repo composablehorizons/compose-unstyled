@@ -289,6 +289,7 @@ fun UnstyledTextField(
             }
         }
     } else {
+        val transformedText = visualTransformation.filter(AnnotatedString(value)).text.text
         Row(
             verticalAlignment = verticalAlignment,
             modifier = modifier then buildModifier {
@@ -304,7 +305,7 @@ fun UnstyledTextField(
                 leadingIcon()
             }
             UnstyledText(
-                text = value.ifBlank { placeholder },
+                text = if (value.isBlank()) placeholder else transformedText,
                 style = overriddenStyle,
                 color = disabledColor,
                 modifier = Modifier.weight(1f),
@@ -400,6 +401,7 @@ fun UnstyledTextField(
 
     scope.text = value
     scope.editable = editable
+    scope.visualTransformation = visualTransformation
 
     val newTextStyle = textStyle.mergeThemed(
         textAlign = textAlign,
@@ -465,6 +467,7 @@ class TextFieldScope {
     internal var innerTextField: (@Composable () -> Unit)? = null
     internal var text: String by mutableStateOf("")
     internal var editable: Boolean by mutableStateOf(true)
+    internal var visualTransformation: VisualTransformation by mutableStateOf(VisualTransformation.None)
     internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
 
     internal var minLines: Int by mutableStateOf(1)
@@ -517,8 +520,9 @@ fun TextFieldScope.TextInput(
                 if (editable) {
                     innerTextField!!.invoke()
                 } else {
+                    val transformedText = visualTransformation.filter(AnnotatedString(text)).text.text
                     SelectionContainer {
-                        UnstyledText(text)
+                        UnstyledText(transformedText)
                     }
                 }
 
@@ -620,6 +624,7 @@ fun UnstyledTextField(
 
     scope.text = state.text.toString()
     scope.editable = editable
+    scope.visualTransformation = visualTransformation
 
     val newTextStyle = textStyle.mergeThemed(
         textAlign = textAlign,

@@ -13,9 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -119,6 +122,24 @@ class TextFieldTest {
         onNodeWithTag("textfield").assertTextEquals("secret")
 
         visualTransformation = PasswordVisualTransformation()
+
+        onNodeWithText("••••••", useUnmergedTree = true).assertTextEquals("••••••")
+        onAllNodesWithText("secret", useUnmergedTree = true).assertCountEquals(0)
+    }
+
+    @Test
+    fun visualTransformationTransformText_whenNotEditable() = runComposeUiTest {
+        val state = TextFieldState("secret")
+        setContent {
+            TextField(
+                state = state,
+                modifier = Modifier.testTag("textfield"),
+                editable = false,
+                visualTransformation = PasswordVisualTransformation()
+            ) {
+                TextInput()
+            }
+        }
 
         onNodeWithTag("textfield").assertTextEquals("••••••")
     }
