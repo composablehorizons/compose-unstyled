@@ -27,3 +27,4 @@ cmake-build-*/
 
 # IntelliJ
 out/
+.idea/
