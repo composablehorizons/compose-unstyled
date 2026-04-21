@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.7] - 2025-04-21
+
+### Added
+
+- All component primitives are now prefixed with `Unstyled-`.
+- Library minSDK is now 23.
+- Bump compileSDK to 36.
+- Add new `demo-system-ui-styling` module that showcases how to style System UI in modals.
+
+### Fixed
+- Fix state TextField visual transformation mapping (Fixes #207)
+- Apply visualTransformation when TextField is non-editable (Fixes #206)
+- Add textDecoration parameter to UnstyledTextField (Fixes #205)
+- Add textDecoration parameter to UnstyledText (Fixes #205)
+- Automatically focus dialog panel content on displayed (Fixes #204)
+- Fix iOS DropdownMenu enter animations (Fixes #159)
+- Fix Modals updating System UI appearance (Fixes #198)
+
 ## [1.49.6] - 2025-01-11
 
 ### Added
