@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -25,9 +28,6 @@ kotlin {
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
-            distribution {
-                outputDirectory = File("$rootDirPath/dist/${project.name}")
-            }
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
 
@@ -47,9 +47,6 @@ kotlin {
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
-            distribution {
-                outputDirectory = File("$rootDirPath/dist/${project.name}")
-            }
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
 
