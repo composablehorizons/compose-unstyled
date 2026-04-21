@@ -15,8 +15,6 @@
  */
 package core.com.composeunstyled
 
-import androidx.compose.foundation.ComposeFoundationFlags.isDetectTapGesturesImmediateCoroutineDispatchEnabled
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.GestureCancellationException
 import androidx.compose.foundation.gestures.PressGestureScope
@@ -67,15 +65,6 @@ internal fun Modifier.interceptingLongClickable(onLongPress: () -> Unit): Modifi
 }
 
 private val NoPressGesture: suspend PressGestureScope.(Offset) -> Unit = {}
-
-@OptIn(ExperimentalFoundationApi::class)
-private val coroutineStartForCurrentDispatchBehavior
-    get() =
-        if (isDetectTapGesturesImmediateCoroutineDispatchEnabled) {
-            CoroutineStart.UNDISPATCHED
-        } else {
-            CoroutineStart.DEFAULT
-        }
 
 internal sealed class LongPressResult {
     /** Long press was triggered */
@@ -144,7 +133,7 @@ suspend fun PointerInputScope.detectTapGestures(
         if (down.type != PointerType.Touch && down.type != PointerType.Stylus) {
             return@awaitEachGesture
         }
-        var resetJob = launch(start = coroutineStartForCurrentDispatchBehavior) { pressScope.reset() }
+        var resetJob = launch(start = CoroutineStart.UNDISPATCHED) { pressScope.reset() }
         val upOrCancel: PointerInputChange?
 
         // wait for first tap up or long press
@@ -214,16 +203,13 @@ internal class PressGestureScopeImpl(density: Density) : PressGestureScope, Dens
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 private fun CoroutineScope.launchAwaitingReset(
     resetJob: Job,
-    start: CoroutineStart = coroutineStartForCurrentDispatchBehavior,
+    start: CoroutineStart = CoroutineStart.UNDISPATCHED,
     block: suspend CoroutineScope.() -> Unit,
 ): Job =
     launch(start = start) {
-        if (isDetectTapGesturesImmediateCoroutineDispatchEnabled) {
-            resetJob.join()
-        }
+        resetJob.join()
         block()
     }
 
