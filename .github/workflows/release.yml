@@ -32,8 +32,8 @@ jobs:
       - name: Compile
         run: ./gradlew --no-daemon --console=plain :composeunstyled:assemble
 
-      - name: Detekt
-        run: ./gradlew --no-daemon --console=plain detekt --info
+      - name: Spotless
+        run: ./gradlew --no-daemon --console=plain spotlessCheck --info
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

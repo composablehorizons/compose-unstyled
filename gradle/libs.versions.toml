@@ -6,7 +6,6 @@ compose = "1.10.3"
 
 hot-reload = "1.0.0-rc01"
 vanniktech = "0.35.0"
-detekt = "1.23.8"
 spotless = "6.21.0"
 activity-core = "1.10.1"
 lucide = "1.0.0"
@@ -42,5 +41,4 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
