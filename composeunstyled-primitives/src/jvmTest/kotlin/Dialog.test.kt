@@ -65,6 +65,26 @@ class DialogTest {
         onNodeWithTag("scrim").assertExists()
     }
 
+    @Test
+    fun initiallyVisibleDialogWithoutScrimCanBeDismissed() = runComposeUiTest {
+        val dialogState = DialogState(initiallyVisible = true)
+
+        setContent {
+            UnstyledDialog(state = dialogState) {
+                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+                }
+            }
+        }
+
+        onNodeWithTag("dialog_content").assertExists()
+
+        dialogState.visible = false
+        waitForIdle()
+
+        onNodeWithTag("dialog_content").assertDoesNotExist()
+        onNode(isDialog()).assertDoesNotExist()
+    }
+
 
     @Test
     fun autoFocusesOnDialog() = runComposeUiTest {

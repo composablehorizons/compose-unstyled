@@ -33,6 +33,8 @@ class DialogState(initiallyVisible: Boolean = false) {
 
     internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
     internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
+    internal var mountedPanels by mutableIntStateOf(0)
+    internal var mountedScrims by mutableIntStateOf(0)
 
     private var innerVisible by mutableStateOf(initiallyVisible)
 
@@ -88,8 +90,8 @@ fun UnstyledDialog(
     val currentDismiss by rememberUpdatedState(onDismiss)
 
     CompositionLocalProvider(LocalDialogState provides state) {
-        val isAnimatingPanel = state.panelVisibilityState.isIdle.not()
-        val isAnimatingScrim = state.scrimVisibilityState.isIdle.not()
+        val isAnimatingPanel = state.mountedPanels > 0 && state.panelVisibilityState.isIdle.not()
+        val isAnimatingScrim = state.mountedScrims > 0 && state.scrimVisibilityState.isIdle.not()
         val addModal = state.visible || isAnimatingScrim || isAnimatingPanel
 
         if (addModal) {
@@ -159,6 +161,12 @@ fun UnstyledDialogPanel(
 ) {
     val state = LocalDialogState.current
     val panelFocusRequester = remember { FocusRequester() }
+    DisposableEffect(state) {
+        state.mountedPanels += 1
+        onDispose {
+            state.mountedPanels -= 1
+        }
+    }
 
     AnimatedVisibility(
         visibleState = state.panelVisibilityState,
@@ -202,6 +210,12 @@ fun UnstyledScrim(
     exit: ExitTransition = DisappearInstantly,
 ) {
     val state = LocalDialogState.current
+    DisposableEffect(state) {
+        state.mountedScrims += 1
+        onDispose {
+            state.mountedScrims -= 1
+        }
+    }
 
     AnimatedVisibility(
         visibleState = state.scrimVisibilityState,

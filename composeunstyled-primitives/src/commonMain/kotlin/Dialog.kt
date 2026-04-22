@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -62,6 +64,8 @@ class DialogState(initiallyVisible: Boolean = false) {
 
     internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
     internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
+    internal var mountedPanels by mutableIntStateOf(0)
+    internal var mountedScrims by mutableIntStateOf(0)
 
     var visible: Boolean
         set(value) {
@@ -153,8 +157,8 @@ fun Dialog(
 
     val currentDismiss by rememberUpdatedState(onDismiss)
 
-    val isPanelVisible = state.panelVisibilityState.isIdle.not() || state.panelVisibilityState.currentState
-    val isScrimVisible = state.scrimVisibilityState.isIdle.not() || state.scrimVisibilityState.currentState
+    val isPanelVisible = state.panelVisibilityState.currentState || (state.mountedPanels > 0 && state.panelVisibilityState.isIdle.not())
+    val isScrimVisible = state.scrimVisibilityState.currentState || (state.mountedScrims > 0 && state.scrimVisibilityState.isIdle.not())
     if (isScrimVisible || isPanelVisible) {
         val onKeyEvent = if (properties.dismissOnBackPress) {
             { event: KeyEvent ->
@@ -214,6 +218,13 @@ fun DialogScope.DialogPanel(
     contentPadding: PaddingValues = NoPadding,
     content: @Composable () -> Unit
 ) {
+    DisposableEffect(state) {
+        state.mountedPanels += 1
+        onDispose {
+            state.mountedPanels -= 1
+        }
+    }
+
     AnimatedVisibility(
         visibleState = state.panelVisibilityState,
         enter = enter,
@@ -249,6 +260,13 @@ fun DialogScope.Scrim(
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
 ) {
+    DisposableEffect(state) {
+        state.mountedScrims += 1
+        onDispose {
+            state.mountedScrims -= 1
+        }
+    }
+
     AnimatedVisibility(
         visibleState = state.scrimVisibilityState,
         enter = enter,
