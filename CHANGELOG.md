@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.49.8] - 2025-04-22
+
+### Fixed
+
+- Fix dialog freeze when initially visible without a scrim. (Fixes #128)
+- Fix stepped slider snapping behavior. (Fixes #81)
+- Fix modals not inheriting `LocalLayoutDirection` from their parent. (Fixes #192)
+- Prevent unnecessary theme recompositions when theme values do not change.
+
+### Added
+
+- Add new `ScrollArea` component in the `com.composeunstyled` package. Old packages will be removed in 2.0.
+
 ## [1.49.7] - 2025-04-21
 
 ### Added
