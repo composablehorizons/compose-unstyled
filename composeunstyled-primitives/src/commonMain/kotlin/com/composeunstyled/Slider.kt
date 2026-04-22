@@ -76,7 +76,11 @@ class SliderState(
     var value: Float
         get() = innerValue
         set(value) {
-            val stepSize = if (steps > 0) (valueRange.endInclusive - valueRange.start) / steps else 0f
+            val stepSize = if (steps > 0) {
+                (valueRange.endInclusive - valueRange.start) / (steps + 1)
+            } else {
+                0f
+            }
             innerValue = if (steps > 0) {
                 val snappedValue = ((value - valueRange.start) / stepSize).roundToInt() * stepSize + valueRange.start
                 snappedValue.coerceIn(valueRange)
@@ -366,7 +370,7 @@ private fun Modifier.sliderKeyboardInteractions(enabled: Boolean, state: SliderS
     if (enabled.not()) return this
     return onKeyEvent { event: KeyEvent ->
         val stepSize = if (state.steps > 0) {
-            (state.valueRange.endInclusive - state.valueRange.start) / state.steps
+            (state.valueRange.endInclusive - state.valueRange.start) / (state.steps + 1)
         } else {
             (state.valueRange.endInclusive - state.valueRange.start) * 0.01f
         }
