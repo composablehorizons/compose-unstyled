@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
@@ -32,66 +53,66 @@ import com.composeunstyled.Text
 
 @Composable
 fun RadioGroupDemo() {
-    val values = listOf("Light", "Dark", "System")
-    var selectedValue by remember { mutableStateOf<String?>(null) }
+  val values = listOf("Light", "Dark", "System")
+  var selectedValue by remember { mutableStateOf<String?>(null) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFFEC6F66), Color(0xFFF3A183)))),
-        contentAlignment = Alignment.Center
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFFEC6F66), Color(0xFFF3A183)))),
+    contentAlignment = Alignment.Center,
+  ) {
+    Column(
+      modifier = Modifier.width(300.dp).padding(16.dp),
+      verticalArrangement = Arrangement.spacedBy(16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+      RadioGroup(
+        value = selectedValue,
+        onValueChange = {
+          selectedValue = it
+        },
+        modifier = Modifier.fillMaxWidth(),
+        contentDescription = "Theme selection",
+      ) {
         Column(
-            modifier = Modifier.width(300.dp).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+          horizontalAlignment = Alignment.Start,
+          verticalArrangement = Arrangement.spacedBy(8.dp),
+          modifier = Modifier.fillMaxWidth(),
         ) {
-            RadioGroup(
-                value = selectedValue,
-                onValueChange = {
-                    selectedValue = it
-                },
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = "Theme selection"
+          values.forEach { value ->
+            val selected = selectedValue == value
+            RadioButton(
+              value = value,
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.fillMaxWidth(),
+              contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+              shape = RoundedCornerShape(8.dp),
             ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    values.forEach { value ->
-                        val selected = selectedValue == value
-                        RadioButton(
-                            value = value,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-                            shape = RoundedCornerShape(8.dp),
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .shadow(elevation = 4.dp, RoundedCornerShape(8.dp))
-                                    .clip(CircleShape)
-                                    .background(
-                                        if (selected) Color(0xFFB23A48) else Color.White
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Box(
-                                    Modifier
-                                        .size(8.dp)
-                                        .clip(CircleShape)
-                                        .alpha(if (selected) 1f else 0f)
-                                        .background(Color.White)
-                                )
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            Text(value)
-                        }
-                    }
-                }
+              Box(
+                modifier = Modifier
+                  .size(20.dp)
+                  .shadow(elevation = 4.dp, RoundedCornerShape(8.dp))
+                  .clip(CircleShape)
+                  .background(
+                    if (selected) Color(0xFFB23A48) else Color.White,
+                  ),
+                contentAlignment = Alignment.Center,
+              ) {
+                Box(
+                  Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .alpha(if (selected) 1f else 0f)
+                    .background(Color.White),
+                )
+              }
+              Spacer(Modifier.width(16.dp))
+              Text(value)
             }
+          }
         }
+      }
     }
+  }
 }

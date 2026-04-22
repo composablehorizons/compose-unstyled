@@ -1,4 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 @file:JvmName("BottomSheetAndroidTest")
+
 package com.composables.core
 
 import androidx.compose.foundation.background
@@ -23,52 +45,52 @@ import kotlin.test.assertFalse
  */
 class BottomSheetTest {
 
-    @Test
-    fun stateChangesDuringInteractions() = runTestSuite {
-        testCase("isIdle is false, when dragging sheet with scrollable content") {
-            lateinit var sheetState: BottomSheetState
-            setContent {
-                val Peek = SheetDetent(identifier = "peek") { containerHeight, _ ->
-                    containerHeight * 0.6f
-                }
-                sheetState = rememberBottomSheetState(
-                    initialDetent = Peek,
-                    detents = listOf(Peek, SheetDetent.FullyExpanded)
-                )
-
-                BottomSheet(
-                    state = sheetState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .testTag("sheet")
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        LazyColumn {
-                            repeat(50) {
-                                item {
-                                    Text(
-                                        text = "Item #${(it + 1)}",
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(10.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Drag the sheet
-            onNodeWithTag("sheet").performTouchInput {
-                swipeDown(
-                    startY = centerY,
-                    endY = centerY + 200f
-                )
-            }
-
-            assertFalse(sheetState.isIdle)
+  @Test
+  fun stateChangesDuringInteractions() = runTestSuite {
+    testCase("isIdle is false, when dragging sheet with scrollable content") {
+      lateinit var sheetState: BottomSheetState
+      setContent {
+        val Peek = SheetDetent(identifier = "peek") { containerHeight, _ ->
+          containerHeight * 0.6f
         }
+        sheetState = rememberBottomSheetState(
+          initialDetent = Peek,
+          detents = listOf(Peek, SheetDetent.FullyExpanded),
+        )
+
+        BottomSheet(
+          state = sheetState,
+          modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .testTag("sheet"),
+        ) {
+          Column(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn {
+              repeat(50) {
+                item {
+                  Text(
+                    text = "Item #${(it + 1)}",
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(10.dp),
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Drag the sheet
+      onNodeWithTag("sheet").performTouchInput {
+        swipeDown(
+          startY = centerY,
+          endY = centerY + 200f,
+        )
+      }
+
+      assertFalse(sheetState.isIdle)
     }
+  }
 }

@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
@@ -38,147 +59,145 @@ import com.composeunstyled.theme.Theme
 
 @Composable
 fun TabGroupDemo() {
-    class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)
+  class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)
 
-    val categories = mapOf<String, List<Article>>(
-        "Trending" to listOf(
-            Article(
-                title = "I hosted my startup's backend on a Tamagotchi – AMA",
-                relativeTime = "11 hours ago",
-                comments = 312,
-                points = 1042
-            ),
-            Article(
-                title = "I fired myself to improve company culture — it worked",
-                relativeTime = "9 hours ago",
-                comments = 264,
-                points = 928
-            )
-        ),
-        "Latest" to listOf(
-            Article(
-                title = "The office microwave is now a Kubernetes node",
-                relativeTime = "2 hours ago",
-                comments = 87,
-                points = 356
-            ),
-            Article(
-                title = "We replaced scrum with interpretive dancing",
-                relativeTime = "1 hour ago",
-                comments = 52,
-                points = 198
-            )
-        ),
-        "Popular" to listOf(
-            Article(
-                title = "Social network for ants is growing fast",
-                relativeTime = "14 hours ago",
-                comments = 412,
-                points = 1376
-            ),
-            Article(
-                title = "Why I quit my $800K FAANG job to grow mushrooms",
-                relativeTime = "16 hours ago",
-                comments = 391,
-                points = 1204
-            )
-        )
-    )
+  val categories = mapOf<String, List<Article>>(
+    "Trending" to listOf(
+      Article(
+        title = "I hosted my startup's backend on a Tamagotchi – AMA",
+        relativeTime = "11 hours ago",
+        comments = 312,
+        points = 1042,
+      ),
+      Article(
+        title = "I fired myself to improve company culture — it worked",
+        relativeTime = "9 hours ago",
+        comments = 264,
+        points = 928,
+      ),
+    ),
+    "Latest" to listOf(
+      Article(
+        title = "The office microwave is now a Kubernetes node",
+        relativeTime = "2 hours ago",
+        comments = 87,
+        points = 356,
+      ),
+      Article(
+        title = "We replaced scrum with interpretive dancing",
+        relativeTime = "1 hour ago",
+        comments = 52,
+        points = 198,
+      ),
+    ),
+    "Popular" to listOf(
+      Article(
+        title = "Social network for ants is growing fast",
+        relativeTime = "14 hours ago",
+        comments = 412,
+        points = 1376,
+      ),
+      Article(
+        title = "Why I quit my $800K FAANG job to grow mushrooms",
+        relativeTime = "16 hours ago",
+        comments = 391,
+        points = 1204,
+      ),
+    ),
+  )
 
+  var selectedTab by remember { mutableStateOf(categories.keys.first()) }
 
-    var selectedTab by remember { mutableStateOf(categories.keys.first()) }
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5))))
-            .padding(16.dp)
-            .padding(top = 90.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        TabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
-            TabList(
-                modifier = Modifier.fillMaxWidth().height(48.dp).shadow(4.dp, RoundedCornerShape(8.dp)),
-                shape = RoundedCornerShape(8.dp),
-                backgroundColor = Color.White,
-            ) {
-                categories.forEach { (key, articles) ->
-                    val selected = key == selectedTab
-                    Tab(
-                        key = key,
-                        selected = selected,
-                        onSelected = { selectedTab = key },
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        indication = Theme[indications][dimmed]
-                    ) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(
-                                text = key,
-                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (selected) {
-                                    Color(0xFF2196F3)
-                                } else {
-                                    Color(0xFF757575)
-                                }
-                            )
-                            if (selected) {
-                                Box(
-                                    modifier = Modifier
-                                        .background(
-                                            color = Color(0xFF2196F3),
-                                            shape = RoundedCornerShape(2.dp)
-                                        )
-                                        .fillMaxWidth()
-                                        .height(3.dp)
-                                        .align(Alignment.BottomCenter)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(4.dp, RoundedCornerShape(8.dp))
+  Box(
+    modifier = Modifier.fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5))))
+      .padding(16.dp)
+      .padding(top = 90.dp),
+    contentAlignment = Alignment.TopCenter,
+  ) {
+    TabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
+      TabList(
+        modifier = Modifier.fillMaxWidth().height(48.dp).shadow(4.dp, RoundedCornerShape(8.dp)),
+        shape = RoundedCornerShape(8.dp),
+        backgroundColor = Color.White,
+      ) {
+        categories.forEach { (key, articles) ->
+          val selected = key == selectedTab
+          Tab(
+            key = key,
+            selected = selected,
+            onSelected = { selectedTab = key },
+            modifier = Modifier.weight(1f).fillMaxHeight(),
+            indication = Theme[indications][dimmed],
+          ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+              Text(
+                text = key,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                color = if (selected) {
+                  Color(0xFF2196F3)
+                } else {
+                  Color(0xFF757575)
+                },
+              )
+              if (selected) {
+                Box(
+                  modifier = Modifier
                     .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(8.dp)
+                      color = Color(0xFF2196F3),
+                      shape = RoundedCornerShape(2.dp),
                     )
-                    .padding(16.dp)
-            ) {
-                categories.forEach { (key, items) ->
-                    TabPanel(key = key) {
-                        Column {
-                            items.forEach { item ->
-                                UnstyledButton(
-                                    onClick = { /* TODO */ },
-                                    shape = RoundedCornerShape(8.dp),
-                                    contentPadding = PaddingValues(12.dp)
-                                ) {
-                                    Column {
-                                        Text(item.title, fontWeight = FontWeight.Medium)
-                                        Spacer(Modifier.height(4.dp))
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier.fillMaxWidth().alpha(0.6f)
-                                        ) {
-                                            Text(item.relativeTime)
-                                            Text("·")
-                                            Text("${item.comments} comments")
-                                            Text("·")
-                                            Text("${item.points} shares")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .align(Alignment.BottomCenter),
+                )
+              }
             }
+          }
         }
-    }
-}
+      }
 
+      Spacer(modifier = Modifier.height(16.dp))
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .shadow(4.dp, RoundedCornerShape(8.dp))
+          .background(
+            color = Color.White,
+            shape = RoundedCornerShape(8.dp),
+          )
+          .padding(16.dp),
+      ) {
+        categories.forEach { (key, items) ->
+          TabPanel(key = key) {
+            Column {
+              items.forEach { item ->
+                UnstyledButton(
+                  onClick = { /* TODO */ },
+                  shape = RoundedCornerShape(8.dp),
+                  contentPadding = PaddingValues(12.dp),
+                ) {
+                  Column {
+                    Text(item.title, fontWeight = FontWeight.Medium)
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                      horizontalArrangement = Arrangement.spacedBy(4.dp),
+                      verticalAlignment = Alignment.CenterVertically,
+                      modifier = Modifier.fillMaxWidth().alpha(0.6f),
+                    ) {
+                      Text(item.relativeTime)
+                      Text("·")
+                      Text("${item.comments} comments")
+                      Text("·")
+                      Text("${item.points} shares")
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

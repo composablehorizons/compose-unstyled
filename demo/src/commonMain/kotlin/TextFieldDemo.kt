@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
@@ -44,108 +65,120 @@ import com.composeunstyled.platformtheme.text4
 import com.composeunstyled.platformtheme.textStyles
 import com.composeunstyled.theme.Theme
 
-
 @Composable
 fun TextFieldDemo() {
-    var email = rememberTextFieldState()
-    var password = rememberTextFieldState()
-    var showPassword by remember { mutableStateOf(false) }
+  var email = rememberTextFieldState()
+  var password = rememberTextFieldState()
+  var showPassword by remember { mutableStateOf(false) }
 
+  Box(
+    modifier = Modifier.fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
+      .padding(horizontal = 16.dp)
+      .padding(top = 16.dp)
+      .imePadding(),
+    contentAlignment = Alignment.Center,
+  ) {
     Box(
-        modifier = Modifier.fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp)
-            .imePadding(),
-        contentAlignment = Alignment.Center
+      modifier = Modifier
+        .widthIn(max = 500.dp)
+        .shadow(8.dp, RoundedCornerShape(16.dp))
+        .background(Color.White, RoundedCornerShape(16.dp))
+        .padding(24.dp),
+      contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = Modifier
-                .widthIn(max = 500.dp)
-                .shadow(8.dp, RoundedCornerShape(16.dp))
-                .background(Color.White, RoundedCornerShape(16.dp))
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
+      Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        TextField(
+          state = email,
+          modifier = Modifier.fillMaxWidth(),
+          singleLine = true,
+          keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+          ),
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextField(
-                    state = email,
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email
-                    ),
-                ) {
-                    Text("Email", modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text4])
-                    TextInput(
-                        Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-                            .background(Color.White, RoundedCornerShape(8.dp))
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        placeholder = {
-                            Text(
-                                "email@example.com",
-                                color = Color.Black.copy(0.6f),
-                                style = Theme[textStyles][text3]
-                            )
-                        },
-                    )
-                }
-
-                TextField(
-                    state = password,
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
-                ) {
-                    Text("Password", modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text4])
-                    TextInput(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-                            .background(Color.White, RoundedCornerShape(8.dp))
-                            .padding(vertical = 4.dp)
-                            .padding(start = 16.dp, end = 4.dp),
-                        placeholder = {
-                            Text(
-                                text = "8-12 characters",
-                                color = Color.Black.copy(0.6f),
-                                style = Theme[textStyles][text3]
-                            )
-                        },
-                        trailing = {
-                            UnstyledButton(
-                                onClick = { showPassword = !showPassword },
-                                backgroundColor = Color.Transparent,
-                                contentPadding = PaddingValues(4.dp),
-                                shape = RoundedCornerShape(4.dp),
-                                indication = Theme[indications][dimmed]
-                            ) {
-                                Icon(
-                                    imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
-                                    contentDescription = if (showPassword) "Hide password" else "Show password",
-                                    tint = Color(0xFF757575)
-                                )
-                            }
-                        }
-                    )
-                }
-
-                UnstyledButton(
-                    onClick = { /* TODO */ },
-                    modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFF8E44AD),
-                    contentColor = Color.White,
-                    contentPadding = PaddingValues(12.dp),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text("Submit", fontWeight = FontWeight.Medium)
-                }
-            }
+          Text(
+            "Email",
+            modifier = Modifier.padding(bottom = 8.dp),
+            style = Theme[textStyles][text4],
+          )
+          TextInput(
+            Modifier
+              .fillMaxWidth()
+              .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+              .background(Color.White, RoundedCornerShape(8.dp))
+              .padding(horizontal = 16.dp, vertical = 12.dp),
+            placeholder = {
+              Text(
+                "email@example.com",
+                color = Color.Black.copy(0.6f),
+                style = Theme[textStyles][text3],
+              )
+            },
+          )
         }
+
+        TextField(
+          state = password,
+          modifier = Modifier.fillMaxWidth(),
+          singleLine = true,
+          visualTransformation =
+          if (showPassword) {
+            VisualTransformation.None
+          } else {
+            PasswordVisualTransformation()
+          },
+        ) {
+          Text(
+            "Password",
+            modifier = Modifier.padding(bottom = 8.dp),
+            style = Theme[textStyles][text4],
+          )
+          TextInput(
+            modifier = Modifier
+              .fillMaxWidth()
+              .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+              .background(Color.White, RoundedCornerShape(8.dp))
+              .padding(vertical = 4.dp)
+              .padding(start = 16.dp, end = 4.dp),
+            placeholder = {
+              Text(
+                text = "8-12 characters",
+                color = Color.Black.copy(0.6f),
+                style = Theme[textStyles][text3],
+              )
+            },
+            trailing = {
+              UnstyledButton(
+                onClick = { showPassword = !showPassword },
+                backgroundColor = Color.Transparent,
+                contentPadding = PaddingValues(4.dp),
+                shape = RoundedCornerShape(4.dp),
+                indication = Theme[indications][dimmed],
+              ) {
+                Icon(
+                  imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
+                  contentDescription = if (showPassword) "Hide password" else "Show password",
+                  tint = Color(0xFF757575),
+                )
+              }
+            },
+          )
+        }
+
+        UnstyledButton(
+          onClick = { /* TODO */ },
+          modifier = Modifier.fillMaxWidth(),
+          backgroundColor = Color(0xFF8E44AD),
+          contentColor = Color.White,
+          contentPadding = PaddingValues(12.dp),
+          shape = RoundedCornerShape(8.dp),
+        ) {
+          Text("Submit", fontWeight = FontWeight.Medium)
+        }
+      }
     }
+  }
 }

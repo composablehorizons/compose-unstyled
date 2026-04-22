@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,171 +34,171 @@ import com.composeunstyled.focusRing
 
 @Composable
 fun FocusRingBasicDemo() {
-    val interactionSource = remember { MutableInteractionSource() }
+  val interactionSource = remember { MutableInteractionSource() }
 
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource
-    )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource,
+  )
 }
 
 @Composable
 fun FocusRingWidthDemo() {
-    val interactionSource1 = remember { MutableInteractionSource() }
-    val interactionSource2 = remember { MutableInteractionSource() }
-    val interactionSource3 = remember { MutableInteractionSource() }
+  val interactionSource1 = remember { MutableInteractionSource() }
+  val interactionSource2 = remember { MutableInteractionSource() }
+  val interactionSource3 = remember { MutableInteractionSource() }
 
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource1,
-            width = 1.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource1
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource2,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource2
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource3,
-            width = 4.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource3
-    )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource1,
+      width = 1.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource1,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource2,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource2,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource3,
+      width = 4.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource3,
+  )
 }
 
 @Composable
 fun FocusRingShapeDemo() {
-    val interactionSource1 = remember { MutableInteractionSource() }
-    val interactionSource2 = remember { MutableInteractionSource() }
-    val interactionSource3 = remember { MutableInteractionSource() }
+  val interactionSource1 = remember { MutableInteractionSource() }
+  val interactionSource2 = remember { MutableInteractionSource() }
+  val interactionSource3 = remember { MutableInteractionSource() }
 
-    SimpleButton(
-        shape = RectangleShape,
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource1,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RectangleShape,
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource1
-    )
-    SimpleButton(
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource2,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource2
-    )
-    SimpleButton(
-        shape = CircleShape,
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource3,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = CircleShape,
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource3
-    )
+  SimpleButton(
+    shape = RectangleShape,
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource1,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RectangleShape,
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource1,
+  )
+  SimpleButton(
+    shape = RoundedCornerShape(8.dp),
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource2,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource2,
+  )
+  SimpleButton(
+    shape = CircleShape,
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource3,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = CircleShape,
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource3,
+  )
 }
 
 @Composable
 fun FocusRingOffsetDemo() {
-    val interactionSource1 = remember { MutableInteractionSource() }
-    val interactionSource2 = remember { MutableInteractionSource() }
-    val interactionSource3 = remember { MutableInteractionSource() }
+  val interactionSource1 = remember { MutableInteractionSource() }
+  val interactionSource2 = remember { MutableInteractionSource() }
+  val interactionSource3 = remember { MutableInteractionSource() }
 
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource1,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 0.dp
-        ),
-        interactionSource = interactionSource1
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource2,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 4.dp
-        ),
-        interactionSource = interactionSource2
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource3,
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 8.dp
-        ),
-        interactionSource = interactionSource3
-    )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource1,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 0.dp,
+    ),
+    interactionSource = interactionSource1,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource2,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 4.dp,
+    ),
+    interactionSource = interactionSource2,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource3,
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 8.dp,
+    ),
+    interactionSource = interactionSource3,
+  )
 }
 
 @Composable
 fun FocusRingColorDemo() {
-    val interactionSource1 = remember { MutableInteractionSource() }
-    val interactionSource2 = remember { MutableInteractionSource() }
-    val interactionSource3 = remember { MutableInteractionSource() }
+  val interactionSource1 = remember { MutableInteractionSource() }
+  val interactionSource2 = remember { MutableInteractionSource() }
+  val interactionSource3 = remember { MutableInteractionSource() }
 
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource1,
-            width = 2.dp,
-            color = Color(0xFFEF4444),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource1
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource2,
-            width = 2.dp,
-            color = Color(0xFF10B981),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource2
-    )
-    SimpleButton(
-        modifier = Modifier.focusRing(
-            interactionSource = interactionSource3,
-            width = 2.dp,
-            color = Color(0xFF8B5CF6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        ),
-        interactionSource = interactionSource3
-    )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource1,
+      width = 2.dp,
+      color = Color(0xFFEF4444),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource1,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource2,
+      width = 2.dp,
+      color = Color(0xFF10B981),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource2,
+  )
+  SimpleButton(
+    modifier = Modifier.focusRing(
+      interactionSource = interactionSource3,
+      width = 2.dp,
+      color = Color(0xFF8B5CF6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+    interactionSource = interactionSource3,
+  )
 }

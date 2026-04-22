@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.shape.CircleShape
@@ -11,127 +32,127 @@ import com.composeunstyled.outline
 
 @Composable
 fun OutlineBasicDemo() {
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
 }
 
 @Composable
 fun OutlineWidthDemo() {
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 1.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 4.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 1.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 4.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
 }
 
 @Composable
 fun OutlineShapeDemo() {
-    SimpleButton(
-        shape = RectangleShape,
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RectangleShape,
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        shape = CircleShape,
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = CircleShape,
-            offset = 2.dp
-        )
-    )
+  SimpleButton(
+    shape = RectangleShape,
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RectangleShape,
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    shape = RoundedCornerShape(8.dp),
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    shape = CircleShape,
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = CircleShape,
+      offset = 2.dp,
+    ),
+  )
 }
 
 @Composable
 fun OutlineOffsetDemo() {
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 0.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 4.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF3B82F6),
-            shape = RoundedCornerShape(8.dp),
-            offset = 8.dp
-        )
-    )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 0.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 4.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF3B82F6),
+      shape = RoundedCornerShape(8.dp),
+      offset = 8.dp,
+    ),
+  )
 }
 
 @Composable
 fun OutlineColorDemo() {
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFFEF4444), // red-500
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF10B981), // emerald-500
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
-    SimpleButton(
-        modifier = Modifier.outline(
-            width = 2.dp,
-            color = Color(0xFF8B5CF6), // violet-500
-            shape = RoundedCornerShape(8.dp),
-            offset = 2.dp
-        )
-    )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFFEF4444), // red-500
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF10B981), // emerald-500
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
+  SimpleButton(
+    modifier = Modifier.outline(
+      width = 2.dp,
+      color = Color(0xFF8B5CF6), // violet-500
+      shape = RoundedCornerShape(8.dp),
+      offset = 2.dp,
+    ),
+  )
 }

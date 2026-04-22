@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.annotation.FloatRange
@@ -24,165 +47,181 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)",
+  ),
 )
 fun Stack(
-    modifier: Modifier = Modifier,
-    orientation: StackOrientation = StackOrientation.Horizontal,
-    mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
-    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
-    spacing: Dp = 0.dp,
-    content: @Composable StackScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  orientation: StackOrientation = StackOrientation.Horizontal,
+  mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
+  crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
+  spacing: Dp = 0.dp,
+  content: @Composable StackScope.() -> Unit,
 ) {
-    UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)
+  UnstyledStack(modifier, orientation, mainAxisArrangement, crossAxisAlignment, spacing, content)
 }
 
 @Composable
 fun UnstyledStack(
-    modifier: Modifier = Modifier,
-    orientation: StackOrientation = StackOrientation.Horizontal,
-    mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
-    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
-    spacing: Dp = 0.dp,
-    content: @Composable StackScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  orientation: StackOrientation = StackOrientation.Horizontal,
+  mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
+  crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
+  spacing: Dp = 0.dp,
+  content: @Composable StackScope.() -> Unit,
 ) {
-    when (orientation) {
-        StackOrientation.Vertical -> {
-            Column(
-                modifier = modifier,
-                verticalArrangement = rememberVerticalArrangement(mainAxisArrangement, spacing),
-                horizontalAlignment = rememberHorizontalAlignment(crossAxisAlignment)
-            ) {
-                val scope = remember(this) { ColumnStackScope(this) }
-                scope.content()
-            }
-        }
-
-        StackOrientation.Horizontal -> {
-            Row(
-                modifier = modifier,
-                horizontalArrangement = rememberHorizontalArrangement(mainAxisArrangement, spacing),
-                verticalAlignment = rememberVerticalAlignment(crossAxisAlignment)
-            ) {
-                val scope = remember(this) { RowStackScope(this) }
-                scope.content()
-            }
-        }
+  when (orientation) {
+    StackOrientation.Vertical -> {
+      Column(
+        modifier = modifier,
+        verticalArrangement = rememberVerticalArrangement(mainAxisArrangement, spacing),
+        horizontalAlignment = rememberHorizontalAlignment(crossAxisAlignment),
+      ) {
+        val scope = remember(this) { ColumnStackScope(this) }
+        scope.content()
+      }
     }
+
+    StackOrientation.Horizontal -> {
+      Row(
+        modifier = modifier,
+        horizontalArrangement = rememberHorizontalArrangement(mainAxisArrangement, spacing),
+        verticalAlignment = rememberVerticalAlignment(crossAxisAlignment),
+      ) {
+        val scope = remember(this) { RowStackScope(this) }
+        scope.content()
+      }
+    }
+  }
 }
 
 sealed class MainAxisArrangement {
-    data object Start : MainAxisArrangement()
-    data object Center : MainAxisArrangement()
-    data object End : MainAxisArrangement()
+  data object Start : MainAxisArrangement()
+  data object Center : MainAxisArrangement()
+  data object End : MainAxisArrangement()
 
-    data object SpaceEvenly : MainAxisArrangement()
-    data object SpaceBetween : MainAxisArrangement()
-    data object SpaceAround : MainAxisArrangement()
+  data object SpaceEvenly : MainAxisArrangement()
+  data object SpaceBetween : MainAxisArrangement()
+  data object SpaceAround : MainAxisArrangement()
 }
 
 sealed class CrossAxisAlignment {
-    data object Start : CrossAxisAlignment()
-    data object Center : CrossAxisAlignment()
-    data object End : CrossAxisAlignment()
+  data object Start : CrossAxisAlignment()
+  data object Center : CrossAxisAlignment()
+  data object End : CrossAxisAlignment()
 }
 
 enum class StackOrientation { Vertical, Horizontal }
 
 @Composable
-private fun rememberHorizontalArrangement(mainAxisAlignment: MainAxisArrangement, spacing: Dp): Arrangement.Horizontal {
-    return remember(mainAxisAlignment, spacing) {
-        mainAxisToHorizontalArrangement(mainAxisAlignment, spacing)
-    }
+private fun rememberHorizontalArrangement(
+  mainAxisAlignment: MainAxisArrangement,
+  spacing: Dp,
+): Arrangement.Horizontal {
+  return remember(mainAxisAlignment, spacing) {
+    mainAxisToHorizontalArrangement(mainAxisAlignment, spacing)
+  }
 }
 
 @Composable
-private fun rememberVerticalArrangement(mainAxisAlignment: MainAxisArrangement, spacing: Dp): Arrangement.Vertical {
-    return remember(mainAxisAlignment, spacing) {
-        mainAxisToVerticalArrangement(mainAxisAlignment, spacing)
-    }
+private fun rememberVerticalArrangement(
+  mainAxisAlignment: MainAxisArrangement,
+  spacing: Dp,
+): Arrangement.Vertical {
+  return remember(mainAxisAlignment, spacing) {
+    mainAxisToVerticalArrangement(mainAxisAlignment, spacing)
+  }
 }
 
 private fun mainAxisToHorizontalArrangement(
-    mainAxisAlignment: MainAxisArrangement,
-    spacing: Dp
+  mainAxisAlignment: MainAxisArrangement,
+  spacing: Dp,
 ): Arrangement.Horizontal {
-    return when (mainAxisAlignment) {
-        MainAxisArrangement.Start -> Arrangement.spacedBy(spacing)
-        MainAxisArrangement.Center -> Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
-        MainAxisArrangement.End -> Arrangement.spacedBy(spacing, Alignment.End)
-        MainAxisArrangement.SpaceEvenly -> Arrangement.SpaceEvenly
-        MainAxisArrangement.SpaceBetween -> Arrangement.SpaceBetween
-        MainAxisArrangement.SpaceAround -> Arrangement.SpaceAround
-    }
+  return when (mainAxisAlignment) {
+    MainAxisArrangement.Start -> Arrangement.spacedBy(spacing)
+    MainAxisArrangement.Center -> Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
+    MainAxisArrangement.End -> Arrangement.spacedBy(spacing, Alignment.End)
+    MainAxisArrangement.SpaceEvenly -> Arrangement.SpaceEvenly
+    MainAxisArrangement.SpaceBetween -> Arrangement.SpaceBetween
+    MainAxisArrangement.SpaceAround -> Arrangement.SpaceAround
+  }
 }
 
-private fun mainAxisToVerticalArrangement(mainAxisAlignment: MainAxisArrangement, spacing: Dp): Arrangement.Vertical {
-    return when (mainAxisAlignment) {
-        MainAxisArrangement.Start -> Arrangement.spacedBy(spacing)
-        MainAxisArrangement.Center -> Arrangement.spacedBy(spacing, Alignment.CenterVertically)
-        MainAxisArrangement.End -> Arrangement.spacedBy(spacing, Alignment.Bottom)
-        MainAxisArrangement.SpaceEvenly -> Arrangement.SpaceEvenly
-        MainAxisArrangement.SpaceBetween -> Arrangement.SpaceBetween
-        MainAxisArrangement.SpaceAround -> Arrangement.SpaceAround
-    }
+private fun mainAxisToVerticalArrangement(
+  mainAxisAlignment: MainAxisArrangement,
+  spacing: Dp,
+): Arrangement.Vertical {
+  return when (mainAxisAlignment) {
+    MainAxisArrangement.Start -> Arrangement.spacedBy(spacing)
+    MainAxisArrangement.Center -> Arrangement.spacedBy(spacing, Alignment.CenterVertically)
+    MainAxisArrangement.End -> Arrangement.spacedBy(spacing, Alignment.Bottom)
+    MainAxisArrangement.SpaceEvenly -> Arrangement.SpaceEvenly
+    MainAxisArrangement.SpaceBetween -> Arrangement.SpaceBetween
+    MainAxisArrangement.SpaceAround -> Arrangement.SpaceAround
+  }
 }
 
 @Composable
-private fun rememberHorizontalAlignment(crossAxisAlignment: CrossAxisAlignment): Alignment.Horizontal {
-    return remember(crossAxisAlignment) {
-        crossAxisToHorizontalAlignment(crossAxisAlignment)
-    }
+private fun rememberHorizontalAlignment(
+  crossAxisAlignment: CrossAxisAlignment,
+): Alignment.Horizontal {
+  return remember(crossAxisAlignment) {
+    crossAxisToHorizontalAlignment(crossAxisAlignment)
+  }
 }
 
 @Composable
 private fun rememberVerticalAlignment(crossAxisAlignment: CrossAxisAlignment): Alignment.Vertical {
-    return remember(crossAxisAlignment) {
-        crossAxisToVerticalAlignment(crossAxisAlignment)
-    }
+  return remember(crossAxisAlignment) {
+    crossAxisToVerticalAlignment(crossAxisAlignment)
+  }
 }
 
 private fun crossAxisToHorizontalAlignment(crossAxisAlignment: CrossAxisAlignment): Alignment.Horizontal {
-    return when (crossAxisAlignment) {
-        CrossAxisAlignment.Start -> Alignment.Start
-        CrossAxisAlignment.Center -> Alignment.CenterHorizontally
-        CrossAxisAlignment.End -> Alignment.End
-    }
+  return when (crossAxisAlignment) {
+    CrossAxisAlignment.Start -> Alignment.Start
+    CrossAxisAlignment.Center -> Alignment.CenterHorizontally
+    CrossAxisAlignment.End -> Alignment.End
+  }
 }
 
 private fun crossAxisToVerticalAlignment(crossAxisAlignment: CrossAxisAlignment): Alignment.Vertical {
-    return when (crossAxisAlignment) {
-        CrossAxisAlignment.Start -> Alignment.Top
-        CrossAxisAlignment.Center -> Alignment.CenterVertically
-        CrossAxisAlignment.End -> Alignment.Bottom
-    }
+  return when (crossAxisAlignment) {
+    CrossAxisAlignment.Start -> Alignment.Top
+    CrossAxisAlignment.Center -> Alignment.CenterVertically
+    CrossAxisAlignment.End -> Alignment.Bottom
+  }
 }
 
 interface StackScope {
-    /**
-     * Size the element's main axis dimension proportional to its [weight] relative to other weighted sibling
-     * elements in the [Stack]. The parent will divide the space remaining after measuring
-     * unweighted child elements and distribute it according to this weight. When [fill] is true,
-     * the element will be forced to occupy the whole space allocated to it. Otherwise, the element
-     * is allowed to be smaller - this will result in [Stack] being smaller, as the unused allocated
-     * space will not be redistributed to other siblings.
-     *
-     * @param weight The proportional space to give to this element, as related to the total of all
-     *   weighted siblings. Must be positive.
-     * @param fill When `true`, the element will occupy the whole space allocated.
-     */
-    fun Modifier.weight(@FloatRange(from = 0.0, fromInclusive = false) weight: Float, fill: Boolean = true): Modifier
+  /**
+   * Size the element's main axis dimension proportional to its [weight] relative to other weighted sibling
+   * elements in the [Stack]. The parent will divide the space remaining after measuring
+   * unweighted child elements and distribute it according to this weight. When [fill] is true,
+   * the element will be forced to occupy the whole space allocated to it. Otherwise, the element
+   * is allowed to be smaller - this will result in [Stack] being smaller, as the unused allocated
+   * space will not be redistributed to other siblings.
+   *
+   * @param weight The proportional space to give to this element, as related to the total of all
+   *   weighted siblings. Must be positive.
+   * @param fill When `true`, the element will occupy the whole space allocated.
+   */
+  fun Modifier.weight(
+    @FloatRange(from = 0.0, fromInclusive = false) weight: Float,
+    fill: Boolean = true,
+  ): Modifier
 }
 
 private class RowStackScope(private val rowScope: RowScope) : StackScope {
-    override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
-        return with(rowScope) { this@weight.weight(weight, fill) }
-    }
+  override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
+    return with(rowScope) { this@weight.weight(weight, fill) }
+  }
 }
 
 private class ColumnStackScope(private val columnScope: ColumnScope) : StackScope {
-    override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
-        return with(columnScope) { this@weight.weight(weight, fill) }
-    }
+  override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
+    return with(columnScope) { this@weight.weight(weight, fill) }
+  }
 }

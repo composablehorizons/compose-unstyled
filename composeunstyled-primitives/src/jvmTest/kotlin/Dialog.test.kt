@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.size
@@ -6,214 +27,221 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.click
+import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.pressKey
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
 class DialogTest {
 
-    @Test
-    fun isModal() = runComposeUiTest {
-        val state = DialogState(initiallyVisible = false)
-        setContent {
-            UnstyledDialog(state) {
-                UnstyledDialogPanel {
-                }
-            }
+  @Test
+  fun isModal() = runComposeUiTest {
+    val state = DialogState(initiallyVisible = false)
+    setContent {
+      UnstyledDialog(state) {
+        UnstyledDialogPanel {
         }
-        onNode(isDialog()).assertDoesNotExist()
-        state.visible = true
-        onNode(isDialog()).assertExists()
+      }
+    }
+    onNode(isDialog()).assertDoesNotExist()
+    state.visible = true
+    onNode(isDialog()).assertExists()
+  }
+
+  @Test
+  fun visibleDialogShowsThePanel() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = false)
+
+    setContent {
+      UnstyledDialog(state = dialogState) {
+        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        }
+      }
     }
 
-    @Test
-    fun visibleDialogShowsThePanel() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = false)
+    onNodeWithTag("dialog_content").assertDoesNotExist()
 
-        setContent {
-            UnstyledDialog(state = dialogState) {
-                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
-                }
-            }
-        }
+    dialogState.visible = true
 
-        onNodeWithTag("dialog_content").assertDoesNotExist()
+    onNodeWithTag("dialog_content").assertExists()
+  }
 
-        dialogState.visible = true
+  @Test
+  fun visibleDialogShowsTheScrim() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = false)
 
-        onNodeWithTag("dialog_content").assertExists()
+    setContent {
+      UnstyledDialog(state = dialogState) {
+        UnstyledScrim(Modifier.testTag("scrim"))
+      }
     }
 
-    @Test
-    fun visibleDialogShowsTheScrim() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = false)
+    onNodeWithTag("scrim").assertDoesNotExist()
 
-        setContent {
-            UnstyledDialog(state = dialogState) {
-                UnstyledScrim(Modifier.testTag("scrim"))
-            }
+    dialogState.visible = true
+
+    onNodeWithTag("scrim").assertExists()
+  }
+
+  @Test
+  fun initiallyVisibleDialogWithoutScrimCanBeDismissed() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = true)
+
+    setContent {
+      UnstyledDialog(state = dialogState) {
+        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
         }
-
-        onNodeWithTag("scrim").assertDoesNotExist()
-
-        dialogState.visible = true
-
-        onNodeWithTag("scrim").assertExists()
+      }
     }
 
-    @Test
-    fun initiallyVisibleDialogWithoutScrimCanBeDismissed() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = true)
+    onNodeWithTag("dialog_content").assertExists()
 
-        setContent {
-            UnstyledDialog(state = dialogState) {
-                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
-                }
-            }
+    dialogState.visible = false
+    waitForIdle()
+
+    onNodeWithTag("dialog_content").assertDoesNotExist()
+    onNode(isDialog()).assertDoesNotExist()
+  }
+
+  @Test
+  fun autoFocusesOnDialog() = runComposeUiTest {
+    setContent {
+      UnstyledDialog(rememberDialogState(initiallyVisible = true)) {
+        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+          BasicTextField(
+            value = "",
+            onValueChange = {},
+            modifier = Modifier.testTag("dialog_focus_target"),
+          )
         }
-
-        onNodeWithTag("dialog_content").assertExists()
-
-        dialogState.visible = false
-        waitForIdle()
-
-        onNodeWithTag("dialog_content").assertDoesNotExist()
-        onNode(isDialog()).assertDoesNotExist()
+      }
     }
 
+    onNodeWithTag("dialog_focus_target").assertIsFocused()
+  }
 
-    @Test
-    fun autoFocusesOnDialog() = runComposeUiTest {
-        setContent {
-            UnstyledDialog(rememberDialogState(initiallyVisible = true)) {
-                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
-                    BasicTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier.testTag("dialog_focus_target")
-                    )
-                }
-            }
+  @Test
+  fun pressingEscapeDismissesDialogWhenDismissOnBackPressIsTrue() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = true)
+
+    setContent {
+      var value by remember { mutableStateOf("") }
+      UnstyledDialog(
+        state = dialogState,
+        properties = DialogProperties(dismissOnBackPress = true),
+      ) {
+        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+          BasicTextField(
+            value = value,
+            onValueChange = { value = it },
+            modifier = Modifier.testTag("dialog_input"),
+          )
         }
-
-        onNodeWithTag("dialog_focus_target").assertIsFocused()
+      }
     }
 
-    @Test
-    fun pressingEscapeDismissesDialogWhenDismissOnBackPressIsTrue() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = true)
+    onNodeWithTag("dialog_content").assertExists()
+    onNodeWithTag("dialog_input").performClick()
+    onNodeWithTag("dialog_input").assertIsFocused()
 
-        setContent {
-            var value by remember { mutableStateOf("") }
-            UnstyledDialog(
-                state = dialogState,
-                properties = DialogProperties(dismissOnBackPress = true)
-            ) {
-                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
-                    BasicTextField(
-                        value = value,
-                        onValueChange = { value = it },
-                        modifier = Modifier.testTag("dialog_input")
-                    )
-                }
-            }
+    onNodeWithTag("dialog_input").performKeyInput {
+      pressKey(Key.Escape)
+    }
+    waitForIdle()
+
+    onNodeWithTag("dialog_content").assertDoesNotExist()
+  }
+
+  @Test
+  fun pressingEscapeDoesNotDismissDialogWhenDismissOnBackPressIsFalse() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = true)
+
+    setContent {
+      var value by remember { mutableStateOf("") }
+      UnstyledDialog(
+        state = dialogState,
+        properties = DialogProperties(dismissOnBackPress = false),
+      ) {
+        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+          BasicTextField(
+            value = value,
+            onValueChange = { value = it },
+            modifier = Modifier.testTag("dialog_input"),
+          )
         }
-
-        onNodeWithTag("dialog_content").assertExists()
-        onNodeWithTag("dialog_input").performClick()
-        onNodeWithTag("dialog_input").assertIsFocused()
-
-        onNodeWithTag("dialog_input").performKeyInput {
-            pressKey(Key.Escape)
-        }
-        waitForIdle()
-
-        onNodeWithTag("dialog_content").assertDoesNotExist()
+      }
     }
 
-    @Test
-    fun pressingEscapeDoesNotDismissDialogWhenDismissOnBackPressIsFalse() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = true)
+    onNodeWithTag("dialog_content").assertExists()
+    onNodeWithTag("dialog_input").performClick()
+    onNodeWithTag("dialog_input").assertIsFocused()
 
-        setContent {
-            var value by remember { mutableStateOf("") }
-            UnstyledDialog(
-                state = dialogState,
-                properties = DialogProperties(dismissOnBackPress = false)
-            ) {
-                UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
-                    BasicTextField(
-                        value = value,
-                        onValueChange = { value = it },
-                        modifier = Modifier.testTag("dialog_input")
-                    )
-                }
-            }
-        }
+    onNodeWithTag("dialog_input").performKeyInput {
+      pressKey(Key.Escape)
+    }
+    waitForIdle()
 
-        onNodeWithTag("dialog_content").assertExists()
-        onNodeWithTag("dialog_input").performClick()
-        onNodeWithTag("dialog_input").assertIsFocused()
+    onNodeWithTag("dialog_content").assertExists()
+  }
 
-        onNodeWithTag("dialog_input").performKeyInput {
-            pressKey(Key.Escape)
-        }
-        waitForIdle()
+  @Test
+  fun clickingOutsideDismissesDialogWhenDismissOnClickOutsideIsTrue() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = true)
 
-        onNodeWithTag("dialog_content").assertExists()
+    setContent {
+      UnstyledDialog(
+        state = dialogState,
+        properties = DialogProperties(dismissOnClickOutside = true),
+      ) {
+        UnstyledScrim(Modifier.testTag("dialog_scrim"))
+        UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+      }
     }
 
-    @Test
-    fun clickingOutsideDismissesDialogWhenDismissOnClickOutsideIsTrue() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = true)
+    waitForIdle()
+    onNodeWithTag("dialog_content").assertExists()
 
-        setContent {
-            UnstyledDialog(
-                state = dialogState,
-                properties = DialogProperties(dismissOnClickOutside = true)
-            ) {
-                UnstyledScrim(Modifier.testTag("dialog_scrim"))
-                UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
-            }
-        }
+    onNodeWithTag("dialog_scrim").performTouchInput {
+      click(Offset(1f, 1f))
+    }
+    waitForIdle()
 
-        waitForIdle()
-        onNodeWithTag("dialog_content").assertExists()
+    onNodeWithTag("dialog_content").assertDoesNotExist()
+  }
 
-        onNodeWithTag("dialog_scrim").performTouchInput {
-            click(Offset(1f, 1f))
-        }
-        waitForIdle()
+  @Test
+  fun clickingOutsideDoesNotDismissDialogWhenDismissOnClickOutsideIsFalse() = runComposeUiTest {
+    val dialogState = DialogState(initiallyVisible = true)
 
-        onNodeWithTag("dialog_content").assertDoesNotExist()
+    setContent {
+      UnstyledDialog(
+        state = dialogState,
+        properties = DialogProperties(dismissOnClickOutside = false),
+      ) {
+        UnstyledScrim(Modifier.testTag("dialog_scrim"))
+        UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+      }
     }
 
-    @Test
-    fun clickingOutsideDoesNotDismissDialogWhenDismissOnClickOutsideIsFalse() = runComposeUiTest {
-        val dialogState = DialogState(initiallyVisible = true)
+    waitForIdle()
+    onNodeWithTag("dialog_content").assertExists()
 
-        setContent {
-            UnstyledDialog(
-                state = dialogState,
-                properties = DialogProperties(dismissOnClickOutside = false)
-            ) {
-                UnstyledScrim(Modifier.testTag("dialog_scrim"))
-                UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
-            }
-        }
-
-        waitForIdle()
-        onNodeWithTag("dialog_content").assertExists()
-
-        onNodeWithTag("dialog_scrim").performTouchInput {
-            click(Offset(1f, 1f))
-        }
-        waitForIdle()
-
-        onNodeWithTag("dialog_content").assertExists()
+    onNodeWithTag("dialog_scrim").performTouchInput {
+      click(Offset(1f, 1f))
     }
+    waitForIdle()
+
+    onNodeWithTag("dialog_content").assertExists()
+  }
 }

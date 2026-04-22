@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.foundation.background
@@ -20,8 +43,8 @@ import androidx.compose.ui.graphics.Shape
 import com.composables.core.androidx.annotation.FloatRange
 
 class ProgressIndicatorScope {
-    var progress by mutableStateOf(0f)
-        internal set
+  var progress by mutableStateOf(0f)
+    internal set
 }
 
 /**
@@ -51,44 +74,46 @@ class ProgressIndicatorScope {
  */
 @Composable
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)",
+  ),
 )
 fun ProgressIndicator(
-    @FloatRange(from = 0.0, to = 1.0) progress: Float,
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    content: @Composable ProgressIndicatorScope.() -> Unit
+  @FloatRange(from = 0.0, to = 1.0) progress: Float,
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  content: @Composable ProgressIndicatorScope.() -> Unit,
 ) {
-    UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)
+  UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)
 }
 
 @Composable
 fun UnstyledProgressIndicator(
-    @FloatRange(from = 0.0, to = 1.0) progress: Float,
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    content: @Composable ProgressIndicatorScope.() -> Unit
+  @FloatRange(from = 0.0, to = 1.0) progress: Float,
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  content: @Composable ProgressIndicatorScope.() -> Unit,
 ) {
-    val scope = remember { ProgressIndicatorScope() }
-    SideEffect { scope.progress = progress }
-    Box(
-        modifier
-            .then(IncreaseVerticalSemanticsBounds)
-            .progressSemantics(progress, 0f..1f)
-            .clip(shape)
-            .background(backgroundColor)
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            with(scope) {
-                content()
-            }
-        }
+  val scope = remember { ProgressIndicatorScope() }
+  SideEffect { scope.progress = progress }
+  Box(
+    modifier
+      .then(IncreaseVerticalSemanticsBounds)
+      .progressSemantics(progress, 0f..1f)
+      .clip(shape)
+      .background(backgroundColor),
+  ) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+      with(scope) {
+        content()
+      }
     }
+  }
 }
 
 /**
@@ -117,38 +142,38 @@ fun UnstyledProgressIndicator(
  */
 @Composable
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith("UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)"),
 )
 fun ProgressIndicator(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    content: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)
+  UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)
 }
 
 @Composable
 fun UnstyledProgressIndicator(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    content: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  content: @Composable () -> Unit,
 ) {
-    Box(
-        modifier
-            .then(IncreaseVerticalSemanticsBounds)
-            .progressSemantics()
-            .clip(shape)
-            .background(backgroundColor)
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            content()
-        }
+  Box(
+    modifier
+      .then(IncreaseVerticalSemanticsBounds)
+      .progressSemantics()
+      .clip(shape)
+      .background(backgroundColor),
+  ) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+      content()
     }
+  }
 }
 
 /**
@@ -159,20 +184,20 @@ fun UnstyledProgressIndicator(
  */
 @Composable
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledProgressBar(shape, color)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith("UnstyledProgressBar(shape, color)"),
 )
 fun ProgressIndicatorScope.ProgressBar(
-    shape: Shape = RectangleShape,
-    color: Color = LocalContentColor.current
+  shape: Shape = RectangleShape,
+  color: Color = LocalContentColor.current,
 ) {
-    UnstyledProgressBar(shape, color)
+  UnstyledProgressBar(shape, color)
 }
 
 @Composable
 fun ProgressIndicatorScope.UnstyledProgressBar(
-    shape: Shape = RectangleShape,
-    color: Color = LocalContentColor.current
+  shape: Shape = RectangleShape,
+  color: Color = LocalContentColor.current,
 ) {
-    Box(Modifier.fillMaxWidth(progress).fillMaxHeight().background(color, shape))
+  Box(Modifier.fillMaxWidth(progress).fillMaxHeight().background(color, shape))
 }

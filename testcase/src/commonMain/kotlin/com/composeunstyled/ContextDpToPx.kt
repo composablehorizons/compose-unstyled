@@ -19,6 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composeunstyled.theme
+package com.composeunstyled
 
-internal expect val isTouchDevice: Boolean
+import androidx.compose.ui.test.ComposeUiTest
+import androidx.compose.ui.unit.Dp
+
+context(uiTest: ComposeUiTest)
+fun Dp.toPx(): Float {
+  val dpValue = this
+  return with(uiTest.density) {
+    dpValue.toPx()
+  }
+}

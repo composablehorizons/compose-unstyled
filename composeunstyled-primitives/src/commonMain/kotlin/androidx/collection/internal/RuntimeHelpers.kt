@@ -23,28 +23,28 @@ import kotlin.contracts.contract
 // the call site much smaller and since it's the slow path anyway,
 // we don't mind the extra function call
 internal fun throwIllegalStateException(message: String) {
-    throw IllegalStateException(message)
+  throw IllegalStateException(message)
 }
 
 // Like Kotlin's require() but without the .toString() call
 @OptIn(ExperimentalContracts::class)
 internal inline fun checkPrecondition(value: Boolean, lazyMessage: () -> String) {
-    contract { returns() implies value }
-    if (!value) {
-        throwIllegalStateException(lazyMessage())
-    }
+  contract { returns() implies value }
+  if (!value) {
+    throwIllegalStateException(lazyMessage())
+  }
 }
 
 internal fun throwIllegalArgumentException(message: String) {
-    throw IllegalArgumentException(message)
+  throw IllegalArgumentException(message)
 }
 
 // Like Kotlin's require() but without the .toString() call
 @Suppress("BanInlineOptIn") // same opt-in as using Kotlin's require()
 @OptIn(ExperimentalContracts::class)
 internal inline fun requirePrecondition(value: Boolean, lazyMessage: () -> String) {
-    contract { returns() implies value }
-    if (!value) {
-        throwIllegalArgumentException(lazyMessage())
-    }
+  contract { returns() implies value }
+  if (!value) {
+    throwIllegalArgumentException(lazyMessage())
+  }
 }

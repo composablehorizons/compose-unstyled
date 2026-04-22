@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.animation.AnimatedVisibility
@@ -29,7 +52,7 @@ import androidx.compose.ui.unit.dp
 
 @Stable
 class DisclosureState(expanded: Boolean = false) {
-    var expanded: Boolean by mutableStateOf(expanded)
+  var expanded: Boolean by mutableStateOf(expanded)
 }
 
 /**
@@ -39,12 +62,12 @@ class DisclosureState(expanded: Boolean = false) {
  */
 @Composable
 fun rememberDisclosureState(initiallyExpanded: Boolean = false): DisclosureState {
-    return remember { DisclosureState(initiallyExpanded) }
+  return remember { DisclosureState(initiallyExpanded) }
 }
 
 @Stable
 class DisclosureScope internal constructor(state: DisclosureState) {
-    internal var state by mutableStateOf(state)
+  internal var state by mutableStateOf(state)
 }
 
 /**
@@ -76,27 +99,30 @@ class DisclosureScope internal constructor(state: DisclosureState) {
  * @param modifier Modifier to be applied to the disclosure.
  * @param content The content of the disclosure, which should contain a [DisclosureHeading] and a [DisclosurePanel].
  */
-@Deprecated("Use UnstyledDisclosure instead", ReplaceWith("UnstyledDisclosure(state, modifier, content)"))
+@Deprecated(
+  "Use UnstyledDisclosure instead",
+  ReplaceWith("UnstyledDisclosure(state, modifier, content)"),
+)
 @Composable
 fun Disclosure(
-    state: DisclosureState = rememberDisclosureState(),
-    modifier: Modifier = Modifier,
-    content: @Composable DisclosureScope.() -> Unit
+  state: DisclosureState = rememberDisclosureState(),
+  modifier: Modifier = Modifier,
+  content: @Composable DisclosureScope.() -> Unit,
 ) {
-    UnstyledDisclosure(state, modifier, content)
+  UnstyledDisclosure(state, modifier, content)
 }
 
 @Composable
 fun UnstyledDisclosure(
-    state: DisclosureState = rememberDisclosureState(),
-    modifier: Modifier = Modifier,
-    content: @Composable DisclosureScope.() -> Unit
+  state: DisclosureState = rememberDisclosureState(),
+  modifier: Modifier = Modifier,
+  content: @Composable DisclosureScope.() -> Unit,
 ) {
-    val scope = remember { DisclosureScope(state) }
+  val scope = remember { DisclosureScope(state) }
 
-    Column(modifier) {
-        scope.content()
-    }
+  Column(modifier) {
+    scope.content()
+  }
 }
 
 /**
@@ -116,192 +142,205 @@ fun UnstyledDisclosure(
  * @param horizontalArrangement The horizontal arrangement of the content.
  * @param content The content of the heading.
  */
-@Deprecated("Use UnstyledDisclosureHeading instead", ReplaceWith("UnstyledDisclosureHeading(modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)"))
+@Deprecated(
+  "Use UnstyledDisclosureHeading instead",
+  ReplaceWith(
+    "UnstyledDisclosureHeading(modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)",
+  ),
+)
 @Composable
 fun DisclosureScope.DisclosureHeading(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 0.dp,
-    indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource? = null,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    content: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 0.dp,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledDisclosureHeading(
-        modifier,
-        enabled,
-        shape,
-        backgroundColor,
-        contentColor,
-        contentPadding,
-        borderColor,
-        borderWidth,
-        indication,
-        interactionSource,
-        verticalAlignment,
-        horizontalArrangement,
-        content
-    )
+  UnstyledDisclosureHeading(
+    modifier,
+    enabled,
+    shape,
+    backgroundColor,
+    contentColor,
+    contentPadding,
+    borderColor,
+    borderWidth,
+    indication,
+    interactionSource,
+    verticalAlignment,
+    horizontalArrangement,
+    content,
+  )
 }
 
-@Deprecated("Use UnstyledDisclosureHeading instead", ReplaceWith("UnstyledDisclosureHeading(onClick, modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)"))
+@Deprecated(
+  "Use UnstyledDisclosureHeading instead",
+  ReplaceWith(
+    "UnstyledDisclosureHeading(onClick, modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)",
+  ),
+)
 @Composable
 fun DisclosureScope.DisclosureHeading(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 0.dp,
-    indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource? = null,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    content: @Composable () -> Unit
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 0.dp,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledDisclosureHeading(
-        onClick,
-        modifier,
-        enabled,
-        shape,
-        backgroundColor,
-        contentColor,
-        contentPadding,
-        borderColor,
-        borderWidth,
-        indication,
-        interactionSource,
-        verticalAlignment,
-        horizontalArrangement,
-        content
-    )
+  UnstyledDisclosureHeading(
+    onClick,
+    modifier,
+    enabled,
+    shape,
+    backgroundColor,
+    contentColor,
+    contentPadding,
+    borderColor,
+    borderWidth,
+    indication,
+    interactionSource,
+    verticalAlignment,
+    horizontalArrangement,
+    content,
+  )
 }
 
 @Composable
 fun DisclosureScope.UnstyledDisclosureHeading(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 0.dp,
-    indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource? = null,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    content: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 0.dp,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledButton(
-        modifier = modifier.semantics {
-            heading()
-            if (state.expanded) {
-                collapse {
-                    state.expanded = false
-                    true
-                }
-            } else {
-                expand {
-                    state.expanded = true
-                    true
-                }
-            }
-        },
-        onClick = { state.expanded = state.expanded.not() },
-        interactionSource = interactionSource,
-        indication = indication,
-        enabled = enabled,
-        shape = shape,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        borderColor = borderColor,
-        borderWidth = borderWidth,
-        contentPadding = contentPadding,
-        verticalAlignment = verticalAlignment,
-        horizontalArrangement = horizontalArrangement
-    ) {
-        content()
-    }
+  UnstyledButton(
+    modifier = modifier.semantics {
+      heading()
+      if (state.expanded) {
+        collapse {
+          state.expanded = false
+          true
+        }
+      } else {
+        expand {
+          state.expanded = true
+          true
+        }
+      }
+    },
+    onClick = { state.expanded = state.expanded.not() },
+    interactionSource = interactionSource,
+    indication = indication,
+    enabled = enabled,
+    shape = shape,
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    borderColor = borderColor,
+    borderWidth = borderWidth,
+    contentPadding = contentPadding,
+    verticalAlignment = verticalAlignment,
+    horizontalArrangement = horizontalArrangement,
+  ) {
+    content()
+  }
 }
 
 @Composable
 fun DisclosureScope.UnstyledDisclosureHeading(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 0.dp,
-    indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource? = null,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    content: @Composable () -> Unit
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 0.dp,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledButton(
-        modifier = modifier,
-        onClick = onClick,
-        interactionSource = interactionSource,
-        indication = indication,
-        enabled = enabled,
-        shape = shape,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        borderColor = borderColor,
-        borderWidth = borderWidth,
-        contentPadding = contentPadding,
-        verticalAlignment = verticalAlignment,
-        horizontalArrangement = horizontalArrangement
-    ) {
-        content()
-    }
+  UnstyledButton(
+    modifier = modifier,
+    onClick = onClick,
+    interactionSource = interactionSource,
+    indication = indication,
+    enabled = enabled,
+    shape = shape,
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    borderColor = borderColor,
+    borderWidth = borderWidth,
+    contentPadding = contentPadding,
+    verticalAlignment = verticalAlignment,
+    horizontalArrangement = horizontalArrangement,
+  ) {
+    content()
+  }
 }
 
 /**
-  * A panel component that is shown when the [Disclosure] is expanded.
-  *
-  * @param modifier Modifier to be applied to the panel.
-  * @param enter The enter transition for the panel.
-  * @param exit The exit transition for the panel.
-  * @param content The content of the panel.
-  */
-@Deprecated("Use UnstyledDisclosurePanel instead", ReplaceWith("UnstyledDisclosurePanel(modifier, enter, exit, content)"))
+ * A panel component that is shown when the [Disclosure] is expanded.
+ *
+ * @param modifier Modifier to be applied to the panel.
+ * @param enter The enter transition for the panel.
+ * @param exit The exit transition for the panel.
+ * @param content The content of the panel.
+ */
+@Deprecated(
+  "Use UnstyledDisclosurePanel instead",
+  ReplaceWith("UnstyledDisclosurePanel(modifier, enter, exit, content)"),
+)
 @Composable
 fun DisclosureScope.DisclosurePanel(
-    modifier: Modifier = Modifier,
-    enter: EnterTransition = AppearInstantly,
-    exit: ExitTransition = DisappearInstantly,
-    content: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  enter: EnterTransition = AppearInstantly,
+  exit: ExitTransition = DisappearInstantly,
+  content: @Composable () -> Unit,
 ) {
-    UnstyledDisclosurePanel(modifier, enter, exit, content)
+  UnstyledDisclosurePanel(modifier, enter, exit, content)
 }
 
 @Composable
 fun DisclosureScope.UnstyledDisclosurePanel(
-    modifier: Modifier = Modifier,
-    enter: EnterTransition = AppearInstantly,
-    exit: ExitTransition = DisappearInstantly,
-    content: @Composable () -> Unit,
+  modifier: Modifier = Modifier,
+  enter: EnterTransition = AppearInstantly,
+  exit: ExitTransition = DisappearInstantly,
+  content: @Composable () -> Unit,
 ) {
-    AnimatedVisibility(
-        modifier = modifier,
-        visible = state.expanded,
-        enter = enter,
-        exit = exit
-    ) {
-        content()
-    }
+  AnimatedVisibility(
+    modifier = modifier,
+    visible = state.expanded,
+    enter = enter,
+    exit = exit,
+  ) {
+    content()
+  }
 }

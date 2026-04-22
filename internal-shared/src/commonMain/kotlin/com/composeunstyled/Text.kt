@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.foundation.text.BasicText
@@ -45,89 +68,93 @@ import androidx.compose.ui.unit.isSpecified
  * @param overflow How to handle text overflow.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledText(text, modifier, style, textAlign, lineHeight, fontSize, letterSpacing, fontWeight, color, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, autoSize)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledText(text, modifier, style, textAlign, lineHeight, fontSize, letterSpacing, " +
+      "fontWeight, color, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, " +
+      "autoSize)",
+  ),
 )
 @Composable
 fun Text(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontSize: TextUnit = style.fontSize,
-    letterSpacing: TextUnit = style.letterSpacing,
-    fontWeight: FontWeight? = style.fontWeight,
-    color: Color = Color.Unspecified,
-    fontFamily: FontFamily? = style.fontFamily,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+  text: String,
+  modifier: Modifier = Modifier,
+  style: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontSize: TextUnit = style.fontSize,
+  letterSpacing: TextUnit = style.letterSpacing,
+  fontWeight: FontWeight? = style.fontWeight,
+  color: Color = Color.Unspecified,
+  fontFamily: FontFamily? = style.fontFamily,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+  overflow: TextOverflow = TextOverflow.Clip,
+  autoSize: TextAutoSize? = null,
 ) {
-    UnstyledText(
-        text = text,
-        modifier = modifier,
-        style = style,
-        textAlign = textAlign,
-        lineHeight = lineHeight,
-        fontSize = fontSize,
-        letterSpacing = letterSpacing,
-        fontWeight = fontWeight,
-        color = color,
-        fontFamily = fontFamily,
-        singleLine = singleLine,
-        minLines = minLines,
-        maxLines = maxLines,
-        onTextLayout = onTextLayout,
-        overflow = overflow,
-        autoSize = autoSize
-    )
+  UnstyledText(
+    text = text,
+    modifier = modifier,
+    style = style,
+    textAlign = textAlign,
+    lineHeight = lineHeight,
+    fontSize = fontSize,
+    letterSpacing = letterSpacing,
+    fontWeight = fontWeight,
+    color = color,
+    fontFamily = fontFamily,
+    singleLine = singleLine,
+    minLines = minLines,
+    maxLines = maxLines,
+    onTextLayout = onTextLayout,
+    overflow = overflow,
+    autoSize = autoSize,
+  )
 }
 
 @Composable
 fun UnstyledText(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontSize: TextUnit = style.fontSize,
-    letterSpacing: TextUnit = style.letterSpacing,
-    fontWeight: FontWeight? = style.fontWeight,
-    color: Color = Color.Unspecified,
-    fontFamily: FontFamily? = style.fontFamily,
-    textDecoration: TextDecoration? = style.textDecoration,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+  text: String,
+  modifier: Modifier = Modifier,
+  style: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontSize: TextUnit = style.fontSize,
+  letterSpacing: TextUnit = style.letterSpacing,
+  fontWeight: FontWeight? = style.fontWeight,
+  color: Color = Color.Unspecified,
+  fontFamily: FontFamily? = style.fontFamily,
+  textDecoration: TextDecoration? = style.textDecoration,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+  overflow: TextOverflow = TextOverflow.Clip,
+  autoSize: TextAutoSize? = null,
 ) {
-    val currentStyle = style.mergeThemed(
-        textAlign = textAlign,
-        fontSize = fontSize,
-        color = color,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        textDecoration = textDecoration,
-        lineHeight = lineHeight,
-        letterSpacing = letterSpacing,
-    )
+  val currentStyle = style.mergeThemed(
+    textAlign = textAlign,
+    fontSize = fontSize,
+    color = color,
+    fontWeight = fontWeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration,
+    lineHeight = lineHeight,
+    letterSpacing = letterSpacing,
+  )
 
-    BasicText(
-        text = text,
-        modifier = modifier,
-        style = currentStyle,
-        minLines = minLines,
-        maxLines = maxLines,
-        overflow = overflow,
-        autoSize = autoSize,
-        onTextLayout = onTextLayout
-    )
+  BasicText(
+    text = text,
+    modifier = modifier,
+    style = currentStyle,
+    minLines = minLines,
+    maxLines = maxLines,
+    overflow = overflow,
+    autoSize = autoSize,
+    onTextLayout = onTextLayout,
+  )
 }
 
 /**
@@ -158,121 +185,127 @@ fun UnstyledText(
  * @param overflow How to handle text overflow.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledText(text, modifier, style, textAlign, fontSize, letterSpacing, fontWeight, color, lineHeight, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, autoSize)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledText(text, modifier, style, textAlign, fontSize, letterSpacing, fontWeight, " +
+      "color, lineHeight, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, " +
+      "autoSize)",
+  ),
 )
 @Composable
 fun Text(
-    text: AnnotatedString,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    fontSize: TextUnit = style.fontSize,
-    letterSpacing: TextUnit = style.letterSpacing,
-    fontWeight: FontWeight? = style.fontWeight,
-    color: Color = Color.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontFamily: FontFamily? = style.fontFamily,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+  text: AnnotatedString,
+  modifier: Modifier = Modifier,
+  style: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  fontSize: TextUnit = style.fontSize,
+  letterSpacing: TextUnit = style.letterSpacing,
+  fontWeight: FontWeight? = style.fontWeight,
+  color: Color = Color.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontFamily: FontFamily? = style.fontFamily,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+  overflow: TextOverflow = TextOverflow.Clip,
+  autoSize: TextAutoSize? = null,
 ) {
-    UnstyledText(
-        text = text,
-        modifier = modifier,
-        style = style,
-        textAlign = textAlign,
-        fontSize = fontSize,
-        letterSpacing = letterSpacing,
-        fontWeight = fontWeight,
-        color = color,
-        lineHeight = lineHeight,
-        fontFamily = fontFamily,
-        singleLine = singleLine,
-        minLines = minLines,
-        maxLines = maxLines,
-        onTextLayout = onTextLayout,
-        overflow = overflow,
-        autoSize = autoSize
-    )
+  UnstyledText(
+    text = text,
+    modifier = modifier,
+    style = style,
+    textAlign = textAlign,
+    fontSize = fontSize,
+    letterSpacing = letterSpacing,
+    fontWeight = fontWeight,
+    color = color,
+    lineHeight = lineHeight,
+    fontFamily = fontFamily,
+    singleLine = singleLine,
+    minLines = minLines,
+    maxLines = maxLines,
+    onTextLayout = onTextLayout,
+    overflow = overflow,
+    autoSize = autoSize,
+  )
 }
 
 @Composable
 fun UnstyledText(
-    text: AnnotatedString,
-    modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    fontSize: TextUnit = style.fontSize,
-    letterSpacing: TextUnit = style.letterSpacing,
-    fontWeight: FontWeight? = style.fontWeight,
-    color: Color = Color.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontFamily: FontFamily? = style.fontFamily,
-    textDecoration: TextDecoration? = style.textDecoration,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-    overflow: TextOverflow = TextOverflow.Clip,
-    autoSize: TextAutoSize? = null
+  text: AnnotatedString,
+  modifier: Modifier = Modifier,
+  style: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  fontSize: TextUnit = style.fontSize,
+  letterSpacing: TextUnit = style.letterSpacing,
+  fontWeight: FontWeight? = style.fontWeight,
+  color: Color = Color.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontFamily: FontFamily? = style.fontFamily,
+  textDecoration: TextDecoration? = style.textDecoration,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+  overflow: TextOverflow = TextOverflow.Clip,
+  autoSize: TextAutoSize? = null,
 ) {
+  val currentStyle = style.mergeThemed(
+    textAlign = textAlign,
+    fontSize = fontSize,
+    color = color,
+    fontWeight = fontWeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration,
+    lineHeight = lineHeight,
+    letterSpacing = letterSpacing,
+  )
 
-    val currentStyle = style.mergeThemed(
-        textAlign = textAlign,
-        fontSize = fontSize,
-        color = color,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        textDecoration = textDecoration,
-        lineHeight = lineHeight,
-        letterSpacing = letterSpacing
-    )
-
-    BasicText(
-        text = text,
-        modifier = modifier,
-        style = currentStyle,
-        minLines = minLines,
-        maxLines = maxLines,
-        overflow = overflow,
-        autoSize = autoSize,
-        onTextLayout = onTextLayout
-    )
+  BasicText(
+    text = text,
+    modifier = modifier,
+    style = currentStyle,
+    minLines = minLines,
+    maxLines = maxLines,
+    overflow = overflow,
+    autoSize = autoSize,
+    onTextLayout = onTextLayout,
+  )
 }
 
 @Composable
 internal fun TextStyle.mergeThemed(
-    textAlign: TextAlign,
-    fontSize: TextUnit,
-    color: Color = Color.Unspecified,
-    fontWeight: FontWeight?,
-    fontFamily: FontFamily?,
-    textDecoration: TextDecoration? = null,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    letterSpacing: TextUnit = TextUnit.Unspecified,
+  textAlign: TextAlign,
+  fontSize: TextUnit,
+  color: Color = Color.Unspecified,
+  fontWeight: FontWeight?,
+  fontFamily: FontFamily?,
+  textDecoration: TextDecoration? = null,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  letterSpacing: TextUnit = TextUnit.Unspecified,
 ): TextStyle {
-    val textStyleColor = this.color
-    val contentColor = LocalContentColor.current
+  val textStyleColor = this.color
+  val contentColor = LocalContentColor.current
 
-    val finalColor = if (ComposeUnstyledFlags.strictTextColorResolutionOrder) {
-        listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
-    } else {
-        listOf(color, contentColor, textStyleColor).firstOrNull { it.isSpecified } ?: Color.Unspecified
-    }
+  val finalColor = if (ComposeUnstyledFlags.strictTextColorResolutionOrder) {
+    listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
+  } else {
+    listOf(color, contentColor, textStyleColor).firstOrNull { it.isSpecified } ?: Color.Unspecified
+  }
 
-    return this.merge(
-        textAlign = listOf(textAlign, this.textAlign)
-            .firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified,
-        fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        color = finalColor,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        textDecoration = textDecoration ?: this.textDecoration,
-        lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
-        letterSpacing = listOf(letterSpacing, this.letterSpacing)
-            .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified)
+  return this.merge(
+    textAlign = listOf(textAlign, this.textAlign)
+      .firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified,
+    fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified }
+      ?: TextUnit.Unspecified,
+    color = finalColor,
+    fontWeight = fontWeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration ?: this.textDecoration,
+    lineHeight = listOf(lineHeight, this.lineHeight).firstOrNull { it.isSpecified }
+      ?: TextUnit.Unspecified,
+    letterSpacing = listOf(letterSpacing, this.letterSpacing)
+      .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
+  )
 }

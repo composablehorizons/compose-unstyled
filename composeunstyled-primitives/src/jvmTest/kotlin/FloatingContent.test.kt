@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
@@ -11,152 +32,156 @@ import kotlin.test.assertNotEquals
 
 class FloatingContentTest {
 
-    @Test
-    fun rendersNothingWhenNoAnchor() = runComposeUiTest {
-        // FloatingContent should not render floating content when there's no anchor
-        setContent {
-            FloatingContent(
-                floatingContent = {
-                    Text("Floating content")
-                },
-                anchor = {}
-            )
-        }
-
-        waitForIdle()
-        onNodeWithText("Floating content").assertDoesNotExist()
+  @Test
+  fun rendersNothingWhenNoAnchor() = runComposeUiTest {
+    // FloatingContent should not render floating content when there's no anchor
+    setContent {
+      FloatingContent(
+        floatingContent = {
+          Text("Floating content")
+        },
+        anchor = {},
+      )
     }
 
-    @Test
-    fun rendersOnlyAnchorWhenNoFloatingContent() = runComposeUiTest {
-        // FloatingContent should render only the anchor when there's no floating content
-        setContent {
-            FloatingContent(
-                floatingContent = {},
-                anchor = {
-                    Text("Anchor")
-                }
-            )
-        }
+    waitForIdle()
+    onNodeWithText("Floating content").assertDoesNotExist()
+  }
 
-        waitForIdle()
-        onNodeWithText("Anchor").assertExists()
+  @Test
+  fun rendersOnlyAnchorWhenNoFloatingContent() = runComposeUiTest {
+    // FloatingContent should render only the anchor when there's no floating content
+    setContent {
+      FloatingContent(
+        floatingContent = {},
+        anchor = {
+          Text("Anchor")
+        },
+      )
     }
 
-    @Test
-    fun placementChangesFloatingContentPosition() = runComposeUiTest {
-        // Test that different placements result in different positions
-        var topStartY = 0f
-        var bottomStartY = 0f
+    waitForIdle()
+    onNodeWithText("Anchor").assertExists()
+  }
 
-        // First, test with TopStart placement
-        setContent {
-            FloatingContent(
-                placement = RelativeAlignment.TopStart,
-                floatingContent = {
-                    Box(Modifier.size(50.dp)) {
-                        Text("Floating")
-                    }
-                },
-                anchor = {
-                    Box(Modifier.size(100.dp)) {
-                        Text("Anchor")
-                    }
-                }
-            )
-        }
+  @Test
+  fun placementChangesFloatingContentPosition() = runComposeUiTest {
+    // Test that different placements result in different positions
+    var topStartY = 0f
+    var bottomStartY = 0f
 
-        waitForIdle()
-        topStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
-
-        // Now test with BottomStart placement
-        setContent {
-            FloatingContent(
-                placement = RelativeAlignment.BottomStart,
-                floatingContent = {
-                    Box(Modifier.size(50.dp)) {
-                        Text("Floating")
-                    }
-                },
-                anchor = {
-                    Box(Modifier.size(100.dp)) {
-                        Text("Anchor")
-                    }
-                }
-            )
-        }
-
-        waitForIdle()
-        bottomStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
-
-        // The Y positions should be different when placement changes
-        assertNotEquals(topStartY, bottomStartY, "Floating content position should change when placement changes")
+    // First, test with TopStart placement
+    setContent {
+      FloatingContent(
+        placement = RelativeAlignment.TopStart,
+        floatingContent = {
+          Box(Modifier.size(50.dp)) {
+            Text("Floating")
+          }
+        },
+        anchor = {
+          Box(Modifier.size(100.dp)) {
+            Text("Anchor")
+          }
+        },
+      )
     }
 
-    @Test
-    fun floatingContentClampsToWindowBounds() = runComposeUiTest {
-        // FloatingContent clamps to window bounds like a Popup
-        setContent {
-            FloatingContent(
-                placement = RelativeAlignment.TopStart,
-                floatingContent = {
-                    Box(Modifier.size(100.dp)) {
-                        Text("Floating")
-                    }
-                },
-                anchor = {
-                    Box(Modifier.size(50.dp)) {
-                        Text("Anchor")
-                    }
-                }
-            )
-        }
+    waitForIdle()
+    topStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
-        waitForIdle()
-
-        val floatingY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
-
-        // With TopStart placement at the top of the window,
-        // floating content should be clamped to not go negative
-        assert(floatingY >= 0f) {
-            "Floating content should be clamped to window bounds (floatingY=$floatingY should be >= 0)"
-        }
+    // Now test with BottomStart placement
+    setContent {
+      FloatingContent(
+        placement = RelativeAlignment.BottomStart,
+        floatingContent = {
+          Box(Modifier.size(50.dp)) {
+            Text("Floating")
+          }
+        },
+        anchor = {
+          Box(Modifier.size(100.dp)) {
+            Text("Anchor")
+          }
+        },
+      )
     }
 
-    @Test
-    fun floatingContentLargerThanWindow() = runComposeUiTest {
-        // When floating content is larger than the window,
-        // it should be clamped to start at 0 to maximize visible area
-        setContent {
-            FloatingContent(
-                placement = RelativeAlignment.BottomStart,
-                floatingContent = {
-                    // Make floating content very large (larger than typical window)
-                    Box(Modifier.size(10000.dp)) {
-                        Text("Large floating")
-                    }
-                },
-                anchor = {
-                    Box(Modifier.size(50.dp)) {
-                        Text("Anchor")
-                    }
-                }
-            )
-        }
+    waitForIdle()
+    bottomStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
-        waitForIdle()
+    // The Y positions should be different when placement changes
+    assertNotEquals(
+      topStartY,
+      bottomStartY,
+      "Floating content position should change when placement changes",
+    )
+  }
 
-        val floatingNode = onNodeWithText("Large floating").fetchSemanticsNode()
-        val floatingX = floatingNode.positionInRoot.x
-        val floatingY = floatingNode.positionInRoot.y
-
-        // When content is larger than window, it should be clamped to 0
-        // to maximize the visible portion at the top-left
-        assert(floatingX >= 0f) {
-            "Large floating content should be clamped to x >= 0 (got x=$floatingX)"
-        }
-        assert(floatingY >= 0f) {
-            "Large floating content should be clamped to y >= 0 (got y=$floatingY)"
-        }
+  @Test
+  fun floatingContentClampsToWindowBounds() = runComposeUiTest {
+    // FloatingContent clamps to window bounds like a Popup
+    setContent {
+      FloatingContent(
+        placement = RelativeAlignment.TopStart,
+        floatingContent = {
+          Box(Modifier.size(100.dp)) {
+            Text("Floating")
+          }
+        },
+        anchor = {
+          Box(Modifier.size(50.dp)) {
+            Text("Anchor")
+          }
+        },
+      )
     }
+
+    waitForIdle()
+
+    val floatingY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
+
+    // With TopStart placement at the top of the window,
+    // floating content should be clamped to not go negative
+    assert(floatingY >= 0f) {
+      "Floating content should be clamped to window bounds (floatingY=$floatingY should be >= 0)"
+    }
+  }
+
+  @Test
+  fun floatingContentLargerThanWindow() = runComposeUiTest {
+    // When floating content is larger than the window,
+    // it should be clamped to start at 0 to maximize visible area
+    setContent {
+      FloatingContent(
+        placement = RelativeAlignment.BottomStart,
+        floatingContent = {
+          // Make floating content very large (larger than typical window)
+          Box(Modifier.size(10000.dp)) {
+            Text("Large floating")
+          }
+        },
+        anchor = {
+          Box(Modifier.size(50.dp)) {
+            Text("Anchor")
+          }
+        },
+      )
+    }
+
+    waitForIdle()
+
+    val floatingNode = onNodeWithText("Large floating").fetchSemanticsNode()
+    val floatingX = floatingNode.positionInRoot.x
+    val floatingY = floatingNode.positionInRoot.y
+
+    // When content is larger than window, it should be clamped to 0
+    // to maximize the visible portion at the top-left
+    assert(floatingX >= 0f) {
+      "Large floating content should be clamped to x >= 0 (got x=$floatingX)"
+    }
+    assert(floatingY >= 0f) {
+      "Large floating content should be clamped to y >= 0 (got y=$floatingY)"
+    }
+  }
 }

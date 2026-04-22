@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composables.core
 
 import androidx.compose.animation.AnimatedVisibility
@@ -114,42 +137,48 @@ import com.composeunstyled.NoPadding
  */
 @Deprecated("Switch to DropdownMenu")
 @Composable
-fun Menu(state: MenuState, modifier: Modifier = Modifier, content: @Composable MenuScope.() -> Unit) {
-    val scope = remember(state.expanded) { MenuScope(state) }
+fun Menu(
+  state: MenuState,
+  modifier: Modifier = Modifier,
+  content: @Composable MenuScope.() -> Unit,
+) {
+  val scope = remember(state.expanded) { MenuScope(state) }
 
-    Box(modifier.onKeyEvent { event ->
-        if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
-        when (event.key) {
-            Key.DirectionDown -> {
-                if (scope.menuState.expanded.not()) {
-                    scope.menuState.expanded = true
-                    true
-                } else {
-                    false
-                }
-            }
-
-            else -> false
+  Box(
+    modifier.onKeyEvent { event ->
+      if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+      when (event.key) {
+        Key.DirectionDown -> {
+          if (scope.menuState.expanded.not()) {
+            scope.menuState.expanded = true
+            true
+          } else {
+            false
+          }
         }
-    }) {
-        state.currentFocusManager = LocalFocusManager.current
-        scope.content()
-    }
+
+        else -> false
+      }
+    },
+  ) {
+    state.currentFocusManager = LocalFocusManager.current
+    scope.content()
+  }
 }
 
 @Deprecated("Switch to DropdownMenu")
 @Stable
 class MenuState(expanded: Boolean = false) {
-    var expanded: Boolean by mutableStateOf(expanded)
-    internal val menuFocusRequester = FocusRequester()
-    internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
-    internal var hasMenuFocus by mutableStateOf(false)
+  var expanded: Boolean by mutableStateOf(expanded)
+  internal val menuFocusRequester = FocusRequester()
+  internal var currentFocusManager by mutableStateOf<FocusManager?>(null)
+  internal var hasMenuFocus by mutableStateOf(false)
 }
 
 @Composable
 @Deprecated("Switch to DropdownMenu")
 fun rememberMenuState(expanded: Boolean = false): MenuState {
-    return remember { MenuState(expanded) }
+  return remember { MenuState(expanded) }
 }
 
 /**
@@ -172,94 +201,102 @@ fun rememberMenuState(expanded: Boolean = false): MenuState {
 @Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuButton(
-    modifier: Modifier = Modifier,
-    mutableInteractionSource: MutableInteractionSource? = null,
-    indication: Indication = LocalIndication.current,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 0.dp,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    contents: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  mutableInteractionSource: MutableInteractionSource? = null,
+  indication: Indication = LocalIndication.current,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 0.dp,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  contents: @Composable () -> Unit,
 ) {
-    Button(
-        onClick = { menuState.expanded = menuState.expanded.not() },
-        role = Role.DropdownList,
-        enabled = enabled,
-        contentColor = contentColor,
-        contentPadding = contentPadding,
-        borderColor = borderColor,
-        borderWidth = borderWidth,
-        interactionSource = mutableInteractionSource,
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment,
-        indication = indication,
-        modifier = modifier,
-        shape = shape,
-        backgroundColor = backgroundColor,
-    ) {
-        contents()
-    }
+  Button(
+    onClick = { menuState.expanded = menuState.expanded.not() },
+    role = Role.DropdownList,
+    enabled = enabled,
+    contentColor = contentColor,
+    contentPadding = contentPadding,
+    borderColor = borderColor,
+    borderWidth = borderWidth,
+    interactionSource = mutableInteractionSource,
+    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = verticalAlignment,
+    indication = indication,
+    modifier = modifier,
+    shape = shape,
+    backgroundColor = backgroundColor,
+  ) {
+    contents()
+  }
 }
 
 @Deprecated("Switch to DropdownMenu")
 @Stable
 class MenuScope internal constructor(state: MenuState) {
-    internal var menuState by mutableStateOf(state)
+  internal var menuState by mutableStateOf(state)
 }
-
 
 // Code modified from Material 3 DropdownMenu.kt
 // https://github.com/JetBrains/compose-multiplatform-core/blob/e62838f496d592c019a3539669a9fbfd33928121/compose/material/material/src/commonMain/kotlin/androidx/compose/material/Menu.kt
 @Immutable
-internal data class MenuContentPositionProvider(val density: Density, val alignment: Alignment.Horizontal) :
-    PopupPositionProvider {
-    override fun calculatePosition(
-        anchorBounds: IntRect, windowSize: IntSize, layoutDirection: LayoutDirection, popupContentSize: IntSize
-    ): IntOffset { // The min margin above and below the menu, relative to the screen.
-        // The content offset specified using the dropdown offset parameter.
+internal data class MenuContentPositionProvider(
+  val density: Density,
+  val alignment: Alignment.Horizontal,
+) :
+  PopupPositionProvider {
+  override fun calculatePosition(
+    anchorBounds: IntRect,
+    windowSize: IntSize,
+    layoutDirection: LayoutDirection,
+    popupContentSize: IntSize,
+  ): IntOffset { // The min margin above and below the menu, relative to the screen.
+    // The content offset specified using the dropdown offset parameter.
 
-        // Compute horizontal position.
-        val toRight = anchorBounds.left
-        val toLeft = anchorBounds.right - popupContentSize.width
+    // Compute horizontal position.
+    val toRight = anchorBounds.left
+    val toLeft = anchorBounds.right - popupContentSize.width
 
-        val toDisplayRight = windowSize.width - popupContentSize.width
-        val toDisplayLeft = 0
+    val toDisplayRight = windowSize.width - popupContentSize.width
+    val toDisplayLeft = 0
 
-        val x = (if (alignment == Alignment.Start) {
-            sequenceOf(
-                toRight, toLeft,
-                // If the anchor gets outside of the window on the left, we want to position
-                // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
-                if (anchorBounds.left >= 0) toDisplayRight else toDisplayLeft
-            )
-        } else if (alignment == Alignment.End) {
-            sequenceOf(
-                toLeft, toRight, // If the anchor gets outside of the window on the right, we want to position
-                // toDisplayRight for proximity to the anchor. Otherwise, toDisplayLeft.
-                if (anchorBounds.right <= windowSize.width) toDisplayLeft else toDisplayRight
-            )
-        } else { // middle
-            sequenceOf(anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2)
-        }).firstOrNull {
-            it >= 0 && it + popupContentSize.width <= windowSize.width
-        } ?: toLeft
+    val x = (
+      if (alignment == Alignment.Start) {
+        sequenceOf(
+          toRight, toLeft,
+          // If the anchor gets outside of the window on the left, we want to position
+          // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
+          if (anchorBounds.left >= 0) toDisplayRight else toDisplayLeft,
+        )
+      } else if (alignment == Alignment.End) {
+        sequenceOf(
+          toLeft,
+          toRight, // If the anchor gets outside of the window on the right, we want to position
+          // toDisplayRight for proximity to the anchor. Otherwise, toDisplayLeft.
+          if (anchorBounds.right <= windowSize.width) toDisplayLeft else toDisplayRight,
+        )
+      } else { // middle
+        sequenceOf(anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2)
+      }
+      ).firstOrNull {
+      it >= 0 && it + popupContentSize.width <= windowSize.width
+    } ?: toLeft
 
-        // Compute vertical position.
-        val toBottom = maxOf(anchorBounds.bottom, 0)
-        val toTop = anchorBounds.top - popupContentSize.height
-        val toCenter = anchorBounds.top - popupContentSize.height / 2
-        val toDisplayBottom = windowSize.height - popupContentSize.height
-        val y = sequenceOf(toBottom, toTop, toCenter, toDisplayBottom).firstOrNull {
-            it >= 0 && it + popupContentSize.height <= windowSize.height
-        } ?: toTop
+    // Compute vertical position.
+    val toBottom = maxOf(anchorBounds.bottom, 0)
+    val toTop = anchorBounds.top - popupContentSize.height
+    val toCenter = anchorBounds.top - popupContentSize.height / 2
+    val toDisplayBottom = windowSize.height - popupContentSize.height
+    val y = sequenceOf(toBottom, toTop, toCenter, toDisplayBottom).firstOrNull {
+      it >= 0 && it + popupContentSize.height <= windowSize.height
+    } ?: toTop
 
-        return IntOffset(x, y)
-    }
+    return IntOffset(x, y)
+  }
 }
 
 /**
@@ -275,80 +312,82 @@ internal data class MenuContentPositionProvider(val density: Density, val alignm
 @Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuContent(
-    modifier: Modifier = Modifier,
-    enter: EnterTransition = AppearInstantly,
-    exit: ExitTransition = DisappearInstantly,
-    alignment: Alignment.Horizontal = Alignment.Start,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    contents: @Composable () -> Unit
+  modifier: Modifier = Modifier,
+  enter: EnterTransition = AppearInstantly,
+  exit: ExitTransition = DisappearInstantly,
+  alignment: Alignment.Horizontal = Alignment.Start,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  contents: @Composable () -> Unit,
 ) {
-    val density = LocalDensity.current
-    val positionProvider = MenuContentPositionProvider(density, alignment)
-    val expandedState = remember { MutableTransitionState(false) }
-    expandedState.targetState = menuState.expanded
-    menuState.currentFocusManager = LocalFocusManager.current
+  val density = LocalDensity.current
+  val positionProvider = MenuContentPositionProvider(density, alignment)
+  val expandedState = remember { MutableTransitionState(false) }
+  expandedState.targetState = menuState.expanded
+  menuState.currentFocusManager = LocalFocusManager.current
 
-    if (expandedState.currentState || expandedState.targetState || !expandedState.isIdle) {
-        Popup(
-            properties = PopupProperties(
-                focusable = true, dismissOnBackPress = true, dismissOnClickOutside = true
-            ),
-            onDismissRequest = {
-                menuState.expanded = false
-                menuState.currentFocusManager?.clearFocus()
-            },
-            popupPositionProvider = positionProvider,
-        ) {
-            menuState.currentFocusManager = LocalFocusManager.current
-            AnimatedVisibility(
-                visibleState = expandedState,
-                enter = enter,
-                exit = exit,
-                modifier = Modifier.onFocusChanged {
-                    menuState.hasMenuFocus = it.hasFocus
-                }.onKeyEvent { event ->
-                    if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+  if (expandedState.currentState || expandedState.targetState || !expandedState.isIdle) {
+    Popup(
+      properties = PopupProperties(
+        focusable = true,
+        dismissOnBackPress = true,
+        dismissOnClickOutside = true,
+      ),
+      onDismissRequest = {
+        menuState.expanded = false
+        menuState.currentFocusManager?.clearFocus()
+      },
+      popupPositionProvider = positionProvider,
+    ) {
+      menuState.currentFocusManager = LocalFocusManager.current
+      AnimatedVisibility(
+        visibleState = expandedState,
+        enter = enter,
+        exit = exit,
+        modifier = Modifier.onFocusChanged {
+          menuState.hasMenuFocus = it.hasFocus
+        }.onKeyEvent { event ->
+          if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
 
-                    return@onKeyEvent when (event.key) {
-                        Key.DirectionDown -> {
-                            menuState.currentFocusManager!!.moveFocus(FocusDirection.Next)
-                            true
-                        }
-
-                        Key.DirectionUp -> {
-                            menuState.currentFocusManager!!.moveFocus(FocusDirection.Previous)
-                            true
-                        }
-
-                        Key.Escape -> {
-                            menuState.expanded = false
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
-            ) {
-                Column(
-                    modifier
-                        .focusRequester(menuState.menuFocusRequester)
-                        .clip(shape)
-                        .background(backgroundColor)
-                        .padding(contentPadding)
-                ) {
-                    LaunchedEffect(Unit) {
-                        menuState.menuFocusRequester.requestFocus()
-                    }
-                    CompositionLocalProvider(LocalContentColor provides contentColor) {
-                        contents()
-                    }
-                }
+          return@onKeyEvent when (event.key) {
+            Key.DirectionDown -> {
+              menuState.currentFocusManager!!.moveFocus(FocusDirection.Next)
+              true
             }
+
+            Key.DirectionUp -> {
+              menuState.currentFocusManager!!.moveFocus(FocusDirection.Previous)
+              true
+            }
+
+            Key.Escape -> {
+              menuState.expanded = false
+              true
+            }
+
+            else -> false
+          }
+        },
+      ) {
+        Column(
+          modifier
+            .focusRequester(menuState.menuFocusRequester)
+            .clip(shape)
+            .background(backgroundColor)
+            .padding(contentPadding),
+        ) {
+          LaunchedEffect(Unit) {
+            menuState.menuFocusRequester.requestFocus()
+          }
+          CompositionLocalProvider(LocalContentColor provides contentColor) {
+            contents()
+          }
         }
+      }
     }
+  }
 }
 
 /**
@@ -368,36 +407,36 @@ fun MenuScope.MenuContent(
 @Deprecated("Switch to DropdownMenu")
 @Composable
 fun MenuScope.MenuItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication = LocalIndication.current,
-    contentPadding: PaddingValues = NoPadding,
-    shape: Shape = RectangleShape,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contents: @Composable RowScope.() -> Unit
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication = LocalIndication.current,
+  contentPadding: PaddingValues = NoPadding,
+  shape: Shape = RectangleShape,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contents: @Composable RowScope.() -> Unit,
 ) {
-    Button(
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        onClick = {
-            onClick()
-            menuState.expanded = false
-            menuState.currentFocusManager?.clearFocus()
-        },
-        modifier = modifier,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        indication = indication,
-        shape = shape,
-        contentPadding = contentPadding,
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment
-    ) {
-        contents()
-    }
+  Button(
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    onClick = {
+      onClick()
+      menuState.expanded = false
+      menuState.currentFocusManager?.clearFocus()
+    },
+    modifier = modifier,
+    enabled = enabled,
+    interactionSource = interactionSource,
+    indication = indication,
+    shape = shape,
+    contentPadding = contentPadding,
+    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = verticalAlignment,
+  ) {
+    contents()
+  }
 }

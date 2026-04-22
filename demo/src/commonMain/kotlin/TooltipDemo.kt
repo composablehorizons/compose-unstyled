@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.animation.core.tween
@@ -45,76 +66,76 @@ import com.composeunstyled.theme.Theme
 
 @Composable
 fun TooltipDemo() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))),
-        contentAlignment = Alignment.Center
-    ) {
-        Row {
-            Tooltip(
-                placement = RelativeAlignment.TopCenter,
-                panel = {
-                    TooltipPanel(
-                        enter = slideInVertically(tween(150), initialOffsetY = { (it * 0.25).toInt() }) +
-                                scaleIn(
-                                    animationSpec = tween(150),
-                                    transformOrigin = TransformOrigin(0.5f, 1f),
-                                    initialScale = 0.65f
-                                ) + fadeIn(tween(150)),
-                        exit = fadeOut(tween(250)),
-                        arrow = { side ->
-                            val degrees = when (side) {
-                                TooltipArrowDirection.Up -> 0f
-                                TooltipArrowDirection.Down -> 180f
-                                TooltipArrowDirection.Left -> 90f
-                                TooltipArrowDirection.Right -> 270f
-                            }
-                            ArrowUp(Modifier.rotate(degrees), Color.Black.copy(0.8f))
-                        }
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(100))
-                                    .background(Color.Black.copy(0.8f))
-                                    .padding(vertical = 8.dp, horizontal = 12.dp),
-                            ) {
-                                ProvideContentColor(Color.White) {
-                                    Text("Notifications")
-                                }
-                            }
-                        }
-                    }
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))),
+    contentAlignment = Alignment.Center,
+  ) {
+    Row {
+      Tooltip(
+        placement = RelativeAlignment.TopCenter,
+        panel = {
+          TooltipPanel(
+            enter = slideInVertically(tween(150), initialOffsetY = { (it * 0.25).toInt() }) +
+              scaleIn(
+                animationSpec = tween(150),
+                transformOrigin = TransformOrigin(0.5f, 1f),
+                initialScale = 0.65f,
+              ) + fadeIn(tween(150)),
+            exit = fadeOut(tween(250)),
+            arrow = { side ->
+              val degrees = when (side) {
+                TooltipArrowDirection.Up -> 0f
+                TooltipArrowDirection.Down -> 180f
+                TooltipArrowDirection.Left -> 90f
+                TooltipArrowDirection.Right -> 270f
+              }
+              ArrowUp(Modifier.rotate(degrees), Color.Black.copy(0.8f))
+            },
+          ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+              Box(
+                modifier = Modifier
+                  .clip(RoundedCornerShape(100))
+                  .background(Color.Black.copy(0.8f))
+                  .padding(vertical = 8.dp, horizontal = 12.dp),
+              ) {
+                ProvideContentColor(Color.White) {
+                  Text("Notifications")
                 }
-            ) {
-                val interactionSource = remember { MutableInteractionSource() }
-
-                UnstyledButton(
-                    onClick = { },
-                    contentPadding = PaddingValues(8.dp),
-                    shape = CircleShape,
-                    modifier = Modifier.focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
-                    interactionSource = interactionSource,
-                    backgroundColor = Color.White,
-                    indication = Theme[indications][dimmed]
-                ) {
-                    Icon(Lucide.BellDot, contentDescription = null)
-                }
+              }
             }
+          }
+        },
+      ) {
+        val interactionSource = remember { MutableInteractionSource() }
+
+        UnstyledButton(
+          onClick = { },
+          contentPadding = PaddingValues(8.dp),
+          shape = CircleShape,
+          modifier = Modifier.focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
+          interactionSource = interactionSource,
+          backgroundColor = Color.White,
+          indication = Theme[indications][dimmed],
+        ) {
+          Icon(Lucide.BellDot, contentDescription = null)
         }
+      }
     }
+  }
 }
 
 @Composable
 fun ArrowUp(modifier: Modifier = Modifier, color: Color) {
-    Canvas(modifier = modifier.size(8.dp, 4.dp)) {
-        val path = Path().apply {
-            moveTo(size.width / 2f, 0f)
-            lineTo(0f, size.height)
-            lineTo(size.width, size.height)
-            close()
-        }
-        drawPath(path, color = color)
+  Canvas(modifier = modifier.size(8.dp, 4.dp)) {
+    val path = Path().apply {
+      moveTo(size.width / 2f, 0f)
+      lineTo(0f, size.height)
+      lineTo(size.width, size.height)
+      close()
     }
+    drawPath(path, color = color)
+  }
 }

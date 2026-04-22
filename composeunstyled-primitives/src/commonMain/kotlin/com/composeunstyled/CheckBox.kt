@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled
 
 import androidx.compose.foundation.Indication
@@ -26,7 +47,8 @@ import androidx.compose.ui.unit.isSpecified
 /**
  * A foundational component used to build checkboxes.
  *
- * For interactive preview & code examples, visit [Checkbox Documentation](https://composeunstyled.com/checkbox).
+ * For interactive preview & code examples, visit
+ * [Checkbox Documentation](https://composeunstyled.com/checkbox).
  *
  * ## Basic Example
  *
@@ -59,88 +81,96 @@ import androidx.compose.ui.unit.isSpecified
  * @param contentDescription Accessibility description of the checkbox.
  * @param checkIcon Composable function to define the check icon.
  */
-@Deprecated("Use UnstyledCheckbox instead", ReplaceWith("UnstyledCheckbox(checked, modifier, backgroundColor, contentColor, enabled, onCheckedChange, shape, borderColor, borderWidth, interactionSource, indication, contentDescription, checkIcon)"))
+@Deprecated(
+  "Use UnstyledCheckbox instead",
+  ReplaceWith(
+    "UnstyledCheckbox(checked, modifier, backgroundColor, contentColor, enabled," +
+      " onCheckedChange, shape, borderColor, borderWidth, interactionSource, indication," +
+      " contentDescription, checkIcon)",
+  ),
+)
 @Composable
 fun Checkbox(
-    checked: Boolean,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Transparent,
-    contentColor: Color = LocalContentColor.current,
-    enabled: Boolean = true,
-    onCheckedChange: ((Boolean) -> Unit)? = null,
-    shape: Shape = RectangleShape,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 1.dp,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = LocalIndication.current,
-    contentDescription: String? = null,
-    checkIcon: @Composable () -> Unit,
+  checked: Boolean,
+  modifier: Modifier = Modifier,
+  backgroundColor: Color = Color.Transparent,
+  contentColor: Color = LocalContentColor.current,
+  enabled: Boolean = true,
+  onCheckedChange: ((Boolean) -> Unit)? = null,
+  shape: Shape = RectangleShape,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 1.dp,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = LocalIndication.current,
+  contentDescription: String? = null,
+  checkIcon: @Composable () -> Unit,
 ) {
-    UnstyledCheckbox(
-        checked,
-        modifier,
-        backgroundColor,
-        contentColor,
-        enabled,
-        onCheckedChange,
-        shape,
-        borderColor,
-        borderWidth,
-        interactionSource,
-        indication,
-        contentDescription,
-        checkIcon
-    )
+  UnstyledCheckbox(
+    checked,
+    modifier,
+    backgroundColor,
+    contentColor,
+    enabled,
+    onCheckedChange,
+    shape,
+    borderColor,
+    borderWidth,
+    interactionSource,
+    indication,
+    contentDescription,
+    checkIcon,
+  )
 }
 
 @Composable
 fun UnstyledCheckbox(
-    checked: Boolean,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Transparent,
-    contentColor: Color = LocalContentColor.current,
-    enabled: Boolean = true,
-    onCheckedChange: ((Boolean) -> Unit)? = null,
-    shape: Shape = RectangleShape,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = 1.dp,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = LocalIndication.current,
-    contentDescription: String? = null,
-    checkIcon: @Composable () -> Unit,
+  checked: Boolean,
+  modifier: Modifier = Modifier,
+  backgroundColor: Color = Color.Transparent,
+  contentColor: Color = LocalContentColor.current,
+  enabled: Boolean = true,
+  onCheckedChange: ((Boolean) -> Unit)? = null,
+  shape: Shape = RectangleShape,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = 1.dp,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = LocalIndication.current,
+  contentDescription: String? = null,
+  checkIcon: @Composable () -> Unit,
 ) {
-    Box(
-        modifier = modifier then buildModifier {
-            if (borderColor.isSpecified && borderWidth.isSpecified) {
-                add(Modifier.border(borderWidth, borderColor, shape))
-            }
-            add(Modifier.clip(shape).background(backgroundColor))
+  Box(
+    modifier = modifier then buildModifier {
+      if (borderColor.isSpecified && borderWidth.isSpecified) {
+        add(Modifier.border(borderWidth, borderColor, shape))
+      }
+      add(Modifier.clip(shape).background(backgroundColor))
 
-            if (onCheckedChange != null) {
-                add(
-                    Modifier.toggleable(
-                        enabled = enabled,
-                        value = checked,
-                        interactionSource = interactionSource,
-                        role = Role.Checkbox,
-                        indication = indication,
-                        onValueChange = onCheckedChange,
-                    )
-                )
-            }
-            if (contentDescription != null) {
-                add(Modifier.semantics {
-                    this.contentDescription = contentDescription
-                }
-                )
-            }
-        },
-        contentAlignment = Alignment.Center
-    ) {
-        if (checked) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                checkIcon()
-            }
-        }
+      if (onCheckedChange != null) {
+        add(
+          Modifier.toggleable(
+            enabled = enabled,
+            value = checked,
+            interactionSource = interactionSource,
+            role = Role.Checkbox,
+            indication = indication,
+            onValueChange = onCheckedChange,
+          ),
+        )
+      }
+      if (contentDescription != null) {
+        add(
+          Modifier.semantics {
+            this.contentDescription = contentDescription
+          },
+        )
+      }
+    },
+    contentAlignment = Alignment.Center,
+  ) {
+    if (checked) {
+      CompositionLocalProvider(LocalContentColor provides contentColor) {
+        checkIcon()
+      }
     }
+  }
 }

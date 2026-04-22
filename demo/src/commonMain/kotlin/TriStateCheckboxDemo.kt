@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
@@ -37,83 +58,83 @@ import com.composeunstyled.theme.Theme
 
 @Composable
 fun TriStateCheckboxDemo() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
-        contentAlignment = Alignment.Center
-    ) {
-        val checkboxOptions = listOf("Option 1", "Option 2", "Option 3", "Option 4")
-        var selected by remember { mutableStateOf(List(checkboxOptions.size) { false }) }
+  Box(
+    modifier = Modifier.fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
+    contentAlignment = Alignment.Center,
+  ) {
+    val checkboxOptions = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+    var selected by remember { mutableStateOf(List(checkboxOptions.size) { false }) }
 
-        val triState = when {
-            selected.all { it } -> ToggleableState.On
-            selected.none { it } -> ToggleableState.Off
-            else -> ToggleableState.Indeterminate
-        }
-
-        Column(
-            modifier = Modifier.widthIn(max = 300.dp).fillMaxWidth().padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TriStateCheckbox(
-                    value = triState,
-                    onClick = {
-                        val newState = when (triState) {
-                            ToggleableState.Off -> true
-                            ToggleableState.Indeterminate -> true
-                            ToggleableState.On -> false
-                        }
-                        selected = List(checkboxOptions.size) { newState }
-                    },
-                    shape = RoundedCornerShape(4.dp),
-                    backgroundColor = Color.White,
-                    borderWidth = 1.dp,
-                    borderColor = Color.Black.copy(0.33f),
-                    modifier = Modifier.size(24.dp),
-                    contentDescription = "Select all options",
-                    indication = Theme[indications][dimmed]
-                ) {
-                    when (triState) {
-                        ToggleableState.On -> Icon(Lucide.Check, contentDescription = null)
-                        ToggleableState.Indeterminate -> Icon(Lucide.Minus, contentDescription = null)
-                        ToggleableState.Off -> Unit
-                    }
-                }
-
-                Spacer(Modifier.width(12.dp))
-                Text("Select All", color = Color.White)
-            }
-
-            checkboxOptions.forEachIndexed { index, option ->
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(start = 36.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    UnstyledCheckbox(
-                        checked = selected[index],
-                        onCheckedChange = { checked ->
-                            selected = selected.toMutableList().apply {
-                                this[index] = checked
-                            }
-                        },
-                        shape = RoundedCornerShape(4.dp),
-                        backgroundColor = Color.White,
-                        borderWidth = 1.dp,
-                        borderColor = Color.Black.copy(0.33f),
-                        modifier = Modifier.size(24.dp),
-                        contentDescription = option
-                    ) {
-                        Icon(Lucide.Check, contentDescription = null)
-                    }
-
-                    Spacer(Modifier.width(12.dp))
-                    Text(option, color = Color.White)
-                }
-            }
-        }
+    val triState = when {
+      selected.all { it } -> ToggleableState.On
+      selected.none { it } -> ToggleableState.Off
+      else -> ToggleableState.Indeterminate
     }
+
+    Column(
+      modifier = Modifier.widthIn(max = 300.dp).fillMaxWidth().padding(16.dp),
+      verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        TriStateCheckbox(
+          value = triState,
+          onClick = {
+            val newState = when (triState) {
+              ToggleableState.Off -> true
+              ToggleableState.Indeterminate -> true
+              ToggleableState.On -> false
+            }
+            selected = List(checkboxOptions.size) { newState }
+          },
+          shape = RoundedCornerShape(4.dp),
+          backgroundColor = Color.White,
+          borderWidth = 1.dp,
+          borderColor = Color.Black.copy(0.33f),
+          modifier = Modifier.size(24.dp),
+          contentDescription = "Select all options",
+          indication = Theme[indications][dimmed],
+        ) {
+          when (triState) {
+            ToggleableState.On -> Icon(Lucide.Check, contentDescription = null)
+            ToggleableState.Indeterminate -> Icon(Lucide.Minus, contentDescription = null)
+            ToggleableState.Off -> Unit
+          }
+        }
+
+        Spacer(Modifier.width(12.dp))
+        Text("Select All", color = Color.White)
+      }
+
+      checkboxOptions.forEachIndexed { index, option ->
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(start = 36.dp),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          UnstyledCheckbox(
+            checked = selected[index],
+            onCheckedChange = { checked ->
+              selected = selected.toMutableList().apply {
+                this[index] = checked
+              }
+            },
+            shape = RoundedCornerShape(4.dp),
+            backgroundColor = Color.White,
+            borderWidth = 1.dp,
+            borderColor = Color.Black.copy(0.33f),
+            modifier = Modifier.size(24.dp),
+            contentDescription = option,
+          ) {
+            Icon(Lucide.Check, contentDescription = null)
+          }
+
+          Spacer(Modifier.width(12.dp))
+          Text(option, color = Color.White)
+        }
+      }
+    }
+  }
 }

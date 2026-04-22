@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import android.app.Activity
@@ -32,7 +55,7 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.composeunstyled.primitives.R
-import java.util.*
+import java.util.UUID
 
 /**
  * Modals are the building blocks for components such as dialogs, alerts and modal bottom sheets.
@@ -46,95 +69,99 @@ import java.util.*
  */
 @Composable
 actual fun Modal(
-    onKeyEvent: (KeyEvent) -> Boolean,
-    content: @Composable () -> Unit
+  onKeyEvent: (KeyEvent) -> Boolean,
+  content: @Composable () -> Unit,
 ) {
-    val parentView = LocalView.current
-    val context = LocalContext.current
-    val layoutDirection = LocalLayoutDirection.current
-    val composition = rememberCompositionContext()
-    val id = rememberSaveable { UUID.randomUUID() }
+  val parentView = LocalView.current
+  val context = LocalContext.current
+  val layoutDirection = LocalLayoutDirection.current
+  val composition = rememberCompositionContext()
+  val id = rememberSaveable { UUID.randomUUID() }
 
-    DisposableEffect(parentView) {
-        val contentView: ComposeView
+  DisposableEffect(parentView) {
+    val contentView: ComposeView
 
-        val dialog = ComponentDialog(context, R.style.Modal).apply {
-            contentView = ComposeView(context).apply {
-                setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
-                setParentCompositionContext(composition)
-                setContent {
-                    val localWindow = window
-                        ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
+    val dialog = ComponentDialog(context, R.style.Modal).apply {
+      contentView = ComposeView(context).apply {
+        setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
+        setParentCompositionContext(composition)
+        setContent {
+          val localWindow = window
+            ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
 
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .onKeyEvent(onKeyEvent)
-                            .semantics { dialog() }
-                    ) {
-                        CompositionLocalProvider(
-                            LocalModalWindow provides localWindow,
-                            LocalLayoutDirection provides layoutDirection
-                        ) {
-                            content()
-                        }
-                    }
-                }
+          Box(
+            Modifier
+              .fillMaxSize()
+              .onKeyEvent(onKeyEvent)
+              .semantics { dialog() },
+          ) {
+            CompositionLocalProvider(
+              LocalModalWindow provides localWindow,
+              LocalLayoutDirection provides layoutDirection,
+            ) {
+              content()
             }
-
-            setContentView(contentView)
-
-            contentView.setViewTreeLifecycleOwner(parentView.findViewTreeLifecycleOwner())
-            contentView.setViewTreeViewModelStoreOwner(parentView.findViewTreeViewModelStoreOwner())
-            contentView.setViewTreeSavedStateRegistryOwner(parentView.findViewTreeSavedStateRegistryOwner())
-
-            setCancelable(false)
-            setCanceledOnTouchOutside(false)
+          }
         }
+      }
 
-        val window = requireNotNull(dialog.window) {
-            "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
-        }
-        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.setDimAmount(0f)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-        } else {
-            @Suppress("DEPRECATION")
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        }
+      setContentView(contentView)
 
-        val hostWindow = context.findActivity()?.window
-        if (hostWindow != null) {
-            syncSystemUiAppearance(from = hostWindow, to = window)
-        }
+      contentView.setViewTreeLifecycleOwner(parentView.findViewTreeLifecycleOwner())
+      contentView.setViewTreeViewModelStoreOwner(parentView.findViewTreeViewModelStoreOwner())
+      contentView.setViewTreeSavedStateRegistryOwner(
+        parentView.findViewTreeSavedStateRegistryOwner(),
+      )
 
-        dialog.show()
-
-        onDispose {
-            contentView.disposeComposition()
-            dialog.dismiss()
-        }
+      setCancelable(false)
+      setCanceledOnTouchOutside(false)
     }
+
+    val window = requireNotNull(dialog.window) {
+      "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
+    }
+    window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    window.setDimAmount(0f)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+    } else {
+      @Suppress("DEPRECATION")
+      window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+    val hostWindow = context.findActivity()?.window
+    if (hostWindow != null) {
+      syncSystemUiAppearance(from = hostWindow, to = window)
+    }
+
+    dialog.show()
+
+    onDispose {
+      contentView.disposeComposition()
+      dialog.dismiss()
+    }
+  }
 }
 
 /**
  * The CompositionLocal containing the current [Window].
  */
 val LocalModalWindow = staticCompositionLocalOf<Window> {
-    error("CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?")
+  error(
+    "CompositionLocal LocalModalWindow not present – did you try to access the modal window without a modal visible on the screen?",
+  )
 }
 
 private tailrec fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
+  is Activity -> this
+  is ContextWrapper -> baseContext.findActivity()
+  else -> null
 }
 
 private fun syncSystemUiAppearance(from: Window, to: Window) {
-    val hostController = WindowCompat.getInsetsController(from, from.decorView)
-    val modalController = WindowCompat.getInsetsController(to, to.decorView)
-    modalController.isAppearanceLightStatusBars = hostController.isAppearanceLightStatusBars
-    modalController.isAppearanceLightNavigationBars = hostController.isAppearanceLightNavigationBars
+  val hostController = WindowCompat.getInsetsController(from, from.decorView)
+  val modalController = WindowCompat.getInsetsController(to, to.decorView)
+  modalController.isAppearanceLightStatusBars = hostController.isAppearanceLightStatusBars
+  modalController.isAppearanceLightNavigationBars = hostController.isAppearanceLightNavigationBars
 }

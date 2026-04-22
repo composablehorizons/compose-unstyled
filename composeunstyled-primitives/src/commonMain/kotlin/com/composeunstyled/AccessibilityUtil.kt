@@ -1,19 +1,24 @@
 /*
- * Copyright 2024 The Android Open Source Project
+ * Copyright (c) 2026 Composable Horizons
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.padding
@@ -32,45 +37,45 @@ internal val VerticalSemanticsBoundsPadding: Dp = 10.dp
  * meet the TalkBack box minimum size while preserving the visual appearance.
  */
 internal val IncreaseHorizontalSemanticsBounds: Modifier =
-    Modifier.layout { measurable, constraints ->
-        val paddingPx = HorizontalSemanticsBoundsPadding.roundToPx()
-        // We need to add horizontal padding to the semantics bounds in order to meet
-        // screenreader green box minimum size, but we also want to
-        // preserve a visual appearance and layout size below that minimum
-        // in order to maintain backwards compatibility. This custom
-        // layout effectively implements "negative padding".
-        val newConstraint = constraints.offset(paddingPx * 2, 0)
-        val placeable = measurable.measure(newConstraint)
+  Modifier.layout { measurable, constraints ->
+    val paddingPx = HorizontalSemanticsBoundsPadding.roundToPx()
+    // We need to add horizontal padding to the semantics bounds in order to meet
+    // screenreader green box minimum size, but we also want to
+    // preserve a visual appearance and layout size below that minimum
+    // in order to maintain backwards compatibility. This custom
+    // layout effectively implements "negative padding".
+    val newConstraint = constraints.offset(paddingPx * 2, 0)
+    val placeable = measurable.measure(newConstraint)
 
-        // But when actually placing the placeable, create the layout without additional
-        // space. Place the placeable where it would've been without any extra padding.
-        val height = placeable.height
-        val width = placeable.width - paddingPx * 2
-        layout(width, height) { placeable.place(-paddingPx, 0) }
-    }
-        .semantics(mergeDescendants = true) {}
-        .padding(horizontal = HorizontalSemanticsBoundsPadding)
+    // But when actually placing the placeable, create the layout without additional
+    // space. Place the placeable where it would've been without any extra padding.
+    val height = placeable.height
+    val width = placeable.width - paddingPx * 2
+    layout(width, height) { placeable.place(-paddingPx, 0) }
+  }
+    .semantics(mergeDescendants = true) {}
+    .padding(horizontal = HorizontalSemanticsBoundsPadding)
 
 /**
  * Increases the semantics bounds vertically by [VerticalSemanticsBoundsPadding] in order to meet
  * the TalkBack box minimum size while preserving the visual appearance.
  */
 internal val IncreaseVerticalSemanticsBounds: Modifier =
-    Modifier.layout { measurable, constraints ->
-        val paddingPx = VerticalSemanticsBoundsPadding.roundToPx()
-        // We need to add vertical padding to the semantics bounds in order to meet
-        // screenreader green box minimum size, but we also want to
-        // preserve a visual appearance and layout size below that minimum
-        // in order to maintain backwards compatibility. This custom
-        // layout effectively implements "negative padding".
-        val newConstraint = constraints.offset(0, paddingPx * 2)
-        val placeable = measurable.measure(newConstraint)
+  Modifier.layout { measurable, constraints ->
+    val paddingPx = VerticalSemanticsBoundsPadding.roundToPx()
+    // We need to add vertical padding to the semantics bounds in order to meet
+    // screenreader green box minimum size, but we also want to
+    // preserve a visual appearance and layout size below that minimum
+    // in order to maintain backwards compatibility. This custom
+    // layout effectively implements "negative padding".
+    val newConstraint = constraints.offset(0, paddingPx * 2)
+    val placeable = measurable.measure(newConstraint)
 
-        // But when actually placing the placeable, create the layout without additional
-        // space. Place the placeable where it would've been without any extra padding.
-        val height = placeable.height - paddingPx * 2
-        val width = placeable.width
-        layout(width, height) { placeable.place(0, -paddingPx) }
-    }
-        .semantics(mergeDescendants = true) {}
-        .padding(vertical = VerticalSemanticsBoundsPadding)
+    // But when actually placing the placeable, create the layout without additional
+    // space. Place the placeable where it would've been without any extra padding.
+    val height = placeable.height - paddingPx * 2
+    val width = placeable.width
+    layout(width, height) { placeable.place(0, -paddingPx) }
+  }
+    .semantics(mergeDescendants = true) {}
+    .padding(vertical = VerticalSemanticsBoundsPadding)

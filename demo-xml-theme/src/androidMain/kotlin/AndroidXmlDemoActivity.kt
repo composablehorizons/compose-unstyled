@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import android.os.Bundle
@@ -36,18 +57,24 @@ import com.composeunstyled.theme.resolveThemeDp
 import com.composeunstyled.theme.resolveThemeTextAppearance
 
 class AndroidXmlDemoActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb()),
-            navigationBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb())
-        )
+    enableEdgeToEdge(
+      statusBarStyle = SystemBarStyle.light(
+        Color.Transparent.toArgb(),
+        Color.Transparent.toArgb(),
+      ),
+      navigationBarStyle = SystemBarStyle.light(
+        Color.Transparent.toArgb(),
+        Color.Transparent.toArgb(),
+      ),
+    )
 
-        setContent {
-            App()
-        }
+    setContent {
+      App()
     }
+  }
 }
 
 val colors = ThemeProperty<Color>("colors")
@@ -66,60 +93,60 @@ val textStyles = ThemeProperty<TextStyle>("textStyles")
 val body = ThemeToken<TextStyle>("body")
 
 val AppTheme = buildTheme {
-    // get a reference to the calling (themed) context
-    val context = LocalContext.current
+  // get a reference to the calling (themed) context
+  val context = LocalContext.current
 
-    // add the material ripple effect
-    defaultIndication = ripple()
+  // add the material ripple effect
+  defaultIndication = ripple()
 
-    // map your XML colors to Compose
-    properties[colors] = mapOf(
-        background to resolveThemeColor(context, R.attr.color_background),
-        onBackground to resolveThemeColor(context, R.attr.color_onBackground),
-        primary to resolveThemeColor(context, R.attr.color_primary),
-        onPrimary to resolveThemeColor(context, R.attr.color_onPrimary),
-    )
+  // map your XML colors to Compose
+  properties[colors] = mapOf(
+    background to resolveThemeColor(context, R.attr.color_background),
+    onBackground to resolveThemeColor(context, R.attr.color_onBackground),
+    primary to resolveThemeColor(context, R.attr.color_primary),
+    onPrimary to resolveThemeColor(context, R.attr.color_onPrimary),
+  )
 
-    // map your XML dimens to Compose
-    properties[spacing] = mapOf(
-        small to resolveThemeDp(context, R.attr.spacing_small),
-        medium to resolveThemeDp(context, R.attr.spacing_medium),
-        large to resolveThemeDp(context, R.attr.spacing_large),
-    )
+  // map your XML dimens to Compose
+  properties[spacing] = mapOf(
+    small to resolveThemeDp(context, R.attr.spacing_small),
+    medium to resolveThemeDp(context, R.attr.spacing_medium),
+    large to resolveThemeDp(context, R.attr.spacing_large),
+  )
 
-    // map your XML typography to Compose
-    properties[textStyles] = mapOf(
-        body to resolveThemeTextAppearance(context, R.attr.textStyle_body),
-    )
+  // map your XML typography to Compose
+  properties[textStyles] = mapOf(
+    body to resolveThemeTextAppearance(context, R.attr.textStyle_body),
+  )
 }
 
 @Composable
 fun App() {
-    AppTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Theme[colors][background]),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ProvideTextStyle(Theme[textStyles][body]) {
-                ProvideContentColor(Theme[colors][onBackground]) {
-                    Text("Hello Styled World!")
+  AppTheme {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(Theme[colors][background]),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      ProvideTextStyle(Theme[textStyles][body]) {
+        ProvideContentColor(Theme[colors][onBackground]) {
+          Text("Hello Styled World!")
 
-                    Spacer(Modifier.height(Theme[spacing][large]))
+          Spacer(Modifier.height(Theme[spacing][large]))
 
-                    UnstyledButton(
-                        onClick = {},
-                        backgroundColor = Theme[colors][primary],
-                        contentColor = Theme[colors][onPrimary],
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                        shape = RoundedCornerShape(100)
-                    ) {
-                        Text("Click Me")
-                    }
-                }
-            }
+          UnstyledButton(
+            onClick = {},
+            backgroundColor = Theme[colors][primary],
+            contentColor = Theme[colors][onPrimary],
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            shape = RoundedCornerShape(100),
+          ) {
+            Text("Click Me")
+          }
         }
+      }
     }
+  }
 }

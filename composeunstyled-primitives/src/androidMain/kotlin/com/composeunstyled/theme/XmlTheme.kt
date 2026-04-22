@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.theme
 
 import android.annotation.SuppressLint
@@ -37,219 +58,223 @@ private const val TYPEFACE_MONOSPACE = 3
 
 @Composable
 fun resolveThemeColor(context: Context, @AttrRes resId: Int): Color {
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, true)
-        Color(typedValue.data)
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, true)
+    Color(typedValue.data)
+  }
 }
 
 @Composable
 fun resolveThemeDp(context: Context, @AttrRes resId: Int): Dp {
-    val density = LocalDensity.current
-    val resources = context.resources
+  val density = LocalDensity.current
+  val resources = context.resources
 
-    return remember(context, density, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, false)
-        with(density) {
-            typedValue.getDimension(resources.displayMetrics).toDp()
-        }
+  return remember(context, density, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, false)
+    with(density) {
+      typedValue.getDimension(resources.displayMetrics).toDp()
     }
+  }
 }
 
 @Composable
 fun resolveThemeSp(context: Context, @AttrRes resId: Int): TextUnit {
-    val density = LocalDensity.current
-    val resources = context.resources
+  val density = LocalDensity.current
+  val resources = context.resources
 
-    return remember(context, density, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, false)
-        with(density) {
-            typedValue.getDimension(resources.displayMetrics).toSp()
-        }
+  return remember(context, density, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, false)
+    with(density) {
+      typedValue.getDimension(resources.displayMetrics).toSp()
     }
+  }
 }
 
 @Composable
 fun resolveThemeInt(context: Context, @AttrRes resId: Int): Int {
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, true)
-        typedValue.data
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, true)
+    typedValue.data
+  }
 }
 
 @Composable
 fun resolveThemeFloat(context: Context, @AttrRes resId: Int): Float {
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, true)
-        typedValue.float
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, true)
+    typedValue.float
+  }
 }
 
 @Composable
 fun resolveThemePx(context: Context, @AttrRes resId: Int): Float {
-    val resources = context.resources
+  val resources = context.resources
 
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, false)
-        typedValue.getDimension(resources.displayMetrics)
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, false)
+    typedValue.getDimension(resources.displayMetrics)
+  }
 }
 
 @Composable
 fun resolveThemeString(context: Context, @AttrRes resId: Int): String {
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, true)
-        typedValue.string?.toString().orEmpty()
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, true)
+    typedValue.string?.toString().orEmpty()
+  }
 }
 
 @Composable
 fun resolveThemeBoolean(context: Context, @AttrRes resId: Int): Boolean {
-    return remember(context, resId) {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(resId, typedValue, true)
-        typedValue.data != 0
-    }
+  return remember(context, resId) {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(resId, typedValue, true)
+    typedValue.data != 0
+  }
 }
 
 @Composable
 @SuppressLint("ResourceType")
 fun resolveThemeTextAppearance(context: Context, @AttrRes resId: Int): TextStyle {
-    val density = LocalDensity.current
+  val density = LocalDensity.current
 
-    var resolvedTextStyle by remember { mutableStateOf<TextStyle?>(null) }
+  var resolvedTextStyle by remember { mutableStateOf<TextStyle?>(null) }
 
-    LaunchedEffect(context, density, resId) {
-        val typedValue = TypedValue()
-        if (context.theme.resolveAttribute(resId, typedValue, true).not()) {
-            return@LaunchedEffect
-        }
-        val styleResId = typedValue.resourceId
+  LaunchedEffect(context, density, resId) {
+    val typedValue = TypedValue()
+    if (context.theme.resolveAttribute(resId, typedValue, true).not()) {
+      return@LaunchedEffect
+    }
+    val styleResId = typedValue.resourceId
 
-        val a: TypedArray = context.theme.obtainStyledAttributes(styleResId, R.styleable.TextAppearance)
-        val textSizePx = a.getDimension(R.styleable.TextAppearance_android_textSize, -1f)
+    val a: TypedArray = context.theme.obtainStyledAttributes(styleResId, R.styleable.TextAppearance)
+    val textSizePx = a.getDimension(R.styleable.TextAppearance_android_textSize, -1f)
 
-        val textSize = if (textSizePx == -1f) {
-            TextUnit.Unspecified
-        } else {
-            with(density) { textSizePx.toSp() }
-        }
-        val textColor = getColorStateList(context, a, R.styleable.TextAppearance_android_textColor)
-        val textStyle = a.getInt(R.styleable.TextAppearance_android_textStyle, Typeface.NORMAL)
-        val typeface = a.getInt(R.styleable.TextAppearance_android_typeface, TYPEFACE_SANS)
+    val textSize = if (textSizePx == -1f) {
+      TextUnit.Unspecified
+    } else {
+      with(density) { textSizePx.toSp() }
+    }
+    val textColor = getColorStateList(context, a, R.styleable.TextAppearance_android_textColor)
+    val textStyle = a.getInt(R.styleable.TextAppearance_android_textStyle, Typeface.NORMAL)
+    val typeface = a.getInt(R.styleable.TextAppearance_android_typeface, TYPEFACE_SANS)
 
-        val fontFamilyResourceId = a.getResourceId(R.styleable.TextAppearance_android_fontFamily, 0)
-        val fontFamily = a.getString(R.styleable.TextAppearance_android_fontFamily)
+    val fontFamilyResourceId = a.getResourceId(R.styleable.TextAppearance_android_fontFamily, 0)
+    val fontFamily = a.getString(R.styleable.TextAppearance_android_fontFamily)
 
-        val shadowColor = getColorStateList(context, a, R.styleable.TextAppearance_android_shadowColor)
-        val shadowDx = a.getFloat(R.styleable.TextAppearance_android_shadowDx, 0f)
-        val shadowDy = a.getFloat(R.styleable.TextAppearance_android_shadowDy, 0f)
-        val shadowRadius = a.getFloat(R.styleable.TextAppearance_android_shadowRadius, 0f)
+    val shadowColor = getColorStateList(context, a, R.styleable.TextAppearance_android_shadowColor)
+    val shadowDx = a.getFloat(R.styleable.TextAppearance_android_shadowDx, 0f)
+    val shadowDy = a.getFloat(R.styleable.TextAppearance_android_shadowDy, 0f)
+    val shadowRadius = a.getFloat(R.styleable.TextAppearance_android_shadowRadius, 0f)
 
-        val fontWeight = resolveFontWeight(textStyle)
-        val fontStyle = resolveFontStyle(textStyle)
-        val composeFontFamily = resolveFontFamily(fontFamilyResourceId, context, fontFamily, textStyle, typeface)
-        val shadow = resolveShadow(shadowRadius, shadowColor, shadowDx, shadowDy)
+    val fontWeight = resolveFontWeight(textStyle)
+    val fontStyle = resolveFontStyle(textStyle)
+    val composeFontFamily =
+      resolveFontFamily(fontFamilyResourceId, context, fontFamily, textStyle, typeface)
+    val shadow = resolveShadow(shadowRadius, shadowColor, shadowDx, shadowDy)
 
-        val resolvedColor = if (textColor == null) {
-            Color.Unspecified
-        } else {
-            Color(textColor.defaultColor)
-        }
-
-        a.recycle()
-
-        resolvedTextStyle = TextStyle(
-            fontSize = textSize,
-            fontWeight = fontWeight,
-            fontStyle = fontStyle,
-            fontFamily = composeFontFamily,
-            color = resolvedColor,
-            shadow = shadow,
-        )
+    val resolvedColor = if (textColor == null) {
+      Color.Unspecified
+    } else {
+      Color(textColor.defaultColor)
     }
 
-    return resolvedTextStyle ?: TextStyle.Default
+    a.recycle()
+
+    resolvedTextStyle = TextStyle(
+      fontSize = textSize,
+      fontWeight = fontWeight,
+      fontStyle = fontStyle,
+      fontFamily = composeFontFamily,
+      color = resolvedColor,
+      shadow = shadow,
+    )
+  }
+
+  return resolvedTextStyle ?: TextStyle.Default
 }
 
 private fun resolveShadow(
-    shadowRadius: Float,
-    shadowColor: ColorStateList?,
-    shadowDx: Float,
-    shadowDy: Float
+  shadowRadius: Float,
+  shadowColor: ColorStateList?,
+  shadowDx: Float,
+  shadowDy: Float,
 ): Shadow? {
-    if (shadowRadius <= 0f || shadowColor == null) return null
+  if (shadowRadius <= 0f || shadowColor == null) return null
 
-    return Shadow(
-        color = Color(shadowColor.defaultColor),
-        offset = Offset(shadowDx, shadowDy),
-        blurRadius = shadowRadius
-    )
+  return Shadow(
+    color = Color(shadowColor.defaultColor),
+    offset = Offset(shadowDx, shadowDy),
+    blurRadius = shadowRadius,
+  )
 }
 
 private suspend fun resolveFontFamily(
-    @FontRes fontFamilyResourceId: Int,
-    context: Context,
-    fontFamily: String?,
-    textStyle: Int,
-    typeface: Int
+  @FontRes fontFamilyResourceId: Int,
+  context: Context,
+  fontFamily: String?,
+  textStyle: Int,
+  typeface: Int,
 ): FontFamily = when {
-    fontFamilyResourceId != 0 -> {
-        val androidTypeface = withContext(Dispatchers.IO) {
-            // Use Dispatchers.IO as ResourcesCompat.getFont can block the current thread
-            ResourcesCompat.getFont(context, fontFamilyResourceId)
-        }
-        if (androidTypeface != null) {
-            FontFamily(androidTypeface)
-        } else {
-            FontFamily.Default
-        }
+  fontFamilyResourceId != 0 -> {
+    val androidTypeface = withContext(Dispatchers.IO) {
+      // Use Dispatchers.IO as ResourcesCompat.getFont can block the current thread
+      ResourcesCompat.getFont(context, fontFamilyResourceId)
     }
+    if (androidTypeface != null) {
+      FontFamily(androidTypeface)
+    } else {
+      FontFamily.Default
+    }
+  }
 
-    fontFamily != null -> {
-        val androidTypeface = Typeface.create(fontFamily, textStyle)
-        FontFamily(androidTypeface)
-    }
-    // Fall back to typeface enum
-    else -> when (typeface) {
-        TYPEFACE_SERIF -> FontFamily.Serif
-        TYPEFACE_MONOSPACE -> FontFamily.Monospace
-        else -> FontFamily.Default
-    }
+  fontFamily != null -> {
+    val androidTypeface = Typeface.create(fontFamily, textStyle)
+    FontFamily(androidTypeface)
+  }
+  // Fall back to typeface enum
+  else -> when (typeface) {
+    TYPEFACE_SERIF -> FontFamily.Serif
+    TYPEFACE_MONOSPACE -> FontFamily.Monospace
+    else -> FontFamily.Default
+  }
 }
 
 private fun resolveFontStyle(textStyle: Int): FontStyle = when {
-    textStyle == Typeface.ITALIC -> FontStyle.Italic
-    textStyle == Typeface.BOLD_ITALIC -> FontStyle.Italic
-    textStyle and Typeface.ITALIC != 0 -> FontStyle.Italic
-    else -> FontStyle.Normal
+  textStyle == Typeface.ITALIC -> FontStyle.Italic
+  textStyle == Typeface.BOLD_ITALIC -> FontStyle.Italic
+  textStyle and Typeface.ITALIC != 0 -> FontStyle.Italic
+  else -> FontStyle.Normal
 }
 
 private fun resolveFontWeight(textStyle: Int): FontWeight = when {
-    textStyle == Typeface.BOLD -> FontWeight.Bold
-    textStyle == Typeface.BOLD_ITALIC -> FontWeight.Bold
-    textStyle and Typeface.BOLD != 0 -> FontWeight.Bold
-    else -> FontWeight.Normal
+  textStyle == Typeface.BOLD -> FontWeight.Bold
+  textStyle == Typeface.BOLD_ITALIC -> FontWeight.Bold
+  textStyle and Typeface.BOLD != 0 -> FontWeight.Bold
+  else -> FontWeight.Normal
 }
 
-private fun getColorStateList(context: Context, attributes: TypedArray, @StyleableRes index: Int): ColorStateList? {
-    if (attributes.hasValue(index)) {
-        val resourceId = attributes.getResourceId(index, 0)
-        if (resourceId != 0) {
-
-            val value: ColorStateList? = ContextCompat.getColorStateList(context, resourceId)
-            if (value != null) {
-                return value
-            }
-        }
+private fun getColorStateList(
+  context: Context,
+  attributes: TypedArray,
+  @StyleableRes index: Int,
+): ColorStateList? {
+  if (attributes.hasValue(index)) {
+    val resourceId = attributes.getResourceId(index, 0)
+    if (resourceId != 0) {
+      val value: ColorStateList? = ContextCompat.getColorStateList(context, resourceId)
+      if (value != null) {
+        return value
+      }
     }
+  }
 
-    return attributes.getColorStateList(index)
+  return attributes.getColorStateList(index)
 }

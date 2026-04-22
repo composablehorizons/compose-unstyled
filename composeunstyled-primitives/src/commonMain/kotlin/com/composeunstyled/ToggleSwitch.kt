@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.animation.core.animateDpAsState
@@ -32,7 +55,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-
 
 /**
  * A foundational component used to build toggle switches.
@@ -71,101 +93,103 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledToggleSwitch(toggled, modifier, onToggled, enabled, shape, backgroundColor, contentPadding, interactionSource, indication, thumb)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledToggleSwitch(toggled, modifier, onToggled, enabled, shape, backgroundColor, contentPadding, interactionSource, indication, thumb)",
+  ),
 )
 fun ToggleSwitch(
-    toggled: Boolean,
-    modifier: Modifier = Modifier,
-    onToggled: ((Boolean) -> Unit)? = null,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication = LocalIndication.current,
-    thumb: @Composable () -> Unit,
+  toggled: Boolean,
+  modifier: Modifier = Modifier,
+  onToggled: ((Boolean) -> Unit)? = null,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication = LocalIndication.current,
+  thumb: @Composable () -> Unit,
 ) {
-    UnstyledToggleSwitch(
-        toggled = toggled,
-        modifier = modifier,
-        onToggled = onToggled,
-        enabled = enabled,
-        shape = shape,
-        backgroundColor = backgroundColor,
-        contentPadding = contentPadding,
-        interactionSource = interactionSource,
-        indication = indication,
-        thumb = thumb
-    )
+  UnstyledToggleSwitch(
+    toggled = toggled,
+    modifier = modifier,
+    onToggled = onToggled,
+    enabled = enabled,
+    shape = shape,
+    backgroundColor = backgroundColor,
+    contentPadding = contentPadding,
+    interactionSource = interactionSource,
+    indication = indication,
+    thumb = thumb,
+  )
 }
 
 @Composable
 fun UnstyledToggleSwitch(
-    toggled: Boolean,
-    modifier: Modifier = Modifier,
-    onToggled: ((Boolean) -> Unit)? = null,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication = LocalIndication.current,
-    thumb: @Composable () -> Unit,
+  toggled: Boolean,
+  modifier: Modifier = Modifier,
+  onToggled: ((Boolean) -> Unit)? = null,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication = LocalIndication.current,
+  thumb: @Composable () -> Unit,
 ) {
-    var trackWidth by remember { mutableStateOf(0.dp) }
-    var thumbWidth by remember { mutableStateOf(0.dp) }
-    val layoutDirection = LocalLayoutDirection.current
+  var trackWidth by remember { mutableStateOf(0.dp) }
+  var thumbWidth by remember { mutableStateOf(0.dp) }
+  val layoutDirection = LocalLayoutDirection.current
 
-    val paddingStart = contentPadding.calculateStartPadding(layoutDirection)
-    val paddingEnd = contentPadding.calculateEndPadding(layoutDirection)
+  val paddingStart = contentPadding.calculateStartPadding(layoutDirection)
+  val paddingEnd = contentPadding.calculateEndPadding(layoutDirection)
 
-    val actualTrackWidth by derivedStateOf {
-        trackWidth - paddingStart - paddingEnd
-    }
+  val actualTrackWidth by derivedStateOf {
+    trackWidth - paddingStart - paddingEnd
+  }
 
-    val hasMeasured by derivedStateOf {
-        trackWidth > 0.dp && thumbWidth > 0.dp
-    }
+  val hasMeasured by derivedStateOf {
+    trackWidth > 0.dp && thumbWidth > 0.dp
+  }
 
-    val targetOffset = if (toggled) actualTrackWidth - thumbWidth else 0.dp
-    val offset by if (hasMeasured) {
-        animateDpAsState(targetValue = targetOffset, animationSpec = tween())
-    } else {
-        remember { mutableStateOf(0.dp) }
-    }
+  val targetOffset = if (toggled) actualTrackWidth - thumbWidth else 0.dp
+  val offset by if (hasMeasured) {
+    animateDpAsState(targetValue = targetOffset, animationSpec = tween())
+  } else {
+    remember { mutableStateOf(0.dp) }
+  }
 
-    val density = LocalDensity.current
+  val density = LocalDensity.current
 
+  Box(
+    modifier = modifier
+      .widthIn(min = 48.dp)
+      .clip(shape)
+      .background(backgroundColor, shape)
+      .onSizeChanged { trackWidth = with(density) { it.width.toDp() } }
+      then buildModifier {
+        if (onToggled != null) {
+          add(
+            Modifier.toggleable(
+              value = toggled,
+              enabled = enabled,
+              interactionSource = interactionSource,
+              indication = indication,
+              role = Role.Switch,
+              onValueChange = onToggled,
+            ),
+          )
+        }
+      }
+        .padding(contentPadding),
+  ) {
     Box(
-        modifier = modifier
-            .widthIn(min = 48.dp)
-            .clip(shape)
-            .background(backgroundColor, shape)
-            .onSizeChanged { trackWidth = with(density) { it.width.toDp() } }
-                then buildModifier {
-            if (onToggled != null) {
-                add(
-                    Modifier.toggleable(
-                        value = toggled,
-                        enabled = enabled,
-                        interactionSource = interactionSource,
-                        indication = indication,
-                        role = Role.Switch,
-                        onValueChange = onToggled
-                    )
-                )
-            }
-        }
-            .padding(contentPadding)
+      Modifier
+        .offset { IntOffset(offset.roundToPx(), 0) }
+        .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
+        .alpha(if (hasMeasured) 1f else 0f),
     ) {
-        Box(
-            Modifier
-                .offset { IntOffset(offset.roundToPx(), 0) }
-                .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
-                .alpha(if (hasMeasured) 1f else 0f)
-        ) {
-            thumb()
-        }
+      thumb()
     }
+  }
 }

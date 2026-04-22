@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composables.core
 
 import androidx.compose.animation.AnimatedVisibility
@@ -56,8 +79,8 @@ val DoNothing: () -> Unit = {}
  * @param dismissOnClickOutside Whether the sheet should be dismissed when clicking outside of it.
  */
 data class ModalSheetProperties(
-    val dismissOnBackPress: Boolean = true,
-    val dismissOnClickOutside: Boolean = true,
+  val dismissOnBackPress: Boolean = true,
+  val dismissOnClickOutside: Boolean = true,
 )
 
 /**
@@ -74,152 +97,161 @@ data class ModalSheetProperties(
  */
 @Composable
 fun rememberModalBottomSheetState(
-    initialDetent: SheetDetent,
-    detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-    animationSpec: AnimationSpec<Float> = tween(),
-    velocityThreshold: () -> Dp = { 125.dp },
-    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
-    confirmDetentChange: (SheetDetent) -> Boolean = { true },
-    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
+  initialDetent: SheetDetent,
+  detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+  animationSpec: AnimationSpec<Float> = tween(),
+  velocityThreshold: () -> Dp = { 125.dp },
+  positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
+  confirmDetentChange: (SheetDetent) -> Boolean = { true },
+  decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
 ): ModalBottomSheetState {
-    val sheetState = rememberBottomSheetState(
+  val sheetState = rememberBottomSheetState(
+    initialDetent = initialDetent,
+    detents = detents,
+    animationSpec = animationSpec,
+    velocityThreshold = velocityThreshold,
+    positionalThreshold = positionalThreshold,
+    decayAnimationSpec = decayAnimationSpec,
+    confirmDetentChange = confirmDetentChange,
+  )
+  val scope = rememberCoroutineScope()
+  return rememberSaveable(
+    saver = mapSaver(
+      save = { modalBottomSheetState ->
+        mapOf(
+          "detent" to modalBottomSheetState.currentDetent.identifier,
+        )
+      },
+      restore = { map ->
+        val restoredDetent = detents.first { it.identifier == map["detent"] }
+        ModalBottomSheetState(
+          initialDetent = restoredDetent,
+          bottomSheetState = sheetState,
+          scope = scope,
+        )
+      },
+    ),
+    init = {
+      ModalBottomSheetState(
         initialDetent = initialDetent,
-        detents = detents,
-        animationSpec = animationSpec,
-        velocityThreshold = velocityThreshold,
-        positionalThreshold = positionalThreshold,
-        decayAnimationSpec = decayAnimationSpec,
-        confirmDetentChange = confirmDetentChange,
-    )
-    val scope = rememberCoroutineScope()
-    return rememberSaveable(
-        saver = mapSaver(
-            save = { modalBottomSheetState -> mapOf("detent" to modalBottomSheetState.currentDetent.identifier) },
-            restore = { map ->
-                val restoredDetent = detents.first { it.identifier == map["detent"] }
-                ModalBottomSheetState(
-                    initialDetent = restoredDetent,
-                    bottomSheetState = sheetState,
-                    scope = scope
-                )
-            }
-        ),
-        init = {
-            ModalBottomSheetState(
-                initialDetent = initialDetent,
-                bottomSheetState = sheetState,
-                scope = scope
-            )
-        }
-    )
+        bottomSheetState = sheetState,
+        scope = scope,
+      )
+    },
+  )
 }
 
 class ModalBottomSheetState(
-    initialDetent: SheetDetent,
-    internal val bottomSheetState: BottomSheetState,
-    val scope: CoroutineScope,
+  initialDetent: SheetDetent,
+  internal val bottomSheetState: BottomSheetState,
+  val scope: CoroutineScope,
 ) {
-    internal var modalDetent by mutableStateOf(initialDetent)
+  internal var modalDetent by mutableStateOf(initialDetent)
 
-    internal val scrimState = MutableTransitionState(initialState = initialDetent != SheetDetent.Hidden)
+  internal val scrimState =
+    MutableTransitionState(initialState = initialDetent != SheetDetent.Hidden)
 
-    internal var modalIsAdded by mutableStateOf(false)
-    internal var pendingDetentChange: Job? = null
+  internal var modalIsAdded by mutableStateOf(false)
+  internal var pendingDetentChange: Job? = null
 
-    var currentDetent: SheetDetent
-        get() {
-            return modalDetent
-        }
-        @Deprecated(
-            message = "This will go away in 2.0. Set the value to targetDetent instead",
-            replaceWith = ReplaceWith("targetDetent")
-        )
-        set(value) {
-            targetDetent = value
-        }
-    var targetDetent: SheetDetent
-        get() = bottomSheetState.targetDetent
-        set(value) {
-            scope.launch {
-                animateTo(value)
-            }
-        }
-
-    val isIdle: Boolean
-        get() = bottomSheetState.isIdle
-
-    @Deprecated("This will go away in 2.0. Use the progress function and provide the detents you need instead.")
-    val progress: Float by derivedStateOf {
-        progress(currentDetent, targetDetent)
+  var currentDetent: SheetDetent
+    get() {
+      return modalDetent
     }
 
-    /**
-     * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
-     */
-    fun progress(from: SheetDetent, to: SheetDetent): Float {
-        return bottomSheetState.progress(from, to)
+    @Deprecated(
+      message = "This will go away in 2.0. Set the value to targetDetent instead",
+      replaceWith = ReplaceWith("targetDetent"),
+    )
+    set(value) {
+      targetDetent = value
+    }
+  var targetDetent: SheetDetent
+    get() = bottomSheetState.targetDetent
+    set(value) {
+      scope.launch {
+        animateTo(value)
+      }
     }
 
-    val offset: Float by derivedStateOf {
-        if (modalIsAdded.not()) {
-            0f
-        } else {
-            bottomSheetState.offset
-        }
+  val isIdle: Boolean
+    get() = bottomSheetState.isIdle
+
+  @Deprecated(
+    "This will go away in 2.0. Use the progress function and provide the detents you need instead.",
+  )
+  val progress: Float by derivedStateOf {
+    progress(currentDetent, targetDetent)
+  }
+
+  /**
+   * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
+   */
+  fun progress(from: SheetDetent, to: SheetDetent): Float {
+    return bottomSheetState.progress(from, to)
+  }
+
+  val offset: Float by derivedStateOf {
+    if (modalIsAdded.not()) {
+      0f
+    } else {
+      bottomSheetState.offset
     }
+  }
 
-    suspend fun animateTo(value: SheetDetent) {
-        val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden
-                || bottomSheetState.targetDetent != SheetDetent.Hidden
+  suspend fun animateTo(value: SheetDetent) {
+    val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden ||
+      bottomSheetState.targetDetent != SheetDetent.Hidden
 
-        if (isBottomSheetVisible) {
-            bottomSheetState.animateTo(value)
-        } else {
-            modalDetent = value
-            pendingDetentChange?.cancel()
-            pendingDetentChange = scope.launch {
-                awaitModal()
-                scrimState.targetState = true
-                bottomSheetState.animateTo(value)
-            }
-            pendingDetentChange?.join()
-        }
+    if (isBottomSheetVisible) {
+      bottomSheetState.animateTo(value)
+    } else {
+      modalDetent = value
+      pendingDetentChange?.cancel()
+      pendingDetentChange = scope.launch {
+        awaitModal()
+        scrimState.targetState = true
+        bottomSheetState.animateTo(value)
+      }
+      pendingDetentChange?.join()
     }
+  }
 
-    fun jumpTo(value: SheetDetent) {
-        val isBottomSheetVisible =
-            bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
+  fun jumpTo(value: SheetDetent) {
+    val isBottomSheetVisible =
+      bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
 
-        modalDetent = value
+    modalDetent = value
 
-        if (isBottomSheetVisible) {
-            bottomSheetState.jumpTo(value)
-        } else {
-            pendingDetentChange?.cancel()
-            pendingDetentChange = scope.launch {
-                awaitModal()
-                scrimState.targetState = true
-                bottomSheetState.jumpTo(value)
-            }
-        }
+    if (isBottomSheetVisible) {
+      bottomSheetState.jumpTo(value)
+    } else {
+      pendingDetentChange?.cancel()
+      pendingDetentChange = scope.launch {
+        awaitModal()
+        scrimState.targetState = true
+        bottomSheetState.jumpTo(value)
+      }
     }
+  }
 
-    private suspend fun awaitModal() {
-        // Workaround until https://github.com/composablehorizons/compose-unstyled/issues/89 is unblocked
-        snapshotFlow { modalIsAdded }.distinctUntilChanged().filter { modalIsAdded }.first()
+  private suspend fun awaitModal() {
+    // Workaround until https://github.com/composablehorizons/compose-unstyled/issues/89 is unblocked
+    snapshotFlow { modalIsAdded }.distinctUntilChanged().filter { modalIsAdded }.first()
 
-        // wait until the anchored state is used and is measured
-        snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }.filter { it }.first()
-    }
+    // wait until the anchored state is used and is measured
+    snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }.filter { it }
+      .first()
+  }
 
-    fun invalidateDetents() {
-        bottomSheetState.invalidateDetents()
-    }
+  fun invalidateDetents() {
+    bottomSheetState.invalidateDetents()
+  }
 }
 
 class ModalBottomSheetScope internal constructor(
-    internal val modalState: ModalBottomSheetState,
-    internal val sheetState: BottomSheetState,
+  internal val modalState: ModalBottomSheetState,
+  internal val sheetState: BottomSheetState,
 )
 
 /**
@@ -257,75 +289,78 @@ class ModalBottomSheetScope internal constructor(
  */
 @Composable
 fun ModalBottomSheet(
-    state: ModalBottomSheetState,
-    properties: ModalSheetProperties = ModalSheetProperties(),
-    onDismiss: () -> Unit = DoNothing,
-    content: @Composable (ModalBottomSheetScope.() -> Unit),
+  state: ModalBottomSheetState,
+  properties: ModalSheetProperties = ModalSheetProperties(),
+  onDismiss: () -> Unit = DoNothing,
+  content: @Composable (ModalBottomSheetScope.() -> Unit),
 ) {
-    val currentDismissCallback by rememberUpdatedState(onDismiss)
-    val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
-    val isSheetVisible by remember { derivedStateOf { state.isIdle.not() || state.targetDetent != SheetDetent.Hidden } }
-    val isScrimVisible by remember {
-        derivedStateOf {
-            (state.scrimState.isIdle.not() || state.currentDetent != SheetDetent.Hidden)
+  val currentDismissCallback by rememberUpdatedState(onDismiss)
+  val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
+  val isSheetVisible by remember {
+    derivedStateOf { state.isIdle.not() || state.targetDetent != SheetDetent.Hidden }
+  }
+  val isScrimVisible by remember {
+    derivedStateOf {
+      (state.scrimState.isIdle.not() || state.currentDetent != SheetDetent.Hidden)
+    }
+  }
+
+  fun onDismissRequest() {
+    currentDismissCallback()
+    state.scrimState.targetState = false
+    state.modalDetent = SheetDetent.Hidden
+    scope.sheetState.targetDetent = SheetDetent.Hidden
+  }
+
+  if (isSheetVisible || isScrimVisible) {
+    Modal {
+      DisposableEffect(Unit) {
+        state.modalIsAdded = true
+        onDispose {
+          state.modalIsAdded = false
+          state.pendingDetentChange?.cancel()
+          state.pendingDetentChange = null
         }
-    }
-
-    fun onDismissRequest() {
-        currentDismissCallback()
-        state.scrimState.targetState = false
-        state.modalDetent = SheetDetent.Hidden
-        scope.sheetState.targetDetent = SheetDetent.Hidden
-    }
-
-
-    if (isSheetVisible || isScrimVisible) {
-        Modal {
-            DisposableEffect(Unit) {
-                state.modalIsAdded = true
-                onDispose {
-                    state.modalIsAdded = false
-                    state.pendingDetentChange?.cancel()
-                    state.pendingDetentChange = null
-                }
+      }
+      if (state.modalIsAdded) {
+        var hasBeenShown by remember { mutableStateOf(false) }
+        if (hasBeenShown.not()) {
+          LaunchedEffect(state.offset > 0f) {
+            hasBeenShown = true
+          }
+        } else {
+          LaunchedEffect(state.bottomSheetState.isIdle) {
+            if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
+              onDismissRequest()
             }
-            if (state.modalIsAdded) {
-                var hasBeenShown by remember { mutableStateOf(false) }
-                if (hasBeenShown.not()) {
-                    LaunchedEffect(state.offset > 0f) {
-                        hasBeenShown = true
-                    }
-                } else {
-                    LaunchedEffect(state.bottomSheetState.isIdle) {
-                        if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
-                            onDismissRequest()
-                        }
-                    }
-                }
-            }
+          }
+        }
+      }
 
-            if (properties.dismissOnBackPress) {
-                EscapeHandler {
+      if (properties.dismissOnBackPress) {
+        EscapeHandler {
+          onDismissRequest()
+        }
+      }
+      Box(
+        modifier = Modifier.fillMaxSize() then buildModifier {
+          if (properties.dismissOnClickOutside) {
+            add(
+              Modifier.pointerInput(Unit) {
+                detectTapGestures {
+                  if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
                     onDismissRequest()
+                  }
                 }
-            }
-            Box(
-                modifier = Modifier.fillMaxSize() then buildModifier {
-                    if (properties.dismissOnClickOutside) {
-                        add(Modifier.pointerInput(Unit) {
-                            detectTapGestures {
-                                if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                                    onDismissRequest()
-                                }
-                            }
-                        })
-                    }
-                }
-            ) {
-                scope.content()
-            }
-        }
+              },
+            )
+          }
+        },
+      ) {
+        scope.content()
+      }
     }
+  }
 }
 
 /**
@@ -338,28 +373,27 @@ fun ModalBottomSheet(
  */
 @Composable
 fun ModalBottomSheetScope.Sheet(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = LocalContentColor.current,
-    contentPadding: PaddingValues = NoPadding,
-    imeAware: Boolean = false,
-    content: @Composable (BottomSheetScope.() -> Unit)
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = LocalContentColor.current,
+  contentPadding: PaddingValues = NoPadding,
+  imeAware: Boolean = false,
+  content: @Composable (BottomSheetScope.() -> Unit),
 ) {
-    BottomSheet(
-        state = sheetState,
-        enabled = enabled,
-        modifier = modifier,
-        content = content,
-        contentPadding = contentPadding,
-        shape = shape,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        imeAware = imeAware
-    )
+  BottomSheet(
+    state = sheetState,
+    enabled = enabled,
+    modifier = modifier,
+    content = content,
+    contentPadding = contentPadding,
+    shape = shape,
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    imeAware = imeAware,
+  )
 }
-
 
 /**
  * A scrim is used to darken the content behind the sheet in order to signify that the rest of the screen is not interactive.
@@ -371,17 +405,17 @@ fun ModalBottomSheetScope.Sheet(
  */
 @Composable
 fun ModalBottomSheetScope.Scrim(
-    modifier: Modifier = Modifier,
-    scrimColor: Color = Color.Black.copy(0.6f),
-    enter: EnterTransition = AppearInstantly,
-    exit: ExitTransition = DisappearInstantly,
+  modifier: Modifier = Modifier,
+  scrimColor: Color = Color.Black.copy(0.6f),
+  enter: EnterTransition = AppearInstantly,
+  exit: ExitTransition = DisappearInstantly,
 ) {
-    AnimatedVisibility(
-        visibleState = modalState.scrimState,
-        enter = enter,
-        exit = exit,
-    ) {
-        // keep the rendered content as a child of animated visibility, because it does not animate itself in
-        Box(modifier = modifier.fillMaxSize().background(scrimColor))
-    }
+  AnimatedVisibility(
+    visibleState = modalState.scrimState,
+    enter = enter,
+    exit = exit,
+  ) {
+    // keep the rendered content as a child of animated visibility, because it does not animate itself in
+    Box(modifier = modifier.fillMaxSize().background(scrimColor))
+  }
 }

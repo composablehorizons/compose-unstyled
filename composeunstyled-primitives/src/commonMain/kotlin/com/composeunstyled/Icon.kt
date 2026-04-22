@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.foundation.Image
@@ -31,30 +54,30 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @param tint The tint color to be applied to the icon.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledIcon(painter, contentDescription, modifier, tint)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith("UnstyledIcon(painter, contentDescription, modifier, tint)"),
 )
 @Composable
 fun Icon(
-    painter: Painter,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  painter: Painter,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    UnstyledIcon(painter, contentDescription, modifier, tint)
+  UnstyledIcon(painter, contentDescription, modifier, tint)
 }
 
 @Composable
 fun UnstyledIcon(
-    painter: Painter,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  painter: Painter,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    val colorFilter = remember(tint) {
-        if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
-    }
-    Image(painter, contentDescription, modifier, colorFilter = colorFilter)
+  val colorFilter = remember(tint) {
+    if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
+  }
+  Image(painter, contentDescription, modifier, colorFilter = colorFilter)
 }
 
 /**
@@ -78,30 +101,30 @@ fun UnstyledIcon(
  * @param tint The tint color to be applied to the icon.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledIcon(imageBitmap, contentDescription, modifier, tint)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith("UnstyledIcon(imageBitmap, contentDescription, modifier, tint)"),
 )
 @Composable
 fun Icon(
-    imageBitmap: ImageBitmap,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  imageBitmap: ImageBitmap,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    UnstyledIcon(imageBitmap, contentDescription, modifier, tint)
+  UnstyledIcon(imageBitmap, contentDescription, modifier, tint)
 }
 
 @Composable
 fun UnstyledIcon(
-    imageBitmap: ImageBitmap,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  imageBitmap: ImageBitmap,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    val colorFilter = remember(tint) {
-        if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
-    }
-    Image(imageBitmap, contentDescription, modifier, colorFilter = colorFilter)
+  val colorFilter = remember(tint) {
+    if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
+  }
+  Image(imageBitmap, contentDescription, modifier, colorFilter = colorFilter)
 }
 
 /**
@@ -125,28 +148,28 @@ fun UnstyledIcon(
  * @param tint The tint color to be applied to the icon.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledIcon(imageVector, contentDescription, modifier, tint)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith("UnstyledIcon(imageVector, contentDescription, modifier, tint)"),
 )
 @Composable
 fun Icon(
-    imageVector: ImageVector,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  imageVector: ImageVector,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    UnstyledIcon(imageVector, contentDescription, modifier, tint)
+  UnstyledIcon(imageVector, contentDescription, modifier, tint)
 }
 
 @Composable
 fun UnstyledIcon(
-    imageVector: ImageVector,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    tint: Color = LocalContentColor.current
+  imageVector: ImageVector,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  tint: Color = LocalContentColor.current,
 ) {
-    val colorFilter = remember(tint) {
-        if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
-    }
-    Image(imageVector, contentDescription, modifier, colorFilter = colorFilter)
+  val colorFilter = remember(tint) {
+    if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
+  }
+  Image(imageVector, contentDescription, modifier, colorFilter = colorFilter)
 }

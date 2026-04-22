@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new `demo-system-ui-styling` module that showcases how to style System UI in modals.
 
 ### Fixed
+
 - Fix state TextField visual transformation mapping (Fixes #207)
 - Apply visualTransformation when TextField is non-editable (Fixes #206)
 - Add textDecoration parameter to UnstyledTextField (Fixes #205)
@@ -40,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add onTextLayout parameter to Text (#185)
-- Begin of prefixing all components with `Unstyled-` prefix, so it's simpler to differenciate with other design systems components.
+- Begin of prefixing all components with `Unstyled-` prefix, so it's simpler to differenciate with
+  other design systems components.
 
 ### Fixed
 
@@ -54,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix a bug where ScrollArea would trigger overscroll effect to the wrong axis 
+- Fix a bug where ScrollArea would trigger overscroll effect to the wrong axis
 - Remove TextField placeholder on any character entered including space
 - Change token names of PlatformTheme so that they do not override user's
 - Fix inverted colors for RadioGroup
@@ -63,7 +65,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Deprecate ScrollArea with overscroll effect parameter
-
 
 ## [1.49.3] - 2025-11-27
 
@@ -81,11 +82,14 @@ Allow customization of Platform Themes (b2c2a26d)
 
 ### Added
 
-- Introduce Platform Themes. Platform Themes provide a native look and feel depending on the platform you are running on, such as platform fonts, text sizes, emojis on Web, touch indications, and interactive sizing for controls.
+- Introduce Platform Themes. Platform Themes provide a native look and feel depending on the
+  platform you are running on, such as platform fonts, text sizes, emojis on Web, touch indications,
+  and interactive sizing for controls.
 - Add option to animate `ColoredIndication`'s color changes
 - Add getter to MutableThemeProperties
 
 ### Changed
+
 - Updated demos to use Platform Theme instead of hardcoded styles
 
 ## [1.48.3] - 2025-11-11

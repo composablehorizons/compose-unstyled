@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
@@ -25,99 +46,99 @@ import kotlin.test.assertEquals
 
 class ThemeTest {
 
-    @Test
-    fun canSetAndReadStringValueFromTheme() = runComposeUiTest {
-        val testTheme = buildTheme {
-            properties[strings] = mapOf(
-                text to "Hello Theme"
-            )
-        }
-
-        setContent {
-            testTheme {
-                BasicText(Theme[strings][text])
-            }
-        }
-
-        onNodeWithText("Hello Theme").assertExists()
+  @Test
+  fun canSetAndReadStringValueFromTheme() = runComposeUiTest {
+    val testTheme = buildTheme {
+      properties[strings] = mapOf(
+        text to "Hello Theme",
+      )
     }
 
-    @Test
-    fun themeTokenValuesUpdateDisplayedText() = runComposeUiTest {
-        var themeValue by mutableStateOf("Hello")
-
-        setContent {
-            val testTheme = buildTheme {
-                properties[strings] = mapOf(
-                    text to themeValue
-                )
-            }
-
-            testTheme {
-                BasicText(Theme[strings][text])
-            }
-        }
-
-        onNodeWithText("Hello").assertExists()
-
-        themeValue = "World"
-
-        onNodeWithText("World").assertExists()
-        onNodeWithText("Hello").assertDoesNotExist()
+    setContent {
+      testTheme {
+        BasicText(Theme[strings][text])
+      }
     }
 
-    @Test
-    fun assigningSameThemeValuesDoesNotCauseExtraRecompositions() = runComposeUiTest {
-        // use neverEqualPolicy to force a recomposition
-        var themeValue by mutableStateOf("Hello", neverEqualPolicy())
-        var themedContentRecompositions = 0
+    onNodeWithText("Hello Theme").assertExists()
+  }
 
-        val TestTheme = buildTheme {
-            println("RECOMPO")
-            properties[strings] = mapOf(
-                text to themeValue
-            )
-        }
-        setContent {
-            TestTheme {
-                SideEffect {
-                    themedContentRecompositions++
-                }
-                BasicText(Theme[strings][text])
-            }
-        }
+  @Test
+  fun themeTokenValuesUpdateDisplayedText() = runComposeUiTest {
+    var themeValue by mutableStateOf("Hello")
 
-        themeValue = "Hello"
+    setContent {
+      val testTheme = buildTheme {
+        properties[strings] = mapOf(
+          text to themeValue,
+        )
+      }
 
-        onNodeWithText("Hello").assertExists()
-        waitForIdle()
-        assertEquals(1, themedContentRecompositions)
+      testTheme {
+        BasicText(Theme[strings][text])
+      }
     }
 
-    @Test
-    fun defaultComponentInteractiveSizeIsPropagatedToModifier() = runComposeUiTest {
-        val testTheme = buildTheme {
-            defaultComponentInteractiveSize = ComponentInteractiveSize(
-                touchInteractionSize = 48.dp,
-                nonTouchInteractionSize = 32.dp
-            )
-        }
+    onNodeWithText("Hello").assertExists()
 
-        setContent {
-            testTheme {
-                Box(
-                    modifier = Modifier
-                        .minimumInteractiveComponentSize()
-                        .testTag("interactive-box")
-                )
-            }
-        }
+    themeValue = "World"
 
-        onNodeWithTag("interactive-box")
-            .assertWidthIsEqualTo(32.dp)
-            .assertHeightIsEqualTo(32.dp)
+    onNodeWithText("World").assertExists()
+    onNodeWithText("Hello").assertDoesNotExist()
+  }
+
+  @Test
+  fun assigningSameThemeValuesDoesNotCauseExtraRecompositions() = runComposeUiTest {
+    // use neverEqualPolicy to force a recomposition
+    var themeValue by mutableStateOf("Hello", neverEqualPolicy())
+    var themedContentRecompositions = 0
+
+    val TestTheme = buildTheme {
+      println("RECOMPO")
+      properties[strings] = mapOf(
+        text to themeValue,
+      )
+    }
+    setContent {
+      TestTheme {
+        SideEffect {
+          themedContentRecompositions++
+        }
+        BasicText(Theme[strings][text])
+      }
     }
 
-    val strings = ThemeProperty<String>("strings")
-    val text = ThemeToken<String>("label")
+    themeValue = "Hello"
+
+    onNodeWithText("Hello").assertExists()
+    waitForIdle()
+    assertEquals(1, themedContentRecompositions)
+  }
+
+  @Test
+  fun defaultComponentInteractiveSizeIsPropagatedToModifier() = runComposeUiTest {
+    val testTheme = buildTheme {
+      defaultComponentInteractiveSize = ComponentInteractiveSize(
+        touchInteractionSize = 48.dp,
+        nonTouchInteractionSize = 32.dp,
+      )
+    }
+
+    setContent {
+      testTheme {
+        Box(
+          modifier = Modifier
+            .minimumInteractiveComponentSize()
+            .testTag("interactive-box"),
+        )
+      }
+    }
+
+    onNodeWithTag("interactive-box")
+      .assertWidthIsEqualTo(32.dp)
+      .assertHeightIsEqualTo(32.dp)
+  }
+
+  val strings = ThemeProperty<String>("strings")
+  val text = ThemeToken<String>("label")
 }

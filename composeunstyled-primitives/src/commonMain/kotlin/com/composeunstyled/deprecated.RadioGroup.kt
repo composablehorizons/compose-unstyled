@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled
 
 import androidx.compose.foundation.Indication
@@ -41,7 +62,7 @@ import androidx.compose.ui.unit.dp
 @Deprecated("Use the RadioGroup overload that takes the value directly instead")
 @Stable
 class RadioGroupState(selectedOption: String? = null) {
-    var selectedOption by mutableStateOf(selectedOption)
+  var selectedOption by mutableStateOf(selectedOption)
 }
 
 /**
@@ -52,9 +73,9 @@ class RadioGroupState(selectedOption: String? = null) {
 @Deprecated("Use the RadioGroup overload that takes the value directly instead")
 @Composable
 fun rememberRadioGroupState(initialValue: String? = null): RadioGroupState {
-    return remember {
-        RadioGroupState(selectedOption = initialValue)
-    }
+  return remember {
+    RadioGroupState(selectedOption = initialValue)
+  }
 }
 
 @Deprecated("Use the RadioGroup overload that takes the value directly instead")
@@ -63,7 +84,8 @@ class RadioGroupScope(val state: RadioGroupState)
 /**
  * A foundational component used to build radio groups.
  *
- * For interactive preview & code examples, visit [Radio Group Documentation](https://composeunstyled.com/radiogroup).
+ * For interactive preview & code examples, visit
+ * [Radio Group Documentation](https://composeunstyled.com/radiogroup).
  *
  * ## Basic Example
  *
@@ -100,41 +122,43 @@ class RadioGroupScope(val state: RadioGroupState)
 @Deprecated("Use the RadioGroup overload that takes the value directly instead")
 @Composable
 fun RadioGroup(
-    state: RadioGroupState,
-    contentDescription: String?,
-    modifier: Modifier = Modifier,
-    content: @Composable RadioGroupScope.() -> Unit
+  state: RadioGroupState,
+  contentDescription: String?,
+  modifier: Modifier = Modifier,
+  content: @Composable RadioGroupScope.() -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-    val scope = remember { RadioGroupScope(state) }
+  val focusManager = LocalFocusManager.current
+  val scope = remember { RadioGroupScope(state) }
 
-    Box(modifier.selectableGroup().semantics {
-        if (contentDescription != null) {
-            this.contentDescription = contentDescription
-        }
+  Box(
+    modifier.selectableGroup().semantics {
+      if (contentDescription != null) {
+        this.contentDescription = contentDescription
+      }
     }.onKeyEvent {
-        when (it.key) {
-            Key.DirectionDown, Key.DirectionRight -> {
-                if (it.isKeyDown) {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-                true
-            }
-
-            Key.DirectionUp, Key.DirectionLeft -> {
-                if (it.isKeyDown) {
-                    focusManager.moveFocus(FocusDirection.Previous)
-                }
-                true
-            }
-
-            else -> false
+      when (it.key) {
+        Key.DirectionDown, Key.DirectionRight -> {
+          if (it.isKeyDown) {
+            focusManager.moveFocus(FocusDirection.Next)
+          }
+          true
         }
-    }) {
-        with(scope) {
-            content()
+
+        Key.DirectionUp, Key.DirectionLeft -> {
+          if (it.isKeyDown) {
+            focusManager.moveFocus(FocusDirection.Previous)
+          }
+          true
         }
+
+        else -> false
+      }
+    },
+  ) {
+    with(scope) {
+      content()
     }
+  }
 }
 
 /**
@@ -163,48 +187,49 @@ fun RadioGroup(
 @Deprecated("Replace with RadioButton")
 @Composable
 fun RadioGroupScope.Radio(
-    value: String,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified,
-    selectedColor: Color = Color.Unspecified,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = Dp.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = LocalIndication.current,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalAlignment: Alignment.Vertical = Alignment.Top,
-    content: @Composable (RowScope.() -> Unit),
+  value: String,
+  modifier: Modifier = Modifier,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = Color.Unspecified,
+  selectedColor: Color = Color.Unspecified,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = Dp.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = LocalIndication.current,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  verticalAlignment: Alignment.Vertical = Alignment.Top,
+  content: @Composable (RowScope.() -> Unit),
 ) {
-    val selected = state.selectedOption == value
+  val selected = state.selectedOption == value
 
-    Radio(
-        selected = selected,
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        selectedColor = selectedColor,
-        enabled = enabled,
-        onSelectedChange = { state.selectedOption = value },
-        shape = shape,
-        borderColor = borderColor,
-        borderWidth = borderWidth,
-        contentPadding = contentPadding,
-        interactionSource = interactionSource,
-        indication = indication,
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment,
-        content = content
-    )
+  Radio(
+    selected = selected,
+    modifier = modifier,
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    selectedColor = selectedColor,
+    enabled = enabled,
+    onSelectedChange = { state.selectedOption = value },
+    shape = shape,
+    borderColor = borderColor,
+    borderWidth = borderWidth,
+    contentPadding = contentPadding,
+    interactionSource = interactionSource,
+    indication = indication,
+    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = verticalAlignment,
+    content = content,
+  )
 }
 
 /**
  * A stateless version of [Radio] component.
  *
- * There is also a managed version of this component, that will automatically manage its state within a [RadioGroup].
+ * There is also a managed version of this component, that will automatically manage its state
+ * within a [RadioGroup].
  *
  * @param selected Whether the radio button is selected.
  * @param onSelectedChange Callback when the selected state changes.
@@ -224,91 +249,99 @@ fun RadioGroupScope.Radio(
  * @param content The content of the radio button.
  */
 @Deprecated(
-    "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-    ReplaceWith("UnstyledRadio(selected, onSelectedChange, modifier, backgroundColor, contentColor, selectedColor, enabled, shape, borderColor, borderWidth, contentPadding, interactionSource, indication, horizontalArrangement, verticalAlignment, content)")
+  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
+  ReplaceWith(
+    "UnstyledRadio(selected, onSelectedChange, modifier, backgroundColor, contentColor," +
+      " selectedColor, enabled, shape, borderColor, borderWidth, contentPadding," +
+      " interactionSource, indication, horizontalArrangement, verticalAlignment, content)",
+  ),
 )
 @Composable
 fun Radio(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified,
-    selectedColor: Color = Color.Unspecified,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = Dp.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = LocalIndication.current,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalAlignment: Alignment.Vertical = Alignment.Top,
-    content: @Composable (RowScope.() -> Unit),
+  selected: Boolean,
+  onSelectedChange: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = Color.Unspecified,
+  selectedColor: Color = Color.Unspecified,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = Dp.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = LocalIndication.current,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  verticalAlignment: Alignment.Vertical = Alignment.Top,
+  content: @Composable (RowScope.() -> Unit),
 ) {
-    UnstyledRadio(
-        selected = selected,
-        onSelectedChange = onSelectedChange,
-        modifier = modifier,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        selectedColor = selectedColor,
-        enabled = enabled,
-        shape = shape,
-        borderColor = borderColor,
-        borderWidth = borderWidth,
-        contentPadding = contentPadding,
-        interactionSource = interactionSource,
-        indication = indication,
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment,
-        content = content
-    )
+  UnstyledRadio(
+    selected = selected,
+    onSelectedChange = onSelectedChange,
+    modifier = modifier,
+    backgroundColor = backgroundColor,
+    contentColor = contentColor,
+    selectedColor = selectedColor,
+    enabled = enabled,
+    shape = shape,
+    borderColor = borderColor,
+    borderWidth = borderWidth,
+    contentPadding = contentPadding,
+    interactionSource = interactionSource,
+    indication = indication,
+    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = verticalAlignment,
+    content = content,
+  )
 }
 
 @Composable
 fun UnstyledRadio(
-    selected: Boolean,
-    onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified,
-    selectedColor: Color = Color.Unspecified,
-    enabled: Boolean = true,
-    shape: Shape = RectangleShape,
-    borderColor: Color = Color.Unspecified,
-    borderWidth: Dp = Dp.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = LocalIndication.current,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalAlignment: Alignment.Vertical = Alignment.Top,
-    content: @Composable (RowScope.() -> Unit),
+  selected: Boolean,
+  onSelectedChange: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = Color.Unspecified,
+  selectedColor: Color = Color.Unspecified,
+  enabled: Boolean = true,
+  shape: Shape = RectangleShape,
+  borderColor: Color = Color.Unspecified,
+  borderWidth: Dp = Dp.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = LocalIndication.current,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+  verticalAlignment: Alignment.Vertical = Alignment.Top,
+  content: @Composable (RowScope.() -> Unit),
 ) {
-    Row(
-        modifier = modifier.semantics(mergeDescendants = true) { } then buildModifier {
-            add(
-                Modifier
-                    .clip(shape)
-                    .background(backgroundColor)
-                    .toggleable(
-                        value = selected,
-                        onValueChange = onSelectedChange,
-                        role = Role.RadioButton,
-                        enabled = enabled,
-                        indication = indication,
-                        interactionSource = interactionSource,
-                    )
-            )
-            if (borderWidth > 0.dp && borderColor.isSpecified) {
-                add(Modifier.border(borderWidth, borderColor, shape))
-            }
+  Row(
+    modifier = modifier.semantics(mergeDescendants = true) { } then buildModifier {
+      add(
+        Modifier
+          .clip(shape)
+          .background(backgroundColor)
+          .toggleable(
+            value = selected,
+            onValueChange = onSelectedChange,
+            role = Role.RadioButton,
+            enabled = enabled,
+            indication = indication,
+            interactionSource = interactionSource,
+          ),
+      )
+      if (borderWidth > 0.dp && borderColor.isSpecified) {
+        add(Modifier.border(borderWidth, borderColor, shape))
+      }
 
-            add(Modifier.padding(contentPadding))
-        }, verticalAlignment = verticalAlignment, horizontalArrangement = horizontalArrangement
+      add(Modifier.padding(contentPadding))
+    },
+    verticalAlignment = verticalAlignment,
+    horizontalArrangement = horizontalArrangement,
+  ) {
+    CompositionLocalProvider(
+      LocalContentColor provides if (selected) contentColor else selectedColor,
     ) {
-        CompositionLocalProvider(LocalContentColor provides if (selected) contentColor else selectedColor) {
-            this@Row.content()
-        }
+      this@Row.content()
     }
+  }
 }

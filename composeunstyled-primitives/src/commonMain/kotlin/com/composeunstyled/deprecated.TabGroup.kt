@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.composeunstyled
 
 import androidx.compose.foundation.Indication
@@ -46,8 +69,8 @@ import androidx.compose.ui.semantics.Role
 typealias TabKey = String
 
 class TabGroupState(initialTab: TabKey, internal val tabs: List<TabKey>) {
-    var selectedTab by mutableStateOf(initialTab)
-    var focusedTab by mutableStateOf<TabKey?>(null)
+  var selectedTab by mutableStateOf(initialTab)
+  var focusedTab by mutableStateOf<TabKey?>(null)
 }
 
 /**
@@ -59,17 +82,17 @@ class TabGroupState(initialTab: TabKey, internal val tabs: List<TabKey>) {
 @Composable
 @Deprecated("")
 fun rememberTabGroupState(selectedTab: TabKey, orderedTabs: List<TabKey>): TabGroupState {
-    return remember {
-        TabGroupState(
-            initialTab = selectedTab,
-            tabs = orderedTabs,
-        )
-    }
+  return remember {
+    TabGroupState(
+      initialTab = selectedTab,
+      tabs = orderedTabs,
+    )
+  }
 }
 
 class TabGroupScope(val state: TabGroupState) {
-    internal val tabFocusRequesters = mutableMapOf<TabKey, FocusRequester>()
-    internal val panelFocusRequesters = mutableMapOf<TabKey, FocusRequester>()
+  internal val tabFocusRequesters = mutableMapOf<TabKey, FocusRequester>()
+  internal val panelFocusRequesters = mutableMapOf<TabKey, FocusRequester>()
 }
 
 /**
@@ -106,17 +129,17 @@ class TabGroupScope(val state: TabGroupState) {
  */
 @Composable
 fun TabGroup(
-    state: TabGroupState,
-    modifier: Modifier = Modifier,
-    content: @Composable TabGroupScope.() -> Unit
+  state: TabGroupState,
+  modifier: Modifier = Modifier,
+  content: @Composable TabGroupScope.() -> Unit,
 ) {
-    val scope = remember { TabGroupScope(state) }
+  val scope = remember { TabGroupScope(state) }
 
-    Column(modifier) {
-        with(scope) {
-            content()
-        }
+  Column(modifier) {
+    with(scope) {
+      content()
     }
+  }
 }
 
 /**
@@ -131,144 +154,144 @@ fun TabGroup(
  */
 @Composable
 fun TabGroupScope.TabList(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = NoPadding,
-    orientation: Orientation = Orientation.Horizontal,
-    activateOnFocus: Boolean = true,
-    content: @Composable RowScope.() -> Unit
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = Color.Unspecified,
+  contentPadding: PaddingValues = NoPadding,
+  orientation: Orientation = Orientation.Horizontal,
+  activateOnFocus: Boolean = true,
+  content: @Composable RowScope.() -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
+  val focusManager = LocalFocusManager.current
 
-    Row(
-        modifier = modifier
-            .selectableGroup()
-            .focusRestorer()
-            .onFocusChanged {
-                if (it.hasFocus) {
-                    val focusRequester = tabFocusRequesters[state.selectedTab]
-                    focusRequester?.requestFocus()
-                }
-            }
-            .focusGroup()
-            .onKeyEvent { event ->
-
-                fun moveFocusTo(key: TabKey, activate: Boolean = activateOnFocus) {
-                    tabFocusRequesters.getValue(key).requestFocus()
-                    if (activate) {
-                        state.selectedTab = key
-                    }
-                }
-
-                fun moveFocusToPrevious() {
-                    val focusedIndex = state.tabs.indexOf(state.focusedTab)
-                    val previous = if (focusedIndex == 0) {
-                        state.tabs.last()
-                    } else {
-                        state.tabs[focusedIndex - 1]
-                    }
-                    moveFocusTo(previous)
-                }
-
-                fun moveFocusToNext() {
-                    val focusedIndex = state.tabs.indexOf(state.focusedTab)
-                    val next = if (focusedIndex == state.tabs.lastIndex) {
-                        state.tabs.first()
-                    } else {
-                        state.tabs[focusedIndex + 1]
-                    }
-                    moveFocusTo(next)
-                }
-
-                when (event.key) {
-                    Key.Tab -> {
-                        if (event.isKeyDown) {
-                            if (event.isShiftPressed) {
-                                // move to item before the TabList
-                                moveFocusTo(state.tabs.first(), activate = false)
-                                focusManager.moveFocus(FocusDirection.Previous)
-                            } else {
-                                // move to item after TabList
-                                moveFocusTo(state.tabs.last(), activate = false)
-                                focusManager.moveFocus(FocusDirection.Next)
-                            }
-                        }
-                        true
-                    }
-
-                    Key.Home -> {
-                        if (event.isKeyDown) {
-                            moveFocusTo(state.tabs.first())
-                        }
-                        true
-                    }
-
-                    Key.MoveEnd -> {
-                        if (event.isKeyDown) {
-                            moveFocusTo(state.tabs.last())
-                        }
-                        true
-                    }
-
-                    Key.DirectionRight -> {
-                        if (orientation == Orientation.Horizontal) {
-                            if (event.isKeyDown) {
-                                moveFocusToNext()
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-
-                    Key.DirectionDown -> {
-                        if (orientation == Orientation.Vertical) {
-                            if (event.isKeyDown) {
-                                moveFocusToNext()
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-
-                    Key.DirectionLeft -> {
-                        if (orientation == Orientation.Horizontal) {
-                            if (event.isKeyDown) {
-                                moveFocusToPrevious()
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-
-                    Key.DirectionUp -> {
-                        if (orientation == Orientation.Vertical) {
-                            if (event.isKeyDown) {
-                                moveFocusToPrevious()
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-
-                    else -> false
-                }
-            }
-            .clip(shape)
-            .background(backgroundColor)
-            .padding(contentPadding),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            content()
+  Row(
+    modifier = modifier
+      .selectableGroup()
+      .focusRestorer()
+      .onFocusChanged {
+        if (it.hasFocus) {
+          val focusRequester = tabFocusRequesters[state.selectedTab]
+          focusRequester?.requestFocus()
         }
+      }
+      .focusGroup()
+      .onKeyEvent { event ->
+
+        fun moveFocusTo(key: TabKey, activate: Boolean = activateOnFocus) {
+          tabFocusRequesters.getValue(key).requestFocus()
+          if (activate) {
+            state.selectedTab = key
+          }
+        }
+
+        fun moveFocusToPrevious() {
+          val focusedIndex = state.tabs.indexOf(state.focusedTab)
+          val previous = if (focusedIndex == 0) {
+            state.tabs.last()
+          } else {
+            state.tabs[focusedIndex - 1]
+          }
+          moveFocusTo(previous)
+        }
+
+        fun moveFocusToNext() {
+          val focusedIndex = state.tabs.indexOf(state.focusedTab)
+          val next = if (focusedIndex == state.tabs.lastIndex) {
+            state.tabs.first()
+          } else {
+            state.tabs[focusedIndex + 1]
+          }
+          moveFocusTo(next)
+        }
+
+        when (event.key) {
+          Key.Tab -> {
+            if (event.isKeyDown) {
+              if (event.isShiftPressed) {
+                // move to item before the TabList
+                moveFocusTo(state.tabs.first(), activate = false)
+                focusManager.moveFocus(FocusDirection.Previous)
+              } else {
+                // move to item after TabList
+                moveFocusTo(state.tabs.last(), activate = false)
+                focusManager.moveFocus(FocusDirection.Next)
+              }
+            }
+            true
+          }
+
+          Key.Home -> {
+            if (event.isKeyDown) {
+              moveFocusTo(state.tabs.first())
+            }
+            true
+          }
+
+          Key.MoveEnd -> {
+            if (event.isKeyDown) {
+              moveFocusTo(state.tabs.last())
+            }
+            true
+          }
+
+          Key.DirectionRight -> {
+            if (orientation == Orientation.Horizontal) {
+              if (event.isKeyDown) {
+                moveFocusToNext()
+              }
+              true
+            } else {
+              false
+            }
+          }
+
+          Key.DirectionDown -> {
+            if (orientation == Orientation.Vertical) {
+              if (event.isKeyDown) {
+                moveFocusToNext()
+              }
+              true
+            } else {
+              false
+            }
+          }
+
+          Key.DirectionLeft -> {
+            if (orientation == Orientation.Horizontal) {
+              if (event.isKeyDown) {
+                moveFocusToPrevious()
+              }
+              true
+            } else {
+              false
+            }
+          }
+
+          Key.DirectionUp -> {
+            if (orientation == Orientation.Vertical) {
+              if (event.isKeyDown) {
+                moveFocusToPrevious()
+              }
+              true
+            } else {
+              false
+            }
+          }
+
+          else -> false
+        }
+      }
+      .clip(shape)
+      .background(backgroundColor)
+      .padding(contentPadding),
+    horizontalArrangement = Arrangement.Start,
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+      content()
     }
+  }
 }
 
 /**
@@ -283,49 +306,49 @@ fun TabGroupScope.TabList(
  */
 @Composable
 fun TabGroupScope.Tab(
-    key: TabKey,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    indication: Indication = LocalIndication.current,
-    interactionSource: MutableInteractionSource? = null,
-    contentPadding: PaddingValues = NoPadding,
-    backgroundColor: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified,
-    shape: Shape = RectangleShape,
-    content: @Composable () -> Unit
+  key: TabKey,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+  contentPadding: PaddingValues = NoPadding,
+  backgroundColor: Color = Color.Unspecified,
+  contentColor: Color = Color.Unspecified,
+  shape: Shape = RectangleShape,
+  content: @Composable () -> Unit,
 ) {
-    val focusRequester = remember(key) { FocusRequester() }
+  val focusRequester = remember(key) { FocusRequester() }
 
-    DisposableEffect(key) {
-        tabFocusRequesters[key] = focusRequester
-        onDispose {
-            tabFocusRequesters.remove(key)
-        }
+  DisposableEffect(key) {
+    tabFocusRequesters[key] = focusRequester
+    onDispose {
+      tabFocusRequesters.remove(key)
     }
+  }
 
-    Box(
-        modifier = modifier
-            .focusRequester(focusRequester)
-            .onFocusChanged {
-                if (it.isFocused) {
-                    state.focusedTab = key
-                }
-            }
-            .clip(shape)
-            .background(backgroundColor)
-            .selectable(
-                selected = state.selectedTab == key,
-                onClick = { state.selectedTab = key },
-                indication = indication,
-                interactionSource = interactionSource,
-                enabled = enabled,
-                role = Role.Tab
-            ).padding(contentPadding)
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            content()
+  Box(
+    modifier = modifier
+      .focusRequester(focusRequester)
+      .onFocusChanged {
+        if (it.isFocused) {
+          state.focusedTab = key
         }
+      }
+      .clip(shape)
+      .background(backgroundColor)
+      .selectable(
+        selected = state.selectedTab == key,
+        onClick = { state.selectedTab = key },
+        indication = indication,
+        interactionSource = interactionSource,
+        enabled = enabled,
+        role = Role.Tab,
+      ).padding(contentPadding),
+  ) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+      content()
     }
+  }
 }
 
 /**
@@ -336,18 +359,18 @@ fun TabGroupScope.Tab(
  */
 @Composable
 fun TabGroupScope.TabPanel(key: TabKey, content: @Composable () -> Unit) {
-    val focusRequester = remember(key) { FocusRequester() }
+  val focusRequester = remember(key) { FocusRequester() }
 
-    DisposableEffect(key) {
-        panelFocusRequesters[key] = focusRequester
-        onDispose {
-            panelFocusRequesters.remove(key)
-        }
+  DisposableEffect(key) {
+    panelFocusRequesters[key] = focusRequester
+    onDispose {
+      panelFocusRequesters.remove(key)
     }
+  }
 
-    if (key == state.selectedTab) {
-        Box(Modifier.focusRequester(focusRequester)) {
-            content()
-        }
+  if (key == state.selectedTab) {
+    Box(Modifier.focusRequester(focusRequester)) {
+      content()
     }
+  }
 }

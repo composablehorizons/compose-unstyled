@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
@@ -6,11 +27,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-    alias(libs.plugins.compose)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.maven.publish)
+  alias(libs.plugins.compose)
+  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.maven.publish)
 }
 
 val publishGroupId = "com.composables"
@@ -19,147 +40,147 @@ val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
 
 java {
-    toolchain {
-        vendor = JvmVendorSpec.JETBRAINS
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+  toolchain {
+    vendor = JvmVendorSpec.JETBRAINS
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 kotlin {
-    androidTarget {
-        publishLibraryVariants("release", "debug")
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+  androidTarget {
+    publishLibraryVariants("release", "debug")
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_17
+    }
+    instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+  }
+
+  jvm()
+
+  wasmJs {
+    browser()
+  }
+
+  js {
+    browser()
+  }
+
+  listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+    iosTarget.binaries.framework {
+      baseName = "ComposeUnstyledTheming"
+      isStatic = true
+    }
+  }
+
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        implementation(compose.foundation)
+        api(projects.internalShared)
+      }
     }
 
-    jvm()
-
-    wasmJs {
-        browser()
+    androidMain.dependencies {
+      implementation(libs.androidx.activitycompose)
     }
 
-    js {
-        browser()
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
     }
 
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeUnstyledTheming"
-            isStatic = true
-        }
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+
+      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+      implementation(compose.uiTest)
     }
 
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.foundation)
-                api(projects.internalShared)
-            }
-        }
+    val jvmTest by getting
 
-        androidMain.dependencies {
-            implementation(libs.androidx.activitycompose)
-        }
-
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.compose.test)
-            implementation(libs.androidx.compose.test.manifest)
-            implementation(libs.androidx.espresso)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-
-            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
-        }
-
-        val jvmTest by getting
-
-        jvmTest.dependencies {
-            implementation(compose.desktop.uiTestJUnit4)
-            implementation(libs.assertj.core)
-            implementation(compose.desktop.currentOs) {
-                exclude(compose.material)
-                exclude(compose.material)
-            }
-        }
-
-        applyDefaultHierarchyTemplate {
-            common {
-                group("cmp") {
-                    withJvm()
-                    withIos()
-                    withWasmJs()
-                    withJs()
-                }
-
-                group("web") {
-                    withWasmJs()
-                    withJs()
-                }
-            }
-        }
-
-        all {
-            if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
-                languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
-            }
-        }
+    jvmTest.dependencies {
+      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.assertj.core)
+      implementation(compose.desktop.currentOs) {
+        exclude(compose.material)
+        exclude(compose.material)
+      }
     }
+
+    applyDefaultHierarchyTemplate {
+      common {
+        group("cmp") {
+          withJvm()
+          withIos()
+          withWasmJs()
+          withJs()
+        }
+
+        group("web") {
+          withWasmJs()
+          withJs()
+        }
+      }
+    }
+
+    all {
+      if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
+        languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
+      }
+    }
+  }
 }
 
 android {
-    namespace = "com.composeunstyled.theme"
-    compileSdk = libs.versions.android.compileSDK.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSDK.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+  namespace = "com.composeunstyled.theme"
+  compileSdk = libs.versions.android.compileSDK.get().toInt()
+  defaultConfig {
+    minSdk = libs.versions.android.minSDK.get().toInt()
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
 }
 
 group = publishGroupId
 version = publishVersion
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = true, validateDeployment = false)
-    if (project.hasProperty("signingInMemoryKeyId")) {
-        signAllPublications()
+  publishToMavenCentral(automaticRelease = true, validateDeployment = false)
+  if (project.hasProperty("signingInMemoryKeyId")) {
+    signAllPublications()
+  }
+
+  coordinates(publishGroupId, "composeunstyled-theming", publishVersion)
+
+  pom {
+    name.set("Compose Unstyled Theming")
+    description.set("Theming system for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    url.set(projectUrl)
+
+    licenses {
+      license {
+        name.set("MIT License")
+        url.set("https://${githubUrl}/blob/main/LICENSE")
+      }
     }
 
-    coordinates(publishGroupId, "composeunstyled-theming", publishVersion)
-
-    pom {
-        name.set("Compose Unstyled Theming")
-        description.set("Theming system for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
-        url.set(projectUrl)
-
-        licenses {
-            license {
-                name.set("MIT License")
-                url.set("https://${githubUrl}/blob/main/LICENSE")
-            }
-        }
-
-        issueManagement {
-            system.set("GitHub Issues")
-            url.set("https://${githubUrl}/issues")
-        }
-
-        developers {
-            developer {
-                id.set("composablehorizons")
-                name.set("Composable Horizons")
-                email.set("alex@composablesui.com")
-            }
-        }
-
-        scm {
-            connection.set("scm:git:${githubUrl}.git")
-            developerConnection.set("scm:git:ssh://${githubUrl}.git")
-            url.set("https://${githubUrl}/tree/main")
-        }
+    issueManagement {
+      system.set("GitHub Issues")
+      url.set("https://${githubUrl}/issues")
     }
+
+    developers {
+      developer {
+        id.set("composablehorizons")
+        name.set("Composable Horizons")
+        email.set("alex@composablesui.com")
+      }
+    }
+
+    scm {
+      connection.set("scm:git:${githubUrl}.git")
+      developerConnection.set("scm:git:ssh://${githubUrl}.git")
+      url.set("https://${githubUrl}/tree/main")
+    }
+  }
 }

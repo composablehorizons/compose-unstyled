@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2026 Composable Horizons
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.composeunstyled.demo
 
 import androidx.compose.animation.animateColorAsState
@@ -45,96 +66,96 @@ import com.composeunstyled.theme.Theme
 
 @Composable
 fun SliderDemo() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .background(Brush.linearGradient(listOf(Color(0xFFED213A), Color(0xFF93291E)))),
-        contentAlignment = Alignment.Center
+  Box(
+    modifier = Modifier.fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFFED213A), Color(0xFF93291E)))),
+    contentAlignment = Alignment.Center,
+  ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val state = rememberSliderState(initialValue = 0.7f)
+
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(12.dp),
+      modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
     ) {
-        val interactionSource = remember { MutableInteractionSource() }
-        val isFocused by interactionSource.collectIsFocusedAsState()
-        val isPressed by interactionSource.collectIsPressedAsState()
+      UnstyledButton(
+        onClick = { state.value -= 0.1f },
+        modifier = Modifier.shadow(4.dp, CircleShape),
+        shape = CircleShape,
+        backgroundColor = Color.White,
+        contentPadding = PaddingValues(8.dp),
+        indication = Theme[indications][dimmed],
+      ) {
+        Icon(Lucide.Volume1, "Decrease")
+      }
 
-        val state = rememberSliderState(initialValue = 0.7f)
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth()
-        ) {
-            UnstyledButton(
-                onClick = { state.value -= 0.1f },
-                modifier = Modifier.shadow(4.dp, CircleShape),
-                shape = CircleShape,
-                backgroundColor = Color.White,
-                contentPadding = PaddingValues(8.dp),
-                indication = Theme[indications][dimmed]
-            ) {
-                Icon(Lucide.Volume1, "Decrease")
-            }
-
-            Slider(
-                interactionSource = interactionSource,
-                state = state,
-                modifier = Modifier.weight(1f),
-                track = {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(8.dp)
-                            .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(100.dp))
-                    ) {
-                        // the 'not yet completed' part of the track
-                        Box(
-                            Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth()
-                                .background(Color(0xFF93291E))
-                        )
-                        // the 'completed' part of the track
-                        Box(
-                            Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth(state.value)
-                                .background(Color.White)
-                        )
-                    }
-                },
-                thumb = {
-                    val thumbSize by animateDpAsState(targetValue = if (isPressed) 22.dp else 18.dp)
-
-                    val thumbInteractionSource = remember { MutableInteractionSource() }
-                    val isHovered by thumbInteractionSource.collectIsHoveredAsState()
-                    val glowColor by animateColorAsState(
-                        if (isFocused || isHovered) Color.White.copy(0.33f) else Color.Transparent
-                    )
-                    // keep the size fixed to ensure that the resizing animation is always centered
-                    Box(
-                        modifier = Modifier.size(36.dp).clip(CircleShape).background(glowColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Thumb(
-                            color = Color.White,
-                            modifier = Modifier
-                                .size(thumbSize)
-                                .shadow(4.dp, CircleShape)
-                                .hoverable(thumbInteractionSource),
-                            shape = CircleShape,
-                        )
-                    }
-                }
+      Slider(
+        interactionSource = interactionSource,
+        state = state,
+        modifier = Modifier.weight(1f),
+        track = {
+          Box(
+            Modifier
+              .fillMaxWidth()
+              .height(8.dp)
+              .padding(horizontal = 16.dp)
+              .clip(RoundedCornerShape(100.dp)),
+          ) {
+            // the 'not yet completed' part of the track
+            Box(
+              Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .background(Color(0xFF93291E)),
             )
+            // the 'completed' part of the track
+            Box(
+              Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(state.value)
+                .background(Color.White),
+            )
+          }
+        },
+        thumb = {
+          val thumbSize by animateDpAsState(targetValue = if (isPressed) 22.dp else 18.dp)
 
-            UnstyledButton(
-                onClick = { state.value += 0.1f },
-                modifier = Modifier.shadow(4.dp, CircleShape),
-                shape = CircleShape,
-                backgroundColor = Color.White,
-                contentPadding = PaddingValues(8.dp),
-                indication = Theme[indications][dimmed]
-            ) {
-                Icon(Lucide.Volume2, "Increase")
-            }
-        }
+          val thumbInteractionSource = remember { MutableInteractionSource() }
+          val isHovered by thumbInteractionSource.collectIsHoveredAsState()
+          val glowColor by animateColorAsState(
+            if (isFocused || isHovered) Color.White.copy(0.33f) else Color.Transparent,
+          )
+          // keep the size fixed to ensure that the resizing animation is always centered
+          Box(
+            modifier = Modifier.size(36.dp).clip(CircleShape).background(glowColor),
+            contentAlignment = Alignment.Center,
+          ) {
+            Thumb(
+              color = Color.White,
+              modifier = Modifier
+                .size(thumbSize)
+                .shadow(4.dp, CircleShape)
+                .hoverable(thumbInteractionSource),
+              shape = CircleShape,
+            )
+          }
+        },
+      )
+
+      UnstyledButton(
+        onClick = { state.value += 0.1f },
+        modifier = Modifier.shadow(4.dp, CircleShape),
+        shape = CircleShape,
+        backgroundColor = Color.White,
+        contentPadding = PaddingValues(8.dp),
+        indication = Theme[indications][dimmed],
+      ) {
+        Icon(Lucide.Volume2, "Increase")
+      }
     }
+  }
 }

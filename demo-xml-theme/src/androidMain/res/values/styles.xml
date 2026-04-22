@@ -1,38 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2026 Composable Horizons
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
 <resources>
-    <style name="AppTheme" parent="@style/Theme.NoActionBar">
-        <item name="color_background">#FFFFFF</item>
-        <item name="color_onBackground">#262626</item>
-        <item name="color_primary">#3F51B5</item>
-        <item name="color_onPrimary">#FFFFFF</item>
+  <style name="AppTheme" parent="@style/Theme.NoActionBar">
+    <item name="color_background">#FFFFFF</item>
+    <item name="color_onBackground">#262626</item>
+    <item name="color_primary">#3F51B5</item>
+    <item name="color_onPrimary">#FFFFFF</item>
 
-        <item name="textStyle_body">@style/Sans</item>
+    <item name="textStyle_body">@style/Sans</item>
 
-        <item name="spacing_small">4dp</item>
-        <item name="spacing_medium">8dp</item>
-        <item name="spacing_large">12dp</item>
-    </style>
+    <item name="spacing_small">4dp</item>
+    <item name="spacing_medium">8dp</item>
+    <item name="spacing_large">12dp</item>
+  </style>
 
-    <style name="Sans">
-        <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/inter</item>
-    </style>
+  <style name="Sans">
+    <item name="android:textSize">18sp</item>
+    <item name="android:fontFamily">@font/inter</item>
+  </style>
 
-    <attr name="color_background" format="color"/>
-    <attr name="color_onBackground" format="color"/>
-    <attr name="color_primary" format="color"/>
-    <attr name="color_onPrimary" format="color"/>
+  <attr name="color_background" format="color"/>
+  <attr name="color_onBackground" format="color"/>
+  <attr name="color_primary" format="color"/>
+  <attr name="color_onPrimary" format="color"/>
 
-    <attr name="textStyle_body" format="reference"/>
+  <attr name="textStyle_body" format="reference"/>
 
-    <attr name="spacing_small" format="dimension"/>
-    <attr name="spacing_medium" format="dimension"/>
-    <attr name="spacing_large" format="dimension"/>
+  <attr name="spacing_small" format="dimension"/>
+  <attr name="spacing_medium" format="dimension"/>
+  <attr name="spacing_large" format="dimension"/>
 
-    <!-- Base theme that removes the action bar and makes the activity full screen-->
-    <style name="Theme.NoActionBar" parent="">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
+  <!-- Base theme that removes the action bar and makes the activity full screen-->
+  <style name="Theme.NoActionBar" parent="">
+    <item name="android:windowFullscreen">true</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
 </resources>

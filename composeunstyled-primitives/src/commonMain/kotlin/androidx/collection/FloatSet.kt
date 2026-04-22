@@ -15,13 +15,13 @@
  */
 
 @file:Suppress(
-    "RedundantVisibilityModifier",
-    "KotlinRedundantDiagnosticSuppress",
-    "KotlinConstantConditions",
-    "PropertyName",
-    "ConstPropertyName",
-    "PrivatePropertyName",
-    "NOTHING_TO_INLINE"
+  "RedundantVisibilityModifier",
+  "KotlinRedundantDiagnosticSuppress",
+  "KotlinConstantConditions",
+  "PropertyName",
+  "ConstPropertyName",
+  "PrivatePropertyName",
+  "NOTHING_TO_INLINE"
 )
 
 package com.composables.core.androidx.collection
