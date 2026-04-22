@@ -1,56 +1,26 @@
 package com.composables.core
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.input.pointer.pointerInput
 import com.composeunstyled.AppearInstantly
 import com.composeunstyled.DisappearInstantly
 import com.composeunstyled.LocalContentColor
-import com.composeunstyled.Modal
 import com.composeunstyled.NoPadding
+import com.composeunstyled.UnstyledDialog
+import com.composeunstyled.UnstyledDialogPanel
+import com.composeunstyled.UnstyledScrim
 
-
-/**
- * Properties that can be used to configure the behavior of a [Dialog].
- *
- * @param dismissOnBackPress Whether the dialog should be dismissed when the back button is pressed.
- * @param dismissOnClickOutside Whether the dialog should be dismissed when clicking outside the dialog panel.
- */
+@Deprecated("This will go away in 2.0. Use DialogProperties from the com.composeunstyled package",)
 data class DialogProperties(val dismissOnBackPress: Boolean = true, val dismissOnClickOutside: Boolean = true)
 
 @Stable
@@ -62,25 +32,17 @@ class DialogState(initiallyVisible: Boolean = false) {
     )
     constructor(visible: Boolean = false, ____deprecated_constructor: Unit) : this(initiallyVisible = visible)
 
-    internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
-    internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
-    internal var mountedPanels by mutableIntStateOf(0)
-    internal var mountedScrims by mutableIntStateOf(0)
+    internal val state = com.composeunstyled.DialogState(initiallyVisible)
 
     var visible: Boolean
         set(value) {
-            panelVisibilityState.targetState = value
-            scrimVisibilityState.targetState = value
+            state.visible = value
         }
-        get() {
-            return panelVisibilityState.currentState || scrimVisibilityState.currentState
-        }
+        get() = state.visible
 }
 
 @Stable
-class DialogScope internal constructor(state: DialogState) {
-    internal var state by mutableStateOf(state)
-}
+class DialogScope internal constructor()
 
 private val DialogStateSaver = run {
     mapSaver(
@@ -93,58 +55,12 @@ private val DialogStateSaver = run {
     )
 }
 
-/**
- * Creates a [DialogState] that can be used to control the visibility of a [Dialog].
- *
- * @param initiallyVisible Whether the dialog should be initially visible.
- */
 @Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
     return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
 
-/**
- * A stackable, renderless, highly performant foundational component to build dialogs with.
- *
- * For interactive preview & code examples, visit [Dialog Documentation](https://composeunstyled.com/dialog).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val dialogState = rememberDialogState()
- *
- * Box {
- *     Button(onClick = { dialogState.visible = true }) {
- *         Text("Show Dialog")
- *     }
- *     Dialog(state = dialogState) {
- *         DialogPanel(
- *             modifier = Modifier
- *                 .displayCutoutPadding()
- *                 .systemBarsPadding()
- *                 .widthIn(min = 280.dp, max = 560.dp)
- *                 .padding(20.dp)
- *                 .clip(RoundedCornerShape(12.dp))
- *                 .border(1.dp, Color(0xFFE4E4E4), RoundedCornerShape(12.dp))
- *                 .background(Color.White)
- *         ) {
- *             Column {
- *                 Text("Something important happened")
- *                 Button(onClick = { dialogState.visible = false }) {
- *                     Text("Got it")
- *                 }
- *             }
- *         }
- *     }
- * }
- * ```
- *
- * @param state The [DialogState] that controls the visibility of the dialog.
- * @param properties The [DialogProperties] that configure the behavior of the dialog.
- * @param onDismiss Callback that is called when the dialog is dismissed.
- * @param content The content of the dialog, which should contain a [DialogPanel] and optionally a [Scrim].
- */
 @Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun Dialog(
@@ -153,59 +69,19 @@ fun Dialog(
     onDismiss: () -> Unit = DoNothing,
     content: @Composable (DialogScope.() -> Unit)
 ) {
-    val scope = remember { DialogScope(state) }
-
-    val currentDismiss by rememberUpdatedState(onDismiss)
-
-    val isPanelVisible = state.panelVisibilityState.currentState || (state.mountedPanels > 0 && state.panelVisibilityState.isIdle.not())
-    val isScrimVisible = state.scrimVisibilityState.currentState || (state.mountedScrims > 0 && state.scrimVisibilityState.isIdle.not())
-    if (isScrimVisible || isPanelVisible) {
-        val onKeyEvent = if (properties.dismissOnBackPress) {
-            { event: KeyEvent ->
-                if (event.type == KeyEventType.KeyDown && (event.key == Key.Back || event.key == Key.Escape)) {
-                    currentDismiss()
-                    state.visible = false
-                    true
-                } else false
-            }
-        } else {
-            { false }
-        }
-        Modal(onKeyEvent = onKeyEvent) {
-            val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .focusRequester(focusRequester)
-                    .then(
-                        if (properties.dismissOnClickOutside) {
-                            Modifier.pointerInput(Unit) {
-                                detectTapGestures {
-                                    currentDismiss()
-                                    state.visible = false
-                                }
-                            }
-                        } else Modifier
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                scope.content()
-            }
-        }
+    val scope = remember { DialogScope() }
+    UnstyledDialog(
+        state = state.state,
+        properties = com.composeunstyled.DialogProperties(
+            dismissOnBackPress = properties.dismissOnBackPress,
+            dismissOnClickOutside = properties.dismissOnClickOutside
+        ),
+        onDismiss = onDismiss
+    ) {
+        scope.content()
     }
 }
 
-/**
- * A container component that renders the dialog's panel and its contents.
- *
- * @param modifier Modifier to be applied to the dialog panel.
- * @param enter The enter transition for the dialog panel.
- * @param exit The exit transition for the dialog panel.
- * @param content The content of the dialog panel.
- */
 @Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun DialogScope.DialogPanel(
@@ -218,40 +94,18 @@ fun DialogScope.DialogPanel(
     contentPadding: PaddingValues = NoPadding,
     content: @Composable () -> Unit
 ) {
-    DisposableEffect(state) {
-        state.mountedPanels += 1
-        onDispose {
-            state.mountedPanels -= 1
-        }
-    }
-
-    AnimatedVisibility(
-        visibleState = state.panelVisibilityState,
+    UnstyledDialogPanel(
+        modifier = modifier,
         enter = enter,
         exit = exit,
-    ) {
-        Box(
-            modifier
-                .clip(shape)
-                .background(backgroundColor)
-                .pointerInput(Unit) { detectTapGestures { } }
-                .padding(contentPadding)
-        ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                content()
-            }
-        }
-    }
+        shape = shape,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        contentPadding = contentPadding,
+        content = content
+    )
 }
 
-/**
- * A component that renders a scrim behind the dialog panel.
- *
- * @param modifier Modifier to be applied to the scrim.
- * @param scrimColor The color of the scrim.
- * @param enter The enter transition for the scrim.
- * @param exit The exit transition for the scrim.
- */
 @Deprecated("This will go away in 2.0. Use Dialog from the com.composeunstyled package",)
 @Composable
 fun DialogScope.Scrim(
@@ -260,18 +114,10 @@ fun DialogScope.Scrim(
     enter: EnterTransition = AppearInstantly,
     exit: ExitTransition = DisappearInstantly,
 ) {
-    DisposableEffect(state) {
-        state.mountedScrims += 1
-        onDispose {
-            state.mountedScrims -= 1
-        }
-    }
-
-    AnimatedVisibility(
-        visibleState = state.scrimVisibilityState,
+    UnstyledScrim(
+        modifier = modifier,
+        scrimColor = scrimColor,
         enter = enter,
         exit = exit
-    ) {
-        Box(Modifier.fillMaxSize().focusable(false).background(scrimColor).then(modifier))
-    }
+    )
 }
