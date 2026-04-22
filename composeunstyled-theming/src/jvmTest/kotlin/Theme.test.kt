@@ -2,15 +2,26 @@ package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.theme.*
+import com.composeunstyled.theme.ComponentInteractiveSize
+import com.composeunstyled.theme.Theme
+import com.composeunstyled.theme.ThemeProperty
+import com.composeunstyled.theme.ThemeToken
+import com.composeunstyled.theme.buildTheme
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ThemeTest {
 
@@ -53,6 +64,34 @@ class ThemeTest {
 
         onNodeWithText("World").assertExists()
         onNodeWithText("Hello").assertDoesNotExist()
+    }
+
+    @Test
+    fun assigningSameThemeValuesDoesNotCauseExtraRecompositions() = runComposeUiTest {
+        // use neverEqualPolicy to force a recomposition
+        var themeValue by mutableStateOf("Hello", neverEqualPolicy())
+        var themedContentRecompositions = 0
+
+        val TestTheme = buildTheme {
+            println("RECOMPO")
+            properties[strings] = mapOf(
+                text to themeValue
+            )
+        }
+        setContent {
+            TestTheme {
+                SideEffect {
+                    themedContentRecompositions++
+                }
+                BasicText(Theme[strings][text])
+            }
+        }
+
+        themeValue = "Hello"
+
+        onNodeWithText("Hello").assertExists()
+        waitForIdle()
+        assertEquals(1, themedContentRecompositions)
     }
 
     @Test

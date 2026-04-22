@@ -4,7 +4,13 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -29,7 +35,8 @@ object Theme {
     }
 }
 
-class ThemeValues<T> internal constructor(
+@ConsistentCopyVisibility
+data class ThemeValues<T> internal constructor(
     internal val propertyName: String,
     internal val values: Map<ThemeToken<T>, T>
 ) {
@@ -157,7 +164,8 @@ class MutableThemeProperties internal constructor() {
     }
 
     operator fun <T> get(property: ThemeProperty<T>): ThemeValues<T> {
-        return entries[property] as? ThemeValues<T> ?: error("No theme was set. In order to use the theme @Composable function.")
+        return entries[property] as? ThemeValues<T>
+            ?: error("No theme was set. In order to use the theme @Composable function.")
     }
 }
 
