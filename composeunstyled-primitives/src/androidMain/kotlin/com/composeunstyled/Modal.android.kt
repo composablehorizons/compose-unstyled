@@ -20,6 +20,7 @@ import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
@@ -50,6 +51,7 @@ actual fun Modal(
 ) {
     val parentView = LocalView.current
     val context = LocalContext.current
+    val layoutDirection = LocalLayoutDirection.current
     val composition = rememberCompositionContext()
     val id = rememberSaveable { UUID.randomUUID() }
 
@@ -70,7 +72,10 @@ actual fun Modal(
                             .onKeyEvent(onKeyEvent)
                             .semantics { dialog() }
                     ) {
-                        CompositionLocalProvider(LocalModalWindow provides localWindow) {
+                        CompositionLocalProvider(
+                            LocalModalWindow provides localWindow,
+                            LocalLayoutDirection provides layoutDirection
+                        ) {
                             content()
                         }
                     }
