@@ -1,122 +1,61 @@
 package com.composables.core
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitHorizontalDragOrCancellation
-import androidx.compose.foundation.gestures.awaitVerticalDragOrCancellation
-import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.DragInteraction
-import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.PointerInputScope
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChange
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.MeasurePolicy
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.constrainHeight
-import androidx.compose.ui.unit.constrainWidth
-import androidx.compose.ui.unit.dp
-import com.composeunstyled.buildModifier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.js.JsName
 import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.roundToInt
-import kotlin.time.Duration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
-/**
- * A foundational component used to build scrollable areas in Compose Multiplatform.
- * Accessible out of the box and fully renderless, so that you can apply any styling you like.
- *
- * For interactive preview & code examples, visit [Scroll Area Documentation](https://composeunstyled.com/scrollarea).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val scrollState = rememberScrollState()
- * val scrollAreaState = rememberScrollAreaState(scrollState)
- *
- * ScrollArea(state = scrollAreaState) {
- *     Column {
- *         repeat(100) { index ->
- *             Text("Item $index")
- *         }
- *     }
- * }
- * ```
- */
 
-/**
- * Creates a [ScrollAreaState] from a [ScrollState].
- *
- * @param scrollState The scroll state to create the scroll area state from.
- */
+
+
 @Composable
-fun rememberScrollAreaState(scrollState: ScrollState): ScrollAreaState = remember(scrollState) {
-    ScrollStateScrollAreaState(scrollState)
-}
+@Deprecated(
+    message = "This will go away in 2.0. Moved to com.composeunstyled. Use com.composeunstyled.rememberScrollAreaState.",
+    replaceWith = ReplaceWith("com.composeunstyled.rememberScrollAreaState(scrollState)")
+)
+fun rememberScrollAreaState(scrollState: ScrollState): ScrollAreaState =
+    com.composeunstyled.rememberScrollAreaState(scrollState)
 
-/**
- * Creates a [ScrollAreaState] from a [LazyListState].
- *
- * @param lazyListState The lazy list state to create the scroll area state from.
- */
-@Composable
-fun rememberScrollAreaState(lazyListState: LazyListState): ScrollAreaState = remember(lazyListState) {
-    LazyListScrollAreaState(lazyListState)
-}
 
-/**
- * Creates a [ScrollAreaState] from a [LazyGridState].
- *
- * @param lazyGridState The lazy grid state to create the scroll area state from.
- */
 @Composable
-fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState = remember(lazyGridState) {
-    LazyGridScrollAreaScrollAreaState(lazyGridState)
-}
+@Deprecated(
+    message = "This will go away in 2.0. Moved to com.composeunstyled. Use com.composeunstyled.rememberScrollAreaState.",
+    replaceWith = ReplaceWith("com.composeunstyled.rememberScrollAreaState(lazyListState)")
+)
+fun rememberScrollAreaState(lazyListState: LazyListState): ScrollAreaState =
+    com.composeunstyled.rememberScrollAreaState(lazyListState)
+
+
+@Composable
+@Deprecated(
+    message = "This will go away in 2.0. Moved to com.composeunstyled. Use com.composeunstyled.rememberScrollAreaState.",
+    replaceWith = ReplaceWith("com.composeunstyled.rememberScrollAreaState(lazyGridState)")
+)
+fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState =
+    com.composeunstyled.rememberScrollAreaState(lazyGridState)
 
 @JvmInline
 @Immutable
@@ -132,7 +71,12 @@ value class OverscrollSides private constructor(private val id: Int) {
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Deprecated("This will be removed in 2.0. Use the ScrollArea() overload without the overscroll effect parameter")
+@Deprecated(
+    message = "This will go away in 2.0. Moved to com.composeunstyled. Use com.composeunstyled.UnstyledScrollArea.",
+    replaceWith = ReplaceWith(
+        "com.composeunstyled.UnstyledScrollArea(state = state, modifier = modifier, content = content)"
+    )
+)
 @Composable
 fun ScrollArea(
     state: ScrollAreaState,
@@ -143,8 +87,7 @@ fun ScrollArea(
     ),
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
-    @OptIn(ExperimentalFoundationApi::class)
-    ScrollArea(
+    com.composeunstyled.UnstyledScrollArea(
         state = state,
         modifier = modifier,
         content = content
@@ -153,27 +96,28 @@ fun ScrollArea(
 
 
 @Composable
+@Deprecated(
+    message = "This will go away in 2.0. Moved to com.composeunstyled. Use com.composeunstyled.UnstyledScrollArea.",
+    replaceWith = ReplaceWith(
+        "com.composeunstyled.UnstyledScrollArea(state = state, modifier = modifier, content = content)"
+    )
+)
 fun ScrollArea(
     state: ScrollAreaState,
     modifier: Modifier = Modifier,
     content: @Composable ScrollAreaScope.() -> Unit
 ) {
-    Box(modifier) {
-        val boxScope = this
-        val scrollAreaScope = remember {
-            ScrollAreaScope(boxScope, state)
-        }
-
-        scrollAreaScope.content()
-    }
+    com.composeunstyled.UnstyledScrollArea(
+        state = state,
+        modifier = modifier,
+        content = content
+    )
 }
 
 @Composable
 internal expect fun NoOverscroll(content: @Composable () -> Unit)
 
-/**
- * Scope for the content of a [ScrollArea].
- */
+
 class ScrollAreaScope internal constructor(
     private val boxScope: BoxScope,
     internal val scrollAreaState: ScrollAreaState,
@@ -185,42 +129,19 @@ class ScrollAreaScope internal constructor(
     }
 }
 
-/**
- * Defines how to scroll the scrollable component and how to display a scrollbar for it.
- *
- * The values of this interface are typically in pixels, but do not have to be.
- * It's possible to create an adapter with any scroll range of `Double` values.
- */
+
 interface ScrollAreaState {
 
-    // We use `Double` values here in order to allow scrolling both very large (think LazyList with
-    // millions of items) and very small (think something whose natural coordinates are less than 1)
-    // content.
-
-    /**
-     * Scroll offset of the content inside the scrollable component.
-     *
-     * For example, a value of `100` could mean the content is scrolled by 100 pixels from the
-     * start.
-     */
+    
     val scrollOffset: Double
 
-    /**
-     * The size of the scrollable content, on the scrollable axis.
-     */
+    
     val contentSize: Double
 
-    /**
-     * The size of the viewport, on the scrollable axis.
-     */
+    
     val viewportSize: Double
 
-    /**
-     * Instantly jump to [scrollOffset].
-     *
-     * @param scrollOffset target offset to jump to, value will be coerced to the valid
-     * scroll range.
-     */
+    
     suspend fun scrollTo(scrollOffset: Double)
 
     val interactionSource: InteractionSource
@@ -228,9 +149,7 @@ interface ScrollAreaState {
     val isScrollInProgress: Boolean
 }
 
-/**
- * The maximum scroll offset of the scrollable content.
- */
+
 val ScrollAreaState.maxScrollOffset: Double
     get() = (contentSize - viewportSize).coerceAtLeast(0.0)
 
@@ -251,10 +170,6 @@ internal class ScrollStateScrollAreaState(
     }
 
     override val contentSize: Double
-        // This isn't strictly correct, as the actual content can be smaller
-        // than the viewport when scrollState.maxValue is 0, but the scrollbar
-        // doesn't really care as long as contentSize <= viewportSize; it's
-        // just not showing itself
         get() = scrollState.maxValue + viewportSize
 
     override val viewportSize: Double
@@ -262,55 +177,32 @@ internal class ScrollStateScrollAreaState(
 
 }
 
-/**
- * Base class for [LazyListScrollAreaState] and [LazyGridScrollAreaScrollAreaState],
- * and in the future maybe other lazy widgets that lay out their content in lines.
- */
-internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
 
-    // Implement the adapter in terms of "lines", which means either rows,
-    // (for a vertically scrollable widget) or columns (for a horizontally
-    // scrollable one).
-    // For LazyList this translates directly to items; for LazyGrid, it
-    // translates to rows/columns of items.
+internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
 
     class VisibleLine(
         val index: Int, val offset: Int
     )
 
-    /**
-     * Return the first visible line, if any.
-     */
+    
     protected abstract fun firstVisibleLine(): VisibleLine?
 
-    /**
-     * Return the total number of lines.
-     */
+    
     protected abstract fun totalLineCount(): Int
 
-    /**
-     * The sum of content padding (before+after) on the scrollable axis.
-     */
+    
     protected abstract fun contentPadding(): Int
 
-    /**
-     * Scroll immediately to the given line, and offset it by [scrollOffset] pixels.
-     */
+    
     protected abstract suspend fun snapToLine(lineIndex: Int, scrollOffset: Int)
 
-    /**
-     * Scroll from the current position by the given amount of pixels.
-     */
+    
     protected abstract suspend fun scrollBy(value: Float)
 
-    /**
-     * Return the average size (on the scrollable axis) of the visible lines.
-     */
+    
     protected abstract fun averageVisibleLineSize(): Double
 
-    /**
-     * The spacing between lines.
-     */
+    
     protected abstract val lineSpacing: Int
 
     @JsName("averageVisibleLineSizeProperty")
@@ -342,12 +234,6 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
 
     override suspend fun scrollTo(scrollOffset: Double) {
         val distance = scrollOffset - this@LazyLineContentScrollAreaState.scrollOffset
-
-        // if we scroll less than viewport we need to use scrollBy function to avoid
-        // undesirable scroll jumps (when an item size is different)
-        //
-        // if we scroll more than viewport we should immediately jump to this position
-        // without recreating all items between the current and the new position
         if (abs(distance) <= viewportSize) {
             scrollBy(distance.toFloat())
         } else {
@@ -384,22 +270,7 @@ internal class LazyListScrollAreaState(
             else viewportSize.width
         }.toDouble()
 
-    /**
-     * A heuristic that tries to ignore the "currently stickied" header because it breaks the other
-     * computations in this adapter:
-     * - The currently stickied header always appears in the list of visible items, with its
-     *   regular index. This makes [firstVisibleLine] always return its index, even if the list has
-     *   been scrolled far beyond it.
-     * - [averageVisibleLineSize] calculates the average size in O(1) by assuming that items don't
-     *   overlap, and the stickied item breaks this assumption.
-     *
-     * Attempts to return the index into `visibleItemsInfo` of the first non-currently-stickied (it
-     * could be sticky, but not stickied to the top of the list right now) item, if there is one.
-     *
-     * Note that this heuristic breaks down if the sticky header covers the entire list, so that
-     * it's the only visible item for some portion of the scroll range. But there's currently no
-     * known better way to solve it, and it's a relatively unusual case.
-     */
+    
     private fun firstFloatingVisibleItemIndex() = with(scrollState.layoutInfo.visibleItemsInfo) {
         when (size) {
             0 -> null
@@ -407,8 +278,6 @@ internal class LazyListScrollAreaState(
             else -> {
                 val first = this[0]
                 val second = this[1]
-                // If either the indices or the offsets aren't continuous, then the first item is
-                // sticky, so we return 1
                 if ((first.index < second.index - 1) || (first.offset + first.size + lineSpacing > second.offset)) 1
                 else 0
             }
@@ -485,8 +354,6 @@ internal class LazyGridScrollAreaScrollAreaState(
 
     private val slotsPerLine by derivedStateOf {
         val orientation = scrollState.layoutInfo.orientation
-
-        // count all unique columns or rows of the respective orientation
         scrollState.layoutInfo.visibleItemsInfo.distinctBy { if (orientation == Orientation.Vertical) it.column else it.row }
             .count()
     }
@@ -496,7 +363,7 @@ internal class LazyGridScrollAreaScrollAreaState(
     private fun indexOfFirstInLine(line: Int): Int = line * slotsPerLine
 
     override fun firstVisibleLine(): VisibleLine? {
-        return scrollState.layoutInfo.visibleItemsInfo.firstOrNull { it.line() != unknownLine } // Skip exiting items
+        return scrollState.layoutInfo.visibleItemsInfo.firstOrNull { it.line() != unknownLine } 
             ?.let { firstVisibleItem ->
                 VisibleLine(
                     index = firstVisibleItem.line(), offset = firstVisibleItem.mainAxisOffset()
@@ -528,10 +395,8 @@ internal class LazyGridScrollAreaScrollAreaState(
         val visibleItemsInfo = scrollState.layoutInfo.visibleItemsInfo
         val indexOfFirstKnownLineItem = visibleItemsInfo.indexOfFirst { it.line() != unknownLine }
         if (indexOfFirstKnownLineItem == -1) return 0.0
-        val reallyVisibleItemsInfo =  // Non-exiting visible items
+        val reallyVisibleItemsInfo =  
             visibleItemsInfo.subList(indexOfFirstKnownLineItem, visibleItemsInfo.size)
-
-        // Compute the size of the last line
         val lastLine = reallyVisibleItemsInfo.last().line()
         val lastLineSize = reallyVisibleItemsInfo.asReversed().asSequence().takeWhile { it.line() == lastLine }
             .maxOf { it.mainAxisSize() }
@@ -568,7 +433,7 @@ internal class SliderAdapter internal constructor(
     private val scrollScale: Double
         get() {
             val extraScrollbarSpace = trackSize - thumbSize
-            val extraContentSpace = adapter.maxScrollOffset  // == contentSize - viewportSize
+            val extraContentSpace = adapter.maxScrollOffset  
             return if (extraContentSpace == 0.0) 1.0 else extraScrollbarSpace / extraContentSpace
         }
 
@@ -579,11 +444,9 @@ internal class SliderAdapter internal constructor(
         get() = if (reverseLayout) trackSize - thumbSize - rawPosition else rawPosition
 
     val bounds get() = position..position + thumbSize
-
-    // How much of the current drag was ignored because we've reached the end of the scrollbar area
     private var unscrolledDragDistance = 0.0
 
-    /** Called when the thumb dragging starts */
+    
     fun onDragStarted() {
         unscrolledDragDistance = 0.0
     }
@@ -599,11 +462,9 @@ internal class SliderAdapter internal constructor(
 
     private val dragMutex = Mutex()
 
-    /** Called on every movement while dragging the thumb */
+    
     fun onDragDelta(offset: Offset) {
         coroutineScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            // Mutex is used to ensure that all earlier drag deltas were applied
-            // before calculating a new raw position
             dragMutex.withLock {
                 val dragDelta = if (isVertical) offset.y else offset.x
                 val maxScrollPosition = adapter.maxScrollOffset * scrollScale
@@ -612,8 +473,6 @@ internal class SliderAdapter internal constructor(
                     0.0, maxScrollPosition
                 )
                 val sliderDelta = targetPosition - currentPosition
-
-                // Have to add to position for smooth content scroll if the items are of different size
                 val newPos = position + sliderDelta
                 setPosition(newPos)
                 unscrolledDragDistance += dragDelta - sliderDelta
