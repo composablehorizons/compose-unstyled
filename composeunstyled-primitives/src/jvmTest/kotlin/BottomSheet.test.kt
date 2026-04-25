@@ -23,6 +23,8 @@
 
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
@@ -808,9 +810,9 @@ class BottomSheetTest {
         )
         BottomSheet(state) {
           Column(Modifier.testTag("sheet_contents").size(100.dp)) {
-            Text("Top")
+            BasicText("Top")
             Spacer(Modifier.weight(1f))
-            Text("Bottom")
+            BasicText("Bottom")
           }
         }
       }
@@ -1108,7 +1110,7 @@ class BottomSheetTest {
             .background(Color.White),
         ) {
           Column(modifier = Modifier.fillMaxWidth().height(1200.dp)) {
-            Text("Test")
+            BasicText("Test")
           }
         }
       }
@@ -1281,7 +1283,7 @@ class BottomSheetTest {
           ) {
             Column {
               repeat(5) { index ->
-                Text(
+                BasicText(
                   text = "item_$index",
                   modifier = Modifier
                     .testTag("item_$index")
@@ -1329,7 +1331,7 @@ class BottomSheetTest {
           ) {
             Column {
               repeat(5) { index ->
-                Text(
+                BasicText(
                   text = "item_$index",
                   modifier = Modifier
                     .testTag("item_$index")

@@ -23,6 +23,8 @@
 
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -50,7 +52,7 @@ class TabGroupTest {
 
       setContent {
         UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button")) {
-          Text("Outside")
+          BasicText("Outside")
         }
 
         UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
@@ -61,7 +63,7 @@ class TabGroupTest {
               selected = selectedTab == "tab1",
               onSelected = { selectedTab = "tab1" },
             ) {
-              Text("Tab #1")
+              BasicText("Tab #1")
             }
             UnstyledTab(
               key = "tab2",
@@ -69,7 +71,7 @@ class TabGroupTest {
               selected = selectedTab == "tab2",
               onSelected = { selectedTab = "tab2" },
             ) {
-              Text("Tab #2")
+              BasicText("Tab #2")
             }
             UnstyledTab(
               key = "tab3",
@@ -77,7 +79,7 @@ class TabGroupTest {
               selected = selectedTab == "tab3",
               onSelected = { selectedTab = "tab3" },
             ) {
-              Text("Tab #3")
+              BasicText("Tab #3")
             }
           }
         }
@@ -96,7 +98,7 @@ class TabGroupTest {
 
       setContent {
         UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button")) {
-          Text("Outside")
+          BasicText("Outside")
         }
 
         UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
@@ -107,7 +109,7 @@ class TabGroupTest {
               selected = selectedTab == "tab1",
               onSelected = { selectedTab = "tab1" },
             ) {
-              Text("Tab #1")
+              BasicText("Tab #1")
             }
             UnstyledTab(
               key = "tab2",
@@ -115,7 +117,7 @@ class TabGroupTest {
               selected = selectedTab == "tab2",
               onSelected = { selectedTab = "tab2" },
             ) {
-              Text("Tab #2")
+              BasicText("Tab #2")
             }
             UnstyledTab(
               key = "tab3",
@@ -123,7 +125,7 @@ class TabGroupTest {
               selected = selectedTab == "tab3",
               onSelected = { selectedTab = "tab3" },
             ) {
-              Text("Tab #3")
+              BasicText("Tab #3")
             }
           }
         }
@@ -142,7 +144,7 @@ class TabGroupTest {
 
       setContent {
         UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button")) {
-          Text("Outside")
+          BasicText("Outside")
         }
         UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
           UnstyledTabList(Modifier.testFocusTag("tablist")) {
@@ -152,7 +154,7 @@ class TabGroupTest {
               selected = selectedTab == "tab1",
               onSelected = { selectedTab = "tab1" },
             ) {
-              Text("Tab #1")
+              BasicText("Tab #1")
             }
             UnstyledTab(
               "tab2",
@@ -160,7 +162,7 @@ class TabGroupTest {
               selected = selectedTab == "tab2",
               onSelected = { selectedTab = "tab2" },
             ) {
-              Text("Tab #2")
+              BasicText("Tab #2")
             }
             UnstyledTab(
               "tab3",
@@ -168,7 +170,7 @@ class TabGroupTest {
               selected = selectedTab == "tab3",
               onSelected = { selectedTab = "tab3" },
             ) {
-              Text("Tab #3")
+              BasicText("Tab #3")
             }
           }
         }
@@ -188,7 +190,7 @@ class TabGroupTest {
 
     setContent {
       UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button").testFocusTag("button")) {
-        Text("Outside")
+        BasicText("Outside")
       }
 
       UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
@@ -199,7 +201,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             "tab2",
@@ -207,7 +209,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             "tab3",
@@ -215,7 +217,7 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }
@@ -240,7 +242,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             key = "tab2",
@@ -248,7 +250,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             key = "tab3",
@@ -256,22 +258,22 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
         UnstyledTabPanel(key = "tab1") {
           UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelA")) {
-            Text("Panel A")
+            BasicText("Panel A")
           }
         }
         UnstyledTabPanel(key = "tab2") {
           UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelB")) {
-            Text("Panel B")
+            BasicText("Panel B")
           }
         }
         UnstyledTabPanel(key = "tab3") {
           UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelC")) {
-            Text("Panel C")
+            BasicText("Panel C")
           }
         }
       }
@@ -299,7 +301,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             "tab2",
@@ -307,7 +309,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             "tab3",
@@ -315,7 +317,7 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }
@@ -338,7 +340,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             "tab2",
@@ -346,7 +348,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             "tab3",
@@ -354,7 +356,7 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }
@@ -386,7 +388,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             "tab2",
@@ -394,7 +396,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             "tab3",
@@ -402,7 +404,7 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }
@@ -434,7 +436,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             key = "tab2",
@@ -442,7 +444,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             key = "tab3",
@@ -450,7 +452,7 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }
@@ -492,7 +494,7 @@ class TabGroupTest {
             selected = selectedTab == "tab1",
             onSelected = { selectedTab = "tab1" },
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             key = "tab2",
@@ -500,7 +502,7 @@ class TabGroupTest {
             selected = selectedTab == "tab2",
             onSelected = { selectedTab = "tab2" },
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             key = "tab3",
@@ -508,17 +510,17 @@ class TabGroupTest {
             selected = selectedTab == "tab3",
             onSelected = { selectedTab = "tab3" },
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
         UnstyledTabPanel(key = "tab1", Modifier.testFocusTag("panelA")) {
-          Text("Panel A")
+          BasicText("Panel A")
         }
         UnstyledTabPanel(key = "tab2", Modifier.testFocusTag("panelB")) {
-          Text("Panel B")
+          BasicText("Panel B")
         }
         UnstyledTabPanel(key = "tab3", Modifier.testFocusTag("panelC")) {
-          Text("Panel C")
+          BasicText("Panel C")
         }
       }
     }
@@ -553,7 +555,7 @@ class TabGroupTest {
             onSelected = { selectedTab = "tab1" },
             activateOnFocus = true,
           ) {
-            Text("Tab #1")
+            BasicText("Tab #1")
           }
           UnstyledTab(
             key = "tab2",
@@ -562,7 +564,7 @@ class TabGroupTest {
             onSelected = { selectedTab = "tab2" },
             activateOnFocus = true,
           ) {
-            Text("Tab #2")
+            BasicText("Tab #2")
           }
           UnstyledTab(
             key = "tab3",
@@ -571,7 +573,7 @@ class TabGroupTest {
             onSelected = { selectedTab = "tab3" },
             activateOnFocus = true,
           ) {
-            Text("Tab #3")
+            BasicText("Tab #3")
           }
         }
       }

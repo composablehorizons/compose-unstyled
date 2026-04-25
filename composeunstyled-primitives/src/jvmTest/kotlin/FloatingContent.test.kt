@@ -21,6 +21,8 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
@@ -38,7 +40,7 @@ class FloatingContentTest {
     setContent {
       FloatingContent(
         floatingContent = {
-          Text("Floating content")
+          BasicText("Floating content")
         },
         anchor = {},
       )
@@ -55,7 +57,7 @@ class FloatingContentTest {
       FloatingContent(
         floatingContent = {},
         anchor = {
-          Text("Anchor")
+          BasicText("Anchor")
         },
       )
     }
@@ -76,12 +78,12 @@ class FloatingContentTest {
         placement = RelativeAlignment.TopStart,
         floatingContent = {
           Box(Modifier.size(50.dp)) {
-            Text("Floating")
+            BasicText("Floating")
           }
         },
         anchor = {
           Box(Modifier.size(100.dp)) {
-            Text("Anchor")
+            BasicText("Anchor")
           }
         },
       )
@@ -96,12 +98,12 @@ class FloatingContentTest {
         placement = RelativeAlignment.BottomStart,
         floatingContent = {
           Box(Modifier.size(50.dp)) {
-            Text("Floating")
+            BasicText("Floating")
           }
         },
         anchor = {
           Box(Modifier.size(100.dp)) {
-            Text("Anchor")
+            BasicText("Anchor")
           }
         },
       )
@@ -126,12 +128,12 @@ class FloatingContentTest {
         placement = RelativeAlignment.TopStart,
         floatingContent = {
           Box(Modifier.size(100.dp)) {
-            Text("Floating")
+            BasicText("Floating")
           }
         },
         anchor = {
           Box(Modifier.size(50.dp)) {
-            Text("Anchor")
+            BasicText("Anchor")
           }
         },
       )
@@ -158,12 +160,12 @@ class FloatingContentTest {
         floatingContent = {
           // Make floating content very large (larger than typical window)
           Box(Modifier.size(10000.dp)) {
-            Text("Large floating")
+            BasicText("Large floating")
           }
         },
         anchor = {
           Box(Modifier.size(50.dp)) {
-            Text("Anchor")
+            BasicText("Anchor")
           }
         },
       )

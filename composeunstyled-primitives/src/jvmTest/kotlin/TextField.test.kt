@@ -21,6 +21,8 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.size
@@ -78,7 +80,7 @@ class TextFieldTest {
         TextInput(
           trailing = {
             UnstyledButton(onClick = {}, modifier = Modifier.testTag("trailing")) {
-              Text("trailing")
+              BasicText("trailing")
             }
           },
         )
@@ -218,7 +220,7 @@ class TextFieldTest {
       ) {
         TextInput()
         if (isFocused) {
-          Text("focused", modifier = Modifier.testTag("focus-indicator"))
+          BasicText("focused", modifier = Modifier.testTag("focus-indicator"))
         }
       }
     }
@@ -235,7 +237,7 @@ class TextFieldTest {
       UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
         TextInput(
           placeholder = {
-            Text("Search", modifier = Modifier.testTag("placeholder"))
+            BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
         )
       }
@@ -256,7 +258,7 @@ class TextFieldTest {
       ) {
         TextInput(
           placeholder = {
-            Text("Search", modifier = Modifier.testTag("placeholder"))
+            BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
         )
       }
@@ -274,7 +276,7 @@ class TextFieldTest {
       UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
         TextInput(
           placeholder = {
-            Text("Search", modifier = Modifier.testTag("placeholder"))
+            BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
         )
       }

@@ -21,6 +21,8 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
@@ -48,7 +50,7 @@ class ScrollBarsTest {
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
         Column(modifier = Modifier.height(200.dp)) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
@@ -72,7 +74,7 @@ class ScrollBarsTest {
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
         Column(modifier = Modifier.height(200.dp)) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
@@ -98,7 +100,7 @@ class ScrollBarsTest {
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
@@ -130,7 +132,7 @@ class ScrollBarsTest {
       ) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(
@@ -177,7 +179,7 @@ class ScrollBarsTest {
             .verticalScroll(scrollState)
             .testTag("list"),
         ) {
-          repeat(100) { Text("Item $it") }
+          repeat(100) { BasicText("Item $it") }
         }
         VerticalScrollbar(
           modifier = Modifier
@@ -240,7 +242,7 @@ class ScrollBarsTest {
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("track")) {
@@ -288,7 +290,7 @@ class ScrollBarsTest {
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
-            Text("Item $index")
+            BasicText("Item $index")
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {

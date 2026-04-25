@@ -55,9 +55,9 @@ import com.composables.icons.lucide.EyeOff
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Text
-import com.composeunstyled.TextField
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.text3
@@ -91,7 +91,7 @@ fun TextFieldDemo() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
-        TextField(
+        UnstyledTextField(
           state = email,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
@@ -120,7 +120,7 @@ fun TextFieldDemo() {
           )
         }
 
-        TextField(
+        UnstyledTextField(
           state = password,
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,

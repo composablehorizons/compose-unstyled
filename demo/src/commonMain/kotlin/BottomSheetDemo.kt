@@ -38,6 +38,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,7 +53,6 @@ import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.rememberBottomSheetState
-import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
 import com.composeunstyled.platformtheme.dimmed
@@ -88,7 +88,7 @@ fun BottomSheetDemo() {
       backgroundColor = Color.White,
       indication = Theme[indications][dimmed],
     ) {
-      Text("Show Sheet")
+      BasicText("Show Sheet")
     }
 
     BottomSheet(

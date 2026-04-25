@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -81,35 +82,35 @@ import androidx.compose.ui.unit.isSpecified
 
 @Composable
 fun UnstyledTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    editable: Boolean = true,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    placeholder: String = "",
-    contentColor: Color = LocalContentColor.current,
-    disabledColor: Color = contentColor.copy(0.66f),
-    backgroundColor: Color = Color.Unspecified,
-    borderWidth: Dp = 1.dp,
-    borderColor: Color = Color.Unspecified,
-    shape: Shape = RectangleShape,
-    textStyle: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    fontWeight: FontWeight? = null,
-    fontFamily: FontFamily? = null,
-    textDecoration: TextDecoration? = textStyle.textDecoration,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    interactionSource: MutableInteractionSource? = null,
-    spacing: Dp = 8.dp,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  value: String,
+  onValueChange: (String) -> Unit,
+  editable: Boolean = true,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  leadingIcon: @Composable (() -> Unit)? = null,
+  trailingIcon: @Composable (() -> Unit)? = null,
+  placeholder: String = "",
+  contentColor: Color = LocalContentColor.current,
+  disabledColor: Color = contentColor.copy(0.66f),
+  backgroundColor: Color = Color.Unspecified,
+  borderWidth: Dp = 1.dp,
+  borderColor: Color = Color.Unspecified,
+  shape: Shape = RectangleShape,
+  textStyle: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  fontSize: TextUnit = TextUnit.Unspecified,
+  fontWeight: FontWeight? = null,
+  fontFamily: FontFamily? = null,
+  textDecoration: TextDecoration? = textStyle.textDecoration,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
+  interactionSource: MutableInteractionSource? = null,
+  spacing: Dp = 8.dp,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
   val overriddenStyle = textStyle.mergeThemed(
     textAlign = textAlign,
@@ -156,15 +157,15 @@ fun UnstyledTextField(
       Row(
         verticalAlignment = verticalAlignment,
         modifier = buildModifier {
-            if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
-                add(Modifier.border(borderWidth, borderColor, shape))
-            }
-            add(Modifier.background(backgroundColor, shape))
+          if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
+            add(Modifier.border(borderWidth, borderColor, shape))
+          }
+          add(Modifier.background(backgroundColor, shape))
 
-            if (editable.not()) {
-                add(Modifier.pointerHoverIcon(PointerIcon.Default))
-            }
-            add(Modifier.padding(contentPadding))
+          if (editable.not()) {
+            add(Modifier.pointerHoverIcon(PointerIcon.Default))
+          }
+          add(Modifier.padding(contentPadding))
         },
         horizontalArrangement = Arrangement.spacedBy(spacing),
       ) {
@@ -176,13 +177,14 @@ fun UnstyledTextField(
         Box(Modifier.weight(1f).semantics(mergeDescendants = true) { }) {
           innerTextField()
           if (value.isEmpty()) {
-              UnstyledText(
-                  text = placeholder,
-                  style = overriddenStyle,
-                  minLines = minLines,
-                  maxLines = maxLines,
-                  color = overriddenStyle.color.copy(alpha = 0.66f),
-              )
+            BasicText(
+              text = placeholder,
+              style = overriddenStyle.copy(
+                color = overriddenStyle.color.copy(alpha = 0.66f)
+              ),
+              minLines = minLines,
+              maxLines = maxLines,
+            )
           }
         }
         if (trailingIcon != null) {
@@ -197,10 +199,10 @@ fun UnstyledTextField(
     Row(
       verticalAlignment = verticalAlignment,
       modifier = modifier then buildModifier {
-          if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
-              add(Modifier.border(borderWidth, borderColor, shape))
-          }
-          add(Modifier.background(backgroundColor, shape))
+        if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
+          add(Modifier.border(borderWidth, borderColor, shape))
+        }
+        add(Modifier.background(backgroundColor, shape))
       }.widthIn(min = 2.dp) // width for the cursor blink
         .focusable(interactionSource = interactionSource).padding(contentPadding),
       horizontalArrangement = Arrangement.spacedBy(spacing),
@@ -208,14 +210,15 @@ fun UnstyledTextField(
       if (leadingIcon != null) {
         leadingIcon()
       }
-        UnstyledText(
-            text = if (value.isBlank()) placeholder else transformedText,
-            style = overriddenStyle,
-            color = disabledColor,
-            modifier = Modifier.weight(1f),
-            minLines = minLines,
-            maxLines = maxLines,
-        )
+      BasicText(
+        text = if (value.isBlank()) placeholder else transformedText,
+        style = overriddenStyle.copy(
+          color = disabledColor
+        ),
+        modifier = Modifier.weight(1f),
+        minLines = minLines,
+        maxLines = maxLines,
+      )
       if (trailingIcon != null) {
         trailingIcon()
       }
@@ -225,28 +228,28 @@ fun UnstyledTextField(
 
 @Composable
 fun UnstyledTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    editable: Boolean = true,
-    cursorBrush: Brush = SolidColor(Color.Black),
-    textStyle: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    letterSpacing: TextUnit = TextUnit.Unspecified,
-    fontWeight: FontWeight? = null,
-    fontFamily: FontFamily? = null,
-    textDecoration: TextDecoration? = textStyle.textDecoration,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    interactionSource: MutableInteractionSource? = null,
-    textColor: Color = Color.Unspecified,
-    content: @Composable TextFieldScope.() -> Unit,
+  value: String,
+  onValueChange: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  editable: Boolean = true,
+  cursorBrush: Brush = SolidColor(Color.Black),
+  textStyle: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontSize: TextUnit = TextUnit.Unspecified,
+  letterSpacing: TextUnit = TextUnit.Unspecified,
+  fontWeight: FontWeight? = null,
+  fontFamily: FontFamily? = null,
+  textDecoration: TextDecoration? = textStyle.textDecoration,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  interactionSource: MutableInteractionSource? = null,
+  textColor: Color = Color.Unspecified,
+  content: @Composable TextFieldScope.() -> Unit,
 ) {
   val scope = remember { TextFieldScope() }
 
@@ -319,7 +322,7 @@ class TextFieldScope {
   internal var text: String by mutableStateOf("")
   internal var editable: Boolean by mutableStateOf(true)
   internal var visualTransformation: VisualTransformation by
-    mutableStateOf(VisualTransformation.None)
+  mutableStateOf(VisualTransformation.None)
   internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
 
   internal var minLines: Int by mutableStateOf(1)
@@ -331,25 +334,25 @@ class TextFieldScope {
 
 @Composable
 fun TextFieldScope.TextInput(
-    modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    backgroundColor: Color = Color.Unspecified,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    contentColor: Color = LocalContentColor.current,
-    label: String? = null,
-    placeholder: (@Composable () -> Unit)? = null,
-    leading: (@Composable () -> Unit)? = null,
-    trailing: (@Composable () -> Unit)? = null,
-    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  contentColor: Color = LocalContentColor.current,
+  label: String? = null,
+  placeholder: (@Composable () -> Unit)? = null,
+  leading: (@Composable () -> Unit)? = null,
+  trailing: (@Composable () -> Unit)? = null,
+  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
   Row(
     modifier = modifier
       .clip(shape)
       .background(backgroundColor)
       .pointerHoverIcon(PointerIcon.Text) then buildModifier {
-        if (label != null) {
-            add(Modifier.semantics { contentDescription = label })
-        }
+      if (label != null) {
+        add(Modifier.semantics { contentDescription = label })
+      }
     }.padding(contentPadding),
     verticalAlignment = verticalAlignment,
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -375,7 +378,7 @@ fun TextFieldScope.TextInput(
         } else {
           val transformedText = visualTransformation.filter(AnnotatedString(text)).text.text
           SelectionContainer {
-              UnstyledText(transformedText)
+            BasicText(transformedText)
           }
         }
 
@@ -399,28 +402,28 @@ fun TextFieldScope.TextInput(
 
 @Composable
 fun UnstyledTextField(
-    state: TextFieldState,
-    modifier: Modifier = Modifier,
-    editable: Boolean = true,
-    cursorBrush: Brush = SolidColor(Color.Black),
-    textStyle: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign = TextAlign.Unspecified,
-    lineHeight: TextUnit = TextUnit.Unspecified,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    letterSpacing: TextUnit = TextUnit.Unspecified,
-    fontWeight: FontWeight? = null,
-    fontFamily: FontFamily? = null,
-    textDecoration: TextDecoration? = textStyle.textDecoration,
-    singleLine: Boolean = false,
-    minLines: Int = 1,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    onKeyboardAction: KeyboardActionHandler? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    interactionSource: MutableInteractionSource? = null,
-    textColor: Color = LocalContentColor.current,
-    scrollState: ScrollState = rememberScrollState(),
-    content: @Composable TextFieldScope.() -> Unit,
+  state: TextFieldState,
+  modifier: Modifier = Modifier,
+  editable: Boolean = true,
+  cursorBrush: Brush = SolidColor(Color.Black),
+  textStyle: TextStyle = LocalTextStyle.current,
+  textAlign: TextAlign = TextAlign.Unspecified,
+  lineHeight: TextUnit = TextUnit.Unspecified,
+  fontSize: TextUnit = TextUnit.Unspecified,
+  letterSpacing: TextUnit = TextUnit.Unspecified,
+  fontWeight: FontWeight? = null,
+  fontFamily: FontFamily? = null,
+  textDecoration: TextDecoration? = textStyle.textDecoration,
+  singleLine: Boolean = false,
+  minLines: Int = 1,
+  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  onKeyboardAction: KeyboardActionHandler? = null,
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  interactionSource: MutableInteractionSource? = null,
+  textColor: Color = LocalContentColor.current,
+  scrollState: ScrollState = rememberScrollState(),
+  content: @Composable TextFieldScope.() -> Unit,
 ) {
   val scope = remember { TextFieldScope() }
 
@@ -442,69 +445,69 @@ fun UnstyledTextField(
   scope.minLines = minLines
   scope.maxLines = maxLines
 
-    ProvideContentColor(textColor) {
-        ProvideTextStyle(newTextStyle) {
-            if (editable) {
-                val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
+  ProvideContentColor(textColor) {
+    ProvideTextStyle(newTextStyle) {
+      if (editable) {
+        val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
 
-                BasicTextField(
-                    scrollState = scrollState,
-                    state = state,
-                    interactionSource = interactionSource,
-                    textStyle = newTextStyle,
-                    outputTransformation = {
-                        val transformedText =
-                            visualTransformation.filter(AnnotatedString(originalText.toString()))
-                        val newText = transformedText.text.text
-                        val mapping = transformedText.offsetMapping
-                        val originalLength = originalText.length
+        BasicTextField(
+          scrollState = scrollState,
+          state = state,
+          interactionSource = interactionSource,
+          textStyle = newTextStyle,
+          outputTransformation = {
+            val transformedText =
+              visualTransformation.filter(AnnotatedString(originalText.toString()))
+            val newText = transformedText.text.text
+            val mapping = transformedText.offsetMapping
+            val originalLength = originalText.length
 
-                        // Apply edits from end to start so index shifts don't affect upcoming edits.
-                        for (index in originalLength - 1 downTo 0) {
-                            val transformedStart = mapping.originalToTransformed(index)
-                            val transformedEnd = mapping.originalToTransformed(index + 1)
-                            val replacement = newText.substring(transformedStart, transformedEnd)
-                            replace(index, index + 1, replacement)
-                        }
-
-                        val suffixStart = mapping.originalToTransformed(originalLength)
-                        if (suffixStart < newText.length) {
-                            replace(length, length, newText.substring(suffixStart))
-                        }
-                    },
-                    inputTransformation = InputTransformation {
-                        // block any value changes, unless the actual text input is focused
-                        if (inputIsFocused.not()) {
-                            revertAllChanges()
-                        }
-                    },
-                    modifier = modifier.semantics(mergeDescendants = true) {},
-                    cursorBrush = cursorBrush,
-                    lineLimits = if (singleLine) {
-                        TextFieldLineLimits.SingleLine
-                    } else {
-                        TextFieldLineLimits.MultiLine(minLines, maxLines)
-                    },
-                    keyboardOptions = keyboardOptions,
-                    onKeyboardAction = onKeyboardAction,
-                    decorator = { innerTextField ->
-                        scope.innerTextField = innerTextField
-                        Column(
-                            Modifier
-                                // we are handling pointerIcons in TextInput()
-                                .pointerHoverIcon(PointerIcon.Default),
-                        ) {
-                            scope.content()
-                        }
-                    },
-                )
-            } else {
-                Column(modifier) {
-                    scope.content()
-                }
+            // Apply edits from end to start so index shifts don't affect upcoming edits.
+            for (index in originalLength - 1 downTo 0) {
+              val transformedStart = mapping.originalToTransformed(index)
+              val transformedEnd = mapping.originalToTransformed(index + 1)
+              val replacement = newText.substring(transformedStart, transformedEnd)
+              replace(index, index + 1, replacement)
             }
+
+            val suffixStart = mapping.originalToTransformed(originalLength)
+            if (suffixStart < newText.length) {
+              replace(length, length, newText.substring(suffixStart))
+            }
+          },
+          inputTransformation = InputTransformation {
+            // block any value changes, unless the actual text input is focused
+            if (inputIsFocused.not()) {
+              revertAllChanges()
+            }
+          },
+          modifier = modifier.semantics(mergeDescendants = true) {},
+          cursorBrush = cursorBrush,
+          lineLimits = if (singleLine) {
+            TextFieldLineLimits.SingleLine
+          } else {
+            TextFieldLineLimits.MultiLine(minLines, maxLines)
+          },
+          keyboardOptions = keyboardOptions,
+          onKeyboardAction = onKeyboardAction,
+          decorator = { innerTextField ->
+            scope.innerTextField = innerTextField
+            Column(
+              Modifier
+                // we are handling pointerIcons in TextInput()
+                .pointerHoverIcon(PointerIcon.Default),
+            ) {
+              scope.content()
+            }
+          },
+        )
+      } else {
+        Column(modifier) {
+          scope.content()
         }
+      }
     }
+  }
 }
 
 @Composable

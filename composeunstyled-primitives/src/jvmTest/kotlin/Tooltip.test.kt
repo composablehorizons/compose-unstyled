@@ -21,6 +21,8 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.text.BasicText
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -67,12 +69,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Button")
+          BasicText("Button")
         }
       }
     }
@@ -87,12 +89,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Focus me")
+          BasicText("Focus me")
         }
       }
     }
@@ -111,17 +113,17 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Focus me")
+          BasicText("Focus me")
         }
       }
 
       UnstyledButton(onClick = {}) {
-        Text("Another button")
+        BasicText("Another button")
       }
     }
 
@@ -143,12 +145,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
-          Text("Hover me")
+          BasicText("Hover me")
         }
       }
     }
@@ -173,12 +175,12 @@ class TooltipTest {
         enabled = false,
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Hover me")
+          BasicText("Hover me")
         }
       }
     }
@@ -204,12 +206,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Focus me")
+          BasicText("Focus me")
         }
       }
     }
@@ -230,17 +232,17 @@ class TooltipTest {
         UnstyledTooltip(
           panel = {
             UnstyledTooltipPanel {
-              Text("Tooltip content")
+              BasicText("Tooltip content")
             }
           },
         ) {
           UnstyledButton(onClick = {}) {
-            Text("Hover me")
+            BasicText("Hover me")
           }
         }
 
         UnstyledButton(onClick = {}) {
-          Text("Other")
+          BasicText("Other")
         }
       }
     }
@@ -269,12 +271,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -312,13 +314,13 @@ class TooltipTest {
         panel = {
           UnstyledTooltipPanel {
             Box(Modifier.testTag("tooltip_content")) {
-              Text("Tooltip content")
+              BasicText("Tooltip content")
             }
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger_button")) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -339,12 +341,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -365,12 +367,12 @@ class TooltipTest {
         placement = RelativeAlignment.BottomStart,
         panel = {
           UnstyledTooltipPanel {
-            Text("Bottom tooltip")
+            BasicText("Bottom tooltip")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -387,18 +389,18 @@ class TooltipTest {
     // Users should be able to interact with other elements while tooltip is visible
     setPaddedContent {
       UnstyledButton(onClick = {}, modifier = Modifier.testTag("outside_button")) {
-        Text("Outside button")
+        BasicText("Outside button")
       }
 
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -428,7 +430,7 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip for disabled element")
+            BasicText("Tooltip for disabled element")
           }
         },
       ) {
@@ -437,7 +439,7 @@ class TooltipTest {
           enabled = false,
           modifier = Modifier.testTag("disabled_button"),
         ) {
-          Text("Disabled button")
+          BasicText("Disabled button")
         }
       }
     }
@@ -460,17 +462,17 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
 
       UnstyledButton(onClick = {}) {
-        Text("Outside button")
+        BasicText("Outside button")
       }
     }
 
@@ -498,12 +500,12 @@ class TooltipTest {
         hoverDelayMillis = 500,
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
-          Text("Hover me")
+          BasicText("Hover me")
         }
       }
     }
@@ -545,12 +547,12 @@ class TooltipTest {
         hoverDelayMillis = 500,
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
-          Text("Hover me")
+          BasicText("Hover me")
         }
       }
     }
@@ -589,12 +591,12 @@ class TooltipTest {
         hoverDelayMillis = 500,
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Focus me")
+          BasicText("Focus me")
         }
       }
     }
@@ -615,12 +617,12 @@ class TooltipTest {
       UnstyledTooltip(
         panel = {
           UnstyledTooltipPanel {
-            Text("Tooltip content")
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }
@@ -653,13 +655,13 @@ class TooltipTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel(arrow = { Text("Arrow") }) {
-            Text("Tooltip content")
+          UnstyledTooltipPanel(arrow = { BasicText("Arrow") }) {
+            BasicText("Tooltip content")
           }
         },
       ) {
         UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
-          Text("Trigger")
+          BasicText("Trigger")
         }
       }
     }

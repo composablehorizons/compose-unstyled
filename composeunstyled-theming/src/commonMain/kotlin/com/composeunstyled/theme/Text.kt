@@ -40,82 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.isSpecified
 
-/**
- * A themable composable that displays text.
- *
- * For interactive preview & code examples, visit [Text Documentation](https://composeunstyled.com/text).
- *
- * ## Basic Example
- *
- * ```kotlin
- * Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
- *
- * ```
- *
- * @param text The text to be displayed.
- * @param modifier Modifier to be applied to the text.
- * @param style The style to be applied to the text.
- * @param textAlign The alignment of the text.
- * @param lineHeight The height of each line of text.
- * @param fontSize The size of the text.
- * @param letterSpacing The spacing between letters.
- * @param fontWeight The weight of the text.
- * @param color The color of the text.
- * @param fontFamily The font family to be used.
- * @param singleLine Whether the text should be displayed in a single line.
- * @param minLines The minimum number of lines to display.
- * @param maxLines The maximum number of lines to display.
- * @param overflow How to handle text overflow.
- */
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledText(text, modifier, style, textAlign, lineHeight, fontSize, letterSpacing, " +
-      "fontWeight, color, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, " +
-      "autoSize)",
-  ),
-)
 @Composable
 fun Text(
-  text: String,
-  modifier: Modifier = Modifier,
-  style: TextStyle = LocalTextStyle.current,
-  textAlign: TextAlign = TextAlign.Unspecified,
-  lineHeight: TextUnit = TextUnit.Unspecified,
-  fontSize: TextUnit = style.fontSize,
-  letterSpacing: TextUnit = style.letterSpacing,
-  fontWeight: FontWeight? = style.fontWeight,
-  color: Color = Color.Unspecified,
-  fontFamily: FontFamily? = style.fontFamily,
-  singleLine: Boolean = false,
-  minLines: Int = 1,
-  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-  overflow: TextOverflow = TextOverflow.Clip,
-  autoSize: TextAutoSize? = null,
-) {
-  UnstyledText(
-    text = text,
-    modifier = modifier,
-    style = style,
-    textAlign = textAlign,
-    lineHeight = lineHeight,
-    fontSize = fontSize,
-    letterSpacing = letterSpacing,
-    fontWeight = fontWeight,
-    color = color,
-    fontFamily = fontFamily,
-    singleLine = singleLine,
-    minLines = minLines,
-    maxLines = maxLines,
-    onTextLayout = onTextLayout,
-    overflow = overflow,
-    autoSize = autoSize,
-  )
-}
-
-@Composable
-fun UnstyledText(
   text: String,
   modifier: Modifier = Modifier,
   style: TextStyle = LocalTextStyle.current,
@@ -157,82 +83,9 @@ fun UnstyledText(
   )
 }
 
-/**
- * A themable composable that displays text.
- *
- * For interactive preview & code examples, visit [Text Documentation](https://composeunstyled.com/text).
- *
- * ## Basic Example
- *
- * ```kotlin
- * Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
- *
- * ```
- *
- * @param text The annotated text to be displayed.
- * @param modifier Modifier to be applied to the text.
- * @param style The style to be applied to the text.
- * @param textAlign The alignment of the text.
- * @param fontSize The size of the text.
- * @param letterSpacing The spacing between letters.
- * @param fontWeight The weight of the text.
- * @param color The color of the text.
- * @param lineHeight The height of each line of text.
- * @param fontFamily The font family to be used.
- * @param singleLine Whether the text should be displayed in a single line.
- * @param minLines The minimum number of lines to display.
- * @param maxLines The maximum number of lines to display.
- * @param overflow How to handle text overflow.
- */
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledText(text, modifier, style, textAlign, fontSize, letterSpacing, fontWeight, " +
-      "color, lineHeight, fontFamily, singleLine, minLines, maxLines, onTextLayout, overflow, " +
-      "autoSize)",
-  ),
-)
-@Composable
-fun Text(
-  text: AnnotatedString,
-  modifier: Modifier = Modifier,
-  style: TextStyle = LocalTextStyle.current,
-  textAlign: TextAlign = TextAlign.Unspecified,
-  fontSize: TextUnit = style.fontSize,
-  letterSpacing: TextUnit = style.letterSpacing,
-  fontWeight: FontWeight? = style.fontWeight,
-  color: Color = Color.Unspecified,
-  lineHeight: TextUnit = TextUnit.Unspecified,
-  fontFamily: FontFamily? = style.fontFamily,
-  singleLine: Boolean = false,
-  minLines: Int = 1,
-  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-  onTextLayout: ((TextLayoutResult) -> Unit)? = null,
-  overflow: TextOverflow = TextOverflow.Clip,
-  autoSize: TextAutoSize? = null,
-) {
-  UnstyledText(
-    text = text,
-    modifier = modifier,
-    style = style,
-    textAlign = textAlign,
-    fontSize = fontSize,
-    letterSpacing = letterSpacing,
-    fontWeight = fontWeight,
-    color = color,
-    lineHeight = lineHeight,
-    fontFamily = fontFamily,
-    singleLine = singleLine,
-    minLines = minLines,
-    maxLines = maxLines,
-    onTextLayout = onTextLayout,
-    overflow = overflow,
-    autoSize = autoSize,
-  )
-}
 
 @Composable
-fun UnstyledText(
+fun Text(
   text: AnnotatedString,
   modifier: Modifier = Modifier,
   style: TextStyle = LocalTextStyle.current,
