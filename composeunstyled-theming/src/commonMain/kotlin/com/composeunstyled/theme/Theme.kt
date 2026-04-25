@@ -37,8 +37,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.isSpecified
-import com.composeunstyled.ComposeUnstyledFlags
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.LocalMinimumComponentInteractiveSize
 import com.composeunstyled.LocalTextStyle
@@ -95,11 +93,7 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 
     val allProperties = builder.properties.entries
 
-    val defaultIndication = if (ComposeUnstyledFlags.noDefaultThemeIndication) {
-      builder.defaultIndication ?: NoIndication
-    } else {
-      builder.defaultIndication ?: LocalIndication.current
-    }
+    val defaultIndication = builder.defaultIndication ?: NoIndication
     val textSelectionColors = builder.defaultTextSelectionColors ?: LocalTextSelectionColors.current
 
     val minInteractiveSize = builder.defaultComponentInteractiveSize

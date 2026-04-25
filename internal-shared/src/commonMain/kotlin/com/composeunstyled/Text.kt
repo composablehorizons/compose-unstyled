@@ -288,11 +288,7 @@ internal fun TextStyle.mergeThemed(
   val textStyleColor = this.color
   val contentColor = LocalContentColor.current
 
-  val finalColor = if (ComposeUnstyledFlags.strictTextColorResolutionOrder) {
-    listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
-  } else {
-    listOf(color, contentColor, textStyleColor).firstOrNull { it.isSpecified } ?: Color.Unspecified
-  }
+  val finalColor = listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
 
   return this.merge(
     textAlign = listOf(textAlign, this.textAlign)
