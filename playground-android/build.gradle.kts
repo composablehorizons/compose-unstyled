@@ -58,7 +58,8 @@ kotlin {
 }
 
 dependencies {
-  implementation(project(":core"))
+  implementation(project(":composeunstyled-theming"))
+  implementation(project(":composeunstyled-primitives"))
   implementation(project(":composeunstyled-platformtheme"))
   implementation(libs.androidx.activitycompose)
 

@@ -106,7 +106,9 @@ kotlin {
     }
     commonMain.dependencies {
       implementation(compose.components.resources)
-      implementation(project(":core"))
+      implementation(project(":composeunstyled-theming"))
+      implementation(project(":composeunstyled-primitives"))
+      implementation(project(":composeunstyled-platformtheme"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
       implementation(libs.composables.icons.lucide)
     }
