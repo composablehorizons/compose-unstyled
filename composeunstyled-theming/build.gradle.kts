@@ -82,10 +82,6 @@ kotlin {
       }
     }
 
-    androidMain.dependencies {
-      implementation(libs.androidx.activitycompose)
-    }
-
     androidInstrumentedTest.dependencies {
       implementation(libs.androidx.compose.test)
       implementation(libs.androidx.compose.test.manifest)
