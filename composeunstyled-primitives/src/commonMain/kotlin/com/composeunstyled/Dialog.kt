@@ -106,20 +106,6 @@ fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
   return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
 }
 
-@Deprecated(
-  "Use UnstyledDialog instead",
-  ReplaceWith("UnstyledDialog(state, properties, onDismiss, content)"),
-)
-@Composable
-fun Dialog(
-  state: DialogState,
-  properties: DialogProperties = DialogProperties(),
-  onDismiss: () -> Unit = DoNothing,
-  content: @Composable (() -> Unit),
-) {
-  UnstyledDialog(state, properties, onDismiss, content)
-}
-
 @Composable
 fun UnstyledDialog(
   state: DialogState,
@@ -180,36 +166,6 @@ fun UnstyledDialog(
   }
 }
 
-@Deprecated(
-  "Use UnstyledDialogPanel instead",
-  ReplaceWith(
-    "UnstyledDialogPanel(modifier, enter, exit, shape, backgroundColor, contentColor," +
-      " contentPadding, content)",
-  ),
-)
-@Composable
-fun DialogPanel(
-  modifier: Modifier = Modifier,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  content: @Composable () -> Unit,
-) {
-  UnstyledDialogPanel(
-    modifier,
-    enter,
-    exit,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    content,
-  )
-}
-
 @Composable
 fun UnstyledDialogPanel(
   modifier: Modifier = Modifier,
@@ -251,20 +207,6 @@ fun UnstyledDialogPanel(
       }
     }
   }
-}
-
-@Deprecated(
-  "Use UnstyledScrim instead",
-  ReplaceWith("UnstyledScrim(modifier, scrimColor, enter, exit)"),
-)
-@Composable
-fun Scrim(
-  modifier: Modifier = Modifier,
-  scrimColor: Color = Color.Black.copy(0.6f),
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-) {
-  UnstyledScrim(modifier, scrimColor, enter, exit)
 }
 
 @Composable

@@ -36,11 +36,6 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.ScrollArea
-import com.composeunstyled.Thumb
-import com.composeunstyled.ThumbVisibility
-import com.composeunstyled.VerticalScrollbar
-import com.composeunstyled.rememberScrollAreaState
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
@@ -57,7 +52,7 @@ class ScrollBarsTest {
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.AlwaysVisible,
           )
@@ -81,7 +76,7 @@ class ScrollBarsTest {
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,
@@ -107,7 +102,7 @@ class ScrollBarsTest {
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,
@@ -142,7 +137,7 @@ class ScrollBarsTest {
           modifier = Modifier.testTag("scrollbar")
             .align(Alignment.CenterEnd),
         ) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,
@@ -189,7 +184,7 @@ class ScrollBarsTest {
             .testTag("scrollbar")
             .align(Alignment.CenterEnd),
         ) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,
@@ -249,7 +244,7 @@ class ScrollBarsTest {
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("track")) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,
@@ -297,7 +292,7 @@ class ScrollBarsTest {
           }
         }
         VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
-          Thumb(
+          UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = AppearInstantly,

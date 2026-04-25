@@ -53,20 +53,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @param modifier Modifier to be applied to the icon.
  * @param tint The tint color to be applied to the icon.
  */
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledIcon(painter, contentDescription, modifier, tint)"),
-)
-@Composable
-fun Icon(
-  painter: Painter,
-  contentDescription: String?,
-  modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
-) {
-  UnstyledIcon(painter, contentDescription, modifier, tint)
-}
-
 @Composable
 fun UnstyledIcon(
   painter: Painter,
@@ -100,20 +86,6 @@ fun UnstyledIcon(
  * @param modifier Modifier to be applied to the icon.
  * @param tint The tint color to be applied to the icon.
  */
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledIcon(imageBitmap, contentDescription, modifier, tint)"),
-)
-@Composable
-fun Icon(
-  imageBitmap: ImageBitmap,
-  contentDescription: String?,
-  modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
-) {
-  UnstyledIcon(imageBitmap, contentDescription, modifier, tint)
-}
-
 @Composable
 fun UnstyledIcon(
   imageBitmap: ImageBitmap,
@@ -147,20 +119,6 @@ fun UnstyledIcon(
  * @param modifier Modifier to be applied to the icon.
  * @param tint The tint color to be applied to the icon.
  */
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledIcon(imageVector, contentDescription, modifier, tint)"),
-)
-@Composable
-fun Icon(
-  imageVector: ImageVector,
-  contentDescription: String?,
-  modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
-) {
-  UnstyledIcon(imageVector, contentDescription, modifier, tint)
-}
-
 @Composable
 fun UnstyledIcon(
   imageVector: ImageVector,

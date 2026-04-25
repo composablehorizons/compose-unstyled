@@ -51,11 +51,11 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.Separator
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledDisclosureHeading
 import com.composeunstyled.UnstyledDisclosurePanel
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberDisclosureState
@@ -106,7 +106,7 @@ fun DisclosureDemo() {
             Text(faq.question, modifier = Modifier.weight(1f))
 
             val degrees by animateFloatAsState(if (state.expanded) -180f else 0f, tween())
-            Icon(
+            UnstyledIcon(
               imageVector = Lucide.ChevronDown,
               contentDescription = null,
               modifier = Modifier.rotate(degrees),

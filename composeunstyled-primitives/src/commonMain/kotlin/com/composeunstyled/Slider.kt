@@ -203,26 +203,6 @@ suspend fun AwaitPointerEventScope.waitRelease(
  * @param thumb The composable that represents the thumb of the slider.
  */
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledSlider(state, modifier, enabled, interactionSource, valueRange, orientation, track, thumb)",
-  ),
-)
-fun Slider(
-  state: SliderState,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  interactionSource: MutableInteractionSource? = null,
-  valueRange: ClosedFloatingPointRange<Float> = state.valueRange,
-  orientation: Orientation = Orientation.Horizontal,
-  track: @Composable () -> Unit,
-  thumb: @Composable () -> Unit,
-) {
-  UnstyledSlider(state, modifier, enabled, interactionSource, valueRange, orientation, track, thumb)
-}
-
-@Composable
 fun UnstyledSlider(
   state: SliderState,
   modifier: Modifier = Modifier,
@@ -472,19 +452,6 @@ private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
 /**
  * A simple "Thumb" component. Intended to be used in [Slider]s and [ToggleSwitch]s but it is not tied to them.
  */
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledThumb(modifier, shape, color)"),
-)
-fun Thumb(
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  color: Color = Color.Unspecified,
-) {
-  UnstyledThumb(modifier, shape, color)
-}
-
 @Composable
 fun UnstyledThumb(
   modifier: Modifier = Modifier,

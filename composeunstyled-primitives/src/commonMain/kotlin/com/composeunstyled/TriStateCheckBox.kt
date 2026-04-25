@@ -48,45 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTriStateCheckbox(value, modifier, backgroundColor, contentColor, enabled, onClick, shape, borderColor, borderWidth, interactionSource, indication, contentDescription, checkIcon)",
-  ),
-)
-fun TriStateCheckbox(
-  value: ToggleableState,
-  modifier: Modifier = Modifier,
-  backgroundColor: Color = Color.Transparent,
-  contentColor: Color = LocalContentColor.current,
-  enabled: Boolean = true,
-  onClick: () -> Unit,
-  shape: Shape = RectangleShape,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 1.dp,
-  interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
-  contentDescription: String? = null,
-  checkIcon: @Composable (ToggleableState) -> Unit,
-) {
-  UnstyledTriStateCheckbox(
-    value = value,
-    modifier = modifier,
-    backgroundColor = backgroundColor,
-    contentColor = contentColor,
-    enabled = enabled,
-    onClick = onClick,
-    shape = shape,
-    borderColor = borderColor,
-    borderWidth = borderWidth,
-    interactionSource = interactionSource,
-    indication = indication,
-    contentDescription = contentDescription,
-    checkIcon = checkIcon,
-  )
-}
-
-@Composable
 fun UnstyledTriStateCheckbox(
   value: ToggleableState,
   modifier: Modifier = Modifier,

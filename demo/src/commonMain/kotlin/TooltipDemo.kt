@@ -51,13 +51,13 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.RelativeAlignment
 import com.composeunstyled.Text
-import com.composeunstyled.Tooltip
+import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.TooltipArrowDirection
-import com.composeunstyled.TooltipPanel
+import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
 import com.composeunstyled.platformtheme.dimmed
@@ -73,10 +73,10 @@ fun TooltipDemo() {
     contentAlignment = Alignment.Center,
   ) {
     Row {
-      Tooltip(
+      UnstyledTooltip(
         placement = RelativeAlignment.TopCenter,
         panel = {
-          TooltipPanel(
+          UnstyledTooltipPanel(
             enter = slideInVertically(tween(150), initialOffsetY = { (it * 0.25).toInt() }) +
               scaleIn(
                 animationSpec = tween(150),
@@ -120,7 +120,7 @@ fun TooltipDemo() {
           backgroundColor = Color.White,
           indication = Theme[indications][dimmed],
         ) {
-          Icon(Lucide.BellDot, contentDescription = null)
+          UnstyledIcon(Lucide.BellDot, contentDescription = null)
         }
       }
     }

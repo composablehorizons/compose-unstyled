@@ -37,9 +37,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
-import com.composeunstyled.Icon
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -61,7 +61,7 @@ fun ButtonDemo() {
       modifier = Modifier.shadow(elevation = 4.dp, RoundedCornerShape(12.dp)),
       indication = Theme[indications][dimmed],
     ) {
-      Icon(Lucide.Pencil, contentDescription = null)
+      UnstyledIcon(Lucide.Pencil, contentDescription = null)
       Spacer(Modifier.width(12.dp))
       Text("Compose")
     }

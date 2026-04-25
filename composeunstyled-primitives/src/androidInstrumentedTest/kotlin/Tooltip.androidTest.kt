@@ -35,10 +35,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Button
-import com.composeunstyled.Text
-import com.composeunstyled.Tooltip
-import com.composeunstyled.TooltipPanel
 import kotlin.test.Test
 
 class TooltipTest {
@@ -58,14 +54,14 @@ class TooltipTest {
   fun showTooltipOnLongPress() = runComposeUiTest {
     // Android/Touch device requirement: Tooltips should appear on long press
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("long_press_target")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("long_press_target")) {
           Text("Long press me")
         }
       }
@@ -90,15 +86,15 @@ class TooltipTest {
     mainClock.autoAdvance = false
 
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         longPressShowDurationMillis = 1500,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("long_press_target")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("long_press_target")) {
           Text("Long press me")
         }
       }

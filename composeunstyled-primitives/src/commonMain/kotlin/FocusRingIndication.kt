@@ -48,26 +48,6 @@ import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.launch
 
-@Deprecated(
-  "This will go away in 2.0. Use the new focusRing() modifier instead that does not force you to override your theme's indication",
-)
-@Composable
-fun rememberFocusRingIndication(
-  ringColor: Color = Color.Unspecified,
-  ringWidth: Dp = Dp.Unspecified,
-  paddingValues: PaddingValues = PaddingValues(),
-  cornerRadius: Dp,
-): Indication {
-  return remember {
-    FocusRingIndicationNodeFactory(
-      ringColor,
-      ringWidth,
-      paddingValues,
-      cornerRadius,
-    )
-  }
-}
-
 internal class FocusRingIndicationNodeFactory internal constructor(
   private val ringColor: Color,
   private val strokeWidth: Dp,

@@ -92,39 +92,6 @@ import androidx.compose.ui.unit.dp
  * @param thumb The composable that represents the thumb of the switch.
  */
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledToggleSwitch(toggled, modifier, onToggled, enabled, shape, backgroundColor, contentPadding, interactionSource, indication, thumb)",
-  ),
-)
-fun ToggleSwitch(
-  toggled: Boolean,
-  modifier: Modifier = Modifier,
-  onToggled: ((Boolean) -> Unit)? = null,
-  enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
-  interactionSource: MutableInteractionSource? = null,
-  indication: Indication = LocalIndication.current,
-  thumb: @Composable () -> Unit,
-) {
-  UnstyledToggleSwitch(
-    toggled = toggled,
-    modifier = modifier,
-    onToggled = onToggled,
-    enabled = enabled,
-    shape = shape,
-    backgroundColor = backgroundColor,
-    contentPadding = contentPadding,
-    interactionSource = interactionSource,
-    indication = indication,
-    thumb = thumb,
-  )
-}
-
-@Composable
 fun UnstyledToggleSwitch(
   toggled: Boolean,
   modifier: Modifier = Modifier,

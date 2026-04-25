@@ -65,6 +65,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.semantics.Role
 
+typealias TabKey = String
+
 private class TabsRegistry {
   var focusedTab: TabKey? by mutableStateOf(null)
   var activatedTab: TabKey? by mutableStateOf(null)
@@ -75,20 +77,6 @@ private class TabsRegistry {
 }
 
 private val LocalTabsRegistry = staticCompositionLocalOf { TabsRegistry() }
-
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledTabGroup(selectedTab, tabs, modifier, content)"),
-)
-fun TabGroup(
-  selectedTab: TabKey,
-  tabs: List<TabKey>,
-  modifier: Modifier = Modifier,
-  content: @Composable ColumnScope.() -> Unit,
-) {
-  UnstyledTabGroup(selectedTab, tabs, modifier, content)
-}
 
 @Composable
 fun UnstyledTabGroup(
@@ -128,37 +116,6 @@ fun UnstyledTabGroup(
       content()
     }
   }
-}
-
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTabList(modifier, shape, backgroundColor, contentColor, contentPadding, orientation, horizontalArrangement, verticalAlignment, content)",
-  ),
-)
-fun TabList(
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
-  orientation: Orientation = Orientation.Horizontal,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-  verticalAlignment: Alignment.Vertical = Alignment.Top,
-  content: @Composable RowScope.() -> Unit,
-) {
-  UnstyledTabList(
-    modifier = modifier,
-    shape = shape,
-    backgroundColor = backgroundColor,
-    contentColor = contentColor,
-    contentPadding = contentPadding,
-    orientation = orientation,
-    horizontalArrangement = horizontalArrangement,
-    verticalAlignment = verticalAlignment,
-    content = content,
-  )
 }
 
 @Composable
@@ -274,45 +231,6 @@ fun UnstyledTabList(
 }
 
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTab(key, selected, onSelected, modifier, enabled, activateOnFocus, indication, interactionSource, shape, backgroundColor, contentColor, contentPadding, content)",
-  ),
-)
-fun Tab(
-  key: TabKey,
-  selected: Boolean,
-  onSelected: () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  activateOnFocus: Boolean = true,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
-  content: @Composable () -> Unit,
-) {
-  UnstyledTab(
-    key = key,
-    selected = selected,
-    onSelected = onSelected,
-    modifier = modifier,
-    enabled = enabled,
-    activateOnFocus = activateOnFocus,
-    indication = indication,
-    interactionSource = interactionSource,
-    shape = shape,
-    backgroundColor = backgroundColor,
-    contentColor = contentColor,
-    contentPadding = contentPadding,
-    content = content,
-  )
-}
-
-@Composable
 fun UnstyledTab(
   key: TabKey,
   selected: Boolean,
@@ -363,35 +281,6 @@ fun UnstyledTab(
       content()
     }
   }
-}
-
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTabPanel(key, modifier, shape, backgroundColor, contentColor, contentPadding, contentAlignment, content)",
-  ),
-)
-fun TabPanel(
-  key: TabKey,
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  contentAlignment: Alignment = Alignment.TopStart,
-  content: @Composable BoxScope.() -> Unit,
-) {
-  UnstyledTabPanel(
-    key,
-    modifier,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    contentAlignment,
-    content,
-  )
 }
 
 @Composable

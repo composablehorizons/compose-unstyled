@@ -77,7 +77,7 @@ class TextFieldTest {
       ) {
         TextInput(
           trailing = {
-            Button(onClick = {}, modifier = Modifier.testTag("trailing")) {
+            UnstyledButton(onClick = {}, modifier = Modifier.testTag("trailing")) {
               Text("trailing")
             }
           },

@@ -147,17 +147,9 @@ class ModalBottomSheetState(
   internal var modalIsAdded by mutableStateOf(false)
   internal var pendingDetentChange: Job? = null
 
-  var currentDetent: SheetDetent
+  val currentDetent: SheetDetent
     get() {
       return modalDetent
-    }
-
-    @Deprecated(
-      message = "This will go away in 2.0. Set the value to targetDetent instead",
-      replaceWith = ReplaceWith("targetDetent"),
-    )
-    set(value) {
-      targetDetent = value
     }
   var targetDetent: SheetDetent
     get() = bottomSheetState.targetDetent
@@ -169,13 +161,6 @@ class ModalBottomSheetState(
 
   val isIdle: Boolean
     get() = bottomSheetState.isIdle
-
-  @Deprecated(
-    "This will go away in 2.0. Use the progress function and provide the detents you need instead.",
-  )
-  val progress: Float by derivedStateOf {
-    progress(currentDetent, targetDetent)
-  }
 
   /**
    * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.

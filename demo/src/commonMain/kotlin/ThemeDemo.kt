@@ -69,11 +69,11 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pause
 import com.composables.icons.lucide.SkipBack
 import com.composables.icons.lucide.SkipForward
-import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.ProvideContentColor
-import com.composeunstyled.Slider
+import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.Text
-import com.composeunstyled.Thumb
+import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.outline
 import com.composeunstyled.rememberSliderState
@@ -634,7 +634,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
 
         val sliderState = rememberSliderState(initialValue = 0.3f)
 
-        Slider(
+        UnstyledSlider(
           state = sliderState,
           modifier = Modifier.fillMaxWidth(),
           track = {
@@ -658,7 +658,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             }
           },
           thumb = {
-            Thumb(
+            UnstyledThumb(
               color = Theme[colors][accent],
               modifier = Modifier.size(16.dp),
               shape = Theme[shapes][buttonShape],
@@ -676,7 +676,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(12.dp),
             shape = Theme[shapes][buttonShape],
           ) {
-            Icon(
+            UnstyledIcon(
               imageVector = Lucide.SkipBack,
               contentDescription = "Previous",
               modifier = Modifier.size(20.dp),
@@ -690,7 +690,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(16.dp),
             shape = Theme[shapes][buttonShape],
           ) {
-            Icon(
+            UnstyledIcon(
               imageVector = Lucide.Pause,
               contentDescription = "Pause",
               modifier = Modifier.size(24.dp),
@@ -702,7 +702,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(12.dp),
             shape = Theme[shapes][buttonShape],
           ) {
-            Icon(
+            UnstyledIcon(
               imageVector = Lucide.SkipForward,
               contentDescription = "Next",
               modifier = Modifier.size(20.dp),

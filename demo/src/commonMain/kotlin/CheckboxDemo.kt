@@ -38,8 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Icon
 import com.composeunstyled.UnstyledCheckbox
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.theme.Theme
@@ -63,7 +63,7 @@ fun CheckboxDemo() {
       contentDescription = "Add olives",
       indication = Theme[indications][dimmed],
     ) {
-      Icon(Lucide.Check, contentDescription = null)
+      UnstyledIcon(Lucide.Check, contentDescription = null)
     }
   }
 }

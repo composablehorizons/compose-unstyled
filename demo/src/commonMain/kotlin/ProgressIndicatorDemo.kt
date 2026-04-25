@@ -42,8 +42,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.ProgressBar
-import com.composeunstyled.ProgressIndicator
+import com.composeunstyled.UnstyledProgressBar
+import com.composeunstyled.UnstyledProgressIndicator
 import kotlinx.coroutines.delay
 
 @Composable
@@ -65,14 +65,14 @@ fun ProgressIndicatorDemo() {
       .padding(horizontal = 16.dp),
     contentAlignment = Alignment.Center,
   ) {
-    ProgressIndicator(
+    UnstyledProgressIndicator(
       progress = progress,
       modifier = Modifier.width(400.dp).height(24.dp).shadow(4.dp, RoundedCornerShape(100)),
       shape = RoundedCornerShape(100),
       backgroundColor = Color(0xff176153),
       contentColor = Color(0xffb6eabb),
     ) {
-      ProgressBar(shape = RoundedCornerShape(100))
+      UnstyledProgressBar(shape = RoundedCornerShape(100))
     }
   }
 }

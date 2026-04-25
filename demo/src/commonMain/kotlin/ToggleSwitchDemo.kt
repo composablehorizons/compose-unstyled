@@ -50,8 +50,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
-import com.composeunstyled.Thumb
-import com.composeunstyled.ToggleSwitch
+import com.composeunstyled.UnstyledThumb
+import com.composeunstyled.UnstyledToggleSwitch
 
 @Composable
 fun ToggleSwitchDemo() {
@@ -81,14 +81,14 @@ fun ToggleSwitchDemo() {
         val animatedColor by animateColorAsState(
           if (toggled) Color(0xFF4A7023) else Color(0xFFE0E0E0),
         )
-        ToggleSwitch(
+        UnstyledToggleSwitch(
           toggled = toggled,
           shape = RoundedCornerShape(100),
           backgroundColor = animatedColor,
           modifier = Modifier.width(58.dp),
           contentPadding = PaddingValues(4.dp),
         ) {
-          Thumb(
+          UnstyledThumb(
             shape = CircleShape,
             color = Color.White,
             modifier = Modifier.shadow(elevation = 4.dp, CircleShape),

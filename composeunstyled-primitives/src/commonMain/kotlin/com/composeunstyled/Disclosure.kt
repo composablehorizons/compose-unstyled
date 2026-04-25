@@ -99,19 +99,6 @@ class DisclosureScope internal constructor(state: DisclosureState) {
  * @param modifier Modifier to be applied to the disclosure.
  * @param content The content of the disclosure, which should contain a [DisclosureHeading] and a [DisclosurePanel].
  */
-@Deprecated(
-  "Use UnstyledDisclosure instead",
-  ReplaceWith("UnstyledDisclosure(state, modifier, content)"),
-)
-@Composable
-fun Disclosure(
-  state: DisclosureState = rememberDisclosureState(),
-  modifier: Modifier = Modifier,
-  content: @Composable DisclosureScope.() -> Unit,
-) {
-  UnstyledDisclosure(state, modifier, content)
-}
-
 @Composable
 fun UnstyledDisclosure(
   state: DisclosureState = rememberDisclosureState(),
@@ -142,86 +129,6 @@ fun UnstyledDisclosure(
  * @param horizontalArrangement The horizontal arrangement of the content.
  * @param content The content of the heading.
  */
-@Deprecated(
-  "Use UnstyledDisclosureHeading instead",
-  ReplaceWith(
-    "UnstyledDisclosureHeading(modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)",
-  ),
-)
-@Composable
-fun DisclosureScope.DisclosureHeading(
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 0.dp,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-  content: @Composable () -> Unit,
-) {
-  UnstyledDisclosureHeading(
-    modifier,
-    enabled,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    borderColor,
-    borderWidth,
-    indication,
-    interactionSource,
-    verticalAlignment,
-    horizontalArrangement,
-    content,
-  )
-}
-
-@Deprecated(
-  "Use UnstyledDisclosureHeading instead",
-  ReplaceWith(
-    "UnstyledDisclosureHeading(onClick, modifier, enabled, shape, backgroundColor, contentColor, contentPadding, borderColor, borderWidth, indication, interactionSource, verticalAlignment, horizontalArrangement, content)",
-  ),
-)
-@Composable
-fun DisclosureScope.DisclosureHeading(
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 0.dp,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-  content: @Composable () -> Unit,
-) {
-  UnstyledDisclosureHeading(
-    onClick,
-    modifier,
-    enabled,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    borderColor,
-    borderWidth,
-    indication,
-    interactionSource,
-    verticalAlignment,
-    horizontalArrangement,
-    content,
-  )
-}
-
 @Composable
 fun DisclosureScope.UnstyledDisclosureHeading(
   modifier: Modifier = Modifier,
@@ -314,20 +221,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
  * @param exit The exit transition for the panel.
  * @param content The content of the panel.
  */
-@Deprecated(
-  "Use UnstyledDisclosurePanel instead",
-  ReplaceWith("UnstyledDisclosurePanel(modifier, enter, exit, content)"),
-)
-@Composable
-fun DisclosureScope.DisclosurePanel(
-  modifier: Modifier = Modifier,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  content: @Composable () -> Unit,
-) {
-  UnstyledDisclosurePanel(modifier, enter, exit, content)
-}
-
 @Composable
 fun DisclosureScope.UnstyledDisclosurePanel(
   modifier: Modifier = Modifier,

@@ -102,20 +102,12 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
     }
     val textSelectionColors = builder.defaultTextSelectionColors ?: LocalTextSelectionColors.current
 
-    val legacyTouchInteractiveSize = builder.defaultMinimumComponentInteractiveSize
     val minInteractiveSize = builder.defaultComponentInteractiveSize
 
-    val finalInteractiveSize = if (legacyTouchInteractiveSize.isSpecified) {
-      ComponentInteractiveSize(
-        nonTouchInteractionSize = legacyTouchInteractiveSize,
-        touchInteractionSize = legacyTouchInteractiveSize,
-      )
-    } else {
-      ComponentInteractiveSize(
-        touchInteractionSize = minInteractiveSize.touchInteractionSize,
-        nonTouchInteractionSize = minInteractiveSize.nonTouchInteractionSize,
-      )
-    }
+    val finalInteractiveSize = ComponentInteractiveSize(
+      touchInteractionSize = minInteractiveSize.touchInteractionSize,
+      nonTouchInteractionSize = minInteractiveSize.nonTouchInteractionSize,
+    )
 
     val theme = ResolvedTheme(builder.name, allProperties)
 
@@ -171,11 +163,6 @@ class ThemeBuilder internal constructor() {
   var defaultContentColor: Color by mutableStateOf(Color.Unspecified)
   var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
 
-  @Deprecated(
-    "This will go away in 2.0. Use defaultComponentInteractiveSize instead for specifying the size for touch and non-touch targets instead.",
-  )
-  var defaultMinimumComponentInteractiveSize: Dp by mutableStateOf(Dp.Unspecified)
-
   /**
    * Specifies the minimum size of components.
    *
@@ -205,38 +192,4 @@ data class OverriddenValue<T>(val token: ThemeToken<T>, val value: T)
 
 infix fun <T> ThemeToken<T>.provides(value: T): OverriddenValue<T> {
   return OverriddenValue(this, value)
-}
-
-@Deprecated(
-  "This function will go away in 2.0. Use ProvideTextStyle or ProvideContentColor instead which affects themable components instead of overriding your theme",
-)
-@Composable
-fun ThemeOverride(
-  vararg overriddenValues: OverriddenValue<*>,
-  content: @Composable () -> Unit,
-) {
-  val currentTheme = LocalTheme.current
-  val updatedProperties = currentTheme.properties.toMutableMap()
-  overriddenValues.forEach { overriddenValue ->
-    val propertyEntry = updatedProperties.entries.find { (_, themeValues) ->
-      themeValues.values.containsKey(overriddenValue.token)
-    }
-
-    if (propertyEntry != null) {
-      val (property, themeValues) = propertyEntry
-
-      @Suppress("UNCHECKED_CAST")
-      val updatedThemeValues = (themeValues as ThemeValues<Any>).copyWithUpdatedValue(
-        overriddenValue.token as ThemeToken<Any>,
-        overriddenValue.value as Any,
-      )
-      updatedProperties[property] = updatedThemeValues
-    }
-  }
-
-  val updatedTheme = ResolvedTheme(currentTheme.name, updatedProperties)
-
-  CompositionLocalProvider(LocalTheme provides updatedTheme) {
-    content()
-  }
 }

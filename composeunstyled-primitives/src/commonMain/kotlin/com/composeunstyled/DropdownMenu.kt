@@ -63,19 +63,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
-@Deprecated(
-  "Use UnstyledDropdownMenu instead",
-  ReplaceWith("UnstyledDropdownMenu(onExpandRequest, modifier, content)"),
-)
-@Composable
-fun DropdownMenu(
-  onExpandRequest: () -> Unit,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  UnstyledDropdownMenu(onExpandRequest, modifier, content)
-}
-
 @Composable
 fun UnstyledDropdownMenu(
   onExpandRequest: () -> Unit,
@@ -105,45 +92,6 @@ sealed interface DropdownPanelAnchor {
   object BottomEnd : DropdownPanelAnchor
   object CenterStart : DropdownPanelAnchor
   object CenterEnd : DropdownPanelAnchor
-}
-
-@Deprecated(
-  "Use UnstyledDropdownMenuPanel instead",
-  ReplaceWith(
-    "UnstyledDropdownMenuPanel(expanded, onDismissRequest, modifier, anchor, shape, backgroundColor, contentColor, contentPadding, enter, exit, verticalArrangement, horizontalAlignment, content)",
-  ),
-)
-@Composable
-fun DropdownMenuPanel(
-  expanded: Boolean,
-  onDismissRequest: () -> Unit,
-  modifier: Modifier = Modifier,
-  anchor: DropdownPanelAnchor = DropdownPanelAnchor.BottomStart,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-  horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-  content: @Composable ColumnScope.() -> Unit,
-) {
-  UnstyledDropdownMenuPanel(
-    expanded,
-    onDismissRequest,
-    modifier,
-    anchor,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    enter,
-    exit,
-    verticalArrangement,
-    horizontalAlignment,
-    content,
-  )
 }
 
 @Composable

@@ -59,12 +59,12 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
-import com.composeunstyled.Icon
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuPanel
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.platformtheme.interactiveSize
@@ -113,7 +113,7 @@ fun DropdownMenuDemo() {
       ) {
         Text("Options")
         Spacer(Modifier.width(8.dp))
-        Icon(Lucide.ChevronDown, null)
+        UnstyledIcon(Lucide.ChevronDown, null)
       }
 
       UnstyledDropdownMenuPanel(
@@ -153,7 +153,7 @@ fun DropdownMenuDemo() {
             indication = Theme[indications][dimmed],
             horizontalArrangement = Arrangement.Start,
           ) {
-            Icon(option.icon, null)
+            UnstyledIcon(option.icon, null)
             Spacer(Modifier.width(12.dp))
             Text(option.text)
           }

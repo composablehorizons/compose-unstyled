@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.HorizontalScrollbar
 import com.composeunstyled.ScrollArea
-import com.composeunstyled.Thumb
+import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.VerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState
@@ -137,7 +137,7 @@ fun VerticalScrollAreaDemo() {
           .width(12.dp)
           .fillMaxHeight(),
       ) {
-        Thumb(
+        UnstyledThumb(
           modifier = Modifier
             .padding(2.dp)
             .height(12.dp)
@@ -187,7 +187,7 @@ fun HorizontalScrollAreaDemo() {
           .height(12.dp)
           .fillMaxWidth(),
       ) {
-        Thumb(
+        UnstyledThumb(
           modifier = Modifier
             .padding(2.dp)
             .width(12.dp)

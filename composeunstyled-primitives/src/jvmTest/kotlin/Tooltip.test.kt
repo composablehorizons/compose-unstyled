@@ -64,14 +64,14 @@ class TooltipTest {
   @Test
   fun tooltipIsHiddenByDefault() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Button")
         }
       }
@@ -84,14 +84,14 @@ class TooltipTest {
   @Test
   fun tooltipAppearsOnKeyboardFocus() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Focus me")
         }
       }
@@ -108,19 +108,19 @@ class TooltipTest {
   @Test
   fun tooltipDisappearsWhenFocusIsLost() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Focus me")
         }
       }
 
-      Button(onClick = {}) {
+      UnstyledButton(onClick = {}) {
         Text("Another button")
       }
     }
@@ -140,14 +140,14 @@ class TooltipTest {
   fun tooltipAppearsOnMouseHover() = runComposeUiTest {
     // W3C requirement: Tooltip should appear on mouse hover
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
           Text("Hover me")
         }
       }
@@ -169,15 +169,15 @@ class TooltipTest {
   @Test
   fun tooltipIsNotDisplayedWhenEnabledIsSetToFalse() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         enabled = false,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Hover me")
         }
       }
@@ -201,14 +201,14 @@ class TooltipTest {
   @Test
   fun edgeCaseTooltipOnTopOnTarget() = runComposeUiTest {
     setContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Focus me")
         }
       }
@@ -227,19 +227,19 @@ class TooltipTest {
     // W3C requirement: Tooltip should disappear on mouse out
     setPaddedContent {
       Row {
-        Tooltip(
+        UnstyledTooltip(
           panel = {
-            TooltipPanel {
+            UnstyledTooltipPanel {
               Text("Tooltip content")
             }
           },
         ) {
-          Button(onClick = {}) {
+          UnstyledButton(onClick = {}) {
             Text("Hover me")
           }
         }
 
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Other")
         }
       }
@@ -266,14 +266,14 @@ class TooltipTest {
   fun tooltipRemainsVisibleWhenBothHoveredAndFocused() = runComposeUiTest {
     // W3C requirement: Tooltip should remain visible when both hovered and focused
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Trigger")
         }
       }
@@ -308,16 +308,16 @@ class TooltipTest {
   fun tooltipDoesNotReceiveFocus() = runComposeUiTest {
     // W3C requirement: Tooltips themselves do not receive focus
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Box(Modifier.testTag("tooltip_content")) {
               Text("Tooltip content")
             }
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger_button")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger_button")) {
           Text("Trigger")
         }
       }
@@ -336,14 +336,14 @@ class TooltipTest {
     // Test that tooltip is displayed and positioned via PopoverPanel
     // Detailed positioning tests would require layout coordinate assertions
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Trigger")
         }
       }
@@ -359,17 +359,17 @@ class TooltipTest {
 
   @Test
   fun tooltipSupportsCustomPlacement() = runComposeUiTest {
-    // Test that TooltipPanel accepts placement parameter
+    // Test that UnstyledTooltipPanel accepts placement parameter
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         placement = RelativeAlignment.BottomStart,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Bottom tooltip")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Trigger")
         }
       }
@@ -386,18 +386,18 @@ class TooltipTest {
     // W3C/NN/g guideline: Tooltips are informative and non-blocking
     // Users should be able to interact with other elements while tooltip is visible
     setPaddedContent {
-      Button(onClick = {}, modifier = Modifier.testTag("outside_button")) {
+      UnstyledButton(onClick = {}, modifier = Modifier.testTag("outside_button")) {
         Text("Outside button")
       }
 
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}) {
+        UnstyledButton(onClick = {}) {
           Text("Trigger")
         }
       }
@@ -425,14 +425,14 @@ class TooltipTest {
     // NN/g guideline: Tooltips are especially useful for disabled/unlabeled elements
     // Disabled elements cannot receive focus, so this test requires hover simulation
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip for disabled element")
           }
         },
       ) {
-        Button(
+        UnstyledButton(
           onClick = {},
           enabled = false,
           modifier = Modifier.testTag("disabled_button"),
@@ -457,19 +457,19 @@ class TooltipTest {
     // W3C note: For tooltips containing focusable elements, use a dialog instead
     // This test verifies that tooltip content doesn't trap or receive focus
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Trigger")
         }
       }
 
-      Button(onClick = {}) {
+      UnstyledButton(onClick = {}) {
         Text("Outside button")
       }
     }
@@ -494,15 +494,15 @@ class TooltipTest {
     mainClock.autoAdvance = false
 
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         hoverDelayMillis = 500,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
           Text("Hover me")
         }
       }
@@ -541,15 +541,15 @@ class TooltipTest {
     mainClock.autoAdvance = false
 
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         hoverDelayMillis = 500,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
           Text("Hover me")
         }
       }
@@ -585,15 +585,15 @@ class TooltipTest {
   fun tooltipAppearsImmediatelyOnFocusRegardlessOfDelay() = runComposeUiTest {
     // Focus should show tooltip immediately, even with hover delay configured
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         hoverDelayMillis = 500,
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Focus me")
         }
       }
@@ -612,14 +612,14 @@ class TooltipTest {
   @Test
   fun announcesTooltipContentWhenShown() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel {
+          UnstyledTooltipPanel {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Trigger")
         }
       }
@@ -651,14 +651,14 @@ class TooltipTest {
   @Test
   fun announcesTooltipWithArrowContentWhenShown() = runComposeUiTest {
     setPaddedContent {
-      Tooltip(
+      UnstyledTooltip(
         panel = {
-          TooltipPanel(arrow = { Text("Arrow") }) {
+          UnstyledTooltipPanel(arrow = { Text("Arrow") }) {
             Text("Tooltip content")
           }
         },
       ) {
-        Button(onClick = {}, modifier = Modifier.testTag("trigger")) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
           Text("Trigger")
         }
       }

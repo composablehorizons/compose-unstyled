@@ -39,7 +39,7 @@ import com.composables.icons.lucide.House
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.Settings
-import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledIcon
 
 @Composable
 fun IconDemo() {
@@ -54,35 +54,35 @@ fun IconDemo() {
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Icon(
+      UnstyledIcon(
         imageVector = Lucide.Heart,
         contentDescription = null,
         tint = Color(0xFF9E9E9E),
         modifier = Modifier.requiredSize(84.dp),
       )
       if (isCompact.not()) {
-        Icon(
+        UnstyledIcon(
           Lucide.Search,
           contentDescription = null,
           tint = Color(0xFF757575),
           modifier = Modifier.requiredSize(84.dp),
         )
       }
-      Icon(
+      UnstyledIcon(
         Lucide.Settings,
         contentDescription = null,
         tint = Color(0xFF616161),
         modifier = Modifier.requiredSize(84.dp),
       )
       if (isCompact.not()) {
-        Icon(
+        UnstyledIcon(
           Lucide.Contact,
           contentDescription = null,
           tint = Color(0xFF424242),
           modifier = Modifier.requiredSize(84.dp),
         )
       }
-      Icon(
+      UnstyledIcon(
         imageVector = Lucide.House,
         contentDescription = null,
         tint = Color(0xFF212121),

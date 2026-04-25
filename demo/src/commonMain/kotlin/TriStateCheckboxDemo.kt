@@ -48,9 +48,9 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
-import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Text
-import com.composeunstyled.TriStateCheckbox
+import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
@@ -80,7 +80,7 @@ fun TriStateCheckboxDemo() {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
       ) {
-        TriStateCheckbox(
+        UnstyledTriStateCheckbox(
           value = triState,
           onClick = {
             val newState = when (triState) {
@@ -99,8 +99,8 @@ fun TriStateCheckboxDemo() {
           indication = Theme[indications][dimmed],
         ) {
           when (triState) {
-            ToggleableState.On -> Icon(Lucide.Check, contentDescription = null)
-            ToggleableState.Indeterminate -> Icon(Lucide.Minus, contentDescription = null)
+            ToggleableState.On -> UnstyledIcon(Lucide.Check, contentDescription = null)
+            ToggleableState.Indeterminate -> UnstyledIcon(Lucide.Minus, contentDescription = null)
             ToggleableState.Off -> Unit
           }
         }
@@ -128,7 +128,7 @@ fun TriStateCheckboxDemo() {
             modifier = Modifier.size(24.dp),
             contentDescription = option,
           ) {
-            Icon(Lucide.Check, contentDescription = null)
+            UnstyledIcon(Lucide.Check, contentDescription = null)
           }
 
           Spacer(Modifier.width(12.dp))

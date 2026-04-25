@@ -55,9 +55,9 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Volume1
 import com.composables.icons.lucide.Volume2
-import com.composeunstyled.Icon
-import com.composeunstyled.Slider
-import com.composeunstyled.Thumb
+import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledSlider
+import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.indications
@@ -90,10 +90,10 @@ fun SliderDemo() {
         contentPadding = PaddingValues(8.dp),
         indication = Theme[indications][dimmed],
       ) {
-        Icon(Lucide.Volume1, "Decrease")
+        UnstyledIcon(Lucide.Volume1, "Decrease")
       }
 
-      Slider(
+      UnstyledSlider(
         interactionSource = interactionSource,
         state = state,
         modifier = Modifier.weight(1f),
@@ -134,7 +134,7 @@ fun SliderDemo() {
             modifier = Modifier.size(36.dp).clip(CircleShape).background(glowColor),
             contentAlignment = Alignment.Center,
           ) {
-            Thumb(
+            UnstyledThumb(
               color = Color.White,
               modifier = Modifier
                 .size(thumbSize)
@@ -154,7 +154,7 @@ fun SliderDemo() {
         contentPadding = PaddingValues(8.dp),
         indication = Theme[indications][dimmed],
       ) {
-        Icon(Lucide.Volume2, "Increase")
+        UnstyledIcon(Lucide.Volume2, "Increase")
       }
     }
   }

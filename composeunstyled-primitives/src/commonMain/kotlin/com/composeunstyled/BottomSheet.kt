@@ -325,15 +325,6 @@ class BottomSheetState(
   }
 
   /**
-   * A 0 to 1 value representing the progress of a sheet between its [currentDetent] and the [targetDetent].
-   */
-  @Deprecated(
-    "This will go away in 2.0. Use the progress function and provide the detents you need instead.",
-  )
-  val progress: Float
-    get() = anchoredDraggableState.progress(currentDetent, targetDetent)
-
-  /**
    * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
    */
   fun progress(from: SheetDetent, to: SheetDetent): Float {
@@ -700,23 +691,6 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
  * @param interactionSource The interaction source for the drag indication.
  * @param onClickLabel The label for the click action.
  */
-@Deprecated(
-  "This will go away in 2.0. Instead of use the overload that does not use the RingIndication as indication argument. Instead, style the focus ring yourself using the Modifier.focusRing().",
-)
-@Composable
-fun BottomSheetScope.DragIndication(
-  modifier: Modifier = Modifier,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  onClickLabel: String? = "Toggle sheet",
-) {
-  DragIndication(
-    modifier = modifier,
-    indication = indication,
-    interactionSource = interactionSource,
-  )
-}
-
 @Composable
 fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,

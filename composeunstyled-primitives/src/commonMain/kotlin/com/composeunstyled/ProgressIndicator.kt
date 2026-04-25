@@ -73,24 +73,6 @@ class ProgressIndicatorScope {
  * @param content The content of the progress indicator. For a batteries included component see [ProgressBar].
  */
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)",
-  ),
-)
-fun ProgressIndicator(
-  @FloatRange(from = 0.0, to = 1.0) progress: Float,
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  content: @Composable ProgressIndicatorScope.() -> Unit,
-) {
-  UnstyledProgressIndicator(progress, modifier, shape, backgroundColor, contentColor, content)
-}
-
-@Composable
 fun UnstyledProgressIndicator(
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
   modifier: Modifier = Modifier,
@@ -141,21 +123,6 @@ fun UnstyledProgressIndicator(
  * @param content The content of the progress indicator.
  */
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)"),
-)
-fun ProgressIndicator(
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  content: @Composable () -> Unit,
-) {
-  UnstyledProgressIndicator(modifier, shape, backgroundColor, contentColor, content)
-}
-
-@Composable
 fun UnstyledProgressIndicator(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
@@ -182,18 +149,6 @@ fun UnstyledProgressIndicator(
  * @param shape The shape of the progress bar.
  * @param color The color of the progress bar.
  */
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledProgressBar(shape, color)"),
-)
-fun ProgressIndicatorScope.ProgressBar(
-  shape: Shape = RectangleShape,
-  color: Color = LocalContentColor.current,
-) {
-  UnstyledProgressBar(shape, color)
-}
-
 @Composable
 fun ProgressIndicatorScope.UnstyledProgressBar(
   shape: Shape = RectangleShape,

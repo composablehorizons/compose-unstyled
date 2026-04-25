@@ -47,8 +47,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.RadioButton
-import com.composeunstyled.RadioGroup
+import com.composeunstyled.UnstyledRadioButton
+import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.Text
 
 @Composable
@@ -67,7 +67,7 @@ fun RadioGroupDemo() {
       verticalArrangement = Arrangement.spacedBy(16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      RadioGroup(
+      UnstyledRadioGroup(
         value = selectedValue,
         onValueChange = {
           selectedValue = it
@@ -82,7 +82,7 @@ fun RadioGroupDemo() {
         ) {
           values.forEach { value ->
             val selected = selectedValue == value
-            RadioButton(
+            UnstyledRadioButton(
               value = value,
               verticalAlignment = Alignment.CenterVertically,
               modifier = Modifier.fillMaxWidth(),

@@ -84,51 +84,6 @@ import androidx.compose.ui.unit.dp
  * @param content    A composable function that defines the content of the button.
  *
  */
-@Deprecated(
-  "Use UnstyledButton instead",
-  ReplaceWith(
-    "UnstyledButton(onClick, enabled, shape, backgroundColor, contentColor, contentPadding," +
-      " borderColor, borderWidth, modifier, role, indication, interactionSource," +
-      " horizontalArrangement, verticalAlignment, content)",
-  ),
-)
-@Composable
-fun Button(
-  onClick: () -> Unit,
-  enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 0.dp,
-  modifier: Modifier = Modifier,
-  role: Role = Role.Button,
-  indication: Indication? = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-  content: @Composable (RowScope.() -> Unit),
-) {
-  UnstyledButton(
-    onClick,
-    enabled,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    borderColor,
-    borderWidth,
-    modifier,
-    role,
-    indication,
-    interactionSource,
-    horizontalArrangement,
-    verticalAlignment,
-    content,
-  )
-}
-
 @Composable
 fun UnstyledButton(
   onClick: () -> Unit,

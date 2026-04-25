@@ -27,13 +27,10 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
-import androidx.compose.foundation.lazy.grid.LazyGridItemInfo.Companion.UnknownColumn
-import androidx.compose.foundation.lazy.grid.LazyGridItemInfo.Companion.UnknownRow
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -70,21 +67,8 @@ fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState =
     LazyGridScrollAreaScrollAreaState(lazyGridState)
   }
 
-@Deprecated(
-  "Use UnstyledScrollArea instead",
-  ReplaceWith("UnstyledScrollArea(state, modifier, content)"),
-)
 @Composable
 fun ScrollArea(
-  state: ScrollAreaState,
-  modifier: Modifier = Modifier,
-  content: @Composable ScrollAreaScope.() -> Unit,
-) {
-  UnstyledScrollArea(state, modifier, content)
-}
-
-@Composable
-fun UnstyledScrollArea(
   state: ScrollAreaState,
   modifier: Modifier = Modifier,
   content: @Composable ScrollAreaScope.() -> Unit,

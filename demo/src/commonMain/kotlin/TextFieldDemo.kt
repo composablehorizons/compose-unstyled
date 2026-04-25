@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Icon
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Text
 import com.composeunstyled.TextField
 import com.composeunstyled.TextInput
@@ -158,7 +158,7 @@ fun TextFieldDemo() {
                 shape = RoundedCornerShape(4.dp),
                 indication = Theme[indications][dimmed],
               ) {
-                Icon(
+                UnstyledIcon(
                   imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
                   contentDescription = if (showPassword) "Hide password" else "Show password",
                   tint = Color(0xFF757575),

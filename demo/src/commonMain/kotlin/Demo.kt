@@ -61,9 +61,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Button
-import com.composeunstyled.Icon
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.outline
@@ -261,7 +261,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
     verticalAlignment = Alignment.CenterVertically,
   ) {
     val interactionSource = remember { MutableInteractionSource() }
-    Button(
+    UnstyledButton(
       onClick = onUpClick,
       interactionSource = interactionSource,
       shape = CircleShape,
@@ -270,7 +270,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       modifier = Modifier
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
-      Icon(Lucide.ArrowLeft, contentDescription = "Go back")
+      UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
     }
     Spacer(Modifier.width(8.dp))
     Text(title, style = Theme[textStyles][text5])
@@ -284,7 +284,7 @@ private fun OutlinedButton(
   content: @Composable () -> Unit,
 ) {
   val interactionSource = remember { MutableInteractionSource() }
-  Button(
+  UnstyledButton(
     onClick = onClick,
     interactionSource = interactionSource,
     modifier = modifier

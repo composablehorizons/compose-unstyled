@@ -80,24 +80,6 @@ enum class TooltipArrowDirection {
 internal val LocalTooltipState = staticCompositionLocalOf<TooltipState?> { null }
 
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTooltip(enabled, panel, placement, longPressShowDurationMillis, hoverDelayMillis, anchor)",
-  ),
-)
-fun Tooltip(
-  enabled: Boolean = true,
-  panel: @Composable () -> Unit,
-  placement: RelativeAlignment = RelativeAlignment.TopCenter,
-  longPressShowDurationMillis: Long = 1500L,
-  hoverDelayMillis: Long = 0L,
-  anchor: @Composable () -> Unit,
-) {
-  UnstyledTooltip(enabled, panel, placement, longPressShowDurationMillis, hoverDelayMillis, anchor)
-}
-
-@Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
   panel: @Composable () -> Unit,
@@ -206,35 +188,6 @@ fun UnstyledTooltip(
 }
 
 @Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith(
-    "UnstyledTooltipPanel(modifier, enter, exit, shape, backgroundColor, contentColor, contentPadding, content)",
-  ),
-)
-fun TooltipPanel(
-  modifier: Modifier = Modifier,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
-  contentPadding: PaddingValues = NoPadding,
-  content: @Composable () -> Unit,
-) {
-  UnstyledTooltipPanel(
-    modifier,
-    enter,
-    exit,
-    shape,
-    backgroundColor,
-    contentColor,
-    contentPadding,
-    content,
-  )
-}
-
-@Composable
 fun UnstyledTooltipPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = AppearInstantly,
@@ -266,21 +219,6 @@ fun UnstyledTooltipPanel(
       }
     }
   }
-}
-
-@Composable
-@Deprecated(
-  "This will go to 2.0. Use the version with the Unstyled- prefix instead",
-  ReplaceWith("UnstyledTooltipPanel(modifier, arrow, enter, exit, content)"),
-)
-fun TooltipPanel(
-  modifier: Modifier = Modifier,
-  arrow: @Composable (TooltipArrowDirection) -> Unit,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  content: @Composable () -> Unit,
-) {
-  UnstyledTooltipPanel(modifier, arrow, enter, exit, content)
 }
 
 @Composable

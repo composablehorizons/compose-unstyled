@@ -47,10 +47,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Tab
-import com.composeunstyled.TabGroup
-import com.composeunstyled.TabList
-import com.composeunstyled.TabPanel
+import com.composeunstyled.UnstyledTab
+import com.composeunstyled.UnstyledTabGroup
+import com.composeunstyled.UnstyledTabList
+import com.composeunstyled.UnstyledTabPanel
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.platformtheme.dimmed
@@ -115,15 +115,15 @@ fun TabGroupDemo() {
       .padding(top = 90.dp),
     contentAlignment = Alignment.TopCenter,
   ) {
-    TabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
-      TabList(
+    UnstyledTabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
+      UnstyledTabList(
         modifier = Modifier.fillMaxWidth().height(48.dp).shadow(4.dp, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = Color.White,
       ) {
         categories.forEach { (key, articles) ->
           val selected = key == selectedTab
-          Tab(
+          UnstyledTab(
             key = key,
             selected = selected,
             onSelected = { selectedTab = key },
@@ -169,7 +169,7 @@ fun TabGroupDemo() {
           .padding(16.dp),
       ) {
         categories.forEach { (key, items) ->
-          TabPanel(key = key) {
+          UnstyledTabPanel(key = key) {
             Column {
               items.forEach { item ->
                 UnstyledButton(
