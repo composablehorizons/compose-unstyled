@@ -35,8 +35,8 @@ dependencyResolutionManagement {
   }
 }
 
-include(":internal-shared")
 include(":testcase")
+include(":composeunstyled-buildmodifier")
 include(":composeunstyled-primitives")
 include(":composeunstyled-theming")
 include(":composeunstyled-platformtheme")

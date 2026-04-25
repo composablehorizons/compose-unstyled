@@ -66,7 +66,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledInternalShared"
+      baseName = "ComposeUnstyledBuildModifier"
       isStatic = true
     }
   }
@@ -96,7 +96,7 @@ mavenPublishing {
     signAllPublications()
   }
 
-  coordinates(publishGroupId, "composeunstyled-internal-shared", publishVersion)
+  coordinates(publishGroupId, "composeunstyled-build-modifier", publishVersion)
 
   pom {
     name.set("Compose Unstyled Internal Shared")
