@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, v2 ]
   pull_request:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Compile
-        run: ./gradlew --no-daemon --console=plain :composeunstyled:assemble
+        run: ./gradlew --no-daemon --console=plain assemble
 
       - name: Spotless
         run: ./gradlew --no-daemon --console=plain spotlessCheck --info
