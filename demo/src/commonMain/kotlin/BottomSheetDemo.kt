@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -38,7 +39,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -55,9 +56,6 @@ import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.rememberBottomSheetState
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
   containerHeight * 0.6f
@@ -86,15 +84,15 @@ fun BottomSheetDemo() {
       shape = RoundedCornerShape(6.dp),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       backgroundColor = Color.White,
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
     ) {
-      BasicText("Show Sheet")
+      Text("Show Sheet")
     }
 
     BottomSheet(
       state = sheetState,
       backgroundColor = Color.White,
-      contentColor = Color.Black,
+//      contentColor = Color.Black,
       shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
       modifier = Modifier
         .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))

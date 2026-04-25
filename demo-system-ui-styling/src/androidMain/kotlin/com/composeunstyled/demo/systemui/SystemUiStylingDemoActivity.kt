@@ -117,7 +117,7 @@ private fun ModalSystemUiStylingDemo(window: android.view.Window) {
       UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       UnstyledDialogPanel(
         backgroundColor = Color.White,
-        contentColor = Color.Black,
+        // contentColor = Color.Black,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
           .padding(20.dp)

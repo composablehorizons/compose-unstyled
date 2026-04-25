@@ -31,7 +31,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.triStateToggleable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +51,6 @@ fun UnstyledTriStateCheckbox(
   value: ToggleableState,
   modifier: Modifier = Modifier,
   backgroundColor: Color = Color.Transparent,
-  contentColor: Color = LocalContentColor.current,
   enabled: Boolean = true,
   onClick: () -> Unit,
   shape: Shape = RectangleShape,
@@ -91,8 +89,6 @@ fun UnstyledTriStateCheckbox(
     },
     contentAlignment = Alignment.Center,
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
       checkIcon(value)
-    }
   }
 }

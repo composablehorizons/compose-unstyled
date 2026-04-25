@@ -53,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,7 @@ import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.VerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -124,7 +125,11 @@ fun VerticalScrollAreaDemo() {
           .fillMaxWidth()
           .padding(8.dp),
       ) {
-        Text("Deserts", Modifier.padding(4.dp), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(
+          "Deserts",
+          Modifier.padding(4.dp),
+          style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+        )
         Spacer(Modifier.height(12.dp))
         desserts.forEach { i ->
           Text(i, Modifier.padding(4.dp).fillMaxWidth())

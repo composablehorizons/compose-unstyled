@@ -119,7 +119,6 @@ fun UnstyledDisclosure(
  * @param enabled Whether the heading is clickable.
  * @param shape The shape of the heading.
  * @param backgroundColor The background color of the heading.
- * @param contentColor The color of the content.
  * @param contentPadding Padding values for the content.
  * @param borderColor The color of the border.
  * @param borderWidth The width of the border.
@@ -135,7 +134,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
   enabled: Boolean = true,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   borderColor: Color = Color.Unspecified,
   borderWidth: Dp = 0.dp,
@@ -166,7 +164,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
     enabled = enabled,
     shape = shape,
     backgroundColor = backgroundColor,
-    contentColor = contentColor,
     borderColor = borderColor,
     borderWidth = borderWidth,
     contentPadding = contentPadding,
@@ -184,7 +181,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
   enabled: Boolean = true,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   borderColor: Color = Color.Unspecified,
   borderWidth: Dp = 0.dp,
@@ -202,7 +198,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
     enabled = enabled,
     shape = shape,
     backgroundColor = backgroundColor,
-    contentColor = contentColor,
     borderColor = borderColor,
     borderWidth = borderWidth,
     contentPadding = contentPadding,

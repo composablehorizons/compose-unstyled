@@ -27,6 +27,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,8 +36,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,7 +54,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Separator
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
 import com.composables.icons.lucide.Copy
@@ -60,17 +62,11 @@ import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.LocalContentColor
-import com.composeunstyled.Text
+import com.composeunstyled.Separator
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.interactiveSize
-import com.composeunstyled.platformtheme.interactiveSizes
-import com.composeunstyled.platformtheme.sizeDefault
-import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -108,8 +104,8 @@ fun DropdownMenuDemo() {
         backgroundColor = Color.White,
         onClick = { expanded = true },
         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
-        indication = Theme[indications][dimmed],
-        modifier = Modifier.interactiveSize(Theme[interactiveSizes][sizeDefault]),
+        indication = LocalIndication.current,
+        modifier = Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp),
       ) {
         Text("Options")
         Spacer(Modifier.width(8.dp))
@@ -144,18 +140,20 @@ fun DropdownMenuDemo() {
             enabled = option.enabled,
             modifier = Modifier
               .padding(4.dp)
-              .interactiveSize(Theme[interactiveSizes][sizeDefault])
+              .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
               .fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-            contentColor = (if (option.dangerous) Color(0xFFC62828) else LocalContentColor.current)
-              .copy(alpha = if (option.enabled) 1f else 0.5f),
             shape = RoundedCornerShape(8.dp),
-            indication = Theme[indications][dimmed],
+            indication = LocalIndication.current,
             horizontalArrangement = Arrangement.Start,
           ) {
             UnstyledIcon(option.icon, null)
             Spacer(Modifier.width(12.dp))
-            Text(option.text)
+            Text(
+              text = option.text,
+              color = (if (option.dangerous) Color(0xFFC62828) else LocalContentColor.current)
+                .copy(alpha = if (option.enabled) 1f else 0.5f),
+            )
           }
         }
       }

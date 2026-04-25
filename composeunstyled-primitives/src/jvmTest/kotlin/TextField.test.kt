@@ -168,24 +168,6 @@ class TextFieldTest {
   }
 
   @Test
-  fun givenTextColor_thenColorIsProvidedAsLocalContentColor() = runComposeUiTest {
-    val expectedColor = Color.Blue
-    var actualColor: Color? = null
-
-    setContent {
-      UnstyledTextField(
-        state = rememberTextFieldState(),
-        textColor = expectedColor,
-      ) {
-        actualColor = LocalContentColor.current
-      }
-    }
-
-    waitForIdle()
-    assertEquals(expectedColor, actualColor)
-  }
-
-  @Test
   fun focusDetected_whenFocusedAndUsingOnFocusChangedModifier() = runComposeUiTest {
     var focused by mutableStateOf(false)
 

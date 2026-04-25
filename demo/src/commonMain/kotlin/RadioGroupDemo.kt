@@ -49,7 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 
 @Composable
 fun RadioGroupDemo() {

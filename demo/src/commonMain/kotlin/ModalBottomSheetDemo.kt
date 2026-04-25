@@ -23,6 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -58,13 +59,10 @@ import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.rememberModalBottomSheetState
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.delay
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -96,7 +94,7 @@ fun ModalBottomSheetDemo() {
       shape = RoundedCornerShape(6.dp),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       backgroundColor = Color.White,
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
     ) {
       Text("Show Sheet")
     }
@@ -123,7 +121,7 @@ fun ModalBottomSheetDemo() {
             .fillMaxWidth(),
           shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
           backgroundColor = Color.White,
-          contentColor = Color.Black,
+          // contentColor = Color.Black,
         ) {
           Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
             val interactionSource = remember { MutableInteractionSource() }

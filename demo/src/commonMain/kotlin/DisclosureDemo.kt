@@ -28,6 +28,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,15 +52,12 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.Separator
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledDisclosureHeading
 import com.composeunstyled.UnstyledDisclosurePanel
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
 import com.composeunstyled.rememberDisclosureState
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun DisclosureDemo() {
@@ -101,7 +99,7 @@ fun DisclosureDemo() {
         UnstyledDisclosure(state = state) {
           UnstyledDisclosureHeading(
             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-            indication = Theme[indications][dimmed],
+            indication = LocalIndication.current,
           ) {
             Text(faq.question, modifier = Modifier.weight(1f))
 

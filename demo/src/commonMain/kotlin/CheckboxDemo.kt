@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,9 +41,6 @@ import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun CheckboxDemo() {
@@ -61,7 +59,7 @@ fun CheckboxDemo() {
       borderColor = Color.Black.copy(0.33f),
       modifier = Modifier.size(24.dp),
       contentDescription = "Add olives",
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
     ) {
       UnstyledIcon(Lucide.Check, contentDescription = null)
     }

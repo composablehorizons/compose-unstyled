@@ -70,9 +70,8 @@ fun ProgressIndicatorDemo() {
       modifier = Modifier.width(400.dp).height(24.dp).shadow(4.dp, RoundedCornerShape(100)),
       shape = RoundedCornerShape(100),
       backgroundColor = Color(0xff176153),
-      contentColor = Color(0xffb6eabb),
     ) {
-      UnstyledProgressBar(shape = RoundedCornerShape(100))
+      UnstyledProgressBar(shape = RoundedCornerShape(100), color = Color(0xffb6eabb))
     }
   }
 }

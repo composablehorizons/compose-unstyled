@@ -26,6 +26,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,33 +63,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.outline
-import com.composeunstyled.platformtheme.EmojiVariant
-import com.composeunstyled.platformtheme.WebFontOptions
-import com.composeunstyled.platformtheme.buildPlatformTheme
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.interactiveSize
-import com.composeunstyled.platformtheme.interactiveSizes
-import com.composeunstyled.platformtheme.sizeDefault
-import com.composeunstyled.platformtheme.text5
-import com.composeunstyled.platformtheme.textStyles
-import com.composeunstyled.theme.Theme
-
-private val DemoTheme = buildPlatformTheme(
-  webFontOptions = WebFontOptions(
-    emojiVariant = EmojiVariant.None,
-  ),
-)
 
 @Composable
 fun Demo(demoId: String? = null) {
-  DemoTheme {
+  MaterialTheme {
     Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
       if (demoId == null) {
         DemoSelection()
@@ -246,7 +232,7 @@ private fun DemoSelection() {
 
 @Composable
 private fun Title(text: String) {
-  Text(text, modifier = Modifier.padding(bottom = 8.dp), style = Theme[textStyles][text5])
+  Text(text, modifier = Modifier.padding(bottom = 8.dp), style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable
@@ -266,14 +252,14 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       interactionSource = interactionSource,
       shape = CircleShape,
       contentPadding = PaddingValues(12.dp),
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
       modifier = Modifier
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
       UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
     }
     Spacer(Modifier.width(8.dp))
-    Text(title, style = Theme[textStyles][text5])
+    Text(title, style = MaterialTheme.typography.titleMedium)
   }
 }
 
@@ -290,13 +276,13 @@ private fun OutlinedButton(
     modifier = modifier
       .focusRing(interactionSource, 1.dp, Color.Blue, RoundedCornerShape(8.dp))
       .shadow(2.dp, RoundedCornerShape(8.dp))
-      .interactiveSize(Theme[interactiveSizes][sizeDefault])
+      .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
       .outline(1.dp, Color.Black.copy(0.1f)),
     shape = RoundedCornerShape(8.dp),
     backgroundColor = Color.White,
-    contentColor = Color(0xFF1A1A1A),
+    // contentColor = Color(0xFF1A1A1A),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-    indication = Theme[indications][dimmed],
+    indication = LocalIndication.current,
   ) {
     content()
   }

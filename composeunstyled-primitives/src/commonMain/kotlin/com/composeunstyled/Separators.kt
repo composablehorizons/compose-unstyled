@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import com.composeunstyled.LocalContentColor
 
 /**
  * Creates a horizontal separator line.
@@ -141,13 +140,13 @@ fun VerticalSeparator(
  * ```
  *
  * @param modifier Modifier to be applied to the separator.
- * @param color The color of the separator line. Defaults to the current content color.
+ * @param color The color of the separator line
  * @param thickness The thickness of the separator line.
  */
 @Composable
 fun ColumnScope.Separator(
   modifier: Modifier = Modifier,
-  color: Color = LocalContentColor.current,
+  color: Color = Color.Unspecified,
   thickness: Dp = Dp.Hairline,
 ) {
   HorizontalSeparator(color = color, modifier = modifier, thickness = thickness)
@@ -175,13 +174,13 @@ fun ColumnScope.Separator(
  * ```
  *
  * @param modifier Modifier to be applied to the separator.
- * @param color The color of the separator line. Defaults to the current content color.
+ * @param color The color of the separator line.
  * @param thickness The thickness of the separator line.
  */
 @Composable
 fun RowScope.Separator(
   modifier: Modifier = Modifier,
-  color: Color = LocalContentColor.current,
+  color: Color = Color.Unspecified,
   thickness: Dp = Dp.Hairline,
 ) {
   VerticalSeparator(color = color, modifier = modifier, thickness = thickness)

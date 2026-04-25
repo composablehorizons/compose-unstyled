@@ -686,7 +686,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           UnstyledButton(
             onClick = { },
             backgroundColor = Theme[colors][primary],
-            contentColor = Theme[colors][onPrimary],
+            // contentColor = Theme[colors][onPrimary],
             contentPadding = PaddingValues(16.dp),
             shape = Theme[shapes][buttonShape],
           ) {
@@ -747,7 +747,7 @@ private fun SimpleThemeCard(
   UnstyledButton(
     onClick = onClick,
     backgroundColor = themeColor,
-    contentColor = Color.Transparent,
+    // contentColor = Color.Transparent,
     contentPadding = PaddingValues(0.dp),
     shape = CircleShape,
     modifier = Modifier

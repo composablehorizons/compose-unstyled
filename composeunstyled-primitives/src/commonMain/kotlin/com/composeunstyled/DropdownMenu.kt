@@ -102,7 +102,6 @@ fun UnstyledDropdownMenuPanel(
   anchor: DropdownPanelAnchor = DropdownPanelAnchor.BottomStart,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   enter: EnterTransition = AppearInstantly,
   exit: ExitTransition = DisappearInstantly,
@@ -177,9 +176,7 @@ fun UnstyledDropdownMenuPanel(
               menuFocusRequester.requestFocus()
             }
           }
-          ProvideContentColor(contentColor) {
             content()
-          }
         }
       }
     }

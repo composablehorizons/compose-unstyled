@@ -41,7 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
-import com.composeunstyled.Text
+import com.composeunstyled.Text as ThemedText
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.outline
@@ -106,7 +106,7 @@ fun PlatformThemeDemo() {
         modifier = Modifier.fillMaxWidth().widthIn(max = 1200.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        Text("Indications", style = Theme[textStyles][text9])
+        ThemedText("Indications", style = Theme[textStyles][text9])
         MaterialButtons()
         IosButtons()
         MacOsButtons()
@@ -118,20 +118,20 @@ fun PlatformThemeDemo() {
 
 @Composable
 fun TypographyDemo() {
-  Text("Typography", style = Theme[textStyles][text9])
+  ThemedText("Typography", style = Theme[textStyles][text9])
 
-  Text("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][heading9])
-  Text("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][text9])
+  ThemedText("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][heading9])
+  ThemedText("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][text9])
 
-  Text("Multilanguage", style = Theme[textStyles][text9])
+  ThemedText("Multilanguage", style = Theme[textStyles][text9])
 
-  Text("Greek: Η γρήγορη καφέ αλεπού πηδά πάνω από το τεμπέλικο σκυλί")
-  Text("Korean: 빠른 갈색 여우가 게으른 개를 뛰어넘습니다")
-  Text(
+  ThemedText("Greek: Η γρήγορη καφέ αλεπού πηδά πάνω από το τεμπέλικο σκυλί")
+  ThemedText("Korean: 빠른 갈색 여우가 게으른 개를 뛰어넘습니다")
+  ThemedText(
     "Japanese: あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
   )
-  Text("Chinese Simplified: 敏捷的棕色狐狸跳过懒狗")
-  Text("Chinese Traditional: 敏捷的棕色狐狸跳過懶狗")
+  ThemedText("Chinese Simplified: 敏捷的棕色狐狸跳过懒狗")
+  ThemedText("Chinese Traditional: 敏捷的棕色狐狸跳過懶狗")
 }
 
 @Composable
@@ -142,7 +142,7 @@ private fun MaterialButtons() {
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
     val MaterialContentPaddingValues = PaddingValues(horizontal = 24.dp)
 
-    Text("Material 3", style = Theme[textStyles][text5])
+    ThemedText("Material 3", style = Theme[textStyles][text5])
     Stack(
       orientation = orientation,
       modifier = Modifier.fillMaxWidth(),
@@ -153,14 +153,14 @@ private fun MaterialButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFF6750A4),
-        contentColor = Color.White,
+        // contentColor = Color.White,
         contentPadding = MaterialContentPaddingValues,
         shape = RoundedCornerShape(100.dp),
         interactionSource = filledInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Filled")
+        ThemedText("Filled")
       }
 
       // Outlined Button (Material 3 Outlined)
@@ -168,7 +168,7 @@ private fun MaterialButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF6750A4),
+        // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
         shape = RoundedCornerShape(100.dp),
         interactionSource = outlinedInteraction,
@@ -182,7 +182,7 @@ private fun MaterialButtons() {
           )
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Outlined")
+        ThemedText("Outlined")
       }
 
       // Text Button (Material 3 Text)
@@ -190,7 +190,7 @@ private fun MaterialButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF6750A4),
+        // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
         shape = RoundedCornerShape(100.dp),
         interactionSource = textInteraction,
@@ -198,7 +198,7 @@ private fun MaterialButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Text")
+        ThemedText("Text")
       }
 
       // Tonal Button (Material 3 Filled Tonal)
@@ -206,7 +206,7 @@ private fun MaterialButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFFE8DEF8),
-        contentColor = Color(0xFF1D192B),
+        // contentColor = Color(0xFF1D192B),
         contentPadding = MaterialContentPaddingValues,
         shape = RoundedCornerShape(100.dp),
         indication = Theme[indications][dimmed],
@@ -214,7 +214,7 @@ private fun MaterialButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Tonal")
+        ThemedText("Tonal")
       }
     }
   }
@@ -226,7 +226,7 @@ private fun IosButtons() {
   val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
 
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    Text("iOS", style = Theme[textStyles][text5])
+    ThemedText("iOS", style = Theme[textStyles][text5])
     Stack(
       orientation = orientation,
       modifier = Modifier.fillMaxWidth(),
@@ -242,14 +242,14 @@ private fun IosButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = iosAccent,
-        contentColor = Color.White,
+        // contentColor = Color.White,
         contentPadding = iosPaddingValues,
         shape = Theme[shapes][roundedFull],
         interactionSource = prominentInteraction,
         modifier = Modifier
           .interactiveSize(interactiveSize),
       ) {
-        Text("Bordered Prominent")
+        ThemedText("Bordered Prominent")
       }
 
       // Bordered Button (SwiftUI .bordered - iOS 15+)
@@ -257,7 +257,7 @@ private fun IosButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFFE9E9EB), // iOS system gray 6
-        contentColor = iosAccent,
+        // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
         shape = Theme[shapes][roundedFull],
         indication = Theme[indications][bright],
@@ -265,7 +265,7 @@ private fun IosButtons() {
         modifier = Modifier
           .interactiveSize(interactiveSize),
       ) {
-        Text("Bordered")
+        ThemedText("Bordered")
       }
 
       // Borderless Button (SwiftUI .borderless)
@@ -274,7 +274,7 @@ private fun IosButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = iosAccent,
+        // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
         shape = RoundedCornerShape(0.dp),
         indication = Theme[indications][bright],
@@ -282,7 +282,7 @@ private fun IosButtons() {
         modifier = Modifier
           .interactiveSize(interactiveSize),
       ) {
-        Text("Borderless")
+        ThemedText("Borderless")
       }
 
       // Plain Button (SwiftUI .plain)
@@ -290,14 +290,14 @@ private fun IosButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color.Black,
+        // contentColor = Color.Black,
         contentPadding = iosPaddingValues,
         shape = RoundedCornerShape(0.dp),
         interactionSource = plainInteraction,
         modifier = Modifier
           .interactiveSize(interactiveSize),
       ) {
-        Text("Plain")
+        ThemedText("Plain")
       }
     }
   }
@@ -308,7 +308,7 @@ private fun MacOsButtons() {
   val isWide = currentWindowContainerSize().width >= 600.dp
   val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    Text("macOS", style = Theme[textStyles][text5])
+    ThemedText("macOS", style = Theme[textStyles][text5])
     Stack(
       orientation = orientation,
       modifier = Modifier.fillMaxWidth(),
@@ -322,14 +322,14 @@ private fun MacOsButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFF007AFF),
-        contentColor = Color.White,
+        // contentColor = Color.White,
         contentPadding = macPaddingValues,
         shape = RoundedCornerShape(6.dp),
         interactionSource = prominentInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
-        Text("Bordered Prominent")
+        ThemedText("Bordered Prominent")
       }
 
       // Bordered Button (SwiftUI .bordered)
@@ -337,7 +337,7 @@ private fun MacOsButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = macSecondary,
-        contentColor = Color.Black,
+        // contentColor = Color.Black,
         contentPadding = macPaddingValues,
         shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
@@ -345,7 +345,7 @@ private fun MacOsButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
-        Text("Bordered")
+        ThemedText("Bordered")
       }
 
       // Borderless Button (SwiftUI .borderless)
@@ -353,7 +353,7 @@ private fun MacOsButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF8E8E93), // iOS/macOS system gray
+        // contentColor = Color(0xFF8E8E93), // iOS/macOS system gray
         contentPadding = macPaddingValues,
         shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
@@ -361,7 +361,7 @@ private fun MacOsButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
-        Text("Borderless")
+        ThemedText("Borderless")
       }
 
       // Plain Button (SwiftUI .plain)
@@ -369,14 +369,14 @@ private fun MacOsButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF272727),
+        // contentColor = Color(0xFF272727),
         contentPadding = macPaddingValues,
         shape = RoundedCornerShape(0.dp),
         interactionSource = plainInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
-        Text("Plain")
+        ThemedText("Plain")
       }
     }
   }
@@ -388,7 +388,7 @@ private fun ShadcnButtons() {
   val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
 
   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    Text("Shadcn/ui", style = Theme[textStyles][text5])
+    ThemedText("Shadcn/ui", style = Theme[textStyles][text5])
     Stack(
       orientation = orientation,
       modifier = Modifier.fillMaxWidth(),
@@ -401,14 +401,14 @@ private fun ShadcnButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFF0F172A), // slate-900
-        contentColor = Color(0xFFF8FAFC), // slate-50
+        // contentColor = Color(0xFFF8FAFC), // slate-50
         contentPadding = shadcnPaddingValues,
         shape = RoundedCornerShape(6.dp),
         interactionSource = primaryInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Primary")
+        ThemedText("Primary")
       }
 
       // Secondary Button
@@ -416,7 +416,7 @@ private fun ShadcnButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFFF1F5F9), // slate-100
-        contentColor = Color(0xFF0F172A), // slate-900
+        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
@@ -424,7 +424,7 @@ private fun ShadcnButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Secondary")
+        ThemedText("Secondary")
       }
 
       // Outline Button
@@ -432,7 +432,7 @@ private fun ShadcnButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF0F172A), // slate-900
+        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
@@ -446,7 +446,7 @@ private fun ShadcnButtons() {
           )
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Outline")
+        ThemedText("Outline")
       }
 
       // Ghost Button
@@ -454,7 +454,7 @@ private fun ShadcnButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color.Transparent,
-        contentColor = Color(0xFF0F172A), // slate-900
+        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
@@ -462,7 +462,7 @@ private fun ShadcnButtons() {
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Ghost")
+        ThemedText("Ghost")
       }
 
       // Destructive Button
@@ -470,14 +470,14 @@ private fun ShadcnButtons() {
       UnstyledButton(
         onClick = {},
         backgroundColor = Color(0xFFEF4444), // red-500
-        contentColor = Color.White,
+        // contentColor = Color.White,
         contentPadding = shadcnPaddingValues,
         shape = RoundedCornerShape(6.dp),
         interactionSource = destructiveInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
-        Text("Destructive")
+        ThemedText("Destructive")
       }
     }
   }
@@ -491,7 +491,7 @@ private fun TextStylesDemo() {
   ) {
     val isWide = currentWindowContainerSize().width >= 600.dp
     val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-    Text("Text Styles", style = Theme[textStyles][text9])
+    ThemedText("Text Styles", style = Theme[textStyles][text9])
 
     Stack(
       orientation = orientation,
@@ -500,26 +500,26 @@ private fun TextStylesDemo() {
     ) {
       val text: String? = null
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(text ?: "Text 9", style = Theme[textStyles][text9])
-        Text(text ?: "Text 8", style = Theme[textStyles][text8])
-        Text(text ?: "Text 7", style = Theme[textStyles][text7])
-        Text(text ?: "Text 6", style = Theme[textStyles][text6])
-        Text(text ?: "Text 5", style = Theme[textStyles][text5])
-        Text(text ?: "Text 4", style = Theme[textStyles][text4])
-        Text(text ?: "Text 3", style = Theme[textStyles][text3])
-        Text(text ?: "Text 2", style = Theme[textStyles][text2])
-        Text(text ?: "Text 1", style = Theme[textStyles][text1])
+        ThemedText(text ?: "Text 9", style = Theme[textStyles][text9])
+        ThemedText(text ?: "Text 8", style = Theme[textStyles][text8])
+        ThemedText(text ?: "Text 7", style = Theme[textStyles][text7])
+        ThemedText(text ?: "Text 6", style = Theme[textStyles][text6])
+        ThemedText(text ?: "Text 5", style = Theme[textStyles][text5])
+        ThemedText(text ?: "Text 4", style = Theme[textStyles][text4])
+        ThemedText(text ?: "Text 3", style = Theme[textStyles][text3])
+        ThemedText(text ?: "Text 2", style = Theme[textStyles][text2])
+        ThemedText(text ?: "Text 1", style = Theme[textStyles][text1])
       }
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(text ?: "Heading 9", style = Theme[textStyles][heading9])
-        Text(text ?: "Heading 8", style = Theme[textStyles][heading8])
-        Text(text ?: "Heading 7", style = Theme[textStyles][heading7])
-        Text(text ?: "Heading 6", style = Theme[textStyles][heading6])
-        Text(text ?: "Heading 5", style = Theme[textStyles][heading5])
-        Text(text ?: "Heading 4", style = Theme[textStyles][heading4])
-        Text(text ?: "Heading 3", style = Theme[textStyles][heading3])
-        Text(text ?: "Heading 2", style = Theme[textStyles][heading2])
-        Text(text ?: "Heading 1", style = Theme[textStyles][heading1])
+        ThemedText(text ?: "Heading 9", style = Theme[textStyles][heading9])
+        ThemedText(text ?: "Heading 8", style = Theme[textStyles][heading8])
+        ThemedText(text ?: "Heading 7", style = Theme[textStyles][heading7])
+        ThemedText(text ?: "Heading 6", style = Theme[textStyles][heading6])
+        ThemedText(text ?: "Heading 5", style = Theme[textStyles][heading5])
+        ThemedText(text ?: "Heading 4", style = Theme[textStyles][heading4])
+        ThemedText(text ?: "Heading 3", style = Theme[textStyles][heading3])
+        ThemedText(text ?: "Heading 2", style = Theme[textStyles][heading2])
+        ThemedText(text ?: "Heading 1", style = Theme[textStyles][heading1])
       }
     }
   }

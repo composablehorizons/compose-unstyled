@@ -55,13 +55,12 @@ class ProgressIndicatorScope {
  * ## Basic Example
  *
  * ```kotlin
- * ProgressIndicator(
+ * UnstyledProgressIndicator(
  *     progress = 0.5f,
  *     shape = RoundedCornerShape(4.dp),
- *     backgroundColor = Color(0xFFE4E4E4),
- *     contentColor = Color(0xFF6699FF)
+ *     backgroundColor = Color(0xFFE4E4E4)
  * ) {
- *     ProgressBar()
+ *     UnstyledProgressBar(color = Color(0xFF6699FF))
  * }
  * ```
  *
@@ -69,7 +68,6 @@ class ProgressIndicatorScope {
  * @param modifier Modifier to be applied to the progress indicator.
  * @param shape The shape of the progress indicator.
  * @param backgroundColor The background color of the progress indicator.
- * @param contentColor The color of the content.
  * @param content The content of the progress indicator. For a batteries included component see [ProgressBar].
  */
 @Composable
@@ -78,7 +76,6 @@ fun UnstyledProgressIndicator(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   content: @Composable ProgressIndicatorScope.() -> Unit,
 ) {
   val scope = remember { ProgressIndicatorScope() }
@@ -90,11 +87,9 @@ fun UnstyledProgressIndicator(
       .clip(shape)
       .background(backgroundColor),
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
       with(scope) {
         content()
       }
-    }
   }
 }
 
@@ -110,7 +105,6 @@ fun UnstyledProgressIndicator(
  *     progress = 0.5f,
  *     shape = RoundedCornerShape(4.dp),
  *     backgroundColor = Color(0xFFE4E4E4),
- *     contentColor = Color(0xFF6699FF)
  * ) {
  *     ProgressBar()
  * }
@@ -119,7 +113,6 @@ fun UnstyledProgressIndicator(
  * @param modifier Modifier to be applied to the progress indicator.
  * @param shape The shape of the progress indicator.
  * @param backgroundColor The background color of the progress indicator.
- * @param contentColor The color of the content.
  * @param content The content of the progress indicator.
  */
 @Composable
@@ -127,7 +120,6 @@ fun UnstyledProgressIndicator(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   content: @Composable () -> Unit,
 ) {
   Box(
@@ -137,9 +129,7 @@ fun UnstyledProgressIndicator(
       .clip(shape)
       .background(backgroundColor),
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
       content()
-    }
   }
 }
 
@@ -151,8 +141,8 @@ fun UnstyledProgressIndicator(
  */
 @Composable
 fun ProgressIndicatorScope.UnstyledProgressBar(
+  color: Color,
   shape: Shape = RectangleShape,
-  color: Color = LocalContentColor.current,
 ) {
   Box(Modifier.fillMaxWidth(progress).fillMaxHeight().background(color, shape))
 }

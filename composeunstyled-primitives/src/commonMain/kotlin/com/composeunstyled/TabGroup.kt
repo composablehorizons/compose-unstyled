@@ -123,7 +123,6 @@ fun UnstyledTabList(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   orientation: Orientation = Orientation.Horizontal,
   horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
@@ -224,9 +223,7 @@ fun UnstyledTabList(
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment,
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-      content()
-    }
+    content()
   }
 }
 
@@ -242,7 +239,6 @@ fun UnstyledTab(
   interactionSource: MutableInteractionSource? = null,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
@@ -277,9 +273,7 @@ fun UnstyledTab(
       )
       .padding(contentPadding),
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-      content()
-    }
+    content()
   }
 }
 
@@ -289,7 +283,6 @@ fun UnstyledTabPanel(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   contentAlignment: Alignment = Alignment.TopStart,
   content: @Composable BoxScope.() -> Unit,
@@ -309,9 +302,7 @@ fun UnstyledTabPanel(
         .focusGroup(),
       contentAlignment = contentAlignment,
     ) {
-      CompositionLocalProvider(LocalContentColor provides contentColor) {
-        content()
-      }
+      content()
     }
   }
 }

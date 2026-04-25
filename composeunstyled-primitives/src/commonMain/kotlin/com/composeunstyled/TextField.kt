@@ -23,9 +23,6 @@ package com.composeunstyled
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,11 +30,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
@@ -45,9 +40,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,255 +59,15 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
-
-@Composable
-fun UnstyledTextField(
-  value: String,
-  onValueChange: (String) -> Unit,
-  editable: Boolean = true,
-  modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
-  leadingIcon: @Composable (() -> Unit)? = null,
-  trailingIcon: @Composable (() -> Unit)? = null,
-  placeholder: String = "",
-  contentColor: Color = LocalContentColor.current,
-  disabledColor: Color = contentColor.copy(0.66f),
-  backgroundColor: Color = Color.Unspecified,
-  borderWidth: Dp = 1.dp,
-  borderColor: Color = Color.Unspecified,
-  shape: Shape = RectangleShape,
-  textStyle: TextStyle = LocalTextStyle.current,
-  textAlign: TextAlign = TextAlign.Unspecified,
-  fontSize: TextUnit = TextUnit.Unspecified,
-  fontWeight: FontWeight? = null,
-  fontFamily: FontFamily? = null,
-  textDecoration: TextDecoration? = textStyle.textDecoration,
-  singleLine: Boolean = false,
-  minLines: Int = 1,
-  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-  keyboardActions: KeyboardActions = KeyboardActions.Default,
-  interactionSource: MutableInteractionSource? = null,
-  spacing: Dp = 8.dp,
-  visualTransformation: VisualTransformation = VisualTransformation.None,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-) {
-  val overriddenStyle = textStyle.mergeThemed(
-    textAlign = textAlign,
-    fontSize = fontSize,
-    fontWeight = fontWeight,
-    fontFamily = fontFamily,
-    textDecoration = textDecoration,
-    color = contentColor,
-  )
-
-  var wasEditable by remember { mutableStateOf(editable) }
-  var textRange by remember { mutableStateOf(TextRange(value.length, value.length)) }
-  var isFocusedOnIcon by remember { mutableStateOf(false) }
-
-  LaunchedEffect(editable) {
-    if (wasEditable.not() && editable) {
-      // just changed to editable. select all text
-      textRange = TextRange(0, value.length)
-    }
-    wasEditable = editable
-  }
-
-  if (editable) {
-    val textFieldValue by derivedStateOf { TextFieldValue(value, textRange) }
-
-    BasicTextField(
-      value = textFieldValue,
-      onValueChange = {
-        if (isFocusedOnIcon.not()) {
-          onValueChange(it.text)
-          textRange = it.selection
-        }
-      },
-      textStyle = overriddenStyle,
-      modifier = modifier,
-      singleLine = singleLine,
-      maxLines = maxLines,
-      minLines = minLines,
-      keyboardOptions = keyboardOptions,
-      keyboardActions = keyboardActions,
-      interactionSource = interactionSource,
-      visualTransformation = visualTransformation,
-    ) { innerTextField ->
-      Row(
-        verticalAlignment = verticalAlignment,
-        modifier = buildModifier {
-          if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
-            add(Modifier.border(borderWidth, borderColor, shape))
-          }
-          add(Modifier.background(backgroundColor, shape))
-
-          if (editable.not()) {
-            add(Modifier.pointerHoverIcon(PointerIcon.Default))
-          }
-          add(Modifier.padding(contentPadding))
-        },
-        horizontalArrangement = Arrangement.spacedBy(spacing),
-      ) {
-        if (leadingIcon != null) {
-          Box(Modifier.onFocusChanged { isFocusedOnIcon = it.hasFocus }) {
-            leadingIcon()
-          }
-        }
-        Box(Modifier.weight(1f).semantics(mergeDescendants = true) { }) {
-          innerTextField()
-          if (value.isEmpty()) {
-            BasicText(
-              text = placeholder,
-              style = overriddenStyle.copy(
-                color = overriddenStyle.color.copy(alpha = 0.66f)
-              ),
-              minLines = minLines,
-              maxLines = maxLines,
-            )
-          }
-        }
-        if (trailingIcon != null) {
-          Box(Modifier.onFocusChanged { isFocusedOnIcon = it.hasFocus }) {
-            trailingIcon()
-          }
-        }
-      }
-    }
-  } else {
-    val transformedText = visualTransformation.filter(AnnotatedString(value)).text.text
-    Row(
-      verticalAlignment = verticalAlignment,
-      modifier = modifier then buildModifier {
-        if (borderWidth.isSpecified && borderWidth > 0.dp && borderColor.isSpecified) {
-          add(Modifier.border(borderWidth, borderColor, shape))
-        }
-        add(Modifier.background(backgroundColor, shape))
-      }.widthIn(min = 2.dp) // width for the cursor blink
-        .focusable(interactionSource = interactionSource).padding(contentPadding),
-      horizontalArrangement = Arrangement.spacedBy(spacing),
-    ) {
-      if (leadingIcon != null) {
-        leadingIcon()
-      }
-      BasicText(
-        text = if (value.isBlank()) placeholder else transformedText,
-        style = overriddenStyle.copy(
-          color = disabledColor
-        ),
-        modifier = Modifier.weight(1f),
-        minLines = minLines,
-        maxLines = maxLines,
-      )
-      if (trailingIcon != null) {
-        trailingIcon()
-      }
-    }
-  }
-}
-
-@Composable
-fun UnstyledTextField(
-  value: String,
-  onValueChange: (String) -> Unit,
-  modifier: Modifier = Modifier,
-  editable: Boolean = true,
-  cursorBrush: Brush = SolidColor(Color.Black),
-  textStyle: TextStyle = LocalTextStyle.current,
-  textAlign: TextAlign = TextAlign.Unspecified,
-  lineHeight: TextUnit = TextUnit.Unspecified,
-  fontSize: TextUnit = TextUnit.Unspecified,
-  letterSpacing: TextUnit = TextUnit.Unspecified,
-  fontWeight: FontWeight? = null,
-  fontFamily: FontFamily? = null,
-  textDecoration: TextDecoration? = textStyle.textDecoration,
-  singleLine: Boolean = false,
-  minLines: Int = 1,
-  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-  keyboardActions: KeyboardActions = KeyboardActions.Default,
-  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-  visualTransformation: VisualTransformation = VisualTransformation.None,
-  interactionSource: MutableInteractionSource? = null,
-  textColor: Color = Color.Unspecified,
-  content: @Composable TextFieldScope.() -> Unit,
-) {
-  val scope = remember { TextFieldScope() }
-
-  scope.text = value
-  scope.editable = editable
-  scope.visualTransformation = visualTransformation
-
-  val newTextStyle = textStyle.mergeThemed(
-    textAlign = textAlign,
-    fontSize = fontSize,
-    fontWeight = fontWeight,
-    fontFamily = fontFamily,
-    textDecoration = textDecoration,
-    lineHeight = lineHeight,
-    letterSpacing = letterSpacing,
-    color = textColor,
-  )
-  scope.textAlignment = newTextStyle.textAlign
-  scope.minLines = minLines
-  scope.maxLines = maxLines
-
-  var textRange by remember { mutableStateOf(TextRange(value.length, value.length)) }
-  val textFieldValue by derivedStateOf { TextFieldValue(value, textRange) }
-
-  CompositionLocalProvider(
-    LocalTextStyle provides newTextStyle,
-  ) {
-    if (editable) {
-      BasicTextField(
-        minLines = minLines,
-        maxLines = maxLines,
-        value = textFieldValue,
-        onValueChange = {
-          if (scope.isTrailingFocused.not() && scope.isLeadingFocused.not()) {
-            // block any value changes, unless the actual text input is focused
-            // this guards for cases where the
-            onValueChange(it.text)
-            textRange = it.selection
-          }
-        },
-        interactionSource = interactionSource,
-        textStyle = newTextStyle,
-        modifier = modifier.semantics(mergeDescendants = true) {}.focusGroup(),
-        cursorBrush = cursorBrush,
-        singleLine = singleLine,
-        enabled = editable,
-        keyboardActions = keyboardActions,
-        keyboardOptions = keyboardOptions,
-        visualTransformation = visualTransformation,
-      ) { innerTextField ->
-        scope.innerTextField = innerTextField
-        Column(
-          Modifier
-            // we are handling pointerIcons in TextInput()
-            .pointerHoverIcon(PointerIcon.Default),
-        ) {
-          scope.content()
-        }
-      }
-    } else {
-      Column(modifier) {
-        scope.content()
-      }
-    }
-  }
-}
 
 class TextFieldScope {
   internal var innerTextField: (@Composable () -> Unit)? = null
@@ -338,7 +90,6 @@ fun TextFieldScope.TextInput(
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = PaddingValues(0.dp),
-  contentColor: Color = LocalContentColor.current,
   label: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
   leading: (@Composable () -> Unit)? = null,
@@ -357,44 +108,42 @@ fun TextFieldScope.TextInput(
     verticalAlignment = verticalAlignment,
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-      if (leading != null) {
-        Box(
-          Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged {
-            isLeadingFocused = it.hasFocus
-          },
-        ) {
-          leading()
+    if (leading != null) {
+      Box(
+        Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged {
+          isLeadingFocused = it.hasFocus
+        },
+      ) {
+        leading()
+      }
+    }
+    val contentAlignment: Alignment = when (textAlignment) {
+      TextAlign.End -> Alignment.TopEnd
+      TextAlign.Center -> Alignment.Center
+      else -> Alignment.TopStart
+    }
+    Box(contentAlignment = contentAlignment, modifier = Modifier.weight(1f)) {
+      if (editable) {
+        innerTextField!!.invoke()
+      } else {
+        val transformedText = visualTransformation.filter(AnnotatedString(text)).text.text
+        SelectionContainer {
+          BasicText(transformedText)
         }
       }
-      val contentAlignment: Alignment = when (textAlignment) {
-        TextAlign.End -> Alignment.TopEnd
-        TextAlign.Center -> Alignment.Center
-        else -> Alignment.TopStart
-      }
-      Box(contentAlignment = contentAlignment, modifier = Modifier.weight(1f)) {
-        if (editable) {
-          innerTextField!!.invoke()
-        } else {
-          val transformedText = visualTransformation.filter(AnnotatedString(text)).text.text
-          SelectionContainer {
-            BasicText(transformedText)
-          }
-        }
 
-        if (placeholder != null && text.isEmpty()) {
-          Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
-            placeholder()
-          }
+      if (placeholder != null && text.isEmpty()) {
+        Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
+          placeholder()
         }
       }
-      if (trailing != null) {
-        Box(
-          Modifier.pointerHoverIcon(PointerIcon.Default)
-            .onFocusChanged { isTrailingFocused = it.hasFocus },
-        ) {
-          trailing()
-        }
+    }
+    if (trailing != null) {
+      Box(
+        Modifier.pointerHoverIcon(PointerIcon.Default)
+          .onFocusChanged { isTrailingFocused = it.hasFocus },
+      ) {
+        trailing()
       }
     }
   }
@@ -406,7 +155,7 @@ fun UnstyledTextField(
   modifier: Modifier = Modifier,
   editable: Boolean = true,
   cursorBrush: Brush = SolidColor(Color.Black),
-  textStyle: TextStyle = LocalTextStyle.current,
+  textStyle: TextStyle = TextStyle.Default,
   textAlign: TextAlign = TextAlign.Unspecified,
   lineHeight: TextUnit = TextUnit.Unspecified,
   fontSize: TextUnit = TextUnit.Unspecified,
@@ -421,7 +170,7 @@ fun UnstyledTextField(
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
   visualTransformation: VisualTransformation = VisualTransformation.None,
   interactionSource: MutableInteractionSource? = null,
-  textColor: Color = LocalContentColor.current,
+  textColor: Color = Color.Unspecified,
   scrollState: ScrollState = rememberScrollState(),
   content: @Composable TextFieldScope.() -> Unit,
 ) {
@@ -431,7 +180,7 @@ fun UnstyledTextField(
   scope.editable = editable
   scope.visualTransformation = visualTransformation
 
-  val newTextStyle = textStyle.mergeThemed(
+  val newTextStyle = textStyle.mergeSafely(
     textAlign = textAlign,
     fontSize = fontSize,
     fontWeight = fontWeight,
@@ -445,73 +194,69 @@ fun UnstyledTextField(
   scope.minLines = minLines
   scope.maxLines = maxLines
 
-  ProvideContentColor(textColor) {
-    ProvideTextStyle(newTextStyle) {
-      if (editable) {
-        val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
+  if (editable) {
+    val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
 
-        BasicTextField(
-          scrollState = scrollState,
-          state = state,
-          interactionSource = interactionSource,
-          textStyle = newTextStyle,
-          outputTransformation = {
-            val transformedText =
-              visualTransformation.filter(AnnotatedString(originalText.toString()))
-            val newText = transformedText.text.text
-            val mapping = transformedText.offsetMapping
-            val originalLength = originalText.length
+    BasicTextField(
+      scrollState = scrollState,
+      state = state,
+      interactionSource = interactionSource,
+      textStyle = newTextStyle,
+      outputTransformation = {
+        val transformedText =
+          visualTransformation.filter(AnnotatedString(originalText.toString()))
+        val newText = transformedText.text.text
+        val mapping = transformedText.offsetMapping
+        val originalLength = originalText.length
 
-            // Apply edits from end to start so index shifts don't affect upcoming edits.
-            for (index in originalLength - 1 downTo 0) {
-              val transformedStart = mapping.originalToTransformed(index)
-              val transformedEnd = mapping.originalToTransformed(index + 1)
-              val replacement = newText.substring(transformedStart, transformedEnd)
-              replace(index, index + 1, replacement)
-            }
+        // Apply edits from end to start so index shifts don't affect upcoming edits.
+        for (index in originalLength - 1 downTo 0) {
+          val transformedStart = mapping.originalToTransformed(index)
+          val transformedEnd = mapping.originalToTransformed(index + 1)
+          val replacement = newText.substring(transformedStart, transformedEnd)
+          replace(index, index + 1, replacement)
+        }
 
-            val suffixStart = mapping.originalToTransformed(originalLength)
-            if (suffixStart < newText.length) {
-              replace(length, length, newText.substring(suffixStart))
-            }
-          },
-          inputTransformation = InputTransformation {
-            // block any value changes, unless the actual text input is focused
-            if (inputIsFocused.not()) {
-              revertAllChanges()
-            }
-          },
-          modifier = modifier.semantics(mergeDescendants = true) {},
-          cursorBrush = cursorBrush,
-          lineLimits = if (singleLine) {
-            TextFieldLineLimits.SingleLine
-          } else {
-            TextFieldLineLimits.MultiLine(minLines, maxLines)
-          },
-          keyboardOptions = keyboardOptions,
-          onKeyboardAction = onKeyboardAction,
-          decorator = { innerTextField ->
-            scope.innerTextField = innerTextField
-            Column(
-              Modifier
-                // we are handling pointerIcons in TextInput()
-                .pointerHoverIcon(PointerIcon.Default),
-            ) {
-              scope.content()
-            }
-          },
-        )
+        val suffixStart = mapping.originalToTransformed(originalLength)
+        if (suffixStart < newText.length) {
+          replace(length, length, newText.substring(suffixStart))
+        }
+      },
+      inputTransformation = InputTransformation {
+        // block any value changes, unless the actual text input is focused
+        if (inputIsFocused.not()) {
+          revertAllChanges()
+        }
+      },
+      modifier = modifier.semantics(mergeDescendants = true) {},
+      cursorBrush = cursorBrush,
+      lineLimits = if (singleLine) {
+        TextFieldLineLimits.SingleLine
       } else {
-        Column(modifier) {
+        TextFieldLineLimits.MultiLine(minLines, maxLines)
+      },
+      keyboardOptions = keyboardOptions,
+      onKeyboardAction = onKeyboardAction,
+      decorator = { innerTextField ->
+        scope.innerTextField = innerTextField
+        Column(
+          Modifier
+            // we are handling pointerIcons in TextInput()
+            .pointerHoverIcon(PointerIcon.Default),
+        ) {
           scope.content()
         }
-      }
+      },
+    )
+  } else {
+    Column(modifier) {
+      scope.content()
     }
   }
 }
 
 @Composable
-internal fun TextStyle.mergeThemed(
+internal fun TextStyle.mergeSafely(
   textAlign: TextAlign,
   fontSize: TextUnit,
   color: Color = Color.Unspecified,
@@ -522,15 +267,15 @@ internal fun TextStyle.mergeThemed(
   letterSpacing: TextUnit = TextUnit.Unspecified,
 ): TextStyle {
   val textStyleColor = this.color
-  val contentColor = LocalContentColor.current
 
-  val finalColor = listOf(color, textStyleColor).firstOrNull { it.isSpecified } ?: contentColor
+  val finalColor = listOf(color, textStyleColor).firstOrNull { it.isSpecified }
+    ?: Color.Unspecified
 
   return this.merge(
     textAlign = listOf(textAlign, this.textAlign)
       .firstOrNull { it != TextAlign.Unspecified } ?: TextAlign.Unspecified,
-    fontSize = listOf(fontSize, this.fontSize).firstOrNull { it.isSpecified }
-      ?: TextUnit.Unspecified,
+    fontSize = listOf(fontSize, this.fontSize)
+      .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
     color = finalColor,
     fontWeight = fontWeight,
     fontFamily = fontFamily,
@@ -541,4 +286,3 @@ internal fun TextStyle.mergeThemed(
       .firstOrNull { it.isSpecified } ?: TextUnit.Unspecified,
   )
 }
-

@@ -355,7 +355,6 @@ fun ModalBottomSheetScope.Sheet(
   enabled: Boolean = true,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   imeAware: Boolean = false,
   content: @Composable (BottomSheetScope.() -> Unit),
@@ -368,7 +367,6 @@ fun ModalBottomSheetScope.Sheet(
     contentPadding = contentPadding,
     shape = shape,
     backgroundColor = backgroundColor,
-    contentColor = contentColor,
     imeAware = imeAware,
   )
 }

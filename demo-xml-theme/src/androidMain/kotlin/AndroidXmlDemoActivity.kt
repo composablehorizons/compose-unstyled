@@ -139,7 +139,7 @@ fun App() {
           UnstyledButton(
             onClick = {},
             backgroundColor = Theme[colors][primary],
-            contentColor = Theme[colors][onPrimary],
+            // contentColor = Theme[colors][onPrimary],
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             shape = RoundedCornerShape(100),
           ) {

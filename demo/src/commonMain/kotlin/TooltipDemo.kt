@@ -27,6 +27,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,18 +53,13 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.ProvideContentColor
 import com.composeunstyled.RelativeAlignment
-import com.composeunstyled.Text
-import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.TooltipArrowDirection
-import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledTooltip
+import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.focusRing
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun TooltipDemo() {
@@ -101,9 +98,7 @@ fun TooltipDemo() {
                   .background(Color.Black.copy(0.8f))
                   .padding(vertical = 8.dp, horizontal = 12.dp),
               ) {
-                ProvideContentColor(Color.White) {
-                  Text("Notifications")
-                }
+                Text("Notifications", color = Color.White)
               }
             }
           }
@@ -118,7 +113,7 @@ fun TooltipDemo() {
           modifier = Modifier.focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
           interactionSource = interactionSource,
           backgroundColor = Color.White,
-          indication = Theme[indications][dimmed],
+          indication = LocalIndication.current,
         ) {
           UnstyledIcon(Lucide.BellDot, contentDescription = null)
         }

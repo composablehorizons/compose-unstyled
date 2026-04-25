@@ -58,7 +58,7 @@ fun UnstyledIcon(
   painter: Painter,
   contentDescription: String?,
   modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
+  tint: Color = Color.Unspecified,
 ) {
   val colorFilter = remember(tint) {
     if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
@@ -91,7 +91,7 @@ fun UnstyledIcon(
   imageBitmap: ImageBitmap,
   contentDescription: String?,
   modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
+  tint: Color = Color.Unspecified,
 ) {
   val colorFilter = remember(tint) {
     if (tint == Color.Unspecified) null else ColorFilter.tint(tint)
@@ -124,7 +124,7 @@ fun UnstyledIcon(
   imageVector: ImageVector,
   contentDescription: String?,
   modifier: Modifier = Modifier,
-  tint: Color = LocalContentColor.current,
+  tint: Color = Color.Unspecified,
 ) {
   val colorFilter = remember(tint) {
     if (tint == Color.Unspecified) null else ColorFilter.tint(tint)

@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,17 +45,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledCheckbox
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun TriStateCheckboxDemo() {
@@ -96,7 +95,7 @@ fun TriStateCheckboxDemo() {
           borderColor = Color.Black.copy(0.33f),
           modifier = Modifier.size(24.dp),
           contentDescription = "Select all options",
-          indication = Theme[indications][dimmed],
+          indication = LocalIndication.current,
         ) {
           when (triState) {
             ToggleableState.On -> UnstyledIcon(Lucide.Check, contentDescription = null)
@@ -106,7 +105,7 @@ fun TriStateCheckboxDemo() {
         }
 
         Spacer(Modifier.width(12.dp))
-        Text("Select All", color = Color.White)
+        Text("Select All", style = TextStyle(color = Color.White))
       }
 
       checkboxOptions.forEachIndexed { index, option ->
@@ -132,7 +131,7 @@ fun TriStateCheckboxDemo() {
           }
 
           Spacer(Modifier.width(12.dp))
-          Text(option, color = Color.White)
+          Text(option, style = TextStyle(color = Color.White))
         }
       }
     }

@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.dp
  * Button(
  *     onClick = { /* TODO */ },
  *     backgroundColor = Color(0xFFFFFFFF),
- *     contentColor = Color(0xFF020817),
  *     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
  *     shape = RoundedCornerShape(12.dp),
  * ) {
@@ -72,7 +71,6 @@ import androidx.compose.ui.unit.dp
  * @param enabled    Whether the button is enabled.
  * @param shape    The shape of the button.
  * @param backgroundColor    The background color of the button.
- * @param contentColor    The color to apply to the contents of the button.
  * @param contentPadding    Padding values for the content.
  * @param borderColor    The color of the border. Applied only if both borderColor is specified and borderWidth is > `0.dp`
  * @param borderWidth    The width of the border. Applied only if both borderColor is specified and borderWidth is > `0.dp`
@@ -90,7 +88,6 @@ fun UnstyledButton(
   enabled: Boolean = true,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   borderColor: Color = Color.Unspecified,
   borderWidth: Dp = 0.dp,
@@ -126,8 +123,6 @@ fun UnstyledButton(
     verticalAlignment = verticalAlignment,
     horizontalArrangement = horizontalArrangement,
   ) {
-    ProvideContentColor(contentColor) {
-      content()
-    }
+    content()
   }
 }

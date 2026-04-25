@@ -173,7 +173,6 @@ fun UnstyledDialogPanel(
   exit: ExitTransition = DisappearInstantly,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
@@ -202,9 +201,7 @@ fun UnstyledDialogPanel(
         .pointerInput(Unit) { detectTapGestures { } }
         .padding(contentPadding),
     ) {
-      ProvideContentColor(contentColor) {
         content()
-      }
     }
   }
 }

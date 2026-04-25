@@ -26,6 +26,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,18 +44,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.text5
-import com.composeunstyled.platformtheme.textStyles
 import com.composeunstyled.rememberDialogState
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun DialogDemo() {
@@ -71,7 +69,7 @@ fun DialogDemo() {
       backgroundColor = Color.White,
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       shape = RoundedCornerShape(6.dp),
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
     ) {
       Text("Show dialog")
     }
@@ -79,7 +77,6 @@ fun DialogDemo() {
       UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       UnstyledDialogPanel(
         backgroundColor = Color.White,
-        contentColor = Color.Black,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
           .padding(20.dp)
@@ -92,11 +89,11 @@ fun DialogDemo() {
       ) {
         Column {
           Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            Text("Update Available", style = Theme[textStyles][text5])
+            Text("Update Available", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
             Text(
-              "A new version of the app is available. Please update to the latest version.",
-              color = Color(0xFF1A1A1A),
+              text = "A new version of the app is available. Please update to the latest version.",
+              style = TextStyle(color = Color(0xFF1A1A1A)),
             )
           }
           Spacer(Modifier.height(24.dp))
@@ -105,9 +102,9 @@ fun DialogDemo() {
             modifier = Modifier.padding(12.dp).align(Alignment.End),
             shape = RoundedCornerShape(6.dp),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-            indication = Theme[indications][dimmed],
+            indication = LocalIndication.current,
           ) {
-            Text("Update", color = Color(0xFF0D99FF))
+            Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
           }
         }
       }

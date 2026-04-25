@@ -106,6 +106,7 @@ kotlin {
     }
     commonMain.dependencies {
       implementation(compose.components.resources)
+      implementation(compose.material3)
       implementation(project(":composeunstyled-theming"))
       implementation(project(":composeunstyled-primitives"))
       implementation(project(":composeunstyled-platformtheme"))

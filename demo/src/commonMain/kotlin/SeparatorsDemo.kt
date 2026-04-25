@@ -39,11 +39,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.HorizontalSeparator
 import com.composeunstyled.VerticalSeparator
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 
 @Composable
 fun SeparatorsDemo() {
@@ -73,11 +74,23 @@ fun SeparatorsDemo() {
       )
       HorizontalSeparator(Color.LightGray)
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-        Text("Copy", modifier = Modifier.padding(8.dp).weight(1f), textAlign = TextAlign.Center)
+        Text(
+          "Copy",
+          modifier = Modifier.padding(8.dp).weight(1f),
+          style = TextStyle(textAlign = TextAlign.Center),
+        )
         VerticalSeparator(Color.LightGray)
-        Text("Cut", modifier = Modifier.padding(8.dp).weight(1f), textAlign = TextAlign.Center)
+        Text(
+          "Cut",
+          modifier = Modifier.padding(8.dp).weight(1f),
+          style = TextStyle(textAlign = TextAlign.Center),
+        )
         VerticalSeparator(Color.LightGray)
-        Text("Paste", Modifier.padding(8.dp).weight(1f), textAlign = TextAlign.Center)
+        Text(
+          "Paste",
+          Modifier.padding(8.dp).weight(1f),
+          style = TextStyle(textAlign = TextAlign.Center),
+        )
       }
     }
   }

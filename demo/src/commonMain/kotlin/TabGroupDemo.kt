@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,17 +46,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTabPanel
-import com.composeunstyled.Text
+import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun TabGroupDemo() {
@@ -128,17 +127,19 @@ fun TabGroupDemo() {
             selected = selected,
             onSelected = { selectedTab = key },
             modifier = Modifier.weight(1f).fillMaxHeight(),
-            indication = Theme[indications][dimmed],
+            indication = LocalIndication.current,
           ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
               Text(
                 text = key,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                color = if (selected) {
-                  Color(0xFF2196F3)
-                } else {
-                  Color(0xFF757575)
-                },
+                style = TextStyle(
+                  fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                  color = if (selected) {
+                    Color(0xFF2196F3)
+                  } else {
+                    Color(0xFF757575)
+                  },
+                ),
               )
               if (selected) {
                 Box(
@@ -178,7 +179,7 @@ fun TabGroupDemo() {
                   contentPadding = PaddingValues(12.dp),
                 ) {
                   Column {
-                    Text(item.title, fontWeight = FontWeight.Medium)
+                    Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
                     Spacer(Modifier.height(4.dp))
                     Row(
                       horizontalArrangement = Arrangement.spacedBy(4.dp),

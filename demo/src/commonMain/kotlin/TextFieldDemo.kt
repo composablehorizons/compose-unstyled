@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -53,22 +56,15 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTextField
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.text3
-import com.composeunstyled.platformtheme.text4
-import com.composeunstyled.platformtheme.textStyles
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun TextFieldDemo() {
-  var email = rememberTextFieldState()
-  var password = rememberTextFieldState()
+  val email = rememberTextFieldState()
+  val password = rememberTextFieldState()
   var showPassword by remember { mutableStateOf(false) }
 
   Box(
@@ -100,9 +96,9 @@ fun TextFieldDemo() {
           ),
         ) {
           Text(
-            "Email",
+            text = "Email",
             modifier = Modifier.padding(bottom = 8.dp),
-            style = Theme[textStyles][text4],
+            style = MaterialTheme.typography.bodyLarge,
           )
           TextInput(
             Modifier
@@ -113,8 +109,13 @@ fun TextFieldDemo() {
             placeholder = {
               Text(
                 "email@example.com",
-                color = Color.Black.copy(0.6f),
-                style = Theme[textStyles][text3],
+                style = MaterialTheme.typography.bodyMedium.merge(
+                  TextStyle(
+                    color = Color.Black.copy(
+                      0.6f
+                    )
+                  )
+                ),
               )
             },
           )
@@ -125,16 +126,16 @@ fun TextFieldDemo() {
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
           visualTransformation =
-          if (showPassword) {
-            VisualTransformation.None
-          } else {
-            PasswordVisualTransformation()
-          },
+            if (showPassword) {
+              VisualTransformation.None
+            } else {
+              PasswordVisualTransformation()
+            },
         ) {
           Text(
             "Password",
             modifier = Modifier.padding(bottom = 8.dp),
-            style = Theme[textStyles][text4],
+            style = MaterialTheme.typography.bodyLarge,
           )
           TextInput(
             modifier = Modifier
@@ -146,8 +147,13 @@ fun TextFieldDemo() {
             placeholder = {
               Text(
                 text = "8-12 characters",
-                color = Color.Black.copy(0.6f),
-                style = Theme[textStyles][text3],
+                style = MaterialTheme.typography.bodyMedium.merge(
+                  TextStyle(
+                    color = Color.Black.copy(
+                      0.6f
+                    )
+                  )
+                ),
               )
             },
             trailing = {
@@ -156,7 +162,7 @@ fun TextFieldDemo() {
                 backgroundColor = Color.Transparent,
                 contentPadding = PaddingValues(4.dp),
                 shape = RoundedCornerShape(4.dp),
-                indication = Theme[indications][dimmed],
+                indication = LocalIndication.current,
               ) {
                 UnstyledIcon(
                   imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
@@ -172,11 +178,13 @@ fun TextFieldDemo() {
           onClick = { /* TODO */ },
           modifier = Modifier.fillMaxWidth(),
           backgroundColor = Color(0xFF8E44AD),
-          contentColor = Color.White,
           contentPadding = PaddingValues(12.dp),
           shape = RoundedCornerShape(8.dp),
         ) {
-          Text("Submit", fontWeight = FontWeight.Medium)
+          Text(
+            text = "Submit",
+            color = Color.White
+          )
         }
       }
     }

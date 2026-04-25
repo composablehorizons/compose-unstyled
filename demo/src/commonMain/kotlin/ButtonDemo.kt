@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +29,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,9 +41,6 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.theme.Theme
 
 @Composable
 fun ButtonDemo() {
@@ -55,15 +53,15 @@ fun ButtonDemo() {
     UnstyledButton(
       onClick = { },
       backgroundColor = Color.White,
-      contentColor = Color(0xFF020817),
+      // contentColor = Color(0xFF020817),
       contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
       shape = RoundedCornerShape(12.dp),
       modifier = Modifier.shadow(elevation = 4.dp, RoundedCornerShape(12.dp)),
-      indication = Theme[indications][dimmed],
+      indication = LocalIndication.current,
     ) {
       UnstyledIcon(Lucide.Pencil, contentDescription = null)
       Spacer(Modifier.width(12.dp))
-      BasicText("Compose")
+      Text("Compose")
     }
   }
 }

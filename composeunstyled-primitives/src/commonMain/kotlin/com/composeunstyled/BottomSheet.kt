@@ -81,7 +81,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.androidx.compose.foundation.gestures.*
+import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledAnchoredDraggableState
+import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledDraggableAnchors
+import com.composeunstyled.androidx.compose.foundation.gestures.animateTo
+import com.composeunstyled.androidx.compose.foundation.gestures.snapTo
+import com.composeunstyled.androidx.compose.foundation.gestures.unstyledAnchoredDraggable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
@@ -520,7 +524,6 @@ fun BottomSheet(
   enabled: Boolean = true,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = LocalContentColor.current,
   contentPadding: PaddingValues = NoPadding,
   imeAware: Boolean = false,
   content: @Composable (BottomSheetScope.() -> Unit),
@@ -577,9 +580,7 @@ fun BottomSheet(
         )
       },
     ) {
-      ProvideContentColor(contentColor) {
-        scope.content()
-      }
+      scope.content()
     }
   }
 }

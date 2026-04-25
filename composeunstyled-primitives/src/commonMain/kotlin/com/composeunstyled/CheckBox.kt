@@ -29,7 +29,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +59,6 @@ import androidx.compose.ui.unit.isSpecified
  *     onCheckedChange = { checked = it },
  *     shape = RoundedCornerShape(4.dp),
  *     backgroundColor = Color.White,
- *     contentColor = Color.Black
  * ) {
  *     // will be shown if checked
  *     Icon(Check, contentDescription = null)
@@ -70,7 +68,6 @@ import androidx.compose.ui.unit.isSpecified
  * @param checked Whether the checkbox is checked.
  * @param modifier Modifier to be applied to the checkbox.
  * @param backgroundColor Background color of the checkbox.
- * @param contentColor Color of the content inside the checkbox.
  * @param enabled Whether the checkbox is enabled.
  * @param onCheckedChange Callback when the checked state changes.
  * @param shape Shape of the checkbox.
@@ -86,7 +83,6 @@ fun UnstyledCheckbox(
   checked: Boolean,
   modifier: Modifier = Modifier,
   backgroundColor: Color = Color.Transparent,
-  contentColor: Color = LocalContentColor.current,
   enabled: Boolean = true,
   onCheckedChange: ((Boolean) -> Unit)? = null,
   shape: Shape = RectangleShape,
@@ -127,9 +123,7 @@ fun UnstyledCheckbox(
     contentAlignment = Alignment.Center,
   ) {
     if (checked) {
-      CompositionLocalProvider(LocalContentColor provides contentColor) {
-        checkIcon()
-      }
+      checkIcon()
     }
   }
 }

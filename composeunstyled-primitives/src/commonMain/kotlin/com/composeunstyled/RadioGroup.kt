@@ -122,7 +122,6 @@ fun UnstyledRadioButton(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,
-  contentColor: Color = Color.Unspecified,
   selectedColor: Color = Color.Unspecified,
   enabled: Boolean = true,
   contentPadding: PaddingValues = NoPadding,
@@ -156,10 +155,6 @@ fun UnstyledRadioButton(
     verticalAlignment = verticalAlignment,
     horizontalArrangement = horizontalArrangement,
   ) {
-    CompositionLocalProvider(
-      LocalContentColor provides if (selected) selectedColor else contentColor,
-    ) {
-      this@Row.content()
-    }
+    this@Row.content()
   }
 }

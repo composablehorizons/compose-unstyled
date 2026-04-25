@@ -74,7 +74,7 @@ private fun TooltipCrashRepro() {
           modifier = Modifier
             .background(Color(0xFF0F172A), RoundedCornerShape(10.dp))
             .padding(horizontal = 12.dp, vertical = 8.dp),
-          contentColor = Color.White,
+          // contentColor = Color.White,
         ) {
           BasicText(
             "Tooltip panel",
