@@ -19,36 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("DEPRECATION")
+package com.composeunstyled
 
-package com.composables.core
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.isDialog
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.runComposeUiTest
-import kotlin.test.Test
-
-class DeprecatedDialogTest {
-
-  @Test
-  fun initiallyVisibleDialogWithoutScrimCanBeDismissed() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
-
-    setContent {
-      Dialog(state = dialogState) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
-        }
-      }
-    }
-
-    onNodeWithTag("dialog_content").assertExists()
-
-    dialogState.visible = false
-    waitForIdle()
-
-    onNodeWithTag("dialog_content").assertDoesNotExist()
-    onNode(isDialog()).assertDoesNotExist()
-  }
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+internal actual fun NoOverscroll(content: @Composable () -> Unit) {
+  CompositionLocalProvider(
+    value = LocalOverscrollConfiguration provides null,
+    content = content,
+  )
 }

@@ -60,7 +60,6 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
-import com.composables.core.DoNothing
 
 data class DialogProperties(
   val dismissOnBackPress: Boolean = true,

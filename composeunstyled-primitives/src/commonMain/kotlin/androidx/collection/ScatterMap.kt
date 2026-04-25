@@ -24,10 +24,10 @@
   "NOTHING_TO_INLINE"
 )
 
-package com.composables.core.androidx.collection
+package com.composeunstyled.androidx.collection
 
-import com.composables.core.androidx.collection.internal.EMPTY_OBJECTS
-import com.composables.core.androidx.collection.internal.requirePrecondition
+import com.composeunstyled.androidx.collection.internal.EMPTY_OBJECTS
+import com.composeunstyled.androidx.collection.internal.requirePrecondition
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
 import kotlin.math.max

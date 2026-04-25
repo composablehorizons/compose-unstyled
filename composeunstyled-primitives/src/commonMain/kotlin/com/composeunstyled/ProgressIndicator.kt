@@ -40,7 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import com.composables.core.androidx.annotation.FloatRange
+import com.composeunstyled.androidx.annotation.FloatRange
 
 class ProgressIndicatorScope {
   var progress by mutableStateOf(0f)

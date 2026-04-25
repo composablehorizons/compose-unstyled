@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.composables.core.androidx.annotation
+package com.composeunstyled.androidx.annotation
 
 /**
  * Denotes that the annotated element should be an int or long in the given range.

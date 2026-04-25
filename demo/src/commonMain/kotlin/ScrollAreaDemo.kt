@@ -57,12 +57,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.core.HorizontalScrollbar
-import com.composables.core.ScrollArea
-import com.composables.core.Thumb
-import com.composables.core.ThumbVisibility
-import com.composables.core.VerticalScrollbar
-import com.composables.core.rememberScrollAreaState
+import com.composeunstyled.HorizontalScrollbar
+import com.composeunstyled.ScrollArea
+import com.composeunstyled.Thumb
+import com.composeunstyled.ThumbVisibility
+import com.composeunstyled.VerticalScrollbar
+import com.composeunstyled.rememberScrollAreaState
 import com.composeunstyled.Text
 import kotlin.time.Duration.Companion.seconds
 

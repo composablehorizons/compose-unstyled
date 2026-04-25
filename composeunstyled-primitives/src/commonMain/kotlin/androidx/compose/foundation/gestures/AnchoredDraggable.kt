@@ -17,7 +17,7 @@
 
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.composables.core.androidx.compose.foundation.gestures
+package com.composeunstyled.androidx.compose.foundation.gestures
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationState
@@ -51,10 +51,10 @@ import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Velocity
-import com.composables.core.androidx.annotation.FloatRange
-import com.composables.core.androidx.collection.MutableObjectFloatMap
-import com.composables.core.androidx.collection.ObjectFloatMap
-import com.composables.core.androidx.compose.foundation.gestures.UnstyledAnchoredDraggableState.Companion.Saver
+import com.composeunstyled.androidx.annotation.FloatRange
+import com.composeunstyled.androidx.collection.MutableObjectFloatMap
+import com.composeunstyled.androidx.collection.ObjectFloatMap
+import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledAnchoredDraggableState.Companion.Saver
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job

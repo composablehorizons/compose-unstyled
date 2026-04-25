@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composables.core
+package com.composeunstyled
 
 // workaround for not being able to publish a library without code
 @Suppress("unused")

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.composables.core.androidx.collection.internal
+package com.composeunstyled.androidx.collection.internal
 
 import kotlin.jvm.JvmField
 

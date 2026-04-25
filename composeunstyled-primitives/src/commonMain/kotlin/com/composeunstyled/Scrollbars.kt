@@ -21,7 +21,7 @@
  */
 @file:Suppress("ktlint:standard:max-line-length")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -60,6 +60,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.ScrollAreaScope
+import com.composeunstyled.ScrollAreaState
+import com.composeunstyled.SliderAdapter
 import com.composeunstyled.buildModifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

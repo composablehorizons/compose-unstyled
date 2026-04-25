@@ -41,8 +41,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.composables.core.HorizontalSeparator
-import com.composables.core.VerticalSeparator
+import com.composeunstyled.HorizontalSeparator
+import com.composeunstyled.VerticalSeparator
 import com.composeunstyled.Text
 
 @Composable

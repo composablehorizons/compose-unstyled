@@ -25,11 +25,11 @@
 )
 @file:OptIn(ExperimentalContracts::class)
 
-package com.composables.core.androidx.collection
+package com.composeunstyled.androidx.collection
 
-import com.composables.core.androidx.annotation.IntRange
-import com.composables.core.androidx.collection.internal.EMPTY_OBJECTS
-import com.composables.core.androidx.collection.internal.requirePrecondition
+import com.composeunstyled.androidx.annotation.IntRange
+import com.composeunstyled.androidx.collection.internal.EMPTY_OBJECTS
+import com.composeunstyled.androidx.collection.internal.requirePrecondition
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.jvm.JvmField

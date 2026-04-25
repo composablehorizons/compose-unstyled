@@ -21,7 +21,7 @@
  */
 @file:Suppress("ktlint:standard:max-line-length")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.IndicationNodeFactory

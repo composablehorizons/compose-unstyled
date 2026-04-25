@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.composables.core.androidx.compose.foundation.gestures
+package com.composeunstyled.androidx.compose.foundation.gestures
 
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
@@ -44,10 +44,10 @@ import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
-import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragCancelled
-import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragDelta
-import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragStarted
-import com.composables.core.androidx.compose.foundation.gestures.DragEvent.DragStopped
+import com.composeunstyled.androidx.compose.foundation.gestures.DragEvent.DragCancelled
+import com.composeunstyled.androidx.compose.foundation.gestures.DragEvent.DragDelta
+import com.composeunstyled.androidx.compose.foundation.gestures.DragEvent.DragStarted
+import com.composeunstyled.androidx.compose.foundation.gestures.DragEvent.DragStopped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope

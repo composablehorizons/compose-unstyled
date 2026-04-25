@@ -21,7 +21,7 @@
  */
 @file:JvmName("BottomSheetAndroidTest")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

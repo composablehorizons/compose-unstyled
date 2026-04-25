@@ -36,11 +36,11 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.dp
-import com.composables.core.ScrollArea
-import com.composables.core.Thumb
-import com.composables.core.ThumbVisibility
-import com.composables.core.VerticalScrollbar
-import com.composables.core.rememberScrollAreaState
+import com.composeunstyled.ScrollArea
+import com.composeunstyled.Thumb
+import com.composeunstyled.ThumbVisibility
+import com.composeunstyled.VerticalScrollbar
+import com.composeunstyled.rememberScrollAreaState
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 

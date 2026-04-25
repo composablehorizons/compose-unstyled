@@ -61,11 +61,11 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.compose.ui.unit.dp
-import com.composables.core.BottomSheet
-import com.composables.core.BottomSheetState
-import com.composables.core.DragIndication
-import com.composables.core.SheetDetent
-import com.composables.core.rememberBottomSheetState
+import com.composeunstyled.BottomSheet
+import com.composeunstyled.BottomSheetState
+import com.composeunstyled.DragIndication
+import com.composeunstyled.SheetDetent
+import com.composeunstyled.rememberBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat

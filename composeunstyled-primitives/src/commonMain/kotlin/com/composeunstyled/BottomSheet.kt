@@ -22,7 +22,7 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 @file:Suppress("ktlint:standard:max-line-length", "ktlint:standard:no-wildcard-imports")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
@@ -81,11 +81,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
-import com.composables.core.androidx.compose.foundation.gestures.*
-import com.composeunstyled.LocalContentColor
-import com.composeunstyled.NoPadding
-import com.composeunstyled.ProvideContentColor
-import com.composeunstyled.buildModifier
+import com.composeunstyled.androidx.compose.foundation.gestures.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
@@ -710,12 +706,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 @Composable
 fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,
-  indication: Indication = rememberFocusRingIndication(
-    ringColor = Color.Blue,
-    ringWidth = 4.dp,
-    paddingValues = PaddingValues(horizontal = 8.dp, vertical = 14.dp),
-    cornerRadius = 8.dp,
-  ),
+  indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
   onClickLabel: String? = "Toggle sheet",
 ) {

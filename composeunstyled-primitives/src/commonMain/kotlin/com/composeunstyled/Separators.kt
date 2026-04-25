@@ -21,7 +21,7 @@
  */
 @file:Suppress("ktlint:standard:max-line-length")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.ColumnScope

@@ -21,7 +21,7 @@
  */
 @file:Suppress("ktlint:standard:max-line-length")
 
-package com.composables.core
+package com.composeunstyled
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -56,13 +56,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.AppearInstantly
-import com.composeunstyled.DisappearInstantly
-import com.composeunstyled.EscapeHandler
-import com.composeunstyled.LocalContentColor
-import com.composeunstyled.Modal
-import com.composeunstyled.NoPadding
-import com.composeunstyled.buildModifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged

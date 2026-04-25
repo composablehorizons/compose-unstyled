@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.composables.core.androidx.compose.foundation.gestures
+package com.composeunstyled.androidx.compose.foundation.gestures
 
 // Note, that there is a copy-paste version of this file (DragGestureDetectorCopy.kt), don't
 // forget to change it too.
