@@ -32,15 +32,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class TextTest {
-
-  @BeforeTest
-  fun setUp() {
-    ComposeUnstyledFlags.strictTextColorResolutionOrder = true
-  }
 
   @Test
   fun defaultColorIsUnspecified() = runComposeUiTest {
