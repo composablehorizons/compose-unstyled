@@ -119,7 +119,7 @@ mavenPublishing {
       developer {
         id.set("composablehorizons")
         name.set("Composable Horizons")
-        email.set("alex@composablesui.com")
+        email.set("alex@composables.com")
       }
     }
 
