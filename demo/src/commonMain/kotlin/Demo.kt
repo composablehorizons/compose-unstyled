@@ -21,12 +21,11 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,15 +39,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
@@ -63,8 +64,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -155,23 +154,21 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 @Composable
 private fun DemoSelection() {
   val navController = rememberNavController()
-  NavHost(navController = navController, startDestination = "home", enterTransition = {
-    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeIn(
-      tween(150),
-    )
-  }, exitTransition = {
-    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(300)) + fadeOut(
-      tween(150),
-    )
-  }, popEnterTransition = {
-    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeIn(
-      tween(150),
-    )
-  }, popExitTransition = {
-    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(300)) + fadeOut(
-      tween(150),
-    )
-  }) {
+  NavHost(
+    navController = navController,
+    startDestination = "home",
+    enterTransition = {
+      fadeIn(animationSpec = tween(durationMillis = 0))
+    },
+    exitTransition = {
+      fadeOut(animationSpec = tween(durationMillis = 0))
+    },
+    popEnterTransition = {
+      fadeIn(animationSpec = tween(durationMillis = 0))
+    },
+    popExitTransition = {
+      fadeOut(animationSpec = tween(durationMillis = 0))
+    }) {
     composable("home") {
       Box(
         modifier = Modifier.fillMaxSize(),
@@ -232,7 +229,11 @@ private fun DemoSelection() {
 
 @Composable
 private fun Title(text: String) {
-  Text(text, modifier = Modifier.padding(bottom = 8.dp), style = MaterialTheme.typography.titleMedium)
+  Text(
+    text,
+    modifier = Modifier.padding(bottom = 8.dp),
+    style = MaterialTheme.typography.titleMedium
+  )
 }
 
 @Composable
