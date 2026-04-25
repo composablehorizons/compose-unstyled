@@ -47,6 +47,9 @@ java {
 }
 
 kotlin {
+  compilerOptions {
+    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
@@ -121,12 +124,6 @@ kotlin {
           withWasmJs()
           withJs()
         }
-      }
-    }
-
-    all {
-      if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
-        languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
       }
     }
   }

@@ -48,6 +48,7 @@ java {
 
 kotlin {
   compilerOptions {
+    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
     freeCompilerArgs.add("-Xcontext-parameters")
   }
   androidTarget {
@@ -135,12 +136,6 @@ kotlin {
           withWasmJs()
           withJs()
         }
-      }
-    }
-
-    all {
-      if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
-        languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
       }
     }
   }

@@ -48,6 +48,9 @@ java {
 }
 
 kotlin {
+  compilerOptions {
+    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
@@ -128,12 +131,6 @@ kotlin {
       implementation(compose.desktop.uiTestJUnit4)
       implementation(compose.desktop.currentOs) {
         exclude(compose.material)
-      }
-    }
-
-    all {
-      if (name.endsWith("Test") || name.contains("InstrumentedTest")) {
-        languageSettings.optIn("androidx.compose.ui.test.ExperimentalTestApi")
       }
     }
   }
