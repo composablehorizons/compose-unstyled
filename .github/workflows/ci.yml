@@ -42,8 +42,16 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Compile JVM Targets
-        run: ./gradlew --console=plain compileKotlinJvm
+      - name: Compile Targets
+        run: |
+          ./gradlew --console=plain \
+            compileKotlinMetadata \
+            compileDebugKotlinAndroid \
+            compileReleaseKotlinAndroid \
+            compileKotlinJs \
+            compileKotlinWasmJs \
+            compileKotlinDesktop \
+            compileKotlinJvm
 
   desktop-tests:
     needs: compile-check
