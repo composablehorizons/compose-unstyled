@@ -19,16 +19,22 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   -->
-<resources>
-  <declare-styleable name="TextAppearance">
-    <attr name="android:textColor"/>
-    <attr name="android:textSize"/>
-    <attr name="android:textStyle"/>
-    <attr name="android:typeface"/>
-    <attr name="android:fontFamily"/>
-    <attr name="android:shadowColor"/>
-    <attr name="android:shadowDx"/>
-    <attr name="android:shadowDy"/>
-    <attr name="android:shadowRadius"/>
-  </declare-styleable>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="Modal.Base" parent="">
+    <item name="android:colorBackground">@android:color/transparent</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:navigationBarColor">@android:color/transparent</item>
+    <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+    <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+
+    <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+  </style>
+
+  <style name="Modal" parent="Modal.Base"/>
 </resources>

@@ -37,6 +37,7 @@ dependencyResolutionManagement {
 
 include(":testcase")
 include(":composeunstyled-buildmodifier")
+include(":composeunstyled-modal")
 include(":composeunstyled-primitives")
 include(":composeunstyled-theming")
 include(":composeunstyled-platformtheme")

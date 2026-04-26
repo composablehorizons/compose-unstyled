@@ -14,7 +14,7 @@
 - [x] Migrate demos to Material theme/text defaults, while keeping `PlatformThemeDemo` on platform theme (using theming `Text`)
 - [x] Remove experimental APIs
 - 
-- [ ] Create `composeunstyled-modal` module
+- [x] Create `composeunstyled-modal` module
 - [ ] Create `composeunstyled-dialog` module
 - [ ] Create `composeunstyled-bottom-sheet` module
 - [ ] Create `composeunstyled-modal-bottom-sheet` module

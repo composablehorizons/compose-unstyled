@@ -54,7 +54,7 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.composeunstyled.primitives.R
+import com.composeunstyled.modal.R
 import java.util.UUID
 
 /**
