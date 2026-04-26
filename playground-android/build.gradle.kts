@@ -53,6 +53,12 @@ android {
   }
 }
 
+androidComponents {
+  beforeVariants(selector().withBuildType("release")) { variantBuilder ->
+    variantBuilder.enable = false
+  }
+}
+
 kotlin {
   jvmToolchain(17)
 }
