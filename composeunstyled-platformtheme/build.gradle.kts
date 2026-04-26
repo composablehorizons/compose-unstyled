@@ -42,7 +42,6 @@ val projectUrl = "https://composeunstyled.com"
 
 java {
   toolchain {
-    vendor = JvmVendorSpec.JETBRAINS
     languageVersion = JavaLanguageVersion.of(17)
   }
 }

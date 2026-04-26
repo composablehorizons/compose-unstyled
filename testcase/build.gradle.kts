@@ -35,7 +35,6 @@ plugins {
 
 java {
   toolchain {
-    vendor = JvmVendorSpec.JETBRAINS
     languageVersion = JavaLanguageVersion.of(17)
   }
 }

@@ -35,14 +35,12 @@ plugins {
 
 java {
   toolchain {
-    vendor = JvmVendorSpec.JETBRAINS
     languageVersion = JavaLanguageVersion.of(17)
   }
 }
 
 kotlin {
   jvmToolchain {
-    vendor = JvmVendorSpec.JETBRAINS
     languageVersion = JavaLanguageVersion.of(17)
   }
   js {
