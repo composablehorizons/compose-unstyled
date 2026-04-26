@@ -28,8 +28,31 @@ jobs:
         run: ./gradlew --console=plain spotlessCheck
 
   compile-check:
-    name: Compile
-    runs-on: macos-latest
+    name: Compile (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: core
+            os: ubuntu-latest
+            tasks: >-
+              compileKotlinMetadata
+              compileDebugKotlinAndroid
+              compileReleaseKotlinAndroid
+              compileKotlinJs
+              compileKotlinWasmJs
+              compileKotlinDesktop
+              compileKotlinJvm
+          - target: ios-x64
+            os: macos-latest
+            tasks: compileKotlinIosX64
+          - target: ios-arm64
+            os: macos-latest
+            tasks: compileKotlinIosArm64
+          - target: ios-simulator-arm64
+            os: macos-latest
+            tasks: compileKotlinIosSimulatorArm64
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
       - uses: gradle/actions/wrapper-validation@v5
@@ -43,18 +66,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Compile Targets
-        run: |
-          ./gradlew --console=plain \
-            compileKotlinMetadata \
-            compileDebugKotlinAndroid \
-            compileReleaseKotlinAndroid \
-            compileKotlinJs \
-            compileKotlinWasmJs \
-            compileKotlinDesktop \
-            compileKotlinJvm \
-            compileKotlinIosX64 \
-            compileKotlinIosArm64 \
-            compileKotlinIosSimulatorArm64
+        run: ./gradlew --console=plain ${{ matrix.tasks }}
 
   desktop-tests:
     needs: compile-check
