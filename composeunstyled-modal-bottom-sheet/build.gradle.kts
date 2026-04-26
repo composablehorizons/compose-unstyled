@@ -79,7 +79,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(compose.foundation)
+        implementation(libs.compose.foundation)
         implementation(projects.composeunstyledBuildmodifier)
         implementation(projects.composeunstyledBottomSheet)
         implementation(projects.composeunstyledModal)
@@ -98,16 +98,16 @@ kotlin {
       implementation(project(":testcase"))
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-      implementation(compose.uiTest)
+      implementation(libs.compose.ui.test)
     }
 
     val jvmTest by getting
 
     jvmTest.dependencies {
-      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.compose.ui.test.junit4)
       implementation(compose.desktop.currentOs) {
-        exclude(compose.material)
-        exclude(compose.material)
+        exclude(group = "org.jetbrains.compose.material", module = "material")
+        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
 

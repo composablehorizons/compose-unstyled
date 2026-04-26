@@ -105,8 +105,8 @@ kotlin {
       languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
     }
     commonMain.dependencies {
-      implementation(compose.components.resources)
-      implementation(compose.material3)
+      implementation(libs.compose.components.resources)
+      implementation(libs.compose.material3)
       implementation(project(":composeunstyled-theming"))
       implementation(project(":composeunstyled-primitives"))
       implementation(project(":composeunstyled-platformtheme"))

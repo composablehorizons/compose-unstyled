@@ -3,6 +3,7 @@ unstyled = "1.49.9"
 
 kotlin = "2.2.20"
 compose = "1.10.3"
+compose-material3 = "1.11.0-alpha01"
 
 hot-reload = "1.0.0-rc01"
 vanniktech = "0.35.0"
@@ -28,6 +29,11 @@ androidx-activitycompose = { module = "androidx.activity:activity-compose", vers
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 composables-icons-lucide = { module = "com.composables:icons-lucide", version.ref = "lucide" }
 composables-ripple = { module = "com.composables:ripple-indication", version.ref = "ripple" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
+compose-ui-test-junit4 = { module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
 
 androidx-compose-test = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "junitAndroid" }
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "junitAndroid" }

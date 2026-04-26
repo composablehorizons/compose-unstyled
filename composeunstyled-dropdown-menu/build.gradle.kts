@@ -79,7 +79,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(compose.foundation)
+        implementation(libs.compose.foundation)
       }
     }
 
@@ -92,10 +92,10 @@ kotlin {
     val jvmTest by getting
 
     jvmTest.dependencies {
-      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.compose.ui.test.junit4)
       implementation(compose.desktop.currentOs) {
-        exclude(compose.material)
-        exclude(compose.material)
+        exclude(group = "org.jetbrains.compose.material", module = "material")
+        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
 

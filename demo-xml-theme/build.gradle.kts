@@ -83,7 +83,7 @@ kotlin {
       languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
     }
     commonMain.dependencies {
-      implementation(compose.components.resources)
+      implementation(libs.compose.components.resources)
       implementation(project(":composeunstyled-theming"))
       implementation(project(":composeunstyled-primitives"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
@@ -106,7 +106,7 @@ kotlin {
         // Material 3 XML themes
         implementation("com.google.android.material:material:1.12.0")
         // Material 3 compose used for the ripple effect
-        implementation(compose.material3)
+        implementation(libs.compose.material3)
       }
     }
   }

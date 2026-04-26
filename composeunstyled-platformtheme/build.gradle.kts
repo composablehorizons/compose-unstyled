@@ -111,9 +111,9 @@ kotlin {
 
   sourceSets {
     commonMain.dependencies {
-      implementation(compose.foundation)
+      implementation(libs.compose.foundation)
       api(projects.composeunstyledTheming)
-      implementation(compose.components.resources)
+      implementation(libs.compose.components.resources)
     }
     androidMain.dependencies {
       implementation(libs.composables.ripple)
@@ -123,15 +123,15 @@ kotlin {
       implementation(kotlin("test"))
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-      implementation(compose.uiTest)
+      implementation(libs.compose.ui.test)
     }
 
     val jvmTest by getting
 
     jvmTest.dependencies {
-      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.compose.ui.test.junit4)
       implementation(compose.desktop.currentOs) {
-        exclude(compose.material)
+        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
   }
