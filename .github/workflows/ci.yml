@@ -21,14 +21,8 @@ jobs:
           java-version: 17
           token: ${{ github.token }}
 
-      - uses: actions/cache@v5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Verify Code Style
         run: ./gradlew --console=plain spotlessCheck
@@ -43,14 +37,8 @@ jobs:
           java-version: 17
           token: ${{ github.token }}
 
-      - uses: actions/cache@v5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Desktop Tests
         run: ./gradlew --console=plain jvmTest
@@ -78,6 +66,8 @@ jobs:
           java-version: 17
           token: ${{ github.token }}
 
+      - uses: actions/checkout@v5
+
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
 
@@ -89,8 +79,6 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-${{ env.API_LEVEL }}-${{ env.ARCH }}-${{ env.DISK_SIZE }}
-
-      - uses: actions/checkout@v5
 
       - name: Create AVD
         if: steps.avd-cache.outputs.cache-hit != 'true'
