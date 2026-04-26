@@ -36,10 +36,11 @@ dependencyResolutionManagement {
 }
 
 include(":testcase")
-include(":composeunstyled-buildmodifier")
+include(":composeunstyled-build-modifier")
 include(":composeunstyled-modal")
 include(":composeunstyled-dialog")
 include(":composeunstyled-bottom-sheet")
+include(":composeunstyled-escape-handler")
 include(":composeunstyled-modal-bottom-sheet")
 include(":composeunstyled-dropdown-menu")
 include(":composeunstyled-tooltip")

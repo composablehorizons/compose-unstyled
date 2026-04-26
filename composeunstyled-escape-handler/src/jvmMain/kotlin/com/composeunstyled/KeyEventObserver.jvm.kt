@@ -21,24 +21,38 @@
  */
 package com.composeunstyled
 
-import android.os.Build
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.InternalComposeUiApi
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.input.key.KeyEventType
+import java.awt.KeyEventDispatcher
+import java.awt.KeyboardFocusManager
 
+@OptIn(InternalComposeUiApi::class)
 @Composable
-actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-    val view = LocalView.current
+internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
+  DisposableEffect(Unit) {
+    val dispatcher = KeyEventDispatcher { awtEvent ->
+      val composeKeyEvent = KeyEvent(
+        key = Key(
+          nativeKeyCode = awtEvent.keyCode,
+          nativeKeyLocation = awtEvent.keyLocation,
+        ),
+        type = when (awtEvent.id) {
+          java.awt.event.KeyEvent.KEY_PRESSED -> KeyEventType.KeyDown
+          java.awt.event.KeyEvent.KEY_RELEASED -> KeyEventType.KeyUp
+          else -> KeyEventType.Unknown
+        },
+      )
+      onEvent(composeKeyEvent)
+    }
 
-    DisposableEffect(view) {
-      val listener = View.OnUnhandledKeyEventListener { v, event ->
-        onEvent(KeyEvent(event))
-      }
-      view.addOnUnhandledKeyEventListener(listener)
-      onDispose { view.removeOnUnhandledKeyEventListener(listener) }
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher)
+
+    onDispose {
+      KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(dispatcher)
     }
   }
 }

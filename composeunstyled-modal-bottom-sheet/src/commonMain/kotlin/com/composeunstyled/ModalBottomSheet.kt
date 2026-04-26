@@ -55,11 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -301,23 +296,7 @@ fun ModalBottomSheet(
   }
 
   if (isSheetVisible || isScrimVisible) {
-    val onKeyEvent = if (properties.dismissOnBackPress) {
-      { event: KeyEvent ->
-        if (
-          event.type == KeyEventType.KeyDown &&
-          (event.key == Key.Back || event.key == Key.Escape)
-        ) {
-          onDismissRequest()
-          true
-        } else {
-          false
-        }
-      }
-    } else {
-      { false }
-    }
-
-    Modal(onKeyEvent = onKeyEvent) {
+    Modal {
       DisposableEffect(Unit) {
         state.modalIsAdded = true
         onDispose {
@@ -338,6 +317,11 @@ fun ModalBottomSheet(
               onDismissRequest()
             }
           }
+        }
+      }
+      if (properties.dismissOnBackPress) {
+        EscapeHandler {
+          onDismissRequest()
         }
       }
 

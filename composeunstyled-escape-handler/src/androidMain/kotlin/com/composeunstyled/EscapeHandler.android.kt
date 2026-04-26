@@ -21,10 +21,10 @@
  */
 package com.composeunstyled
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.key.KeyEvent
 
 @Composable
-actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
-  // NO-OP iOS does not support this
+actual fun EscapeHandler(callback: () -> Unit) {
+  BackHandler { callback() }
 }

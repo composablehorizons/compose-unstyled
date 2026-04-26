@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Split the primitives into modules. You can now pick and add only the primitives that you need instead of being forced to add the entire API in your codebase.
+- Introduced the following new modules: `composeunstyled-escape-handler`, `composeunstyled-build-modifier`
+
 ## [1.49.9] - 2025-04-24
 
 ### Fixed

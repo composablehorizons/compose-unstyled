@@ -54,9 +54,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -88,9 +85,6 @@ private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(dura
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 private val NoPadding = PaddingValues(0.dp)
 
-private val androidx.compose.ui.input.key.KeyEvent.isKeyDown: Boolean
-  get() = type == androidx.compose.ui.input.key.KeyEventType.KeyDown
-
 @Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
@@ -116,12 +110,9 @@ fun UnstyledTooltip(
     }
   }
 
-  KeyEventObserver { event ->
-    if (event.key == Key.Escape && event.isKeyDown) {
-      entered = false
-      focused = false
-    }
-    false // never consume
+  EscapeHandler {
+    entered = false
+    focused = false
   }
 
   SideEffect {

@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledBottomSheet"
+      baseName = "ComposeUnstyledEscapeHandler"
       isStatic = true
     }
   }
@@ -79,8 +79,15 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
-        implementation(projects.composeunstyledBuildModifier)
       }
+    }
+
+    androidMain.dependencies {
+      implementation(libs.androidx.activitycompose)
+    }
+
+    webMain.dependencies {
+      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
     }
 
     androidInstrumentedTest.dependencies {
@@ -102,7 +109,6 @@ kotlin {
 
     jvmTest.dependencies {
       implementation(libs.compose.ui.test.junit4)
-      implementation(libs.assertj.core)
       implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
         exclude(group = "org.jetbrains.compose.material", module = "material")
@@ -128,7 +134,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.bottomsheet"
+  namespace = "com.composeunstyled.escapehandler"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -147,13 +153,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-bottom-sheet",
+    artifactId = "composeunstyled-escape-handler",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Bottom Sheet")
-    description.set("Bottom sheet primitive for Compose Unstyled - foundational API for building sheet surfaces in Compose Multiplatform.")
+    name.set("Compose Unstyled Escape Handler")
+    description.set("Escape and Back key handling primitives for Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

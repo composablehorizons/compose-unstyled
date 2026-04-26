@@ -22,11 +22,16 @@
 package com.composeunstyled
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
+
+private val androidx.compose.ui.input.key.KeyEvent.isKeyDown: Boolean
+  get() = type == KeyEventType.KeyDown
 
 @Composable
-internal actual fun EscapeHandler(callback: () -> Unit) {
+actual fun EscapeHandler(callback: () -> Unit) {
   KeyEventObserver { event ->
     if (event.isKeyDown && (event.key == Key.Escape || event.key == Key.Back)) {
       callback()

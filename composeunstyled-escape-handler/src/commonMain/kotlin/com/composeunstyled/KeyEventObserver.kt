@@ -22,43 +22,13 @@
 package com.composeunstyled
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.InternalComposeUiApi
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import kotlinx.browser.document
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.KeyboardEvent
 
-@OptIn(InternalComposeUiApi::class)
+/**
+ * Global keyboard listener. Does not block any key presses.
+ *
+ * As opposed to Compose's onKeyEvent, this will be called no matter if we have focus or not.
+ *
+ */
 @Composable
-actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
-  DisposableEffect(Unit) {
-    val listener: (Event) -> Unit = { event ->
-      event as KeyboardEvent
-      val consumed = onEvent(
-        KeyEvent(
-          key = Key(event.keyCode.toLong()),
-          type = when (event.type) {
-            "keydown" -> KeyEventType.KeyDown
-            "keyup" -> KeyEventType.KeyUp
-            else -> KeyEventType.Unknown
-          },
-        ),
-      )
-      if (consumed) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-    }
-
-    document.addEventListener("keydown", listener)
-    document.addEventListener("keyup", listener)
-
-    onDispose {
-      document.removeEventListener("keydown", listener)
-      document.removeEventListener("keyup", listener)
-    }
-  }
-}
+internal expect fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean)
