@@ -39,8 +39,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.RelativeAlignment
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledText
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.platformtheme.buildPlatformTheme
@@ -89,7 +89,7 @@ private fun TooltipCrashRepro() {
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
       ) {
-        UnstyledText(
+        Text(
           "Long press me",
           style = TextStyle(color = Color.White, fontSize = 16.sp),
         )

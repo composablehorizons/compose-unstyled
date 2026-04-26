@@ -33,7 +33,6 @@ import org.jetbrains.skiko.wasm.onWasmReady
 import org.w3c.dom.HTMLStyleElement
 import org.w3c.dom.url.URLSearchParams
 
-@OptIn(ExperimentalWasmJsInterop::class)
 fun main() {
   val iFrameParams = URLSearchParams(document.location?.search)
   val id = iFrameParams.get("id")

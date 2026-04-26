@@ -34,7 +34,6 @@ import com.composables.composeunstyled_platformtheme.generated.resources.NotoSan
 import com.composables.composeunstyled_platformtheme.generated.resources.NotoSansSC
 import com.composables.composeunstyled_platformtheme.generated.resources.NotoSansTC
 import com.composables.composeunstyled_platformtheme.generated.resources.Res
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.preloadFont
 
@@ -49,7 +48,6 @@ internal actual val PlatformFonts.SansSerif: FontFamily
     }
   }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal actual fun loadPlatformFonts(webFontOptions: WebFontOptions): PlatformFontsState {
   val state = remember { PlatformFontsState(fontsReady = false) }

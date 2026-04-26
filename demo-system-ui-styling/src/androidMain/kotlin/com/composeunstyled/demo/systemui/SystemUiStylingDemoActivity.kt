@@ -43,6 +43,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -50,11 +51,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowInsetsControllerCompat
 import com.composables.compose.ripple.rememberRippleIndication
 import com.composeunstyled.LocalModalWindow
-import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.UnstyledDialogPanel
@@ -77,13 +79,13 @@ class SystemUiStylingDemoActivity : ComponentActivity() {
     )
 
     setContent {
-      ModalSystemUiStylingDemo(window = window)
+      ModalSystemUiStylingDemo()
     }
   }
 }
 
 @Composable
-private fun ModalSystemUiStylingDemo(window: android.view.Window) {
+private fun ModalSystemUiStylingDemo() {
   val dialogState = rememberDialogState(initiallyVisible = false)
 
   Box(
@@ -100,7 +102,7 @@ private fun ModalSystemUiStylingDemo(window: android.view.Window) {
       shape = RoundedCornerShape(6.dp),
       indication = rememberRippleIndication(),
     ) {
-      Text("Show dialog")
+      BasicText("Show dialog")
     }
     UnstyledDialog(state = dialogState) {
       val window = LocalModalWindow.current
@@ -130,11 +132,11 @@ private fun ModalSystemUiStylingDemo(window: android.view.Window) {
       ) {
         Column {
           Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            Text("Update Available")
+            BasicText("Update Available")
             Spacer(Modifier.height(8.dp))
-            Text(
+            BasicText(
               "A new version of the app is available. Please update to the latest version.",
-              color = Color(0xFF1A1A1A),
+              style = TextStyle(color = Color(0xFF1A1A1A)),
             )
           }
           Spacer(Modifier.height(24.dp))
@@ -147,7 +149,7 @@ private fun ModalSystemUiStylingDemo(window: android.view.Window) {
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             indication = rememberRippleIndication(),
           ) {
-            Text("Update", color = Color(0xFF0D99FF))
+            BasicText("Update", style = TextStyle(color = Color(0xFF0D99FF)))
           }
         }
       }

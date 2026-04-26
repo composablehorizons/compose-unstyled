@@ -32,7 +32,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun Modal(
   onKeyEvent: (KeyEvent) -> Boolean,

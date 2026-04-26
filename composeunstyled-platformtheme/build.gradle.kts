@@ -50,6 +50,7 @@ java {
 kotlin {
   compilerOptions {
     optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
+    optIn.add("org.jetbrains.compose.resources.ExperimentalResourceApi")
   }
   androidTarget {
     publishLibraryVariants("release", "debug")

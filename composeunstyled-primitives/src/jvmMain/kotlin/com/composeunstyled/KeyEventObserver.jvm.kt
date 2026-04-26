@@ -35,9 +35,11 @@ import java.awt.KeyboardFocusManager
 internal actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
   DisposableEffect(Unit) {
     val dispatcher = KeyEventDispatcher { awtEvent ->
-      // we are getting
       val composeKeyEvent = KeyEvent(
-        key = Key(awtEvent.keyCode, nativeKeyLocation = awtEvent.keyLocation),
+        key = Key(
+          nativeKeyCode = awtEvent.keyCode,
+          nativeKeyLocation = awtEvent.keyLocation
+        ),
         type = when (awtEvent.id) {
           java.awt.event.KeyEvent.KEY_PRESSED -> KeyEventType.KeyDown
           java.awt.event.KeyEvent.KEY_RELEASED -> KeyEventType.KeyUp

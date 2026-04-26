@@ -12,8 +12,8 @@
 - [x] Remove primitives/theming coupling points (primitives must not require theming module)
 - [x] Update demos/playgrounds to use only surviving modules and `Unstyled*` primitives imports
 - [x] Migrate demos to Material theme/text defaults, while keeping `PlatformThemeDemo` on platform theme (using theming `Text`)
-
-- [ ] Remove experimental APIs
+- [x] Remove experimental APIs
+- 
 - [ ] Create `composeunstyled-modal` module
 - [ ] Create `composeunstyled-dialog` module
 - [ ] Create `composeunstyled-bottom-sheet` module

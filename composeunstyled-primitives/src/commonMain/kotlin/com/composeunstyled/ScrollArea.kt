@@ -95,9 +95,6 @@ value class OverscrollSides private constructor(private val id: Int) {
   }
 }
 
-@Composable
-internal expect fun NoOverscroll(content: @Composable () -> Unit)
-
 class ScrollAreaScope internal constructor(
   private val boxScope: BoxScope,
   internal val scrollAreaState: ScrollAreaState,
