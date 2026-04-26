@@ -42,6 +42,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -58,11 +59,10 @@ import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
-import com.composeunstyled.rememberModalBottomSheetState
-import androidx.compose.material3.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
+import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.delay
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->

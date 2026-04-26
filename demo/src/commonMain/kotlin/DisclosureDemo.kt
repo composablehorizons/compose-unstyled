@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -49,10 +50,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Separator
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
-import androidx.compose.material3.Text
+import com.composeunstyled.Separator
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledDisclosureHeading
 import com.composeunstyled.UnstyledDisclosurePanel

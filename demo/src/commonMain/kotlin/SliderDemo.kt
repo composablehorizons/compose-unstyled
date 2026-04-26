@@ -56,10 +56,10 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Volume1
 import com.composables.icons.lucide.Volume2
+import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.UnstyledThumb
-import com.composeunstyled.UnstyledButton
 import com.composeunstyled.rememberSliderState
 
 @Composable

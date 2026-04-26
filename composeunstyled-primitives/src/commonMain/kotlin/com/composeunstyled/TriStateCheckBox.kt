@@ -89,6 +89,6 @@ fun UnstyledTriStateCheckbox(
     },
     contentAlignment = Alignment.Center,
   ) {
-      checkIcon(value)
+    checkIcon(value)
   }
 }

@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,9 +86,9 @@ fun UnstyledProgressIndicator(
       .clip(shape)
       .background(backgroundColor),
   ) {
-      with(scope) {
-        content()
-      }
+    with(scope) {
+      content()
+    }
   }
 }
 
@@ -129,7 +128,7 @@ fun UnstyledProgressIndicator(
       .clip(shape)
       .background(backgroundColor),
   ) {
-      content()
+    content()
   }
 }
 

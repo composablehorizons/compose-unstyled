@@ -46,6 +46,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,11 +61,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.HorizontalScrollbar
 import com.composeunstyled.ScrollArea
-import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.ThumbVisibility
+import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.VerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState
-import androidx.compose.material3.Text
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,10 +51,9 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
-import com.composeunstyled.UnstyledIcon
-import androidx.compose.material3.Text
-import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledCheckbox
+import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledTriStateCheckbox
 
 @Composable
 fun TriStateCheckboxDemo() {

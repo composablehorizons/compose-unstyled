@@ -22,11 +22,11 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key

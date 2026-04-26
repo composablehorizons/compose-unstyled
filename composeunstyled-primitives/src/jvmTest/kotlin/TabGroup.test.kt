@@ -24,7 +24,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.text.BasicText
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -189,7 +188,10 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button").testFocusTag("button")) {
+      UnstyledButton(
+        onClick = {},
+        modifier = Modifier.testFocusTag("button").testFocusTag("button"),
+      ) {
         BasicText("Outside")
       }
 

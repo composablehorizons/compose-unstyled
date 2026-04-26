@@ -181,7 +181,7 @@ fun UnstyledDropdownMenuPanel(
               menuFocusRequester.requestFocus()
             }
           }
-            content()
+          content()
         }
       }
     }

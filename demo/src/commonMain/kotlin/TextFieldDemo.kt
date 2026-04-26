@@ -112,9 +112,9 @@ fun TextFieldDemo() {
                 style = MaterialTheme.typography.bodyMedium.merge(
                   TextStyle(
                     color = Color.Black.copy(
-                      0.6f
-                    )
-                  )
+                      0.6f,
+                    ),
+                  ),
                 ),
               )
             },
@@ -126,11 +126,11 @@ fun TextFieldDemo() {
           modifier = Modifier.fillMaxWidth(),
           singleLine = true,
           visualTransformation =
-            if (showPassword) {
-              VisualTransformation.None
-            } else {
-              PasswordVisualTransformation()
-            },
+          if (showPassword) {
+            VisualTransformation.None
+          } else {
+            PasswordVisualTransformation()
+          },
         ) {
           Text(
             "Password",
@@ -150,9 +150,9 @@ fun TextFieldDemo() {
                 style = MaterialTheme.typography.bodyMedium.merge(
                   TextStyle(
                     color = Color.Black.copy(
-                      0.6f
-                    )
-                  )
+                      0.6f,
+                    ),
+                  ),
                 ),
               )
             },
@@ -183,7 +183,7 @@ fun TextFieldDemo() {
         ) {
           Text(
             text = "Submit",
-            color = Color.White
+            color = Color.White,
           )
         }
       }

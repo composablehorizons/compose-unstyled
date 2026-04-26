@@ -53,9 +53,9 @@ import com.composeunstyled.DragIndication
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
-import com.composeunstyled.rememberBottomSheetState
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
+import com.composeunstyled.rememberBottomSheetState
 
 private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
   containerHeight * 0.6f

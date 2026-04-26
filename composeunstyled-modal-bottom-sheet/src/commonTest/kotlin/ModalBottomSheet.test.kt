@@ -37,13 +37,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.ModalBottomSheet
-import com.composeunstyled.ModalBottomSheetState
-import com.composeunstyled.ModalSheetProperties
-import com.composeunstyled.Scrim
-import com.composeunstyled.Sheet
-import com.composeunstyled.SheetDetent
-import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test

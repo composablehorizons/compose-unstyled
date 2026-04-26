@@ -168,7 +168,8 @@ private fun DemoSelection() {
     },
     popExitTransition = {
       fadeOut(animationSpec = tween(durationMillis = 0))
-    }) {
+    },
+  ) {
     composable("home") {
       Box(
         modifier = Modifier.fillMaxSize(),
@@ -232,7 +233,7 @@ private fun Title(text: String) {
   Text(
     text,
     modifier = Modifier.padding(bottom = 8.dp),
-    style = MaterialTheme.typography.titleMedium
+    style = MaterialTheme.typography.titleMedium,
   )
 }
 

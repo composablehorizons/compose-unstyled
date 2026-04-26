@@ -38,7 +38,7 @@ actual fun KeyEventObserver(onEvent: (KeyEvent) -> Boolean) {
       val composeKeyEvent = KeyEvent(
         key = Key(
           nativeKeyCode = awtEvent.keyCode,
-          nativeKeyLocation = awtEvent.keyLocation
+          nativeKeyLocation = awtEvent.keyLocation,
         ),
         type = when (awtEvent.id) {
           java.awt.event.KeyEvent.KEY_PRESSED -> KeyEventType.KeyDown

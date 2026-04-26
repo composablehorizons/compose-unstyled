@@ -21,10 +21,9 @@
  */
 package com.composeunstyled
 
-import androidx.compose.foundation.text.BasicText
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest

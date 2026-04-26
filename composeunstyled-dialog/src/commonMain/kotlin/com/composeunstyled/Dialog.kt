@@ -210,7 +210,7 @@ fun UnstyledDialogPanel(
         .pointerInput(Unit) { detectTapGestures { } }
         .padding(contentPadding),
     ) {
-        content()
+      content()
     }
   }
 }

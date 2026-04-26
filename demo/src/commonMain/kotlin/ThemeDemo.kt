@@ -69,12 +69,12 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pause
 import com.composables.icons.lucide.SkipBack
 import com.composables.icons.lucide.SkipForward
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.ProvideContentColor
-import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.Text
-import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledSlider
+import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.outline
 import com.composeunstyled.rememberSliderState
 import com.composeunstyled.theme.Theme

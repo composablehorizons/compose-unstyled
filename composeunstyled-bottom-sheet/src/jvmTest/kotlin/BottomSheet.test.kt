@@ -23,8 +23,6 @@
 
 package com.composeunstyled
 
-import androidx.compose.foundation.text.BasicText
-
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
@@ -37,6 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,11 +62,6 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.BottomSheet
-import com.composeunstyled.BottomSheetState
-import com.composeunstyled.DragIndication
-import com.composeunstyled.SheetDetent
-import com.composeunstyled.rememberBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat

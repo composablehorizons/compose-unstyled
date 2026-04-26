@@ -225,7 +225,7 @@ fun UnstyledTooltipPanel(
         .background(backgroundColor)
         .padding(contentPadding),
     ) {
-        content()
+      content()
     }
   }
 }

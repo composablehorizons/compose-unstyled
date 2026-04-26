@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
-import com.composeunstyled.Text as ThemedText
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.outline
@@ -78,6 +77,7 @@ import com.composeunstyled.platformtheme.text8
 import com.composeunstyled.platformtheme.text9
 import com.composeunstyled.platformtheme.textStyles
 import com.composeunstyled.theme.Theme
+import com.composeunstyled.Text as ThemedText
 
 private val PlatformTheme = buildPlatformTheme(
   webFontOptions = WebFontOptions(
@@ -120,7 +120,10 @@ fun PlatformThemeDemo() {
 fun TypographyDemo() {
   ThemedText("Typography", style = Theme[textStyles][text9])
 
-  ThemedText("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][heading9])
+  ThemedText(
+    "The quick brown fox jumps over the lazy dog 😊🦊😘",
+    style = Theme[textStyles][heading9],
+  )
   ThemedText("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][text9])
 
   ThemedText("Multilanguage", style = Theme[textStyles][text9])
