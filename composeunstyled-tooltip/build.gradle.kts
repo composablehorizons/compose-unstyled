@@ -71,7 +71,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPrimitives"
+      baseName = "ComposeUnstyledTooltip"
       isStatic = true
     }
   }
@@ -80,13 +80,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(compose.foundation)
-        api(projects.composeunstyledBuildmodifier)
-        api(projects.composeunstyledModal)
-        api(projects.composeunstyledDialog)
-        api(projects.composeunstyledBottomSheet)
-        api(projects.composeunstyledModalBottomSheet)
-        api(projects.composeunstyledDropdownMenu)
-        api(projects.composeunstyledTooltip)
+        implementation(projects.composeunstyledBuildmodifier)
       }
     }
 
@@ -122,7 +116,6 @@ kotlin {
 
     jvmTest.dependencies {
       implementation(compose.desktop.uiTestJUnit4)
-      implementation(libs.assertj.core)
       implementation(compose.desktop.currentOs) {
         exclude(compose.material)
         exclude(compose.material)
@@ -148,7 +141,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.primitives"
+  namespace = "com.composeunstyled.tooltip"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -167,13 +160,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-primitives",
+    artifactId = "composeunstyled-tooltip",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Primitives")
-    description.set("Primitive components for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    name.set("Compose Unstyled Tooltip")
+    description.set("Tooltip primitive for Compose Unstyled - foundational API for building accessible hover and long-press hints in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

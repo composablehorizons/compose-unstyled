@@ -71,7 +71,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPrimitives"
+      baseName = "ComposeUnstyledBottomSheet"
       isStatic = true
     }
   }
@@ -80,27 +80,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(compose.foundation)
-        api(projects.composeunstyledBuildmodifier)
-        api(projects.composeunstyledModal)
-        api(projects.composeunstyledDialog)
-        api(projects.composeunstyledBottomSheet)
-        api(projects.composeunstyledModalBottomSheet)
-        api(projects.composeunstyledDropdownMenu)
-        api(projects.composeunstyledTooltip)
+        implementation(projects.composeunstyledBuildmodifier)
       }
-    }
-
-    androidMain.dependencies {
-      implementation(libs.androidx.activitycompose)
-      implementation(libs.androidx.window)
-    }
-
-    jvmMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-    }
-
-    webMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
     }
 
     androidInstrumentedTest.dependencies {
@@ -148,7 +129,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.primitives"
+  namespace = "com.composeunstyled.bottomsheet"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -167,13 +148,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-primitives",
+    artifactId = "composeunstyled-bottom-sheet",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Primitives")
-    description.set("Primitive components for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    name.set("Compose Unstyled Bottom Sheet")
+    description.set("Bottom sheet primitive for Compose Unstyled - foundational API for building sheet surfaces in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

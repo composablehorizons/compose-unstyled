@@ -71,7 +71,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPrimitives"
+      baseName = "ComposeUnstyledDialog"
       isStatic = true
     }
   }
@@ -80,34 +80,13 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(compose.foundation)
-        api(projects.composeunstyledBuildmodifier)
-        api(projects.composeunstyledModal)
-        api(projects.composeunstyledDialog)
-        api(projects.composeunstyledBottomSheet)
-        api(projects.composeunstyledModalBottomSheet)
-        api(projects.composeunstyledDropdownMenu)
-        api(projects.composeunstyledTooltip)
+        implementation(project(":composeunstyled-modal"))
       }
     }
 
     androidMain.dependencies {
       implementation(libs.androidx.activitycompose)
       implementation(libs.androidx.window)
-    }
-
-    jvmMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-    }
-
-    webMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
-      implementation(project(":testcase"))
     }
 
     commonTest.dependencies {
@@ -122,7 +101,6 @@ kotlin {
 
     jvmTest.dependencies {
       implementation(compose.desktop.uiTestJUnit4)
-      implementation(libs.assertj.core)
       implementation(compose.desktop.currentOs) {
         exclude(compose.material)
         exclude(compose.material)
@@ -148,7 +126,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.primitives"
+  namespace = "com.composeunstyled.dialog"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -167,13 +145,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-primitives",
+    artifactId = "composeunstyled-dialog",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Primitives")
-    description.set("Primitive components for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    name.set("Compose Unstyled Dialog")
+    description.set("Dialog primitive for Compose Unstyled - foundational API for building dialogs and alert surfaces in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

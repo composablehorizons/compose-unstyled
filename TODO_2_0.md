@@ -15,10 +15,10 @@
 - [x] Remove experimental APIs
 - 
 - [x] Create `composeunstyled-modal` module
-- [ ] Create `composeunstyled-dialog` module
-- [ ] Create `composeunstyled-bottom-sheet` module
-- [ ] Create `composeunstyled-modal-bottom-sheet` module
-- [ ] Create `composeunstyled-dropdown-menu` module
-- [ ] Create `composeunstyled-tooltip` module
+- [x] Create `composeunstyled-dialog` module
+- [x] Create `composeunstyled-bottom-sheet` module
+- [x] Create `composeunstyled-modal-bottom-sheet` module
+- [x] Create `composeunstyled-dropdown-menu` module
+- [x] Create `composeunstyled-tooltip` module
 - [ ] Write migration guide + changelog section for 1.x -> 2.0
 - [ ] Final verification: `./gradlew test` + demo builds pass after all removals
