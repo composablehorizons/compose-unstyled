@@ -25,6 +25,23 @@ jobs:
       - name: Desktop Tests
         run: ./gradlew --console=plain jvmTest
 
+  spotless-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Spotless Check
+        run: ./gradlew --console=plain spotlessCheck
+
   discover-android-modules:
     runs-on: ubuntu-latest
     outputs:
