@@ -80,19 +80,6 @@ fun ScrollArea(
   }
 }
 
-@JvmInline
-@Immutable
-value class OverscrollSides private constructor(private val id: Int) {
-  companion object {
-    val Top = OverscrollSides(0)
-    val Bottom = OverscrollSides(1)
-    val Left = OverscrollSides(2)
-    val Right = OverscrollSides(3)
-    val Vertical = OverscrollSides(4)
-    val Horizontal = OverscrollSides(5)
-  }
-}
-
 class ScrollAreaScope internal constructor(
   private val boxScope: BoxScope,
   internal val scrollAreaState: ScrollAreaState,
