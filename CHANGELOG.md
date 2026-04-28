@@ -8,8 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Split the primitives into modules. You can now pick and add only the primitives that you need instead of being forced to add the entire API in your codebase.
-- Introduced the following new modules: `composeunstyled-escape-handler`, `composeunstyled-build-modifier`
+
+- Split the primitives into modules. You can now pick and choose only the APIs that you want to use
+  instead of being forced to add the entire API in your codebase.
+- Introduced the following new modules: `composeunstyled-escape-handler`,
+  `composeunstyled-build-modifier`
+
+### Removed
+
+- All deprecated APIs are now removed. If you have breaking changes moving to this version,
+  downgrade to the latest 1.x.x version and use `ReplaceWith()` to smoothly migrate to the latest
+  APIs.
+- Removed any `com.composables.core` reference.
+
+### Changed
+
+- Decoupled theming from primitives. Primitives used to be themable using `LocalContentColor` and
+  `LocalTextStyle`. This was problematic as you could not easily style your primitives using a
+  different theming API (such as Material Compose). Because of this, any kind of theming is removed,
+  and the users are responsible for choosing the theming API of their choice.
 
 ## [1.49.9] - 2025-04-24
 
@@ -22,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add new `ScrollArea` component in the `com.composeunstyled` package. Old packages will be removed in 2.0.
+- Add new `ScrollArea` component in the `com.composeunstyled` package. Old packages will be removed
+  in 2.0.
 
 ## [1.49.7] - 2025-04-21
 
