@@ -9,12 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Modularization! You can now pick and choose only the APIs that you want to use
+- Modules! You can now pick and choose only the APIs that you want to use
   instead of being forced to add the entire API in your codebase. To try this out, modals such as
   dialogs, sheets and tooltips are available. More primitives will be modularized in the future if
   there is demand.
-- Introduced the following new modules: `composeunstyled-escape-handler`,
-  `composeunstyled-build-modifier`
+- Added the following new modules:`composeunstyled-bottom-sheet`,`composeunstyled-build-modifier`,
+  `composeunstyled-dialog`,`composeunstyled-dropdown-menu`,`composeunstyled-escape-handler`,
+  `composeunstyled-modal`,`composeunstyled-modal-bottom-sheet`, `composeunstyled-scroll-area`,
+  `composeunstyled-tooltip`
+- Compose Unstyled now uses Compose Multiplatform `1.10.3`.
+
+> [!WARNING]
+> Modals on non-Android targets (Dialog and Modal Bottom Sheet) now have a built-in animation that
+> is part of Compose Multiplatform 1.10.3. The option to remove this animation is added in 1.11.x
+> but it is not yet stable. Because of this, the animation will be removed in a future version of
+> Unstyled. If this is a blocker for you, you can continue using the pre 2.0 version of the library
+> until then.
 
 ### Removed
 
@@ -22,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   downgrade to the latest 1.x.x version and use `ReplaceWith()` to smoothly migrate to the latest
   APIs.
 - Removed any `com.composables.core` reference.
+- `ComposeUnstyledFlags` is removed.
 
 ### Changed
 
@@ -29,6 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `LocalTextStyle`. This was problematic as you could not easily style your primitives using a
   different theming API (such as Material Compose). Because of this, any kind of theming is removed,
   and the users are responsible for choosing the theming API of their choice.
+
+### Fixed
+
+- Scrollbars now support dynamic sizing (https://github.com/composablehorizons/compose-unstyled/issues/78)
+- BottomSheet's content are now constraint to the content visible height. No need to hardcode a size if your content is scrollable (https://github.com/composablehorizons/compose-unstyled/issues/134)
+- ModalBottomSheet's state no longer relies on a Sheet to be present.
 
 ## [1.49.9] - 2025-04-24
 
