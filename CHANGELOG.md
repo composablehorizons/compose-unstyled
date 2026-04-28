@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Split the primitives into modules. You can now pick and choose only the APIs that you want to use
-  instead of being forced to add the entire API in your codebase.
+- Modularization! You can now pick and choose only the APIs that you want to use
+  instead of being forced to add the entire API in your codebase. To try this out, modals such as
+  dialogs, sheets and tooltips are available. More primitives will be modularized in the future if
+  there is demand.
 - Introduced the following new modules: `composeunstyled-escape-handler`,
   `composeunstyled-build-modifier`
 
