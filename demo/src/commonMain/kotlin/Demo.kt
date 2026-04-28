@@ -89,7 +89,7 @@ fun Demo(demoId: String? = null) {
 
 private data class DemoItem(val name: String, val id: String, val demo: @Composable () -> Unit)
 
-private val availableComponents = listOf(
+private val availablePrimitives = listOf(
   DemoItem("Bottom Sheet", "bottom-sheet", { BottomSheetDemo() }),
   DemoItem("Bottom Sheet (Modal)", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
   DemoItem("Button", "button", { ButtonDemo() }),
@@ -135,7 +135,7 @@ private val themingDemos = listOf(
   DemoItem("Platform Theme", "platform-theme") { PlatformThemeDemo() },
 )
 private val availableDemos: List<DemoItem> =
-  availableComponents + availableModifiers + themingDemos
+  availablePrimitives + availableModifiers + themingDemos
 
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
@@ -191,7 +191,7 @@ private fun DemoSelection() {
           }
           Spacer(Modifier.height(8.dp))
           Title("Components")
-          availableComponents.forEach { demo ->
+          availablePrimitives.forEach { demo ->
             OutlinedButton(
               onClick = { navController.navigate(demo.id) },
               modifier = Modifier.fillMaxWidth(),
