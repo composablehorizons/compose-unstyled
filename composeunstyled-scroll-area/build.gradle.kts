@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPrimitives"
+      baseName = "ComposeUnstyledScrollArea"
       isStatic = true
     }
   }
@@ -79,35 +79,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
-        api(projects.composeunstyledBuildModifier)
-        api(projects.composeunstyledModal)
-        api(projects.composeunstyledDialog)
-        api(projects.composeunstyledBottomSheet)
-        api(projects.composeunstyledModalBottomSheet)
-        api(projects.composeunstyledDropdownMenu)
-        api(projects.composeunstyledTooltip)
-        api(projects.composeunstyledScrollArea)
+        implementation(projects.composeunstyledBuildModifier)
       }
-    }
-
-    androidMain.dependencies {
-      implementation(libs.androidx.activitycompose)
-      implementation(libs.androidx.window)
-    }
-
-    jvmMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-    }
-
-    webMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
-      implementation(project(":testcase"))
     }
 
     commonTest.dependencies {
@@ -122,7 +95,6 @@ kotlin {
 
     jvmTest.dependencies {
       implementation(libs.compose.ui.test.junit4)
-      implementation(libs.assertj.core)
       implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
         exclude(group = "org.jetbrains.compose.material", module = "material")
@@ -148,7 +120,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.primitives"
+  namespace = "com.composeunstyled.scrollarea"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -167,13 +139,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-primitives",
+    artifactId = "composeunstyled-scroll-area",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Primitives")
-    description.set("Primitive components for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    name.set("Compose Unstyled Scroll Area")
+    description.set("Scroll area and scrollbar primitives for Compose Unstyled - foundational APIs for custom scroll containers in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {
