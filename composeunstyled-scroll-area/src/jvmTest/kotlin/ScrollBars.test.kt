@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
@@ -389,6 +390,31 @@ class ScrollBarsTest {
     advanceTimeBy(2.seconds)
     waitForIdle()
     onNodeWithTag("thumb").assertDoesNotExist()
+  }
+
+  @Test
+  fun `VerticalScrollbar respects explicit thumb height modifier`() = runComposeUiTest {
+    setContent {
+      val scrollState = rememberScrollState()
+      ScrollArea(state = rememberScrollAreaState(scrollState)) {
+        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
+          repeat(36_000) { index ->
+            BasicText("Item $index")
+          }
+        }
+        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+          UnstyledThumb(
+            modifier = Modifier
+              .testTag("thumb")
+              .height(48.dp),
+            thumbVisibility = ThumbVisibility.AlwaysVisible,
+          )
+        }
+      }
+    }
+
+    onNodeWithTag("thumb").assertIsDisplayed()
+    onNodeWithTag("thumb").assertHeightIsEqualTo(48.dp)
   }
 }
 
