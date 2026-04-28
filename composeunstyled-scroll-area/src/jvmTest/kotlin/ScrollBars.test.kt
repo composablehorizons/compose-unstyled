@@ -334,6 +334,62 @@ class ScrollBarsTest {
     advanceTimeBy(5.seconds)
     onNodeWithTag("thumb").assertDoesNotExist()
   }
+
+  @Test
+  fun `HideWhileIdle keeps thumb visible when pointer leaves track during thumb drag`() = runComposeUiTest {
+    setContent {
+      val scrollState = rememberScrollState()
+      ScrollArea(state = rememberScrollAreaState(scrollState)) {
+        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
+          repeat(100) { index ->
+            BasicText("Item $index")
+          }
+        }
+        VerticalScrollbar(modifier = Modifier.testTag("track")) {
+          UnstyledThumb(
+            modifier = Modifier.testTag("thumb"),
+            thumbVisibility = ThumbVisibility.HideWhileIdle(
+              enter = AppearInstantly,
+              exit = DisappearInstantly,
+              hideDelay = 2.seconds,
+            ),
+          )
+        }
+      }
+    }
+
+    onNodeWithTag("thumb").assertDoesNotExist()
+
+    // Make thumb visible first.
+    onNodeWithTag("list").performTouchInput {
+      swipeUp(durationMillis = 1_000)
+    }
+    onNodeWithTag("thumb").assertIsDisplayed()
+
+    // Start thumb drag and keep pointer down.
+    onNodeWithTag("thumb").performTouchInput {
+      down(Offset(5f, 5f))
+      moveTo(Offset(350f, 350f))
+    }
+    onNodeWithTag("thumb").assertIsDisplayed()
+
+    // Pointer has moved outside track bounds while drag is still active.
+
+    // Even after hideDelay, thumb must remain visible while drag is active.
+    advanceTimeBy(3.seconds)
+    waitForIdle()
+    onNodeWithTag("thumb").assertIsDisplayed()
+
+    // Release thumb drag.
+    onNodeWithTag("thumb").performTouchInput { up() }
+    waitForIdle()
+    onNodeWithTag("thumb").assertIsDisplayed()
+
+    // Now it may hide after idle delay.
+    advanceTimeBy(2.seconds)
+    waitForIdle()
+    onNodeWithTag("thumb").assertDoesNotExist()
+  }
 }
 
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
