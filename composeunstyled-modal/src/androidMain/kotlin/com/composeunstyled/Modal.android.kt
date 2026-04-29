@@ -69,9 +69,12 @@ import java.util.UUID
  */
 @Composable
 actual fun Modal(
+  state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable () -> Unit,
 ) {
+  if (state.visible.not() && state.visibilityState.isIdle) return
+
   val parentView = LocalView.current
   val context = LocalContext.current
   val layoutDirection = LocalLayoutDirection.current
@@ -96,6 +99,7 @@ actual fun Modal(
               .semantics { dialog() },
           ) {
             CompositionLocalProvider(
+              LocalModalState provides state,
               LocalModalWindow provides localWindow,
               LocalLayoutDirection provides layoutDirection,
             ) {

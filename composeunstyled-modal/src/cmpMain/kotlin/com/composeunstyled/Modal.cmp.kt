@@ -24,6 +24,7 @@ package com.composeunstyled
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
@@ -33,21 +34,28 @@ import androidx.compose.ui.window.DialogProperties
 
 @Composable
 actual fun Modal(
+  state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable () -> Unit,
-) = Dialog(
-  onDismissRequest = {},
-  properties = DialogProperties(
-    dismissOnBackPress = false,
-    dismissOnClickOutside = false,
-    usePlatformInsets = false,
-    useSoftwareKeyboardInset = false,
-    usePlatformDefaultWidth = false,
-    scrimColor = Color.Transparent,
-  ),
-  content = {
-    Box(Modifier.fillMaxSize().onKeyEvent(onKeyEvent)) {
-      content()
-    }
-  },
-)
+) {
+  if (state.visible.not() && state.visibilityState.isIdle) return
+
+  Dialog(
+    onDismissRequest = {},
+    properties = DialogProperties(
+      dismissOnBackPress = false,
+      dismissOnClickOutside = false,
+      usePlatformInsets = false,
+      useSoftwareKeyboardInset = false,
+      usePlatformDefaultWidth = false,
+      scrimColor = Color.Transparent,
+    ),
+    content = {
+      CompositionLocalProvider(LocalModalState provides state) {
+        Box(Modifier.fillMaxSize().onKeyEvent(onKeyEvent)) {
+          content()
+        }
+      }
+    },
+  )
+}

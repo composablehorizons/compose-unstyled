@@ -130,6 +130,7 @@ fun UnstyledDialog(
     val addModal = state.visible || isAnimatingScrim || isAnimatingPanel
 
     if (addModal) {
+      val modalState = rememberModalState(initiallyVisible = true)
       val onKeyEvent = if (properties.dismissOnBackPress) {
         { event: KeyEvent ->
           if (
@@ -146,7 +147,10 @@ fun UnstyledDialog(
       } else {
         { false }
       }
-      Modal(onKeyEvent = onKeyEvent) {
+      Modal(
+        state = modalState,
+        onKeyEvent = onKeyEvent,
+      ) {
         LaunchedEffect(Unit) {
           state.panelVisibilityState.targetState = true
           state.scrimVisibilityState.targetState = true

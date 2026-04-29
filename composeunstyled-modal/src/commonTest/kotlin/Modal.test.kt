@@ -47,7 +47,10 @@ class ModalTest {
 
       setContent {
         if (showModal) {
-          Modal(onKeyEvent = { false }) {
+          Modal(
+            state = rememberModalState(initiallyVisible = true),
+            onKeyEvent = { false },
+          ) {
             Box(Modifier.testTag("modal_contents").size(40.dp))
           }
         }
@@ -60,7 +63,7 @@ class ModalTest {
     testCase("content respects LocalLayoutDirection") {
       setContent {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-          Modal {
+          Modal(state = rememberModalState(initiallyVisible = true)) {
             val layoutDirection =
               if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
             BasicText(layoutDirection, Modifier.testTag("layout_direction"))
@@ -69,6 +72,52 @@ class ModalTest {
       }
 
       onNodeWithTag("layout_direction").assertTextEquals("rtl")
+    }
+  }
+
+  @Test
+  fun scrim() = runTestSuite {
+    testCase("scrim is removed from composition, when modal is hidden") {
+      setContent {
+        val modalState = rememberModalState(initiallyVisible = true)
+
+        Modal(state = modalState) {
+          UnstyledScrim(Modifier.testTag("scrim"))
+        }
+
+        modalState.visible = false
+      }
+
+      waitForIdle()
+      onNodeWithTag("scrim").assertDoesNotExist()
+    }
+
+    testCase("scrim exists in composition, when modal is visible") {
+      setContent {
+        val modalState = rememberModalState(initiallyVisible = true)
+        Modal(state = modalState) {
+          UnstyledScrim(Modifier.testTag("scrim"))
+        }
+      }
+
+      onNodeWithTag("scrim").assertExists()
+    }
+
+    testCase("scrim appears when state changes to visible") {
+      var visible by mutableStateOf(false)
+
+      setContent {
+        val modalState = rememberModalState(initiallyVisible = visible)
+        modalState.visible = visible
+
+        Modal(state = modalState) {
+          UnstyledScrim(Modifier.testTag("scrim"))
+        }
+      }
+
+      visible = true
+      waitForIdle()
+      onNodeWithTag("scrim").assertExists()
     }
   }
 }

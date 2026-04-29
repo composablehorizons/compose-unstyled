@@ -296,7 +296,8 @@ fun ModalBottomSheet(
   }
 
   if (isSheetVisible || isScrimVisible) {
-    Modal {
+    val modalState = rememberModalState(initiallyVisible = true)
+    Modal(state = modalState) {
       DisposableEffect(Unit) {
         state.modalIsAdded = true
         onDispose {
