@@ -29,7 +29,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -79,9 +78,7 @@ data class DialogProperties(
 class DialogState(initiallyVisible: Boolean = false) {
 
   internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
-  internal val scrimVisibilityState = MutableTransitionState(initiallyVisible)
   internal var mountedPanels by mutableIntStateOf(0)
-  internal var mountedScrims by mutableIntStateOf(0)
 
   private var innerVisible by mutableStateOf(initiallyVisible)
 
@@ -90,7 +87,6 @@ class DialogState(initiallyVisible: Boolean = false) {
       innerVisible = value
       if (value.not()) {
         panelVisibilityState.targetState = false
-        scrimVisibilityState.targetState = false
       }
       field = value
     }
@@ -123,14 +119,14 @@ fun UnstyledDialog(
   content: @Composable (() -> Unit),
 ) {
   val currentDismiss by rememberUpdatedState(onDismiss)
+  val modalState = rememberModalState(initiallyVisible = state.visible)
 
   CompositionLocalProvider(LocalDialogState provides state) {
     val isAnimatingPanel = state.mountedPanels > 0 && state.panelVisibilityState.isIdle.not()
-    val isAnimatingScrim = state.mountedScrims > 0 && state.scrimVisibilityState.isIdle.not()
-    val addModal = state.visible || isAnimatingScrim || isAnimatingPanel
+    modalState.visible = state.visible
+    val addModal = state.visible || isAnimatingPanel || modalState.isAnimating
 
     if (addModal) {
-      val modalState = rememberModalState(initiallyVisible = true)
       val onKeyEvent = if (properties.dismissOnBackPress) {
         { event: KeyEvent ->
           if (
@@ -153,7 +149,6 @@ fun UnstyledDialog(
       ) {
         LaunchedEffect(Unit) {
           state.panelVisibilityState.targetState = true
-          state.scrimVisibilityState.targetState = true
         }
         Box(
           modifier = Modifier
@@ -216,29 +211,5 @@ fun UnstyledDialogPanel(
     ) {
       content()
     }
-  }
-}
-
-@Composable
-fun UnstyledScrim(
-  modifier: Modifier = Modifier,
-  scrimColor: Color = Color.Black.copy(0.6f),
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-) {
-  val state = LocalDialogState.current
-  DisposableEffect(state) {
-    state.mountedScrims += 1
-    onDispose {
-      state.mountedScrims -= 1
-    }
-  }
-
-  AnimatedVisibility(
-    visibleState = state.scrimVisibilityState,
-    enter = enter,
-    exit = exit,
-  ) {
-    Box(Modifier.fillMaxSize().focusable(false).background(scrimColor).then(modifier))
   }
 }

@@ -92,6 +92,10 @@ class DialogTest {
     dialogState.visible = true
 
     onNodeWithTag("scrim").assertExists()
+
+    dialogState.visible = false
+    waitForIdle()
+    onNodeWithTag("scrim").assertDoesNotExist()
   }
 
   @Test

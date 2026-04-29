@@ -34,8 +34,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,7 +53,10 @@ private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(d
 @Stable
 class ModalState(initiallyVisible: Boolean = false) {
   internal val visibilityState = MutableTransitionState(initiallyVisible)
+  internal var mountedScrims by mutableIntStateOf(0)
   private var innerVisible by mutableStateOf(initiallyVisible)
+  val isAnimating: Boolean
+    get() = visibilityState.isIdle.not()
 
   var visible: Boolean
     get() = innerVisible
@@ -103,6 +108,12 @@ fun UnstyledScrim(
   exit: ExitTransition = DisappearInstantly,
 ) {
   val state = LocalModalState.current
+  DisposableEffect(state) {
+    state.mountedScrims += 1
+    onDispose {
+      state.mountedScrims -= 1
+    }
+  }
   AnimatedVisibility(
     visibleState = state.visibilityState,
     enter = enter,
