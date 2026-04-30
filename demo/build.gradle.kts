@@ -107,8 +107,10 @@ kotlin {
       implementation(project(":composeunstyled-theming"))
       implementation(project(":composeunstyled-primitives"))
       implementation(project(":composeunstyled-platformtheme"))
+      implementation(project(":composeunstyled-escape-handler"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
       implementation(libs.composables.icons.lucide)
+      implementation("com.composables:compose-uri-painter:1.0.2")
     }
 
     val desktopMain by getting {

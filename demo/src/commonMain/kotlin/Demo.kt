@@ -99,6 +99,7 @@ private val availablePrimitives = listOf(
   DemoItem("Disclosure", "disclosure", { DisclosureDemo() }),
   DemoItem("Dropdown Menu", "dropdown-menu", { DropdownMenuDemo() }),
   DemoItem("Icon", "icon", { IconDemo() }),
+  DemoItem("Modal", "modal", { ModalDemo() }),
   DemoItem("Progress Indicator", "progressindicator", { ProgressIndicatorDemo() }),
   DemoItem("Radio Group", "radiogroup", { RadioGroupDemo() }),
   DemoItem("Scroll Area", "scrollarea", { ScrollAreaDemo() }),
