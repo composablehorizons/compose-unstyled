@@ -119,6 +119,7 @@ private val availableModifiers = listOf(
   DemoItem("Outline Offset", "outline-offset", { OutlineOffsetDemo() }),
   DemoItem("Outline Color", "outline-color", { OutlineColorDemo() }),
   DemoItem("Haze", "haze", { HazeDemo() }),
+  DemoItem("Haze Scrim", "haze-scrim", { HazeScrimDemo() }),
   DemoItem("Focus Ring Basic", "focus-ring-basic", { FocusRingBasicDemo() }),
   DemoItem("Focus Ring Width", "focus-ring-width", { FocusRingWidthDemo() }),
   DemoItem("Focus Ring Shape", "focus-ring-shape", { FocusRingShapeDemo() }),
