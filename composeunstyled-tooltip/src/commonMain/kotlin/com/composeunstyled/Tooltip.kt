@@ -110,9 +110,11 @@ fun UnstyledTooltip(
     }
   }
 
-  EscapeHandler {
-    entered = false
-    focused = false
+  if (state.show) {
+    EscapeHandler {
+      entered = false
+      focused = false
+    }
   }
 
   SideEffect {

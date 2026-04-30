@@ -498,16 +498,22 @@ class TooltipTest {
     mainClock.autoAdvance = false
 
     setPaddedContent {
-      UnstyledTooltip(
-        hoverDelayMillis = 500,
-        panel = {
-          UnstyledTooltipPanel {
-            BasicText("Tooltip content")
+      Row {
+        UnstyledTooltip(
+          hoverDelayMillis = 500,
+          panel = {
+            UnstyledTooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+            BasicText("Hover me")
           }
-        },
-      ) {
-        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
-          BasicText("Hover me")
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("outside_target")) {
+          BasicText("Outside")
         }
       }
     }
@@ -545,16 +551,22 @@ class TooltipTest {
     mainClock.autoAdvance = false
 
     setPaddedContent {
-      UnstyledTooltip(
-        hoverDelayMillis = 500,
-        panel = {
-          UnstyledTooltipPanel {
-            BasicText("Tooltip content")
+      Row {
+        UnstyledTooltip(
+          hoverDelayMillis = 500,
+          panel = {
+            UnstyledTooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+            BasicText("Hover me")
           }
-        },
-      ) {
-        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
-          BasicText("Hover me")
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("outside_target")) {
+          BasicText("Outside")
         }
       }
     }
@@ -583,6 +595,55 @@ class TooltipTest {
 
     // Tooltip should not appear because hover ended early
     onNodeWithText("Tooltip content").assertDoesNotExist()
+  }
+
+  @Test
+  fun escapeDoesNotCancelPendingTooltipWhenTooltipIsStillHidden() = runComposeUiTest {
+    mainClock.autoAdvance = false
+
+    setPaddedContent {
+      Row {
+        UnstyledTooltip(
+          hoverDelayMillis = 500,
+          panel = {
+            UnstyledTooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+            BasicText("Hover me")
+          }
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("outside_target")) {
+          BasicText("Outside")
+        }
+      }
+    }
+
+    onNodeWithTag("hover_target").performMouseInput {
+      enter(center)
+    }
+    mainClock.advanceTimeByFrame()
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+
+    onNodeWithTag("outside_target").requestFocus()
+    waitForIdle()
+    onNodeWithTag("outside_target").assertIsFocused()
+
+    // ESC should not be consumed by hidden tooltips.
+    onNodeWithTag("outside_target").performKeyInput {
+      pressKey(Key.Escape)
+    }
+    waitForIdle()
+
+    mainClock.advanceTimeBy(600)
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertIsDisplayed()
   }
 
   @Test
