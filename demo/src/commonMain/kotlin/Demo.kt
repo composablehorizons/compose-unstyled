@@ -118,6 +118,7 @@ private val availableModifiers = listOf(
   DemoItem("Outline Shape", "outline-shape", { OutlineShapeDemo() }),
   DemoItem("Outline Offset", "outline-offset", { OutlineOffsetDemo() }),
   DemoItem("Outline Color", "outline-color", { OutlineColorDemo() }),
+  DemoItem("Haze", "haze", { HazeDemo() }),
   DemoItem("Focus Ring Basic", "focus-ring-basic", { FocusRingBasicDemo() }),
   DemoItem("Focus Ring Width", "focus-ring-width", { FocusRingWidthDemo() }),
   DemoItem("Focus Ring Shape", "focus-ring-shape", { FocusRingShapeDemo() }),
@@ -191,7 +192,7 @@ private fun DemoSelection() {
             }
           }
           Spacer(Modifier.height(8.dp))
-          Title("Components")
+          Title("Primitives")
           availablePrimitives.forEach { demo ->
             OutlinedButton(
               onClick = { navController.navigate(demo.id) },
