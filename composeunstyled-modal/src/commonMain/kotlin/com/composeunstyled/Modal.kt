@@ -53,7 +53,7 @@ private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(d
 @Stable
 class ModalState(initiallyVisible: Boolean = false) {
   internal val visibilityState = MutableTransitionState(initiallyVisible)
-  internal var mountedScrims by mutableIntStateOf(0)
+  internal var mountedFragments by mutableIntStateOf(0)
   private var innerVisible by mutableStateOf(initiallyVisible)
   val isAnimating: Boolean
     get() = visibilityState.isIdle.not()
@@ -81,7 +81,7 @@ fun rememberModalState(initiallyVisible: Boolean = false): ModalState {
 }
 
 internal val LocalModalState = staticCompositionLocalOf<ModalState> {
-  error("CompositionLocal LocalModalState not present")
+  ModalState()
 }
 
 /**
@@ -108,17 +108,28 @@ fun UnstyledScrim(
   exit: ExitTransition = DisappearInstantly,
 ) {
   val state = LocalModalState.current
-  DisposableEffect(state) {
-    state.mountedScrims += 1
-    onDispose {
-      state.mountedScrims -= 1
-    }
-  }
   AnimatedVisibility(
     visibleState = state.visibilityState,
     enter = enter,
     exit = exit,
   ) {
-    Box(Modifier.fillMaxSize().background(scrimColor).then(modifier))
+    Box(modifier.modalFragment().fillMaxSize().background(scrimColor))
   }
+}
+
+/**
+ * Marks the composable as a participant in the parent [Modal] lifecycle.
+ *
+ * As soon as all fragments are removed from the composition, the [Modal] will automatically remove itself from composition.
+ */
+@Composable
+fun Modifier.modalFragment(): Modifier {
+  val state = LocalModalState.current
+  DisposableEffect(state) {
+    state.mountedFragments += 1
+    onDispose {
+      state.mountedFragments -= 1
+    }
+  }
+  return this
 }

@@ -36,11 +36,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -77,20 +76,18 @@ data class DialogProperties(
 @Stable
 class DialogState(initiallyVisible: Boolean = false) {
 
-  internal val panelVisibilityState = MutableTransitionState(initiallyVisible)
-  internal var mountedPanels by mutableIntStateOf(0)
+  internal val visibilityState = MutableTransitionState(initiallyVisible)
 
-  private var innerVisible by mutableStateOf(initiallyVisible)
+  private var internalVisible by mutableStateOf(initiallyVisible)
 
-  var visible: Boolean = innerVisible
+  var visible: Boolean
+    get() = internalVisible
     set(value) {
-      innerVisible = value
+      internalVisible = value
       if (value.not()) {
-        panelVisibilityState.targetState = false
+        visibilityState.targetState = false
       }
-      field = value
     }
-    get() = innerVisible
 }
 
 internal val LocalDialogState = staticCompositionLocalOf { DialogState() }
@@ -122,53 +119,48 @@ fun UnstyledDialog(
   val modalState = rememberModalState(initiallyVisible = state.visible)
 
   CompositionLocalProvider(LocalDialogState provides state) {
-    val isAnimatingPanel = state.mountedPanels > 0 && state.panelVisibilityState.isIdle.not()
-    modalState.visible = state.visible
-    val addModal = state.visible || isAnimatingPanel || modalState.isAnimating
-
-    if (addModal) {
-      val onKeyEvent = if (properties.dismissOnBackPress) {
-        { event: KeyEvent ->
-          if (
-            event.type == KeyEventType.KeyDown &&
-            (event.key == Key.Back || event.key == Key.Escape)
-          ) {
-            currentDismiss()
-            state.visible = false
-            true
-          } else {
-            false
-          }
-        }
-      } else {
-        { false }
-      }
-      Modal(
-        state = modalState,
-        onKeyEvent = onKeyEvent,
-      ) {
-        LaunchedEffect(Unit) {
-          state.panelVisibilityState.targetState = true
-        }
-        Box(
-          modifier = Modifier
-            .fillMaxSize()
-            .then(
-              if (properties.dismissOnClickOutside) {
-                Modifier.pointerInput(Unit) {
-                  detectTapGestures {
-                    currentDismiss()
-                    state.visible = false
-                  }
-                }
-              } else {
-                Modifier
-              },
-            ),
-          contentAlignment = Alignment.Center,
+    SideEffect { modalState.visible = state.visible }
+    val onKeyEvent = if (properties.dismissOnBackPress) {
+      { event: KeyEvent ->
+        if (
+          event.type == KeyEventType.KeyDown &&
+          (event.key == Key.Back || event.key == Key.Escape)
         ) {
-          content()
+          currentDismiss()
+          state.visible = false
+          true
+        } else {
+          false
         }
+      }
+    } else {
+      { false }
+    }
+    Modal(
+      state = modalState,
+      onKeyEvent = onKeyEvent,
+    ) {
+      LaunchedEffect(Unit) {
+        state.visibilityState.targetState = true
+      }
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .then(
+            if (properties.dismissOnClickOutside) {
+              Modifier.pointerInput(Unit) {
+                detectTapGestures {
+                  currentDismiss()
+                  state.visible = false
+                }
+              }
+            } else {
+              Modifier
+            },
+          ),
+        contentAlignment = Alignment.Center,
+      ) {
+        content()
       }
     }
   }
@@ -186,15 +178,9 @@ fun UnstyledDialogPanel(
 ) {
   val state = LocalDialogState.current
   val panelFocusRequester = remember { FocusRequester() }
-  DisposableEffect(state) {
-    state.mountedPanels += 1
-    onDispose {
-      state.mountedPanels -= 1
-    }
-  }
 
   AnimatedVisibility(
-    visibleState = state.panelVisibilityState,
+    visibleState = state.visibilityState,
     enter = enter,
     exit = exit,
   ) {
@@ -203,6 +189,7 @@ fun UnstyledDialogPanel(
     }
     Box(
       modifier
+        .modalFragment()
         .focusRequester(panelFocusRequester)
         .clip(shape)
         .background(backgroundColor)

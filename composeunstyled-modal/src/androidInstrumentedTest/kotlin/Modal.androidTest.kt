@@ -39,21 +39,19 @@ class ModalAndroidTest {
   @Test
   fun contentRespectsLocalLayoutDirection() = runTestSuite {
     testCase("content respects LocalLayoutDirection") {
-      var showModal by mutableStateOf(true)
+      val state = ModalState(initiallyVisible = true)
       setContent {
-        if (showModal) {
-          CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            Modal {
-              val layoutDirection =
-                if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
-              BasicText(layoutDirection, Modifier.testTag("layout_direction"))
-            }
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+          Modal(state) {
+            val layoutDirection =
+              if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
+            BasicText(layoutDirection, Modifier.testTag("layout_direction"))
           }
         }
       }
 
       onNodeWithTag("layout_direction").assertTextEquals("rtl")
-      showModal = false
+      state.visible = false
       waitForIdle()
     }
   }
