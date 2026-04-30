@@ -2,7 +2,7 @@
 unstyled = "1.49.9"
 
 kotlin = "2.2.20"
-compose = "1.10.3"
+compose = "1.11.0-alpha01"
 compose-material3 = "1.11.0-alpha01"
 
 vanniktech = "0.35.0"

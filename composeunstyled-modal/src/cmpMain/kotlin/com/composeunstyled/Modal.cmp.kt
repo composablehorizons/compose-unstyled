@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
@@ -32,6 +33,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun Modal(
   state: ModalState,
@@ -49,6 +51,7 @@ actual fun Modal(
       useSoftwareKeyboardInset = false,
       usePlatformDefaultWidth = false,
       scrimColor = Color.Transparent,
+      animateTransition = false,
     ),
     content = {
       CompositionLocalProvider(LocalModalState provides state) {
