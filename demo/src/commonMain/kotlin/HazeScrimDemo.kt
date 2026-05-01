@@ -28,7 +28,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -66,7 +65,8 @@ import dev.chrisbanes.haze.rememberHazeState
 
 @Composable
 fun HazeScrimDemo() {
-  val backgroundUrl = "https://images.unsplash.com/photo-1554629947-334ff61d85dc?q=80&w=2200&auto=format&fit=crop"
+  val backgroundUrl =
+    "https://images.unsplash.com/photo-1554629947-334ff61d85dc?q=80&w=2200&auto=format&fit=crop"
   val hazeState = rememberHazeState()
   val dialogState = rememberDialogState(initiallyVisible = false)
 
@@ -127,7 +127,8 @@ fun HazeScrimDemo() {
             Text("Haze Scrim", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
             Text(
-              "This demo keeps the dialog panel normal and applies Haze blur only to the scrim layer.",
+              "This demo keeps the dialog panel normal and applies Haze blur " +
+                "only to the scrim layer.",
               style = TextStyle(color = Color(0xFF1A1A1A)),
             )
           }

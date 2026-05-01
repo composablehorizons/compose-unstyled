@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
@@ -34,15 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.unit.dp
-import androidx.compose.animation.core.tween
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
@@ -337,60 +337,61 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle keeps thumb visible when pointer leaves track during thumb drag`() = runComposeUiTest {
-    setContent {
-      val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
-        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
-          repeat(100) { index ->
-            BasicText("Item $index")
+  fun `HideWhileIdle keeps thumb visible when pointer leaves track during thumb drag`() =
+    runComposeUiTest {
+      setContent {
+        val scrollState = rememberScrollState()
+        ScrollArea(state = rememberScrollAreaState(scrollState)) {
+          Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
+            repeat(100) { index ->
+              BasicText("Item $index")
+            }
+          }
+          VerticalScrollbar(modifier = Modifier.testTag("track")) {
+            UnstyledThumb(
+              modifier = Modifier.testTag("thumb"),
+              thumbVisibility = ThumbVisibility.HideWhileIdle(
+                enter = AppearInstantly,
+                exit = DisappearInstantly,
+                hideDelay = 2.seconds,
+              ),
+            )
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("track")) {
-          UnstyledThumb(
-            modifier = Modifier.testTag("thumb"),
-            thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
-              hideDelay = 2.seconds,
-            ),
-          )
-        }
       }
+
+      onNodeWithTag("thumb").assertDoesNotExist()
+
+      // Make thumb visible first.
+      onNodeWithTag("list").performTouchInput {
+        swipeUp(durationMillis = 1_000)
+      }
+      onNodeWithTag("thumb").assertIsDisplayed()
+
+      // Start thumb drag and keep pointer down.
+      onNodeWithTag("thumb").performTouchInput {
+        down(Offset(5f, 5f))
+        moveTo(Offset(350f, 350f))
+      }
+      onNodeWithTag("thumb").assertIsDisplayed()
+
+      // Pointer has moved outside track bounds while drag is still active.
+
+      // Even after hideDelay, thumb must remain visible while drag is active.
+      advanceTimeBy(3.seconds)
+      waitForIdle()
+      onNodeWithTag("thumb").assertIsDisplayed()
+
+      // Release thumb drag.
+      onNodeWithTag("thumb").performTouchInput { up() }
+      waitForIdle()
+      onNodeWithTag("thumb").assertIsDisplayed()
+
+      // Now it may hide after idle delay.
+      advanceTimeBy(2.seconds)
+      waitForIdle()
+      onNodeWithTag("thumb").assertDoesNotExist()
     }
-
-    onNodeWithTag("thumb").assertDoesNotExist()
-
-    // Make thumb visible first.
-    onNodeWithTag("list").performTouchInput {
-      swipeUp(durationMillis = 1_000)
-    }
-    onNodeWithTag("thumb").assertIsDisplayed()
-
-    // Start thumb drag and keep pointer down.
-    onNodeWithTag("thumb").performTouchInput {
-      down(Offset(5f, 5f))
-      moveTo(Offset(350f, 350f))
-    }
-    onNodeWithTag("thumb").assertIsDisplayed()
-
-    // Pointer has moved outside track bounds while drag is still active.
-
-    // Even after hideDelay, thumb must remain visible while drag is active.
-    advanceTimeBy(3.seconds)
-    waitForIdle()
-    onNodeWithTag("thumb").assertIsDisplayed()
-
-    // Release thumb drag.
-    onNodeWithTag("thumb").performTouchInput { up() }
-    waitForIdle()
-    onNodeWithTag("thumb").assertIsDisplayed()
-
-    // Now it may hide after idle delay.
-    advanceTimeBy(2.seconds)
-    waitForIdle()
-    onNodeWithTag("thumb").assertDoesNotExist()
-  }
 
   @Test
   fun `VerticalScrollbar respects explicit thumb height modifier`() = runComposeUiTest {

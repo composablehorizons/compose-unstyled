@@ -26,9 +26,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -67,7 +66,8 @@ import dev.chrisbanes.haze.rememberHazeState
 
 @Composable
 fun HazeDemo() {
-  val backgroundUrl = "https://images.unsplash.com/photo-1554629947-334ff61d85dc?q=80&w=2200&auto=format&fit=crop"
+  val backgroundUrl =
+    "https://images.unsplash.com/photo-1554629947-334ff61d85dc?q=80&w=2200&auto=format&fit=crop"
   val hazeState = rememberHazeState()
   val dialogState = rememberDialogState(initiallyVisible = false)
 
@@ -129,7 +129,8 @@ fun HazeDemo() {
             Text("Haze x Unstyled", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
             Text(
-              "This is a Compose Unstyled dialog that uses Haze blur effect as its panel's background",
+              "This is a Compose Unstyled dialog that uses Haze blur effect " +
+                "as its panel's background",
               style = TextStyle(color = Color(0xFF1A1A1A)),
             )
           }

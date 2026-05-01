@@ -21,15 +21,15 @@
  */
 package com.composeunstyled
 
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -134,7 +134,7 @@ class ModalBottomSheet {
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(if (index % 2 == 0) Color.Red else Color.LightGray)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
                 ) {
                   BasicText("index = $index")
                 }

@@ -83,27 +83,33 @@ fun ModalDemo() {
 
   val galleryItems = listOf(
     GalleryItem(
-      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Golden wheat field",
     ),
     GalleryItem(
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Mountain landscape",
     ),
     GalleryItem(
-      "https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1500534623283-312aade485b7" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Sunlit forest",
     ),
     GalleryItem(
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Ocean wave",
     ),
     GalleryItem(
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Mountain lake at dawn",
     ),
     GalleryItem(
-      "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1448375240586-882707db888b" +
+        "?q=80&w=1800&auto=format&fit=crop",
       "Misty pine forest",
     ),
   )
@@ -222,7 +228,9 @@ fun ModalDemo() {
 
               UnstyledButton(
                 onClick = {
-                  coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                  coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                  }
                 },
                 enabled = canGoPrevious,
                 interactionSource = remember { MutableInteractionSource() },
@@ -243,7 +251,9 @@ fun ModalDemo() {
 
               UnstyledButton(
                 onClick = {
-                  coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                  coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                  }
                 },
                 enabled = canGoNext,
                 interactionSource = remember { MutableInteractionSource() },
