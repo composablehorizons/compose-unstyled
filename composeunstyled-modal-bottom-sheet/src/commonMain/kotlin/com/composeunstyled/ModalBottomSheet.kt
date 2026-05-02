@@ -269,23 +269,23 @@ fun UnstyledModalBottomSheet(
 
   Modal(state = state.modalState) {
     var hasBeenShown by remember { mutableStateOf(false) }
-    LaunchedEffect(state.offset > 0f) {
-      if (state.offset > 0f) {
+    if (hasBeenShown.not()) {
+      LaunchedEffect(state.offset > 0f) {
         hasBeenShown = true
+      }
+    } else {
+      LaunchedEffect(
+        state.bottomSheetState.isIdle,
+        state.bottomSheetState.currentDetent,
+      ) {
+        if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
+          onDismissRequest()
+        }
       }
     }
     LaunchedEffect(state.bottomSheetState.currentDetent) {
       if (state.bottomSheetState.currentDetent != SheetDetent.Hidden) {
         dismissRequested = false
-      }
-    }
-    LaunchedEffect(
-      hasBeenShown,
-      state.bottomSheetState.isIdle,
-      state.bottomSheetState.currentDetent,
-    ) {
-      if (hasBeenShown && state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
-        onDismissRequest()
       }
     }
     if (properties.dismissOnBackPress) {
