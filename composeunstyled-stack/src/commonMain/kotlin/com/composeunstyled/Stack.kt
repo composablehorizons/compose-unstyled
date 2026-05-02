@@ -191,7 +191,8 @@ interface StackScope {
    * @param fill When `true`, the element will occupy the whole space allocated.
    */
   fun Modifier.weight(
-    @FloatRange(from = 0.0, fromInclusive = false) weight: Float,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    weight: Float,
     fill: Boolean = true,
   ): Modifier
 }
