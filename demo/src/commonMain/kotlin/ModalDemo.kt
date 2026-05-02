@@ -22,7 +22,6 @@
 package com.composeunstyled.demo
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -115,7 +114,6 @@ fun ModalDemo() {
   )
   val modalState = rememberModalState(initiallyVisible = false)
   val pagerState = rememberPagerState(pageCount = { galleryItems.size })
-  val panelVisibility = remember { MutableTransitionState(false) }
   val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
   var selectedIndex by remember { mutableIntStateOf(0) }
   val canGoPrevious = pagerState.currentPage > 0
@@ -129,10 +127,8 @@ fun ModalDemo() {
     animationSpec = tween(durationMillis = 180),
   )
 
-  panelVisibility.targetState = modalState.visible
-
-  LaunchedEffect(modalState.visible, selectedIndex) {
-    if (modalState.visible) {
+  LaunchedEffect(modalState.targetVisible, selectedIndex) {
+    if (modalState.targetVisible) {
       pagerState.scrollToPage(selectedIndex)
     }
   }
@@ -158,7 +154,7 @@ fun ModalDemo() {
           UnstyledButton(
             onClick = {
               selectedIndex = index
-              modalState.visible = true
+              modalState.show()
             },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(0.dp),
@@ -178,7 +174,7 @@ fun ModalDemo() {
 
     Modal(state = modalState) {
       EscapeHandler {
-        modalState.visible = false
+        modalState.dismiss()
       }
       UnstyledScrim(
         enter = fadeIn(tween(durationMillis = 220)),
@@ -189,12 +185,12 @@ fun ModalDemo() {
         modifier = Modifier
           .fillMaxSize()
           .pointerInput(Unit) {
-            detectTapGestures { modalState.visible = false }
+            detectTapGestures { modalState.dismiss() }
           },
         contentAlignment = Alignment.Center,
       ) {
         AnimatedVisibility(
-          visibleState = panelVisibility,
+          visibleState = modalState.transitionState,
           enter = scaleIn(animationSpec = tween(220), initialScale = 0.97f) + fadeIn(tween(220)),
           exit = scaleOut(animationSpec = tween(180), targetScale = 0.98f) + fadeOut(tween(180)),
         ) {
