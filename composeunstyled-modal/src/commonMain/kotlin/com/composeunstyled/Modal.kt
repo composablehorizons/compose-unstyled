@@ -54,19 +54,9 @@ private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(d
 
 @Stable
 class ModalState(initiallyVisible: Boolean = false) {
-  internal val visibilityState = MutableTransitionState(initiallyVisible)
+  val transitionState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
   internal var attachedToWindow by mutableStateOf(false)
-  private var innerVisible by mutableStateOf(initiallyVisible)
-  val isAnimating: Boolean
-    get() = visibilityState.isIdle.not()
-
-  var visible: Boolean
-    get() = innerVisible
-    set(value) {
-      innerVisible = value
-      visibilityState.targetState = value
-    }
 
   suspend fun awaitAttachedToWindow() {
     snapshotFlow { attachedToWindow }.first { it }
@@ -75,7 +65,7 @@ class ModalState(initiallyVisible: Boolean = false) {
 
 private val ModalStateSaver = run {
   mapSaver(
-    save = { mapOf("visible" to it.visible) },
+    save = { mapOf("visible" to it.transitionState.targetState) },
     restore = { ModalState(initiallyVisible = it["visible"] as Boolean) },
   )
 }
@@ -87,7 +77,7 @@ fun rememberModalState(initiallyVisible: Boolean = false): ModalState {
   }
 }
 
-internal val LocalModalState = staticCompositionLocalOf<ModalState> {
+val LocalModalState = staticCompositionLocalOf<ModalState> {
   ModalState()
 }
 
@@ -116,7 +106,7 @@ fun UnstyledScrim(
 ) {
   val state = LocalModalState.current
   AnimatedVisibility(
-    visibleState = state.visibilityState,
+    visibleState = state.transitionState,
     enter = enter,
     exit = exit,
   ) {

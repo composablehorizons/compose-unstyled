@@ -24,7 +24,6 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -35,18 +34,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,22 +69,14 @@ data class DialogProperties(
 
 @Stable
 class DialogState(initiallyVisible: Boolean = false) {
-
-  internal val visibilityState = MutableTransitionState(initiallyVisible)
-
-  private var internalVisible by mutableStateOf(initiallyVisible)
+  internal val modalState = ModalState(initiallyVisible = initiallyVisible)
 
   var visible: Boolean
-    get() = internalVisible
+    get() = modalState.transitionState.targetState
     set(value) {
-      internalVisible = value
-      if (value.not()) {
-        visibilityState.targetState = false
-      }
+      modalState.transitionState.targetState = value
     }
 }
-
-internal val LocalDialogState = staticCompositionLocalOf { DialogState() }
 
 private val DialogStateSaver = run {
   mapSaver(
@@ -116,52 +102,45 @@ fun UnstyledDialog(
   content: @Composable (() -> Unit),
 ) {
   val currentDismiss by rememberUpdatedState(onDismiss)
-  val modalState = rememberModalState(initiallyVisible = state.visible)
 
-  CompositionLocalProvider(LocalDialogState provides state) {
-    SideEffect { modalState.visible = state.visible }
-    val onKeyEvent = if (properties.dismissOnBackPress) {
-      { event: KeyEvent ->
-        if (
-          event.type == KeyEventType.KeyDown &&
-          (event.key == Key.Back || event.key == Key.Escape)
-        ) {
-          currentDismiss()
-          state.visible = false
-          true
-        } else {
-          false
-        }
-      }
-    } else {
-      { false }
-    }
-    Modal(
-      state = modalState,
-      onKeyEvent = onKeyEvent,
-    ) {
-      LaunchedEffect(Unit) {
-        state.visibilityState.targetState = true
-      }
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .then(
-            if (properties.dismissOnClickOutside) {
-              Modifier.pointerInput(Unit) {
-                detectTapGestures {
-                  currentDismiss()
-                  state.visible = false
-                }
-              }
-            } else {
-              Modifier
-            },
-          ),
-        contentAlignment = Alignment.Center,
+  val onKeyEvent = if (properties.dismissOnBackPress) {
+    { event: KeyEvent ->
+      if (
+        event.type == KeyEventType.KeyDown &&
+        (event.key == Key.Back || event.key == Key.Escape)
       ) {
-        content()
+        currentDismiss()
+        state.visible = false
+        true
+      } else {
+        false
       }
+    }
+  } else {
+    { false }
+  }
+  Modal(
+    state = state.modalState,
+    onKeyEvent = onKeyEvent,
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .then(
+          if (properties.dismissOnClickOutside) {
+            Modifier.pointerInput(Unit) {
+              detectTapGestures {
+                currentDismiss()
+                state.visible = false
+              }
+            }
+          } else {
+            Modifier
+          },
+        ),
+      contentAlignment = Alignment.Center,
+    ) {
+      content()
     }
   }
 }
@@ -176,11 +155,11 @@ fun UnstyledDialogPanel(
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
-  val state = LocalDialogState.current
+  val modalState = LocalModalState.current
   val panelFocusRequester = remember { FocusRequester() }
 
   AnimatedVisibility(
-    visibleState = state.visibilityState,
+    visibleState = modalState.transitionState,
     enter = enter,
     exit = exit,
   ) {

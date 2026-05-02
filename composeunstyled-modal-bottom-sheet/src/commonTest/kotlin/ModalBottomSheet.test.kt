@@ -197,17 +197,17 @@ class ModalBottomSheetTest {
 
       // Check that the scrim animation is running (not instantly completed)
       onNodeWithTag("scrim").assertExists()
-      assertTrue(state.modalState.isAnimating)
+      assertFalse(state.modalState.transitionState.isIdle)
 
       // Advance halfway through animation
       mainClock.advanceTimeBy(150)
-      assertTrue(state.modalState.isAnimating)
+      assertFalse(state.modalState.transitionState.isIdle)
 
       // Complete the animation
       mainClock.advanceTimeBy(150)
       waitForIdle()
-      assertFalse(state.modalState.isAnimating)
-      assertTrue(state.modalState.visible)
+      assertTrue(state.modalState.transitionState.isIdle)
+      assertTrue(state.modalState.transitionState.targetState)
     }
   }
 
