@@ -23,6 +23,7 @@
 
 package com.composeunstyled
 
+import androidx.annotation.IntRange
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -57,8 +58,10 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
@@ -75,7 +78,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastCoerceIn
 import androidx.compose.ui.util.lerp
-import com.composeunstyled.androidx.annotation.IntRange
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -83,6 +85,9 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+
+private val KeyEvent.isKeyDown: Boolean
+  get() = type == KeyEventType.KeyDown
 
 @Stable
 class SliderState(
@@ -126,7 +131,8 @@ class SliderState(
 fun rememberSliderState(
   initialValue: Float = 0.0f,
   valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-  @IntRange(from = 0) steps: Int = 0,
+  @IntRange(from = 0)
+  steps: Int = 0,
 ): SliderState {
   return remember {
     SliderState(initialValue, valueRange, steps)
