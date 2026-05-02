@@ -78,6 +78,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        api(libs.androidx.annotation)
         implementation(libs.compose.foundation)
         implementation(projects.composeunstyledBuildModifier)
       }

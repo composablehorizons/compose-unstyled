@@ -51,7 +51,7 @@ import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Velocity
-import com.composeunstyled.androidx.annotation.FloatRange
+import androidx.annotation.FloatRange
 import com.composeunstyled.androidx.collection.MutableObjectFloatMap
 import com.composeunstyled.androidx.collection.ObjectFloatMap
 import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledAnchoredDraggableState.Companion.Saver

@@ -27,7 +27,7 @@
 
 package com.composeunstyled.androidx.collection
 
-import com.composeunstyled.androidx.annotation.IntRange
+import androidx.annotation.IntRange
 import com.composeunstyled.androidx.collection.internal.EMPTY_OBJECTS
 import com.composeunstyled.androidx.collection.internal.requirePrecondition
 import kotlin.contracts.ExperimentalContracts
