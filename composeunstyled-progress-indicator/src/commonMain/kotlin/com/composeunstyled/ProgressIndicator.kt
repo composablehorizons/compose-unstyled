@@ -23,6 +23,7 @@
 
 package com.composeunstyled
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -39,7 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import com.composeunstyled.androidx.annotation.FloatRange
 
 class ProgressIndicatorScope {
   var progress by mutableStateOf(0f)

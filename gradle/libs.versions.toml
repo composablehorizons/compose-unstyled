@@ -8,6 +8,7 @@ compose-material3 = "1.11.0-alpha01"
 vanniktech = "0.35.0"
 spotless = "6.21.0"
 activity-core = "1.10.1"
+annotation = "1.9.1"
 lucide = "1.0.0"
 ripple = "1.1.0"
 window = "1.4.0"
@@ -25,6 +26,7 @@ espresso = "3.5.1"
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 androidx-activitycompose = { module = "androidx.activity:activity-compose", version.ref = "activity-core" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 composables-icons-lucide = { module = "com.composables:icons-lucide", version.ref = "lucide" }
 composables-ripple = { module = "com.composables:ripple-indication", version.ref = "ripple" }
