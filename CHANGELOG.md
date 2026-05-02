@@ -9,43 +9,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Modules! You can now pick and choose only the APIs that you want to use
-  instead of being forced to add the entire API in your codebase. To try this out, modals such as
-  dialogs, sheets and tooltips are available. More primitives will be modularized in the future if
-  there is demand.
-- Added the following new modules:`composeunstyled-bottom-sheet`,`composeunstyled-build-modifier`,
-  `composeunstyled-dialog`,`composeunstyled-dropdown-menu`,`composeunstyled-escape-handler`,
-  `composeunstyled-modal`,`composeunstyled-modal-bottom-sheet`, `composeunstyled-scroll-area`,
-  `composeunstyled-tooltip`
-- Compose Unstyled now uses Compose Multiplatform `1.10.3`.
-
-> [!WARNING]
-> Modals on non-Android targets (Dialog and Modal Bottom Sheet) now have a built-in animation that
-> is part of Compose Multiplatform 1.10.3. The option to remove this animation is added in 1.11.x
-> but it is not yet stable. Because of this, the animation will be removed in a future version of
-> Unstyled. If this is a blocker for you, you can continue using the pre 2.0 version of the library
-> until then.
+- Modules! You can now pick and choose only the APIs that you want to use instead of being forced
+  to add the full library to your codebase. `composeunstyled-primitives` continues to aggregate all
+  primitives for users who prefer a single dependency.
+- Added the following new modules: `composeunstyled-bottom-sheet`, `composeunstyled-build-modifier`,
+  `composeunstyled-button`, `composeunstyled-checkbox`, `composeunstyled-dialog`,
+  `composeunstyled-disclosure`, `composeunstyled-dropdown-menu`, `composeunstyled-escape-handler`,
+  `composeunstyled-focus-ring`, `composeunstyled-icon`, `composeunstyled-modal`,
+  `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
+  `composeunstyled-progress-indicator`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
+  `composeunstyled-scroll-area`, `composeunstyled-separators`, `composeunstyled-slider`,
+  `composeunstyled-stack`, `composeunstyled-tab-group`, `composeunstyled-text-field`,
+  `composeunstyled-toggle-switch`, and `composeunstyled-tri-state-checkbox`.
+- New Modal API: The Modal API has been revamped in order to make building custom models easier,
+  without having to worry about different.
+- Added `UnstyledScrim` as a standalone primitive.
+- Added `Sheet` as the measured bottom sheet panel and `UnstyledBottomSheet` as the bottom sheet
+  container.
+- Compose Unstyled now uses Kotlin `2.3.20` and Compose Multiplatform `1.11.0-alpha01`.
 
 ### Removed
 
+- The `composeunstyled` artifact is removed. Use `composeunstyled-primitives` for the aggregate
+  dependency, or depend on the individual modules you need.
 - All deprecated APIs are now removed. If you have breaking changes moving to this version,
   downgrade to the latest 1.x.x version and use `ReplaceWith()` to smoothly migrate to the latest
   APIs.
-- Removed any `com.composables.core` reference.
-- `ComposeUnstyledFlags` is removed.
+- Removed the `com.composables.core` package.
+- Removed `ComposeUnstyledFlags`.
 
 ### Changed
 
-- Decoupled theming from primitives. Primitives used to be themable using `LocalContentColor` and
-  `LocalTextStyle`. This was problematic as you could not easily style your primitives using a
-  different theming API (such as Material Compose). Because of this, any kind of theming is removed,
-  and the users are responsible for choosing the theming API of their choice.
+- Decoupled theming from primitives. Primitives no longer read `LocalContentColor` or
+  `LocalTextStyle`; users are responsible for styling primitives with their theming API of choice.
+- Moved `Text`, `LocalContentColor`, `LocalTextStyle`, `ProvideContentColor`, and
+  `ProvideTextStyle` to the theming module.
+- The `BottomSheet` API has been reworked and split into two composables. `UnstyledBottomSheet`
+  works as the area in which the bottom sheet can move on, while the `Sheet` does the actual
+  rendering.
+- Modal Bottom Sheet does not have its own independent `Sheet` composable anymore. Instead of reuses
+  `BottomSheet`'s.
+- Modal Bottom Sheet now has a separate `overlay` slot for passing any dimming overlay such as a
+  scrim.
 
 ### Fixed
-
-- Scrollbars now support dynamic sizing (https://github.com/composablehorizons/compose-unstyled/issues/78)
-- BottomSheet's content are now constraint to the content visible height. No need to hardcode a size if your content is scrollable (https://github.com/composablehorizons/compose-unstyled/issues/134)
-- ModalBottomSheet's state no longer relies on a Sheet to be present.
+- Tooltips now hide on Escape only while visible and keep keyboard focus and hover visibility
+  handling separate.
+- Scrollbars now support dynamic sizing.
+  (https://github.com/composablehorizons/compose-unstyled/issues/78)
+- Scrollbars now stay visible while their thumb is dragged.
+- Bottom Sheet content is now constrained to the visible sheet height. No need to hardcode a size if
+  your content is scrollable. (https://github.com/composablehorizons/compose-unstyled/issues/134)
+- Dialog, Modal Bottom Sheet, and Scrim now synchronize their exit lifecycle through shared modal
+  state, preventing the modal window from being removed before animated fragments finish exiting.
+- Dialog no longer freezes when it is initially visible without a scrim.
 
 ## [1.49.9] - 2025-04-24
 
