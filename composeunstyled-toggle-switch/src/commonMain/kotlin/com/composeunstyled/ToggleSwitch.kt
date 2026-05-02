@@ -56,6 +56,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
+private val NoPadding = PaddingValues(0.dp)
+
 /**
  * A foundational component used to build toggle switches.
  *
