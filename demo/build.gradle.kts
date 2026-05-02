@@ -110,7 +110,7 @@ kotlin {
       implementation(project(":composeunstyled-escape-handler"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
       implementation(libs.composables.icons.lucide)
-      implementation("com.composables:compose-uri-painter:1.0.2")
+      implementation("com.composables:compose-uri-painter:1.0.4")
       implementation("dev.chrisbanes.haze:haze:2.0.0-alpha01")
       implementation("dev.chrisbanes.haze:haze-blur:2.0.0-alpha01")
     }
