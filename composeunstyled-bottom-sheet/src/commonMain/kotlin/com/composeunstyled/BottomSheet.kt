@@ -46,6 +46,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.SideEffect
@@ -478,14 +479,14 @@ private fun UnstyledDraggableAnchors<SheetDetent>.closestDetent(
 }
 
 private class BottomSheetContext(
-  internal val state: BottomSheetState,
-  enabled: Boolean,
+  internal val state: BottomSheetState? = null,
+  enabled: Boolean = true,
 ) {
   internal var enabled by mutableStateOf(enabled)
 }
 
-private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext?> =
-  compositionLocalOf { null }
+private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext> =
+  compositionLocalOf { BottomSheetContext() }
 
 /**
  * A foundational component used to build bottom sheets.
@@ -530,7 +531,7 @@ fun UnstyledBottomSheet(
   imeAware: Boolean = false,
   content: @Composable () -> Unit,
 ) {
-  val context = remember { BottomSheetContext(state, enabled) }
+  val context = remember(state) { BottomSheetContext(state = state, enabled = enabled) }
   SideEffect { context.enabled = enabled }
 
   val coroutineScope = rememberCoroutineScope()
@@ -542,7 +543,7 @@ fun UnstyledBottomSheet(
     },
     contentAlignment = Alignment.TopCenter,
   ) {
-    androidx.compose.runtime.CompositionLocalProvider(LocalBottomSheetContext provides context) {
+    CompositionLocalProvider(LocalBottomSheetContext provides context) {
       Box(
         modifier = buildModifier {
           add(Modifier.sheetOffset(state = state, imeAware = imeAware))
@@ -585,15 +586,16 @@ fun SheetPanel(
   contentPadding: PaddingValues = PaddingValues(0.dp),
   content: @Composable () -> Unit,
 ) {
-  val scope = LocalBottomSheetContext.current
+  val context = LocalBottomSheetContext.current
+  val state = context.state
 
   Box(
     modifier = buildModifier {
-      if (scope != null) {
+      if (state != null) {
         add(
           Modifier.onSizeChanged {
-            scope.state.contentHeightPx = it.height.toFloat()
-            scope.state.invalidateDetents()
+            state.contentHeightPx = it.height.toFloat()
+            state.invalidateDetents()
           },
         )
       }
@@ -716,12 +718,12 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
  * @param interactionSource The interaction source for the drag indication.
  */
 @Composable
-fun DragIndication(
+fun UnstyledDragIndication(
   modifier: Modifier = Modifier,
   indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
 ) {
-  val context = LocalBottomSheetContext.current ?: return
+  val context = LocalBottomSheetContext.current
   val state = context.state
   val enabled = context.enabled
 
@@ -730,6 +732,7 @@ fun DragIndication(
 
   val canExpand by remember {
     derivedStateOf {
+      if (state == null) return@derivedStateOf false
       if (state.detents.size <= 1) return@derivedStateOf false
 
       val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
@@ -744,6 +747,7 @@ fun DragIndication(
 
   val canCollapse by remember {
     derivedStateOf {
+      if (state == null) return@derivedStateOf false
       if (state.detents.size <= 1) return@derivedStateOf false
 
       val currentPosition = state.anchoredDraggableState.anchors.positionOf(state.currentDetent)
@@ -758,6 +762,7 @@ fun DragIndication(
 
   val canDismiss by remember {
     derivedStateOf {
+      if (state == null) return@derivedStateOf false
       state.detents.contains(SheetDetent.Hidden) && state.currentDetent != SheetDetent.Hidden
     }
   }
@@ -765,21 +770,24 @@ fun DragIndication(
   val coroutineScope = rememberCoroutineScope()
 
   val onIndicationClicked: () -> Unit = {
-    if (detentIndex == -1) {
-      detentIndex = state.detents.indexOf(state.currentDetent)
+    if (state != null) {
+      if (detentIndex == -1) {
+        detentIndex = state.detents.indexOf(state.currentDetent)
+      }
+      if (detentIndex == state.detents.size - 1) goUp = false
+      if (detentIndex == 0) goUp = true
+
+      if (goUp) detentIndex++ else detentIndex--
+
+      val detent = state.detents[detentIndex]
+      state.targetDetent = detent
     }
-    if (detentIndex == state.detents.size - 1) goUp = false
-    if (detentIndex == 0) goUp = true
-
-    if (goUp) detentIndex++ else detentIndex--
-
-    val detent = state.detents[detentIndex]
-    state.targetDetent = detent
   }
 
   Box(
     modifier = modifier
       .semantics(mergeDescendants = false) {
+        if (state == null) return@semantics
         if (canExpand) {
           expand {
             // Find next detent with LOWER position value (more expanded = higher on screen)
@@ -841,10 +849,24 @@ fun DragIndication(
       }
       .clickable(
         role = Role.Button,
-        enabled = enabled && state.detents.size > 1,
+        enabled = state != null && enabled && state.detents.size > 1,
         interactionSource = interactionSource,
         indication = indication,
         onClick = onIndicationClicked,
       ),
+  )
+}
+
+@Deprecated("Renamed to UnstyledDragIndication", ReplaceWith("UnstyledDragIndication(modifier, indication, interactionSource)"))
+@Composable
+fun DragIndication(
+  modifier: Modifier = Modifier,
+  indication: Indication = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+) {
+  UnstyledDragIndication(
+    modifier = modifier,
+    indication = indication,
+    interactionSource = interactionSource,
   )
 }
