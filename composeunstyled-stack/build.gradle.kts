@@ -89,6 +89,12 @@ kotlin {
       }
     }
 
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+    }
+
     commonTest.dependencies {
       implementation(kotlin("test"))
 
