@@ -26,6 +26,9 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -49,6 +52,10 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
+private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
+private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
+private val NoPadding = PaddingValues(0.dp)
 
 @Stable
 class DisclosureState(expanded: Boolean = false) {
