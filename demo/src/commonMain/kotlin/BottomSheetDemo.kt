@@ -48,12 +48,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.DragIndication
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.SheetPanel
+import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.focusRing
 import com.composeunstyled.rememberBottomSheetState
@@ -103,23 +103,24 @@ fun BottomSheetDemo() {
         backgroundColor = Color.White,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
       ) {
-        Box(Modifier.fillMaxSize(),contentAlignment = Alignment.TopCenter) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
           val interactionSource = remember { MutableInteractionSource() }
 
-        DragIndication(
-          interactionSource = interactionSource,
-          modifier = Modifier
-            .padding(top = 22.dp)
-            .focusRing(
-              interactionSource = interactionSource,
+          DragIndication(
+            interactionSource = interactionSource,
+            modifier = Modifier
+              .padding(top = 22.dp)
+              .focusRing(
+                interactionSource = interactionSource,
                 width = 2.dp,
-                 color = Color(0XFF2563EB),
-              shape = RoundedCornerShape(100),
-              offset = 4.dp,
-            )
-            .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-            .size(32.dp, 4.dp),
-        )}
+                color = Color(0XFF2563EB),
+                shape = RoundedCornerShape(100),
+                offset = 4.dp,
+              )
+              .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
+              .size(32.dp, 4.dp),
+          )
+        }
       }
     }
   }

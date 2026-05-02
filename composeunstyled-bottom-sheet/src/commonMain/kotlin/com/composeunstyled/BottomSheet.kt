@@ -857,7 +857,10 @@ fun UnstyledDragIndication(
   )
 }
 
-@Deprecated("Renamed to UnstyledDragIndication", ReplaceWith("UnstyledDragIndication(modifier, indication, interactionSource)"))
+@Deprecated(
+  "Renamed to UnstyledDragIndication",
+  ReplaceWith("UnstyledDragIndication(modifier, indication, interactionSource)"),
+)
 @Composable
 fun DragIndication(
   modifier: Modifier = Modifier,

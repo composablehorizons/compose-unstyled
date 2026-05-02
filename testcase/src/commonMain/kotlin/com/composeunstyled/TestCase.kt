@@ -38,7 +38,7 @@ data class TestResult(
 
 @Deprecated(
   "Use runComposeUiTest instead",
-  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest")
+  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest"),
 )
 fun testCase(
   name: String,
@@ -97,7 +97,7 @@ fun testCase(
 
 @Deprecated(
   "Use runComposeUiTest instead",
-  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest")
+  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest"),
 )
 fun runTestSuite(block: TestSuiteScope.() -> Unit) {
   val scope = TestSuiteScope()
