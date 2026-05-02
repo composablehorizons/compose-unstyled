@@ -89,8 +89,15 @@ kotlin {
       }
     }
 
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+    }
+
     commonTest.dependencies {
       implementation(kotlin("test"))
+      implementation(projects.composeunstyledButton)
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
       implementation(libs.compose.ui.test)
@@ -99,7 +106,6 @@ kotlin {
     val jvmTest by getting
 
     jvmTest.dependencies {
-      implementation(projects.composeunstyledButton)
       implementation(libs.compose.ui.test.junit4)
       implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
