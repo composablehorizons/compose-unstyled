@@ -21,8 +21,12 @@
  */
 package com.composeunstyled
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,24 +82,24 @@ class DialogTest {
   }
 
   @Test
-  fun visibleDialogShowsTheScrim() = runComposeUiTest {
+  fun visibleDialogShowsTheModalFragment() = runComposeUiTest {
     val dialogState = DialogState(initiallyVisible = false)
 
     setContent {
       UnstyledDialog(state = dialogState) {
-        UnstyledScrim(Modifier.testTag("scrim"))
+        TestModalFragment(Modifier.testTag("modal_fragment"))
       }
     }
 
-    onNodeWithTag("scrim").assertDoesNotExist()
+    onNodeWithTag("modal_fragment").assertDoesNotExist()
 
     dialogState.visible = true
 
-    onNodeWithTag("scrim").assertExists()
+    onNodeWithTag("modal_fragment").assertExists()
 
     dialogState.visible = false
     waitForIdle()
-    onNodeWithTag("scrim").assertDoesNotExist()
+    onNodeWithTag("modal_fragment").assertDoesNotExist()
   }
 
   @Test
@@ -208,7 +212,7 @@ class DialogTest {
         state = dialogState,
         properties = DialogProperties(dismissOnClickOutside = true),
       ) {
-        UnstyledScrim(Modifier.testTag("dialog_scrim"))
+        TestModalFragment(Modifier.testTag("dialog_backdrop"))
         UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
@@ -216,7 +220,7 @@ class DialogTest {
     waitForIdle()
     onNodeWithTag("dialog_content").assertExists()
 
-    onNodeWithTag("dialog_scrim").performTouchInput {
+    onNodeWithTag("dialog_backdrop").performTouchInput {
       click(Offset(1f, 1f))
     }
     waitForIdle()
@@ -233,7 +237,7 @@ class DialogTest {
         state = dialogState,
         properties = DialogProperties(dismissOnClickOutside = false),
       ) {
-        UnstyledScrim(Modifier.testTag("dialog_scrim"))
+        TestModalFragment(Modifier.testTag("dialog_backdrop"))
         UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
@@ -241,11 +245,19 @@ class DialogTest {
     waitForIdle()
     onNodeWithTag("dialog_content").assertExists()
 
-    onNodeWithTag("dialog_scrim").performTouchInput {
+    onNodeWithTag("dialog_backdrop").performTouchInput {
       click(Offset(1f, 1f))
     }
     waitForIdle()
 
     onNodeWithTag("dialog_content").assertExists()
+  }
+}
+
+@Composable
+private fun TestModalFragment(modifier: Modifier = Modifier) {
+  val modalState = LocalModalState.current
+  AnimatedVisibility(visibleState = modalState.transitionState) {
+    Box(modifier.modalFragment().fillMaxSize())
   }
 }

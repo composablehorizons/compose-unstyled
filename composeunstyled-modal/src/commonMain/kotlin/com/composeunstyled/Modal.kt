@@ -19,20 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
-
 package com.composeunstyled
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
@@ -45,12 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import kotlinx.coroutines.flow.first
-
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 
 @Stable
 class ModalState(initiallyVisible: Boolean = false) {
@@ -96,23 +81,6 @@ expect fun Modal(
   onKeyEvent: (KeyEvent) -> Boolean = { false },
   content: @Composable () -> Unit,
 )
-
-@Composable
-fun UnstyledScrim(
-  modifier: Modifier = Modifier,
-  scrimColor: Color = Color.Black.copy(alpha = 0.6f),
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-) {
-  val state = LocalModalState.current
-  AnimatedVisibility(
-    visibleState = state.transitionState,
-    enter = enter,
-    exit = exit,
-  ) {
-    Box(modifier.modalFragment().fillMaxSize().background(scrimColor))
-  }
-}
 
 /**
  * Marks the composable as a participant in the parent [Modal] lifecycle.

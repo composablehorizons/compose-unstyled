@@ -79,7 +79,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
-        api(projects.composeunstyledModal)
+        implementation(projects.composeunstyledModal)
       }
     }
 
