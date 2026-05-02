@@ -18,6 +18,7 @@ captures
 venv/
 .cache/
 .kotlin/
+.codex/
 
 # CMake
 cmake-build-*/

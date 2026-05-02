@@ -52,14 +52,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.ModalBottomSheet
-import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDragIndication
+import com.composeunstyled.UnstyledModalBottomSheet
+import com.composeunstyled.UnstyledScrim
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.rememberModalBottomSheetState
@@ -101,46 +101,42 @@ fun ModalBottomSheetDemo() {
 
     val isCompact = currentWindowContainerSize().width < 600.dp
 
-    ModalBottomSheet(state = modalSheetState) {
-      Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-
-      Box(
-        Modifier.fillMaxSize()
+    UnstyledModalBottomSheet(
+      state = modalSheetState,
+      overlay = {
+        UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+      },
+    ) {
+      Sheet(
+        modifier = Modifier
           .padding(top = 12.dp)
           .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
           .displayCutoutPadding()
           .statusBarsPadding()
-          .padding(
-            WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
-          ),
+          .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
+          .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .widthIn(max = 640.dp)
+          .fillMaxWidth(),
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        backgroundColor = Color.White,
       ) {
-        Sheet(
-          modifier = Modifier
-            .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-            .widthIn(max = 640.dp)
-            .fillMaxWidth(),
-          shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-          backgroundColor = Color.White,
-          // contentColor = Color.Black,
-        ) {
-          Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
-            val interactionSource = remember { MutableInteractionSource() }
+        Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+          val interactionSource = remember { MutableInteractionSource() }
 
-            UnstyledDragIndication(
-              interactionSource = interactionSource,
-              modifier = Modifier
-                .padding(top = 22.dp)
-                .focusRing(
-                  interactionSource,
-                  width = 2.dp,
-                  Color(0XFF2563EB),
-                  RoundedCornerShape(100),
-                  offset = 4.dp,
-                )
-                .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-                .size(32.dp, 4.dp),
-            )
-          }
+          UnstyledDragIndication(
+            interactionSource = interactionSource,
+            modifier = Modifier
+              .padding(top = 22.dp)
+              .focusRing(
+                interactionSource,
+                width = 2.dp,
+                Color(0XFF2563EB),
+                RoundedCornerShape(100),
+                offset = 4.dp,
+              )
+              .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
+              .size(32.dp, 4.dp),
+          )
         }
       }
     }

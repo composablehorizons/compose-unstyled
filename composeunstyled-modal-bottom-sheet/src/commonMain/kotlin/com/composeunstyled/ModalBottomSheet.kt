@@ -23,23 +23,14 @@
 
 package com.composeunstyled
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,31 +38,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.mapSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 private val DoNothing: () -> Unit = {}
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
-private val NoPadding = PaddingValues(0.dp)
 
 /**
- * Properties that control the behavior of a [ModalBottomSheet].
+ * Properties that control the behavior of a [UnstyledModalBottomSheet].
  *
  * @param dismissOnBackPress Whether the sheet should be dismissed when the back button is pressed.
  * @param dismissOnClickOutside Whether the sheet should be dismissed when clicking outside of it.
@@ -112,52 +94,32 @@ fun rememberModalBottomSheetState(
     decayAnimationSpec = decayAnimationSpec,
     confirmDetentChange = confirmDetentChange,
   )
+  val modalState = rememberModalState(initiallyVisible = initialDetent != SheetDetent.Hidden)
   val scope = rememberCoroutineScope()
-  return rememberSaveable(
-    saver = mapSaver(
-      save = { modalBottomSheetState ->
-        mapOf(
-          "detent" to modalBottomSheetState.currentDetent.identifier,
-        )
-      },
-      restore = { map ->
-        val restoredDetent = detents.first { it.identifier == map["detent"] }
-        ModalBottomSheetState(
-          initialDetent = restoredDetent,
-          bottomSheetState = sheetState,
-          scope = scope,
-        )
-      },
-    ),
-    init = {
-      ModalBottomSheetState(
-        initialDetent = initialDetent,
-        bottomSheetState = sheetState,
-        scope = scope,
-      )
-    },
-  )
+  return remember(sheetState, modalState, scope) {
+    ModalBottomSheetState(
+      bottomSheetState = sheetState,
+      modalState = modalState,
+      scope = scope,
+    )
+  }
 }
 
 class ModalBottomSheetState(
-  initialDetent: SheetDetent,
   internal val bottomSheetState: BottomSheetState,
+  internal val modalState: ModalState,
   val scope: CoroutineScope,
 ) {
-  internal var modalDetent by mutableStateOf(initialDetent)
-
-  internal val scrimState =
-    MutableTransitionState(initialState = initialDetent != SheetDetent.Hidden)
-
-  internal var modalIsAdded by mutableStateOf(false)
   internal var pendingDetentChange: Job? = null
+  internal var modalDetent by mutableStateOf(bottomSheetState.currentDetent)
+  private var pendingTargetDetent: SheetDetent? by mutableStateOf(null)
 
   val currentDetent: SheetDetent
     get() {
       return modalDetent
     }
   var targetDetent: SheetDetent
-    get() = bottomSheetState.targetDetent
+    get() = pendingTargetDetent ?: bottomSheetState.targetDetent
     set(value) {
       scope.launch {
         animateTo(value)
@@ -165,7 +127,7 @@ class ModalBottomSheetState(
     }
 
   val isIdle: Boolean
-    get() = bottomSheetState.isIdle
+    get() = pendingTargetDetent == null && bottomSheetState.isIdle
 
   /**
    * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
@@ -175,28 +137,41 @@ class ModalBottomSheetState(
   }
 
   val offset: Float by derivedStateOf {
-    if (modalIsAdded.not()) {
-      0f
-    } else {
-      bottomSheetState.offset
-    }
+    bottomSheetState.offset
   }
 
   suspend fun animateTo(value: SheetDetent) {
+    pendingTargetDetent = value
+
     val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden ||
       bottomSheetState.targetDetent != SheetDetent.Hidden
 
-    if (isBottomSheetVisible) {
-      bottomSheetState.animateTo(value)
-    } else {
-      modalDetent = value
-      pendingDetentChange?.cancel()
-      pendingDetentChange = scope.launch {
-        awaitModal()
-        scrimState.targetState = true
+    try {
+      if (isBottomSheetVisible) {
         bottomSheetState.animateTo(value)
+        if (value == SheetDetent.Hidden && bottomSheetState.currentDetent == SheetDetent.Hidden) {
+          modalDetent = SheetDetent.Hidden
+          modalState.visible = false
+        }
+      } else {
+        modalDetent = value
+        if (value == SheetDetent.Hidden) {
+          bottomSheetState.animateTo(value)
+          modalState.visible = false
+          return
+        }
+        modalState.visible = true
+        pendingDetentChange?.cancel()
+        pendingDetentChange = scope.launch {
+          awaitModalAndSheetAnchors()
+          bottomSheetState.animateTo(value)
+        }
+        pendingDetentChange?.join()
       }
-      pendingDetentChange?.join()
+    } finally {
+      if (pendingTargetDetent == value) {
+        pendingTargetDetent = null
+      }
     }
   }
 
@@ -208,19 +183,24 @@ class ModalBottomSheetState(
 
     if (isBottomSheetVisible) {
       bottomSheetState.jumpTo(value)
-    } else {
-      pendingDetentChange?.cancel()
-      pendingDetentChange = scope.launch {
-        awaitModal()
-        scrimState.targetState = true
-        bottomSheetState.jumpTo(value)
+      if (value == SheetDetent.Hidden) {
+        modalState.visible = false
       }
+      return
+    }
+
+    pendingDetentChange?.cancel()
+    pendingDetentChange = scope.launch {
+      modalState.visible = value != SheetDetent.Hidden
+      if (value != SheetDetent.Hidden) {
+        awaitModalAndSheetAnchors()
+      }
+      bottomSheetState.jumpTo(value)
     }
   }
 
-  private suspend fun awaitModal() {
-    // Workaround until https://github.com/composablehorizons/compose-unstyled/issues/89 is unblocked
-    snapshotFlow { modalIsAdded }.distinctUntilChanged().filter { modalIsAdded }.first()
+  private suspend fun awaitModalAndSheetAnchors() {
+    modalState.awaitAttachedToWindow()
 
     // wait until the anchored state is used and is measured
     snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }.filter { it }
@@ -231,11 +211,6 @@ class ModalBottomSheetState(
     bottomSheetState.invalidateDetents()
   }
 }
-
-class ModalBottomSheetScope internal constructor(
-  internal val modalState: ModalBottomSheetState,
-  internal val sheetState: BottomSheetState,
-)
 
 /**
  * A foundational component used to build modal bottom sheets.
@@ -253,7 +228,7 @@ class ModalBottomSheetScope internal constructor(
  *     Text("Show Sheet")
  * }
  *
- * ModalBottomSheet(state = sheetState) {
+ * UnstyledModalBottomSheet(state = sheetState) {
  *     Sheet(modifier = Modifier.fillMaxWidth().background(Color.White)) {
  *         Box(
  *             modifier = Modifier.fillMaxWidth().height(1200.dp),
@@ -268,140 +243,79 @@ class ModalBottomSheetScope internal constructor(
  * @param state The [ModalBottomSheetState] that controls the sheet.
  * @param properties The [ModalSheetProperties] that control the behavior of the sheet.
  * @param onDismiss Callback that is called right before the sheet is about to be dismissed.
+ * @param overlay Optional content placed behind the modal sheet content.
  * @param content The content of the modal
  */
 @Composable
-fun ModalBottomSheet(
+fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
   properties: ModalSheetProperties = ModalSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
-  content: @Composable (ModalBottomSheetScope.() -> Unit),
+  overlay: (@Composable () -> Unit)? = null,
+  content: @Composable () -> Unit,
 ) {
   val currentDismissCallback by rememberUpdatedState(onDismiss)
-  val scope = remember { ModalBottomSheetScope(state, state.bottomSheetState) }
-  val isSheetVisible by remember {
-    derivedStateOf { state.isIdle.not() || state.targetDetent != SheetDetent.Hidden }
-  }
-  val isScrimVisible by remember {
-    derivedStateOf {
-      (state.scrimState.isIdle.not() || state.currentDetent != SheetDetent.Hidden)
-    }
-  }
+  var dismissRequested by remember { mutableStateOf(false) }
 
   fun onDismissRequest() {
-    currentDismissCallback()
-    state.scrimState.targetState = false
+    if (dismissRequested.not()) {
+      dismissRequested = true
+      currentDismissCallback()
+    }
+    state.modalState.visible = false
     state.modalDetent = SheetDetent.Hidden
-    scope.sheetState.targetDetent = SheetDetent.Hidden
+    state.bottomSheetState.targetDetent = SheetDetent.Hidden
   }
 
-  if (isSheetVisible || isScrimVisible) {
-    val modalState = rememberModalState(initiallyVisible = true)
-    Modal(state = modalState) {
-      DisposableEffect(Unit) {
-        state.modalIsAdded = true
-        onDispose {
-          state.modalIsAdded = false
-          state.pendingDetentChange?.cancel()
-          state.pendingDetentChange = null
-        }
+  Modal(state = state.modalState) {
+    var hasBeenShown by remember { mutableStateOf(false) }
+    if (hasBeenShown.not()) {
+      LaunchedEffect(state.offset > 0f) {
+        hasBeenShown = true
       }
-      if (state.modalIsAdded) {
-        var hasBeenShown by remember { mutableStateOf(false) }
-        if (hasBeenShown.not()) {
-          LaunchedEffect(state.offset > 0f) {
-            hasBeenShown = true
-          }
-        } else {
-          LaunchedEffect(state.bottomSheetState.isIdle) {
-            if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
-              onDismissRequest()
-            }
-          }
-        }
-      }
-      if (properties.dismissOnBackPress) {
-        EscapeHandler {
+    } else {
+      LaunchedEffect(
+        state.bottomSheetState.isIdle,
+        state.bottomSheetState.currentDetent,
+      ) {
+        if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
           onDismissRequest()
         }
       }
-
-      Box(
-        modifier = Modifier.fillMaxSize() then buildModifier {
-          if (properties.dismissOnClickOutside) {
-            add(
-              Modifier.pointerInput(Unit) {
-                detectTapGestures {
-                  if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                    onDismissRequest()
-                  }
-                }
-              },
-            )
-          }
-        },
-      ) {
-        scope.content()
+    }
+    LaunchedEffect(state.bottomSheetState.currentDetent) {
+      if (state.bottomSheetState.currentDetent != SheetDetent.Hidden) {
+        dismissRequested = false
       }
     }
-  }
-}
-
-/**
- * The main content area of the modal bottom sheet.
- *
- * @param modifier Modifier to be applied to the sheet.
- * @param enabled Whether the sheet is enabled.
- * @param imeAware Automatically move the sheet according to the soft keyboard's height.
- * @param content The content of the sheet.
- */
-@Composable
-fun ModalBottomSheetScope.Sheet(
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
-  imeAware: Boolean = false,
-  content: @Composable () -> Unit,
-) {
-  UnstyledBottomSheet(
-    state = sheetState,
-    enabled = enabled,
-    modifier = modifier,
-    imeAware = imeAware,
-  ) {
-    SheetPanel(
-      shape = shape,
-      backgroundColor = backgroundColor,
-      contentPadding = contentPadding,
-    ) {
-      content()
+    if (properties.dismissOnBackPress) {
+      EscapeHandler {
+        onDismissRequest()
+      }
     }
-  }
-}
 
-/**
- * A scrim is used to darken the content behind the sheet in order to signify that the rest of the screen is not interactive.
- *
- * @param modifier Modifier to be applied to the scrim.
- * @param scrimColor The color of the scrim.
- * @param enter The enter transition for the scrim.
- * @param exit The exit transition for the scrim.
- */
-@Composable
-fun ModalBottomSheetScope.Scrim(
-  modifier: Modifier = Modifier,
-  scrimColor: Color = Color.Black.copy(0.6f),
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-) {
-  AnimatedVisibility(
-    visibleState = modalState.scrimState,
-    enter = enter,
-    exit = exit,
-  ) {
-    // keep the rendered content as a child of animated visibility, because it does not animate itself in
-    Box(modifier = modifier.fillMaxSize().background(scrimColor))
+    Box(
+      modifier = Modifier.fillMaxSize() then buildModifier {
+        if (properties.dismissOnClickOutside) {
+          add(
+            Modifier.pointerInput(Unit) {
+              detectTapGestures {
+                if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
+                  onDismissRequest()
+                }
+              }
+            },
+          )
+        }
+      },
+    ) {
+      overlay?.invoke()
+      UnstyledBottomSheet(
+        state = state.bottomSheetState,
+        modifier = Modifier.fillMaxSize(),
+      ) {
+        content()
+      }
+    }
   }
 }

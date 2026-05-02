@@ -95,7 +95,7 @@ class BottomSheetTest {
           state = state,
           modifier = Modifier.fillMaxSize(),
         ) {
-          SheetPanel(
+          Sheet(
             modifier = Modifier
               .requiredSize(width = 120.dp, height = 80.dp)
               .testTag("panel"),
@@ -132,7 +132,7 @@ class BottomSheetTest {
           state = state,
           modifier = Modifier.fillMaxSize(),
         ) {
-          SheetPanel(
+          Sheet(
             modifier = Modifier
               .requiredSize(width = 120.dp, height = 80.dp)
               .testTag("panel"),
@@ -255,7 +255,7 @@ class BottomSheetTest {
             enabled = false,
             modifier = Modifier.testTag("sheet"),
           ) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -295,7 +295,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -338,7 +338,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -375,7 +375,7 @@ class BottomSheetTest {
           initialDetent = SheetDetent.Hidden,
         )
         UnstyledBottomSheet(state = state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -393,7 +393,7 @@ class BottomSheetTest {
           initialDetent = SheetDetent.FullyExpanded,
         )
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -415,7 +415,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(60.dp))
           }
         }
@@ -433,7 +433,7 @@ class BottomSheetTest {
           initialDetent = SheetDetent.Hidden,
         )
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -449,7 +449,7 @@ class BottomSheetTest {
           initialDetent = SheetDetent.FullyExpanded,
         )
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -471,7 +471,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -495,7 +495,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("content").height(70.dp).fillMaxWidth())
           }
         }
@@ -519,7 +519,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(100.dp))
           }
         }
@@ -548,7 +548,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state) {
-            SheetPanel {
+            Sheet {
               Box(Modifier.fillMaxWidth().height(100.dp))
             }
           }
@@ -577,7 +577,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -640,7 +640,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -670,7 +670,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -701,7 +701,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Column(Modifier.testTag("sheet_contents")) {
               Box(Modifier.testTag("visible_content").height(150.dp).fillMaxWidth())
               Box(Modifier.testTag("hidden_content").height(100.dp).fillMaxWidth())
@@ -732,7 +732,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -761,7 +761,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(contentSize))
           }
         }
@@ -784,7 +784,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -818,7 +818,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -859,7 +859,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -894,7 +894,7 @@ class BottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.testTag("sheet_contents").size(40.dp))
           }
         }
@@ -925,7 +925,7 @@ class BottomSheetTest {
           detents = listOf(dynamicDetent),
         )
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Column(Modifier.testTag("sheet_contents").size(100.dp)) {
               BasicText("Top")
               Spacer(Modifier.weight(1f))
@@ -954,7 +954,7 @@ class BottomSheetTest {
           )
 
           UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            SheetPanel {
+            Sheet {
               Box(
                 Modifier
                   .testTag("sheet_contents")
@@ -1010,7 +1010,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
@@ -1048,7 +1048,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1081,7 +1081,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1124,7 +1124,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(500.dp))
           }
         }
@@ -1165,7 +1165,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1193,7 +1193,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(500.dp))
           }
         }
@@ -1241,7 +1241,7 @@ class BottomSheetTest {
             .fillMaxWidth()
             .background(Color.White),
         ) {
-          SheetPanel {
+          Sheet {
             Column(modifier = Modifier.fillMaxWidth().height(1200.dp)) {
               BasicText("Test")
             }
@@ -1274,7 +1274,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
@@ -1296,7 +1296,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
@@ -1318,7 +1318,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
@@ -1340,7 +1340,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
@@ -1370,7 +1370,7 @@ class BottomSheetTest {
           state = state,
           modifier = Modifier.testTag("sheet"),
         ) {
-          SheetPanel {
+          Sheet {
             Column(
               Modifier
                 .testTag("scrollable_content")
@@ -1425,7 +1425,7 @@ class BottomSheetTest {
               .testTag("sheet")
               .verticalScroll(rememberScrollState()),
           ) {
-            SheetPanel {
+            Sheet {
               Column {
                 repeat(5) { index ->
                   BasicText(
@@ -1475,7 +1475,7 @@ class BottomSheetTest {
               .testTag("sheet")
               .verticalScroll(rememberScrollState()),
           ) {
-            SheetPanel {
+            Sheet {
               Column {
                 repeat(5) { index ->
                   BasicText(
@@ -1522,7 +1522,7 @@ class BottomSheetTest {
           state = state,
           modifier = Modifier.testTag("sheet"),
         ) {
-          SheetPanel(Modifier.testTag("panel")) {
+          Sheet(Modifier.testTag("panel")) {
             Column(
               Modifier
                 .testTag("scrollable_content")
@@ -1578,7 +1578,7 @@ class BottomSheetTest {
         UnstyledBottomSheet(
           state = sheetState,
         ) {
-          SheetPanel(backgroundColor = Color.White) {
+          Sheet(backgroundColor = Color.White) {
             Column(
               Modifier
                 .testTag("scrollable_content")
@@ -1628,7 +1628,7 @@ class BottomSheetTest {
           state = state,
           modifier = Modifier.testTag("sheet"),
         ) {
-          SheetPanel(Modifier.testTag("panel")) {
+          Sheet(Modifier.testTag("panel")) {
             Column(
               Modifier
                 .testTag("scrollable_content")
@@ -1673,7 +1673,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1700,7 +1700,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1727,7 +1727,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1765,7 +1765,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1796,7 +1796,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1833,7 +1833,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1865,7 +1865,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1898,7 +1898,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1931,7 +1931,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -1961,7 +1961,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -1989,7 +1989,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2016,7 +2016,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2051,7 +2051,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2085,7 +2085,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2130,7 +2130,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2168,7 +2168,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(500.dp))
           }
@@ -2198,7 +2198,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
@@ -2225,7 +2225,7 @@ class BottomSheetTest {
         )
 
         UnstyledBottomSheet(state) {
-          SheetPanel {
+          Sheet {
             UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }

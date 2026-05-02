@@ -1,1 +1,3 @@
 - [ ] Add Unstyled- Scrollbars to 1.x.x with ReplaceWith
+- [ ] How does modals use visibilityState? is that needed. do we need isAnimating
+- [ ] Reconsider usages of `shape`, `backgroundColor`, `border`.
