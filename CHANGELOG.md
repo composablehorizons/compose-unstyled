@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-05-02
+
 ### Added
 
 - Modules! You can now pick and choose only the APIs that you want to use instead of being forced
