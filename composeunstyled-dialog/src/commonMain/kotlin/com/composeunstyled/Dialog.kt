@@ -72,7 +72,7 @@ class DialogState(initiallyVisible: Boolean = false) {
   internal val modalState = ModalState(initiallyVisible = initiallyVisible)
 
   var visible: Boolean
-    get() = modalState.visible
+    get() = modalState.targetVisible
     set(value) {
       if (value) {
         modalState.show()

@@ -73,7 +73,12 @@ actual fun Modal(
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable () -> Unit,
 ) {
-  if (state.visible.not() && (state.mountedFragments == 0 || state.transitionState.isIdle)) return
+  if (
+    state.targetVisible.not() &&
+    (state.mountedFragments == 0 || state.transitionState.isIdle)
+  ) {
+    return
+  }
 
   val parentView = LocalView.current
   val context = LocalContext.current

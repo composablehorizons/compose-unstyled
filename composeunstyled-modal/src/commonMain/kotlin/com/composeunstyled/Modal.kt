@@ -57,21 +57,19 @@ class ModalState(initiallyVisible: Boolean = false) {
   val transitionState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
   internal var attachedToWindow by mutableStateOf(false)
-  private var innerVisible by mutableStateOf(initiallyVisible)
 
-  var visible: Boolean
-    get() = innerVisible
+  var targetVisible: Boolean
+    get() = transitionState.targetState
     private set(value) {
-      innerVisible = value
       transitionState.targetState = value
     }
 
   fun show() {
-    visible = true
+    targetVisible = true
   }
 
   fun dismiss() {
-    visible = false
+    targetVisible = false
   }
 
   suspend fun awaitAttachedToWindow() {
@@ -81,7 +79,7 @@ class ModalState(initiallyVisible: Boolean = false) {
 
 private val ModalStateSaver = run {
   mapSaver(
-    save = { mapOf("visible" to it.visible) },
+    save = { mapOf("visible" to it.targetVisible) },
     restore = { ModalState(initiallyVisible = it["visible"] as Boolean) },
   )
 }
