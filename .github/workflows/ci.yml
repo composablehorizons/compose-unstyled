@@ -115,7 +115,7 @@ jobs:
           echo "modules=$modules_json" >> "$GITHUB_OUTPUT"
 
   android-tests:
-    name: ${{ matrix.module }}
+    name: ${{ matrix.module }}-android-tests
     needs: discover-android-modules
     runs-on: ubuntu-latest
     timeout-minutes: 60
