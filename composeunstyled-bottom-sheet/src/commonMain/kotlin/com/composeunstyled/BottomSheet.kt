@@ -42,6 +42,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -71,6 +72,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
@@ -92,6 +94,8 @@ import com.composeunstyled.androidx.compose.foundation.gestures.unstyledAnchored
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 private fun Saver(
@@ -352,6 +356,21 @@ class BottomSheetState(
     }
   }
 
+  internal val visibleHeightPx: Float by derivedStateOf {
+    when {
+      containerHeightPx.isNaN() -> Float.NaN
+      offset > 0f -> offset
+      else -> containerHeightPx
+    }
+  }
+
+  internal fun updateContentHeight(measuredHeightPx: Float) {
+    if (contentHeightPx != measuredHeightPx) {
+      contentHeightPx = measuredHeightPx
+      invalidateDetents()
+    }
+  }
+
   /**
    * Animates the sheet to the given [SheetDetent]
    */
@@ -404,8 +423,10 @@ class BottomSheetState(
         closestDetentToTopPx = Float.NaN
 
         innerDetents.forEach { detent ->
+          val maxDetentHeight = minOf(containerHeight, sheetHeight)
           val contentHeight =
-            detent.calculateDetentHeight(containerHeight, sheetHeight).coerceIn(0.dp, sheetHeight)
+            detent.calculateDetentHeight(containerHeight, sheetHeight)
+              .coerceIn(0.dp, maxDetentHeight)
 
           val offsetDp = containerHeight - contentHeight
           val offset = offsetDp.toPx()
@@ -588,26 +609,47 @@ fun SheetPanel(
 ) {
   val context = LocalBottomSheetContext.current
   val state = context.state
+  val density = LocalDensity.current
+  val visibleHeight = state?.visibleHeightPx?.let { height ->
+    if (height.isNaN()) Dp.Unspecified else with(density) { height.toDp() }
+  } ?: Dp.Unspecified
 
-  Box(
-    modifier = buildModifier {
-      if (state != null) {
-        add(
-          Modifier.onSizeChanged {
-            state.contentHeightPx = it.height.toFloat()
-            state.invalidateDetents()
-          },
-        )
+  Layout(
+    modifier = modifier
+      .heightIn(max = visibleHeight)
+      .clip(shape)
+      .background(backgroundColor)
+      .padding(contentPadding),
+    content = content,
+  ) { measurables, constraints ->
+    var contentHeight = 0
+    val placeables = measurables.map { measurable ->
+      contentHeight = max(contentHeight, measurable.maxIntrinsicHeight(constraints.maxWidth))
+
+      measurable.measure(constraints).also { placeable ->
+        contentHeight = max(contentHeight, placeable.height)
       }
-      add(
-        modifier
-          .clip(shape)
-          .background(backgroundColor)
-          .padding(contentPadding),
-      )
-    },
-  ) {
-    content()
+    }
+
+    val width = max(
+      constraints.minWidth,
+      placeables.maxOfOrNull { it.width } ?: 0,
+    )
+    val height = min(
+      constraints.maxHeight,
+      max(
+        constraints.minHeight,
+        placeables.maxOfOrNull { it.height } ?: 0,
+      ),
+    )
+
+    state?.updateContentHeight(max(contentHeight, height).toFloat())
+
+    layout(width, height) {
+      placeables.forEach { placeable ->
+        placeable.placeRelative(0, 0)
+      }
+    }
   }
 }
 

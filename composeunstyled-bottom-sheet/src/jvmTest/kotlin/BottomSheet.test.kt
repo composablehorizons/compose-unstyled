@@ -59,6 +59,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
@@ -1498,6 +1499,162 @@ class BottomSheetTest {
       awaitIdle()
       onNodeWithTag("item_4").assertIsDisplayed()
     }
+  }
+
+  @Test
+  fun `scrollable column expands to visible sheet height`() = runComposeUiTest {
+    val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
+      containerHeight * 0.5f
+    }
+
+    setContent {
+      Box(
+        Modifier
+          .requiredSize(400.dp)
+          .testTag("root"),
+      ) {
+        val state = rememberBottomSheetState(
+          initialDetent = halfExpandedDetent,
+          detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.testTag("sheet"),
+        ) {
+          SheetPanel(Modifier.testTag("panel")) {
+            Column(
+              Modifier
+                .testTag("scrollable_content")
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(6) { index ->
+                BasicText(
+                  text = "item_$index",
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("sheet"))
+
+    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+    val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
+    val scrollableContentBounds = onNodeWithTag(
+      "scrollable_content",
+    ).fetchSemanticsNode().boundsInRoot
+    val visibleSheetHeight = rootBounds.bottom - panelBounds.top
+
+    assertThat(visibleSheetHeight).isEqualTo(rootBounds.height / 2f)
+    assertThat(scrollableContentBounds.height).isEqualTo(visibleSheetHeight)
+  }
+
+  @Test
+  fun `scrollable column without fixed height does not clip last item`() = runComposeUiTest {
+    val expanded = SheetDetent(identifier = "peek3") { containerHeight, _ ->
+      containerHeight * 0.7f
+    }
+
+    setContent {
+      Box(
+        Modifier
+          .requiredSize(400.dp)
+          .testTag("root"),
+      ) {
+        val sheetState = rememberBottomSheetState(
+          initialDetent = expanded,
+          detents = listOf(
+            SheetDetent.Hidden,
+            expanded,
+          ),
+        )
+
+        UnstyledBottomSheet(
+          state = sheetState,
+        ) {
+          SheetPanel(backgroundColor = Color.White) {
+            Column(
+              Modifier
+                .testTag("scrollable_content")
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(10) { index ->
+                BasicText(
+                  text = "index = $index",
+                  modifier = Modifier
+                    .testTag("item_$index")
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("root"))
+
+    onNodeWithTag("item_9").performScrollTo()
+
+    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+    val lastItemBounds = onNodeWithTag("item_9").fetchSemanticsNode().boundsInRoot
+
+    assertThat(lastItemBounds.bottom).isLessThanOrEqualTo(rootBounds.bottom)
+  }
+
+  @Test
+  fun `fully expanded sheet with tall content anchors to container top`() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(
+        Modifier
+          .requiredSize(400.dp)
+          .testTag("root"),
+      ) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.testTag("sheet"),
+        ) {
+          SheetPanel(Modifier.testTag("panel")) {
+            Column(
+              Modifier
+                .testTag("scrollable_content")
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(6) { index ->
+                BasicText(
+                  text = "item_$index",
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("sheet"))
+
+    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+    val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
+
+    assertThat(panelBounds.top).isEqualTo(rootBounds.top)
+    assertThat(state.offset).isEqualTo(rootBounds.height)
   }
 
   @Test
