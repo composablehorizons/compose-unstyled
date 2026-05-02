@@ -47,7 +47,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
@@ -70,7 +69,7 @@ class ModalState(initiallyVisible: Boolean = false) {
     }
 
   suspend fun awaitAttachedToWindow() {
-    snapshotFlow { attachedToWindow }.filter { it }.first()
+    snapshotFlow { attachedToWindow }.first { it }
   }
 }
 
