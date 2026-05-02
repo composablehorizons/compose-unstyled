@@ -78,7 +78,22 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(libs.compose.foundation)
+        api(projects.composeunstyledButton)
+        api(projects.composeunstyledCheckbox)
+        api(projects.composeunstyledTriStateCheckbox)
+        api(projects.composeunstyledDisclosure)
+        api(projects.composeunstyledProgressIndicator)
+        api(projects.composeunstyledToggleSwitch)
+        api(projects.composeunstyledTabGroup)
+        api(projects.composeunstyledIcon)
+        api(projects.composeunstyledTextField)
+        api(projects.composeunstyledRadioGroup)
+        api(projects.composeunstyledOutline)
+        api(projects.composeunstyledSlider)
+        api(projects.composeunstyledSeparators)
+        api(projects.composeunstyledStack)
+        api(projects.composeunstyledFocusRing)
+
         api(projects.composeunstyledBuildModifier)
         api(projects.composeunstyledModal)
         api(projects.composeunstyledScrim)
