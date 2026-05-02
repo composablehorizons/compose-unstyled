@@ -42,7 +42,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -90,7 +89,6 @@ import com.composeunstyled.androidx.compose.foundation.gestures.unstyledAnchored
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 private fun Saver(
@@ -534,7 +532,6 @@ fun BottomSheet(
   SideEffect { scope.enabled = enabled }
 
   val coroutineScope = rememberCoroutineScope()
-  val density = LocalDensity.current
 
   BoxWithConstraints(
     modifier = Modifier.fillMaxSize().onSizeChanged {
@@ -548,13 +545,7 @@ fun BottomSheet(
         add(
           Modifier
             .onSizeChanged {
-              // Keep the tallest measured content height so detent math is based on natural content size
-              // even when the visible viewport is constrained by the current sheet position.
-              state.contentHeightPx = if (state.contentHeightPx.isNaN()) {
-                it.height.toFloat()
-              } else {
-                max(state.contentHeightPx, it.height.toFloat())
-              }
+              state.contentHeightPx = it.height.toFloat()
               state.invalidateDetents()
             }
             .sheetOffset(state = state, imeAware = imeAware),
@@ -582,13 +573,6 @@ fun BottomSheet(
         }
         add(
           modifier
-            .heightIn(
-              max = if (state.offset > 0f) {
-                with(density) { state.offset.toDp() }
-              } else {
-                Dp.Infinity
-              },
-            )
             .pointerInput(Unit) { detectTapGestures { } }
             .clip(shape)
             .background(backgroundColor)
