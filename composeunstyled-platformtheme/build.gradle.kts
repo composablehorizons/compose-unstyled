@@ -118,6 +118,12 @@ kotlin {
       implementation(libs.composables.ripple)
     }
 
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.test.runner)
+    }
+
     commonTest.dependencies {
       implementation(kotlin("test"))
 
