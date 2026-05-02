@@ -72,13 +72,9 @@ class DialogState(initiallyVisible: Boolean = false) {
   internal val modalState = ModalState(initiallyVisible = initiallyVisible)
 
   var visible: Boolean
-    get() = modalState.targetVisible
+    get() = modalState.transitionState.targetState
     set(value) {
-      if (value) {
-        modalState.show()
-      } else {
-        modalState.dismiss()
-      }
+      modalState.transitionState.targetState = value
     }
 }
 

@@ -207,7 +207,7 @@ class ModalBottomSheetTest {
       mainClock.advanceTimeBy(150)
       waitForIdle()
       assertTrue(state.modalState.transitionState.isIdle)
-      assertTrue(state.modalState.targetVisible)
+      assertTrue(state.modalState.transitionState.targetState)
     }
   }
 

@@ -42,7 +42,7 @@ actual fun Modal(
   content: @Composable () -> Unit,
 ) {
   if (
-    state.targetVisible.not() &&
+    state.transitionState.targetState.not() &&
     (state.mountedFragments == 0 || state.transitionState.isIdle)
   ) {
     return

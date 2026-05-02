@@ -151,16 +151,16 @@ class ModalBottomSheetState(
         bottomSheetState.animateTo(value)
         if (value == SheetDetent.Hidden && bottomSheetState.currentDetent == SheetDetent.Hidden) {
           modalDetent = SheetDetent.Hidden
-          modalState.dismiss()
+          modalState.transitionState.targetState = false
         }
       } else {
         modalDetent = value
         if (value == SheetDetent.Hidden) {
           bottomSheetState.animateTo(value)
-          modalState.dismiss()
+          modalState.transitionState.targetState = false
           return
         }
-        modalState.show()
+        modalState.transitionState.targetState = true
         pendingDetentChange?.cancel()
         pendingDetentChange = scope.launch {
           awaitModalAndSheetAnchors()
@@ -184,7 +184,7 @@ class ModalBottomSheetState(
     if (isBottomSheetVisible) {
       bottomSheetState.jumpTo(value)
       if (value == SheetDetent.Hidden) {
-        modalState.dismiss()
+        modalState.transitionState.targetState = false
       }
       return
     }
@@ -192,9 +192,9 @@ class ModalBottomSheetState(
     pendingDetentChange?.cancel()
     pendingDetentChange = scope.launch {
       if (value == SheetDetent.Hidden) {
-        modalState.dismiss()
+        modalState.transitionState.targetState = false
       } else {
-        modalState.show()
+        modalState.transitionState.targetState = true
       }
       if (value != SheetDetent.Hidden) {
         awaitModalAndSheetAnchors()
@@ -266,7 +266,7 @@ fun UnstyledModalBottomSheet(
       dismissRequested = true
       currentDismissCallback()
     }
-    state.modalState.dismiss()
+    state.modalState.transitionState.targetState = false
     state.modalDetent = SheetDetent.Hidden
     state.bottomSheetState.targetDetent = SheetDetent.Hidden
   }

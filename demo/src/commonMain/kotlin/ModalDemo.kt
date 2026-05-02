@@ -127,8 +127,8 @@ fun ModalDemo() {
     animationSpec = tween(durationMillis = 180),
   )
 
-  LaunchedEffect(modalState.targetVisible, selectedIndex) {
-    if (modalState.targetVisible) {
+  LaunchedEffect(modalState.transitionState.targetState, selectedIndex) {
+    if (modalState.transitionState.targetState) {
       pagerState.scrollToPage(selectedIndex)
     }
   }
@@ -154,7 +154,7 @@ fun ModalDemo() {
           UnstyledButton(
             onClick = {
               selectedIndex = index
-              modalState.show()
+              modalState.transitionState.targetState = true
             },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(0.dp),
@@ -174,7 +174,7 @@ fun ModalDemo() {
 
     Modal(state = modalState) {
       EscapeHandler {
-        modalState.dismiss()
+        modalState.transitionState.targetState = false
       }
       UnstyledScrim(
         enter = fadeIn(tween(durationMillis = 220)),
@@ -185,7 +185,7 @@ fun ModalDemo() {
         modifier = Modifier
           .fillMaxSize()
           .pointerInput(Unit) {
-            detectTapGestures { modalState.dismiss() }
+            detectTapGestures { modalState.transitionState.targetState = false }
           },
         contentAlignment = Alignment.Center,
       ) {
