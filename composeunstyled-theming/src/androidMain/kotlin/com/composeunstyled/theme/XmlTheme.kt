@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.composeunstyled.primitives.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
