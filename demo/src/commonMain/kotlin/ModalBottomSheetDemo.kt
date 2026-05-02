@@ -52,7 +52,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.DragIndication
 import com.composeunstyled.ModalBottomSheet
 import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
@@ -60,6 +59,7 @@ import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledDragIndication
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.rememberModalBottomSheetState
@@ -126,7 +126,7 @@ fun ModalBottomSheetDemo() {
           Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
             val interactionSource = remember { MutableInteractionSource() }
 
-            DragIndication(
+            UnstyledDragIndication(
               interactionSource = interactionSource,
               modifier = Modifier
                 .padding(top = 22.dp)

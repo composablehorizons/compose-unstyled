@@ -36,6 +36,10 @@ data class TestResult(
   val ignored: Boolean = false,
 )
 
+@Deprecated(
+  "Use runComposeUiTest instead",
+  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest"),
+)
 fun testCase(
   name: String,
   expected: KClass<out Throwable>? = null,
@@ -91,6 +95,10 @@ fun testCase(
   }
 }
 
+@Deprecated(
+  "Use runComposeUiTest instead",
+  ReplaceWith("runComposeUiTest", "androidx.compose.ui.test.runComposeUiTest"),
+)
 fun runTestSuite(block: TestSuiteScope.() -> Unit) {
   val scope = TestSuiteScope()
   scope.block()
