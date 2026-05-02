@@ -99,7 +99,7 @@ mavenPublishing {
 
   pom {
     name.set("Compose Unstyled Internal Shared")
-    description.set("Internal shared utilities for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
+    description.set("Build modifier for Jetpack Compose.")
     url.set(projectUrl)
 
     licenses {
