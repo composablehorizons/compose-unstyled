@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledModalBottomSheet"
+      baseName = "ComposeUnstyledScrim"
       isStatic = true
     }
   }
@@ -79,9 +79,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
-        implementation(projects.composeunstyledBuildModifier)
-        api(projects.composeunstyledBottomSheet)
-        implementation(projects.composeunstyledEscapeHandler)
         implementation(projects.composeunstyledModal)
       }
     }
@@ -91,13 +88,11 @@ kotlin {
       implementation(libs.androidx.compose.test.manifest)
       implementation(libs.androidx.espresso)
       implementation(project(":testcase"))
-      implementation(projects.composeunstyledScrim)
     }
 
     commonTest.dependencies {
       implementation(kotlin("test"))
       implementation(project(":testcase"))
-      implementation(projects.composeunstyledScrim)
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
       implementation(libs.compose.ui.test)
@@ -132,7 +127,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.modalbottomsheet"
+  namespace = "com.composeunstyled.scrim"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -151,13 +146,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-modal-bottom-sheet",
+    artifactId = "composeunstyled-scrim",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Modal Bottom Sheet")
-    description.set("Modal bottom sheet primitive for Compose Unstyled - foundational API for building modal sheet surfaces in Compose Multiplatform.")
+    name.set("Compose Unstyled Scrim")
+    description.set("Scrim primitive for Compose Unstyled - foundational API for building modal overlays in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

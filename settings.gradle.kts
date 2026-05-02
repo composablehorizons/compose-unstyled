@@ -38,6 +38,7 @@ dependencyResolutionManagement {
 include(":testcase")
 include(":composeunstyled-build-modifier")
 include(":composeunstyled-modal")
+include(":composeunstyled-scrim")
 include(":composeunstyled-dialog")
 include(":composeunstyled-bottom-sheet")
 include(":composeunstyled-escape-handler")
