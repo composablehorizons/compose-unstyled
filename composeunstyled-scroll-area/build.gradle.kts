@@ -83,6 +83,13 @@ kotlin {
       }
     }
 
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+      implementation(project(":testcase"))
+    }
+
     commonTest.dependencies {
       implementation(kotlin("test"))
       implementation(project(":testcase"))
