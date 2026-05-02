@@ -42,10 +42,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
@@ -54,6 +57,7 @@ private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(d
 class ModalState(initiallyVisible: Boolean = false) {
   internal val visibilityState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
+  internal var attachedToWindow by mutableStateOf(false)
   private var innerVisible by mutableStateOf(initiallyVisible)
   val isAnimating: Boolean
     get() = visibilityState.isIdle.not()
@@ -64,6 +68,10 @@ class ModalState(initiallyVisible: Boolean = false) {
       innerVisible = value
       visibilityState.targetState = value
     }
+
+  suspend fun awaitAttachedToWindow() {
+    snapshotFlow { attachedToWindow }.filter { it }.first()
+  }
 }
 
 private val ModalStateSaver = run {

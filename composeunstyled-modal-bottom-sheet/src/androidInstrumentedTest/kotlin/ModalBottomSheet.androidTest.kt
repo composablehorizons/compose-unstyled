@@ -42,12 +42,12 @@ class ModalBottomSheet {
     testCase("sheet is dismissed, when pressing Back with dismissOnBackPress true") {
       var dismissCalled = false
       setContent {
-        ModalBottomSheet(
+        UnstyledModalBottomSheet(
           state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnBackPress = true),
           onDismiss = { dismissCalled = true },
+          overlay = { UnstyledScrim() },
         ) {
-          Scrim()
           Sheet(
             Modifier
               .fillMaxWidth()
@@ -71,12 +71,12 @@ class ModalBottomSheet {
     testCase("sheet is not dismissed, when pressing escape with dismissOnBackPress false") {
       var dismissCalled = false
       setContent {
-        ModalBottomSheet(
+        UnstyledModalBottomSheet(
           rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnBackPress = false),
           onDismiss = { dismissCalled = true },
+          overlay = { UnstyledScrim() },
         ) {
-          Scrim()
           Sheet {
             Box(
               Modifier

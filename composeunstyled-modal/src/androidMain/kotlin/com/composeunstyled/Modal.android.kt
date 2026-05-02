@@ -103,6 +103,12 @@ actual fun Modal(
               LocalModalWindow provides localWindow,
               LocalLayoutDirection provides layoutDirection,
             ) {
+              DisposableEffect(state) {
+                state.attachedToWindow = true
+                onDispose {
+                  state.attachedToWindow = false
+                }
+              }
               content()
             }
           }

@@ -600,7 +600,7 @@ fun UnstyledBottomSheet(
 }
 
 @Composable
-fun SheetPanel(
+fun Sheet(
   modifier: Modifier = Modifier,
   shape: Shape = RectangleShape,
   backgroundColor: Color = Color.Unspecified,

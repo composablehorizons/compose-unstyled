@@ -48,10 +48,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
-import com.composeunstyled.SheetPanel
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDragIndication
@@ -94,7 +94,7 @@ fun BottomSheetDemo() {
       state = sheetState,
       modifier = Modifier.fillMaxSize(),
     ) {
-      SheetPanel(
+      Sheet(
         modifier = Modifier
           .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
           .widthIn(max = 640.dp)
