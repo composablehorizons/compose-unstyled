@@ -48,6 +48,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+private val NoPadding = PaddingValues(0.dp)
+
 /**
  * An accessible clickable component used to create buttons with the styling of your choice.
  *
