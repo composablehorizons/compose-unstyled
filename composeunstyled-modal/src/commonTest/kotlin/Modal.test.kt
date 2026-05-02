@@ -85,7 +85,7 @@ class ModalTest {
           UnstyledScrim(Modifier.testTag("scrim"))
         }
 
-        modalState.visible = false
+        modalState.dismiss()
       }
 
       waitForIdle()
@@ -108,7 +108,11 @@ class ModalTest {
 
       setContent {
         val modalState = rememberModalState(initiallyVisible = visible)
-        modalState.visible = visible
+        if (visible) {
+          modalState.show()
+        } else {
+          modalState.dismiss()
+        }
 
         Modal(state = modalState) {
           UnstyledScrim(Modifier.testTag("scrim"))

@@ -50,7 +50,7 @@ class ModalAndroidTest {
       }
 
       onNodeWithTag("layout_direction").assertTextEquals("rtl")
-      state.visible = false
+      state.dismiss()
       waitForIdle()
     }
   }

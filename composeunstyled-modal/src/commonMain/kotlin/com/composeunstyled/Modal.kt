@@ -61,10 +61,18 @@ class ModalState(initiallyVisible: Boolean = false) {
 
   var visible: Boolean
     get() = innerVisible
-    set(value) {
+    private set(value) {
       innerVisible = value
       transitionState.targetState = value
     }
+
+  fun show() {
+    visible = true
+  }
+
+  fun dismiss() {
+    visible = false
+  }
 
   suspend fun awaitAttachedToWindow() {
     snapshotFlow { attachedToWindow }.first { it }

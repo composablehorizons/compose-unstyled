@@ -74,7 +74,11 @@ class DialogState(initiallyVisible: Boolean = false) {
   var visible: Boolean
     get() = modalState.visible
     set(value) {
-      modalState.visible = value
+      if (value) {
+        modalState.show()
+      } else {
+        modalState.dismiss()
+      }
     }
 }
 
