@@ -21,8 +21,9 @@
  */
 package com.composeunstyled
 
+import assertk.assertThat
+import assertk.assertions.isCloseTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class SliderTest {
 
@@ -36,6 +37,6 @@ class SliderTest {
 
     sliderState.value = 0.6f
 
-    assertEquals(0.6f, sliderState.value, absoluteTolerance = 0.001f)
+    assertThat(sliderState.value).isCloseTo(0.6f, 0.001f)
   }
 }

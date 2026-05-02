@@ -96,6 +96,7 @@ kotlin {
 
     commonTest.dependencies {
       implementation(kotlin("test"))
+      implementation(libs.assertk)
       implementation(project(":testcase"))
       implementation(projects.composeunstyledScrim)
 

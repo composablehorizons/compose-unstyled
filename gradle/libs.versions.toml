@@ -19,13 +19,13 @@ android-minSDK = "23"
 agp = "8.10.1"
 
 # testing
-assertj = "3.24.2"
+assertk = "0.28.1"
 junitAndroid = "1.8.2"
 espresso = "3.5.1"
 testRunner = "1.5.2"
 
 [libraries]
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 androidx-activitycompose = { module = "androidx.activity:activity-compose", version.ref = "activity-core" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }

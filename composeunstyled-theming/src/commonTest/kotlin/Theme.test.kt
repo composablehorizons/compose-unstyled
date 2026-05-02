@@ -29,12 +29,13 @@ import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ThemeCommonTest {
 
@@ -104,7 +105,7 @@ class ThemeCommonTest {
 
     onNodeWithText("Hello").assertExists()
     waitForIdle()
-    assertEquals(1, themedContentRecompositions)
+    assertThat(themedContentRecompositions).isEqualTo(1)
   }
 
   val strings = ThemeProperty<String>("strings")

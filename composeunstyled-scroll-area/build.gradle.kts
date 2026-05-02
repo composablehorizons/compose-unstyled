@@ -92,6 +92,7 @@ kotlin {
 
     commonTest.dependencies {
       implementation(kotlin("test"))
+      implementation(libs.assertk)
       implementation(project(":testcase"))
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)

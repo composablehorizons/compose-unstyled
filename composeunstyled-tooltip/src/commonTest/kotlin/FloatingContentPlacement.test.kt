@@ -22,8 +22,9 @@
 package com.composeunstyled
 
 import androidx.compose.ui.unit.LayoutDirection
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class FloatingContentPlacementTest {
   private val anchorWidth = 100
@@ -46,8 +47,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(0, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo(0)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   @Test
@@ -64,8 +65,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(anchorWidth - contentWidth, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo(anchorWidth - contentWidth)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   // TopEnd tests
@@ -83,8 +84,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(anchorWidth - contentWidth, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo(anchorWidth - contentWidth)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   @Test
@@ -101,8 +102,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(0, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo(0)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   // TopCenter tests
@@ -120,8 +121,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals((anchorWidth - contentWidth) / 2, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo((anchorWidth - contentWidth) / 2)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   @Test
@@ -139,8 +140,8 @@ class FloatingContentPlacementTest {
     )
 
     // TopCenter should be the same in RTL
-    assertEquals((anchorWidth - contentWidth) / 2, x)
-    assertEquals(-contentHeight, y)
+    assertThat(x).isEqualTo((anchorWidth - contentWidth) / 2)
+    assertThat(y).isEqualTo(-contentHeight)
   }
 
   // BottomStart tests
@@ -158,8 +159,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(0, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo(0)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   @Test
@@ -176,8 +177,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(anchorWidth - contentWidth, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo(anchorWidth - contentWidth)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   // BottomEnd tests
@@ -195,8 +196,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(anchorWidth - contentWidth, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo(anchorWidth - contentWidth)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   @Test
@@ -213,8 +214,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals(0, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo(0)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   // BottomCenter tests
@@ -232,8 +233,8 @@ class FloatingContentPlacementTest {
       contentHeight = contentHeight,
     )
 
-    assertEquals((anchorWidth - contentWidth) / 2, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo((anchorWidth - contentWidth) / 2)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   @Test
@@ -251,8 +252,8 @@ class FloatingContentPlacementTest {
     )
 
     // BottomCenter should be the same in RTL
-    assertEquals((anchorWidth - contentWidth) / 2, x)
-    assertEquals(anchorHeight, y)
+    assertThat(x).isEqualTo((anchorWidth - contentWidth) / 2)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   // CenterStart tests
@@ -271,8 +272,8 @@ class FloatingContentPlacementTest {
     )
 
     // CenterStart: content positioned to the LEFT of anchor
-    assertEquals(-contentWidth, x)
-    assertEquals((anchorHeight - contentHeight) / 2, y)
+    assertThat(x).isEqualTo(-contentWidth)
+    assertThat(y).isEqualTo((anchorHeight - contentHeight) / 2)
   }
 
   @Test
@@ -290,8 +291,8 @@ class FloatingContentPlacementTest {
     )
 
     // CenterStart in RTL: content positioned to the RIGHT of anchor (mirrored)
-    assertEquals(anchorWidth, x)
-    assertEquals((anchorHeight - contentHeight) / 2, y)
+    assertThat(x).isEqualTo(anchorWidth)
+    assertThat(y).isEqualTo((anchorHeight - contentHeight) / 2)
   }
 
   // CenterEnd tests
@@ -310,8 +311,8 @@ class FloatingContentPlacementTest {
     )
 
     // CenterEnd: content positioned to the RIGHT of anchor
-    assertEquals(anchorWidth, x)
-    assertEquals((anchorHeight - contentHeight) / 2, y)
+    assertThat(x).isEqualTo(anchorWidth)
+    assertThat(y).isEqualTo((anchorHeight - contentHeight) / 2)
   }
 
   @Test
@@ -329,8 +330,8 @@ class FloatingContentPlacementTest {
     )
 
     // CenterEnd in RTL: content positioned to the LEFT of anchor (mirrored)
-    assertEquals(-contentWidth, x)
-    assertEquals((anchorHeight - contentHeight) / 2, y)
+    assertThat(x).isEqualTo(-contentWidth)
+    assertThat(y).isEqualTo((anchorHeight - contentHeight) / 2)
   }
 
   // Edge cases with different sizes
@@ -344,7 +345,7 @@ class FloatingContentPlacementTest {
       contentWidth = smallContent,
     )
 
-    assertEquals(0, x)
+    assertThat(x).isEqualTo(0)
   }
 
   @Test
@@ -357,7 +358,7 @@ class FloatingContentPlacementTest {
       contentWidth = smallContent,
     )
 
-    assertEquals(anchorWidth - smallContent, x)
+    assertThat(x).isEqualTo(anchorWidth - smallContent)
   }
 
   @Test
@@ -370,7 +371,7 @@ class FloatingContentPlacementTest {
       contentWidth = smallContent,
     )
 
-    assertEquals((anchorWidth - smallContent) / 2, x)
+    assertThat(x).isEqualTo((anchorWidth - smallContent) / 2)
   }
 
   @Test
@@ -384,7 +385,7 @@ class FloatingContentPlacementTest {
     )
 
     // TopEnd should position at anchorWidth - contentWidth (can be negative)
-    assertEquals(anchorWidth - largeContent, x)
+    assertThat(x).isEqualTo(anchorWidth - largeContent)
   }
 
   @Test
@@ -398,7 +399,7 @@ class FloatingContentPlacementTest {
     )
 
     // TopCenter should center even if result is negative
-    assertEquals((anchorWidth - largeContent) / 2, x)
+    assertThat(x).isEqualTo((anchorWidth - largeContent) / 2)
   }
 
   @Test
@@ -410,7 +411,7 @@ class FloatingContentPlacementTest {
     )
 
     // Bottom placements should position at anchorHeight
-    assertEquals(anchorHeight, y)
+    assertThat(y).isEqualTo(anchorHeight)
   }
 
   @Test
@@ -422,7 +423,7 @@ class FloatingContentPlacementTest {
     )
 
     // Center should position at (anchorHeight - contentHeight) / 2
-    assertEquals((anchorHeight - contentHeight) / 2, y)
+    assertThat(y).isEqualTo((anchorHeight - contentHeight) / 2)
   }
 
   @Test
@@ -435,7 +436,7 @@ class FloatingContentPlacementTest {
     )
 
     // With smaller content, should be positive offset
-    assertEquals((anchorHeight - smallContentHeight) / 2, y)
+    assertThat(y).isEqualTo((anchorHeight - smallContentHeight) / 2)
   }
 }
 
