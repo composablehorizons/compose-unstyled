@@ -48,7 +48,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.DragIndication
+import com.composeunstyled.UnstyledDragIndication
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
@@ -106,7 +106,7 @@ fun BottomSheetDemo() {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
           val interactionSource = remember { MutableInteractionSource() }
 
-          DragIndication(
+          UnstyledDragIndication(
             interactionSource = interactionSource,
             modifier = Modifier
               .padding(top = 22.dp)

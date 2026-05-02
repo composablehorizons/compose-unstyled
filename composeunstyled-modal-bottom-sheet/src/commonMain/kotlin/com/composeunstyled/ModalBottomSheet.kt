@@ -259,7 +259,7 @@ class ModalBottomSheetScope internal constructor(
  *             modifier = Modifier.fillMaxWidth().height(1200.dp),
  *             contentAlignment = Alignment.TopCenter
  *         ) {
- *             DragIndication()
+ *             UnstyledDragIndication()
  *         }
  *     }
  * }

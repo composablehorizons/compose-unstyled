@@ -512,7 +512,7 @@ private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetConte
  *         modifier = Modifier.fillMaxWidth().height(1200.dp),
  *         contentAlignment = Alignment.TopCenter
  *     ) {
- *         DragIndication(Modifier.width(32.dp).height(4.dp))
+ *         UnstyledDragIndication(Modifier.width(32.dp).height(4.dp))
  *     }
  * }
  * ```
@@ -711,7 +711,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 /**
  * A drag indication that can be used to control the bottom sheet.
  *
- * It is strongly advised to use this component within your [UnstyledBottomSheet]. Sheets are not by default accessible, and the [DragIndication] allows toggling of the sheet via the keyboard.
+ * It is strongly advised to use this component within your [UnstyledBottomSheet]. Sheets are not by default accessible, and the [UnstyledDragIndication] allows toggling of the sheet via the keyboard.
  *
  * @param modifier Modifier to be applied to the drag indication.
  * @param indication The indication to be shown when the drag indication is interacted with.
@@ -854,22 +854,5 @@ fun UnstyledDragIndication(
         indication = indication,
         onClick = onIndicationClicked,
       ),
-  )
-}
-
-@Deprecated(
-  "Renamed to UnstyledDragIndication",
-  ReplaceWith("UnstyledDragIndication(modifier, indication, interactionSource)"),
-)
-@Composable
-fun DragIndication(
-  modifier: Modifier = Modifier,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-) {
-  UnstyledDragIndication(
-    modifier = modifier,
-    indication = indication,
-    interactionSource = interactionSource,
   )
 }

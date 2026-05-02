@@ -1274,7 +1274,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1296,7 +1296,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1318,7 +1318,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1340,7 +1340,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(300.dp))
           }
         }
@@ -1775,7 +1775,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1805,7 +1805,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1833,7 +1833,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1860,7 +1860,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1895,7 +1895,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1929,7 +1929,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -1974,7 +1974,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -2012,7 +2012,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(500.dp))
           }
         }
@@ -2042,7 +2042,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
@@ -2069,7 +2069,7 @@ class BottomSheetTest {
 
         UnstyledBottomSheet(state) {
           SheetPanel {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+            UnstyledDragIndication(Modifier.testTag("drag_indication").size(32.dp))
             Box(Modifier.fillMaxWidth().height(400.dp))
           }
         }
