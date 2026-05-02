@@ -41,7 +41,7 @@ actual fun Modal(
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable () -> Unit,
 ) {
-  if (state.visible.not() && (state.mountedFragments == 0 || state.visibilityState.isIdle)) return
+  if (state.visible.not() && (state.mountedFragments == 0 || state.transitionState.isIdle)) return
 
   Dialog(
     onDismissRequest = {},
