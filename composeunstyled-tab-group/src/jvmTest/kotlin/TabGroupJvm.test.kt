@@ -40,8 +40,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class TabGroupTest {
   @Test
@@ -469,7 +470,7 @@ class TabGroupTest {
       keyPress(Key.Enter)
     }
 
-    assertEquals("tab2", selectedTab)
+    assertThat(selectedTab).isEqualTo("tab2")
   }
 
   @Test
@@ -589,7 +590,7 @@ class TabGroupTest {
 
     // Verify that the second tab is focused and activated
     onNodeWithTag("tab2").assertIsFocused()
-    assertEquals("tab2", selectedTab)
+    assertThat(selectedTab).isEqualTo("tab2")
   }
 
   fun KeyInjectionScope.keyPress(key: Key) {

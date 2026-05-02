@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class RelativePositionTest {
   private val density = Density(1f, 1f)
@@ -45,8 +46,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left, position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.left)
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -60,8 +61,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.right - popupSize.width, position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right - popupSize.width)
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -75,8 +76,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left, position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.left)
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   @Test
@@ -90,8 +91,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.right - popupSize.width, position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right - popupSize.width)
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   @Test
@@ -109,10 +110,9 @@ class RelativePositionTest {
     )
 
     // CenterStart: popup positioned to the LEFT of anchor (right edge touches anchor's left edge)
-    assertEquals(anchorWithSpace.left - popupSize.width, position.x)
-    assertEquals(
+    assertThat(position.x).isEqualTo(anchorWithSpace.left - popupSize.width)
+    assertThat(position.y).isEqualTo(
       anchorWithSpace.top + (anchorWithSpace.height / 2) - (popupSize.height / 2),
-      position.y,
     )
   }
 
@@ -128,8 +128,10 @@ class RelativePositionTest {
     )
 
     // CenterEnd: popup positioned to the RIGHT of anchor (left edge touches anchor's right edge)
-    assertEquals(anchorBounds.right, position.x)
-    assertEquals(anchorBounds.top + (anchorBounds.height / 2) - (popupSize.height / 2), position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right)
+    assertThat(
+      position.y,
+    ).isEqualTo(anchorBounds.top + (anchorBounds.height / 2) - (popupSize.height / 2))
   }
 
   // RTL tests
@@ -144,8 +146,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.right - popupSize.width, position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right - popupSize.width)
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -159,8 +161,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left, position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.left)
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -174,8 +176,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.right - popupSize.width, position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right - popupSize.width)
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   @Test
@@ -189,8 +191,8 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left, position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.left)
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   @Test
@@ -205,8 +207,10 @@ class RelativePositionTest {
     )
 
     // CenterStart in RTL: popup positioned to the RIGHT of anchor (mirrored)
-    assertEquals(anchorBounds.right, position.x)
-    assertEquals(anchorBounds.top + (anchorBounds.height / 2) - (popupSize.height / 2), position.y)
+    assertThat(position.x).isEqualTo(anchorBounds.right)
+    assertThat(
+      position.y,
+    ).isEqualTo(anchorBounds.top + (anchorBounds.height / 2) - (popupSize.height / 2))
   }
 
   @Test
@@ -224,10 +228,9 @@ class RelativePositionTest {
     )
 
     // CenterEnd in RTL: popup positioned to the LEFT of anchor (mirrored)
-    assertEquals(anchorWithSpace.left - popupSize.width, position.x)
-    assertEquals(
+    assertThat(position.x).isEqualTo(anchorWithSpace.left - popupSize.width)
+    assertThat(position.y).isEqualTo(
       anchorWithSpace.top + (anchorWithSpace.height / 2) - (popupSize.height / 2),
-      position.y,
     )
   }
 
@@ -242,8 +245,10 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2), position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(
+      position.x,
+    ).isEqualTo(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2))
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -257,8 +262,10 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2), position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(
+      position.x,
+    ).isEqualTo(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2))
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   @Test
@@ -272,8 +279,10 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2), position.x)
-    assertEquals(anchorBounds.top - popupSize.height, position.y)
+    assertThat(
+      position.x,
+    ).isEqualTo(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2))
+    assertThat(position.y).isEqualTo(anchorBounds.top - popupSize.height)
   }
 
   @Test
@@ -287,8 +296,10 @@ class RelativePositionTest {
       popupContentSize = popupSize,
     )
 
-    assertEquals(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2), position.x)
-    assertEquals(anchorBounds.bottom, position.y)
+    assertThat(
+      position.x,
+    ).isEqualTo(anchorBounds.left + (anchorBounds.width / 2) - (popupSize.width / 2))
+    assertThat(position.y).isEqualTo(anchorBounds.bottom)
   }
 
   // Edge clamping tests
@@ -306,8 +317,8 @@ class RelativePositionTest {
       popupContentSize = largePopup,
     )
 
-    assertEquals(anchorNearTop.left, position.x)
-    assertEquals(0, position.y)
+    assertThat(position.x).isEqualTo(anchorNearTop.left)
+    assertThat(position.y).isEqualTo(0)
   }
 
   @Test
@@ -326,8 +337,8 @@ class RelativePositionTest {
 
     // TopEnd would position at anchorNearLeft.right - largePopup.width = 60 - 150 = -90
     // Should clamp to 0
-    assertEquals(0, position.x)
-    assertEquals(anchorNearLeft.top - largePopup.height, position.y)
+    assertThat(position.x).isEqualTo(0)
+    assertThat(position.y).isEqualTo(anchorNearLeft.top - largePopup.height)
   }
 
   @Test
@@ -344,8 +355,8 @@ class RelativePositionTest {
       popupContentSize = largePopup,
     )
 
-    assertEquals(anchorNearBottom.right - largePopup.width, position.x)
-    assertEquals(windowSize.height - largePopup.height, position.y)
+    assertThat(position.x).isEqualTo(anchorNearBottom.right - largePopup.width)
+    assertThat(position.y).isEqualTo(windowSize.height - largePopup.height)
   }
 
   @Test
@@ -365,8 +376,8 @@ class RelativePositionTest {
     // BottomStart would position at anchorNearRight.left = 900
     // Popup extends to 900 + 150 = 1050, which exceeds window width (1000)
     // Should clamp to windowSize.width - largePopup.width = 1000 - 150 = 850
-    assertEquals(windowSize.width - largePopup.width, position.x)
-    assertEquals(anchorNearRight.bottom, position.y)
+    assertThat(position.x).isEqualTo(windowSize.width - largePopup.width)
+    assertThat(position.y).isEqualTo(anchorNearRight.bottom)
   }
 
   @Test
@@ -385,7 +396,7 @@ class RelativePositionTest {
 
     // TopEnd: x = anchorAtTopLeft.right - largePopup.width = 60 - 150 = -90 → clamped to 0
     // TopEnd: y = anchorAtTopLeft.top - largePopup.height = 20 - 100 = -80 → clamped to 0
-    assertEquals(0, position.x)
-    assertEquals(0, position.y)
+    assertThat(position.x).isEqualTo(0)
+    assertThat(position.y).isEqualTo(0)
   }
 }

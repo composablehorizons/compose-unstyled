@@ -49,8 +49,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isTrue
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class TextFieldTest {
   @Test
@@ -183,7 +184,7 @@ class TextFieldTest {
 
     onNodeWithTag("textfield").requestFocus()
     waitForIdle()
-    assertTrue(focused, "Focus should be detected via Modifier.onFocusChanged")
+    assertThat(focused).isTrue()
   }
 
   @Test

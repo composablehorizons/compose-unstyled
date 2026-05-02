@@ -93,6 +93,7 @@ kotlin {
 
     commonTest.dependencies {
       implementation(kotlin("test"))
+      implementation(libs.assertk)
       implementation(project(":testcase"))
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
@@ -103,7 +104,6 @@ kotlin {
 
     jvmTest.dependencies {
       implementation(libs.compose.ui.test.junit4)
-      implementation(libs.assertj.core)
       implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
         exclude(group = "org.jetbrains.compose.material", module = "material")

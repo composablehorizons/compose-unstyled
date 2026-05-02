@@ -44,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
@@ -63,16 +62,20 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isCloseTo
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class BottomSheetCommonTest {
+  private val DensityTolerance = 0.5.dp
+
   @Test
   fun sheet_panel_is_horizontally_centered_in_bottom_sheet_container() = runComposeUiTest {
     lateinit var state: BottomSheetState
@@ -107,7 +110,7 @@ class BottomSheetCommonTest {
     val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
 
     val expectedLeft = (rootBounds.width - panelBounds.width) / 2f
-    assertEquals(expectedLeft, panelBounds.left, 0.5f)
+    assertThat(panelBounds.left).isCloseTo(expectedLeft, 0.5f)
   }
 
   @Test
@@ -143,7 +146,7 @@ class BottomSheetCommonTest {
     val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
     val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
 
-    assertEquals(rootBounds.bottom, panelBounds.bottom)
+    assertThat(panelBounds.bottom).isEqualTo(rootBounds.bottom)
   }
 
   @Test
@@ -274,8 +277,8 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Sheet should remain at the same detent and offset
-      assertEquals(halfExpandedDetent, state.currentDetent)
-      assertEquals(initialOffset, state.offset)
+      assertThat(state.currentDetent).isEqualTo(halfExpandedDetent)
+      assertThat(state.offset).isEqualTo(initialOffset)
     }
 
     testCase("isIdle is false, when dragging sheet") {
@@ -304,7 +307,7 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertTrue(state.isIdle)
+      assertThat(state.isIdle).isTrue()
 
       mainClock.autoAdvance = false
 
@@ -315,7 +318,7 @@ class BottomSheetCommonTest {
       }
       mainClock.advanceTimeBy(50)
 
-      assertFalse(state.isIdle)
+      assertThat(state.isIdle).isFalse()
     }
 
     testCase("isIdle is false during animation, when sheet animates to new detent") {
@@ -354,12 +357,12 @@ class BottomSheetCommonTest {
       }
       mainClock.advanceTimeBy(50)
 
-      assertFalse(state.isIdle)
+      assertThat(state.isIdle).isFalse()
 
       mainClock.autoAdvance = true
       waitForIdle()
 
-      assertTrue(state.isIdle)
+      assertThat(state.isIdle).isTrue()
     }
   }
 
@@ -379,7 +382,7 @@ class BottomSheetCommonTest {
       }
 
       onNodeWithTag("sheet_contents").assertIsNotDisplayed()
-      assertEquals(0f, state.offset)
+      assertThat(state.offset).isEqualTo(0f)
     }
 
     testCase("offset is height of content, when sheet is created with hidden detent") {
@@ -397,7 +400,7 @@ class BottomSheetCommonTest {
       }
 
       onNodeWithTag("sheet_contents").assertIsDisplayed()
-      assertOffsetEquals(40.dp, state.offset)
+      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
     }
 
     testCase("offset is custom detent height, when creating sheet with custom initial detent") {
@@ -419,8 +422,8 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(customDetent, state.currentDetent)
-      assertOffsetEquals(50.dp, state.offset)
+      assertThat(state.currentDetent).isEqualTo(customDetent)
+      assertThat(state.offset).isCloseTo(50.dp.toPx(), DensityTolerance.toPx())
     }
 
     testCase("offset is zero, when sheet is created at hidden detent") {
@@ -436,7 +439,7 @@ class BottomSheetCommonTest {
         }
       }
 
-      assertEquals(0f, state.offset)
+      assertThat(state.offset).isEqualTo(0f)
     }
 
     testCase("offset equals content height, when sheet is created at fully expanded detent") {
@@ -452,7 +455,7 @@ class BottomSheetCommonTest {
         }
       }
 
-      assertOffsetEquals(40.dp, state.offset)
+      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
     }
   }
 
@@ -475,7 +478,7 @@ class BottomSheetCommonTest {
       }
       state.targetDetent = SheetDetent.FullyExpanded
       onNodeWithTag("sheet_contents").assertIsDisplayed()
-      assertOffsetEquals(40.dp, state.offset)
+      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
     }
 
     testCase(
@@ -503,7 +506,7 @@ class BottomSheetCommonTest {
 
       // Content should be displayed
       onNodeWithTag("content").assertIsDisplayed()
-      assertOffsetEquals(40.dp, state.offset)
+      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
     }
 
     testCase("isIdle correctly reflects animation state, when sheet settles at detent") {
@@ -527,7 +530,7 @@ class BottomSheetCommonTest {
 
       // Should not be idle during animation
       mainClock.advanceTimeBy(50)
-      assertFalse(state.isIdle)
+      assertThat(state.isIdle).isFalse()
     }
 
     testCase("isIdle becomes true after settling, when detents are updated") {
@@ -557,7 +560,7 @@ class BottomSheetCommonTest {
 
       // Should eventually settle and become idle
       waitUntil { state.isIdle }
-      assertTrue(state.isIdle)
+      assertThat(state.isIdle).isTrue()
     }
 
     testCase("current and target detents update correctly, when dragging") {
@@ -586,8 +589,8 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(halfDetent, state.currentDetent)
-      assertEquals(halfDetent, state.targetDetent)
+      assertThat(state.currentDetent).isEqualTo(halfDetent)
+      assertThat(state.targetDetent).isEqualTo(halfDetent)
 
       mainClock.autoAdvance = false
       val dragDistance = with(density) { 150.dp.toPx() }
@@ -604,8 +607,8 @@ class BottomSheetCommonTest {
       mainClock.advanceTimeBy(50)
 
       // During drag, target should change to FullyExpanded, current stays at half
-      assertEquals(SheetDetent.FullyExpanded, state.targetDetent)
-      assertEquals(halfDetent, state.currentDetent)
+      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+      assertThat(state.currentDetent).isEqualTo(halfDetent)
 
       // Release
       onNodeWithTag("sheet").performTouchInput {
@@ -616,8 +619,8 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // After settling, both should be FullyExpanded
-      assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
-      assertEquals(SheetDetent.FullyExpanded, state.targetDetent)
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
   }
 
@@ -651,7 +654,7 @@ class BottomSheetCommonTest {
 
       waitForIdle()
 
-      assertOffsetEquals(300.dp, state.offset)
+      assertThat(state.offset).isCloseTo(300.dp.toPx(), DensityTolerance.toPx())
       onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
     }
     testCase("sheet matches sheet content height, when using content-sized detent") {
@@ -681,7 +684,7 @@ class BottomSheetCommonTest {
 
       waitForIdle()
 
-      assertOffsetEquals(200.dp, state.offset)
+      assertThat(state.offset).isCloseTo(200.dp.toPx(), DensityTolerance.toPx())
       onNodeWithTag("sheet").assertHeightIsEqualTo(200.dp)
     }
     testCase("sheet uses fixed height, when using fixed-height detent") {
@@ -711,7 +714,7 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Sheet should be at exactly 150.dp
-      assertOffsetEquals(150.dp, state.offset)
+      assertThat(state.offset).isCloseTo(150.dp.toPx(), DensityTolerance.toPx())
     }
     testCase(
       "sheet takes full container size, when using content-sized detent and content is fillMaxSize()",
@@ -743,7 +746,7 @@ class BottomSheetCommonTest {
 
       waitForIdle()
 
-      assertOffsetEquals(300.dp, state.offset)
+      assertThat(state.offset).isCloseTo(300.dp.toPx(), DensityTolerance.toPx())
       onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
     }
   }
@@ -836,7 +839,7 @@ class BottomSheetCommonTest {
 
       // Even though container changed from 200.dp to 400.dp,
       // fixed detent should still be at 100.dp (not affected by container size)
-      assertOffsetEquals(100.dp, state.offset)
+      assertThat(state.offset).isCloseTo(100.dp.toPx(), DensityTolerance.toPx())
     }
 
     testCase(
@@ -872,7 +875,7 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // When content uses fillMaxSize(), it should match the container height (400.dp)
-      assertOffsetEquals(400.dp, state.offset)
+      assertThat(state.offset).isCloseTo(400.dp.toPx(), DensityTolerance.toPx())
       onNodeWithTag("sheet").assertHeightIsEqualTo(400.dp)
     }
   }
@@ -905,7 +908,7 @@ class BottomSheetCommonTest {
       mainClock.advanceTimeBy(1000L)
 
       // During animation, target should be FullyExpanded
-      assertEquals(SheetDetent.FullyExpanded, state.targetDetent)
+      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
   }
 
@@ -988,7 +991,7 @@ class BottomSheetCommonTest {
       mainClock.advanceTimeByFrame()
 
       // Target detent should remain the same after invalidation
-      assertEquals(originalDetent, state.targetDetent)
+      assertThat(state.targetDetent).isEqualTo(originalDetent)
     }
 
     testCase("sheet moves with content, when content changes at content-based detent") {
@@ -1026,7 +1029,7 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Offset should move with content to new height
-      assertOffsetEquals(200.dp, state.offset)
+      assertThat(state.offset).isCloseTo(200.dp.toPx(), DensityTolerance.toPx())
     }
   }
 
@@ -1053,12 +1056,12 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(listOf(detent100, detent200), state.detents)
+      assertThat(state.detents).isEqualTo(listOf(detent100, detent200))
 
       state.detents = listOf(detent100, detent200, detent300)
       waitForIdle()
 
-      assertEquals(listOf(detent100, detent200, detent300), state.detents)
+      assertThat(state.detents).isEqualTo(listOf(detent100, detent200, detent300))
     }
 
     testCase("sheet moves to closest detent upward, when current detent removed while moving up") {
@@ -1090,16 +1093,16 @@ class BottomSheetCommonTest {
         state.animateTo(detent200)
       }
       // Verify we're actually moving toward detent200
-      assertEquals(detent200, state.targetDetent)
-      assertFalse(state.isIdle)
+      assertThat(state.targetDetent).isEqualTo(detent200)
+      assertThat(state.isIdle).isFalse()
 
       // Remove detent200 while animating toward it
       state.detents = listOf(detent100, detent300, detent400)
 
       // Should move to detent300 (closest upward)
-      assertEquals(detent300, state.targetDetent)
+      assertThat(state.targetDetent).isEqualTo(detent300)
       awaitIdle()
-      assertEquals(detent300, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent300)
     }
 
     testCase(
@@ -1138,8 +1141,8 @@ class BottomSheetCommonTest {
       mainClock.advanceTimeBy(100)
 
       // Verify we're actually moving toward detent300
-      assertEquals(detent300, state.targetDetent)
-      assertFalse(state.isIdle)
+      assertThat(state.targetDetent).isEqualTo(detent300)
+      assertThat(state.isIdle).isFalse()
 
       // Remove detent300 while animating toward it
       state.detents = listOf(detent100, detent200, detent400)
@@ -1149,7 +1152,7 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Should move to detent200 (closest downward)
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase(
@@ -1208,8 +1211,8 @@ class BottomSheetCommonTest {
       mainClock.advanceTimeBy(100)
 
       // Verify we're actually moving toward detent300
-      assertEquals(detent300, state.targetDetent)
-      assertFalse(state.isIdle)
+      assertThat(state.targetDetent).isEqualTo(detent300)
+      assertThat(state.isIdle).isFalse()
 
       // Remove all detents below detent400, leaving only detent400 and detent500
       // No valid detent in downward direction - should fall back to first detent
@@ -1220,7 +1223,7 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Should move to first detent (detent400)
-      assertEquals(detent400, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent400)
     }
 
     testCase("detents update successfully, when new list has same length but different detents") {
@@ -1257,9 +1260,9 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // If we reach here without crashing, the test passes
-      assertEquals(2, sheetState.detents.size)
-      assertTrue(sheetState.detents.contains(Header))
-      assertTrue(sheetState.detents.contains(Tall))
+      assertThat(sheetState.detents.size).isEqualTo(2)
+      assertThat(sheetState.detents).contains(Header)
+      assertThat(sheetState.detents).contains(Tall)
     }
   }
 
@@ -1397,7 +1400,7 @@ class BottomSheetCommonTest {
       onNodeWithTag("item_9").performScrollTo()
 
       // Sheet offset should NOT change - only content scrolls
-      assertEquals(initialOffset, state.offset)
+      assertThat(state.offset).isEqualTo(initialOffset)
     }
 
     testCase("expands sheet before scrolling content, when swiping up with multiple detents") {
@@ -1447,7 +1450,7 @@ class BottomSheetCommonTest {
         swipeUp()
       }
       awaitIdle()
-      assertEquals(SheetDetent.FullyExpanded, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
 
     testCase("bottom of scrollable sheet is not clipped") {
@@ -1551,8 +1554,8 @@ class BottomSheetCommonTest {
     ).fetchSemanticsNode().boundsInRoot
     val visibleSheetHeight = rootBounds.bottom - panelBounds.top
 
-    assertEquals(rootBounds.height / 2f, visibleSheetHeight)
-    assertEquals(visibleSheetHeight, scrollableContentBounds.height)
+    assertThat(visibleSheetHeight).isEqualTo(rootBounds.height / 2f)
+    assertThat(scrollableContentBounds.height).isEqualTo(visibleSheetHeight)
   }
 
   @Test
@@ -1606,7 +1609,7 @@ class BottomSheetCommonTest {
     val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
     val lastItemBounds = onNodeWithTag("item_9").fetchSemanticsNode().boundsInRoot
 
-    assertTrue(lastItemBounds.bottom <= rootBounds.bottom)
+    assertThat(lastItemBounds.bottom <= rootBounds.bottom).isTrue()
   }
 
   @Test
@@ -1653,8 +1656,8 @@ class BottomSheetCommonTest {
     val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
     val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
 
-    assertEquals(rootBounds.top, panelBounds.top)
-    assertEquals(rootBounds.height, state.offset)
+    assertThat(panelBounds.top).isEqualTo(rootBounds.top)
+    assertThat(state.offset).isEqualTo(rootBounds.height)
   }
 
   @Test
@@ -1683,7 +1686,7 @@ class BottomSheetCommonTest {
       state.targetDetent = detent200
       waitForIdle()
 
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
     testCase("detent change proceeds, when confirmDetentChange returns true") {
@@ -1710,7 +1713,7 @@ class BottomSheetCommonTest {
       state.targetDetent = detent200
       waitForIdle()
 
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("sheet returns to original detent, when drag is blocked by confirmDetentChange") {
@@ -1743,8 +1746,8 @@ class BottomSheetCommonTest {
       waitForIdle()
 
       // Should return to original detent
-      assertEquals(detent100, state.currentDetent)
-      assertEquals(initialOffset, state.offset)
+      assertThat(state.currentDetent).isEqualTo(detent100)
+      assertThat(state.offset).isEqualTo(initialOffset)
     }
 
     testCase(
@@ -1778,7 +1781,7 @@ class BottomSheetCommonTest {
       }
       waitForIdle()
 
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
     testCase("sheet stays at current detent, when confirmDetentChange blocks all other detents") {
@@ -1807,12 +1810,12 @@ class BottomSheetCommonTest {
       // Try to swipe up
       onNodeWithTag("sheet").performTouchInput { swipeUp() }
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
 
       // Try to swipe down
       onNodeWithTag("sheet").performTouchInput { swipeDown() }
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("confirmDetentChange is called with correct detent, when dragging upward") {
@@ -1844,7 +1847,7 @@ class BottomSheetCommonTest {
       onNodeWithTag("sheet").performTouchInput { swipeUp() }
       waitForIdle()
 
-      assertEquals(detent200, receivedDetent)
+      assertThat(receivedDetent).isEqualTo(detent200)
     }
 
     testCase("confirmDetentChange is called with correct detent, when using targetDetent setter") {
@@ -1875,7 +1878,7 @@ class BottomSheetCommonTest {
       state.targetDetent = detent200
       waitForIdle()
 
-      assertEquals(detent200, receivedDetent)
+      assertThat(receivedDetent).isEqualTo(detent200)
     }
 
     testCase("confirmDetentChange is called with correct detent, when using animateTo") {
@@ -1911,7 +1914,7 @@ class BottomSheetCommonTest {
       }
       waitForIdle()
 
-      assertEquals(detent200, receivedDetent)
+      assertThat(receivedDetent).isEqualTo(detent200)
     }
   }
 
@@ -1939,12 +1942,12 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
 
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
 
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("sheet moves to next detent down, when drag indication clicked from top") {
@@ -1969,12 +1972,12 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(detent300, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent300)
 
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
 
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("drag indication is disabled, when only one detent") {
@@ -2024,17 +2027,17 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
 
       // Click to move to detent200
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
 
       // Click to move to detent300
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent300, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent300)
     }
 
     testCase("sheet reverses direction, when reaching top detent") {
@@ -2063,12 +2066,12 @@ class BottomSheetCommonTest {
       // Click to move up to detent300
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent300, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent300)
 
       // Click again - should reverse and go down to detent200
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("sheet reverses direction, when reaching bottom detent") {
@@ -2101,16 +2104,16 @@ class BottomSheetCommonTest {
       // Then start going down
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
 
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
 
       // Click again - should reverse and go up to detent200
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
-      assertEquals(detent200, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
     testCase("drag indication respects confirmDetentChange, when moving to blocked detent") {
@@ -2138,13 +2141,13 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
 
       // Try to click - should be blocked from moving to detent200
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
 
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
     testCase(
@@ -2176,13 +2179,13 @@ class BottomSheetCommonTest {
       }
 
       waitForIdle()
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
 
       // Click drag indication - detent200 is blocked, so sheet stays at detent100
       onNodeWithTag("drag_indication").performClick()
       waitForIdle()
 
-      assertEquals(detent100, state.currentDetent)
+      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
     testCase("drag indication has button role, when multiple detents exist") {
@@ -2263,9 +2266,5 @@ class BottomSheetCommonTest {
     return SemanticsMatcher("has no collapse action") { node ->
       androidx.compose.ui.semantics.SemanticsActions.Collapse !in node.config
     }
-  }
-
-  private fun ComposeUiTest.assertOffsetEquals(expected: Dp, actual: Float) {
-    assertEquals(with(density) { expected.toPx() }, actual, 0.5f)
   }
 }
