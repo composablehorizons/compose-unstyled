@@ -1,1 +1,3 @@
 - [ ] Add Unstyled- Scrollbars to 1.x.x with ReplaceWith
+- [ ] Reconsider usages of `shape`, `backgroundColor`, `border`.
+- [ ] How does modals use visibilityState? is that needed
