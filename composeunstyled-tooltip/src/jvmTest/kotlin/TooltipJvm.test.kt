@@ -51,7 +51,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
-class TooltipTest {
+class TooltipJvmTest {
 
   /**
    * We are specifying padding to prevent cases where the Tooltip ends up above the trigger

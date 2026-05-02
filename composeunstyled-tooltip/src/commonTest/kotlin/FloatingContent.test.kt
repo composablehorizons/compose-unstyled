@@ -24,6 +24,9 @@ package com.composeunstyled
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
@@ -68,13 +71,13 @@ class FloatingContentTest {
   @Test
   fun placementChangesFloatingContentPosition() = runComposeUiTest {
     // Test that different placements result in different positions
+    var placement by mutableStateOf<RelativeAlignment>(RelativeAlignment.TopStart)
     var topStartY = 0f
     var bottomStartY = 0f
 
-    // First, test with TopStart placement
     setContent {
       FloatingContent(
-        placement = RelativeAlignment.TopStart,
+        placement = placement,
         floatingContent = {
           Box(Modifier.size(50.dp)) {
             BasicText("Floating")
@@ -91,23 +94,7 @@ class FloatingContentTest {
     waitForIdle()
     topStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
-    // Now test with BottomStart placement
-    setContent {
-      FloatingContent(
-        placement = RelativeAlignment.BottomStart,
-        floatingContent = {
-          Box(Modifier.size(50.dp)) {
-            BasicText("Floating")
-          }
-        },
-        anchor = {
-          Box(Modifier.size(100.dp)) {
-            BasicText("Anchor")
-          }
-        },
-      )
-    }
-
+    placement = RelativeAlignment.BottomStart
     waitForIdle()
     bottomStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
@@ -140,7 +127,7 @@ class FloatingContentTest {
 
     waitForIdle()
 
-    val floatingY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
+    val floatingY = onNodeWithText("Floating").fetchSemanticsNode().positionInWindow.y
 
     // With TopStart placement at the top of the window,
     // floating content should be clamped to not go negative
@@ -173,8 +160,8 @@ class FloatingContentTest {
     waitForIdle()
 
     val floatingNode = onNodeWithText("Large floating").fetchSemanticsNode()
-    val floatingX = floatingNode.positionInRoot.x
-    val floatingY = floatingNode.positionInRoot.y
+    val floatingX = floatingNode.positionInWindow.x
+    val floatingY = floatingNode.positionInWindow.y
 
     // When content is larger than window, it should be clamped to 0
     // to maximize the visible portion at the top-left
