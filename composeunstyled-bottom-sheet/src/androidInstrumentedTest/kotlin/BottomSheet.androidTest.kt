@@ -57,7 +57,7 @@ class BottomSheetTest {
           detents = listOf(Peek, SheetDetent.FullyExpanded),
         )
 
-        BottomSheet(
+        UnstyledBottomSheet(
           state = sheetState,
           modifier = Modifier
             .fillMaxWidth()

@@ -47,7 +47,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -475,12 +477,15 @@ private fun UnstyledDraggableAnchors<SheetDetent>.closestDetent(
   return closestDetent
 }
 
-class BottomSheetScope internal constructor(
+private class BottomSheetContext(
   internal val state: BottomSheetState,
   enabled: Boolean,
 ) {
   internal var enabled by mutableStateOf(enabled)
 }
+
+private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext?> =
+  compositionLocalOf { null }
 
 /**
  * A foundational component used to build bottom sheets.
@@ -518,18 +523,15 @@ class BottomSheetScope internal constructor(
  * @param content The content of the sheet.
  */
 @Composable
-fun BottomSheet(
+fun UnstyledBottomSheet(
   state: BottomSheetState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
   imeAware: Boolean = false,
-  content: @Composable (BottomSheetScope.() -> Unit),
+  content: @Composable () -> Unit,
 ) {
-  val scope = remember { BottomSheetScope(state, enabled) }
-  SideEffect { scope.enabled = enabled }
+  val context = remember { BottomSheetContext(state, enabled) }
+  SideEffect { context.enabled = enabled }
 
   val coroutineScope = rememberCoroutineScope()
 
@@ -540,48 +542,70 @@ fun BottomSheet(
     },
     contentAlignment = Alignment.TopCenter,
   ) {
-    Box(
-      modifier = buildModifier {
-        add(
-          Modifier
-            .onSizeChanged {
-              state.contentHeightPx = it.height.toFloat()
-              state.invalidateDetents()
-            }
-            .sheetOffset(state = state, imeAware = imeAware),
-        )
-        if (scope.enabled && state.detents.size > 1) {
-          add(
-            Modifier
-              .unstyledAnchoredDraggable(
-                state = state.anchoredDraggableState,
-                orientation = Orientation.Vertical,
-                enabled = scope.enabled,
-              )
-              .nestedScroll(
-                remember(state.anchoredDraggableState, Orientation.Vertical) {
-                  ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                    orientation = Orientation.Vertical,
-                    sheetState = state.anchoredDraggableState,
-                    onFling = {
-                      coroutineScope.launch { state.anchoredDraggableState.settle(it) }
-                    },
-                  )
-                },
-              ),
-          )
-        }
-        add(
-          modifier
-            .pointerInput(Unit) { detectTapGestures { } }
-            .clip(shape)
-            .background(backgroundColor)
-            .padding(contentPadding),
-        )
-      },
-    ) {
-      scope.content()
+    androidx.compose.runtime.CompositionLocalProvider(LocalBottomSheetContext provides context) {
+      Box(
+        modifier = buildModifier {
+          add(Modifier.sheetOffset(state = state, imeAware = imeAware))
+          if (context.enabled && state.detents.size > 1) {
+            add(
+              Modifier
+                .unstyledAnchoredDraggable(
+                  state = state.anchoredDraggableState,
+                  orientation = Orientation.Vertical,
+                  enabled = context.enabled,
+                )
+                .nestedScroll(
+                  remember(state.anchoredDraggableState, Orientation.Vertical) {
+                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                      orientation = Orientation.Vertical,
+                      sheetState = state.anchoredDraggableState,
+                      onFling = {
+                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                      },
+                    )
+                  },
+                ),
+            )
+          }
+          add(modifier.pointerInput(Unit) { detectTapGestures { } })
+        },
+        contentAlignment = Alignment.TopCenter,
+      ) {
+        content()
+      }
     }
+  }
+}
+
+@Composable
+fun SheetPanel(
+  modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
+  backgroundColor: Color = Color.Unspecified,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  content: @Composable () -> Unit,
+) {
+  val scope = LocalBottomSheetContext.current
+
+  Box(
+    modifier = buildModifier {
+      if (scope != null) {
+        add(
+          Modifier.onSizeChanged {
+            scope.state.contentHeightPx = it.height.toFloat()
+            scope.state.invalidateDetents()
+          },
+        )
+      }
+      add(
+        modifier
+          .clip(shape)
+          .background(backgroundColor)
+          .padding(contentPadding),
+      )
+    },
+  ) {
+    content()
   }
 }
 
@@ -685,19 +709,22 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 /**
  * A drag indication that can be used to control the bottom sheet.
  *
- * It is strongly advised to use this component within your [BottomSheet]. Sheets are not by default accessible, and the [DragIndication] allows toggling of the sheet via the keyboard.
+ * It is strongly advised to use this component within your [UnstyledBottomSheet]. Sheets are not by default accessible, and the [DragIndication] allows toggling of the sheet via the keyboard.
  *
  * @param modifier Modifier to be applied to the drag indication.
  * @param indication The indication to be shown when the drag indication is interacted with.
  * @param interactionSource The interaction source for the drag indication.
- * @param onClickLabel The label for the click action.
  */
 @Composable
-fun BottomSheetScope.DragIndication(
+fun DragIndication(
   modifier: Modifier = Modifier,
   indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
 ) {
+  val context = LocalBottomSheetContext.current ?: return
+  val state = context.state
+  val enabled = context.enabled
+
   var detentIndex by rememberSaveable { mutableStateOf(-1) }
   var goUp by rememberSaveable { mutableStateOf(true) }
 

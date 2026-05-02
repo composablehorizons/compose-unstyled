@@ -363,18 +363,22 @@ fun ModalBottomSheetScope.Sheet(
   backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   imeAware: Boolean = false,
-  content: @Composable (BottomSheetScope.() -> Unit),
+  content: @Composable () -> Unit,
 ) {
-  BottomSheet(
+  UnstyledBottomSheet(
     state = sheetState,
     enabled = enabled,
     modifier = modifier,
-    content = content,
-    contentPadding = contentPadding,
-    shape = shape,
-    backgroundColor = backgroundColor,
     imeAware = imeAware,
-  )
+  ) {
+    SheetPanel(
+      shape = shape,
+      backgroundColor = backgroundColor,
+      contentPadding = contentPadding,
+    ) {
+      content()
+    }
+  }
 }
 
 /**
