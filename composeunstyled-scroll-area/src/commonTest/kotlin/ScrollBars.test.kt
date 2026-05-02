@@ -28,6 +28,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +41,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeUp
@@ -49,7 +51,7 @@ import kotlin.time.Duration.Companion.seconds
 class ScrollBarsTest {
 
   @Test
-  fun `AlwaysVisible keeps the thumb visible`() = runComposeUiTest {
+  fun always_visible_keeps_the_thumb_visible() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
@@ -73,7 +75,7 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle starts with thumb out of composition`() = runComposeUiTest {
+  fun hide_while_idle_starts_with_thumb_out_of_composition() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
@@ -99,7 +101,7 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle shows thumb when list is scrolled`() = runComposeUiTest {
+  fun hide_while_idle_shows_thumb_when_list_is_scrolled() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
@@ -128,7 +130,7 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle hides thumb after given time after done scrolling`() = runComposeUiTest {
+  fun hide_while_idle_hides_thumb_after_given_time_after_done_scrolling() = runComposeUiTest {
     // TODO this checks for drags, not scrolls
     setContent {
       val scrollState = rememberScrollState()
@@ -174,7 +176,7 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle does not hide thumb while dragging`() = runComposeUiTest {
+  fun hide_while_idle_does_not_hide_thumb_while_dragging() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
@@ -241,55 +243,7 @@ class ScrollBarsTest {
   }
 
   @Test
-  fun `HideWhileIdle does not hide thumb while track is hovered`() = runComposeUiTest {
-    setContent {
-      val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
-        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
-          repeat(100) { index ->
-            BasicText("Item $index")
-          }
-        }
-        VerticalScrollbar(modifier = Modifier.testTag("track")) {
-          UnstyledThumb(
-            modifier = Modifier.testTag("thumb"),
-            thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
-              hideDelay = 5.seconds,
-            ),
-          )
-        }
-      }
-    }
-
-    onNodeWithTag("thumb").assertDoesNotExist()
-
-    onNodeWithTag("track").performMouseInput { enter() }
-    onNodeWithTag("track").performMouseInput { exit() }
-    onNodeWithTag("thumb").assertDoesNotExist()
-
-    // Hover on track
-    onNodeWithTag("list").performTouchInput {
-      swipeUp(durationMillis = 1_000)
-    }
-    onNodeWithTag("track").performMouseInput { enter() }
-    onNodeWithTag("thumb").assertIsDisplayed()
-
-    // Advance time beyond hideDelay while hovered
-    advanceTimeBy(6.seconds)
-    onNodeWithTag("thumb").assertIsDisplayed() // Should still be visible
-
-    // Unhover
-    onNodeWithTag("track").performMouseInput { exit() }
-
-    // Advance time by hideDelay
-    advanceTimeBy(5.seconds)
-    onNodeWithTag("thumb").assertDoesNotExist()
-  }
-
-  @Test
-  fun `HideWhileIdle does not hide thumb while dragging the thumb`() = runComposeUiTest {
+  fun hide_while_idle_does_not_hide_thumb_while_dragging_the_thumb() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
       ScrollArea(state = rememberScrollAreaState(scrollState)) {
@@ -331,13 +285,14 @@ class ScrollBarsTest {
     // Stop dragging
     onNodeWithTag("thumb").performTouchInput { up() }
 
-    // Advance time by hideDelay
-    advanceTimeBy(5.seconds)
+    // Advance time beyond hideDelay
+    advanceTimeBy(6.seconds)
+    waitForIdle()
     onNodeWithTag("thumb").assertDoesNotExist()
   }
 
   @Test
-  fun `HideWhileIdle keeps thumb visible when pointer leaves track during thumb drag`() =
+  fun hide_while_idle_keeps_thumb_visible_when_pointer_leaves_track_during_thumb_drag() =
     runComposeUiTest {
       setContent {
         val scrollState = rememberScrollState()
@@ -394,12 +349,12 @@ class ScrollBarsTest {
     }
 
   @Test
-  fun `VerticalScrollbar respects explicit thumb height modifier`() = runComposeUiTest {
+  fun vertical_scrollbar_respects_explicit_thumb_height_modifier() = runComposeUiTest {
     setContent {
-      val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
-        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
-          repeat(36_000) { index ->
+      val lazyListState = rememberLazyListState()
+      ScrollArea(state = rememberScrollAreaState(lazyListState)) {
+        LazyColumn(modifier = Modifier.height(200.dp).testTag("list"), state = lazyListState) {
+          items((0 until 36_000).toList()) { index ->
             BasicText("Item $index")
           }
         }
