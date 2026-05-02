@@ -80,9 +80,9 @@ kotlin {
       dependencies {
         implementation(libs.compose.foundation)
         implementation(projects.composeunstyledBuildModifier)
-        implementation(projects.composeunstyledBottomSheet)
+        api(projects.composeunstyledBottomSheet)
         implementation(projects.composeunstyledEscapeHandler)
-        implementation(projects.composeunstyledModal)
+        api(projects.composeunstyledModal)
       }
     }
 
