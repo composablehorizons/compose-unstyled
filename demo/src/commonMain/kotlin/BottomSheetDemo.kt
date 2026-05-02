@@ -48,13 +48,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.UnstyledDragIndication
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.SheetPanel
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledDragIndication
 import com.composeunstyled.focusRing
 import com.composeunstyled.rememberBottomSheetState
 
