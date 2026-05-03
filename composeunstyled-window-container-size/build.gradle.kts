@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
   alias(libs.plugins.compose)
@@ -46,16 +46,11 @@ java {
 }
 
 kotlin {
-  compilerOptions {
-    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
-    freeCompilerArgs.add("-Xcontext-parameters")
-  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
-    instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
   }
 
   jvm()
@@ -70,57 +65,18 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledTooltip"
+      baseName = "ComposeUnstyledWindowContainerSize"
       isStatic = true
     }
   }
 
   sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(libs.compose.foundation)
-        implementation(projects.composeunstyledBuildModifier)
-        implementation(projects.composeunstyledEscapeHandler)
-        implementation(projects.composeunstyledWindowContainerSize)
-      }
+    commonMain.dependencies {
+      implementation(libs.compose.foundation)
     }
 
     androidMain.dependencies {
-      implementation(libs.androidx.activitycompose)
-    }
-
-    jvmMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-    }
-
-    webMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
-      implementation(project(":testcase"))
-    }
-
-    commonTest.dependencies {
-      implementation(kotlin("test"))
-      implementation(libs.assertk)
-      implementation(project(":testcase"))
-
-      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-      implementation(libs.compose.ui.test)
-    }
-
-    val jvmTest by getting
-
-    jvmTest.dependencies {
-      implementation(libs.compose.ui.test.junit4)
-      implementation(compose.desktop.currentOs) {
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-      }
+      implementation(libs.androidx.window)
     }
 
     applyDefaultHierarchyTemplate {
@@ -131,22 +87,16 @@ kotlin {
           withWasmJs()
           withJs()
         }
-
-        group("web") {
-          withWasmJs()
-          withJs()
-        }
       }
     }
   }
 }
 
 android {
-  namespace = "com.composeunstyled.tooltip"
+  namespace = "com.composeunstyled.windowsize"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 }
 
@@ -161,13 +111,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-tooltip",
+    artifactId = "composeunstyled-window-container-size",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Tooltip")
-    description.set("Tooltip primitive for Compose Unstyled - foundational API for building accessible hover and long-press hints in Compose Multiplatform.")
+    name.set("Compose Unstyled Window Container Size")
+    description.set("Window container size utility for Compose Unstyled - foundational API for observing the host window container size in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {
