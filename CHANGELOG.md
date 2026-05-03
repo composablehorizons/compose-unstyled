@@ -13,14 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to add the full library to your codebase. `composeunstyled-primitives` continues to aggregate all
   primitives for users who prefer a single dependency.
 - Added the following new modules: `composeunstyled-bottom-sheet`, `composeunstyled-build-modifier`,
-  `composeunstyled-button`, `composeunstyled-checkbox`, `composeunstyled-dialog`,
-  `composeunstyled-disclosure`, `composeunstyled-dropdown-menu`, `composeunstyled-escape-handler`,
-  `composeunstyled-focus-ring`, `composeunstyled-icon`, `composeunstyled-modal`,
-  `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
+  `composeunstyled-button`, `composeunstyled-checkbox`, `composeunstyled-colored-indication`,
+  `composeunstyled-dialog`, `composeunstyled-disclosure`, `composeunstyled-dropdown-menu`,
+  `composeunstyled-escape-handler`, `composeunstyled-focus-ring`, `composeunstyled-icon`,
+  `composeunstyled-modal`, `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
   `composeunstyled-progress-indicator`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
   `composeunstyled-scroll-area`, `composeunstyled-separators`, `composeunstyled-slider`,
   `composeunstyled-stack`, `composeunstyled-tab-group`, `composeunstyled-text-field`,
-  `composeunstyled-toggle-switch`, and `composeunstyled-tri-state-checkbox`.
+  `composeunstyled-toggle-switch`, `composeunstyled-tri-state-checkbox`, and
+  `composeunstyled-window-container-size`.
 - New Modal API: The Modal API has been revamped in order to make building custom models easier,
   without having to worry about different.
 - Added `UnstyledScrim` as a standalone primitive.
