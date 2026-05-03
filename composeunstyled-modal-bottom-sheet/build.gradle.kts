@@ -116,7 +116,7 @@ kotlin {
 
     applyDefaultHierarchyTemplate {
       common {
-        group("cmp") {
+        group("nonAndroid") {
           withJvm()
           withIos()
           withWasmJs()
