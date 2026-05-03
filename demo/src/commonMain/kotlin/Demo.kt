@@ -110,6 +110,7 @@ private val availablePrimitives = listOf(
   DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Text Field", "textfield", { TextFieldDemo() }),
   DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
+  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
 )
 
 private val availableModifiers = listOf(
