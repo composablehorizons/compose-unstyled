@@ -20,12 +20,11 @@
  * SOFTWARE.
  */
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
   alias(libs.plugins.compose)
@@ -47,37 +46,17 @@ java {
 }
 
 kotlin {
-  compilerOptions {
-    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
-    optIn.add("org.jetbrains.compose.resources.ExperimentalResourceApi")
-  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
-    instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
   }
 
   jvm()
 
   wasmJs {
-    browser {
-      val rootDirPath = project.rootDir.path
-      val projectDirPath = project.projectDir.path
-      commonWebpackConfig {
-        outputFileName = "composeApp.js"
-        devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-          static = (static ?: mutableListOf()).apply {
-            // Serve sources to debug inside browser
-            add(rootDirPath)
-            add(projectDirPath)
-          }
-        }
-      }
-
-    }
-    binaries.executable()
+    browser()
   }
 
   js {
@@ -86,70 +65,24 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPlatformTheme"
+      baseName = "ComposeUnstyledColoredIndication"
       isStatic = true
-    }
-  }
-
-  applyDefaultHierarchyTemplate {
-    common {
-      group("nonAndroid") {
-        withIos()
-        withJvm()
-        withJs()
-        withWasmJs()
-      }
-
-      group("nonWeb") {
-        withIos()
-        withAndroidTarget()
-        withJvm()
-      }
     }
   }
 
   sourceSets {
     commonMain.dependencies {
       implementation(libs.compose.foundation)
-      implementation(projects.composeunstyledColoredIndication)
-      api(projects.composeunstyledTheming)
-      implementation(libs.compose.components.resources)
-    }
-    androidMain.dependencies {
-      implementation(libs.composables.ripple)
     }
 
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.test.runner)
-    }
-
-    commonTest.dependencies {
-      implementation(kotlin("test"))
-      implementation(libs.assertk)
-
-      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-      implementation(libs.compose.ui.test)
-    }
-
-    val jvmTest by getting
-
-    jvmTest.dependencies {
-      implementation(libs.compose.ui.test.junit4)
-      implementation(compose.desktop.currentOs) {
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-      }
-    }
   }
 }
 
 android {
-  namespace = "com.composeunstyled.platformtheme"
+  namespace = "com.composeunstyled.coloredindication"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 }
 
@@ -162,11 +95,15 @@ mavenPublishing {
     signAllPublications()
   }
 
-  coordinates(publishGroupId, "composeunstyled-platformtheme", version = publishVersion)
+  coordinates(
+    groupId = publishGroupId,
+    artifactId = "composeunstyled-colored-indication",
+    version = publishVersion
+  )
 
   pom {
-    name.set("Compose Unstyled Platform Theme")
-    description.set("Theme with native look and feel for Compose Multiplatform.")
+    name.set("Compose Unstyled Colored Indication")
+    description.set("Colored indication utility for Compose Unstyled - foundational API for drawing interaction feedback in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {
