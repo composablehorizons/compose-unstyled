@@ -29,19 +29,18 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -50,20 +49,31 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.ArrowRight
 import com.composables.icons.lucide.Lucide
@@ -83,38 +93,39 @@ fun ModalDemo() {
   val galleryItems = listOf(
     GalleryItem(
       "https://images.unsplash.com/photo-1472214103451-9374bd1c798e" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Golden wheat field",
     ),
     GalleryItem(
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Mountain landscape",
     ),
     GalleryItem(
       "https://images.unsplash.com/photo-1500534623283-312aade485b7" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Sunlit forest",
     ),
     GalleryItem(
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Ocean wave",
     ),
     GalleryItem(
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Mountain lake at dawn",
     ),
     GalleryItem(
       "https://images.unsplash.com/photo-1448375240586-882707db888b" +
-        "?q=80&w=1800&auto=format&fit=crop",
+        "?q=80&w=1080&auto=format&fit=crop",
       "Misty pine forest",
     ),
   )
   val modalState = rememberModalState(initiallyVisible = false)
+  val modalFocusRequester = remember { FocusRequester() }
   val pagerState = rememberPagerState(pageCount = { galleryItems.size })
-  val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+  val coroutineScope = rememberCoroutineScope()
   var selectedIndex by remember { mutableIntStateOf(0) }
   val canGoPrevious = pagerState.currentPage > 0
   val canGoNext = pagerState.currentPage < galleryItems.lastIndex
@@ -130,21 +141,30 @@ fun ModalDemo() {
   LaunchedEffect(modalState.transitionState.targetState, selectedIndex) {
     if (modalState.transitionState.targetState) {
       pagerState.scrollToPage(selectedIndex)
+      modalFocusRequester.requestFocus()
     }
   }
 
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Color(0xFFF7F7F7))
       .padding(24.dp),
     contentAlignment = Alignment.Center,
   ) {
     Column(
-      modifier = Modifier.widthIn(max = 920.dp).fillMaxWidth(),
+      modifier = Modifier.widthIn(max = 420.dp).fillMaxWidth(),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+      BasicText(
+        "Select a photo to preview",
+        style = TextStyle(
+          color = Color(0xFF18181B),
+          fontSize = 14.sp,
+          fontWeight = FontWeight.Medium,
+        ),
+      )
+
       FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -158,7 +178,6 @@ fun ModalDemo() {
             },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(0.dp),
-            indication = LocalIndication.current,
             modifier = Modifier.size(110.dp, 72.dp).clip(RoundedCornerShape(8.dp)),
           ) {
             Image(
@@ -172,7 +191,34 @@ fun ModalDemo() {
       }
     }
 
-    Modal(state = modalState) {
+    Modal(
+      state = modalState,
+      onKeyEvent = { event ->
+        if (event.type != KeyEventType.KeyDown) return@Modal false
+
+        when (event.key) {
+          Key.DirectionLeft -> {
+            if (canGoPrevious) {
+              coroutineScope.launch {
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+              }
+            }
+            true
+          }
+
+          Key.DirectionRight -> {
+            if (canGoNext) {
+              coroutineScope.launch {
+                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+              }
+            }
+            true
+          }
+
+          else -> false
+        }
+      },
+    ) {
       EscapeHandler {
         modalState.transitionState.targetState = false
       }
@@ -184,6 +230,8 @@ fun ModalDemo() {
       Box(
         modifier = Modifier
           .fillMaxSize()
+          .focusRequester(modalFocusRequester)
+          .focusable()
           .pointerInput(Unit) {
             detectTapGestures { modalState.transitionState.targetState = false }
           },
@@ -194,13 +242,16 @@ fun ModalDemo() {
           enter = scaleIn(animationSpec = tween(220), initialScale = 0.97f) + fadeIn(tween(220)),
           exit = scaleOut(animationSpec = tween(180), targetScale = 0.98f) + fadeOut(tween(180)),
         ) {
-          Column(
-            modifier = Modifier.fillMaxWidth().widthIn(max = 1200.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+          BoxWithConstraints(
+            modifier = Modifier
+              .fillMaxSize()
+              .padding(vertical = 20.dp),
+            contentAlignment = Alignment.Center,
           ) {
             Box(
               modifier = Modifier
                 .fillMaxWidth()
+                .widthIn(max = 900.dp)
                 .pointerInput(Unit) { detectTapGestures { } },
               contentAlignment = Alignment.Center,
             ) {
@@ -209,15 +260,17 @@ fun ModalDemo() {
                 pageSize = PageSize.Fill,
                 pageSpacing = 18.dp,
                 contentPadding = PaddingValues(horizontal = 34.dp),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(vertical = 20.dp),
               ) { page ->
                 Image(
                   painter = rememberUriPainter(galleryItems[page].url),
                   contentDescription = galleryItems[page].description,
-                  modifier = Modifier.aspectRatio(16 / 9f)
-                    .fillMaxWidth()
-                    .height(560.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                  modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFF27272A)),
                   contentScale = ContentScale.Crop,
                 )
               }
@@ -237,7 +290,6 @@ fun ModalDemo() {
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
                   .alpha(previousButtonAlpha),
-                indication = LocalIndication.current,
               ) {
                 UnstyledIcon(
                   imageVector = Lucide.ArrowLeft,
@@ -260,7 +312,6 @@ fun ModalDemo() {
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
                   .alpha(nextButtonAlpha),
-                indication = LocalIndication.current,
               ) {
                 UnstyledIcon(
                   imageVector = Lucide.ArrowRight,
