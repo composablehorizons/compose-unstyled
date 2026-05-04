@@ -59,9 +59,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.ScrollArea
 import com.composeunstyled.ThumbVisibility
+import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState

@@ -59,7 +59,6 @@ import com.composables.icons.lucide.Volume2
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
-import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.rememberSliderState
 
 @Composable
@@ -132,13 +131,13 @@ fun SliderDemo() {
             modifier = Modifier.size(36.dp).clip(CircleShape).background(glowColor),
             contentAlignment = Alignment.Center,
           ) {
-            UnstyledThumb(
-              color = Color.White,
+            Box(
               modifier = Modifier
                 .size(thumbSize)
                 .shadow(4.dp, CircleShape)
-                .hoverable(thumbInteractionSource),
-              shape = CircleShape,
+                .hoverable(thumbInteractionSource)
+                .clip(CircleShape)
+                .background(Color.White),
             )
           }
         },

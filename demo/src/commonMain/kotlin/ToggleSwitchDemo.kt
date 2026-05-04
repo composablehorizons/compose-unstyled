@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
@@ -51,7 +52,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.UnstyledToggleSwitch
 
 @Composable
@@ -89,10 +89,12 @@ fun ToggleSwitchDemo() {
           modifier = Modifier.width(58.dp),
           contentPadding = PaddingValues(4.dp),
         ) {
-          UnstyledThumb(
-            shape = CircleShape,
-            color = Color.White,
-            modifier = Modifier.shadow(elevation = 4.dp, CircleShape),
+          Box(
+            modifier = Modifier
+              .shadow(elevation = 4.dp, CircleShape)
+              .clip(CircleShape)
+              .background(Color.White)
+              .size(24.dp),
           )
         }
       }

@@ -74,7 +74,6 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
-import com.composeunstyled.UnstyledThumb
 import com.composeunstyled.outline
 import com.composeunstyled.rememberSliderState
 import com.composeunstyled.theme.Theme
@@ -658,10 +657,11 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             }
           },
           thumb = {
-            UnstyledThumb(
-              color = Theme[colors][accent],
-              modifier = Modifier.size(16.dp),
-              shape = Theme[shapes][buttonShape],
+            Box(
+              modifier = Modifier
+                .size(16.dp)
+                .clip(Theme[shapes][buttonShape])
+                .background(Theme[colors][accent]),
             )
           },
         )
