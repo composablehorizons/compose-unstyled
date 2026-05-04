@@ -59,11 +59,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.HorizontalScrollbar
+import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.ScrollArea
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledThumb
-import com.composeunstyled.VerticalScrollbar
+import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState
 import kotlin.time.Duration.Companion.seconds
 
@@ -136,7 +136,7 @@ fun VerticalScrollAreaDemo() {
           Spacer(Modifier.height(12.dp))
         }
       }
-      VerticalScrollbar(
+      UnstyledVerticalScrollbar(
         modifier = Modifier
           .align(Alignment.TopEnd)
           .width(12.dp)
@@ -186,7 +186,7 @@ fun HorizontalScrollAreaDemo() {
           Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Red))
         }
       }
-      HorizontalScrollbar(
+      UnstyledHorizontalScrollbar(
         modifier = Modifier
           .align(Alignment.BottomCenter)
           .height(12.dp)

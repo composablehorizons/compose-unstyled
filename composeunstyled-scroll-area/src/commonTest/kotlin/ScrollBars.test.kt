@@ -60,7 +60,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.AlwaysVisible,
@@ -84,7 +84,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -110,7 +110,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -142,7 +142,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(
+        UnstyledVerticalScrollbar(
           modifier = Modifier.testTag("scrollbar")
             .align(Alignment.CenterEnd),
         ) {
@@ -188,7 +188,7 @@ class ScrollBarsTest {
         ) {
           repeat(100) { BasicText("Item $it") }
         }
-        VerticalScrollbar(
+        UnstyledVerticalScrollbar(
           modifier = Modifier
             .testTag("scrollbar")
             .align(Alignment.CenterEnd),
@@ -252,7 +252,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -302,7 +302,7 @@ class ScrollBarsTest {
               BasicText("Item $index")
             }
           }
-          VerticalScrollbar(modifier = Modifier.testTag("track")) {
+          UnstyledVerticalScrollbar(modifier = Modifier.testTag("track")) {
             UnstyledThumb(
               modifier = Modifier.testTag("thumb"),
               thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -358,7 +358,7 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
           UnstyledThumb(
             modifier = Modifier
               .testTag("thumb")
