@@ -62,11 +62,11 @@ import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.LocalContentColor
-import com.composeunstyled.Separator
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledSeparator
 import kotlinx.coroutines.delay
 
 @Composable
@@ -133,7 +133,7 @@ fun DropdownMenuDemo() {
       ) {
         options.forEachIndexed { index, option ->
           if (index == 1 || index == options.lastIndex) {
-            Separator(color = Color(0xFFBDBDBD))
+            UnstyledSeparator(color = Color(0xFFBDBDBD))
           }
           UnstyledButton(
             onClick = { expanded = false },

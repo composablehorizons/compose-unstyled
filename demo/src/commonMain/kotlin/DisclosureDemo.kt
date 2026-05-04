@@ -52,11 +52,11 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.Separator
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledDisclosureHeading
 import com.composeunstyled.UnstyledDisclosurePanel
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.UnstyledSeparator
 import com.composeunstyled.rememberDisclosureState
 
 @Composable
@@ -92,7 +92,7 @@ fun DisclosureDemo() {
     ) {
       faqs.forEachIndexed { i, faq ->
         if (i != 0) {
-          Separator(color = Color.Black.copy(0.2f))
+          UnstyledSeparator(color = Color.Black.copy(0.2f))
         }
 
         val state = rememberDisclosureState(initiallyExpanded = i == 0)

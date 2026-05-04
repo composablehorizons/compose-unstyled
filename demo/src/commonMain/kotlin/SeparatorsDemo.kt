@@ -43,8 +43,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.HorizontalSeparator
-import com.composeunstyled.VerticalSeparator
+import com.composeunstyled.UnstyledHorizontalSeparator
+import com.composeunstyled.UnstyledVerticalSeparator
 
 @Composable
 fun SeparatorsDemo() {
@@ -65,27 +65,27 @@ fun SeparatorsDemo() {
         "New Window",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      HorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Color.LightGray)
       Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
-      HorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Color.LightGray)
       Text(
         "New Incognito Tab",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      HorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Color.LightGray)
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Text(
           "Copy",
           modifier = Modifier.padding(8.dp).weight(1f),
           style = TextStyle(textAlign = TextAlign.Center),
         )
-        VerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Color.LightGray)
         Text(
           "Cut",
           modifier = Modifier.padding(8.dp).weight(1f),
           style = TextStyle(textAlign = TextAlign.Center),
         )
-        VerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Color.LightGray)
         Text(
           "Paste",
           Modifier.padding(8.dp).weight(1f),

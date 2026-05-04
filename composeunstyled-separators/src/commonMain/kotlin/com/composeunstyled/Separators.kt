@@ -46,13 +46,13 @@ import androidx.compose.ui.unit.Dp
  * ```kotlin
  * Column {
  *     Text("Item 1")
- *     Separator() // Horizontal separator in Column
+ *     UnstyledSeparator() // Horizontal separator in Column
  *     Text("Item 2")
  * }
  *
  * Row {
  *     Text("Item 1")
- *     Separator() // Vertical separator in Row
+ *     UnstyledSeparator() // Vertical separator in Row
  *     Text("Item 2")
  * }
  * ```
@@ -62,7 +62,7 @@ import androidx.compose.ui.unit.Dp
  * @param thickness The thickness of the separator line.
  */
 @Composable
-fun HorizontalSeparator(
+fun UnstyledHorizontalSeparator(
   color: Color,
   modifier: Modifier = Modifier,
   thickness: Dp = Dp.Hairline,
@@ -87,13 +87,13 @@ fun HorizontalSeparator(
  * ```kotlin
  * Column {
  *     Text("Item 1")
- *     Separator() // Horizontal separator in Column
+ *     UnstyledSeparator() // Horizontal separator in Column
  *     Text("Item 2")
  * }
  *
  * Row {
  *     Text("Item 1")
- *     Separator() // Vertical separator in Row
+ *     UnstyledSeparator() // Vertical separator in Row
  *     Text("Item 2")
  * }
  * ```
@@ -103,7 +103,7 @@ fun HorizontalSeparator(
  * @param thickness The thickness of the separator line.
  */
 @Composable
-fun VerticalSeparator(
+fun UnstyledVerticalSeparator(
   color: Color,
   modifier: Modifier = Modifier,
   thickness: Dp = Dp.Hairline,
@@ -128,13 +128,13 @@ fun VerticalSeparator(
  * ```kotlin
  * Column {
  *     Text("Item 1")
- *     Separator() // Horizontal separator in Column
+ *     UnstyledSeparator() // Horizontal separator in Column
  *     Text("Item 2")
  * }
  *
  * Row {
  *     Text("Item 1")
- *     Separator() // Vertical separator in Row
+ *     UnstyledSeparator() // Vertical separator in Row
  *     Text("Item 2")
  * }
  * ```
@@ -144,12 +144,12 @@ fun VerticalSeparator(
  * @param thickness The thickness of the separator line.
  */
 @Composable
-fun ColumnScope.Separator(
+fun ColumnScope.UnstyledSeparator(
   modifier: Modifier = Modifier,
   color: Color = Color.Unspecified,
   thickness: Dp = Dp.Hairline,
 ) {
-  HorizontalSeparator(color = color, modifier = modifier, thickness = thickness)
+  UnstyledHorizontalSeparator(color = color, modifier = modifier, thickness = thickness)
 }
 
 /**
@@ -162,13 +162,13 @@ fun ColumnScope.Separator(
  * ```kotlin
  * Column {
  *     Text("Item 1")
- *     Separator() // Horizontal separator in Column
+ *     UnstyledSeparator() // Horizontal separator in Column
  *     Text("Item 2")
  * }
  *
  * Row {
  *     Text("Item 1")
- *     Separator() // Vertical separator in Row
+ *     UnstyledSeparator() // Vertical separator in Row
  *     Text("Item 2")
  * }
  * ```
@@ -178,10 +178,10 @@ fun ColumnScope.Separator(
  * @param thickness The thickness of the separator line.
  */
 @Composable
-fun RowScope.Separator(
+fun RowScope.UnstyledSeparator(
   modifier: Modifier = Modifier,
   color: Color = Color.Unspecified,
   thickness: Dp = Dp.Hairline,
 ) {
-  VerticalSeparator(color = color, modifier = modifier, thickness = thickness)
+  UnstyledVerticalSeparator(color = color, modifier = modifier, thickness = thickness)
 }
