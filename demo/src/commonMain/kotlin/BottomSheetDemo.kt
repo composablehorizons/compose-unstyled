@@ -21,105 +21,185 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Play
+import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
-import com.composeunstyled.SheetDetent.Companion.Hidden
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledBottomSheet
-import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledDragIndication
-import com.composeunstyled.focusRing
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberBottomSheetState
-
-private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
-  containerHeight * 0.6f
-}
 
 @Composable
 fun BottomSheetDemo() {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6))))
-      .padding(top = 12.dp)
-      .statusBarsPadding()
-      .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
+  val peekHeight = 74.dp
+  val mini = SheetDetent("mini") { _, _ ->
+    peekHeight
+  }
+  val sheetState = rememberBottomSheetState(
+    initialDetent = mini,
+    detents = listOf(mini, FullyExpanded),
+  )
+  val coverUrl = "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=512"
+  val tracks = listOf(
+    "Memory Leak",
+    "Out of Context",
+    "Fragments of Time",
+    "Android Love",
+    "Mr. Roboto",
+    "Invalidate",
+  )
+
+  UnstyledBottomSheet(
+    state = sheetState,
+    modifier = Modifier.fillMaxSize(),
   ) {
-    val sheetState = rememberBottomSheetState(
-      initialDetent = Peek,
-      detents = listOf(Hidden, Peek, FullyExpanded),
-    )
-
-    UnstyledButton(
-      onClick = { sheetState.targetDetent = Peek },
+    Sheet(
       modifier = Modifier
-        .align(Alignment.Center)
-        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
-      shape = RoundedCornerShape(6.dp),
-      contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+        .dropShadow(
+          shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+          shadow = Shadow(
+            radius = 24.dp,
+            spread = 0.dp,
+            color = Color.Black.copy(alpha = 0.14f),
+            offset = DpOffset(x = 0.dp, y = (-3).dp),
+          ),
+        )
+        .fillMaxWidth(),
       backgroundColor = Color.White,
-      indication = LocalIndication.current,
+      shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
     ) {
-      Text("Show Sheet")
-    }
-
-    UnstyledBottomSheet(
-      state = sheetState,
-      modifier = Modifier.fillMaxSize(),
-    ) {
-      Sheet(
+      Column(
         modifier = Modifier
-          .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .widthIn(max = 640.dp)
-          .height(600.dp)
           .fillMaxWidth(),
-        backgroundColor = Color.White,
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
       ) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-          val interactionSource = remember { MutableInteractionSource() }
-
-          UnstyledDragIndication(
-            interactionSource = interactionSource,
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+              if (sheetState.currentDetent != FullyExpanded) {
+                sheetState.targetDetent = FullyExpanded
+              }
+            }
+            .padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 8.dp),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Box(
             modifier = Modifier
-              .padding(top = 22.dp)
-              .focusRing(
-                interactionSource = interactionSource,
-                width = 2.dp,
-                color = Color(0XFF2563EB),
-                shape = RoundedCornerShape(100),
-                offset = 4.dp,
+              .size(52.dp)
+              .clip(RoundedCornerShape(10.dp))
+              .background(Color(0xFFE4E4E7)),
+          ) {
+            Image(
+              painter = rememberUriPainter(coverUrl),
+              contentDescription = "Album cover",
+              contentScale = ContentScale.Crop,
+              modifier = Modifier.fillMaxSize(),
+            )
+          }
+          Column(
+            modifier = Modifier
+              .weight(1f)
+              .padding(horizontal = 12.dp),
+          ) {
+            Text(
+              "Just hoist it!",
+              fontWeight = FontWeight.SemiBold,
+              fontSize = 15.sp,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+              "The @Deprecated",
+              color = Color(0xFF71717A),
+              fontSize = 13.sp,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+            )
+          }
+          Box(
+            modifier = Modifier
+              .size(38.dp)
+              .clip(RoundedCornerShape(100))
+              .background(Color.White.copy(alpha = 0.92f)),
+            contentAlignment = Alignment.Center,
+          ) {
+            UnstyledIcon(
+              Lucide.Play,
+              contentDescription = "Play",
+              tint = Color(0xFF18181B),
+              modifier = Modifier.size(18.dp),
+            )
+          }
+        }
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Color(0xFFE4E4E7)),
+        )
+
+        LazyColumn(
+          modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
+        ) {
+          items(count = tracks.size) { index ->
+            val title = tracks[index]
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 56.dp)
+                .padding(horizontal = 16.dp),
+              verticalAlignment = Alignment.CenterVertically,
+            ) {
+              Text(
+                "${index + 1}",
+                color = Color(0xFF71717A),
+                fontSize = 12.sp,
+                modifier = Modifier.padding(end = 12.dp),
               )
-              .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-              .size(32.dp, 4.dp),
-          )
+              Text(
+                title,
+                fontSize = 14.sp,
+                modifier = Modifier.weight(1f),
+              )
+              Text(
+                "3:${10 + index}",
+                color = Color(0xFF71717A),
+                fontSize = 12.sp,
+              )
+            }
+          }
         }
       }
     }

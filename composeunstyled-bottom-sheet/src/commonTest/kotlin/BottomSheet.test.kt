@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -43,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
@@ -57,6 +59,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
@@ -68,6 +71,7 @@ import assertk.assertions.contains
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -802,6 +806,49 @@ class BottomSheetCommonTest {
       onNodeWithTag("sheet").assertHeightIsEqualTo(100.dp)
     }
 
+    testCase("sheet content keeps its height, when dragged toward hidden") {
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(Modifier.requiredSize(800.dp)) {
+          state = rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+          )
+
+          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+            Sheet(Modifier.testTag("panel")) {
+              Box(
+                Modifier
+                  .testTag("sheet_contents")
+                  .fillMaxWidth()
+                  .height(400.dp),
+              )
+            }
+          }
+        }
+      }
+
+      waitForIdle()
+      onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
+
+      mainClock.autoAdvance = false
+      val dragDistance = with(density) { 200.dp.toPx() }
+
+      onNodeWithTag("sheet").performTouchInput {
+        down(center)
+        moveTo(center.copy(y = center.y + dragDistance))
+      }
+      mainClock.advanceTimeByFrame()
+
+      onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
+
+      onNodeWithTag("sheet").performTouchInput {
+        up()
+      }
+      mainClock.autoAdvance = true
+    }
+
     testCase("offset matches detent fixed height, when sheet contents changes") {
       // Fixed height detent - always 100.dp
       val fixedDetent = SheetDetent("fixed100") { _, _ ->
@@ -1401,6 +1448,176 @@ class BottomSheetCommonTest {
 
       // Sheet offset should NOT change - only content scrolls
       assertThat(state.offset).isEqualTo(initialOffset)
+    }
+
+    testCase("supports LazyColumn content") {
+      val customDetent = SheetDetent("custom") { _, _ -> 280.dp }
+      lateinit var state: BottomSheetState
+
+      setContent {
+        state = rememberBottomSheetState(
+          initialDetent = customDetent,
+          detents = listOf(customDetent),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+        ) {
+          Sheet {
+            LazyColumn(
+              Modifier
+                .testTag("lazy_content")
+                .fillMaxWidth(),
+            ) {
+              items(10) { index ->
+                BasicText(
+                  text = "item_$index",
+                  modifier = Modifier
+                    .testTag("item_$index")
+                    .fillMaxWidth()
+                    .height(56.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+
+      waitUntilExactlyOneExists(hasTestTag("lazy_content"))
+      onNodeWithTag("item_0").assertIsDisplayed()
+
+      val initialOffset = state.offset
+
+      onNodeWithTag("lazy_content").performScrollToIndex(9)
+
+      onNodeWithTag("item_9").assertIsDisplayed()
+      assertThat(state.offset).isEqualTo(initialOffset)
+    }
+
+    testCase("expands to FullyExpanded with weighted LazyColumn content") {
+      val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(Modifier.requiredSize(400.dp)) {
+          state = rememberBottomSheetState(
+            initialDetent = miniDetent,
+            detents = listOf(miniDetent, SheetDetent.FullyExpanded),
+          )
+
+          UnstyledBottomSheet(state = state) {
+            Sheet {
+              Column(Modifier.fillMaxWidth()) {
+                Box(
+                  Modifier
+                    .testTag("header")
+                    .fillMaxWidth()
+                    .height(74.dp),
+                )
+
+                LazyColumn(
+                  Modifier
+                    .testTag("lazy_content")
+                    .fillMaxWidth()
+                    .weight(1f),
+                ) {
+                  items(10) { index ->
+                    BasicText(
+                      text = "item_$index",
+                      modifier = Modifier
+                        .testTag("item_$index")
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    )
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      waitUntilExactlyOneExists(hasTestTag("header"))
+      waitForIdle()
+
+      val initialOffset = state.offset
+      assertThat(initialOffset).isCloseTo(74.dp.toPx(), DensityTolerance.toPx())
+
+      state.targetDetent = SheetDetent.FullyExpanded
+      waitForIdle()
+
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+      assertThat(state.offset).isGreaterThan(initialOffset + 200.dp.toPx())
+    }
+
+    testCase("does not change content height while dragging between detents") {
+      val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
+      lateinit var state: BottomSheetState
+      var measuredContentHeight = 0
+
+      setContent {
+        Box(Modifier.requiredSize(400.dp)) {
+          state = rememberBottomSheetState(
+            initialDetent = miniDetent,
+            detents = listOf(miniDetent, SheetDetent.FullyExpanded),
+          )
+
+          UnstyledBottomSheet(
+            state = state,
+            modifier = Modifier.testTag("sheet"),
+          ) {
+            Sheet {
+              Column(
+                Modifier
+                  .fillMaxWidth()
+                  .onSizeChanged { measuredContentHeight = it.height },
+              ) {
+                Box(
+                  Modifier
+                    .testTag("header")
+                    .fillMaxWidth()
+                    .height(74.dp),
+                )
+
+                LazyColumn(
+                  Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                ) {
+                  items(10) { index ->
+                    BasicText(
+                      text = "item_$index",
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    )
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      waitUntilExactlyOneExists(hasTestTag("header"))
+      waitForIdle()
+
+      val expandedContentHeight = measuredContentHeight
+      assertThat(expandedContentHeight.toFloat()).isCloseTo(400.dp.toPx(), DensityTolerance.toPx())
+
+      mainClock.autoAdvance = false
+      onNodeWithTag("sheet").performTouchInput {
+        down(center)
+        moveTo(center.copy(y = center.y - 150.dp.toPx()))
+      }
+      mainClock.advanceTimeByFrame()
+
+      assertThat(measuredContentHeight).isEqualTo(expandedContentHeight)
+
+      onNodeWithTag("sheet").performTouchInput {
+        up()
+      }
+      mainClock.autoAdvance = true
     }
 
     testCase("expands sheet before scrolling content, when swiping up with multiple detents") {
