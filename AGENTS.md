@@ -12,6 +12,10 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Do not use experimental Compose Foundation APIs. They can be removed or changed in future Compose versions and cause consumers to crash.
 - When an unstable Foundation API is required, vendor the source code needed by this project until the final API becomes stable.
 
+## Design with Compose
+
+- Never use the old `shadow()` API as it uses Material Design's specs. Always prefer using `dropShadow()` (`androidx.compose.ui.draw.dropShadow`) instead.
+
 ## Git commit etiquette
 
 - Commit messages should describe how the codebase changed, not just the bug that was fixed.
