@@ -95,6 +95,12 @@ kotlin {
       implementation(libs.compose.ui.test)
     }
 
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+    }
+
     val jvmTest by getting
 
     jvmTest.dependencies {
