@@ -339,8 +339,7 @@ class ModalBottomSheetTest {
       mainClock.autoAdvance = false
       onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
       mainClock.advanceTimeByFrame()
-      mainClock.advanceTimeBy(1300)
-      mainClock.advanceTimeByFrame()
+      advanceUntilModalSheetGone()
 
       assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
       onNode(isDialog()).assertDoesNotExist()
@@ -953,5 +952,16 @@ class ModalBottomSheetTest {
       onNode(isDialog()).assertExists()
       assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
+  }
+}
+
+private fun androidx.compose.ui.test.ComposeUiTest.advanceUntilModalSheetGone() {
+  repeat(120) {
+    val modalGone = runCatching { onNode(isDialog()).assertDoesNotExist() }.isSuccess
+    val sheetGone = runCatching { onNodeWithTag("sheet").assertDoesNotExist() }.isSuccess
+    val scrimGone = runCatching { onNodeWithTag("scrim").assertDoesNotExist() }.isSuccess
+    if (modalGone && sheetGone && scrimGone) return
+
+    mainClock.advanceTimeByFrame()
   }
 }

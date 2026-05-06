@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:OptIn(ExperimentalFoundationApi::class)
 @file:Suppress("ktlint:standard:max-line-length", "ktlint:standard:no-wildcard-imports")
 
 package com.composeunstyled
@@ -28,13 +27,18 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.snapTo
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -48,6 +52,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
@@ -85,14 +90,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledAnchoredDraggableState
-import com.composeunstyled.androidx.compose.foundation.gestures.UnstyledDraggableAnchors
-import com.composeunstyled.androidx.compose.foundation.gestures.animateTo
-import com.composeunstyled.androidx.compose.foundation.gestures.snapTo
-import com.composeunstyled.androidx.compose.foundation.gestures.unstyledAnchoredDraggable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -252,8 +254,9 @@ class BottomSheetState(
   internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
+  internal var isDragging: Boolean by mutableStateOf(false)
 
-  val anchoredDraggableState = UnstyledAnchoredDraggableState(
+  val anchoredDraggableState = AnchoredDraggableState(
     initialValue = initialDetent,
     positionalThreshold = positionalThreshold,
     velocityThreshold = velocityThreshold,
@@ -268,19 +271,7 @@ class BottomSheetState(
     }
 
   private val derivedTargetDetent: SheetDetent by derivedStateOf {
-    // If we have a drag target, use that
-    if (anchoredDraggableState.dragTarget != null) {
-      return@derivedStateOf anchoredDraggableState.dragTarget as SheetDetent
-    }
-    // Otherwise determine target based on current offset and direction
-    val currentOffset = anchoredDraggableState.offset
-    if (currentOffset.isNaN()) return@derivedStateOf currentDetent
-
-    val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
-    val isMovingUp = currentOffset < currentPosition
-
-    return@derivedStateOf anchoredDraggableState.anchors.closestAnchor(currentOffset, !isMovingUp)
-      ?: currentDetent
+    anchoredDraggableState.targetValue
   }
 
   var targetDetent: SheetDetent
@@ -302,7 +293,12 @@ class BottomSheetState(
     }
 
   val isIdle: Boolean by derivedStateOf {
-    anchoredDraggableState.isDragging.not() && anchoredDraggableState.isAnimationRunning.not()
+    val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
+    val currentOffset = anchoredDraggableState.offset
+    val isSettledAtCurrentDetent =
+      currentOffset.isNaN() || currentPosition.isNaN() || abs(currentOffset - currentPosition) < 0.5f
+
+    isDragging.not() && anchoredDraggableState.isAnimationRunning.not() && isSettledAtCurrentDetent
   }
 
   fun progress(from: SheetDetent, to: SheetDetent): Float {
@@ -429,7 +425,7 @@ class BottomSheetState(
       false
     }
 
-    val anchors = UnstyledDraggableAnchors {
+    val anchors = DraggableAnchors {
       with(density) {
         closestDetentToTopPx = Float.NaN
         maxDetentHeightPx = Float.NaN
@@ -472,14 +468,16 @@ class BottomSheetState(
   }
 }
 
-private fun UnstyledDraggableAnchors<SheetDetent>.closestDetent(
+private fun DraggableAnchors<SheetDetent>.closestDetent(
   offset: Float,
   searchUpwards: Boolean,
 ): SheetDetent? {
   var closestDetent: SheetDetent? = null
   var closestDistance = Float.POSITIVE_INFINITY
 
-  forEach { detent, position ->
+  for (index in 0 until size) {
+    val detent = anchorAt(index) ?: continue
+    val position = positionAt(index)
     if (searchUpwards) {
       // Moving up: we want positions smaller than current offset
       if (position < offset) {
@@ -526,7 +524,17 @@ fun UnstyledBottomSheet(
   SideEffect { context.enabled = enabled }
 
   val coroutineScope = rememberCoroutineScope()
-
+  val dragInteractionSource = remember { MutableInteractionSource() }
+  LaunchedEffect(dragInteractionSource) {
+    dragInteractionSource.interactions.collect { interaction ->
+      when (interaction) {
+        is DragInteraction.Start -> state.isDragging = true
+        is DragInteraction.Stop,
+        is DragInteraction.Cancel,
+        -> state.isDragging = false
+      }
+    }
+  }
   BoxWithConstraints(
     modifier = Modifier.fillMaxSize().onSizeChanged {
       state.containerHeightPx = it.height.toFloat()
@@ -541,10 +549,11 @@ fun UnstyledBottomSheet(
           if (context.enabled && state.detents.size > 1) {
             add(
               Modifier
-                .unstyledAnchoredDraggable(
+                .anchoredDraggable(
                   state = state.anchoredDraggableState,
                   orientation = Orientation.Vertical,
                   enabled = context.enabled,
+                  interactionSource = dragInteractionSource,
                 )
                 .nestedScroll(
                   remember(state.anchoredDraggableState, Orientation.Vertical) {
@@ -694,7 +703,7 @@ private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Mo
 }
 
 private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-  sheetState: UnstyledAnchoredDraggableState<SheetDetent>,
+  sheetState: AnchoredDraggableState<SheetDetent>,
   orientation: Orientation,
   onFling: (velocity: Float) -> Unit,
 ): NestedScrollConnection = object : NestedScrollConnection {
@@ -722,7 +731,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
   override suspend fun onPreFling(available: Velocity): Velocity {
     val toFling = available.toFloat()
     val currentOffset = sheetState.requireOffset()
-    val minAnchor = sheetState.anchors.minAnchor()
+    val minAnchor = sheetState.anchors.minPosition()
     return if (toFling < 0 && currentOffset > minAnchor) {
       onFling(toFling)
       // since we go to the anchor with tween settling, consume all for the best UX
