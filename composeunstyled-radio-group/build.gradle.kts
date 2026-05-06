@@ -87,6 +87,22 @@ kotlin {
         implementation(libs.compose.foundation)
       }
     }
+
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+
+      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+      implementation(libs.compose.ui.test)
+    }
+
+    val jvmTest by getting
+
+    jvmTest.dependencies {
+      implementation(libs.compose.ui.test.junit4)
+      implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material", module = "material")
+      }
+    }
   }
 }
 
