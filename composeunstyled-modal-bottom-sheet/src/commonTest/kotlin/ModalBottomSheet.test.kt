@@ -312,7 +312,9 @@ class ModalBottomSheetTest {
       onNodeWithTag("sheet").assertExists()
     }
 
-    testCase("modal sheet unmounts after outside tap dismiss animation and modal fragment exit complete") {
+    testCase(
+      "modal sheet unmounts after outside tap dismiss animation and modal fragment exit complete",
+    ) {
       lateinit var state: ModalBottomSheetState
       setContent {
         state = rememberModalBottomSheetState(

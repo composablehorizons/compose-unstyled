@@ -23,7 +23,6 @@
 
 package core.com.composeunstyled
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.GestureCancellationException
 import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.awaitEachGesture
