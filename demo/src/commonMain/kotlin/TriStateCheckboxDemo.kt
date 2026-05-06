@@ -46,14 +46,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
+import com.composeunstyled.CheckedIndicator
+import com.composeunstyled.StateIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
+import com.composeunstyled.outline
 
 @Composable
 fun TriStateCheckboxDemo() {
@@ -75,63 +77,84 @@ fun TriStateCheckboxDemo() {
       modifier = Modifier.widthIn(max = 300.dp).fillMaxWidth().padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        UnstyledTriStateCheckbox(
-          value = triState,
-          onClick = {
-            val newState = when (triState) {
-              ToggleableState.Off -> true
-              ToggleableState.Indeterminate -> true
-              ToggleableState.On -> false
-            }
-            selected = List(checkboxOptions.size) { newState }
-          },
-          shape = RoundedCornerShape(4.dp),
-          backgroundColor = Color.White,
-          borderWidth = 1.dp,
-          borderColor = Color.Black.copy(0.33f),
-          modifier = Modifier.size(24.dp),
-          contentDescription = "Select all options",
-          indication = LocalIndication.current,
-        ) {
-          when (triState) {
-            ToggleableState.On -> UnstyledIcon(Lucide.Check, contentDescription = null)
-            ToggleableState.Indeterminate -> UnstyledIcon(Lucide.Minus, contentDescription = null)
-            ToggleableState.Off -> Unit
+      val triStateShape = RoundedCornerShape(4.dp)
+      UnstyledTriStateCheckbox(
+        value = triState,
+        onClick = {
+          val newState = when (triState) {
+            ToggleableState.Off -> true
+            ToggleableState.Indeterminate -> true
+            ToggleableState.On -> false
           }
-        }
-
-        Spacer(Modifier.width(12.dp))
-        Text("Select All", style = TextStyle(color = Color.White))
-      }
-
-      checkboxOptions.forEachIndexed { index, option ->
+          selected = List(checkboxOptions.size) { newState }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        accessibilityLabel = "Select all options",
+        indication = null,
+      ) {
         Row(
-          modifier = Modifier.fillMaxWidth().padding(start = 36.dp),
+          modifier = Modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          UnstyledCheckbox(
-            checked = selected[index],
-            onCheckedChange = { checked ->
-              selected = selected.toMutableList().apply {
-                this[index] = checked
-              }
-            },
-            shape = RoundedCornerShape(4.dp),
-            backgroundColor = Color.White,
-            borderWidth = 1.dp,
-            borderColor = Color.Black.copy(0.33f),
-            modifier = Modifier.size(24.dp),
-            contentDescription = option,
-          ) {
-            UnstyledIcon(Lucide.Check, contentDescription = null)
+          StateIndicator(
+            indication = LocalIndication.current,
+            modifier = Modifier
+              .size(24.dp)
+              .background(Color.White, triStateShape)
+              .outline(1.dp, Color.Black.copy(alpha = 0.10f), triStateShape),
+          ) { state ->
+            when (state) {
+              ToggleableState.On -> UnstyledIcon(
+                Lucide.Check,
+                contentDescription = null,
+                tint = Color.Black,
+              )
+
+              ToggleableState.Indeterminate -> UnstyledIcon(
+                Lucide.Minus,
+                contentDescription = null,
+                tint = Color.Black,
+              )
+
+              ToggleableState.Off -> Unit
+            }
           }
 
           Spacer(Modifier.width(12.dp))
-          Text(option, style = TextStyle(color = Color.White))
+          Text("Select All", color = Color.White)
+        }
+      }
+
+      val checkboxShape = RoundedCornerShape(4.dp)
+      checkboxOptions.forEachIndexed { index, option ->
+        UnstyledCheckbox(
+          checked = selected[index],
+          onCheckedChange = { checked ->
+            selected = selected.toMutableList().apply {
+              this[index] = checked
+            }
+          },
+          modifier = Modifier.fillMaxWidth(),
+          accessibilityLabel = option,
+          indication = null,
+        ) {
+          Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 36.dp),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            CheckedIndicator(
+              indication = LocalIndication.current,
+              modifier = Modifier
+                .size(24.dp)
+                .background(Color.White, checkboxShape)
+                .outline(1.dp, Color.Black.copy(alpha = 0.10f), checkboxShape),
+            ) {
+              UnstyledIcon(Lucide.Check, contentDescription = null, tint = Color.Black)
+            }
+
+            Spacer(Modifier.width(12.dp))
+            Text(option, color = Color.White)
+          }
         }
       }
     }
