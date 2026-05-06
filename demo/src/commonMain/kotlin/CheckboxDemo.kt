@@ -21,7 +21,6 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,13 +33,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
+import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.outline
 
 @Composable
 fun CheckboxDemo() {
@@ -50,18 +52,21 @@ fun CheckboxDemo() {
     contentAlignment = Alignment.Center,
   ) {
     var checked by remember { mutableStateOf(false) }
+    val checkboxShape = RoundedCornerShape(4.dp)
     UnstyledCheckbox(
       checked = checked,
       onCheckedChange = { checked = it },
-      shape = RoundedCornerShape(4.dp),
-      backgroundColor = Color.White,
-      borderWidth = 1.dp,
-      borderColor = Color.Black.copy(0.33f),
-      modifier = Modifier.size(24.dp),
-      contentDescription = "Add olives",
-      indication = LocalIndication.current,
+      modifier = Modifier.clip(checkboxShape),
+      accessibilityLabel = "Add olives",
     ) {
-      UnstyledIcon(Lucide.Check, contentDescription = null)
+      CheckedIndicator(
+        modifier = Modifier
+          .size(24.dp)
+          .background(Color.White, checkboxShape)
+          .outline(1.dp, Color.Black.copy(alpha = 0.10f), checkboxShape),
+      ) {
+        UnstyledIcon(Lucide.Check, contentDescription = null, tint = Color.Black)
+      }
     }
   }
 }
