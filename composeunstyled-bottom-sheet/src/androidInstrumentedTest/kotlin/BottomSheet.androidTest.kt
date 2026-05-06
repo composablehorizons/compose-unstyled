@@ -39,9 +39,6 @@ import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlin.test.assertFalse
 
-/**
- * We keep this test in Android source set as we cannot 'expand' the sheet using a mouse scroll
- */
 class BottomSheetTest {
 
   @Test

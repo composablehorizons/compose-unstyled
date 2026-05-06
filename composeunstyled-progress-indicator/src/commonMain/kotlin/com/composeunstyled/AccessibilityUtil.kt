@@ -32,10 +32,6 @@ import androidx.compose.ui.unit.offset
 internal val HorizontalSemanticsBoundsPadding: Dp = 10.dp
 internal val VerticalSemanticsBoundsPadding: Dp = 10.dp
 
-/**
- * Increases the semantics bounds horizontally by [HorizontalSemanticsBoundsPadding] in order to
- * meet the TalkBack box minimum size while preserving the visual appearance.
- */
 internal val IncreaseHorizontalSemanticsBounds: Modifier =
   Modifier.layout { measurable, constraints ->
     val paddingPx = HorizontalSemanticsBoundsPadding.roundToPx()
@@ -56,10 +52,6 @@ internal val IncreaseHorizontalSemanticsBounds: Modifier =
     .semantics(mergeDescendants = true) {}
     .padding(horizontal = HorizontalSemanticsBoundsPadding)
 
-/**
- * Increases the semantics bounds vertically by [VerticalSemanticsBoundsPadding] in order to meet
- * the TalkBack box minimum size while preserving the visual appearance.
- */
 internal val IncreaseVerticalSemanticsBounds: Modifier =
   Modifier.layout { measurable, constraints ->
     val paddingPx = VerticalSemanticsBoundsPadding.roundToPx()

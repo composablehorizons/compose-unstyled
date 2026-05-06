@@ -35,15 +35,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 
-/**
- * A layout that renders [floatingContent] above the [anchor].
- *
- * This is handy when building floating non-interactive interactions such as Tooltips.
- *
- * As opposed to a [androidx.compose.ui.window.Popup], the FloatingContent renders its contents in the same window as the composition it is part of.
- *
- * This has the benefit of not intercepting pointer events for fully non-intrusive floating elements.
- */
 @Composable
 internal fun FloatingContent(
   floatingContent: @Composable () -> Unit,

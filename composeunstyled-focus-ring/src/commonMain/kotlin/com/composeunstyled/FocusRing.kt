@@ -32,17 +32,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Draws an outline around the composable's bound when the component is focused.
- *
- * This modifier does not affect the components bounds.
- *
- * @param interactionSource The [InteractionSource] to subscribe to for focus events.
- * @param width the thickness of the outline
- * @param color the color of the outline
- * @param shape the shape of the composable. This is *not* the shape of the outline
- * @param offset the distance between the composable and the outline
- */
 @Composable
 fun Modifier.focusRing(
   interactionSource: InteractionSource,

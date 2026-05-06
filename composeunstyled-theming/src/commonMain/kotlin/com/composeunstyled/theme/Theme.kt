@@ -133,12 +133,6 @@ internal val LocalTheme =
 @DslMarker
 annotation class ThemeBuilderMarker
 
-/**
- * The preferred minimum size of components for interactivity purposes.
- *
- * @param [nonTouchInteractionSize] the size to be applied to components when running on a non-touch device (such as Desktop and Web)
- * @param [touchInteractionSize] the size to be applied to components when running on a touch based device (such as Android and iOS)
- */
 data class ComponentInteractiveSize(
   val nonTouchInteractionSize: Dp = Dp.Unspecified,
   val touchInteractionSize: Dp = Dp.Unspecified,
@@ -157,11 +151,6 @@ class ThemeBuilder internal constructor() {
   var defaultContentColor: Color by mutableStateOf(Color.Unspecified)
   var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
 
-  /**
-   * Specifies the minimum size of components.
-   *
-   * To apply the sizing to your composables, use the `Modifier.minimumInteractiveComponentSize()`.
-   */
   var defaultComponentInteractiveSize: ComponentInteractiveSize by mutableStateOf(
     ComponentInteractiveSize(Dp.Unspecified, Dp.Unspecified),
   )

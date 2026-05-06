@@ -122,18 +122,6 @@ private fun Saver(
     )
   })
 
-/**
- * Creates a [BottomSheetState]
- *
- * @param initialDetent The initial detent of the sheet.
- * @param detents The list of detents that the sheet can snap to.
- * @param animationSpec The animation spec to use for animating between detents.
- * @param confirmDetentChange Callback to confirm whether a detent change should be allowed.
- * @param decayAnimationSpec The animation spec to use for decay animations.
- * @param velocityThreshold The velocity threshold for determining whether to snap to the next detent.
- * @param positionalThreshold The positional threshold for determining whether to snap to the next detent.
- * @return A remembered [BottomSheetState] instance.
- */
 @Composable
 fun rememberBottomSheetState(
   initialDetent: SheetDetent,
@@ -188,27 +176,15 @@ fun rememberBottomSheetState(
   }
 }
 
-/**
- * A detent represents a stopping point for a bottom sheet.
- *
- * @property identifier A unique identifier for this detent.
- * @property calculateDetentHeight A function that calculates the height of this detent based on the container and sheet heights.
- */
 @Immutable
 class SheetDetent(
   val identifier: String,
   val calculateDetentHeight: (containerHeight: Dp, sheetHeight: Dp) -> Dp,
 ) {
   companion object {
-    /**
-     * A detent that expands the sheet to its full height.
-     */
     val FullyExpanded: SheetDetent =
       SheetDetent("fully-expanded") { containerHeight, sheetHeight -> sheetHeight }
 
-    /**
-     * A detent that hides the sheet.
-     */
     val Hidden: SheetDetent = SheetDetent("hidden") { containerHeight, sheetHeight -> 0.dp }
   }
 
@@ -307,9 +283,6 @@ class BottomSheetState(
       ?: currentDetent
   }
 
-  /**
-   * The [SheetDetent] that the sheet is heading towards, in case of an animation or drag events.
-   */
   var targetDetent: SheetDetent
     get() {
       return derivedTargetDetent
@@ -328,24 +301,14 @@ class BottomSheetState(
       }
     }
 
-  /**
-   * Whether the sheet is currently rested at a detent.
-   */
   val isIdle: Boolean by derivedStateOf {
     anchoredDraggableState.isDragging.not() && anchoredDraggableState.isAnimationRunning.not()
   }
 
-  /**
-   * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
-   */
   fun progress(from: SheetDetent, to: SheetDetent): Float {
     return anchoredDraggableState.progress(from, to)
   }
 
-  /**
-   * The amount the sheet has traveled from the bottom of its container in pixels.
-   *
-   */
   val offset: Float by derivedStateOf {
     if (anchoredDraggableState.offset.isNaN() || closestDetentToTopPx.isNaN()) {
       0f
@@ -425,9 +388,6 @@ class BottomSheetState(
     }
   }
 
-  /**
-   * Animates the sheet to the given [SheetDetent]
-   */
   suspend fun animateTo(value: SheetDetent) {
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -435,9 +395,6 @@ class BottomSheetState(
     anchoredDraggableState.animateTo(value)
   }
 
-  /**
-   * Instantly moves the sheet to the given [SheetDetent] without any animations.
-   */
   fun jumpTo(value: SheetDetent) {
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -515,17 +472,6 @@ class BottomSheetState(
   }
 }
 
-/**
- * Finds the closest detent to the given offset in the specified direction.
- *
- * For bottom sheets:
- * - Moving up means we want smaller offset values (closer to top of screen)
- * - Moving down means we want larger offset values (closer to bottom of screen)
- *
- * @param offset The current offset position
- * @param searchUpwards Whether to search upwards (true) or downwards (false)
- * @return The closest detent in the specified direction, or null if none found
- */
 private fun UnstyledDraggableAnchors<SheetDetent>.closestDetent(
   offset: Float,
   searchUpwards: Boolean,
@@ -568,41 +514,6 @@ private class BottomSheetContext(
 private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext> =
   compositionLocalOf { BottomSheetContext() }
 
-/**
- * A foundational component used to build bottom sheets.
- *
- * For interactive preview & code examples, visit [Bottom Sheet Documentation](https://composeunstyled.com/bottomsheet).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val sheetState = rememberBottomSheetState(
- *     initialDetent = Hidden,
- * )
- *
- * Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
- *     Text("Show Sheet")
- * }
- *
- * BottomSheet(
- *     state = sheetState,
- *     modifier = Modifier.fillMaxWidth(),
- * ) {
- *     Box(
- *         modifier = Modifier.fillMaxWidth().height(1200.dp),
- *         contentAlignment = Alignment.TopCenter
- *     ) {
- *         UnstyledDragIndication(Modifier.width(32.dp).height(4.dp))
- *     }
- * }
- * ```
- *
- * @param state The [BottomSheetState] that controls the sheet.
- * @param modifier Modifier to be applied to the sheet.
- * @param enabled Whether the sheet is enabled.
- * @param imeAware Automatically move the sheet according to the soft keyboard's height.
- * @param content The content of the sheet.
- */
 @Composable
 fun UnstyledBottomSheet(
   state: BottomSheetState,
@@ -838,15 +749,6 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
   private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
 }
 
-/**
- * A drag indication that can be used to control the bottom sheet.
- *
- * It is strongly advised to use this component within your [UnstyledBottomSheet]. Sheets are not by default accessible, and the [UnstyledDragIndication] allows toggling of the sheet via the keyboard.
- *
- * @param modifier Modifier to be applied to the drag indication.
- * @param indication The indication to be shown when the drag indication is interacted with.
- * @param interactionSource The interaction source for the drag indication.
- */
 @Composable
 fun UnstyledDragIndication(
   modifier: Modifier = Modifier,

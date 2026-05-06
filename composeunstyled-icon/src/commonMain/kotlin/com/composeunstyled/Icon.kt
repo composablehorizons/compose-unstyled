@@ -33,26 +33,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
-/**
- * A foundational component used to display icons.
- *
- * For interactive preview & code examples, visit [Icon Documentation](https://composeunstyled.com/icon).
- *
- * ## Basic Example
- *
- * ```kotlin
- * Icon(
- *     painter = painterResource("icon.xml"),
- *     contentDescription = "Settings",
- *     tint = Color.Black
- * )
- * ```
- *
- * @param painter The painter to draw the icon.
- * @param contentDescription The content description for accessibility.
- * @param modifier Modifier to be applied to the icon.
- * @param tint The tint color to be applied to the icon.
- */
 @Composable
 fun UnstyledIcon(
   painter: Painter,
@@ -66,26 +46,6 @@ fun UnstyledIcon(
   Image(painter, contentDescription, modifier, colorFilter = colorFilter)
 }
 
-/**
- * A foundational component used to display icons.
- *
- * For interactive preview & code examples, visit [Icon Documentation](https://composeunstyled.com/icon).
- *
- * ## Basic Example
- *
- * ```kotlin
- * Icon(
- *     painter = painterResource("icon.xml"),
- *     contentDescription = "Settings",
- *     tint = Color.Black
- * )
- * ```
- *
- * @param imageBitmap The image bitmap to draw the icon.
- * @param contentDescription The content description for accessibility.
- * @param modifier Modifier to be applied to the icon.
- * @param tint The tint color to be applied to the icon.
- */
 @Composable
 fun UnstyledIcon(
   imageBitmap: ImageBitmap,
@@ -99,26 +59,6 @@ fun UnstyledIcon(
   Image(imageBitmap, contentDescription, modifier, colorFilter = colorFilter)
 }
 
-/**
- * A foundational component used to display icons.
- *
- * For interactive preview & code examples, visit [Icon Documentation](https://composeunstyled.com/icon).
- *
- * ## Basic Example
- *
- * ```kotlin
- * Icon(
- *     painter = painterResource("icon.xml"),
- *     contentDescription = "Settings",
- *     tint = Color.Black
- * )
- * ```
- *
- * @param imageVector The image vector to draw the icon.
- * @param contentDescription The content description for accessibility.
- * @param modifier Modifier to be applied to the icon.
- * @param tint The tint color to be applied to the icon.
- */
 @Composable
 fun UnstyledIcon(
   imageVector: ImageVector,

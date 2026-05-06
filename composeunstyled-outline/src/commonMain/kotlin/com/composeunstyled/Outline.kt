@@ -36,21 +36,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Draws an outline outside the composable's bounds.
- *
- * Unlike [border], this modifier does not affect layout or size.
- *
- * The final outline shape is based on the given [shape]'s corner radius and the [offset]
- *
- * Only [Outline.Rectangle] and [Outline.Rounded] are supported. [Outline.Generic] is ignored.
- *
- *
- * @param width the thickness of the outline
- * @param color the color of the outline
- * @param shape the shape of the composable. This is *not* the shape of the outline
- * @param offset the distance between the composable and the outline
- */
 fun Modifier.outline(
   width: Dp,
   color: Color,

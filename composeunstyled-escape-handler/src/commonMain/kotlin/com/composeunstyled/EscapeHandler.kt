@@ -25,10 +25,5 @@ package com.composeunstyled
 
 import androidx.compose.runtime.Composable
 
-/**
- * A multiplatform version of Android's BackHandler.
- *
- * On non-Android devices, this can be implemented to react to Escape and Back key presses.
- */
 @Composable
 expect fun EscapeHandler(callback: () -> Unit)

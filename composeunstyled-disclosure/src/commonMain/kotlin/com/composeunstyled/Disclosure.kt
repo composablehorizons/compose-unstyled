@@ -62,11 +62,6 @@ class DisclosureState(expanded: Boolean = false) {
   var expanded: Boolean by mutableStateOf(expanded)
 }
 
-/**
- * Creates a [DisclosureState] that can be used to manually control a [Disclosure].
- *
- * @param initiallyExpanded Whether the disclosure should be initially expanded.
- */
 @Composable
 fun rememberDisclosureState(initiallyExpanded: Boolean = false): DisclosureState {
   return remember { DisclosureState(initiallyExpanded) }
@@ -77,35 +72,6 @@ class DisclosureScope internal constructor(state: DisclosureState) {
   internal var state by mutableStateOf(state)
 }
 
-/**
- * A foundational component used to build disclosure widgets.
- *
- * For interactive preview & code examples, visit [Disclosure Documentation](https://composeunstyled.com/disclosure).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val disclosureState = rememberDisclosureState()
- *
- * Disclosure(state = disclosureState) {
- *     DisclosureHeading(
- *         shape = RoundedCornerShape(8.dp),
- *         backgroundColor = Color.White,
- *         borderColor = Color(0xFFE4E4E4),
- *         borderWidth = 1.dp
- *     ) {
- *         Text("Click to expand")
- *     }
- *     DisclosurePanel {
- *         Text("This is the expanded content")
- *     }
- * }
- * ```
- *
- * @param state The [DisclosureState] that controls the expanded state of the disclosure.
- * @param modifier Modifier to be applied to the disclosure.
- * @param content The content of the disclosure, which should contain a [DisclosureHeading] and a [DisclosurePanel].
- */
 @Composable
 fun UnstyledDisclosure(
   state: DisclosureState = rememberDisclosureState(),
@@ -119,22 +85,6 @@ fun UnstyledDisclosure(
   }
 }
 
-/**
- * A heading component that can be clicked to expand or collapse the [DisclosurePanel].
- *
- * @param modifier Modifier to be applied to the heading.
- * @param enabled Whether the heading is clickable.
- * @param shape The shape of the heading.
- * @param backgroundColor The background color of the heading.
- * @param contentPadding Padding values for the content.
- * @param borderColor The color of the border.
- * @param borderWidth The width of the border.
- * @param indication The indication to be shown when the heading is interacted with.
- * @param interactionSource The interaction source for the heading.
- * @param verticalAlignment The vertical alignment of the content.
- * @param horizontalArrangement The horizontal arrangement of the content.
- * @param content The content of the heading.
- */
 @Composable
 fun DisclosureScope.UnstyledDisclosureHeading(
   modifier: Modifier = Modifier,
@@ -215,14 +165,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
   }
 }
 
-/**
- * A panel component that is shown when the [Disclosure] is expanded.
- *
- * @param modifier Modifier to be applied to the panel.
- * @param enter The enter transition for the panel.
- * @param exit The exit transition for the panel.
- * @param content The content of the panel.
- */
 @Composable
 fun DisclosureScope.UnstyledDisclosurePanel(
   modifier: Modifier = Modifier,

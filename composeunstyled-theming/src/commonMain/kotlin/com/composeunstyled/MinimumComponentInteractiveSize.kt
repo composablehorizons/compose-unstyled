@@ -34,11 +34,6 @@ import com.composeunstyled.theme.isTouchDevice
 internal val LocalMinimumComponentInteractiveSize =
   compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified) }
 
-/**
- * Sets the minimum size of the composable according to the currently resolved [com.composeunstyled.theme.Theme]
- *
- * To specify this value, set the value you want via the [com.composeunstyled.theme.buildTheme]'s [defaultComponentInteractiveSize] property.
- */
 @Composable
 fun Modifier.minimumInteractiveComponentSize(): Modifier {
   val size = LocalMinimumComponentInteractiveSize.current

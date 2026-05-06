@@ -66,15 +66,6 @@ val LocalModalState = staticCompositionLocalOf<ModalState> {
   ModalState()
 }
 
-/**
- * Modals are the building blocks for components such as dialogs, alerts and modal bottom sheets.
- *
- * They create their own window and block interaction with the rest of the interface until removed from the composition.
- *
- * @param state Controls modal visibility and lifecycle.
- * @param onKeyEvent Allows the caller to intercept [KeyEvent]s happening within the contents of the modal. Return `true` if you handled the event.
- * @param content The content of the modal
- */
 @Composable
 expect fun Modal(
   state: ModalState,
@@ -82,11 +73,6 @@ expect fun Modal(
   content: @Composable () -> Unit,
 )
 
-/**
- * Marks the composable as a participant in the parent [Modal] lifecycle.
- *
- * As soon as all fragments are removed from the composition, the [Modal] will automatically remove itself from composition.
- */
 @Composable
 fun Modifier.modalFragment(): Modifier {
   val state = LocalModalState.current

@@ -36,15 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Stack places its children either horizontally or vertically depending on the given [orientation].
- *
- * In other words, it works as a [Row] or [Column] depending on the [orientation].
- *
- * @param mainAxisArrangement controls the arrangement of the stack's children on the main axis. ie if the [orientation] is Horizontal, this will control the children on the **horizontal** axis.
- * @param crossAxisAlignment controls the arrangement of the stack's children on the opposite axis of [orientation]. ie if the [orientation] is Horizontal, this will control the children on the **vertical** axis.
- * @param spacing Spacing between the children. **This does nothing if** the given [mainAxisArrangement] is [MainAxisArrangement.SpaceEvenly], [MainAxisArrangement.SpaceBetween] or [MainAxisArrangement.SpaceAround]
- */
 @Composable
 fun Stack(
   modifier: Modifier = Modifier,
@@ -178,18 +169,6 @@ private fun crossAxisToVerticalAlignment(crossAxisAlignment: CrossAxisAlignment)
 }
 
 interface StackScope {
-  /**
-   * Size the element's main axis dimension proportional to its [weight] relative to other weighted sibling
-   * elements in the [Stack]. The parent will divide the space remaining after measuring
-   * unweighted child elements and distribute it according to this weight. When [fill] is true,
-   * the element will be forced to occupy the whole space allocated to it. Otherwise, the element
-   * is allowed to be smaller - this will result in [Stack] being smaller, as the unused allocated
-   * space will not be redistributed to other siblings.
-   *
-   * @param weight The proportional space to give to this element, as related to the total of all
-   *   weighted siblings. Must be positive.
-   * @param fill When `true`, the element will occupy the whole space allocated.
-   */
   fun Modifier.weight(
     @FloatRange(from = 0.0, fromInclusive = false)
     weight: Float,

@@ -54,9 +54,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 
-/**
- * A modified version of [clickable] that allow the composable to handle long clicks before its children.
- */
 @Composable
 internal fun Modifier.interceptingLongClickable(onLongPress: () -> Unit): Modifier {
   val hapticFeedback = LocalHapticFeedback.current
@@ -75,13 +72,10 @@ internal fun Modifier.interceptingLongClickable(onLongPress: () -> Unit): Modifi
 private val NoPressGesture: suspend PressGestureScope.(Offset) -> Unit = {}
 
 internal sealed class LongPressResult {
-  /** Long press was triggered */
   object Success : LongPressResult()
 
-  /** All pointers were released without long press being triggered */
   class Released(val finalUpChange: PointerInputChange) : LongPressResult()
 
-  /** The gesture was canceled */
   object Canceled : LongPressResult()
 }
 
@@ -170,7 +164,6 @@ internal class PressGestureScopeImpl(density: Density) : PressGestureScope, Dens
   private var isCanceled = false
   private val mutex = Mutex(locked = false)
 
-  /** Called when a gesture has been canceled. */
   fun cancel() {
     isCanceled = true
     if (mutex.isLocked) {
@@ -178,7 +171,6 @@ internal class PressGestureScopeImpl(density: Density) : PressGestureScope, Dens
     }
   }
 
-  /** Called when all pointers are up. */
   fun release() {
     isReleased = true
     if (mutex.isLocked) {
@@ -186,7 +178,6 @@ internal class PressGestureScopeImpl(density: Density) : PressGestureScope, Dens
     }
   }
 
-  /** Called when a new gesture has started. */
   suspend fun reset() {
     mutex.lock()
     isReleased = false

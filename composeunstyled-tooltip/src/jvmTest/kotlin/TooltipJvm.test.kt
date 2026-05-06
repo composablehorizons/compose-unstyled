@@ -53,9 +53,6 @@ import kotlin.test.Test
 
 class TooltipJvmTest {
 
-  /**
-   * We are specifying padding to prevent cases where the Tooltip ends up above the trigger
-   */
   fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {
       Box(Modifier.padding(100.dp)) {

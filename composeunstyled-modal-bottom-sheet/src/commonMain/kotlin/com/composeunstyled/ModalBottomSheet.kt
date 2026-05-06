@@ -52,29 +52,11 @@ import kotlinx.coroutines.launch
 
 private val DoNothing: () -> Unit = {}
 
-/**
- * Properties that control the behavior of a [UnstyledModalBottomSheet].
- *
- * @param dismissOnBackPress Whether the sheet should be dismissed when the back button is pressed.
- * @param dismissOnClickOutside Whether the sheet should be dismissed when clicking outside of it.
- */
 data class ModalSheetProperties(
   val dismissOnBackPress: Boolean = true,
   val dismissOnClickOutside: Boolean = true,
 )
 
-/**
- * Creates a [ModalBottomSheetState] that is remembered across compositions.
- *
- * @param initialDetent The initial detent of the sheet.
- * @param detents The list of detents that the sheet can snap to.
- * @param animationSpec The animation spec to use for animating between detents.
- * @param velocityThreshold The velocity threshold for determining whether to snap to the next detent.
- * @param positionalThreshold The positional threshold for determining whether to snap to the next detent.
- * @param confirmDetentChange Callback to confirm whether a detent change should be allowed.
- * @param decayAnimationSpec The animation spec to use for decay animations.
- * @return A remembered [ModalBottomSheetState] instance.
- */
 @Composable
 fun rememberModalBottomSheetState(
   initialDetent: SheetDetent,
@@ -129,9 +111,6 @@ class ModalBottomSheetState(
   val isIdle: Boolean
     get() = pendingTargetDetent == null && bottomSheetState.isIdle
 
-  /**
-   * A 0 to 1 value representing the progress of a sheet between its [from] and the [to] detents.
-   */
   fun progress(from: SheetDetent, to: SheetDetent): Float {
     return bottomSheetState.progress(from, to)
   }
@@ -216,40 +195,6 @@ class ModalBottomSheetState(
   }
 }
 
-/**
- * A foundational component used to build modal bottom sheets.
- *
- * For interactive preview & code examples, visit [Modal Bottom Sheet Documentation](https://composeunstyled.com/modalbottomsheet).
- *
- * ## Basic Example
- *
- * ```kotlin
- * val sheetState = rememberModalBottomSheetState(
- *     initialDetent = Hidden,
- * )
- *
- * Button(onClick = { sheetState.currentDetent = FullyExpanded }) {
- *     Text("Show Sheet")
- * }
- *
- * UnstyledModalBottomSheet(state = sheetState) {
- *     Sheet(modifier = Modifier.fillMaxWidth().background(Color.White)) {
- *         Box(
- *             modifier = Modifier.fillMaxWidth().height(1200.dp),
- *             contentAlignment = Alignment.TopCenter
- *         ) {
- *             UnstyledDragIndication()
- *         }
- *     }
- * }
- * ```
- *
- * @param state The [ModalBottomSheetState] that controls the sheet.
- * @param properties The [ModalSheetProperties] that control the behavior of the sheet.
- * @param onDismiss Callback that is called right before the sheet is about to be dismissed.
- * @param overlay Optional content placed behind the modal sheet content.
- * @param content The content of the modal
- */
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
