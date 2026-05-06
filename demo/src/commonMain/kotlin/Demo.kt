@@ -26,6 +26,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,16 +48,29 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -64,6 +78,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Search
+import com.composables.icons.lucide.X
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -158,6 +174,9 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 @Composable
 private fun DemoSelection() {
   val navController = rememberNavController()
+  var filterQuery by remember { mutableStateOf("") }
+  var filterVisible by remember { mutableStateOf(false) }
+
   NavHost(
     navController = navController,
     startDestination = "home",
@@ -175,8 +194,42 @@ private fun DemoSelection() {
     },
   ) {
     composable("home") {
+      val filteredThemingDemos = remember(filterQuery) {
+        themingDemos.filterBy(filterQuery)
+      }
+      val filteredPrimitives = remember(filterQuery) {
+        availablePrimitives.filterBy(filterQuery)
+      }
+      val filteredModifiers = remember(filterQuery) {
+        availableModifiers.filterBy(filterQuery)
+      }
+      val homeFocusRequester = remember { FocusRequester() }
+
+      LaunchedEffect(Unit) {
+        homeFocusRequester.requestFocus()
+      }
+
       Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .fillMaxSize()
+          .focusRequester(homeFocusRequester)
+          .focusable()
+          .onPreviewKeyEvent { event ->
+            when {
+              event.type == KeyEventType.KeyDown && event.key == Key.F && event.isMetaPressed -> {
+                filterVisible = true
+                true
+              }
+
+              event.type == KeyEventType.KeyDown && event.key == Key.Escape && filterVisible -> {
+                filterQuery = ""
+                filterVisible = false
+                true
+              }
+
+              else -> false
+            }
+          },
         contentAlignment = Alignment.Center,
       ) {
         Column(
@@ -184,35 +237,50 @@ private fun DemoSelection() {
             .widthIn(max = 600.dp).fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-          Title("Theme")
-          themingDemos.forEach { demo ->
-            OutlinedButton(
-              onClick = { navController.navigate(demo.id) },
-              modifier = Modifier.fillMaxWidth(),
-            ) {
-              Text(demo.name)
+          if (filteredThemingDemos.isNotEmpty()) {
+            DemoSection("Theme", filteredThemingDemos) { demo ->
+              navController.navigate(demo.id)
             }
           }
-          Spacer(Modifier.height(8.dp))
-          Title("Primitives")
-          availablePrimitives.forEach { demo ->
-            OutlinedButton(
-              onClick = { navController.navigate(demo.id) },
-              modifier = Modifier.fillMaxWidth(),
-            ) {
-              Text(demo.name)
+
+          if (filteredPrimitives.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            DemoSection("Primitives", filteredPrimitives) { demo ->
+              navController.navigate(demo.id)
             }
           }
-          Spacer(Modifier.height(8.dp))
-          Title("Modifiers")
-          availableModifiers.forEach { demo ->
-            OutlinedButton(
-              onClick = { navController.navigate(demo.id) },
-              modifier = Modifier.fillMaxWidth(),
-            ) {
-              Text(demo.name)
+
+          if (filteredModifiers.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            DemoSection("Modifiers", filteredModifiers) { demo ->
+              navController.navigate(demo.id)
             }
           }
+
+          if (
+            filteredThemingDemos.isEmpty() &&
+            filteredPrimitives.isEmpty() &&
+            filteredModifiers.isEmpty()
+          ) {
+            Text(
+              "No demos match \"$filterQuery\"",
+              modifier = Modifier.padding(24.dp).align(Alignment.CenterHorizontally),
+              color = Color.Black.copy(alpha = 0.58f),
+              style = MaterialTheme.typography.bodyMedium,
+            )
+          }
+        }
+
+        if (filterVisible || filterQuery.isNotEmpty()) {
+          DemoFilterBox(
+            value = filterQuery,
+            onValueChange = { filterQuery = it },
+            onDismiss = {
+              filterQuery = ""
+              filterVisible = false
+            },
+            modifier = Modifier.align(Alignment.TopEnd).systemBarsPadding().padding(16.dp),
+          )
         }
       }
     }
@@ -228,6 +296,91 @@ private fun DemoSelection() {
           }
         }
       }
+    }
+  }
+}
+
+private fun List<DemoItem>.filterBy(query: String): List<DemoItem> {
+  val normalizedQuery = query.trim()
+  if (normalizedQuery.isEmpty()) return this
+  return filter { demo ->
+    demo.name.contains(normalizedQuery, ignoreCase = true) ||
+      demo.id.contains(normalizedQuery, ignoreCase = true)
+  }
+}
+
+@Composable
+private fun DemoSection(
+  title: String,
+  demos: List<DemoItem>,
+  onClick: (DemoItem) -> Unit,
+) {
+  Title(title)
+  demos.forEach { demo ->
+    OutlinedButton(
+      onClick = { onClick(demo) },
+      modifier = Modifier.fillMaxWidth(),
+    ) {
+      Text(demo.name)
+    }
+  }
+}
+
+@Composable
+private fun DemoFilterBox(
+  value: String,
+  onValueChange: (String) -> Unit,
+  onDismiss: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val focusRequester = remember { FocusRequester() }
+  val shape = RoundedCornerShape(100)
+
+  LaunchedEffect(Unit) {
+    focusRequester.requestFocus()
+  }
+
+  Row(
+    modifier = modifier
+      .widthIn(min = 260.dp, max = 360.dp)
+      .shadow(12.dp, shape)
+      .background(Color.White, shape)
+      .outline(1.dp, Color.Black.copy(alpha = 0.08f), shape)
+      .padding(horizontal = 14.dp, vertical = 10.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    UnstyledIcon(Lucide.Search, contentDescription = null, tint = Color.Black)
+    Spacer(Modifier.width(10.dp))
+    BasicTextField(
+      value = value,
+      onValueChange = onValueChange,
+      modifier = Modifier.weight(1f).focusRequester(focusRequester),
+      singleLine = true,
+      textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+      decorationBox = { innerTextField ->
+        Box {
+          if (value.isEmpty()) {
+            Text(
+              "Filter demos...",
+              color = Color.Black.copy(alpha = 0.42f),
+              style = MaterialTheme.typography.bodyLarge,
+            )
+          }
+          innerTextField()
+        }
+      },
+    )
+    Spacer(Modifier.width(10.dp))
+    val interactionSource = remember { MutableInteractionSource() }
+    UnstyledButton(
+      onClick = onDismiss,
+      interactionSource = interactionSource,
+      shape = CircleShape,
+      contentPadding = PaddingValues(6.dp),
+      indication = LocalIndication.current,
+      modifier = Modifier.focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
+    ) {
+      UnstyledIcon(Lucide.X, contentDescription = "Close filter", tint = Color.Black)
     }
   }
 }
