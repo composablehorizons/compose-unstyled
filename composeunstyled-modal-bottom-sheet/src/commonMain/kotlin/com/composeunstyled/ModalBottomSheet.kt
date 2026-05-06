@@ -206,14 +206,28 @@ fun UnstyledModalBottomSheet(
   val currentDismissCallback by rememberUpdatedState(onDismiss)
   var dismissRequested by remember { mutableStateOf(false) }
 
-  fun onDismissRequest() {
+  fun dispatchDismiss() {
     if (dismissRequested.not()) {
       dismissRequested = true
       currentDismissCallback()
     }
-    state.modalState.transitionState.targetState = false
+  }
+
+  fun completeDismiss(notifyDismiss: Boolean = true) {
+    if (notifyDismiss) {
+      dispatchDismiss()
+    }
     state.modalDetent = SheetDetent.Hidden
-    state.bottomSheetState.targetDetent = SheetDetent.Hidden
+    state.modalState.transitionState.targetState = false
+  }
+
+  fun requestDismiss() {
+    dispatchDismiss()
+    state.pendingDetentChange?.cancel()
+    state.pendingDetentChange = state.scope.launch {
+      state.bottomSheetState.animateTo(SheetDetent.Hidden)
+      completeDismiss(notifyDismiss = false)
+    }
   }
 
   Modal(state = state.modalState) {
@@ -228,7 +242,7 @@ fun UnstyledModalBottomSheet(
         state.bottomSheetState.currentDetent,
       ) {
         if (state.bottomSheetState.isIdle && state.bottomSheetState.currentDetent == SheetDetent.Hidden) {
-          onDismissRequest()
+          completeDismiss()
         }
       }
     }
@@ -239,7 +253,9 @@ fun UnstyledModalBottomSheet(
     }
     if (properties.dismissOnBackPress) {
       EscapeHandler {
-        onDismissRequest()
+        if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
+          requestDismiss()
+        }
       }
     }
 
@@ -250,7 +266,7 @@ fun UnstyledModalBottomSheet(
             Modifier.pointerInput(Unit) {
               detectTapGestures {
                 if (state.bottomSheetState.confirmDetentChange(SheetDetent.Hidden)) {
-                  onDismissRequest()
+                  requestDismiss()
                 }
               }
             },
