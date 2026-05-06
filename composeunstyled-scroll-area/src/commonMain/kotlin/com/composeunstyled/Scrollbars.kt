@@ -68,9 +68,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 
-/**
- * Scope for the scrollbars of a [ScrollArea].
- */
 class ScrollbarScope internal constructor(
   internal val dragInteraction: MutableState<DragInteraction.Start?>,
   internal val sliderAdapter: SliderAdapter,
@@ -91,7 +88,7 @@ sealed class ThumbVisibility {
 fun ScrollAreaScope.UnstyledVerticalScrollbar(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
 ) = ScrollBar(modifier, enabled, interactionSource, reverseLayout, true, thumb)
@@ -100,7 +97,7 @@ fun ScrollAreaScope.UnstyledVerticalScrollbar(
 fun ScrollAreaScope.UnstyledHorizontalScrollbar(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
 ) = ScrollBar(modifier, enabled, interactionSource, reverseLayout, false, thumb)
@@ -109,17 +106,18 @@ fun ScrollAreaScope.UnstyledHorizontalScrollbar(
 private fun ScrollAreaScope.ScrollBar(
   modifier: Modifier,
   enabled: Boolean = true,
-  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  interactionSource: MutableInteractionSource? = null,
   reverse: Boolean = false,
   isVertical: Boolean,
   thumb: @Composable (ScrollbarScope.() -> Unit),
 ) = with(LocalDensity.current) {
   val reverseLayout = if (LocalLayoutDirection.current == LayoutDirection.Rtl) !reverse else reverse
   val dragInteraction = remember { mutableStateOf<DragInteraction.Start?>(null) }
-  androidx.compose.runtime.DisposableEffect(interactionSource) {
+  val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
+  androidx.compose.runtime.DisposableEffect(resolvedInteractionSource) {
     onDispose {
       dragInteraction.value?.let { interaction ->
-        interactionSource.tryEmit(DragInteraction.Cancel(interaction))
+        resolvedInteractionSource.tryEmit(DragInteraction.Cancel(interaction))
         dragInteraction.value = null
       }
     }
@@ -149,11 +147,11 @@ private fun ScrollAreaScope.ScrollBar(
     )
   }
 
-  val scrollbarScope = remember(sliderAdapter, containerSize) {
+  val scrollbarScope = remember(sliderAdapter, resolvedInteractionSource, scrollAreaState) {
     ScrollbarScope(
       dragInteraction,
       sliderAdapter,
-      interactionSource,
+      resolvedInteractionSource,
       scrollAreaState,
     )
   }
@@ -183,7 +181,7 @@ private fun ScrollAreaScope.ScrollBar(
 
   Layout(
     content = { scrollbarScope.thumb() },
-    modifier = modifier.hoverable(interactionSource = interactionSource).let {
+    modifier = modifier.hoverable(interactionSource = resolvedInteractionSource).let {
       if (enabled) {
         it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
       } else {
@@ -438,9 +436,6 @@ private fun Modifier.scrollOnPressTrack(
   }
 }
 
-/**
- * Responsible for scrolling when the scrollbar track is pressed (outside the thumb).
- */
 private class TrackPressScroller(
   private val coroutineScope: CoroutineScope,
   private val sliderAdapter: SliderAdapter,
@@ -537,13 +532,6 @@ private suspend fun PointerInputScope.detectScrollViaTrackGestures(
   }
 }
 
-/**
- * The delay between the 1st and 2nd scroll while the scrollbar track is pressed outside the thumb.
- */
 internal const val DelayBeforeSecondScrollOnTrackPress: Long = 300L
 
-/**
- * The delay between each subsequent (after the 2nd) scroll while the scrollbar track is pressed
- * outside the thumb.
- */
 internal const val DelayBetweenScrollsOnTrackPress: Long = 100L
