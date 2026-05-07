@@ -39,11 +39,11 @@ val publishGroupId = "com.composables"
 val publishVersion = libs.versions.unstyled.get()
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
-val pomArtifactId = "composeunstyled-progress-indicator"
-val pomName = "Compose Unstyled Progress Indicator"
+val pomArtifactId = "composeunstyled-progress"
+val pomName = "Compose Unstyled Progress"
 val pomDescription = "Progress indicator component primitive for Jetpack Compose."
-val frameworkBaseName = "ComposeUnstyledProgressindicator"
-val androidNamespace = "com.composeunstyled.progress.indicator"
+val frameworkBaseName = "ComposeUnstyledProgress"
+val androidNamespace = "com.composeunstyled.progress"
 
 java {
   toolchain {
@@ -86,6 +86,22 @@ kotlin {
       dependencies {
         api(libs.androidx.annotation)
         implementation(libs.compose.foundation)
+      }
+    }
+
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+
+      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+      implementation(libs.compose.ui.test)
+    }
+
+    val jvmTest by getting
+
+    jvmTest.dependencies {
+      implementation(libs.compose.ui.test.junit4)
+      implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
   }

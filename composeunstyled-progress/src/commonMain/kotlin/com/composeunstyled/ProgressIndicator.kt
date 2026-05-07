@@ -24,7 +24,6 @@
 package com.composeunstyled
 
 import androidx.annotation.FloatRange
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,32 +35,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 
-class ProgressIndicatorScope {
+class ProgressScope {
   var progress by mutableStateOf(0f)
     internal set
 }
 
 @Composable
-fun UnstyledProgressIndicator(
+fun UnstyledProgress(
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  content: @Composable ProgressIndicatorScope.() -> Unit,
+  content: @Composable ProgressScope.() -> Unit,
 ) {
-  val scope = remember { ProgressIndicatorScope() }
+  val scope = remember { ProgressScope() }
   SideEffect { scope.progress = progress }
   Box(
     modifier
       .then(IncreaseVerticalSemanticsBounds)
-      .progressSemantics(progress, 0f..1f)
-      .clip(shape)
-      .background(backgroundColor),
+      .progressSemantics(progress, 0f..1f),
   ) {
     with(scope) {
       content()
@@ -70,27 +61,22 @@ fun UnstyledProgressIndicator(
 }
 
 @Composable
-fun UnstyledProgressIndicator(
+fun UnstyledProgress(
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   content: @Composable () -> Unit,
 ) {
   Box(
     modifier
       .then(IncreaseVerticalSemanticsBounds)
-      .progressSemantics()
-      .clip(shape)
-      .background(backgroundColor),
+      .progressSemantics(),
   ) {
     content()
   }
 }
 
 @Composable
-fun ProgressIndicatorScope.UnstyledProgressBar(
-  color: Color,
-  shape: Shape = RectangleShape,
+fun ProgressScope.Indicator(
+  modifier: Modifier = Modifier,
 ) {
-  Box(Modifier.fillMaxWidth(progress).fillMaxHeight().background(color, shape))
+  Box(modifier.fillMaxWidth(progress).fillMaxHeight())
 }

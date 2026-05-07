@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `composeunstyled-dialog`, `composeunstyled-disclosure`, `composeunstyled-dropdown-menu`,
   `composeunstyled-escape-handler`, `composeunstyled-focus-ring`, `composeunstyled-icon`,
   `composeunstyled-modal`, `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
-  `composeunstyled-progress-indicator`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
+  `composeunstyled-progress`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
   `composeunstyled-scroll-area`, `composeunstyled-separators`, `composeunstyled-slider`,
   `composeunstyled-stack`, `composeunstyled-tab-group`, `composeunstyled-text-field`,
   `composeunstyled-toggle-switch`, `composeunstyled-tri-state-checkbox`, and

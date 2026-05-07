@@ -82,7 +82,7 @@ kotlin {
         api(projects.composeunstyledCheckbox)
         api(projects.composeunstyledTriStateCheckbox)
         api(projects.composeunstyledDisclosure)
-        api(projects.composeunstyledProgressIndicator)
+        api(projects.composeunstyledProgress)
         api(projects.composeunstyledToggleSwitch)
         api(projects.composeunstyledTabGroup)
         api(projects.composeunstyledIcon)
