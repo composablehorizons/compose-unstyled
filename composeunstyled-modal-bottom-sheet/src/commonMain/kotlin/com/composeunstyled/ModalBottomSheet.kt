@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +63,7 @@ fun rememberModalBottomSheetState(
   initialDetent: SheetDetent,
   detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
   animationSpec: AnimationSpec<Float> = tween(),
+  dismissAnimationSpec: AnimationSpec<Float>? = null,
   velocityThreshold: () -> Dp = { 125.dp },
   positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
   confirmDetentChange: (SheetDetent) -> Boolean = { true },
@@ -78,22 +80,29 @@ fun rememberModalBottomSheetState(
   )
   val modalState = rememberModalState(initiallyVisible = initialDetent != SheetDetent.Hidden)
   val scope = rememberCoroutineScope()
-  return remember(sheetState, modalState, scope) {
+  val state = remember(sheetState, modalState, scope) {
     ModalBottomSheetState(
       bottomSheetState = sheetState,
       modalState = modalState,
       scope = scope,
+      dismissAnimationSpec = dismissAnimationSpec,
     )
   }
+  SideEffect {
+    state.dismissAnimationSpec = dismissAnimationSpec
+  }
+  return state
 }
 
 class ModalBottomSheetState(
   internal val bottomSheetState: BottomSheetState,
   internal val modalState: ModalState,
   val scope: CoroutineScope,
+  dismissAnimationSpec: AnimationSpec<Float>? = null,
 ) {
   internal var pendingDetentChange: Job? = null
   internal var modalDetent by mutableStateOf(bottomSheetState.currentDetent)
+  internal var dismissAnimationSpec by mutableStateOf(dismissAnimationSpec)
   private var pendingTargetDetent: SheetDetent? by mutableStateOf(null)
 
   val currentDetent: SheetDetent
@@ -225,7 +234,7 @@ fun UnstyledModalBottomSheet(
     dispatchDismiss()
     state.pendingDetentChange?.cancel()
     state.pendingDetentChange = state.scope.launch {
-      state.bottomSheetState.animateTo(SheetDetent.Hidden)
+      state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
       completeDismiss(notifyDismiss = false)
     }
   }

@@ -312,6 +312,36 @@ class ModalBottomSheetTest {
       onNodeWithTag("sheet").assertExists()
     }
 
+    testCase("outside tap dismiss uses the provided dismiss animation spec") {
+      lateinit var state: ModalBottomSheetState
+      setContent {
+        state = rememberModalBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+          animationSpec = tween(durationMillis = 1000),
+          dismissAnimationSpec = tween(durationMillis = 100),
+        )
+        UnstyledModalBottomSheet(
+          state = state,
+          properties = ModalSheetProperties(dismissOnClickOutside = true),
+          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+        }
+      }
+      waitForIdle()
+      onNode(isDialog()).assertExists()
+
+      mainClock.autoAdvance = false
+      onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
+      mainClock.advanceTimeByFrame()
+      mainClock.advanceTimeBy(150)
+
+      assertThat(state.bottomSheetState.isIdle).isTrue()
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+      mainClock.autoAdvance = true
+    }
+
     testCase(
       "modal sheet unmounts after outside tap dismiss animation and modal fragment exit complete",
     ) {
