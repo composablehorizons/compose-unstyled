@@ -94,10 +94,10 @@ fun rememberModalBottomSheetState(
   return state
 }
 
-class ModalBottomSheetState(
+class ModalBottomSheetState internal constructor(
   internal val bottomSheetState: BottomSheetState,
   internal val modalState: ModalState,
-  val scope: CoroutineScope,
+  private val scope: CoroutineScope,
   dismissAnimationSpec: AnimationSpec<Float>? = null,
 ) {
   internal var pendingDetentChange: Job? = null
@@ -202,6 +202,12 @@ class ModalBottomSheetState(
   fun invalidateDetents() {
     bottomSheetState.invalidateDetents()
   }
+
+  internal fun launchPendingDetentChange(block: suspend () -> Unit) {
+    pendingDetentChange = scope.launch {
+      block()
+    }
+  }
 }
 
 @Composable
@@ -233,7 +239,7 @@ fun UnstyledModalBottomSheet(
   fun requestDismiss() {
     dispatchDismiss()
     state.pendingDetentChange?.cancel()
-    state.pendingDetentChange = state.scope.launch {
+    state.launchPendingDetentChange {
       state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
       completeDismiss(notifyDismiss = false)
     }
