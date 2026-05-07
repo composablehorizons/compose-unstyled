@@ -21,6 +21,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 
 - Compose Unstyled promises that it will never take or force design choices on the user. Keep APIs focused on behavior, state, semantics, and slots so design systems can provide their own visuals, icons, animation, layout, and styling.
 - Modifier chains in public composables must always start with the `modifier` parameter before adding internal modifiers.
+- Scoped composables must be extension functions on the scope, not members of the scope interface or class.
 
 ## Working in Unstyled
 
