@@ -25,7 +25,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldBuffer
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.getValue
@@ -43,13 +48,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import kotlin.test.Test
 
@@ -128,41 +129,52 @@ class TextFieldTest {
   }
 
   @Test
-  fun visualTransformationTransformText() = runComposeUiTest {
+  fun outputTransformationTransformsText() = runComposeUiTest {
     val state = TextFieldState("secret")
-    var visualTransformation by mutableStateOf(VisualTransformation.None)
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
-        visualTransformation = visualTransformation,
+        outputTransformation = PasswordOutputTransformation,
       ) {
         TextInput()
       }
     }
 
-    onNodeWithTag("textfield").assertTextEquals("secret")
-
-    visualTransformation = PasswordVisualTransformation()
-
     onNodeWithText("••••••", useUnmergedTree = true).assertTextEquals("••••••")
   }
 
   @Test
-  fun visualTransformationTransformText_whenNotEditable() = runComposeUiTest {
+  fun outputTransformationTransformsNonEditableText() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
         editable = false,
-        visualTransformation = PasswordVisualTransformation(),
+        outputTransformation = PasswordOutputTransformation,
       ) {
         TextInput()
       }
     }
 
     onNodeWithText("••••••", useUnmergedTree = true).assertTextEquals("••••••")
+  }
+
+  @Test
+  fun nonEditableTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
+    val state = TextFieldState("secret")
+    setContent {
+      UnstyledTextField(
+        state = state,
+        modifier = Modifier.testTag("textfield"),
+        editable = false,
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithText("secret", useUnmergedTree = true).assertTextEquals("secret")
   }
 
   @Test
@@ -268,13 +280,13 @@ class TextFieldTest {
   }
 
   @Test
-  fun visualTransformationWithLongerOutputWorksWithStateBasedTextField() = runComposeUiTest {
+  fun outputTransformationWithLongerOutputWorksWithStateBasedTextField() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").size(120.dp),
-        visualTransformation = CreditCardVisualTransformation(),
+        outputTransformation = CreditCardOutputTransformation,
       ) {
         TextInput()
       }
@@ -284,35 +296,112 @@ class TextFieldTest {
     onNodeWithTag("textfield").performTextInput("1234")
     onNodeWithTag("textfield").assertTextEquals("1234-")
   }
+
+  @Test
+  fun inputTransformationFiltersUserInput() = runComposeUiTest {
+    val state = TextFieldState("")
+    setContent {
+      UnstyledTextField(
+        state = state,
+        modifier = Modifier.testTag("textfield").size(120.dp),
+        inputTransformation = InputTransformation.maxLength(2),
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithTag("textfield").performClick()
+    onNodeWithTag("textfield").performTextInput("12")
+    onNodeWithTag("textfield").performTextInput("3")
+
+    onNodeWithTag("textfield").assertTextEquals("12")
+    assertThat(state.text.toString()).isEqualTo("12")
+  }
+
+  @Test
+  fun outputTransformationChangesRenderedTextWithoutChangingState() = runComposeUiTest {
+    val state = TextFieldState("")
+    setContent {
+      UnstyledTextField(
+        state = state,
+        modifier = Modifier.testTag("textfield").size(120.dp),
+        outputTransformation = object : OutputTransformation {
+          override fun TextFieldBuffer.transformOutput() {
+            replace(0, 0, "(")
+            replace(length, length, ")")
+          }
+        },
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithTag("textfield").performClick()
+    onNodeWithTag("textfield").performTextInput("12")
+
+    onNodeWithTag("textfield").assertTextEquals("(12)")
+    assertThat(state.text.toString()).isEqualTo("12")
+  }
+
+  @Test
+  fun lineLimitsAreForwardedToTextInput() = runComposeUiTest {
+    val state = TextFieldState("")
+    var lineCount = 0
+    setContent {
+      UnstyledTextField(
+        state = state,
+        modifier = Modifier.testTag("textfield").size(120.dp),
+        lineLimits = TextFieldLineLimits.SingleLine,
+        onTextLayout = { getResult ->
+          lineCount = getResult()?.lineCount ?: 0
+        },
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithTag("textfield").performClick()
+    onNodeWithTag("textfield").performTextInput("A\nB")
+    waitForIdle()
+
+    assertThat(lineCount).isEqualTo(1)
+  }
+
+  @Test
+  fun onTextLayoutIsForwardedToTextInput() = runComposeUiTest {
+    var layoutText = ""
+    setContent {
+      UnstyledTextField(
+        state = rememberTextFieldState("layout"),
+        modifier = Modifier.testTag("textfield"),
+        onTextLayout = { getResult ->
+          layoutText = getResult()?.layoutInput?.text?.text.orEmpty()
+        },
+      ) {
+        TextInput()
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(layoutText).isEqualTo("layout")
+  }
 }
 
-private class CreditCardVisualTransformation : VisualTransformation {
-  override fun filter(text: AnnotatedString): TransformedText {
-    var out = ""
-    for (i in text.text.indices) {
-      out += text.text[i]
-      if (i % 4 == 3 && i != 15) {
-        out += "-"
-      }
+private val PasswordOutputTransformation = object : OutputTransformation {
+  override fun TextFieldBuffer.transformOutput() {
+    for (index in 0 until length) {
+      replace(index, index + 1, "•")
     }
-    val creditCardOffsetTranslator = object : OffsetMapping {
-      override fun originalToTransformed(offset: Int): Int {
-        if (offset <= 3) return offset
-        if (offset <= 7) return offset + 1
-        if (offset <= 11) return offset + 2
-        if (offset <= 16) return offset + 3
-        return 19
-      }
+  }
+}
 
-      override fun transformedToOriginal(offset: Int): Int {
-        if (offset <= 4) return offset
-        if (offset <= 9) return offset - 1
-        if (offset <= 14) return offset - 2
-        if (offset <= 19) return offset - 3
-        return 16
-      }
+private val CreditCardOutputTransformation = object : OutputTransformation {
+  override fun TextFieldBuffer.transformOutput() {
+    var index = 4
+    while (index <= length) {
+      replace(index, index, "-")
+      index += 5
     }
-
-    return TransformedText(AnnotatedString(out), creditCardOffsetTranslator)
   }
 }

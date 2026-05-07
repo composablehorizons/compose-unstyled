@@ -31,14 +31,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.input.then
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,13 +58,13 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
@@ -72,13 +72,7 @@ import androidx.compose.ui.unit.isSpecified
 class TextFieldScope {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
-  internal var editable: Boolean by mutableStateOf(true)
-  internal var visualTransformation: VisualTransformation by
-    mutableStateOf(VisualTransformation.None)
   internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
-
-  internal var minLines: Int by mutableStateOf(1)
-  internal var maxLines: Int by mutableStateOf(Int.MAX_VALUE)
 
   internal var isLeadingFocused by mutableStateOf(false)
   internal var isTrailingFocused by mutableStateOf(false)
@@ -123,14 +117,7 @@ fun TextFieldScope.TextInput(
       else -> Alignment.TopStart
     }
     Box(contentAlignment = contentAlignment, modifier = Modifier.weight(1f)) {
-      if (editable) {
-        innerTextField!!.invoke()
-      } else {
-        val transformedText = visualTransformation.filter(AnnotatedString(text)).text.text
-        SelectionContainer {
-          BasicText(transformedText)
-        }
-      }
+      innerTextField!!.invoke()
 
       if (placeholder != null && text.isEmpty()) {
         Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
@@ -163,12 +150,12 @@ fun UnstyledTextField(
   fontWeight: FontWeight? = null,
   fontFamily: FontFamily? = null,
   textDecoration: TextDecoration? = textStyle.textDecoration,
-  singleLine: Boolean = false,
-  minLines: Int = 1,
-  maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+  lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
+  inputTransformation: InputTransformation? = null,
+  outputTransformation: OutputTransformation? = null,
+  onTextLayout: (Density.(getResult: () -> TextLayoutResult?) -> Unit)? = null,
   onKeyboardAction: KeyboardActionHandler? = null,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-  visualTransformation: VisualTransformation = VisualTransformation.None,
   interactionSource: MutableInteractionSource? = null,
   textColor: Color = Color.Unspecified,
   scrollState: ScrollState = rememberScrollState(),
@@ -177,8 +164,6 @@ fun UnstyledTextField(
   val scope = remember { TextFieldScope() }
 
   scope.text = state.text.toString()
-  scope.editable = editable
-  scope.visualTransformation = visualTransformation
 
   val newTextStyle = textStyle.mergeSafely(
     textAlign = textAlign,
@@ -191,68 +176,43 @@ fun UnstyledTextField(
     color = textColor,
   )
   scope.textAlignment = newTextStyle.textAlign
-  scope.minLines = minLines
-  scope.maxLines = maxLines
 
-  if (editable) {
-    val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
-
-    BasicTextField(
-      scrollState = scrollState,
-      state = state,
-      interactionSource = interactionSource,
-      textStyle = newTextStyle,
-      outputTransformation = {
-        val transformedText =
-          visualTransformation.filter(AnnotatedString(originalText.toString()))
-        val newText = transformedText.text.text
-        val mapping = transformedText.offsetMapping
-        val originalLength = originalText.length
-
-        // Apply edits from end to start so index shifts don't affect upcoming edits.
-        for (index in originalLength - 1 downTo 0) {
-          val transformedStart = mapping.originalToTransformed(index)
-          val transformedEnd = mapping.originalToTransformed(index + 1)
-          val replacement = newText.substring(transformedStart, transformedEnd)
-          replace(index, index + 1, replacement)
-        }
-
-        val suffixStart = mapping.originalToTransformed(originalLength)
-        if (suffixStart < newText.length) {
-          replace(length, length, newText.substring(suffixStart))
-        }
-      },
-      inputTransformation = InputTransformation {
-        // block any value changes, unless the actual text input is focused
-        if (inputIsFocused.not()) {
-          revertAllChanges()
-        }
-      },
-      modifier = modifier.semantics(mergeDescendants = true) {},
-      cursorBrush = cursorBrush,
-      lineLimits = if (singleLine) {
-        TextFieldLineLimits.SingleLine
-      } else {
-        TextFieldLineLimits.MultiLine(minLines, maxLines)
-      },
-      keyboardOptions = keyboardOptions,
-      onKeyboardAction = onKeyboardAction,
-      decorator = { innerTextField ->
-        scope.innerTextField = innerTextField
-        Column(
-          Modifier
-            // we are handling pointerIcons in TextInput()
-            .pointerHoverIcon(PointerIcon.Default),
-        ) {
-          scope.content()
-        }
-      },
-    )
-  } else {
-    Column(modifier) {
-      scope.content()
+  val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
+  val focusTransformation = InputTransformation {
+    // block any value changes, unless the actual text input is focused
+    if (inputIsFocused.not()) {
+      revertAllChanges()
     }
   }
+  val resolvedInputTransformation = inputTransformation?.let {
+    focusTransformation.then(it)
+  } ?: focusTransformation
+
+  BasicTextField(
+    scrollState = scrollState,
+    state = state,
+    interactionSource = interactionSource,
+    textStyle = newTextStyle,
+    readOnly = editable.not(),
+    outputTransformation = outputTransformation,
+    inputTransformation = resolvedInputTransformation,
+    modifier = modifier.semantics(mergeDescendants = true) {},
+    cursorBrush = cursorBrush,
+    lineLimits = lineLimits,
+    onTextLayout = onTextLayout,
+    keyboardOptions = keyboardOptions,
+    onKeyboardAction = onKeyboardAction,
+    decorator = { innerTextField ->
+      scope.innerTextField = innerTextField
+      Column(
+        Modifier
+          // we are handling pointerIcons in TextInput()
+          .pointerHoverIcon(PointerIcon.Default),
+      ) {
+        scope.content()
+      }
+    },
+  )
 }
 
 @Composable

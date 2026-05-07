@@ -35,6 +35,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldBuffer
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,8 +53,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
@@ -90,7 +91,7 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = email,
           modifier = Modifier.fillMaxWidth(),
-          singleLine = true,
+          lineLimits = TextFieldLineLimits.SingleLine,
           keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
           ),
@@ -124,12 +125,11 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = password,
           modifier = Modifier.fillMaxWidth(),
-          singleLine = true,
-          visualTransformation =
-          if (showPassword) {
-            VisualTransformation.None
+          lineLimits = TextFieldLineLimits.SingleLine,
+          outputTransformation = if (showPassword) {
+            null
           } else {
-            PasswordVisualTransformation()
+            PasswordOutputTransformation
           },
         ) {
           Text(
@@ -187,6 +187,14 @@ fun TextFieldDemo() {
           )
         }
       }
+    }
+  }
+}
+
+private val PasswordOutputTransformation = object : OutputTransformation {
+  override fun TextFieldBuffer.transformOutput() {
+    for (index in 0 until length) {
+      replace(index, index + 1, "•")
     }
   }
 }
