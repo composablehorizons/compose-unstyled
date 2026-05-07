@@ -23,107 +23,118 @@
 
 package com.composeunstyled
 
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
-private val NoPadding = PaddingValues(0.dp)
+@Stable
+interface UnstyledSwitchScope : BoxScope {
+  val checked: Boolean
+  val enabled: Boolean
+  val interactionSource: MutableInteractionSource
+}
+
+private class UnstyledSwitchScopeImpl(
+  override val checked: Boolean,
+  override val enabled: Boolean,
+  override val interactionSource: MutableInteractionSource,
+  private val boxScope: BoxScope,
+) : UnstyledSwitchScope,
+  BoxScope by boxScope
 
 @Composable
-fun UnstyledToggleSwitch(
-  toggled: Boolean,
+fun UnstyledSwitch(
+  checked: Boolean,
+  onCheckedChange: ((Boolean) -> Unit)?,
   modifier: Modifier = Modifier,
-  onToggled: ((Boolean) -> Unit)? = null,
   enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
   interactionSource: MutableInteractionSource? = null,
-  indication: Indication = LocalIndication.current,
-  thumb: @Composable () -> Unit,
+  indication: Indication? = LocalIndication.current,
+  content: @Composable UnstyledSwitchScope.() -> Unit,
 ) {
-  var trackWidth by remember { mutableStateOf(0.dp) }
-  var thumbWidth by remember { mutableStateOf(0.dp) }
-  val layoutDirection = LocalLayoutDirection.current
-
-  val paddingStart = contentPadding.calculateStartPadding(layoutDirection)
-  val paddingEnd = contentPadding.calculateEndPadding(layoutDirection)
-
-  val actualTrackWidth by derivedStateOf {
-    trackWidth - paddingStart - paddingEnd
-  }
-
-  val hasMeasured by derivedStateOf {
-    trackWidth > 0.dp && thumbWidth > 0.dp
-  }
-
-  val targetOffset = if (toggled) actualTrackWidth - thumbWidth else 0.dp
-  val offset by if (hasMeasured) {
-    animateDpAsState(targetValue = targetOffset, animationSpec = tween())
-  } else {
-    remember { mutableStateOf(0.dp) }
-  }
-
-  val density = LocalDensity.current
+  val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
 
   Box(
     modifier = modifier
-      .widthIn(min = 48.dp)
-      .clip(shape)
-      .background(backgroundColor, shape)
-      .onSizeChanged { trackWidth = with(density) { it.width.toDp() } }
-      then buildModifier {
-        if (onToggled != null) {
-          add(
-            Modifier.toggleable(
-              value = toggled,
-              enabled = enabled,
-              interactionSource = interactionSource,
-              indication = indication,
-              role = Role.Switch,
-              onValueChange = onToggled,
-            ),
+      .then(
+        if (onCheckedChange != null) {
+          Modifier.toggleable(
+            value = checked,
+            enabled = enabled,
+            interactionSource = resolvedInteractionSource,
+            indication = indication,
+            role = Role.Switch,
+            onValueChange = onCheckedChange,
           )
-        }
-      }
-        .padding(contentPadding),
+        } else {
+          Modifier
+        },
+      ),
+  ) {
+    val scope = UnstyledSwitchScopeImpl(
+      checked = checked,
+      enabled = enabled,
+      interactionSource = resolvedInteractionSource,
+      boxScope = this,
+    )
+    scope.content()
+  }
+}
+
+@Composable
+fun UnstyledSwitchScope.UnstyledSwitchThumb(
+  modifier: Modifier = Modifier,
+  animationSpec: FiniteAnimationSpec<Dp> = tween(),
+  contentAlignment: Alignment = Alignment.Center,
+  content: @Composable BoxScope.() -> Unit = {},
+) {
+  var trackWidth by remember { mutableStateOf(0.dp) }
+  var thumbWidth by remember { mutableStateOf(0.dp) }
+  val hasMeasured = trackWidth > 0.dp && thumbWidth > 0.dp
+  val targetOffset = if (checked) trackWidth - thumbWidth else 0.dp
+  val offset by if (hasMeasured) {
+    animateDpAsState(targetValue = targetOffset, animationSpec = animationSpec)
+  } else {
+    remember { mutableStateOf(0.dp) }
+  }
+  val density = LocalDensity.current
+
+  Box(
+    Modifier
+      .fillMaxSize()
+      .onSizeChanged { trackWidth = with(density) { it.width.toDp() } },
   ) {
     Box(
-      Modifier
+      modifier = Modifier
         .offset { IntOffset(offset.roundToPx(), 0) }
         .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
-        .alpha(if (hasMeasured) 1f else 0f),
-    ) {
-      thumb()
-    }
+        .alpha(if (hasMeasured) 1f else 0f)
+        .then(modifier),
+      contentAlignment = contentAlignment,
+      content = content,
+    )
   }
 }

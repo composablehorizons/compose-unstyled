@@ -27,9 +27,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -52,7 +52,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.UnstyledToggleSwitch
+import com.composeunstyled.UnstyledSwitch
+import com.composeunstyled.UnstyledSwitchThumb
 
 @Composable
 fun ToggleSwitchDemo() {
@@ -82,15 +83,18 @@ fun ToggleSwitchDemo() {
         val animatedColor by animateColorAsState(
           if (toggled) Color(0xFF4A7023) else Color(0xFFE0E0E0),
         )
-        UnstyledToggleSwitch(
-          toggled = toggled,
-          shape = RoundedCornerShape(100),
-          backgroundColor = animatedColor,
-          modifier = Modifier.width(58.dp),
-          contentPadding = PaddingValues(4.dp),
+        UnstyledSwitch(
+          checked = toggled,
+          onCheckedChange = null,
+          modifier = Modifier
+            .width(58.dp)
+            .height(32.dp)
+            .clip(RoundedCornerShape(100))
+            .background(animatedColor, RoundedCornerShape(100)),
         ) {
-          Box(
+          UnstyledSwitchThumb(
             modifier = Modifier
+              .padding(4.dp)
               .shadow(elevation = 4.dp, CircleShape)
               .clip(CircleShape)
               .background(Color.White)
