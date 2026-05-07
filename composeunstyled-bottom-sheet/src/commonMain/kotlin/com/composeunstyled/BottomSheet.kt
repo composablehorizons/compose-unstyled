@@ -384,11 +384,15 @@ class BottomSheetState(
     }
   }
 
-  suspend fun animateTo(value: SheetDetent) {
+  suspend fun animateTo(value: SheetDetent, animationSpec: AnimationSpec<Float>? = null) {
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
     }
-    anchoredDraggableState.animateTo(value)
+    if (animationSpec == null) {
+      anchoredDraggableState.animateTo(value)
+    } else {
+      anchoredDraggableState.animateTo(value, animationSpec)
+    }
   }
 
   fun jumpTo(value: SheetDetent) {
