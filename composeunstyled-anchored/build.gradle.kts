@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledDropdownMenu"
+      baseName = "ComposeUnstyledAnchored"
       isStatic = true
     }
   }
@@ -79,23 +79,12 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
-        api(projects.composeunstyledAnchored)
       }
     }
 
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
-      }
-    }
-
-    val jvmTest by getting
-
-    jvmTest.dependencies {
-      implementation(libs.compose.ui.test.junit4)
-      implementation(compose.desktop.currentOs) {
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
 
@@ -118,7 +107,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.dropdownmenu"
+  namespace = "com.composeunstyled.anchored"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -137,13 +126,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-dropdown-menu",
+    artifactId = "composeunstyled-anchored",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Dropdown Menu")
-    description.set("Dropdown menu primitive for Compose Unstyled - foundational API for building anchored menu surfaces in Compose Multiplatform.")
+    name.set("Compose Unstyled Anchored")
+    description.set("Anchored positioning primitives for Compose Unstyled - foundational API for placing content relative to an anchor in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

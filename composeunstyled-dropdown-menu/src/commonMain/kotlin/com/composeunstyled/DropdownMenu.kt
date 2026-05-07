@@ -27,29 +27,20 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -59,6 +50,7 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -68,17 +60,51 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
+@Stable
+internal class DropdownMenuState(
+  val onExpandedChange: (Boolean) -> Unit,
+  val transitionState: MutableTransitionState<Boolean>,
+)
+
+internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState?> { null }
+
 @Composable
 fun UnstyledDropdownMenu(
-  onExpandRequest: () -> Unit,
+  expanded: Boolean,
+  onExpandedChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
+  side: AnchorSide = AnchorSide.Bottom,
+  alignment: AnchorAlignment = AnchorAlignment.Start,
+  sideOffset: Dp = 0.dp,
+  alignmentOffset: Dp = 0.dp,
+  panel: @Composable () -> Unit,
+  anchor: @Composable () -> Unit,
 ) {
+  val density = LocalDensity.current
+  val positionProvider = MenuContentPositionProvider(
+    density = density,
+    side = side,
+    alignment = alignment,
+    sideOffset = sideOffset,
+    alignmentOffset = alignmentOffset,
+  )
+  val transitionState = remember { MutableTransitionState(false) }
+  val state = remember(onExpandedChange, transitionState) {
+    DropdownMenuState(
+      onExpandedChange = onExpandedChange,
+      transitionState = transitionState,
+    )
+  }
+
+  LaunchedEffect(expanded) {
+    transitionState.targetState = expanded
+  }
+
   Box(
     modifier.onKeyEvent { event ->
       if (event.key == Key.DirectionDown) {
         if (event.type == KeyEventType.KeyDown) {
-          onExpandRequest()
+          onExpandedChange(true)
         }
         true
       } else {
@@ -86,103 +112,82 @@ fun UnstyledDropdownMenu(
       }
     },
   ) {
-    content()
-  }
-}
+    anchor()
 
-sealed interface DropdownPanelAnchor {
-  object TopStart : DropdownPanelAnchor
-  object TopEnd : DropdownPanelAnchor
-  object BottomStart : DropdownPanelAnchor
-  object BottomEnd : DropdownPanelAnchor
-  object CenterStart : DropdownPanelAnchor
-  object CenterEnd : DropdownPanelAnchor
+    if (expanded || transitionState.currentState || !transitionState.isIdle) {
+      Popup(
+        properties = PopupProperties(
+          focusable = true,
+          dismissOnBackPress = true,
+          dismissOnClickOutside = true,
+        ),
+        onDismissRequest = {
+          onExpandedChange(false)
+        },
+        popupPositionProvider = positionProvider,
+      ) {
+        CompositionLocalProvider(LocalDropdownMenuState provides state) {
+          panel()
+        }
+      }
+    }
+  }
 }
 
 @Composable
 fun UnstyledDropdownMenuPanel(
-  expanded: Boolean,
-  onDismissRequest: () -> Unit,
   modifier: Modifier = Modifier,
-  anchor: DropdownPanelAnchor = DropdownPanelAnchor.BottomStart,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
-  verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-  horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
   content: @Composable ColumnScope.() -> Unit,
 ) {
-  val density = LocalDensity.current
-  val positionProvider = MenuContentPositionProvider(density, anchor)
-  val transitionState = remember { MutableTransitionState(false) }
+  val state = LocalDropdownMenuState.current
 
-  if (expanded || transitionState.currentState || !transitionState.isIdle) {
+  if (state != null) {
     val menuFocusRequester = remember { FocusRequester() }
+    val currentFocusManager = LocalFocusManager.current
 
-    Popup(
-      properties = PopupProperties(
-        focusable = true,
-        dismissOnBackPress = true,
-        dismissOnClickOutside = true,
-      ),
-      onDismissRequest = onDismissRequest,
-      popupPositionProvider = positionProvider,
-    ) {
-      LaunchedEffect(expanded) {
-        transitionState.targetState = expanded
-      }
-      val currentFocusManager = LocalFocusManager.current
-
-      AnimatedVisibility(
-        visibleState = transitionState,
-        enter = enter,
-        exit = exit,
-        modifier = Modifier.onKeyEvent { event ->
-          when (event.key) {
-            Key.DirectionDown -> {
-              if (event.isKeyDown) {
-                currentFocusManager.moveFocus(FocusDirection.Next)
-              }
-              true
+    AnimatedVisibility(
+      visibleState = state.transitionState,
+      enter = enter,
+      exit = exit,
+      modifier = Modifier.onKeyEvent { event ->
+        when (event.key) {
+          Key.DirectionDown -> {
+            if (event.isKeyDown) {
+              currentFocusManager.moveFocus(FocusDirection.Next)
             }
-
-            Key.DirectionUp -> {
-              if (event.isKeyDown) {
-                currentFocusManager.moveFocus(FocusDirection.Previous)
-              }
-              true
-            }
-
-            Key.Escape -> {
-              if (event.isKeyDown) {
-                onDismissRequest()
-              }
-              true
-            }
-
-            else -> false
+            true
           }
-        },
-      ) {
-        Column(
-          modifier
-            .focusRequester(menuFocusRequester)
-            .clip(shape)
-            .background(backgroundColor)
-            .padding(contentPadding),
-          horizontalAlignment = horizontalAlignment,
-          verticalArrangement = verticalArrangement,
-        ) {
-          // Request focus when the menu becomes visible
-          if (transitionState.currentState) {
-            LaunchedEffect(Unit) {
-              menuFocusRequester.requestFocus()
+
+          Key.DirectionUp -> {
+            if (event.isKeyDown) {
+              currentFocusManager.moveFocus(FocusDirection.Previous)
             }
+            true
           }
-          content()
+
+          Key.Escape -> {
+            if (event.isKeyDown) {
+              state.onExpandedChange(false)
+            }
+            true
+          }
+
+          else -> false
         }
+      },
+    ) {
+      Column(
+        modifier = modifier.focusRequester(menuFocusRequester),
+      ) {
+        // Request focus when the menu becomes visible
+        if (state.transitionState.currentState) {
+          LaunchedEffect(Unit) {
+            menuFocusRequester.requestFocus()
+          }
+        }
+        content()
       }
     }
   }
@@ -191,35 +196,28 @@ fun UnstyledDropdownMenuPanel(
 @Immutable
 internal data class MenuContentPositionProvider(
   val density: Density,
-  val anchor: DropdownPanelAnchor,
+  val side: AnchorSide,
+  val alignment: AnchorAlignment,
+  val sideOffset: Dp,
+  val alignmentOffset: Dp,
 ) : PopupPositionProvider {
   override fun calculatePosition(
     anchorBounds: IntRect,
     windowSize: IntSize,
     layoutDirection: LayoutDirection,
     popupContentSize: IntSize,
-  ): IntOffset {
-    val x = when (anchor) {
-      DropdownPanelAnchor.TopStart, DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.BottomStart -> anchorBounds.left
-      DropdownPanelAnchor.TopEnd, DropdownPanelAnchor.CenterEnd, DropdownPanelAnchor.BottomEnd -> anchorBounds.right - popupContentSize.width
-    }
-
-    val y = when (anchor) {
-      DropdownPanelAnchor.TopStart, DropdownPanelAnchor.TopEnd -> anchorBounds.top - popupContentSize.height
-      DropdownPanelAnchor.CenterStart, DropdownPanelAnchor.CenterEnd -> anchorBounds.top - popupContentSize.height / 2
-      DropdownPanelAnchor.BottomStart, DropdownPanelAnchor.BottomEnd -> anchorBounds.bottom
-    }
-
-    val clampedX = x.coerceIn(0, windowSize.width - popupContentSize.width)
-    val clampedY = y.coerceIn(0, windowSize.height - popupContentSize.height)
-
-    return IntOffset(clampedX, clampedY)
-  }
+  ): IntOffset = calculateAnchoredPosition(
+    density = density,
+    anchorBounds = anchorBounds,
+    windowSize = windowSize,
+    layoutDirection = layoutDirection,
+    contentSize = popupContentSize,
+    side = side,
+    alignment = alignment,
+    sideOffset = sideOffset,
+    alignmentOffset = alignmentOffset,
+  )
 }
-
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
-private val NoPadding = PaddingValues(0.dp)
 
 private val KeyEvent.isKeyDown: Boolean
   get() = type == KeyEventType.KeyDown

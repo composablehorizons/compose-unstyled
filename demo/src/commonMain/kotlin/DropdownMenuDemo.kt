@@ -27,7 +27,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,11 +47,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
@@ -68,6 +70,7 @@ import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSeparator
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun DropdownMenuDemo() {
@@ -94,69 +97,90 @@ fun DropdownMenuDemo() {
     var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-      delay(500)
+      delay(500.milliseconds)
       expanded = true
     }
 
-    UnstyledDropdownMenu(onExpandRequest = { expanded = true }) {
-      UnstyledButton(
-        shape = RoundedCornerShape(6.dp),
-        backgroundColor = Color.White,
-        onClick = { expanded = true },
-        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
-        indication = LocalIndication.current,
-        modifier = Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp),
-      ) {
-        Text("Options")
-        Spacer(Modifier.width(8.dp))
-        UnstyledIcon(Lucide.ChevronDown, null)
-      }
-
-      UnstyledDropdownMenuPanel(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        backgroundColor = Color.White,
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.padding(vertical = 4.dp)
-          .width(240.dp)
-          .shadow(4.dp, RoundedCornerShape(8.dp)),
-        enter = scaleIn(
-          animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
-          initialScale = 0.8f,
-          transformOrigin = TransformOrigin(0f, 0f),
-        ) + fadeIn(tween(durationMillis = 30)),
-        exit = scaleOut(
-          animationSpec = tween(durationMillis = 1, delayMillis = 75),
-          targetScale = 1f,
-        ) +
-          fadeOut(tween(durationMillis = 75)),
-      ) {
-        options.forEachIndexed { index, option ->
-          if (index == 1 || index == options.lastIndex) {
-            UnstyledSeparator(color = Color(0xFFBDBDBD))
-          }
-          UnstyledButton(
-            onClick = { expanded = false },
-            enabled = option.enabled,
-            modifier = Modifier
-              .padding(4.dp)
-              .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-              .fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-            shape = RoundedCornerShape(8.dp),
-            indication = LocalIndication.current,
-            horizontalArrangement = Arrangement.Start,
-          ) {
-            UnstyledIcon(option.icon, null)
-            Spacer(Modifier.width(12.dp))
-            Text(
-              text = option.text,
-              color = (if (option.dangerous) Color(0xFFC62828) else LocalContentColor.current)
-                .copy(alpha = if (option.enabled) 1f else 0.5f),
+    UnstyledDropdownMenu(
+      expanded = expanded,
+      onExpandedChange = { expanded = it },
+      sideOffset = 4.dp,
+      panel = {
+        UnstyledDropdownMenuPanel(
+          modifier = Modifier
+            .width(240.dp)
+            .dropShadow(
+              shape = RoundedCornerShape(8.dp),
+              shadow = Shadow(
+                radius = 8.dp,
+                spread = 0.dp,
+                color = Color.Black.copy(alpha = 0.18f),
+                offset = DpOffset(x = 0.dp, y = 2.dp),
+              ),
             )
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White),
+          enter = scaleIn(
+            animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
+            initialScale = 0.8f,
+            transformOrigin = TransformOrigin(0f, 0f),
+          ) + fadeIn(tween(durationMillis = 30)),
+          exit = scaleOut(
+            animationSpec = tween(durationMillis = 1, delayMillis = 75),
+            targetScale = 1f,
+          ) +
+            fadeOut(tween(durationMillis = 75)),
+        ) {
+          options.forEachIndexed { index, option ->
+            if (index == 1 || index == options.lastIndex) {
+              UnstyledSeparator(color = Color(0xFFBDBDBD))
+            }
+            UnstyledButton(
+              onClick = { expanded = false },
+              enabled = option.enabled,
+              modifier = Modifier
+                .padding(4.dp)
+                .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+                .fillMaxWidth(),
+              contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+              shape = RoundedCornerShape(8.dp),
+              horizontalArrangement = Arrangement.Start,
+            ) {
+              val contentColor = (
+                if (option.dangerous) {
+                  Color(0xFFC62828)
+                } else {
+                  LocalContentColor.current
+                }
+                ).copy(alpha = if (option.enabled) 1f else 0.5f)
+
+              UnstyledIcon(
+                imageVector = option.icon,
+                contentDescription = null,
+                tint = contentColor,
+              )
+              Spacer(Modifier.width(12.dp))
+              Text(
+                text = option.text,
+                color = contentColor,
+              )
+            }
           }
         }
-      }
-    }
+      },
+      anchor = {
+        UnstyledButton(
+          shape = RoundedCornerShape(6.dp),
+          backgroundColor = Color.White,
+          onClick = { expanded = true },
+          contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+          modifier = Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp),
+        ) {
+          Text("Options")
+          Spacer(Modifier.width(8.dp))
+          UnstyledIcon(Lucide.ChevronDown, null)
+        }
+      },
+    )
   }
 }
