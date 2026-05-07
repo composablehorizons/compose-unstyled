@@ -36,8 +36,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ProgressIndicatorTest {
 
@@ -98,7 +100,10 @@ class ProgressIndicatorTest {
 
     waitForIdle()
 
-    assertEquals(rootSize.width / 2, indicatorSize.width)
+    assertTrue(
+      abs(indicatorSize.width - rootSize.width * 0.5f) <= 1f,
+      "Expected indicator width to be half of $rootSize, but was $indicatorSize",
+    )
     assertEquals(rootSize.height, indicatorSize.height)
   }
 

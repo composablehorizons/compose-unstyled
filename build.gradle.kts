@@ -10,6 +10,16 @@ plugins {
 subprojects {
   apply(plugin = rootProject.libs.plugins.spotless.get().pluginId)
 
+  plugins.withId(rootProject.libs.plugins.kotlin.multiplatform.get().pluginId) {
+    extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
+      sourceSets.matching { it.name == "androidInstrumentedTest" }.configureEach {
+        dependencies {
+          implementation(rootProject.libs.androidx.test.runner)
+        }
+      }
+    }
+  }
+
   configure<com.diffplug.gradle.spotless.SpotlessExtension> {
     kotlin {
       target(
