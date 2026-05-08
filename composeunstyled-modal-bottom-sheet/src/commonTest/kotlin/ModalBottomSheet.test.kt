@@ -359,7 +359,7 @@ class ModalBottomSheetTest {
         UnstyledModalBottomSheet(
           state = state,
           properties = ModalSheetProperties(dismissOnClickOutside = true),
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
