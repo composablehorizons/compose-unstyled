@@ -59,12 +59,16 @@ data class DialogProperties(
   val dismissOnClickOutside: Boolean = true,
 )
 
+interface DialogScope
+
+private object DialogScopeInstance : DialogScope
+
 @Composable
 fun UnstyledDialog(
   visible: Boolean,
   onDismissRequest: () -> Unit,
   properties: DialogProperties = DialogProperties(),
-  content: @Composable (() -> Unit),
+  content: @Composable DialogScope.() -> Unit,
 ) {
   val modalState = rememberModalState(initiallyVisible = visible)
   val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
@@ -113,13 +117,13 @@ fun UnstyledDialog(
         ),
       contentAlignment = Alignment.Center,
     ) {
-      content()
+      DialogScopeInstance.content()
     }
   }
 }
 
 @Composable
-fun UnstyledDialogPanel(
+fun DialogScope.DialogPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = AppearInstantly,
   exit: ExitTransition = DisappearInstantly,

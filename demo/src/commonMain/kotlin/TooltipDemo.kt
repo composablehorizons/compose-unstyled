@@ -56,10 +56,10 @@ import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
 import com.composeunstyled.TooltipArrowDirection
+import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
-import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.focusRing
 
 @Composable
@@ -75,7 +75,7 @@ fun TooltipDemo() {
         side = AnchorSide.Top,
         alignment = AnchorAlignment.Center,
         panel = {
-          UnstyledTooltipPanel(
+          TooltipPanel(
             enter = slideInVertically(tween(150), initialOffsetY = { (it * 0.25).toInt() }) +
               scaleIn(
                 animationSpec = tween(150),

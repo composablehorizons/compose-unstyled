@@ -56,7 +56,7 @@ class TooltipCommonTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -75,7 +75,7 @@ class TooltipCommonTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -102,7 +102,7 @@ class TooltipCommonTest {
       Row {
         UnstyledTooltip(
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -140,7 +140,7 @@ class TooltipCommonTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip for disabled element")
           }
         },
@@ -172,7 +172,7 @@ class TooltipCommonTest {
         UnstyledTooltip(
           hoverDelayMillis = 500,
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -218,7 +218,7 @@ class TooltipCommonTest {
         UnstyledTooltip(
           hoverDelayMillis = 500,
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },

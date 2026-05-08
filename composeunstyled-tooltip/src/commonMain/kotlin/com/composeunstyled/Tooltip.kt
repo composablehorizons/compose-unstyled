@@ -76,15 +76,21 @@ enum class TooltipArrowDirection {
   Up, Down, Left, Right
 }
 
-internal val LocalTooltipState = staticCompositionLocalOf<TooltipState?> { null }
-
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
+
+interface TooltipScope
+
+private object TooltipScopeInstance : TooltipScope
+
+internal val LocalTooltipState = staticCompositionLocalOf<TooltipState> {
+  error("Panel must be placed inside UnstyledTooltip's panel slot.")
+}
 
 @Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
-  panel: @Composable () -> Unit,
+  panel: @Composable TooltipScope.() -> Unit,
   side: AnchorSide = AnchorSide.Top,
   alignment: AnchorAlignment = AnchorAlignment.Center,
   sideOffset: Dp = 0.dp,
@@ -231,7 +237,7 @@ fun UnstyledTooltip(
     },
     floatingContent = {
       CompositionLocalProvider(LocalTooltipState provides state) {
-        panel()
+        TooltipScopeInstance.panel()
       }
     },
     anchor = anchor,
@@ -239,28 +245,27 @@ fun UnstyledTooltip(
 }
 
 @Composable
-fun UnstyledTooltipPanel(
+fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = AppearInstantly,
   exit: ExitTransition = DisappearInstantly,
   content: @Composable () -> Unit,
 ) {
   val state = LocalTooltipState.current
-
-  val showTooltip = state?.show ?: false
+  val showTooltip = state.show
 
   AnimatedVisibility(
     visible = showTooltip,
     enter = enter,
     exit = exit,
-    modifier = modifier.tooltipPanelSemantics(),
+    modifier = modifier.tooltipPanelSemantics(showTooltip),
   ) {
     content()
   }
 }
 
 @Composable
-fun UnstyledTooltipPanel(
+fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,
   arrow: @Composable (TooltipArrowDirection) -> Unit,
   enter: EnterTransition = AppearInstantly,
@@ -268,16 +273,15 @@ fun UnstyledTooltipPanel(
   content: @Composable () -> Unit,
 ) {
   val state = LocalTooltipState.current
-
-  val showTooltip = state?.show ?: false
-  val arrowDirection = state?.arrowDirection ?: TooltipArrowDirection.Down
-  val arrowOffset = state?.arrowOffset ?: IntOffset.Zero
+  val showTooltip = state.show
+  val arrowDirection = state.arrowDirection
+  val arrowOffset = state.arrowOffset
 
   AnimatedVisibility(
     visible = showTooltip,
     enter = enter,
     exit = exit,
-    modifier = modifier.tooltipPanelSemantics(),
+    modifier = modifier.tooltipPanelSemantics(showTooltip),
   ) {
     when (arrowDirection) {
       TooltipArrowDirection.Up -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -320,13 +324,9 @@ private fun arrowDirection(side: AnchorSide): TooltipArrowDirection {
   }
 }
 
-@Composable
-private fun Modifier.tooltipPanelSemantics(): Modifier {
-  val showTooltip = LocalTooltipState.current?.show ?: false
-
-  return this then Modifier.semantics {
+private fun Modifier.tooltipPanelSemantics(showTooltip: Boolean): Modifier =
+  this then Modifier.semantics {
     if (showTooltip) {
       liveRegion = LiveRegionMode.Assertive
     }
   }
-}

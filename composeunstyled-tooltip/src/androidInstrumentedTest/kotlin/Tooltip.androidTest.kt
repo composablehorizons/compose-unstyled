@@ -58,7 +58,7 @@ class TooltipTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -91,7 +91,7 @@ class TooltipTest {
       UnstyledTooltip(
         longPressShowDurationMillis = 1500,
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },

@@ -66,7 +66,13 @@ internal class DropdownMenuState(
   val transitionState: MutableTransitionState<Boolean>,
 )
 
-internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState?> { null }
+interface DropdownMenuScope
+
+private object DropdownMenuScopeInstance : DropdownMenuScope
+
+internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState> {
+  error("Panel must be placed inside UnstyledDropdownMenu's panel slot.")
+}
 
 @Composable
 fun UnstyledDropdownMenu(
@@ -77,7 +83,7 @@ fun UnstyledDropdownMenu(
   alignment: AnchorAlignment = AnchorAlignment.Start,
   sideOffset: Dp = 0.dp,
   alignmentOffset: Dp = 0.dp,
-  panel: @Composable () -> Unit,
+  panel: @Composable DropdownMenuScope.() -> Unit,
   anchor: @Composable () -> Unit,
 ) {
   val density = LocalDensity.current
@@ -127,7 +133,7 @@ fun UnstyledDropdownMenu(
         popupPositionProvider = positionProvider,
       ) {
         CompositionLocalProvider(LocalDropdownMenuState provides state) {
-          panel()
+          DropdownMenuScopeInstance.panel()
         }
       }
     }
@@ -135,60 +141,57 @@ fun UnstyledDropdownMenu(
 }
 
 @Composable
-fun UnstyledDropdownMenuPanel(
+fun DropdownMenuScope.DropdownMenuPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val state = LocalDropdownMenuState.current
+  val menuFocusRequester = remember { FocusRequester() }
+  val currentFocusManager = LocalFocusManager.current
 
-  if (state != null) {
-    val menuFocusRequester = remember { FocusRequester() }
-    val currentFocusManager = LocalFocusManager.current
-
-    AnimatedVisibility(
-      visibleState = state.transitionState,
-      enter = enter,
-      exit = exit,
-      modifier = Modifier.onKeyEvent { event ->
-        when (event.key) {
-          Key.DirectionDown -> {
-            if (event.isKeyDown) {
-              currentFocusManager.moveFocus(FocusDirection.Next)
-            }
-            true
+  AnimatedVisibility(
+    visibleState = state.transitionState,
+    enter = enter,
+    exit = exit,
+    modifier = Modifier.onKeyEvent { event ->
+      when (event.key) {
+        Key.DirectionDown -> {
+          if (event.isKeyDown) {
+            currentFocusManager.moveFocus(FocusDirection.Next)
           }
-
-          Key.DirectionUp -> {
-            if (event.isKeyDown) {
-              currentFocusManager.moveFocus(FocusDirection.Previous)
-            }
-            true
-          }
-
-          Key.Escape -> {
-            if (event.isKeyDown) {
-              state.onExpandedChange(false)
-            }
-            true
-          }
-
-          else -> false
+          true
         }
-      },
-    ) {
-      Column(
-        modifier = modifier.focusRequester(menuFocusRequester),
-      ) {
-        // Request focus when the menu becomes visible
-        if (state.transitionState.currentState) {
-          LaunchedEffect(Unit) {
-            menuFocusRequester.requestFocus()
+
+        Key.DirectionUp -> {
+          if (event.isKeyDown) {
+            currentFocusManager.moveFocus(FocusDirection.Previous)
           }
+          true
         }
-        content()
+
+        Key.Escape -> {
+          if (event.isKeyDown) {
+            state.onExpandedChange(false)
+          }
+          true
+        }
+
+        else -> false
       }
+    },
+  ) {
+    Column(
+      modifier = modifier.focusRequester(menuFocusRequester),
+    ) {
+      // Request focus when the menu becomes visible
+      if (state.transitionState.currentState) {
+        LaunchedEffect(Unit) {
+          menuFocusRequester.requestFocus()
+        }
+      }
+      content()
     }
   }
 }

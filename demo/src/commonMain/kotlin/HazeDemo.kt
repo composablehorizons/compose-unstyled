@@ -58,9 +58,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.uripainter.rememberUriPainter
+import com.composeunstyled.DialogPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
 import dev.chrisbanes.haze.blur.blurEffect
 import dev.chrisbanes.haze.hazeEffect
@@ -107,7 +107,7 @@ fun HazeDemo() {
         exit = fadeOut(),
       )
 
-      UnstyledDialogPanel(
+      DialogPanel(
         modifier = Modifier
           .padding(20.dp)
           .displayCutoutPadding()

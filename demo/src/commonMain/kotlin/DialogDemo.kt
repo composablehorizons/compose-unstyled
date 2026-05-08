@@ -53,9 +53,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.DialogPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
 
 @Composable
@@ -81,7 +81,7 @@ fun DialogDemo() {
       onDismissRequest = { dialogVisible = false },
     ) {
       UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-      UnstyledDialogPanel(
+      DialogPanel(
         modifier = Modifier
           .padding(20.dp)
           .displayCutoutPadding()

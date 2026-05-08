@@ -57,7 +57,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        UnstyledDialogPanel {
+        DialogPanel {
         }
       }
     }
@@ -75,7 +75,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
     }
@@ -120,7 +120,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
     }
@@ -141,7 +141,7 @@ class DialogTest {
         visible = true,
         onDismissRequest = {},
       ) {
-        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = "",
             onValueChange = {},
@@ -165,7 +165,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = true),
       ) {
-        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -198,7 +198,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = false),
       ) {
-        UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -231,7 +231,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = true),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
 
@@ -257,7 +257,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = false),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        UnstyledDialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
 
