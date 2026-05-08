@@ -29,7 +29,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -67,11 +66,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -585,8 +581,6 @@ fun UnstyledBottomSheet(
 @Composable
 fun Sheet(
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = PaddingValues(0.dp),
   content: @Composable () -> Unit,
 ) {
@@ -595,8 +589,7 @@ fun Sheet(
 
   Layout(
     modifier = modifier
-      .clip(shape)
-      .background(backgroundColor)
+      .clipToBounds()
       .padding(contentPadding),
     content = content,
   ) { measurables, constraints ->

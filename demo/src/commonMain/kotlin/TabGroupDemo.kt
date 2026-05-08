@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -116,9 +117,12 @@ fun TabGroupDemo() {
   ) {
     UnstyledTabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
       UnstyledTabList(
-        modifier = Modifier.fillMaxWidth().height(48.dp).shadow(4.dp, RoundedCornerShape(8.dp)),
-        shape = RoundedCornerShape(8.dp),
-        backgroundColor = Color.White,
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(48.dp)
+          .shadow(4.dp, RoundedCornerShape(8.dp))
+          .clip(RoundedCornerShape(8.dp))
+          .background(Color.White),
       ) {
         categories.forEach { (key, articles) ->
           val selected = key == selectedTab
@@ -175,7 +179,7 @@ fun TabGroupDemo() {
               items.forEach { item ->
                 UnstyledButton(
                   onClick = { /* TODO */ },
-                  shape = RoundedCornerShape(8.dp),
+                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                   contentPadding = PaddingValues(12.dp),
                 ) {
                   Column {

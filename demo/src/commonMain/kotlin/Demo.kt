@@ -61,6 +61,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -80,6 +81,7 @@ import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.X
+import com.composeunstyled.OverlayHost
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -89,15 +91,17 @@ import com.composeunstyled.outline
 @Composable
 fun Demo(demoId: String? = null) {
   MaterialTheme {
-    Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
-      if (demoId == null) {
-        DemoSelection()
-      } else {
-        (
-          availableDemos.firstOrNull { it.id == demoId }
-            ?: error("Demo not found: $demoId")
-          )
-          .demo()
+    OverlayHost {
+      Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
+        if (demoId == null) {
+          DemoSelection()
+        } else {
+          (
+            availableDemos.firstOrNull { it.id == demoId }
+              ?: error("Demo not found: $demoId")
+            )
+            .demo()
+        }
       }
     }
   }
@@ -375,10 +379,11 @@ private fun DemoFilterBox(
     UnstyledButton(
       onClick = onDismiss,
       interactionSource = interactionSource,
-      shape = CircleShape,
       contentPadding = PaddingValues(6.dp),
       indication = LocalIndication.current,
-      modifier = Modifier.focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
+      modifier = Modifier
+        .clip(CircleShape)
+        .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
       UnstyledIcon(Lucide.X, contentDescription = "Close filter", tint = Color.Black)
     }
@@ -409,10 +414,10 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
     UnstyledButton(
       onClick = onUpClick,
       interactionSource = interactionSource,
-      shape = CircleShape,
       contentPadding = PaddingValues(12.dp),
       indication = LocalIndication.current,
       modifier = Modifier
+        .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
       UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
@@ -436,9 +441,9 @@ private fun OutlinedButton(
       .focusRing(interactionSource, 1.dp, Color.Blue, RoundedCornerShape(8.dp))
       .shadow(2.dp, RoundedCornerShape(8.dp))
       .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-      .outline(1.dp, Color.Black.copy(0.1f)),
-    shape = RoundedCornerShape(8.dp),
-    backgroundColor = Color.White,
+      .clip(RoundedCornerShape(8.dp))
+      .background(Color.White)
+      .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
     // contentColor = Color(0xFF1A1A1A),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
     indication = LocalIndication.current,

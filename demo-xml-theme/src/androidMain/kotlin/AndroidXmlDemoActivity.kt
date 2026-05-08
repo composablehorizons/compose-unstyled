@@ -38,6 +38,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -138,10 +139,11 @@ fun App() {
 
           UnstyledButton(
             onClick = {},
-            backgroundColor = Theme[colors][primary],
             // contentColor = Theme[colors][onPrimary],
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-            shape = RoundedCornerShape(100),
+            modifier = Modifier
+              .clip(RoundedCornerShape(100))
+              .background(Theme[colors][primary]),
           ) {
             Text("Click Me")
           }

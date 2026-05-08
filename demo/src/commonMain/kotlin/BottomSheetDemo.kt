@@ -94,9 +94,9 @@ fun BottomSheetDemo() {
             offset = DpOffset(x = 0.dp, y = (-3).dp),
           ),
         )
+        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+        .background(Color.White)
         .fillMaxWidth(),
-      backgroundColor = Color.White,
-      shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
     ) {
       Column(
         modifier = Modifier

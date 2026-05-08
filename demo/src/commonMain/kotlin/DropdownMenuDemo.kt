@@ -141,9 +141,9 @@ fun DropdownMenuDemo() {
               modifier = Modifier
                 .padding(4.dp)
                 .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+                .clip(RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
               contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-              shape = RoundedCornerShape(8.dp),
               horizontalArrangement = Arrangement.Start,
             ) {
               val contentColor = (
@@ -170,11 +170,12 @@ fun DropdownMenuDemo() {
       },
       anchor = {
         UnstyledButton(
-          shape = RoundedCornerShape(6.dp),
-          backgroundColor = Color.White,
           onClick = { expanded = true },
           contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
-          modifier = Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp),
+          modifier = Modifier
+            .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(Color.White),
         ) {
           Text("Options")
           Spacer(Modifier.width(8.dp))

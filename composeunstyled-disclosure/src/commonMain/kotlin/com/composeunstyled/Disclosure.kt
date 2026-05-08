@@ -40,14 +40,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.expand
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
@@ -88,11 +84,7 @@ fun UnstyledDisclosure(
 fun DisclosureScope.UnstyledDisclosureHeading(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 0.dp,
   indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
   verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
@@ -118,10 +110,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
     interactionSource = interactionSource,
     indication = indication,
     enabled = enabled,
-    shape = shape,
-    backgroundColor = backgroundColor,
-    borderColor = borderColor,
-    borderWidth = borderWidth,
     contentPadding = contentPadding,
     verticalAlignment = verticalAlignment,
     horizontalArrangement = horizontalArrangement,
@@ -135,11 +123,7 @@ fun DisclosureScope.UnstyledDisclosureHeading(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
-  borderColor: Color = Color.Unspecified,
-  borderWidth: Dp = 0.dp,
   indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
   verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
@@ -152,10 +136,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
     interactionSource = interactionSource,
     indication = indication,
     enabled = enabled,
-    shape = shape,
-    backgroundColor = backgroundColor,
-    borderColor = borderColor,
-    borderWidth = borderWidth,
     contentPadding = contentPadding,
     verticalAlignment = verticalAlignment,
     horizontalArrangement = horizontalArrangement,

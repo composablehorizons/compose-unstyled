@@ -82,9 +82,7 @@ fun SliderDemo() {
     ) {
       UnstyledButton(
         onClick = { value = (value - 0.1f).coerceIn(0f, 1f) },
-        modifier = Modifier.shadow(4.dp, CircleShape),
-        shape = CircleShape,
-        backgroundColor = Color.White,
+        modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
         contentPadding = PaddingValues(8.dp),
         indication = LocalIndication.current,
       ) {
@@ -147,9 +145,7 @@ fun SliderDemo() {
 
       UnstyledButton(
         onClick = { value = (value + 0.1f).coerceIn(0f, 1f) },
-        modifier = Modifier.shadow(4.dp, CircleShape),
-        shape = CircleShape,
-        backgroundColor = Color.White,
+        modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
         contentPadding = PaddingValues(8.dp),
         indication = LocalIndication.current,
       ) {

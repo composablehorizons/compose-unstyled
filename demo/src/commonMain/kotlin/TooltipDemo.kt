@@ -111,10 +111,11 @@ fun TooltipDemo() {
         UnstyledButton(
           onClick = { },
           contentPadding = PaddingValues(8.dp),
-          shape = CircleShape,
-          modifier = Modifier.focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
+          modifier = Modifier
+            .clip(CircleShape)
+            .background(Color.White)
+            .focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
           interactionSource = interactionSource,
-          backgroundColor = Color.White,
           indication = LocalIndication.current,
         ) {
           UnstyledIcon(Lucide.BellDot, contentDescription = null)

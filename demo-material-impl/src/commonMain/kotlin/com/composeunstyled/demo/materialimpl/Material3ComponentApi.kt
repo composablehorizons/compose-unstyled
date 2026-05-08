@@ -174,7 +174,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -326,9 +325,6 @@ private enum class TextFieldVariant {
   Outlined,
 }
 
-private fun BorderStroke?.colorOrUnspecified(): Color =
-  (this?.brush as? SolidColor)?.value ?: Color.Unspecified
-
 private fun Modifier.outlinedTextFieldCutout(
   labelSize: Size,
   labelStartPadding: Dp,
@@ -350,8 +346,6 @@ private fun Modifier.outlinedTextFieldCutout(
     drawContent()
   }
 }
-
-private fun BorderStroke?.widthOrZero(): Dp = this?.width ?: 0.dp
 
 private val DropdownMenuEnterTransition = fadeIn(
   animationSpec = tween(DropdownMenuFadeInDurationMillis),
@@ -481,13 +475,19 @@ private fun ButtonSurface(
       UnstyledButton(
         onClick = onClick,
         enabled = enabled,
-        shape = shape,
-        backgroundColor = backgroundColor,
-        borderColor = border.colorOrUnspecified(),
-        borderWidth = border.widthOrZero(),
         contentPadding = contentPadding,
         interactionSource = interactionSource,
-        modifier = resolvedModifier.defaultMinSize(minWidth = minWidth, minHeight = minHeight),
+        modifier = resolvedModifier
+          .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
+          .clip(shape)
+          .background(backgroundColor, shape)
+          .then(
+            if (border != null) {
+              Modifier.border(border, shape)
+            } else {
+              Modifier
+            },
+          ),
         content = content,
       )
     }
@@ -1824,6 +1824,8 @@ private fun TextFieldContent(
           modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = TextFieldContainerHeight)
+            .clip(shape)
+            .background(containerColor, shape)
             .then(
               when (variant) {
                 TextFieldVariant.Filled -> Modifier
@@ -1833,8 +1835,6 @@ private fun TextFieldContent(
                     .border(indicatorWidth, indicatorColor, shape)
               },
             ),
-          shape = shape,
-          backgroundColor = containerColor,
           contentPadding = PaddingValues(
             start = horizontalPadding,
             top = inputTopPadding,
@@ -3014,7 +3014,10 @@ fun AlertDialog(
       exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)),
     )
     UnstyledDialogPanel(
-      modifier = modifier.sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth),
+      modifier = modifier
+        .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
+        .clip(shape)
+        .background(containerColor, shape),
       enter = fadeIn(animationSpec = tween(DialogFadeInDurationMillis)) +
         scaleIn(
           initialScale = 0.8f,
@@ -3025,8 +3028,6 @@ fun AlertDialog(
           targetScale = 0.95f,
           animationSpec = tween(DialogExitDurationMillis),
         ),
-      shape = shape,
-      backgroundColor = containerColor,
       contentPadding = DialogPadding,
     ) {
       Column {
@@ -3148,8 +3149,6 @@ fun ModalBottomSheet(
           .heightIn(max = maxSheetHeight)
           .widthIn(max = sheetMaxWidth)
           .fillMaxWidth(),
-        shape = shape,
-        backgroundColor = Color.Transparent,
       ) {
         M3Surface(
           modifier = Modifier.fillMaxWidth(),

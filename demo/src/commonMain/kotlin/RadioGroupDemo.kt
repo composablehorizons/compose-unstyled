@@ -80,9 +80,19 @@ fun RadioGroupDemo() {
         ) {
           values.forEach { value ->
             val selected = selectedValue == value
+            val itemShape = RoundedCornerShape(14.dp)
             UnstyledRadioButton(
               value = value,
-              modifier = Modifier.fillMaxWidth(),
+              modifier = Modifier
+                .fillMaxWidth()
+                .clip(itemShape)
+                .background(
+                  if (selected) {
+                    Color.White.copy(alpha = 0.16f)
+                  } else {
+                    Color.Transparent
+                  },
+                ),
             ) {
               Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),

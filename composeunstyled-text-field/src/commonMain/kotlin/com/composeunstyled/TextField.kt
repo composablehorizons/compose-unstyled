@@ -22,7 +22,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,12 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -81,8 +77,6 @@ class TextFieldScope {
 @Composable
 fun TextFieldScope.TextInput(
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = PaddingValues(0.dp),
   label: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
@@ -92,8 +86,6 @@ fun TextFieldScope.TextInput(
 ) {
   Row(
     modifier = modifier
-      .clip(shape)
-      .background(backgroundColor)
       .pointerHoverIcon(PointerIcon.Text) then buildModifier {
       if (label != null) {
         add(Modifier.semantics { contentDescription = label })

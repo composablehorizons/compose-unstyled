@@ -28,6 +28,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -87,11 +89,10 @@ fun HazeScrimDemo() {
 
     UnstyledButton(
       onClick = { dialogVisible = true },
-      shape = RoundedCornerShape(8.dp),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       interactionSource = remember { MutableInteractionSource() },
       indication = LocalIndication.current,
-      backgroundColor = Color.White,
+      modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color.White),
     ) {
       Text("Show dialog")
     }
@@ -118,9 +119,9 @@ fun HazeScrimDemo() {
           .systemBarsPadding()
           .widthIn(max = 560.dp)
           .padding(20.dp)
+          .clip(RoundedCornerShape(12.dp))
+          .background(Color.White)
           .pointerInput(Unit) { detectTapGestures { } },
-        shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color.White,
         enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
         exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
       ) {
@@ -137,8 +138,7 @@ fun HazeScrimDemo() {
           Spacer(Modifier.height(24.dp))
           UnstyledButton(
             onClick = { dialogVisible = false },
-            modifier = Modifier.padding(12.dp).align(Alignment.End),
-            shape = RoundedCornerShape(6.dp),
+            modifier = Modifier.padding(12.dp).align(Alignment.End).clip(RoundedCornerShape(6.dp)),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             interactionSource = remember { MutableInteractionSource() },
             indication = LocalIndication.current,

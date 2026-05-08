@@ -25,7 +25,6 @@ package com.composeunstyled
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,16 +49,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -130,8 +125,6 @@ fun UnstyledTabGroup(
 @Composable
 fun UnstyledTabList(
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   orientation: Orientation = Orientation.Horizontal,
   horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
@@ -146,8 +139,6 @@ fun UnstyledTabList(
       .focusRestorer()
       .focusGroup()
       .selectableGroup()
-      .clip(shape)
-      .background(backgroundColor)
       .padding(contentPadding)
       .onKeyEvent { event ->
         when {
@@ -246,8 +237,6 @@ fun UnstyledTab(
   activateOnFocus: Boolean = true,
   indication: Indication = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
@@ -270,8 +259,6 @@ fun UnstyledTab(
           }
         }
       }
-      .clip(shape)
-      .background(backgroundColor)
       .selectable(
         selected = selected,
         onClick = onSelected,
@@ -290,8 +277,6 @@ fun UnstyledTab(
 fun UnstyledTabPanel(
   key: TabKey,
   modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   contentAlignment: Alignment = Alignment.TopStart,
   content: @Composable BoxScope.() -> Unit,
@@ -304,8 +289,6 @@ fun UnstyledTabPanel(
 
     Box(
       modifier = modifier
-        .clip(shape)
-        .background(backgroundColor)
         .padding(contentPadding)
         .focusRequester(focusRequester)
         .focusGroup(),
