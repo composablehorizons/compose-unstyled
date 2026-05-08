@@ -27,7 +27,10 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -323,5 +326,18 @@ fun ModalBottomSheetScope.Sheet(
     modifier = modifier,
     contentPadding = contentPadding,
     content = content,
+  )
+}
+
+@Composable
+fun ModalBottomSheetScope.DragIndication(
+  modifier: Modifier = Modifier,
+  indication: Indication? = LocalIndication.current,
+  interactionSource: MutableInteractionSource? = null,
+) {
+  bottomSheetScope.DragIndication(
+    modifier = modifier,
+    indication = indication,
+    interactionSource = interactionSource,
   )
 }
