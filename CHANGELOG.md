@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `composeunstyled-window-container-size`.
 - New Modal API: The Modal API has been revamped in order to make building custom models easier,
   without having to worry about different.
-- Added `UnstyledScrim` as a standalone primitive.
+- Added `Scrim` as a scoped modal primitive.
 - Added `Sheet` as the measured bottom sheet panel and `UnstyledBottomSheet` as the bottom sheet
   container.
 - Compose Unstyled now uses Kotlin `2.3.20` and Compose Multiplatform `1.11.0-alpha01`.

@@ -66,11 +66,15 @@ val LocalModalState = staticCompositionLocalOf<ModalState> {
   ModalState()
 }
 
+interface ModalScope
+
+internal object ModalScopeInstance : ModalScope
+
 @Composable
 expect fun Modal(
   state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean = { false },
-  content: @Composable () -> Unit,
+  content: @Composable ModalScope.() -> Unit,
 )
 
 @Composable

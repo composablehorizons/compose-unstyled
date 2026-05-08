@@ -59,9 +59,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.DialogPanel
+import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledScrim
 import dev.chrisbanes.haze.blur.blurEffect
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
@@ -100,13 +100,14 @@ fun HazeDemo() {
     UnstyledDialog(
       visible = dialogVisible,
       onDismissRequest = { dialogVisible = false },
+      overlay = {
+        Scrim(
+          scrimColor = Color.Black.copy(0.3f),
+          enter = fadeIn(),
+          exit = fadeOut(),
+        )
+      },
     ) {
-      UnstyledScrim(
-        scrimColor = Color.Black.copy(0.3f),
-        enter = fadeIn(),
-        exit = fadeOut(),
-      )
-
       DialogPanel(
         modifier = Modifier
           .padding(20.dp)

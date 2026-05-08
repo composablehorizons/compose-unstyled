@@ -62,7 +62,7 @@ class ModalBottomSheetTest {
         UnstyledModalBottomSheet(
           state = state,
           overlay = {
-            UnstyledScrim()
+            Scrim()
           },
         ) {
           Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
@@ -78,7 +78,7 @@ class ModalBottomSheetTest {
             initialDetent = SheetDetent.Hidden,
           ),
           overlay = {
-            UnstyledScrim()
+            Scrim()
           },
         ) {
           Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
@@ -95,7 +95,7 @@ class ModalBottomSheetTest {
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
         }
@@ -111,7 +111,7 @@ class ModalBottomSheetTest {
             initialDetent = SheetDetent.FullyExpanded,
           ),
           overlay = {
-            UnstyledScrim(Modifier.testTag("scrim"))
+            Scrim(Modifier.testTag("scrim"))
           },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
@@ -127,7 +127,7 @@ class ModalBottomSheetTest {
       lateinit var state: ModalBottomSheetState
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
       }
@@ -141,7 +141,7 @@ class ModalBottomSheetTest {
       lateinit var state: ModalBottomSheetState
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
       }
@@ -155,7 +155,7 @@ class ModalBottomSheetTest {
       lateinit var state: ModalBottomSheetState
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet {
             Box(Modifier.testTag("sheet").fillMaxSize())
           }
@@ -184,7 +184,7 @@ class ModalBottomSheetTest {
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.Hidden)
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(
+          Scrim(
             modifier = Modifier.testTag("scrim"),
             enter = fadeIn(tween(durationMillis = 300)),
           )
@@ -223,7 +223,7 @@ class ModalBottomSheetTest {
       lateinit var state: ModalBottomSheetState
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
       }
@@ -238,7 +238,7 @@ class ModalBottomSheetTest {
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
         }
@@ -254,7 +254,7 @@ class ModalBottomSheetTest {
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -274,7 +274,7 @@ class ModalBottomSheetTest {
           state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnClickOutside = true),
 
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -295,7 +295,7 @@ class ModalBottomSheetTest {
         UnstyledModalBottomSheet(
           state = state,
           properties = ModalSheetProperties(dismissOnClickOutside = true),
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
@@ -326,7 +326,7 @@ class ModalBottomSheetTest {
         UnstyledModalBottomSheet(
           state = state,
           properties = ModalSheetProperties(dismissOnClickOutside = true),
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
@@ -410,7 +410,7 @@ class ModalBottomSheetTest {
           state = state,
           properties = ModalSheetProperties(dismissOnClickOutside = true),
           overlay = {
-            UnstyledScrim(
+            Scrim(
               modifier = Modifier.testTag("scrim"),
               exit = androidx.compose.animation.fadeOut(tween(durationMillis = 300)),
             )
@@ -439,7 +439,7 @@ class ModalBottomSheetTest {
           rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnClickOutside = false),
 
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -454,7 +454,7 @@ class ModalBottomSheetTest {
       setContent {
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -477,7 +477,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
@@ -509,7 +509,7 @@ class ModalBottomSheetTest {
           animationSpec = tween(2000),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(100.dp)) }
         }
@@ -539,7 +539,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
           animationSpec = tween(1000),
         )
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(100.dp)) }
         }
       }
@@ -575,7 +575,7 @@ class ModalBottomSheetTest {
           animationSpec = tween(2000),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(300.dp)) }
         }
@@ -614,7 +614,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -646,7 +646,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -678,7 +678,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, customDetent, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -710,7 +710,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
@@ -744,7 +744,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -777,7 +777,7 @@ class ModalBottomSheetTest {
           properties = ModalSheetProperties(dismissOnClickOutside = true),
           onDismiss = { dismissCallCount++ },
 
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -797,7 +797,7 @@ class ModalBottomSheetTest {
           properties = ModalSheetProperties(dismissOnClickOutside = false),
           onDismiss = { dismissCallCount++ },
 
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -820,7 +820,7 @@ class ModalBottomSheetTest {
         UnstyledModalBottomSheet(state = state, onDismiss = {
           dismissCallCount++
         }, overlay = {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
         }
@@ -852,7 +852,7 @@ class ModalBottomSheetTest {
           properties = ModalSheetProperties(dismissOnClickOutside = true),
           onDismiss = { dismissCallCount++ },
 
-          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+          overlay = { Scrim(Modifier.testTag("scrim")) },
         ) {
           Sheet { Box(Modifier.size(40.dp)) }
         }
@@ -889,7 +889,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -925,7 +925,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -958,7 +958,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, customDetent, SheetDetent.FullyExpanded),
         )
         UnstyledModalBottomSheet(state, overlay = {
-          UnstyledScrim()
+          Scrim()
         }) {
           Sheet { Box(Modifier.testTag("sheet").size(600.dp)) }
         }
@@ -990,7 +990,7 @@ class ModalBottomSheetTest {
           detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
           animationSpec = tween(5000), // Long animation to verify jumpTo is instant
         )
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(600.dp)) }
         }
       }
@@ -1020,7 +1020,7 @@ class ModalBottomSheetTest {
           initialDetent = halfDetent,
           detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
         )
-        UnstyledModalBottomSheet(state, overlay = { UnstyledScrim() }) {
+        UnstyledModalBottomSheet(state, overlay = { Scrim() }) {
           Sheet { Box(Modifier.size(600.dp)) }
         }
       }

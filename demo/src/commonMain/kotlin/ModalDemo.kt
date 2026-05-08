@@ -80,9 +80,9 @@ import com.composables.icons.lucide.Lucide
 import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.EscapeHandler
 import com.composeunstyled.Modal
+import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.UnstyledScrim
 import com.composeunstyled.rememberModalState
 import kotlinx.coroutines.launch
 
@@ -221,7 +221,7 @@ fun ModalDemo() {
       EscapeHandler {
         modalState.transitionState.targetState = false
       }
-      UnstyledScrim(
+      Scrim(
         enter = fadeIn(tween(durationMillis = 220)),
         exit = fadeOut(tween(durationMillis = 180)),
       )

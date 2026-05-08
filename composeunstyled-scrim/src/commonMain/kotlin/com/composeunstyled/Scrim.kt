@@ -38,7 +38,7 @@ private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(dura
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 
 @Composable
-fun UnstyledScrim(
+fun ModalScope.Scrim(
   modifier: Modifier = Modifier,
   scrimColor: Color = Color.Black.copy(alpha = 0.6f),
   enter: EnterTransition = AppearInstantly,

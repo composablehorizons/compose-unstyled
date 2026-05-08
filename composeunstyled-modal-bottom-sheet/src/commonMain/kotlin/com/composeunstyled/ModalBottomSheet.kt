@@ -215,7 +215,7 @@ fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
   properties: ModalSheetProperties = ModalSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
-  overlay: (@Composable () -> Unit)? = null,
+  overlay: (@Composable ModalScope.() -> Unit)? = null,
   content: @Composable () -> Unit,
 ) {
   val currentDismissCallback by rememberUpdatedState(onDismiss)
@@ -294,7 +294,7 @@ fun UnstyledModalBottomSheet(
         }
       },
     ) {
-      overlay?.invoke()
+      overlay?.invoke(this@Modal)
       UnstyledBottomSheet(
         state = state.bottomSheetState,
         modifier = Modifier.fillMaxSize(),

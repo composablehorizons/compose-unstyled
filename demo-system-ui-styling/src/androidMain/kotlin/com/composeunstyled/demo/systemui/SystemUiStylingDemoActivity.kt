@@ -62,9 +62,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.composables.compose.ripple.rememberRippleIndication
 import com.composeunstyled.DialogPanel
 import com.composeunstyled.LocalModalWindow
+import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledScrim
 
 class SystemUiStylingDemoActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,6 +109,9 @@ private fun ModalSystemUiStylingDemo() {
     UnstyledDialog(
       visible = dialogVisible,
       onDismissRequest = { dialogVisible = false },
+      overlay = {
+        Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+      },
     ) {
       val window = LocalModalWindow.current
       LaunchedEffect(Unit) {
@@ -121,7 +124,6 @@ private fun ModalSystemUiStylingDemo() {
         windowInsetsController.isAppearanceLightStatusBars = true
         windowInsetsController.isAppearanceLightNavigationBars = true
       }
-      UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       DialogPanel(
         // contentColor = Color.Black,
         modifier = Modifier
