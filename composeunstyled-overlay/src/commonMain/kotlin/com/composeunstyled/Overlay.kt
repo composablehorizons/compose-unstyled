@@ -68,7 +68,6 @@ fun Overlay(
   val id = remember { Any() }
 
   if (state == null) {
-    content()
     return
   }
 

@@ -44,8 +44,10 @@ class TooltipTest {
 
   private fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {
-      Box(Modifier.padding(100.dp)) {
-        content()
+      OverlayHost {
+        Box(Modifier.padding(100.dp)) {
+          content()
+        }
       }
     }
   }

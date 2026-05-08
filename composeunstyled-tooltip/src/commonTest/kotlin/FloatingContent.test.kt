@@ -69,6 +69,24 @@ class FloatingContentTest {
   }
 
   @Test
+  fun rendersNoFloatingContentWithoutOverlayHost() = runComposeUiTest {
+    setContent {
+      FloatingContent(
+        floatingContent = {
+          BasicText("Floating content")
+        },
+        anchor = {
+          BasicText("Anchor")
+        },
+      )
+    }
+
+    waitForIdle()
+    onNodeWithText("Anchor").assertExists()
+    onNodeWithText("Floating content").assertDoesNotExist()
+  }
+
+  @Test
   fun placementChangesFloatingContentPosition() = runComposeUiTest {
     // Test that different placements result in different positions
     var side by mutableStateOf(AnchorSide.Top)
@@ -76,20 +94,22 @@ class FloatingContentTest {
     var bottomStartY = 0f
 
     setContent {
-      FloatingContent(
-        side = side,
-        alignment = AnchorAlignment.Start,
-        floatingContent = {
-          Box(Modifier.size(50.dp)) {
-            BasicText("Floating")
-          }
-        },
-        anchor = {
-          Box(Modifier.size(100.dp)) {
-            BasicText("Anchor")
-          }
-        },
-      )
+      OverlayHost {
+        FloatingContent(
+          side = side,
+          alignment = AnchorAlignment.Start,
+          floatingContent = {
+            Box(Modifier.size(50.dp)) {
+              BasicText("Floating")
+            }
+          },
+          anchor = {
+            Box(Modifier.size(100.dp)) {
+              BasicText("Anchor")
+            }
+          },
+        )
+      }
     }
 
     waitForIdle()
@@ -111,20 +131,22 @@ class FloatingContentTest {
   fun floatingContentClampsToWindowBounds() = runComposeUiTest {
     // FloatingContent clamps to window bounds like a Popup
     setContent {
-      FloatingContent(
-        side = AnchorSide.Top,
-        alignment = AnchorAlignment.Start,
-        floatingContent = {
-          Box(Modifier.size(100.dp)) {
-            BasicText("Floating")
-          }
-        },
-        anchor = {
-          Box(Modifier.size(50.dp)) {
-            BasicText("Anchor")
-          }
-        },
-      )
+      OverlayHost {
+        FloatingContent(
+          side = AnchorSide.Top,
+          alignment = AnchorAlignment.Start,
+          floatingContent = {
+            Box(Modifier.size(100.dp)) {
+              BasicText("Floating")
+            }
+          },
+          anchor = {
+            Box(Modifier.size(50.dp)) {
+              BasicText("Anchor")
+            }
+          },
+        )
+      }
     }
 
     waitForIdle()
@@ -143,21 +165,23 @@ class FloatingContentTest {
     // When floating content is larger than the window,
     // it should be clamped to start at 0 to maximize visible area
     setContent {
-      FloatingContent(
-        side = AnchorSide.Bottom,
-        alignment = AnchorAlignment.Start,
-        floatingContent = {
-          // Make floating content very large (larger than typical window)
-          Box(Modifier.size(10000.dp)) {
-            BasicText("Large floating")
-          }
-        },
-        anchor = {
-          Box(Modifier.size(50.dp)) {
-            BasicText("Anchor")
-          }
-        },
-      )
+      OverlayHost {
+        FloatingContent(
+          side = AnchorSide.Bottom,
+          alignment = AnchorAlignment.Start,
+          floatingContent = {
+            // Make floating content very large (larger than typical window)
+            Box(Modifier.size(10000.dp)) {
+              BasicText("Large floating")
+            }
+          },
+          anchor = {
+            Box(Modifier.size(50.dp)) {
+              BasicText("Anchor")
+            }
+          },
+        )
+      }
     }
 
     waitForIdle()

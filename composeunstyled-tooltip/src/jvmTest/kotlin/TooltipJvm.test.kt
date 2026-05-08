@@ -53,8 +53,10 @@ class TooltipJvmTest {
 
   fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {
-      Box(Modifier.padding(100.dp)) {
-        content()
+      OverlayHost {
+        Box(Modifier.padding(100.dp)) {
+          content()
+        }
       }
     }
   }
@@ -228,15 +230,17 @@ class TooltipJvmTest {
   @Test
   fun edgeCaseTooltipOnTopOnTarget() = runComposeUiTest {
     setContent {
-      UnstyledTooltip(
-        panel = {
-          UnstyledTooltipPanel {
-            BasicText("Tooltip content")
+      OverlayHost {
+        UnstyledTooltip(
+          panel = {
+            UnstyledTooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}) {
+            BasicText("Focus me")
           }
-        },
-      ) {
-        UnstyledButton(onClick = {}) {
-          BasicText("Focus me")
         }
       }
     }
