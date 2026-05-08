@@ -773,7 +773,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 }
 
 @Composable
-fun UnstyledDragIndication(
+fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,
   indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
