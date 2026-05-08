@@ -256,13 +256,11 @@ fun UnstyledModalBottomSheet(
         state.bottomSheetState.isIdle,
         state.bottomSheetState.currentDetent,
         state.bottomSheetState.targetDetent,
-        state.offset,
       ) {
         if (
           state.bottomSheetState.isIdle &&
           state.bottomSheetState.currentDetent == SheetDetent.Hidden &&
-          state.bottomSheetState.targetDetent == SheetDetent.Hidden &&
-          state.offset <= 0.5f
+          state.bottomSheetState.targetDetent == SheetDetent.Hidden
         ) {
           completeDismiss()
         }
