@@ -123,6 +123,7 @@ fun HazeScrimDemo() {
           .clip(RoundedCornerShape(12.dp))
           .background(Color.White)
           .pointerInput(Unit) { detectTapGestures { } },
+        paneTitle = "Dialog",
         enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
         exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
       ) {

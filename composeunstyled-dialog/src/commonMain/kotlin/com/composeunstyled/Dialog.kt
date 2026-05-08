@@ -45,6 +45,8 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 private val NoPadding = PaddingValues(0.dp)
@@ -122,6 +124,7 @@ fun UnstyledDialog(
 @Composable
 fun DialogScope.DialogPanel(
   modifier: Modifier = Modifier,
+  paneTitle: String?,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
   contentPadding: PaddingValues = NoPadding,
@@ -141,6 +144,15 @@ fun DialogScope.DialogPanel(
     Box(
       modifier
         .modalFragment()
+        .then(
+          if (paneTitle != null) {
+            Modifier.semantics {
+              this.paneTitle = paneTitle
+            }
+          } else {
+            Modifier
+          },
+        )
         .focusRequester(panelFocusRequester)
         .pointerInput(Unit) { detectTapGestures { } }
         .padding(contentPadding),
