@@ -71,7 +71,10 @@ interface DropdownMenuScope
 private object DropdownMenuScopeInstance : DropdownMenuScope
 
 internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState> {
-  error("Panel must be placed inside UnstyledDropdownMenu's panel slot.")
+  DropdownMenuState(
+    onExpandedChange = {},
+    transitionState = MutableTransitionState(false),
+  )
 }
 
 @Composable

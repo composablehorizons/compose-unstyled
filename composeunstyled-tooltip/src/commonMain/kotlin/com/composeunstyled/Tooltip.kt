@@ -78,7 +78,7 @@ interface TooltipScope
 private object TooltipScopeInstance : TooltipScope
 
 internal val LocalTooltipState = staticCompositionLocalOf<TooltipState> {
-  error("Panel must be placed inside UnstyledTooltip's panel slot.")
+  TooltipState()
 }
 
 @Composable

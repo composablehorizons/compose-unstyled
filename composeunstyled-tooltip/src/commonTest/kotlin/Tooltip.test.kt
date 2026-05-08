@@ -52,6 +52,19 @@ class TooltipCommonTest {
   }
 
   @Test
+  fun panelWithoutTooltipStateIsHidden() = runComposeUiTest {
+    setContent {
+      with(FakeTooltipScope) {
+        TooltipPanel {
+          BasicText("Tooltip content")
+        }
+      }
+    }
+
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+  }
+
+  @Test
   fun tooltipIsHiddenByDefault() = runComposeUiTest {
     setPaddedContent {
       UnstyledTooltip(
@@ -275,3 +288,5 @@ class TooltipCommonTest {
     }
   }
 }
+
+private object FakeTooltipScope : TooltipScope
