@@ -38,12 +38,21 @@ internal val LocalMinimumComponentInteractiveSize =
 fun Modifier.minimumInteractiveComponentSize(): Modifier {
   val size = LocalMinimumComponentInteractiveSize.current
 
-  return this then if (isTouchDevice) {
-    Modifier.sizeIn(minWidth = size.touchInteractionSize, minHeight = size.touchInteractionSize)
-  } else {
-    Modifier.sizeIn(
-      minWidth = size.nonTouchInteractionSize,
-      minHeight = size.nonTouchInteractionSize,
-    )
+  return this then buildModifier {
+    if (isTouchDevice) {
+      add(
+        Modifier.sizeIn(
+          minWidth = size.touchInteractionSize,
+          minHeight = size.touchInteractionSize,
+        ),
+      )
+    } else {
+      add(
+        Modifier.sizeIn(
+          minWidth = size.nonTouchInteractionSize,
+          minHeight = size.nonTouchInteractionSize,
+        ),
+      )
+    }
   }
 }

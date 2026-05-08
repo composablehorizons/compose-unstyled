@@ -234,6 +234,7 @@ import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledVerticalSeparator
+import com.composeunstyled.buildModifier
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.launch
@@ -477,17 +478,16 @@ private fun ButtonSurface(
         enabled = enabled,
         contentPadding = contentPadding,
         interactionSource = interactionSource,
-        modifier = resolvedModifier
-          .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
-          .clip(shape)
-          .background(backgroundColor, shape)
-          .then(
-            if (border != null) {
-              Modifier.border(border, shape)
-            } else {
-              Modifier
-            },
-          ),
+        modifier = (
+          resolvedModifier
+            .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
+            .clip(shape)
+            .background(backgroundColor, shape)
+          ) then buildModifier {
+          if (border != null) {
+            add(Modifier.border(border, shape))
+          }
+        },
         content = content,
       )
     }
@@ -505,16 +505,15 @@ private fun ContainerSurface(
 ) {
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     Box(
-      modifier
-        .clip(shape)
-        .background(color, shape)
-        .then(
-          if (border != null) {
-            Modifier.border(border, shape)
-          } else {
-            Modifier
-          },
-        ),
+      modifier = (
+        modifier
+          .clip(shape)
+          .background(color, shape)
+        ) then buildModifier {
+        if (border != null) {
+          add(Modifier.border(border, shape))
+        }
+      },
     ) {
       content()
     }
@@ -541,29 +540,26 @@ private fun CardSurface(
   }
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     Box(
-      modifier = modifier
-        .shadow(shadowElevation, shape)
-        .clip(shape)
-        .background(containerColor, shape)
-        .then(
-          if (border != null) {
-            Modifier.border(border, shape)
-          } else {
-            Modifier
-          },
-        )
-        .then(
-          if (onClick != null) {
+      modifier = (
+        modifier
+          .shadow(shadowElevation, shape)
+          .clip(shape)
+          .background(containerColor, shape)
+        ) then buildModifier {
+        if (border != null) {
+          add(Modifier.border(border, shape))
+        }
+        if (onClick != null) {
+          add(
             Modifier.clickable(
               enabled = enabled,
               interactionSource = cardInteractionSource,
               indication = ripple(),
               onClick = onClick,
-            )
-          } else {
-            Modifier
-          },
-        ),
+            ),
+          )
+        }
+      },
     ) {
       Column(content = content)
     }
@@ -691,17 +687,16 @@ private fun rememberSliderThumbActive(interactionSource: MutableInteractionSourc
 @Composable
 private fun PlainSliderThumb(color: Color, enabled: Boolean, thumbActive: Boolean) {
   Box(
-    Modifier
-      .width(if (thumbActive) SliderThumbWidth / 2 else SliderThumbWidth)
-      .height(SliderThumbHeight)
-      .then(
-        if (enabled) {
-          Modifier.pointerHoverIcon(PointerIcon.Hand)
-        } else {
-          Modifier
-        },
-      )
-      .background(color, MaterialTheme.shapes.extraLarge),
+    modifier = (
+      Modifier
+        .width(if (thumbActive) SliderThumbWidth / 2 else SliderThumbWidth)
+        .height(SliderThumbHeight)
+      ) then buildModifier {
+      if (enabled) {
+        add(Modifier.pointerHoverIcon(PointerIcon.Hand))
+      }
+      add(Modifier.background(color, MaterialTheme.shapes.extraLarge))
+    },
   )
 }
 
@@ -1821,20 +1816,23 @@ private fun TextFieldContent(
     ) {
       Box(Modifier.fillMaxWidth()) {
         TextInput(
-          modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = TextFieldContainerHeight)
-            .clip(shape)
-            .background(containerColor, shape)
-            .then(
-              when (variant) {
-                TextFieldVariant.Filled -> Modifier
-                TextFieldVariant.Outlined ->
+          modifier = (
+            Modifier
+              .fillMaxWidth()
+              .heightIn(min = TextFieldContainerHeight)
+              .clip(shape)
+              .background(containerColor, shape)
+            ) then buildModifier {
+            when (variant) {
+              TextFieldVariant.Filled -> Unit
+              TextFieldVariant.Outlined ->
+                add(
                   Modifier
                     .outlinedTextFieldCutout(outlinedCutoutLabelSize, labelStartPadding)
-                    .border(indicatorWidth, indicatorColor, shape)
-              },
-            ),
+                    .border(indicatorWidth, indicatorColor, shape),
+                )
+            }
+          },
           contentPadding = PaddingValues(
             start = horizontalPadding,
             top = inputTopPadding,
@@ -2907,18 +2905,22 @@ fun DropdownMenu(
     alignmentOffset = offset.x,
     panel = {
       DropdownMenuPanel(
-        modifier = modifier
-          .width(IntrinsicSize.Max)
-          .graphicsLayer {
-            this.shadowElevation = shadowElevation.toPx()
-            this.shape = shape
-            clip = false
+        modifier = (
+          modifier.width(IntrinsicSize.Max)
+            .graphicsLayer {
+              this.shadowElevation = shadowElevation.toPx()
+              this.shape = shape
+              clip = false
+            }
+            .clip(shape)
+            .background(containerColor)
+          ) then buildModifier {
+          if (border != null) {
+            add(Modifier.border(border, shape))
           }
-          .clip(shape)
-          .background(containerColor)
-          .then(if (border != null) Modifier.border(border, shape) else Modifier)
-          .verticalScroll(scrollState)
-          .padding(vertical = 8.dp),
+          add(Modifier.verticalScroll(scrollState))
+          add(Modifier.padding(vertical = 8.dp))
+        },
         enter = DropdownMenuEnterTransition,
         exit = DropdownMenuExitTransition,
         content = content,
@@ -2960,18 +2962,22 @@ fun ExposedDropdownMenuBoxScope.ExposedDropdownMenu(
     onExpandedChange = onExpandedChange,
     panel = {
       DropdownMenuPanel(
-        modifier = modifier
-          .width(IntrinsicSize.Max)
-          .graphicsLayer {
-            this.shadowElevation = shadowElevation.toPx()
-            this.shape = shape
-            clip = false
+        modifier = (
+          modifier.width(IntrinsicSize.Max)
+            .graphicsLayer {
+              this.shadowElevation = shadowElevation.toPx()
+              this.shape = shape
+              clip = false
+            }
+            .clip(shape)
+            .background(containerColor)
+          ) then buildModifier {
+          if (border != null) {
+            add(Modifier.border(border, shape))
           }
-          .clip(shape)
-          .background(containerColor)
-          .then(if (border != null) Modifier.border(border, shape) else Modifier)
-          .verticalScroll(scrollState)
-          .padding(vertical = 8.dp),
+          add(Modifier.verticalScroll(scrollState))
+          add(Modifier.padding(vertical = 8.dp))
+        },
         enter = DropdownMenuEnterTransition,
         exit = DropdownMenuExitTransition,
         content = content,

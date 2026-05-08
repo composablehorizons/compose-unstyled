@@ -861,9 +861,12 @@ class TooltipJvmTest {
     content: @Composable () -> Unit,
   ) {
     Box(
-      modifier = modifier
-        .then(if (enabled) Modifier.clickable(onClick = onClick).focusable() else Modifier)
-        .padding(8.dp),
+      modifier = modifier then buildModifier {
+        if (enabled) {
+          add(Modifier.clickable(onClick = onClick).focusable())
+        }
+        add(Modifier.padding(8.dp))
+      },
     ) {
       content()
     }
