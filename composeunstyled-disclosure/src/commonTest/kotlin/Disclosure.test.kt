@@ -27,6 +27,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -43,19 +49,19 @@ class DisclosureTest {
         expanded = false,
         onExpandedChange = { nextValue = it },
       ) {
-        UnstyledDisclosureHeading(Modifier.testTag("heading")) {
+        DisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
       }
     }
 
-    onNodeWithTag("heading").performClick()
+    onNodeWithTag("button").performClick()
 
     assertEquals(true, nextValue)
   }
 
   @Test
-  fun showsPanelWhenExpanded() = runComposeUiTest {
+  fun showsContentWhenExpanded() = runComposeUiTest {
     var expanded by mutableStateOf(false)
 
     setContent {
@@ -63,19 +69,83 @@ class DisclosureTest {
         expanded = expanded,
         onExpandedChange = { expanded = it },
       ) {
-        UnstyledDisclosureHeading(Modifier.testTag("heading")) {
+        DisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
-        UnstyledDisclosurePanel(Modifier.testTag("panel")) {
+        DisclosedContent(Modifier.testTag("content")) {
           BasicText("Panel")
         }
       }
     }
 
-    onNodeWithTag("panel").assertDoesNotExist()
+    onNodeWithTag("content").assertDoesNotExist()
 
-    onNodeWithTag("heading").performClick()
+    onNodeWithTag("button").performClick()
 
-    onNodeWithTag("panel").assertExists()
+    onNodeWithTag("content").assertExists()
+  }
+
+  @Test
+  fun disclosureButtonExposesButtonRoleAndExpandActionWhenCollapsed() = runComposeUiTest {
+    setContent {
+      UnstyledDisclosure(
+        expanded = false,
+        onExpandedChange = {},
+      ) {
+        DisclosureButton(Modifier.testTag("button")) {
+          BasicText("Heading")
+        }
+      }
+    }
+
+    onNodeWithTag("button")
+      .assertHasClickAction()
+      .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+      .assert(hasExpandAction())
+      .assert(hasNoCollapseAction())
+  }
+
+  @Test
+  fun disclosureButtonExposesButtonRoleAndCollapseActionWhenExpanded() = runComposeUiTest {
+    setContent {
+      UnstyledDisclosure(
+        expanded = true,
+        onExpandedChange = {},
+      ) {
+        DisclosureButton(Modifier.testTag("button")) {
+          BasicText("Heading")
+        }
+      }
+    }
+
+    onNodeWithTag("button")
+      .assertHasClickAction()
+      .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+      .assert(hasCollapseAction())
+      .assert(hasNoExpandAction())
+  }
+}
+
+private fun hasExpandAction(): SemanticsMatcher {
+  return SemanticsMatcher("has expand action") { node ->
+    SemanticsActions.Expand in node.config
+  }
+}
+
+private fun hasCollapseAction(): SemanticsMatcher {
+  return SemanticsMatcher("has collapse action") { node ->
+    SemanticsActions.Collapse in node.config
+  }
+}
+
+private fun hasNoExpandAction(): SemanticsMatcher {
+  return SemanticsMatcher("has no expand action") { node ->
+    SemanticsActions.Expand !in node.config
+  }
+}
+
+private fun hasNoCollapseAction(): SemanticsMatcher {
+  return SemanticsMatcher("has no collapse action") { node ->
+    SemanticsActions.Collapse !in node.config
   }
 }

@@ -55,9 +55,9 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
+import com.composeunstyled.DisclosedContent
+import com.composeunstyled.DisclosureButton
 import com.composeunstyled.UnstyledDisclosure
-import com.composeunstyled.UnstyledDisclosureHeading
-import com.composeunstyled.UnstyledDisclosurePanel
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSeparator
 
@@ -102,7 +102,7 @@ fun DisclosureDemo() {
           expanded = expanded,
           onExpandedChange = { expanded = it },
         ) {
-          UnstyledDisclosureHeading(
+          DisclosureButton(
             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
             indication = LocalIndication.current,
           ) {
@@ -115,7 +115,7 @@ fun DisclosureDemo() {
               modifier = Modifier.rotate(degrees),
             )
           }
-          UnstyledDisclosurePanel(
+          DisclosedContent(
             enter = expandVertically(
               spring(
                 stiffness = Spring.StiffnessMediumLow,
