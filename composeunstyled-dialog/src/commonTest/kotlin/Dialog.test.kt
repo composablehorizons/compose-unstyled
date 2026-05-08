@@ -51,24 +51,30 @@ class DialogTest {
 
   @Test
   fun isModal() = runComposeUiTest {
-    val state = DialogState(initiallyVisible = false)
+    var visible by mutableStateOf(false)
     setContent {
-      UnstyledDialog(state) {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+      ) {
         UnstyledDialogPanel {
         }
       }
     }
     onNode(isDialog()).assertDoesNotExist()
-    state.visible = true
+    visible = true
     onNode(isDialog()).assertExists()
   }
 
   @Test
   fun visibleDialogShowsThePanel() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = false)
+    var visible by mutableStateOf(false)
 
     setContent {
-      UnstyledDialog(state = dialogState) {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+      ) {
         UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
@@ -76,38 +82,44 @@ class DialogTest {
 
     onNodeWithTag("dialog_content").assertDoesNotExist()
 
-    dialogState.visible = true
+    visible = true
 
     onNodeWithTag("dialog_content").assertExists()
   }
 
   @Test
   fun visibleDialogShowsTheModalFragment() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = false)
+    var visible by mutableStateOf(false)
 
     setContent {
-      UnstyledDialog(state = dialogState) {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+      ) {
         TestModalFragment(Modifier.testTag("modal_fragment"))
       }
     }
 
     onNodeWithTag("modal_fragment").assertDoesNotExist()
 
-    dialogState.visible = true
+    visible = true
 
     onNodeWithTag("modal_fragment").assertExists()
 
-    dialogState.visible = false
+    visible = false
     waitForIdle()
     onNodeWithTag("modal_fragment").assertDoesNotExist()
   }
 
   @Test
   fun initiallyVisibleDialogWithoutScrimCanBeDismissed() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
+    var visible by mutableStateOf(true)
 
     setContent {
-      UnstyledDialog(state = dialogState) {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+      ) {
         UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
@@ -115,7 +127,7 @@ class DialogTest {
 
     onNodeWithTag("dialog_content").assertExists()
 
-    dialogState.visible = false
+    visible = false
     waitForIdle()
 
     onNodeWithTag("dialog_content").assertDoesNotExist()
@@ -125,7 +137,10 @@ class DialogTest {
   @Test
   fun autoFocusesOnDialog() = runComposeUiTest {
     setContent {
-      UnstyledDialog(rememberDialogState(initiallyVisible = true)) {
+      UnstyledDialog(
+        visible = true,
+        onDismissRequest = {},
+      ) {
         UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = "",
@@ -141,12 +156,13 @@ class DialogTest {
 
   @Test
   fun pressingEscapeDismissesDialogWhenDismissOnBackPressIsTrue() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
+    var visible by mutableStateOf(true)
 
     setContent {
       var value by remember { mutableStateOf("") }
       UnstyledDialog(
-        state = dialogState,
+        visible = visible,
+        onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = true),
       ) {
         UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
@@ -173,12 +189,13 @@ class DialogTest {
 
   @Test
   fun pressingEscapeDoesNotDismissDialogWhenDismissOnBackPressIsFalse() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
+    var visible by mutableStateOf(true)
 
     setContent {
       var value by remember { mutableStateOf("") }
       UnstyledDialog(
-        state = dialogState,
+        visible = visible,
+        onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = false),
       ) {
         UnstyledDialogPanel(Modifier.testTag("dialog_content")) {
@@ -205,11 +222,12 @@ class DialogTest {
 
   @Test
   fun clickingOutsideDismissesDialogWhenDismissOnClickOutsideIsTrue() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
+    var visible by mutableStateOf(true)
 
     setContent {
       UnstyledDialog(
-        state = dialogState,
+        visible = visible,
+        onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnClickOutside = true),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
@@ -230,11 +248,12 @@ class DialogTest {
 
   @Test
   fun clickingOutsideDoesNotDismissDialogWhenDismissOnClickOutsideIsFalse() = runComposeUiTest {
-    val dialogState = DialogState(initiallyVisible = true)
+    var visible by mutableStateOf(true)
 
     setContent {
       UnstyledDialog(
-        state = dialogState,
+        visible = visible,
+        onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnClickOutside = false),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
