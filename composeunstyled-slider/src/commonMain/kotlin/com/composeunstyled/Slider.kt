@@ -35,6 +35,9 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction.Press
 import androidx.compose.foundation.interaction.PressInteraction.Release
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.progressSemantics
@@ -43,6 +46,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -67,6 +71,7 @@ import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.setProgress
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastCoerceIn
@@ -84,44 +89,31 @@ private val KeyEvent.isKeyDown: Boolean
 
 @Stable
 class SliderState(
-  initialValue: Float,
-  internal val valueRange: ClosedFloatingPointRange<Float>,
-  internal val steps: Int,
+  value: Float,
+  val valueRange: ClosedFloatingPointRange<Float>,
+  val steps: Int,
+  val enabled: Boolean = true,
+  val orientation: Orientation = Orientation.Horizontal,
+  val isRtl: Boolean = false,
+  val isDragging: Boolean = false,
+  val isPressed: Boolean = false,
+  val isFocused: Boolean = false,
 ) {
   init {
     require(steps >= 0) { "steps must be >= 0" }
   }
 
-  private var innerValue by mutableFloatStateOf(initialValue)
+  val tickFractions: FloatArray = stepsToTickFractions(steps)
 
-  var value: Float
-    get() = innerValue
-    set(value) {
-      val stepSize = if (steps > 0) {
-        (valueRange.endInclusive - valueRange.start) / (steps + 1)
-      } else {
-        0f
-      }
-      innerValue = if (steps > 0) {
-        val snappedValue =
-          ((value - valueRange.start) / stepSize).roundToInt() * stepSize + valueRange.start
-        snappedValue.coerceIn(valueRange)
-      } else {
-        value.coerceIn(valueRange)
-      }
-    }
-}
+  val value: Float = snapValueToTick(
+    value.coerceIn(valueRange.start, valueRange.endInclusive),
+    tickFractions,
+    valueRange.start,
+    valueRange.endInclusive,
+  )
 
-@Composable
-fun rememberSliderState(
-  initialValue: Float = 0.0f,
-  valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-  @IntRange(from = 0)
-  steps: Int = 0,
-): SliderState {
-  return remember {
-    SliderState(initialValue, valueRange, steps)
-  }
+  val fraction: Float
+    get() = calcFraction(valueRange.start, valueRange.endInclusive, value)
 }
 
 @Composable
@@ -156,33 +148,77 @@ suspend fun AwaitPointerEventScope.waitRelease(
 
 @Composable
 fun UnstyledSlider(
-  state: SliderState,
+  value: Float,
+  onValueChange: (Float) -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
-  valueRange: ClosedFloatingPointRange<Float> = state.valueRange,
+  valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+  @IntRange(from = 0)
+  steps: Int = 0,
+  onValueChangeFinished: (() -> Unit)? = null,
   orientation: Orientation = Orientation.Horizontal,
-  track: @Composable () -> Unit,
-  thumb: @Composable () -> Unit,
+  reverseDirection: Boolean = false,
+  track: @Composable (SliderState) -> Unit,
+  thumb: @Composable (SliderState) -> Unit,
 ) {
-  var thumbWidthPx by remember { mutableFloatStateOf(0f) }
+  require(steps >= 0) { "steps must be >= 0" }
+
+  var thumbSize by remember { mutableStateOf(IntSize.Zero) }
   val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
   var rawOffset by remember { mutableFloatStateOf(0f) }
   var pressOffset by remember { mutableFloatStateOf(0f) }
+  var dragging by remember { mutableStateOf(false) }
+  var sliderSize by remember { mutableStateOf(IntSize.Zero) }
 
-  val coerced = state.value.coerceIn(valueRange.start, valueRange.endInclusive)
+  val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
+  val isPressed by resolvedInteractionSource.collectIsPressedAsState()
+  val isDragged by resolvedInteractionSource.collectIsDraggedAsState()
+  val isFocused by resolvedInteractionSource.collectIsFocusedAsState()
+
+  val coerced = snapValueToTick(
+    value.coerceIn(valueRange.start, valueRange.endInclusive),
+    stepsToTickFractions(steps),
+    valueRange.start,
+    valueRange.endInclusive,
+  )
+
   val fraction = calcFraction(valueRange.start, valueRange.endInclusive, coerced)
+  val effectiveReverseDirection =
+    reverseDirection != (orientation == Orientation.Horizontal && isRtl)
+  val displayFraction = if (effectiveReverseDirection) 1f - fraction else fraction
 
   val focusRequester = remember { FocusRequester() }
-  var sliderWidth by remember { mutableFloatStateOf(0f) }
 
   val scope = rememberCoroutineScope()
+  val sliderMainAxisSize = if (orientation == Orientation.Horizontal) {
+    sliderSize.width.toFloat()
+  } else {
+    sliderSize.height.toFloat()
+  }
+  val thumbMainAxisSize = if (orientation == Orientation.Horizontal) {
+    thumbSize.width.toFloat()
+  } else {
+    thumbSize.height.toFloat()
+  }
 
-  val maxPx: Float = max(sliderWidth - (thumbWidthPx / 2), 0f)
-  val minPx: Float = min(thumbWidthPx / 2, maxPx)
+  val maxPx: Float = max(sliderMainAxisSize - (thumbMainAxisSize / 2), 0f)
+  val minPx: Float = min(thumbMainAxisSize / 2, maxPx)
 
-  val offset = (sliderWidth - thumbWidthPx) * fraction
+  val offset = (sliderMainAxisSize - thumbMainAxisSize) * displayFraction
+
+  val state = SliderState(
+    value = coerced,
+    valueRange = valueRange,
+    steps = steps,
+    enabled = enabled,
+    orientation = orientation,
+    isRtl = isRtl,
+    isDragging = dragging || isDragged,
+    isPressed = isPressed,
+    isFocused = isFocused,
+  )
 
   fun scaleToUserValue(offset: Float) =
     scale(minPx, maxPx, offset, valueRange.start, valueRange.endInclusive)
@@ -195,26 +231,48 @@ fun UnstyledSlider(
     maxPx,
   )
 
+  fun updateValueFromOffset(offset: Float) {
+    val offsetInTrack = offset.coerceIn(minPx, maxPx)
+    val snappedOffset = snapValueToTick(offsetInTrack, state.tickFractions, minPx, maxPx)
+    val nextValue = scaleToUserValue(snappedOffset)
+    if (nextValue != coerced) {
+      onValueChange(nextValue)
+    }
+  }
+
   val draggableState = rememberDraggableState { dragAmount ->
-    rawOffset = (rawOffset + dragAmount + pressOffset)
+    val resolvedDragAmount = if (effectiveReverseDirection) -dragAmount else dragAmount
+    rawOffset = (rawOffset + resolvedDragAmount + pressOffset)
     pressOffset = 0f
-    val offsetInTrack = rawOffset.coerceIn(minPx, maxPx)
-    state.value = scaleToUserValue(offsetInTrack)
+    updateValueFromOffset(rawOffset)
   }
 
   CorrectValueSideEffect(
     scaleToOffset = ::scaleToOffset,
     scaleToValue = ::scaleToUserValue,
-    correctValue = { state.value = it },
+    correctValue = { onValueChange(it) },
     trackRange = minPx..maxPx,
-    value = state.value,
+    value = coerced,
   )
 
-  val dragOnTap = Modifier.pointerInput(draggableState, interactionSource, maxPx, isRtl) {
+  SideEffect {
+    if (!dragging) {
+      rawOffset = scaleToOffset(coerced)
+    }
+  }
+
+  val dragOnTap = Modifier.pointerInput(
+    draggableState,
+    resolvedInteractionSource,
+    sliderMainAxisSize,
+    effectiveReverseDirection,
+    orientation,
+  ) {
     if (enabled) {
       detectTapGestures(
         onPress = { pos ->
-          val to = if (isRtl) maxPx - pos.x else pos.x
+          val position = if (orientation == Orientation.Horizontal) pos.x else pos.y
+          val to = if (effectiveReverseDirection) sliderMainAxisSize - position else position
           pressOffset = to - rawOffset
 
           // dispatch a drag so that offset calculations kick in
@@ -236,12 +294,13 @@ fun UnstyledSlider(
               // just trigger animation, press offset will be applied
               dragBy(0f)
             }
+            onValueChangeFinished?.invoke()
           }
         },
       )
     }
   }
-    .pointerInput(draggableState, interactionSource, enabled) {
+    .pointerInput(draggableState, resolvedInteractionSource, enabled) {
       val currentContext = currentCoroutineContext()
       if (enabled) {
         awaitPointerEventScope {
@@ -249,16 +308,12 @@ fun UnstyledSlider(
             val down = awaitFirstDown()
 
             val press = Press(down.position)
-            if (interactionSource != null) {
-              scope.launch { interactionSource.emit(press) }
-            }
+            scope.launch { resolvedInteractionSource.emit(press) }
             try {
               waitRelease()
             } catch (_: Exception) {
             }
-            if (interactionSource != null) {
-              scope.launch { interactionSource.emit(Release(press)) }
-            }
+            scope.launch { resolvedInteractionSource.emit(Release(press)) }
           }
         }
       }
@@ -268,122 +323,177 @@ fun UnstyledSlider(
     modifier = modifier
       .then(dragOnTap)
       .focusRequester(focusRequester)
-      .focusable(enabled, interactionSource = interactionSource)
-      .sliderKeyboardInteractions(enabled = enabled, state = state)
+      .focusable(enabled, interactionSource = resolvedInteractionSource)
+      .sliderKeyboardInteractions(
+        enabled = enabled,
+        value = coerced,
+        valueRange = valueRange,
+        steps = steps,
+        reverseDirection = effectiveReverseDirection,
+        onValueChange = onValueChange,
+        onValueChangeFinished = onValueChangeFinished,
+      )
       .draggable(
         state = draggableState,
         orientation = orientation,
-        onDragStarted = { focusRequester.requestFocus() },
-        interactionSource = interactionSource,
-      ).onSizeChanged { sliderWidth = it.width.toFloat() }
-      .sliderSemantics(enabled = enabled, state = state, coerced = coerced),
+        enabled = enabled,
+        reverseDirection = effectiveReverseDirection,
+        onDragStarted = {
+          dragging = true
+          focusRequester.requestFocus()
+        },
+        onDragStopped = {
+          dragging = false
+          onValueChangeFinished?.invoke()
+        },
+        interactionSource = resolvedInteractionSource,
+      ).onSizeChanged { sliderSize = it }
+      .sliderSemantics(
+        enabled = enabled,
+        value = coerced,
+        valueRange = valueRange,
+        steps = steps,
+        onValueChange = onValueChange,
+        onValueChangeFinished = onValueChangeFinished,
+      ),
     contentAlignment = Alignment.CenterStart,
   ) {
-    track()
+    track(state)
 
     Box(
       Modifier
-        .onSizeChanged { thumbWidthPx = it.width.toFloat() }
-        .offset { IntOffset(x = offset.roundToInt(), y = 0) },
+        .onSizeChanged { thumbSize = it }
+        .offset {
+          if (orientation == Orientation.Horizontal) {
+            IntOffset(x = offset.roundToInt(), y = 0)
+          } else {
+            IntOffset(x = 0, y = offset.roundToInt())
+          }
+        },
     ) {
-      thumb()
+      thumb(state)
     }
   }
 }
 
 private fun Modifier.sliderSemantics(
   enabled: Boolean,
-  state: SliderState,
-  coerced: Float,
+  value: Float,
+  valueRange: ClosedFloatingPointRange<Float>,
+  steps: Int,
+  onValueChange: (Float) -> Unit,
+  onValueChangeFinished: (() -> Unit)?,
 ): Modifier {
   return semantics {
     if (enabled.not()) disabled()
-    setProgress(
-      action = { targetValue ->
-        var newValue = targetValue.coerceIn(state.valueRange.start, state.valueRange.endInclusive)
-        val originalVal = newValue
-        val resolvedValue = if (state.steps > 0) {
-          var distance: Float = newValue
-          for (i in 0..state.steps + 1) {
-            val stepValue = lerp(
-              state.valueRange.start,
-              state.valueRange.endInclusive,
-              i.toFloat() / (state.steps + 1),
-            )
-            if (abs(stepValue - originalVal) <= distance) {
-              distance = abs(stepValue - originalVal)
-              newValue = stepValue
-            }
+    if (enabled) {
+      setProgress(
+        action = { targetValue ->
+          val resolvedValue = snapValueToTick(
+            targetValue.coerceIn(valueRange.start, valueRange.endInclusive),
+            stepsToTickFractions(steps),
+            valueRange.start,
+            valueRange.endInclusive,
+          )
+          // This is to keep it consistent with AbsSeekbar.java: return false if no
+          // change from current.
+          if (resolvedValue == value) {
+            false
+          } else {
+            onValueChange(resolvedValue)
+            onValueChangeFinished?.invoke()
+            true
           }
-          newValue
-        } else {
-          newValue
-        }
-        // This is to keep it consistent with AbsSeekbar.java: return false if no
-        // change from current.
-        if (resolvedValue == coerced) {
-          false
-        } else {
-          state.value = resolvedValue
-          true
-        }
-      },
-    )
+        },
+      )
+    }
   }.progressSemantics(
-    state.value,
-    state.valueRange.start..state.valueRange.endInclusive,
-    state.steps,
+    value,
+    valueRange.start..valueRange.endInclusive,
+    steps,
   )
 }
 
-private fun Modifier.sliderKeyboardInteractions(enabled: Boolean, state: SliderState): Modifier {
+private fun Modifier.sliderKeyboardInteractions(
+  enabled: Boolean,
+  value: Float,
+  valueRange: ClosedFloatingPointRange<Float>,
+  steps: Int,
+  reverseDirection: Boolean,
+  onValueChange: (Float) -> Unit,
+  onValueChangeFinished: (() -> Unit)?,
+): Modifier {
   if (enabled.not()) return this
   return onKeyEvent { event: KeyEvent ->
-    val stepSize = if (state.steps > 0) {
-      (state.valueRange.endInclusive - state.valueRange.start) / (state.steps + 1)
+    val stepSize = if (steps > 0) {
+      (valueRange.endInclusive - valueRange.start) / (steps + 1)
     } else {
-      (state.valueRange.endInclusive - state.valueRange.start) * 0.01f
+      (valueRange.endInclusive - valueRange.start) * 0.01f
     }
-    val pageStepSize = stepSize * 2
+    val pageStepSize = stepSize * 10
+    val sign = if (reverseDirection) -1 else 1
+    fun setValue(newValue: Float) {
+      val coerced = newValue.coerceIn(valueRange.start, valueRange.endInclusive)
+      val snapped = snapValueToTick(
+        coerced,
+        stepsToTickFractions(steps),
+        valueRange.start,
+        valueRange.endInclusive,
+      )
+      onValueChange(snapped)
+    }
+
     when (event.key) {
       Key.DirectionRight, Key.DirectionUp -> {
         if (event.isKeyDown) {
-          state.value += stepSize
+          setValue(value + stepSize * sign)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
 
       Key.DirectionLeft, Key.DirectionDown -> {
         if (event.isKeyDown) {
-          state.value -= stepSize
+          setValue(value - stepSize * sign)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
 
       Key.Home -> {
         if (event.isKeyDown) {
-          state.value = state.valueRange.start
+          setValue(valueRange.start)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
 
       Key.MoveEnd -> {
         if (event.isKeyDown) {
-          state.value = state.valueRange.endInclusive
+          setValue(valueRange.endInclusive)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
 
       Key.PageUp -> {
         if (event.isKeyDown) {
-          state.value += pageStepSize
+          setValue(value + pageStepSize * sign)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
 
       Key.PageDown -> {
         if (event.isKeyDown) {
-          state.value -= pageStepSize
+          setValue(value - pageStepSize * sign)
+        } else {
+          onValueChangeFinished?.invoke()
         }
         true
       }
@@ -400,3 +510,23 @@ private fun calcFraction(a: Float, b: Float, pos: Float) =
 // Scale x1 from a1..b1 range to a2..b2 range
 private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
   lerp(a2, b2, calcFraction(a1, b1, x1))
+
+internal fun stepsToTickFractions(steps: Int): FloatArray {
+  return if (steps == 0) {
+    floatArrayOf()
+  } else {
+    FloatArray(steps + 2) { it.toFloat() / (steps + 1) }
+  }
+}
+
+internal fun snapValueToTick(
+  current: Float,
+  tickFractions: FloatArray,
+  min: Float,
+  max: Float,
+): Float {
+  return tickFractions
+    .minByOrNull { abs(lerp(min, max, it) - current) }
+    ?.run { lerp(min, max, this) }
+    ?: current
+}

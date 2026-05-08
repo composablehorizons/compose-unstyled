@@ -45,7 +45,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,7 +61,6 @@ import com.composables.icons.lucide.Volume2
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
-import com.composeunstyled.rememberSliderState
 
 @Composable
 fun SliderDemo() {
@@ -72,7 +73,7 @@ fun SliderDemo() {
     val isFocused by interactionSource.collectIsFocusedAsState()
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    val state = rememberSliderState(initialValue = 0.7f)
+    var value by remember { mutableFloatStateOf(0.7f) }
 
     Row(
       verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +81,7 @@ fun SliderDemo() {
       modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
     ) {
       UnstyledButton(
-        onClick = { state.value -= 0.1f },
+        onClick = { value = (value - 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape),
         shape = CircleShape,
         backgroundColor = Color.White,
@@ -92,9 +93,10 @@ fun SliderDemo() {
 
       UnstyledSlider(
         interactionSource = interactionSource,
-        state = state,
+        value = value,
+        onValueChange = { value = it },
         modifier = Modifier.weight(1f),
-        track = {
+        track = { state ->
           Box(
             Modifier
               .fillMaxWidth()
@@ -113,7 +115,7 @@ fun SliderDemo() {
             Box(
               Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(state.value)
+                .fillMaxWidth(state.fraction)
                 .background(Color.White),
             )
           }
@@ -144,7 +146,7 @@ fun SliderDemo() {
       )
 
       UnstyledButton(
-        onClick = { state.value += 0.1f },
+        onClick = { value = (value + 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape),
         shape = CircleShape,
         backgroundColor = Color.White,

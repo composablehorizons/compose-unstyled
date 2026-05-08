@@ -48,6 +48,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -75,7 +76,6 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.outline
-import com.composeunstyled.rememberSliderState
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -631,12 +631,13 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           }
         }
 
-        val sliderState = rememberSliderState(initialValue = 0.3f)
+        var sliderValue by remember { mutableFloatStateOf(0.3f) }
 
         UnstyledSlider(
-          state = sliderState,
+          value = sliderValue,
+          onValueChange = { sliderValue = it },
           modifier = Modifier.fillMaxWidth(),
-          track = {
+          track = { state ->
             Box(
               Modifier
                 .fillMaxWidth()
@@ -650,7 +651,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
               )
               Box(
                 Modifier
-                  .fillMaxWidth(sliderState.value)
+                  .fillMaxWidth(state.fraction)
                   .fillMaxSize()
                   .background(Theme[colors][accent]),
               )
