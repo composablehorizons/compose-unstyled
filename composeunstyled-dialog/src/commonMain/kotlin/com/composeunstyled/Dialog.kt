@@ -27,7 +27,6 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,12 +40,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -128,8 +123,6 @@ fun UnstyledDialogPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = AppearInstantly,
   exit: ExitTransition = DisappearInstantly,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
@@ -148,8 +141,6 @@ fun UnstyledDialogPanel(
       modifier
         .modalFragment()
         .focusRequester(panelFocusRequester)
-        .clip(shape)
-        .background(backgroundColor)
         .pointerInput(Unit) { detectTapGestures { } }
         .padding(contentPadding),
     ) {

@@ -48,6 +48,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -90,10 +91,10 @@ fun ModalBottomSheetDemo() {
       onClick = { modalSheetState.targetDetent = Peek },
       modifier = Modifier
         .align(Alignment.Center)
-        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues()),
-      shape = RoundedCornerShape(6.dp),
+        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
+        .clip(RoundedCornerShape(6.dp))
+        .background(Color.White),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
-      backgroundColor = Color.White,
       indication = LocalIndication.current,
     ) {
       Text("Show Sheet")
@@ -115,10 +116,10 @@ fun ModalBottomSheetDemo() {
           .statusBarsPadding()
           .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
           .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .background(Color.White)
           .widthIn(max = 640.dp)
           .fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        backgroundColor = Color.White,
       ) {
         Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
           val interactionSource = remember { MutableInteractionSource() }

@@ -21,11 +21,13 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledButton
@@ -38,10 +40,9 @@ internal fun SimpleButton(
 ) {
   UnstyledButton(
     onClick = {},
-    shape = shape,
-    modifier = modifier,
-    borderWidth = 1.dp,
-    borderColor = Color.Black.copy(alpha = 0.2f),
+    modifier = modifier
+      .clip(shape)
+      .border(1.dp, Color.Black.copy(alpha = 0.2f), shape),
     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     interactionSource = interactionSource,
   ) {

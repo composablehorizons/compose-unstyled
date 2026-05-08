@@ -34,6 +34,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -88,8 +89,7 @@ private fun TooltipCrashRepro() {
     ) {
       UnstyledButton(
         onClick = { },
-        backgroundColor = Color(0xFF1D4ED8),
-        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(Color(0xFF1D4ED8)),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
       ) {
         Text(

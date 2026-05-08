@@ -23,6 +23,7 @@
 
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
@@ -155,12 +157,12 @@ private fun MaterialButtons() {
       val filledInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFF6750A4),
         // contentColor = Color.White,
         contentPadding = MaterialContentPaddingValues,
-        shape = RoundedCornerShape(100.dp),
         interactionSource = filledInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(100.dp))
+          .background(Color(0xFF6750A4))
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Filled")
@@ -170,13 +172,12 @@ private fun MaterialButtons() {
       val outlinedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
-        shape = RoundedCornerShape(100.dp),
         interactionSource = outlinedInteraction,
         indication = Theme[indications][dimmed],
         modifier = Modifier
+          .clip(RoundedCornerShape(100.dp))
           .outline(
             width = 1.dp,
             color = Color(0xFF79747E),
@@ -192,13 +193,12 @@ private fun MaterialButtons() {
       val textInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
-        shape = RoundedCornerShape(100.dp),
         interactionSource = textInteraction,
         indication = Theme[indications][dimmed],
         modifier = Modifier
+          .clip(RoundedCornerShape(100.dp))
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Text")
@@ -208,13 +208,13 @@ private fun MaterialButtons() {
       val tonalInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFFE8DEF8),
         // contentColor = Color(0xFF1D192B),
         contentPadding = MaterialContentPaddingValues,
-        shape = RoundedCornerShape(100.dp),
         indication = Theme[indications][dimmed],
         interactionSource = tonalInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(100.dp))
+          .background(Color(0xFFE8DEF8))
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Tonal")
@@ -244,12 +244,12 @@ private fun IosButtons() {
 
       UnstyledButton(
         onClick = {},
-        backgroundColor = iosAccent,
         // contentColor = Color.White,
         contentPadding = iosPaddingValues,
-        shape = Theme[shapes][roundedFull],
         interactionSource = prominentInteraction,
         modifier = Modifier
+          .clip(Theme[shapes][roundedFull])
+          .background(iosAccent)
           .interactiveSize(interactiveSize),
       ) {
         ThemedText("Bordered Prominent")
@@ -259,13 +259,13 @@ private fun IosButtons() {
       val borderedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFFE9E9EB), // iOS system gray 6
         // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
-        shape = Theme[shapes][roundedFull],
         indication = Theme[indications][bright],
         interactionSource = borderedInteraction,
         modifier = Modifier
+          .clip(Theme[shapes][roundedFull])
+          .background(Color(0xFFE9E9EB)) // iOS system gray 6
           .interactiveSize(interactiveSize),
       ) {
         ThemedText("Bordered")
@@ -276,10 +276,8 @@ private fun IosButtons() {
       val borderlessInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
-        shape = RoundedCornerShape(0.dp),
         indication = Theme[indications][bright],
         interactionSource = borderlessInteraction,
         modifier = Modifier
@@ -292,10 +290,8 @@ private fun IosButtons() {
       val plainInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color.Black,
         contentPadding = iosPaddingValues,
-        shape = RoundedCornerShape(0.dp),
         interactionSource = plainInteraction,
         modifier = Modifier
           .interactiveSize(interactiveSize),
@@ -324,12 +320,12 @@ private fun MacOsButtons() {
       val prominentInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFF007AFF),
         // contentColor = Color.White,
         contentPadding = macPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         interactionSource = prominentInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
+          .background(Color(0xFF007AFF))
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
         ThemedText("Bordered Prominent")
@@ -339,13 +335,13 @@ private fun MacOsButtons() {
       val borderedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = macSecondary,
         // contentColor = Color.Black,
         contentPadding = macPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
         interactionSource = borderedInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
+          .background(macSecondary)
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
         ThemedText("Bordered")
@@ -355,13 +351,12 @@ private fun MacOsButtons() {
       val borderlessInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF8E8E93), // iOS/macOS system gray
         contentPadding = macPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
         interactionSource = borderlessInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
       ) {
         ThemedText("Borderless")
@@ -371,10 +366,8 @@ private fun MacOsButtons() {
       val plainInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF272727),
         contentPadding = macPaddingValues,
-        shape = RoundedCornerShape(0.dp),
         interactionSource = plainInteraction,
         modifier = Modifier
           .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
@@ -403,12 +396,12 @@ private fun ShadcnButtons() {
       val primaryInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFF0F172A), // slate-900
         // contentColor = Color(0xFFF8FAFC), // slate-50
         contentPadding = shadcnPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         interactionSource = primaryInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
+          .background(Color(0xFF0F172A)) // slate-900
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Primary")
@@ -418,13 +411,13 @@ private fun ShadcnButtons() {
       val secondaryInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFFF1F5F9), // slate-100
         // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
         interactionSource = secondaryInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
+          .background(Color(0xFFF1F5F9)) // slate-100
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Secondary")
@@ -434,13 +427,12 @@ private fun ShadcnButtons() {
       val outlineInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
         interactionSource = outlineInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
           .outline(
             width = 1.dp,
             color = Color(0xFFE2E8F0), // slate-200
@@ -456,13 +448,12 @@ private fun ShadcnButtons() {
       val ghostInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color.Transparent,
         // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         indication = Theme[indications][dimmed],
         interactionSource = ghostInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Ghost")
@@ -472,12 +463,12 @@ private fun ShadcnButtons() {
       val destructiveInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        backgroundColor = Color(0xFFEF4444), // red-500
         // contentColor = Color.White,
         contentPadding = shadcnPaddingValues,
-        shape = RoundedCornerShape(6.dp),
         interactionSource = destructiveInteraction,
         modifier = Modifier
+          .clip(RoundedCornerShape(6.dp))
+          .background(Color(0xFFEF4444)) // red-500
           .interactiveSize(Theme[interactiveSizes][sizeDefault]),
       ) {
         ThemedText("Destructive")

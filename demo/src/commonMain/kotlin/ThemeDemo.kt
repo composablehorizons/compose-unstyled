@@ -675,7 +675,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           UnstyledButton(
             onClick = { },
             contentPadding = PaddingValues(12.dp),
-            shape = Theme[shapes][buttonShape],
+            modifier = Modifier.clip(Theme[shapes][buttonShape]),
           ) {
             UnstyledIcon(
               imageVector = Lucide.SkipBack,
@@ -686,10 +686,11 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
 
           UnstyledButton(
             onClick = { },
-            backgroundColor = Theme[colors][primary],
             // contentColor = Theme[colors][onPrimary],
             contentPadding = PaddingValues(16.dp),
-            shape = Theme[shapes][buttonShape],
+            modifier = Modifier
+              .clip(Theme[shapes][buttonShape])
+              .background(Theme[colors][primary]),
           ) {
             UnstyledIcon(
               imageVector = Lucide.Pause,
@@ -701,7 +702,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           UnstyledButton(
             onClick = { },
             contentPadding = PaddingValues(12.dp),
-            shape = Theme[shapes][buttonShape],
+            modifier = Modifier.clip(Theme[shapes][buttonShape]),
           ) {
             UnstyledIcon(
               imageVector = Lucide.SkipForward,
@@ -747,12 +748,12 @@ private fun SimpleThemeCard(
 
   UnstyledButton(
     onClick = onClick,
-    backgroundColor = themeColor,
     // contentColor = Color.Transparent,
     contentPadding = PaddingValues(0.dp),
-    shape = CircleShape,
     modifier = Modifier
       .size(32.dp)
+      .clip(CircleShape)
+      .background(themeColor)
       .outline(outlineThickness, outlineColor, CircleShape, offset),
     interactionSource = interactionSource,
   ) { }

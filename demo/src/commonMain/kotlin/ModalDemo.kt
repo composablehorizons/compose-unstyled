@@ -176,7 +176,6 @@ fun ModalDemo() {
               selectedIndex = index
               modalState.transitionState.targetState = true
             },
-            shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier.size(110.dp, 72.dp).clip(RoundedCornerShape(8.dp)),
           ) {
@@ -283,12 +282,12 @@ fun ModalDemo() {
                 },
                 enabled = canGoPrevious,
                 interactionSource = remember { MutableInteractionSource() },
-                shape = CircleShape,
-                backgroundColor = Color.White,
                 contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
+                  .clip(CircleShape)
+                  .background(Color.White)
                   .alpha(previousButtonAlpha),
               ) {
                 UnstyledIcon(
@@ -305,12 +304,12 @@ fun ModalDemo() {
                 },
                 enabled = canGoNext,
                 interactionSource = remember { MutableInteractionSource() },
-                shape = CircleShape,
-                backgroundColor = Color.White,
                 contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
+                  .clip(CircleShape)
+                  .background(Color.White)
                   .alpha(nextButtonAlpha),
               ) {
                 UnstyledIcon(

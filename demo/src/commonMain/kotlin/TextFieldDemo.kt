@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -159,9 +160,8 @@ fun TextFieldDemo() {
             trailing = {
               UnstyledButton(
                 onClick = { showPassword = !showPassword },
-                backgroundColor = Color.Transparent,
                 contentPadding = PaddingValues(4.dp),
-                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.clip(RoundedCornerShape(4.dp)),
                 indication = LocalIndication.current,
               ) {
                 UnstyledIcon(
@@ -176,10 +176,11 @@ fun TextFieldDemo() {
 
         UnstyledButton(
           onClick = { /* TODO */ },
-          modifier = Modifier.fillMaxWidth(),
-          backgroundColor = Color(0xFF8E44AD),
+          modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF8E44AD)),
           contentPadding = PaddingValues(12.dp),
-          shape = RoundedCornerShape(8.dp),
         ) {
           Text(
             text = "Submit",

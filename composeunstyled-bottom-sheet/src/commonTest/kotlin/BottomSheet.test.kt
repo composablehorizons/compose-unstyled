@@ -1798,7 +1798,7 @@ class BottomSheetCommonTest {
         UnstyledBottomSheet(
           state = sheetState,
         ) {
-          Sheet(backgroundColor = Color.White) {
+          Sheet(Modifier.background(Color.White)) {
             Column(
               Modifier
                 .testTag("scrollable_content")
