@@ -525,13 +525,17 @@ private class BottomSheetContext(
 private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext> =
   compositionLocalOf { BottomSheetContext() }
 
+interface BottomSheetScope
+
+private object BottomSheetScopeInstance : BottomSheetScope
+
 @Composable
 fun UnstyledBottomSheet(
   state: BottomSheetState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   imeAware: Boolean = false,
-  content: @Composable () -> Unit,
+  content: @Composable BottomSheetScope.() -> Unit,
 ) {
   val context = remember(state) { BottomSheetContext(state = state, enabled = enabled) }
   SideEffect { context.enabled = enabled }
@@ -585,14 +589,14 @@ fun UnstyledBottomSheet(
         },
         contentAlignment = Alignment.TopCenter,
       ) {
-        content()
+        BottomSheetScopeInstance.content()
       }
     }
   }
 }
 
 @Composable
-fun Sheet(
+fun BottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
   content: @Composable () -> Unit,

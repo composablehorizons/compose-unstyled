@@ -29,6 +29,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +53,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 private val DoNothing: () -> Unit = {}
+
+class ModalBottomSheetScope internal constructor(
+  internal val bottomSheetScope: BottomSheetScope,
+)
 
 data class ModalSheetProperties(
   val dismissOnBackPress: Boolean = true,
@@ -216,7 +221,7 @@ fun UnstyledModalBottomSheet(
   properties: ModalSheetProperties = ModalSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
   overlay: (@Composable ModalScope.() -> Unit)? = null,
-  content: @Composable () -> Unit,
+  content: @Composable ModalBottomSheetScope.() -> Unit,
 ) {
   val currentDismissCallback by rememberUpdatedState(onDismiss)
   var dismissRequested by remember { mutableStateOf(false) }
@@ -299,8 +304,24 @@ fun UnstyledModalBottomSheet(
         state = state.bottomSheetState,
         modifier = Modifier.fillMaxSize(),
       ) {
-        content()
+        val modalBottomSheetScope = remember(this) {
+          ModalBottomSheetScope(bottomSheetScope = this)
+        }
+        modalBottomSheetScope.content()
       }
     }
   }
+}
+
+@Composable
+fun ModalBottomSheetScope.Sheet(
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  content: @Composable () -> Unit,
+) {
+  bottomSheetScope.Sheet(
+    modifier = modifier,
+    contentPadding = contentPadding,
+    content = content,
+  )
 }

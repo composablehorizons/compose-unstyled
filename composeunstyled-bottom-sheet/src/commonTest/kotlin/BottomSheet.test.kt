@@ -81,6 +81,19 @@ class BottomSheetCommonTest {
   private val DensityTolerance = 0.5.dp
 
   @Test
+  fun sheet_without_bottom_sheet_state_renders_content() = runComposeUiTest {
+    setContent {
+      with(FakeBottomSheetScope) {
+        Sheet {
+          BasicText("Sheet content")
+        }
+      }
+    }
+
+    onNodeWithText("Sheet content").assertIsDisplayed()
+  }
+
+  @Test
   fun sheet_panel_is_horizontally_centered_in_bottom_sheet_container() = runComposeUiTest {
     lateinit var state: BottomSheetState
 
@@ -2485,3 +2498,5 @@ class BottomSheetCommonTest {
     }
   }
 }
+
+private object FakeBottomSheetScope : BottomSheetScope
