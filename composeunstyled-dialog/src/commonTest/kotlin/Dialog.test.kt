@@ -88,6 +88,30 @@ class DialogTest {
   }
 
   @Test
+  fun visibleDialogShowsTheOverlay() = runComposeUiTest {
+    var visible by mutableStateOf(false)
+
+    setContent {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+        overlay = {
+          Box(Modifier.testTag("dialog_overlay"))
+        },
+      ) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
+        }
+      }
+    }
+
+    onNodeWithTag("dialog_overlay").assertDoesNotExist()
+
+    visible = true
+
+    onNodeWithTag("dialog_overlay").assertExists()
+  }
+
+  @Test
   fun visibleDialogShowsTheModalFragment() = runComposeUiTest {
     var visible by mutableStateOf(false)
 

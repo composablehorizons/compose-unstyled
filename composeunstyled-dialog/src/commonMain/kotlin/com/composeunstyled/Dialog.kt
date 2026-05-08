@@ -68,6 +68,7 @@ fun UnstyledDialog(
   visible: Boolean,
   onDismissRequest: () -> Unit,
   properties: DialogProperties = DialogProperties(),
+  overlay: (@Composable ModalScope.() -> Unit)? = null,
   content: @Composable DialogScope.() -> Unit,
 ) {
   val modalState = rememberModalState(initiallyVisible = visible)
@@ -117,6 +118,7 @@ fun UnstyledDialog(
         ),
       contentAlignment = Alignment.Center,
     ) {
+      overlay?.invoke(this@Modal)
       DialogScopeInstance.content()
     }
   }

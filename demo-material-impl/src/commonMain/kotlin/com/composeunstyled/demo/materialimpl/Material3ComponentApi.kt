@@ -208,6 +208,7 @@ import com.composeunstyled.DialogPanel
 import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.ModalBottomSheetState
 import com.composeunstyled.ModalSheetProperties
+import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.StateIndicator
@@ -224,7 +225,6 @@ import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.UnstyledProgress
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
-import com.composeunstyled.UnstyledScrim
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.UnstyledSwitch
 import com.composeunstyled.UnstyledTab
@@ -3008,11 +3008,13 @@ fun AlertDialog(
       dismissOnBackPress = properties.dismissOnBackPress,
       dismissOnClickOutside = properties.dismissOnClickOutside,
     ),
+    overlay = {
+      Scrim(
+        enter = fadeIn(animationSpec = tween(DialogEnterDurationMillis)),
+        exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)),
+      )
+    },
   ) {
-    UnstyledScrim(
-      enter = fadeIn(animationSpec = tween(DialogEnterDurationMillis)),
-      exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)),
-    )
     DialogPanel(
       modifier = modifier
         .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
@@ -3118,7 +3120,7 @@ fun ModalBottomSheet(
     ),
     onDismiss = onDismissRequest,
     overlay = {
-      UnstyledScrim(
+      Scrim(
         scrimColor = scrimColor,
         enter = fadeIn(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()),
         exit = fadeOut(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()),

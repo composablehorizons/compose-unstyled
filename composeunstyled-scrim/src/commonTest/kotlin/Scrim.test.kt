@@ -38,7 +38,7 @@ class ScrimTest {
         val modalState = rememberModalState(initiallyVisible = true)
 
         Modal(state = modalState) {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }
 
         modalState.transitionState.targetState = false
@@ -52,7 +52,7 @@ class ScrimTest {
       setContent {
         val modalState = rememberModalState(initiallyVisible = true)
         Modal(state = modalState) {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }
       }
 
@@ -67,7 +67,7 @@ class ScrimTest {
         modalState.transitionState.targetState = visible
 
         Modal(state = modalState) {
-          UnstyledScrim(Modifier.testTag("scrim"))
+          Scrim(Modifier.testTag("scrim"))
         }
       }
 

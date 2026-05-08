@@ -61,7 +61,7 @@ import java.util.UUID
 actual fun Modal(
   state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean,
-  content: @Composable () -> Unit,
+  content: @Composable ModalScope.() -> Unit,
 ) {
   if (
     state.transitionState.targetState.not() &&
@@ -104,7 +104,7 @@ actual fun Modal(
                   state.attachedToWindow = false
                 }
               }
-              content()
+              ModalScopeInstance.content()
             }
           }
         }

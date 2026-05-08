@@ -46,7 +46,7 @@ class ModalBottomSheet {
           state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnBackPress = true),
           onDismiss = { dismissCalled = true },
-          overlay = { UnstyledScrim() },
+          overlay = { Scrim() },
         ) {
           Sheet(
             Modifier
@@ -75,7 +75,7 @@ class ModalBottomSheet {
           rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
           properties = ModalSheetProperties(dismissOnBackPress = false),
           onDismiss = { dismissCalled = true },
-          overlay = { UnstyledScrim() },
+          overlay = { Scrim() },
         ) {
           Sheet {
             Box(
