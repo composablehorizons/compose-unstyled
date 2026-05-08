@@ -775,7 +775,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 @Composable
 fun UnstyledDragIndication(
   modifier: Modifier = Modifier,
-  indication: Indication = LocalIndication.current,
+  indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
 ) {
   val context = LocalBottomSheetContext.current
