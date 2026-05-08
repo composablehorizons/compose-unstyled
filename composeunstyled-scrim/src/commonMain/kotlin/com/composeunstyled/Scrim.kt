@@ -24,9 +24,6 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,15 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
-
 @Composable
 fun ModalScope.Scrim(
   modifier: Modifier = Modifier,
   scrimColor: Color = Color.Black.copy(alpha = 0.6f),
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
 ) {
   val state = LocalModalState.current
   AnimatedVisibility(

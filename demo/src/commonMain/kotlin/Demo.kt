@@ -21,9 +21,8 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -185,16 +184,16 @@ private fun DemoSelection() {
     navController = navController,
     startDestination = "home",
     enterTransition = {
-      fadeIn(animationSpec = tween(durationMillis = 0))
+      EnterTransition.None
     },
     exitTransition = {
-      fadeOut(animationSpec = tween(durationMillis = 0))
+      ExitTransition.None
     },
     popEnterTransition = {
-      fadeIn(animationSpec = tween(durationMillis = 0))
+      EnterTransition.None
     },
     popExitTransition = {
-      fadeOut(animationSpec = tween(durationMillis = 0))
+      ExitTransition.None
     },
   ) {
     composable("home") {
