@@ -151,6 +151,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -213,6 +214,8 @@ import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.StateIndicator
 import com.composeunstyled.TabKey
+import com.composeunstyled.TabList
+import com.composeunstyled.TabListScope
 import com.composeunstyled.TextInput
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
@@ -227,9 +230,7 @@ import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.UnstyledSwitch
-import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
-import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.UnstyledTriStateCheckbox
@@ -240,6 +241,7 @@ import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import androidx.compose.material3.Surface as M3Surface
+import com.composeunstyled.Tab as UnstyledTab
 
 private val IconButtonSize = 40.dp
 private val CheckboxSize = 18.dp
@@ -2430,6 +2432,7 @@ private class MaterialTabRowContext(
 ) {
   var nextIndex = 0
   private val tabContentWidths = mutableStateMapOf<TabKey, Dp>()
+  private val tabSelectionCallbacks = mutableStateMapOf<TabKey, () -> Unit>()
 
   fun nextTabKey(): TabKey {
     val index = nextIndex++
@@ -2447,6 +2450,14 @@ private class MaterialTabRowContext(
   }
 
   fun hasContentWidth(tabKey: TabKey): Boolean = tabContentWidths.containsKey(tabKey)
+
+  fun setSelectionCallback(tabKey: TabKey, onClick: () -> Unit) {
+    tabSelectionCallbacks[tabKey] = onClick
+  }
+
+  fun select(tabKey: TabKey) {
+    tabSelectionCallbacks[tabKey]?.invoke()
+  }
 }
 
 private class MaterialTabIndicatorState(
@@ -2463,7 +2474,7 @@ private fun MaterialTabRowContext?.nextTabKey(): TabKey =
   this?.nextTabKey() ?: error("Tab must be placed inside PrimaryTabRow or SecondaryTabRow.")
 
 @Composable
-fun RowScope.Tab(
+fun TabListScope<TabKey>.Tab(
   selected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -2479,14 +2490,15 @@ fun RowScope.Tab(
   val tabKey = tabRowContext.nextTabKey()
   val density = LocalDensity.current
   val tabIndication = ripple(bounded = true, color = selectedContentColor)
+  SideEffect {
+    tabRowContext?.setSelectionCallback(tabKey, onClick)
+  }
 
   CompositionLocalProvider(
     LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
   ) {
     UnstyledTab(
       key = tabKey,
-      selected = selected,
-      onSelected = onClick,
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
@@ -2525,7 +2537,7 @@ fun RowScope.Tab(
 }
 
 @Composable
-fun RowScope.Tab(
+fun TabListScope<TabKey>.Tab(
   selected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -2539,14 +2551,15 @@ fun RowScope.Tab(
   val tabKey = tabRowContext.nextTabKey()
   val density = LocalDensity.current
   val tabIndication = ripple(bounded = true, color = selectedContentColor)
+  SideEffect {
+    tabRowContext?.setSelectionCallback(tabKey, onClick)
+  }
 
   CompositionLocalProvider(
     LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
   ) {
     UnstyledTab(
       key = tabKey,
-      selected = selected,
-      onSelected = onClick,
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
@@ -2582,7 +2595,7 @@ fun PrimaryTabRow(
   contentColor: Color = TabRowDefaults.primaryContentColor,
   indicator: @Composable TabIndicatorScope.() -> Unit = {},
   divider: @Composable () -> Unit = {},
-  tabs: @Composable RowScope.() -> Unit,
+  tabs: @Composable TabListScope<TabKey>.() -> Unit,
 ) {
   val selectedTab = tabKeys.getOrNull(selectedTabIndex)
     ?: error("selectedTabIndex must reference an entry in tabKeys.")
@@ -2595,9 +2608,11 @@ fun PrimaryTabRow(
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     UnstyledTabGroup(
       selectedTab = selectedTab,
+      onSelectedTabChange = { tabRowContext.select(it) },
       tabs = tabKeys,
       modifier = modifier.background(containerColor),
     ) {
+      val tabGroup = this
       Box(
         modifier = Modifier
           .fillMaxWidth()
@@ -2639,7 +2654,7 @@ fun PrimaryTabRow(
         }
 
         tabRowContext.nextIndex = 0
-        UnstyledTabList(
+        tabGroup.TabList(
           modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { tabRowSize = it },
@@ -2695,7 +2710,7 @@ fun SecondaryTabRow(
   contentColor: Color = TabRowDefaults.secondaryContentColor,
   indicator: @Composable TabIndicatorScope.() -> Unit = {},
   divider: @Composable () -> Unit = {},
-  tabs: @Composable RowScope.() -> Unit,
+  tabs: @Composable TabListScope<TabKey>.() -> Unit,
 ) {
   val selectedTab = tabKeys.getOrNull(selectedTabIndex)
     ?: error("selectedTabIndex must reference an entry in tabKeys.")
@@ -2707,9 +2722,11 @@ fun SecondaryTabRow(
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     UnstyledTabGroup(
       selectedTab = selectedTab,
+      onSelectedTabChange = { tabRowContext.select(it) },
       tabs = tabKeys,
       modifier = modifier.background(containerColor),
     ) {
+      val tabGroup = this
       Box(
         modifier = Modifier
           .fillMaxWidth()
@@ -2745,7 +2762,7 @@ fun SecondaryTabRow(
         }
 
         tabRowContext.nextIndex = 0
-        UnstyledTabList(
+        tabGroup.TabList(
           modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { tabRowSize = it },

@@ -55,29 +55,25 @@ class TabGroupTest {
           BasicText("Outside")
         }
 
-        UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-          UnstyledTabList(Modifier.testFocusTag("tablist")) {
-            UnstyledTab(
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2", "tab3")) {
+          TabList(Modifier.testFocusTag("tablist")) {
+            Tab(
               key = "tab1",
               modifier = Modifier.testFocusTag("tab1"),
-              selected = selectedTab == "tab1",
-              onSelected = { selectedTab = "tab1" },
             ) {
               BasicText("Tab #1")
             }
-            UnstyledTab(
+            Tab(
               key = "tab2",
               modifier = Modifier.testFocusTag("tab2"),
-              selected = selectedTab == "tab2",
-              onSelected = { selectedTab = "tab2" },
             ) {
               BasicText("Tab #2")
             }
-            UnstyledTab(
+            Tab(
               key = "tab3",
               modifier = Modifier.testFocusTag("tab3"),
-              selected = selectedTab == "tab3",
-              onSelected = { selectedTab = "tab3" },
             ) {
               BasicText("Tab #3")
             }
@@ -101,29 +97,25 @@ class TabGroupTest {
           BasicText("Outside")
         }
 
-        UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-          UnstyledTabList(Modifier.testFocusTag("tablist")) {
-            UnstyledTab(
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2", "tab3")) {
+          TabList(Modifier.testFocusTag("tablist")) {
+            Tab(
               key = "tab1",
               modifier = Modifier.testFocusTag("tab1"),
-              selected = selectedTab == "tab1",
-              onSelected = { selectedTab = "tab1" },
             ) {
               BasicText("Tab #1")
             }
-            UnstyledTab(
+            Tab(
               key = "tab2",
               modifier = Modifier.testFocusTag("tab2"),
-              selected = selectedTab == "tab2",
-              onSelected = { selectedTab = "tab2" },
             ) {
               BasicText("Tab #2")
             }
-            UnstyledTab(
+            Tab(
               key = "tab3",
               modifier = Modifier.testFocusTag("tab3"),
-              selected = selectedTab == "tab3",
-              onSelected = { selectedTab = "tab3" },
             ) {
               BasicText("Tab #3")
             }
@@ -146,29 +138,25 @@ class TabGroupTest {
         UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("button")) {
           BasicText("Outside")
         }
-        UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-          UnstyledTabList(Modifier.testFocusTag("tablist")) {
-            UnstyledTab(
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2", "tab3")) {
+          TabList(Modifier.testFocusTag("tablist")) {
+            Tab(
               "tab1",
               modifier = Modifier.testFocusTag("tab1"),
-              selected = selectedTab == "tab1",
-              onSelected = { selectedTab = "tab1" },
             ) {
               BasicText("Tab #1")
             }
-            UnstyledTab(
+            Tab(
               "tab2",
               modifier = Modifier.testFocusTag("tab2"),
-              selected = selectedTab == "tab2",
-              onSelected = { selectedTab = "tab2" },
             ) {
               BasicText("Tab #2")
             }
-            UnstyledTab(
+            Tab(
               "tab3",
               modifier = Modifier.testFocusTag("tab3"),
-              selected = selectedTab == "tab3",
-              onSelected = { selectedTab = "tab3" },
             ) {
               BasicText("Tab #3")
             }
@@ -196,29 +184,25 @@ class TabGroupTest {
         BasicText("Outside")
       }
 
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist").testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist").testFocusTag("tablist")) {
+          Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1").testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             "tab2",
             modifier = Modifier.testFocusTag("tab2").testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             "tab3",
             modifier = Modifier.testFocusTag("tab3").testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
@@ -237,45 +221,41 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             key = "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             key = "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
         }
-        UnstyledTabPanel(key = "tab1") {
-          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelA")) {
+        TabPanel(key = "tab1", modifier = Modifier.testFocusTag("panelA")) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelAButton")) {
             BasicText("Panel A")
           }
         }
-        UnstyledTabPanel(key = "tab2") {
-          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelB")) {
+        TabPanel(key = "tab2", modifier = Modifier.testFocusTag("panelB")) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelBButton")) {
             BasicText("Panel B")
           }
         }
-        UnstyledTabPanel(key = "tab3") {
-          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelC")) {
+        TabPanel(key = "tab3", modifier = Modifier.testFocusTag("panelC")) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("panelCButton")) {
             BasicText("Panel C")
           }
         }
@@ -292,33 +272,77 @@ class TabGroupTest {
   }
 
   @Test
+  fun givenTabPanelHasNoFocusableContent_whenPressingTab_thenMovesFocusToTabPanel() =
+    runComposeUiTest {
+      var selectedTab by mutableStateOf("tab1")
+
+      setContent {
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2")) {
+          TabList(Modifier.testFocusTag("tablist")) {
+            Tab(
+              key = "tab1",
+              modifier = Modifier.testFocusTag("tab1"),
+            ) {
+              BasicText("Tab #1")
+            }
+            Tab(
+              key = "tab2",
+              modifier = Modifier.testFocusTag("tab2"),
+            ) {
+              BasicText("Tab #2")
+            }
+          }
+          TabPanel(
+            key = "tab1",
+            modifier = Modifier.testFocusTag("panelA"),
+          ) {
+            BasicText("Panel A")
+          }
+          TabPanel(
+            key = "tab2",
+            modifier = Modifier.testFocusTag("panelB"),
+          ) {
+            BasicText("Panel B")
+          }
+        }
+      }
+
+      onNodeWithTag("tab1").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+
+      onNodeWithTag("panelA").isDisplayed()
+      onNodeWithTag("panelA").assertIsFocused()
+      onNodeWithTag("panelB").assertDoesNotExist()
+    }
+
+  @Test
   fun canFocusSecondTabDirectly() = runComposeUiTest {
     var selectedTab by mutableStateOf("tab2")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
@@ -335,29 +359,25 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
@@ -383,29 +403,25 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
@@ -431,29 +447,25 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             key = "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             key = "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
@@ -488,41 +500,36 @@ class TabGroupTest {
     setContent {
       UnstyledTabGroup(
         selectedTab = selectedTab,
+        onSelectedTabChange = { selectedTab = it },
         tabs = listOf("tab1", "tab2", "tab3"),
       ) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             key = "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             key = "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
         }
-        UnstyledTabPanel(key = "tab1", Modifier.testFocusTag("panelA")) {
+        TabPanel(key = "tab1", Modifier.testFocusTag("panelA")) {
           BasicText("Panel A")
         }
-        UnstyledTabPanel(key = "tab2", Modifier.testFocusTag("panelB")) {
+        TabPanel(key = "tab2", Modifier.testFocusTag("panelB")) {
           BasicText("Panel B")
         }
-        UnstyledTabPanel(key = "tab3", Modifier.testFocusTag("panelC")) {
+        TabPanel(key = "tab3", Modifier.testFocusTag("panelC")) {
           BasicText("Panel C")
         }
       }
@@ -549,31 +556,27 @@ class TabGroupTest {
     var selectedTab by mutableStateOf("tab1")
 
     setContent {
-      UnstyledTabGroup(selectedTab = selectedTab, tabs = listOf("tab1", "tab2", "tab3")) {
-        UnstyledTabList(Modifier.testFocusTag("tablist")) {
-          UnstyledTab(
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist")) {
+          Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
             activateOnFocus = true,
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             key = "tab2",
             modifier = Modifier.testFocusTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
             activateOnFocus = true,
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             key = "tab3",
             modifier = Modifier.testFocusTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
             activateOnFocus = true,
           ) {
             BasicText("Tab #3")

@@ -53,7 +53,6 @@ fun ButtonDemo() {
   ) {
     UnstyledButton(
       onClick = { },
-      // contentColor = Color(0xFF020817),
       contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
       modifier = Modifier
         .shadow(elevation = 4.dp, RoundedCornerShape(12.dp))

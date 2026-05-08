@@ -29,11 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 
 class TabGroupCommonTest {
+  private enum class SettingsTab {
+    Account,
+    Billing,
+  }
+
   @Test
   fun showsPanelOfTheActivatedTab() = runComposeUiTest {
     var selectedTab by mutableStateOf("tab1")
@@ -41,41 +47,36 @@ class TabGroupCommonTest {
     setContent {
       UnstyledTabGroup(
         selectedTab = selectedTab,
+        onSelectedTabChange = { selectedTab = it },
         tabs = listOf("tab1", "tab2", "tab3"),
       ) {
-        UnstyledTabList(Modifier.testTag("tablist")) {
-          UnstyledTab(
+        TabList(Modifier.testTag("tablist")) {
+          Tab(
             key = "tab1",
             modifier = Modifier.testTag("tab1"),
-            selected = selectedTab == "tab1",
-            onSelected = { selectedTab = "tab1" },
           ) {
             BasicText("Tab #1")
           }
-          UnstyledTab(
+          Tab(
             key = "tab2",
             modifier = Modifier.testTag("tab2"),
-            selected = selectedTab == "tab2",
-            onSelected = { selectedTab = "tab2" },
           ) {
             BasicText("Tab #2")
           }
-          UnstyledTab(
+          Tab(
             key = "tab3",
             modifier = Modifier.testTag("tab3"),
-            selected = selectedTab == "tab3",
-            onSelected = { selectedTab = "tab3" },
           ) {
             BasicText("Tab #3")
           }
         }
-        UnstyledTabPanel(key = "tab1", Modifier.testTag("panelA")) {
+        TabPanel(key = "tab1", Modifier.testTag("panelA")) {
           BasicText("Panel A")
         }
-        UnstyledTabPanel(key = "tab2", Modifier.testTag("panelB")) {
+        TabPanel(key = "tab2", Modifier.testTag("panelB")) {
           BasicText("Panel B")
         }
-        UnstyledTabPanel(key = "tab3", Modifier.testTag("panelC")) {
+        TabPanel(key = "tab3", Modifier.testTag("panelC")) {
           BasicText("Panel C")
         }
       }
@@ -95,5 +96,44 @@ class TabGroupCommonTest {
     onNodeWithTag("panelA").assertDoesNotExist()
     onNodeWithTag("panelB").assertDoesNotExist()
     onNodeWithTag("panelC").isDisplayed()
+  }
+
+  @Test
+  fun supportsTypedTabKeys() = runComposeUiTest {
+    var selectedTab by mutableStateOf(SettingsTab.Account)
+
+    setContent {
+      UnstyledTabGroup(
+        selectedTab = selectedTab,
+        onSelectedTabChange = { selectedTab = it },
+        tabs = SettingsTab.entries,
+      ) {
+        TabList {
+          Tab(
+            key = SettingsTab.Account,
+            modifier = Modifier.testTag("account"),
+          ) {
+            BasicText("Account")
+          }
+          Tab(
+            key = SettingsTab.Billing,
+            modifier = Modifier.testTag("billing"),
+          ) {
+            BasicText("Billing")
+          }
+        }
+        TabPanel(key = SettingsTab.Account) {
+          BasicText("Account panel")
+        }
+        TabPanel(key = SettingsTab.Billing) {
+          BasicText("Billing panel")
+        }
+      }
+    }
+
+    onNodeWithTag("billing").performClick()
+
+    onNodeWithText("Account panel").assertDoesNotExist()
+    onNodeWithText("Billing panel").isDisplayed()
   }
 }
