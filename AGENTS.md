@@ -25,6 +25,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Use `buildModifier` for conditional modifiers instead of branching inside `Modifier.then(...)`.
 - Scoped composables must be extension functions on the scope, not members of the scope interface or class.
 - Public `interactionSource` parameters should be nullable and default to `null`. Resolve a non-null interaction source internally only when the primitive needs one for behavior or slot state.
+- Public `indication` parameters should be nullable and default to `LocalIndication.current`: `indication: Indication? = LocalIndication.current`.
 
 ## Working in Unstyled
 
