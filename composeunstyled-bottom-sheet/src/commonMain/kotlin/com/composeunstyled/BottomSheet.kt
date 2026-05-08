@@ -321,12 +321,13 @@ class BottomSheetState(
     } else {
       val currentHeight = anchoredHeightFor(currentDetent)
       val targetHeight = anchoredHeightFor(targetDetent)
+      val offsetHeight = currentOffsetHeight()
 
       when {
-        currentHeight.isNaN() && targetHeight.isNaN() -> maxDetentHeightPx
-        currentHeight.isNaN() -> targetHeight
-        targetHeight.isNaN() -> currentHeight
-        else -> max(currentHeight, targetHeight)
+        currentHeight.isNaN() && targetHeight.isNaN() && offsetHeight.isNaN() -> maxDetentHeightPx
+        else -> listOf(currentHeight, targetHeight, offsetHeight)
+          .filterNot { it.isNaN() }
+          .maxOrNull() ?: maxDetentHeightPx
       }
     }
   }
@@ -336,8 +337,11 @@ class BottomSheetState(
 
     val currentHeight = detentHeightPx(currentDetent, measuredContentHeightPx)
     val targetHeight = detentHeightPx(targetDetent, measuredContentHeightPx)
+    val offsetHeight = currentOffsetHeight().coerceAtMost(measuredContentHeightPx.coerceAtLeast(0f))
 
-    return max(currentHeight, targetHeight)
+    return listOf(currentHeight, targetHeight, offsetHeight)
+      .filterNot { it.isNaN() }
+      .maxOrNull() ?: Float.NaN
   }
 
   internal fun hasContentDependentDetents(): Boolean {
@@ -355,6 +359,15 @@ class BottomSheetState(
       Float.NaN
     } else {
       (containerHeightPx - position).coerceAtLeast(0f)
+    }
+  }
+
+  private fun currentOffsetHeight(): Float {
+    val offset = anchoredDraggableState.offset
+    return if (containerHeightPx.isNaN() || offset.isNaN()) {
+      Float.NaN
+    } else {
+      (containerHeightPx - offset).coerceAtLeast(0f)
     }
   }
 

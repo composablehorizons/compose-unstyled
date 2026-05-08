@@ -43,6 +43,8 @@ import assertk.assertThat
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isLessThan
 import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -339,6 +341,49 @@ class ModalBottomSheetTest {
 
       assertThat(state.bottomSheetState.isIdle).isTrue()
       assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+      mainClock.autoAdvance = true
+    }
+
+    testCase("modal sheet remains visible while outside tap interrupts enter animation") {
+      val peek = SheetDetent("peek") { containerHeight, _ ->
+        containerHeight * 0.6f
+      }
+      lateinit var state: ModalBottomSheetState
+      setContent {
+        state = rememberModalBottomSheetState(
+          initialDetent = SheetDetent.Hidden,
+          detents = listOf(SheetDetent.Hidden, peek, SheetDetent.FullyExpanded),
+          animationSpec = tween(durationMillis = 1000),
+          dismissAnimationSpec = tween(durationMillis = 1000),
+        )
+        UnstyledModalBottomSheet(
+          state = state,
+          properties = ModalSheetProperties(dismissOnClickOutside = true),
+          overlay = { UnstyledScrim(Modifier.testTag("scrim")) },
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+        }
+      }
+      waitForIdle()
+      onNode(isDialog()).assertDoesNotExist()
+
+      mainClock.autoAdvance = false
+      state.targetDetent = peek
+      mainClock.advanceTimeBy(300)
+      onNode(isDialog()).assertExists()
+      onNodeWithTag("sheet").assertExists()
+      assertThat(state.offset).isGreaterThan(0f)
+
+      onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
+      mainClock.advanceTimeByFrame()
+
+      val dialogBottomAfterDismiss = onNode(isDialog()).fetchSemanticsNode().boundsInRoot.bottom
+      val sheetTopAfterDismiss = onNodeWithTag("sheet").fetchSemanticsNode().boundsInRoot.top
+
+      assertThat(state.offset).isGreaterThan(0f)
+      assertThat(sheetTopAfterDismiss).isLessThan(dialogBottomAfterDismiss)
+      onNode(isDialog()).assertExists()
+      onNodeWithTag("sheet").assertExists()
       mainClock.autoAdvance = true
     }
 
