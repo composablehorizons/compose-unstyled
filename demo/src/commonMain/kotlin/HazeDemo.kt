@@ -44,7 +44,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,7 +61,6 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
-import com.composeunstyled.rememberDialogState
 import dev.chrisbanes.haze.blur.blurEffect
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
@@ -69,7 +71,7 @@ fun HazeDemo() {
   val backgroundUrl =
     "https://images.unsplash.com/photo-1554629947-334ff61d85dc?q=80&w=2200&auto=format&fit=crop"
   val hazeState = rememberHazeState()
-  val dialogState = rememberDialogState(initiallyVisible = false)
+  var dialogVisible by remember { mutableStateOf(false) }
 
   Box(
     modifier = Modifier
@@ -85,7 +87,7 @@ fun HazeDemo() {
     )
 
     UnstyledButton(
-      onClick = { dialogState.visible = true },
+      onClick = { dialogVisible = true },
       shape = RoundedCornerShape(8.dp),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       interactionSource = remember { MutableInteractionSource() },
@@ -96,8 +98,8 @@ fun HazeDemo() {
     }
 
     UnstyledDialog(
-      state = dialogState,
-      onDismiss = { dialogState.visible = false },
+      visible = dialogVisible,
+      onDismissRequest = { dialogVisible = false },
     ) {
       UnstyledScrim(
         scrimColor = Color.Black.copy(0.3f),
@@ -136,7 +138,7 @@ fun HazeDemo() {
           }
           Spacer(Modifier.height(24.dp))
           UnstyledButton(
-            onClick = { dialogState.visible = false },
+            onClick = { dialogVisible = false },
             modifier = Modifier.padding(12.dp).align(Alignment.End),
             shape = RoundedCornerShape(6.dp),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),

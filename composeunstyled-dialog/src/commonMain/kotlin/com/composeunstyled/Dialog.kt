@@ -35,12 +35,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.mapSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +55,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
-private val DoNothing: () -> Unit = {}
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 private val NoPadding = PaddingValues(0.dp)
@@ -67,41 +64,23 @@ data class DialogProperties(
   val dismissOnClickOutside: Boolean = true,
 )
 
-@Stable
-class DialogState(initiallyVisible: Boolean = false) {
-  internal val modalState = ModalState(initiallyVisible = initiallyVisible)
-
-  var visible: Boolean
-    get() = modalState.transitionState.targetState
-    set(value) {
-      modalState.transitionState.targetState = value
-    }
-}
-
-private val DialogStateSaver = run {
-  mapSaver(
-    save = {
-      mapOf("visible" to it.visible)
-    },
-    restore = {
-      DialogState(initiallyVisible = it["visible"] as Boolean)
-    },
-  )
-}
-
-@Composable
-fun rememberDialogState(initiallyVisible: Boolean = false): DialogState {
-  return rememberSaveable(saver = DialogStateSaver) { DialogState(initiallyVisible) }
-}
-
 @Composable
 fun UnstyledDialog(
-  state: DialogState,
+  visible: Boolean,
+  onDismissRequest: () -> Unit,
   properties: DialogProperties = DialogProperties(),
-  onDismiss: () -> Unit = DoNothing,
   content: @Composable (() -> Unit),
 ) {
-  val currentDismiss by rememberUpdatedState(onDismiss)
+  val modalState = rememberModalState(initiallyVisible = visible)
+  val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
+
+  SideEffect {
+    modalState.transitionState.targetState = visible
+  }
+
+  fun dismiss() {
+    currentOnDismissRequest()
+  }
 
   val onKeyEvent = if (properties.dismissOnBackPress) {
     { event: KeyEvent ->
@@ -109,8 +88,7 @@ fun UnstyledDialog(
         event.type == KeyEventType.KeyDown &&
         (event.key == Key.Back || event.key == Key.Escape)
       ) {
-        currentDismiss()
-        state.visible = false
+        dismiss()
         true
       } else {
         false
@@ -119,8 +97,9 @@ fun UnstyledDialog(
   } else {
     { false }
   }
+
   Modal(
-    state = state.modalState,
+    state = modalState,
     onKeyEvent = onKeyEvent,
   ) {
     Box(
@@ -130,8 +109,7 @@ fun UnstyledDialog(
           if (properties.dismissOnClickOutside) {
             Modifier.pointerInput(Unit) {
               detectTapGestures {
-                currentDismiss()
-                state.visible = false
+                dismiss()
               }
             }
           } else {

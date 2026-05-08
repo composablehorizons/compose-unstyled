@@ -151,7 +151,6 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -237,7 +236,6 @@ import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.currentWindowContainerSize
-import com.composeunstyled.rememberDialogState
 import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -3003,15 +3001,13 @@ fun AlertDialog(
   tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
   properties: DialogProperties = DialogProperties(),
 ) {
-  val state = rememberDialogState(initiallyVisible = visible)
-  SideEffect { state.visible = visible }
   UnstyledDialog(
-    state = state,
+    visible = visible,
+    onDismissRequest = onDismissRequest,
     properties = com.composeunstyled.DialogProperties(
       dismissOnBackPress = properties.dismissOnBackPress,
       dismissOnClickOutside = properties.dismissOnClickOutside,
     ),
-    onDismiss = onDismissRequest,
   ) {
     UnstyledScrim(
       enter = fadeIn(animationSpec = tween(DialogEnterDurationMillis)),

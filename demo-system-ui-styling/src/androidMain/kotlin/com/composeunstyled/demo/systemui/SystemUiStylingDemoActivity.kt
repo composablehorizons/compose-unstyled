@@ -46,6 +46,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -60,7 +64,6 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
-import com.composeunstyled.rememberDialogState
 
 class SystemUiStylingDemoActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +88,7 @@ class SystemUiStylingDemoActivity : ComponentActivity() {
 
 @Composable
 private fun ModalSystemUiStylingDemo() {
-  val dialogState = rememberDialogState(initiallyVisible = false)
+  var dialogVisible by remember { mutableStateOf(false) }
 
   Box(
     modifier = Modifier
@@ -95,7 +98,7 @@ private fun ModalSystemUiStylingDemo() {
     contentAlignment = Alignment.Center,
   ) {
     UnstyledButton(
-      onClick = { dialogState.visible = true },
+      onClick = { dialogVisible = true },
       backgroundColor = Color.White,
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       shape = RoundedCornerShape(6.dp),
@@ -103,7 +106,10 @@ private fun ModalSystemUiStylingDemo() {
     ) {
       BasicText("Show dialog")
     }
-    UnstyledDialog(state = dialogState) {
+    UnstyledDialog(
+      visible = dialogVisible,
+      onDismissRequest = { dialogVisible = false },
+    ) {
       val window = LocalModalWindow.current
       LaunchedEffect(Unit) {
         // change system bars to transparent
@@ -140,7 +146,7 @@ private fun ModalSystemUiStylingDemo() {
           }
           Spacer(Modifier.height(24.dp))
           UnstyledButton(
-            onClick = { dialogState.visible = false },
+            onClick = { dialogVisible = false },
             modifier = Modifier
               .padding(12.dp)
               .align(Alignment.End),
