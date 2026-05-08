@@ -62,9 +62,12 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 
@@ -85,25 +88,28 @@ sealed class ThumbVisibility {
 }
 
 @Composable
-fun ScrollAreaScope.VerticalScrollbar(
+fun UnstyledVerticalScrollbar(
+  scrollAreaState: ScrollAreaState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
-) = ScrollBar(modifier, enabled, interactionSource, reverseLayout, true, thumb)
+) = ScrollBar(scrollAreaState, modifier, enabled, interactionSource, reverseLayout, true, thumb)
 
 @Composable
-fun ScrollAreaScope.HorizontalScrollbar(
+fun UnstyledHorizontalScrollbar(
+  scrollAreaState: ScrollAreaState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
-) = ScrollBar(modifier, enabled, interactionSource, reverseLayout, false, thumb)
+) = ScrollBar(scrollAreaState, modifier, enabled, interactionSource, reverseLayout, false, thumb)
 
 @Composable
-private fun ScrollAreaScope.ScrollBar(
+private fun ScrollBar(
+  scrollAreaState: ScrollAreaState,
   modifier: Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
@@ -306,6 +312,77 @@ private val SliderAdapter.thumbPixelRange: IntRange
   }
 
 private val IntRange.size get() = last + 1 - first
+
+internal class SliderAdapter internal constructor(
+  val adapter: ScrollAreaState,
+  private val trackSize: Int,
+  private val minHeight: Float,
+  private val reverseLayout: Boolean,
+  private val isVertical: Boolean,
+  private val coroutineScope: CoroutineScope,
+) {
+  private val contentSize get() = adapter.contentSize
+  private val visiblePart: Double
+    get() {
+      val contentSize = contentSize
+      return if (contentSize == 0.0) {
+        1.0
+      } else {
+        (adapter.viewportSize / contentSize).coerceAtMost(1.0)
+      }
+    }
+
+  val thumbSize
+    get() = (trackSize * visiblePart).coerceAtLeast(minHeight.toDouble())
+
+  private val scrollScale: Double
+    get() {
+      val extraScrollbarSpace = trackSize - thumbSize
+      val extraContentSpace = adapter.maxScrollOffset
+      return if (extraContentSpace == 0.0) 1.0 else extraScrollbarSpace / extraContentSpace
+    }
+
+  private val rawPosition: Double
+    get() = scrollScale * adapter.scrollOffset
+
+  val position: Double
+    get() = if (reverseLayout) trackSize - thumbSize - rawPosition else rawPosition
+
+  private var unscrolledDragDistance = 0.0
+
+  fun onDragStarted() {
+    unscrolledDragDistance = 0.0
+  }
+
+  private suspend fun setPosition(value: Double) {
+    val rawPosition = if (reverseLayout) {
+      trackSize - thumbSize - value
+    } else {
+      value
+    }
+    adapter.scrollTo(rawPosition / scrollScale)
+  }
+
+  private val dragMutex = Mutex()
+
+  fun onDragDelta(offset: Offset) {
+    coroutineScope.launch(start = CoroutineStart.UNDISPATCHED) {
+      dragMutex.withLock {
+        val dragDelta = if (isVertical) offset.y else offset.x
+        val maxScrollPosition = adapter.maxScrollOffset * scrollScale
+        val currentPosition = position
+        val targetPosition = (currentPosition + dragDelta + unscrolledDragDistance).coerceIn(
+          0.0,
+          maxScrollPosition,
+        )
+        val sliderDelta = targetPosition - currentPosition
+        val newPos = position + sliderDelta
+        setPosition(newPos)
+        unscrolledDragDistance += dragDelta - sliderDelta
+      }
+    }
+  }
+}
 
 private fun verticalMeasurePolicy(
   sliderAdapter: SliderAdapter,
