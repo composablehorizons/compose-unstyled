@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.expand
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
@@ -76,11 +75,11 @@ fun UnstyledDisclosure(
 }
 
 @Composable
-fun DisclosureScope.UnstyledDisclosureHeading(
+fun DisclosureScope.DisclosureButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   contentPadding: PaddingValues = NoPadding,
-  indication: Indication = LocalIndication.current,
+  indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
   verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
   horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
@@ -88,7 +87,6 @@ fun DisclosureScope.UnstyledDisclosureHeading(
 ) {
   UnstyledButton(
     modifier = modifier.semantics {
-      heading()
       if (expanded) {
         collapse {
           onExpandedChange(false)
@@ -114,33 +112,7 @@ fun DisclosureScope.UnstyledDisclosureHeading(
 }
 
 @Composable
-fun DisclosureScope.UnstyledDisclosureHeading(
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  contentPadding: PaddingValues = NoPadding,
-  indication: Indication = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-  content: @Composable () -> Unit,
-) {
-  UnstyledButton(
-    modifier = modifier,
-    onClick = onClick,
-    interactionSource = interactionSource,
-    indication = indication,
-    enabled = enabled,
-    contentPadding = contentPadding,
-    verticalAlignment = verticalAlignment,
-    horizontalArrangement = horizontalArrangement,
-  ) {
-    content()
-  }
-}
-
-@Composable
-fun DisclosureScope.UnstyledDisclosurePanel(
+fun DisclosureScope.DisclosedContent(
   modifier: Modifier = Modifier,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
