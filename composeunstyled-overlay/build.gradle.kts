@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
@@ -38,6 +39,11 @@ val publishGroupId = "com.composables"
 val publishVersion = libs.versions.unstyled.get()
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
+val pomArtifactId = "composeunstyled-overlay"
+val pomName = "Compose Unstyled Overlay"
+val pomDescription = "Same-window overlay utility for Jetpack Compose."
+val frameworkBaseName = "ComposeUnstyledOverlay"
+val androidNamespace = "com.composeunstyled.overlay"
 
 java {
   toolchain {
@@ -70,7 +76,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledPrimitives"
+      baseName = frameworkBaseName
       isStatic = true
     }
   }
@@ -78,58 +84,13 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        api(projects.composeunstyledButton)
-        api(projects.composeunstyledCheckbox)
-        api(projects.composeunstyledTriStateCheckbox)
-        api(projects.composeunstyledDisclosure)
-        api(projects.composeunstyledProgress)
-        api(projects.composeunstyledToggleSwitch)
-        api(projects.composeunstyledTabGroup)
-        api(projects.composeunstyledIcon)
-        api(projects.composeunstyledTextField)
-        api(projects.composeunstyledRadioGroup)
-        api(projects.composeunstyledOutline)
-        api(projects.composeunstyledSlider)
-        api(projects.composeunstyledSeparators)
-        api(projects.composeunstyledStack)
-        api(projects.composeunstyledFocusRing)
-
-        api(projects.composeunstyledBuildModifier)
-        api(projects.composeunstyledModal)
-        api(projects.composeunstyledScrim)
-        api(projects.composeunstyledDialog)
-        api(projects.composeunstyledBottomSheet)
-        api(projects.composeunstyledModalBottomSheet)
-        api(projects.composeunstyledDropdownMenu)
-        api(projects.composeunstyledTooltip)
-        api(projects.composeunstyledScrollArea)
-        api(projects.composeunstyledOverlay)
+        implementation(libs.compose.foundation)
       }
-    }
-
-    androidMain.dependencies {
-      implementation(libs.androidx.activitycompose)
-      implementation(libs.androidx.window)
-    }
-
-    jvmMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.1")
-    }
-
-    webMain.dependencies {
-      implementation("org.jetbrains.kotlinx:kotlinx-browser:0.5.0")
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
-      implementation(project(":testcase"))
     }
 
     commonTest.dependencies {
       implementation(kotlin("test"))
-      implementation(project(":testcase"))
+      implementation(libs.assertk)
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
       implementation(libs.compose.ui.test)
@@ -141,30 +102,13 @@ kotlin {
       implementation(libs.compose.ui.test.junit4)
       implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-      }
-    }
-
-    applyDefaultHierarchyTemplate {
-      common {
-        group("nonAndroid") {
-          withJvm()
-          withIos()
-          withWasmJs()
-          withJs()
-        }
-
-        group("web") {
-          withWasmJs()
-          withJs()
-        }
       }
     }
   }
 }
 
 android {
-  namespace = "com.composeunstyled.primitives"
+  namespace = androidNamespace
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -183,39 +127,30 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-primitives",
-    version = publishVersion
+    artifactId = pomArtifactId,
+    version = publishVersion,
   )
 
   pom {
-    name.set("Compose Unstyled Primitives")
-    description.set("Primitive components for Compose Unstyled - foundational components for building high-quality, accessible design systems in Compose Multiplatform.")
-    url.set(projectUrl)
-
+    name = pomName
+    description = pomDescription
+    url = projectUrl
+    inceptionYear = "2026"
     licenses {
       license {
-        name.set("MIT License")
-        url.set("https://${githubUrl}/blob/main/LICENSE")
+        name = "MIT License"
+        url = "https://opensource.org/licenses/MIT"
       }
     }
-
-    issueManagement {
-      system.set("GitHub Issues")
-      url.set("https://${githubUrl}/issues")
-    }
-
     developers {
       developer {
-        id.set("composablehorizons")
-        name.set("Composable Horizons")
-        email.set("alex@composables.com")
+        id = "alexstyl"
+        name = "Alex Styl"
+        url = "https://alexstyl.com"
       }
     }
-
     scm {
-      connection.set("scm:git:${githubUrl}.git")
-      developerConnection.set("scm:git:ssh://${githubUrl}.git")
-      url.set("https://${githubUrl}/tree/main")
+      url = githubUrl
     }
   }
 }
