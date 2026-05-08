@@ -369,9 +369,18 @@ class ModalBottomSheetTest {
 
       mainClock.autoAdvance = false
       state.targetDetent = peek
-      mainClock.advanceTimeBy(300)
+      var frame = 0
+      while (runCatching { onNode(isDialog()).assertExists() }.isFailure && frame < 30) {
+        mainClock.advanceTimeByFrame()
+        frame++
+      }
       onNode(isDialog()).assertExists()
       onNodeWithTag("sheet").assertExists()
+      frame = 0
+      while (state.offset <= 0f && frame < 30) {
+        mainClock.advanceTimeByFrame()
+        frame++
+      }
       assertThat(state.offset).isGreaterThan(0f)
 
       onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
