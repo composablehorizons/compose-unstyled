@@ -35,6 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.isDialog
@@ -57,7 +60,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel {
+        DialogPanel(paneTitle = null) {
         }
       }
     }
@@ -75,7 +78,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
         }
       }
     }
@@ -99,7 +102,7 @@ class DialogTest {
           Box(Modifier.testTag("dialog_overlay"))
         },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
         }
       }
     }
@@ -112,6 +115,37 @@ class DialogTest {
   }
 
   @Test
+  fun dialogPanelSetsPaneTitleSemanticsWhenPresent() = runComposeUiTest {
+    setContent {
+      UnstyledDialog(
+        visible = true,
+        onDismissRequest = {},
+      ) {
+        DialogPanel(Modifier.testTag("dialog_panel"), paneTitle = "Dialog") {
+        }
+      }
+    }
+
+    onNodeWithTag("dialog_panel")
+      .assert(SemanticsMatcher.expectValue(SemanticsProperties.PaneTitle, "Dialog"))
+  }
+
+  @Test
+  fun dialogPanelDoesNotSetPaneTitleSemanticsWhenAbsent() = runComposeUiTest {
+    setContent {
+      UnstyledDialog(
+        visible = true,
+        onDismissRequest = {},
+      ) {
+        DialogPanel(Modifier.testTag("dialog_panel"), paneTitle = null) {
+        }
+      }
+    }
+
+    onNodeWithTag("dialog_panel")
+      .assert(SemanticsMatcher.keyNotDefined(SemanticsProperties.PaneTitle))
+  }
+
   fun visibleDialogShowsTheModalFragment() = runComposeUiTest {
     var visible by mutableStateOf(false)
 
@@ -144,7 +178,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
         }
       }
     }
@@ -165,7 +199,7 @@ class DialogTest {
         visible = true,
         onDismissRequest = {},
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
           BasicTextField(
             value = "",
             onValueChange = {},
@@ -189,7 +223,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = true),
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -222,7 +256,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = false),
       ) {
-        DialogPanel(Modifier.testTag("dialog_content")) {
+        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -255,7 +289,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = true),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp), paneTitle = null) {}
       }
     }
 
@@ -281,7 +315,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = false),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp), paneTitle = null) {}
       }
     }
 

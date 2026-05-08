@@ -3020,6 +3020,7 @@ fun AlertDialog(
         .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
         .clip(shape)
         .background(containerColor, shape),
+      paneTitle = "Dialog",
       enter = fadeIn(animationSpec = tween(DialogFadeInDurationMillis)) +
         scaleIn(
           initialScale = 0.8f,
