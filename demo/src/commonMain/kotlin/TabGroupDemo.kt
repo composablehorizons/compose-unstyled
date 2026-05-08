@@ -21,7 +21,6 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,11 +50,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Tab
+import com.composeunstyled.TabList
+import com.composeunstyled.TabPanel
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
-import com.composeunstyled.UnstyledTabList
-import com.composeunstyled.UnstyledTabPanel
 
 @Composable
 fun TabGroupDemo() {
@@ -115,8 +114,12 @@ fun TabGroupDemo() {
       .padding(top = 90.dp),
     contentAlignment = Alignment.TopCenter,
   ) {
-    UnstyledTabGroup(selectedTab = selectedTab, tabs = categories.keys.toList()) {
-      UnstyledTabList(
+    UnstyledTabGroup(
+      selectedTab = selectedTab,
+      onSelectedTabChange = { selectedTab = it },
+      tabs = categories.keys.toList(),
+    ) {
+      TabList(
         modifier = Modifier
           .fillMaxWidth()
           .height(48.dp)
@@ -124,14 +127,10 @@ fun TabGroupDemo() {
           .clip(RoundedCornerShape(8.dp))
           .background(Color.White),
       ) {
-        categories.forEach { (key, articles) ->
-          val selected = key == selectedTab
-          UnstyledTab(
+        categories.forEach { (key, _) ->
+          Tab(
             key = key,
-            selected = selected,
-            onSelected = { selectedTab = key },
             modifier = Modifier.weight(1f).fillMaxHeight(),
-            indication = LocalIndication.current,
           ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
               Text(
@@ -163,39 +162,38 @@ fun TabGroupDemo() {
       }
 
       Spacer(modifier = Modifier.height(16.dp))
-      Box(
-        modifier = Modifier
-          .fillMaxWidth()
-          .shadow(4.dp, RoundedCornerShape(8.dp))
-          .background(
-            color = Color.White,
-            shape = RoundedCornerShape(8.dp),
-          )
-          .padding(16.dp),
-      ) {
-        categories.forEach { (key, items) ->
-          UnstyledTabPanel(key = key) {
-            Column {
-              items.forEach { item ->
-                UnstyledButton(
-                  onClick = { /* TODO */ },
-                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                  contentPadding = PaddingValues(12.dp),
-                ) {
-                  Column {
-                    Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
-                    Spacer(Modifier.height(4.dp))
-                    Row(
-                      horizontalArrangement = Arrangement.spacedBy(4.dp),
-                      verticalAlignment = Alignment.CenterVertically,
-                      modifier = Modifier.fillMaxWidth().alpha(0.6f),
-                    ) {
-                      Text(item.relativeTime)
-                      Text("·")
-                      Text("${item.comments} comments")
-                      Text("·")
-                      Text("${item.points} shares")
-                    }
+      categories.forEach { (key, items) ->
+        TabPanel(
+          key = key,
+          modifier = Modifier
+            .fillMaxWidth()
+            .shadow(4.dp, RoundedCornerShape(8.dp))
+            .background(
+              color = Color.White,
+              shape = RoundedCornerShape(8.dp),
+            ),
+          contentPadding = PaddingValues(16.dp),
+        ) {
+          Column {
+            items.forEach { item ->
+              UnstyledButton(
+                onClick = { /* TODO */ },
+                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                contentPadding = PaddingValues(12.dp),
+              ) {
+                Column {
+                  Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
+                  Spacer(Modifier.height(4.dp))
+                  Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().alpha(0.6f),
+                  ) {
+                    Text(item.relativeTime)
+                    Text("·")
+                    Text("${item.comments} comments")
+                    Text("·")
+                    Text("${item.points} shares")
                   }
                 }
               }

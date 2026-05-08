@@ -443,7 +443,6 @@ private fun OutlinedButton(
       .clip(RoundedCornerShape(8.dp))
       .background(Color.White)
       .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
-    // contentColor = Color(0xFF1A1A1A),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
     indication = LocalIndication.current,
   ) {

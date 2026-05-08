@@ -157,7 +157,6 @@ private fun MaterialButtons() {
       val filledInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.White,
         contentPadding = MaterialContentPaddingValues,
         interactionSource = filledInteraction,
         modifier = Modifier
@@ -172,7 +171,6 @@ private fun MaterialButtons() {
       val outlinedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
         interactionSource = outlinedInteraction,
         indication = Theme[indications][dimmed],
@@ -193,7 +191,6 @@ private fun MaterialButtons() {
       val textInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF6750A4),
         contentPadding = MaterialContentPaddingValues,
         interactionSource = textInteraction,
         indication = Theme[indications][dimmed],
@@ -208,7 +205,6 @@ private fun MaterialButtons() {
       val tonalInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF1D192B),
         contentPadding = MaterialContentPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = tonalInteraction,
@@ -244,7 +240,6 @@ private fun IosButtons() {
 
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.White,
         contentPadding = iosPaddingValues,
         interactionSource = prominentInteraction,
         modifier = Modifier
@@ -259,7 +254,6 @@ private fun IosButtons() {
       val borderedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
         indication = Theme[indications][bright],
         interactionSource = borderedInteraction,
@@ -276,7 +270,6 @@ private fun IosButtons() {
       val borderlessInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = iosAccent,
         contentPadding = iosPaddingValues,
         indication = Theme[indications][bright],
         interactionSource = borderlessInteraction,
@@ -290,7 +283,6 @@ private fun IosButtons() {
       val plainInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.Black,
         contentPadding = iosPaddingValues,
         interactionSource = plainInteraction,
         modifier = Modifier
@@ -320,7 +312,6 @@ private fun MacOsButtons() {
       val prominentInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.White,
         contentPadding = macPaddingValues,
         interactionSource = prominentInteraction,
         modifier = Modifier
@@ -335,7 +326,6 @@ private fun MacOsButtons() {
       val borderedInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.Black,
         contentPadding = macPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = borderedInteraction,
@@ -351,7 +341,6 @@ private fun MacOsButtons() {
       val borderlessInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF8E8E93), // iOS/macOS system gray
         contentPadding = macPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = borderlessInteraction,
@@ -366,7 +355,6 @@ private fun MacOsButtons() {
       val plainInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF272727),
         contentPadding = macPaddingValues,
         interactionSource = plainInteraction,
         modifier = Modifier
@@ -396,7 +384,6 @@ private fun ShadcnButtons() {
       val primaryInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFFF8FAFC), // slate-50
         contentPadding = shadcnPaddingValues,
         interactionSource = primaryInteraction,
         modifier = Modifier
@@ -411,7 +398,6 @@ private fun ShadcnButtons() {
       val secondaryInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = secondaryInteraction,
@@ -427,7 +413,6 @@ private fun ShadcnButtons() {
       val outlineInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = outlineInteraction,
@@ -448,7 +433,6 @@ private fun ShadcnButtons() {
       val ghostInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color(0xFF0F172A), // slate-900
         contentPadding = shadcnPaddingValues,
         indication = Theme[indications][dimmed],
         interactionSource = ghostInteraction,
@@ -463,7 +447,6 @@ private fun ShadcnButtons() {
       val destructiveInteraction = remember { MutableInteractionSource() }
       UnstyledButton(
         onClick = {},
-        // contentColor = Color.White,
         contentPadding = shadcnPaddingValues,
         interactionSource = destructiveInteraction,
         modifier = Modifier

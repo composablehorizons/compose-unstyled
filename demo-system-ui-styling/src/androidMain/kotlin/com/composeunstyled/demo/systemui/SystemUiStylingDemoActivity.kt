@@ -125,7 +125,6 @@ private fun ModalSystemUiStylingDemo() {
         windowInsetsController.isAppearanceLightNavigationBars = true
       }
       DialogPanel(
-        // contentColor = Color.Black,
         modifier = Modifier
           .padding(20.dp)
           .displayCutoutPadding()
