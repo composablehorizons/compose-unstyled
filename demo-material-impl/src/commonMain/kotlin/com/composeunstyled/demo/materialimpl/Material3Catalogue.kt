@@ -25,8 +25,6 @@ package com.composeunstyled.demo.material3api
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,13 +38,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -56,7 +56,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,11 +67,10 @@ import com.composables.icons.materialsymbols.rounded.Add
 import com.composables.icons.materialsymbols.rounded.Apps
 import com.composables.icons.materialsymbols.rounded.Arrow_back
 import com.composables.icons.materialsymbols.rounded.Help
-import com.composables.icons.materialsymbols.rounded.Home
 import com.composables.icons.materialsymbols.rounded.Info
-import com.composables.icons.materialsymbols.rounded.Search
 import com.composables.icons.materialsymbols.rounded.Settings
 import com.composables.icons.materialsymbols.rounded.Star
+import com.composeunstyled.OverlayHost
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.rememberModalBottomSheetState
 import androidx.compose.material3.AlertDialog as M3AlertDialog
@@ -92,17 +90,12 @@ import androidx.compose.material3.IconToggleButton as M3IconToggleButton
 import androidx.compose.material3.LargeFloatingActionButton as M3LargeFloatingActionButton
 import androidx.compose.material3.LinearProgressIndicator as M3LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet as M3ModalBottomSheet
-import androidx.compose.material3.NavigationBar as M3NavigationBar
-import androidx.compose.material3.NavigationBarItem as M3NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem as M3NavigationDrawerItem
-import androidx.compose.material3.NavigationRail as M3NavigationRail
-import androidx.compose.material3.NavigationRailItem as M3NavigationRailItem
 import androidx.compose.material3.OutlinedButton as M3OutlinedButton
 import androidx.compose.material3.OutlinedIconButton as M3OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField as M3OutlinedTextField
+import androidx.compose.material3.PlainTooltip as M3PlainTooltip
 import androidx.compose.material3.PrimaryTabRow as M3PrimaryTabRow
 import androidx.compose.material3.RadioButton as M3RadioButton
-import androidx.compose.material3.RangeSlider as M3RangeSlider
 import androidx.compose.material3.SecondaryTabRow as M3SecondaryTabRow
 import androidx.compose.material3.Slider as M3Slider
 import androidx.compose.material3.SmallFloatingActionButton as M3SmallFloatingActionButton
@@ -111,6 +104,7 @@ import androidx.compose.material3.Switch as M3Switch
 import androidx.compose.material3.Tab as M3Tab
 import androidx.compose.material3.TextButton as M3TextButton
 import androidx.compose.material3.TextField as M3TextField
+import androidx.compose.material3.TooltipBox as M3TooltipBox
 import androidx.compose.material3.TriStateCheckbox as M3TriStateCheckbox
 import androidx.compose.material3.VerticalDivider as M3VerticalDivider
 import androidx.compose.material3.rememberModalBottomSheetState as rememberM3ModalBottomSheetState
@@ -118,29 +112,31 @@ import androidx.compose.material3.rememberModalBottomSheetState as rememberM3Mod
 @Composable
 fun Material3ImplementationDemo() {
   MaterialTheme {
-    val navController = rememberNavController()
-    Surface(
-      modifier = Modifier.fillMaxSize(),
-      color = MaterialTheme.colorScheme.background,
-      contentColor = MaterialTheme.colorScheme.onBackground,
-    ) {
-      NavHost(
-        navController = navController,
-        startDestination = CatalogueRoute,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None },
+    OverlayHost {
+      val navController = rememberNavController()
+      Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
       ) {
-        composable(CatalogueRoute) {
-          Catalogue(onOpenDemo = { navController.navigate(it.id) })
-        }
-        componentDemos.forEach { demo ->
-          composable(demo.id) {
-            DemoDetail(
-              demo = demo,
-              onBack = { navController.navigateUp() },
-            )
+        NavHost(
+          navController = navController,
+          startDestination = CatalogueRoute,
+          enterTransition = { EnterTransition.None },
+          exitTransition = { ExitTransition.None },
+          popEnterTransition = { EnterTransition.None },
+          popExitTransition = { ExitTransition.None },
+        ) {
+          composable(CatalogueRoute) {
+            Catalogue(onOpenDemo = { navController.navigate(it.id) })
+          }
+          componentDemos.forEach { demo ->
+            composable(demo.id) {
+              DemoDetail(
+                demo = demo,
+                onBack = { navController.navigateUp() },
+              )
+            }
           }
         }
       }
@@ -158,31 +154,34 @@ private data class ComponentDemo(
 )
 
 private val componentDemos = listOf(
-//  ComponentDemo("buttons", "Actions", "Buttons", { ButtonsDemo() }),
-//  ComponentDemo("icon-buttons", "Actions", "Icon buttons", { IconButtonsDemo() }),
-//  ComponentDemo("floating-action-buttons", "Actions", "Floating action buttons", { FloatingActionButtonsDemo() }),
-//  ComponentDemo("checkbox", "Input", "Checkbox", { CheckboxDemo() }),
-//  ComponentDemo("tri-state-checkbox", "Input", "Tri-state checkbox", { TriStateCheckboxDemo() }),
-//  ComponentDemo("radio-button", "Input", "Radio button", { RadioButtonDemo() }),
-//  ComponentDemo("switch", "Input", "Switch", { SwitchDemo() }),
+  ComponentDemo("buttons", "Actions", "Buttons", { ButtonsDemo() }),
+  ComponentDemo("icon-buttons", "Actions", "Icon buttons", { IconButtonsDemo() }),
+  ComponentDemo("floating-action-buttons", "Actions", "Floating action buttons", {
+    FloatingActionButtonsDemo()
+  }),
+  ComponentDemo("checkbox", "Input", "Checkbox", { CheckboxDemo() }),
+  ComponentDemo("tri-state-checkbox", "Input", "Tri-state checkbox", { TriStateCheckboxDemo() }),
+  ComponentDemo("radio-button", "Input", "Radio button", { RadioButtonDemo() }),
+  ComponentDemo("switch", "Input", "Switch", { SwitchDemo() }),
   ComponentDemo("slider", "Input", "Slider", { SliderComponentDemo() }),
-//  ComponentDemo("text-field", "Input", "Text field", { TextFieldDemo() }),
-//  ComponentDemo("outlined-text-field", "Input", "Outlined text field", { OutlinedTextFieldDemo() }),
+  ComponentDemo("text-field", "Input", "Text field", { TextFieldDemo() }),
+  ComponentDemo("outlined-text-field", "Input", "Outlined text field", { OutlinedTextFieldDemo() }),
   ComponentDemo("linear-progress-indicator", "Feedback", "Linear progress indicator", {
     LinearProgressDemo()
   }),
   ComponentDemo("primary-tab-row", "Navigation", "Primary tab row", { PrimaryTabRowDemo() }),
   ComponentDemo("secondary-tab-row", "Navigation", "Secondary tab row", { SecondaryTabRowDemo() }),
-  ComponentDemo("navigation-bar", "Navigation", "Navigation bar", { NavigationBarDemo() }),
-  ComponentDemo("navigation-rail", "Navigation", "Navigation rail", { NavigationRailDemo() }),
-  ComponentDemo("navigation-drawer-item", "Navigation", "Navigation drawer item", {
-    DrawerItemDemo()
-  }),
-//  ComponentDemo("dropdown-menu", "Menus", "Dropdown menu", { DropdownMenuDemo() }),
-//  ComponentDemo("alert-dialog", "Overlays", "Alert dialog", { AlertDialogDemo() }),
-//  ComponentDemo("modal-bottom-sheet", "Overlays", "Modal bottom sheet", { ModalBottomSheetDemo() }),
-//  ComponentDemo("horizontal-divider", "Structure", "Horizontal divider", { HorizontalDividerDemo() }),
-//  ComponentDemo("vertical-divider", "Structure", "Vertical divider", { VerticalDividerDemo() }),
+  ComponentDemo("dropdown-menu", "Menus", "Dropdown menu", { DropdownMenuDemo() }),
+  ComponentDemo("alert-dialog", "Overlays", "Alert dialog", { AlertDialogDemo() }),
+  ComponentDemo("modal-bottom-sheet", "Overlays", "Modal bottom sheet", { ModalBottomSheetDemo() }),
+  ComponentDemo("tooltip", "Overlays", "Tooltip", { TooltipDemo() }),
+  ComponentDemo(
+    "horizontal-divider",
+    "Structure",
+    "Horizontal divider",
+    { HorizontalDividerDemo() },
+  ),
+  ComponentDemo("vertical-divider", "Structure", "Vertical divider", { VerticalDividerDemo() }),
 )
 
 @Composable
@@ -638,61 +637,19 @@ private fun SliderComponentDemo() {
   ComparisonLayout(
     top = {
       var value by remember { mutableFloatStateOf(0.35f) }
-      var steppedValue by remember { mutableFloatStateOf(0.5f) }
-      SampleBlock("Supported by UnstyledSlider") {
+      SampleBlock("Slider") {
         Slider(value = value, onValueChange = { value = it })
-        Slider(value = steppedValue, onValueChange = { steppedValue = it }, steps = 4)
-      }
-      SampleBlock("Missing from UnstyledSlider") {
-        SliderGapRow("Range slider")
+        Text("Value: ${value.toString().take(4)}")
       }
     },
     bottom = {
       var value by remember { mutableFloatStateOf(0.35f) }
-      var steppedValue by remember { mutableFloatStateOf(0.5f) }
-      var rangeValue by remember { mutableStateOf(0.25f..0.75f) }
-      MaterialSampleBlock("Material 3 sliders") {
+      MaterialSampleBlock("Slider") {
         M3Slider(value = value, onValueChange = { value = it })
-        M3Slider(value = steppedValue, onValueChange = { steppedValue = it }, steps = 4)
-        M3RangeSlider(value = rangeValue, onValueChange = { rangeValue = it })
+        Text("Value: ${value.toString().take(4)}")
       }
     },
   )
-}
-
-@Composable
-private fun SliderGapRow(label: String) {
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    Text(label, style = MaterialTheme.typography.labelLarge)
-    Box(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(44.dp)
-        .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
-        .padding(12.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      SliderGapPreview()
-    }
-  }
-}
-
-@Composable
-private fun SliderGapPreview() {
-  val activeColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
-  val inactiveColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.24f)
-  val handleColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.46f)
-  Canvas(Modifier.fillMaxSize()) {
-    val strokeWidth = 16.dp.toPx()
-    val handleRadius = 6.dp.toPx()
-    val y = center.y
-    val startHandle = size.width * 0.25f
-    val endHandle = size.width * 0.75f
-    drawLine(inactiveColor, Offset(0f, y), Offset(size.width, y), strokeWidth)
-    drawLine(activeColor, Offset(startHandle, y), Offset(endHandle, y), strokeWidth)
-    drawCircle(handleColor, handleRadius, Offset(startHandle, y))
-    drawCircle(handleColor, handleRadius, Offset(endHandle, y))
-  }
 }
 
 @Composable
@@ -773,7 +730,7 @@ private fun PrimaryTabRowDemo() {
     top = {
       var selected by remember { mutableIntStateOf(0) }
       SampleBlock("Primary tab row") {
-        PrimaryTabRow(selectedTabIndex = selected) {
+        PrimaryTabRow(selectedTabIndex = selected, tabKeys = listOf("one", "two", "three")) {
           Tab(selected = selected == 0, onClick = { selected = 0 }, text = { Text("One") })
           Tab(selected = selected == 1, onClick = { selected = 1 }, text = { Text("Two") })
           Tab(selected = selected == 2, onClick = { selected = 2 }, text = { Text("Three") })
@@ -799,7 +756,7 @@ private fun SecondaryTabRowDemo() {
     top = {
       var selected by remember { mutableIntStateOf(0) }
       SampleBlock("Secondary tab row") {
-        SecondaryTabRow(selectedTabIndex = selected) {
+        SecondaryTabRow(selectedTabIndex = selected, tabKeys = listOf("apps", "settings")) {
           Tab(selected = selected == 0, onClick = { selected = 0 }) {
             Icon(MaterialSymbols.Rounded.Apps, contentDescription = "Apps")
             Text("Apps")
@@ -824,134 +781,6 @@ private fun SecondaryTabRowDemo() {
             Text("Settings")
           }
         }
-      }
-    },
-  )
-}
-
-@Composable
-private fun NavigationBarDemo() {
-  ComparisonLayout(
-    top = {
-      var selected by remember { mutableIntStateOf(0) }
-      SampleBlock("Navigation bar") {
-        NavigationBar {
-          NavigationBarItem(
-            selected = selected == 0,
-            onClick = { selected = 0 },
-            icon = { Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-          )
-          NavigationBarItem(
-            selected = selected == 1,
-            onClick = { selected = 1 },
-            icon = { Icon(MaterialSymbols.Rounded.Search, contentDescription = "Search") },
-            label = { Text("Search") },
-          )
-        }
-      }
-    },
-    bottom = {
-      var selected by remember { mutableIntStateOf(0) }
-      MaterialSampleBlock("Navigation bar") {
-        M3NavigationBar {
-          M3NavigationBarItem(
-            selected = selected == 0,
-            onClick = { selected = 0 },
-            icon = { M3Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-          )
-          M3NavigationBarItem(
-            selected = selected == 1,
-            onClick = { selected = 1 },
-            icon = { M3Icon(MaterialSymbols.Rounded.Search, contentDescription = "Search") },
-            label = { Text("Search") },
-          )
-        }
-      }
-    },
-  )
-}
-
-@Composable
-private fun NavigationRailDemo() {
-  ComparisonLayout(
-    top = {
-      var selected by remember { mutableIntStateOf(0) }
-      SampleBlock("Navigation rail") {
-        NavigationRail {
-          NavigationRailItem(
-            selected = selected == 0,
-            onClick = { selected = 0 },
-            icon = { Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-          )
-          NavigationRailItem(
-            selected = selected == 1,
-            onClick = { selected = 1 },
-            icon = { Icon(MaterialSymbols.Rounded.Search, contentDescription = "Search") },
-            label = { Text("Search") },
-          )
-        }
-      }
-    },
-    bottom = {
-      var selected by remember { mutableIntStateOf(0) }
-      MaterialSampleBlock("Navigation rail") {
-        M3NavigationRail {
-          M3NavigationRailItem(
-            selected = selected == 0,
-            onClick = { selected = 0 },
-            icon = { M3Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-            label = { Text("Home") },
-          )
-          M3NavigationRailItem(
-            selected = selected == 1,
-            onClick = { selected = 1 },
-            icon = { M3Icon(MaterialSymbols.Rounded.Search, contentDescription = "Search") },
-            label = { Text("Search") },
-          )
-        }
-      }
-    },
-  )
-}
-
-@Composable
-private fun DrawerItemDemo() {
-  ComparisonLayout(
-    top = {
-      SampleBlock("Navigation drawer item") {
-        NavigationDrawerItem(
-          selected = true,
-          onClick = {},
-          icon = { Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-          label = { Text("Home") },
-          badge = { Text("12") },
-        )
-        NavigationDrawerItem(
-          selected = false,
-          onClick = {},
-          icon = { Icon(MaterialSymbols.Rounded.Settings, contentDescription = "Settings") },
-          label = { Text("Settings") },
-        )
-      }
-    },
-    bottom = {
-      MaterialSampleBlock("Navigation drawer item") {
-        M3NavigationDrawerItem(
-          selected = true,
-          onClick = {},
-          icon = { M3Icon(MaterialSymbols.Rounded.Home, contentDescription = "Home") },
-          label = { Text("Home") },
-          badge = { Text("12") },
-        )
-        M3NavigationDrawerItem(
-          selected = false,
-          onClick = {},
-          icon = { M3Icon(MaterialSymbols.Rounded.Settings, contentDescription = "Settings") },
-          label = { Text("Settings") },
-        )
       }
     },
   )
@@ -1043,6 +872,7 @@ private fun ModalBottomSheetDemo() {
     top = {
       val sheetState = rememberModalBottomSheetState(
         initialDetent = SheetDetent.Hidden,
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
         dismissAnimationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
       )
       SampleBlock("Modal bottom sheet") {
@@ -1069,6 +899,50 @@ private fun ModalBottomSheetDemo() {
           sheetState = sheetState,
         ) {
           Spacer(Modifier.height(320.dp))
+        }
+      }
+    },
+  )
+}
+
+@Composable
+private fun TooltipDemo() {
+  ComparisonLayout(
+    top = {
+      SampleBlock("Tooltip") {
+        Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+          TooltipBox(
+            tooltip = {
+              PlainTooltip {
+                Text("Add item")
+              }
+            },
+          ) {
+            IconButton(onClick = {}) {
+              Icon(MaterialSymbols.Rounded.Add, contentDescription = "Add item")
+            }
+          }
+        }
+      }
+    },
+    bottom = {
+      MaterialSampleBlock("Tooltip") {
+        Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+          M3TooltipBox(
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+              TooltipAnchorPosition.Above,
+            ),
+            tooltip = {
+              M3PlainTooltip {
+                Text("Add item")
+              }
+            },
+            state = rememberTooltipState(),
+          ) {
+            M3IconButton(onClick = {}) {
+              M3Icon(MaterialSymbols.Rounded.Add, contentDescription = "Add item")
+            }
+          }
         }
       }
     },

@@ -3098,6 +3098,7 @@ fun ModalBottomSheet(
   modifier: Modifier = Modifier,
   sheetState: ModalBottomSheetState = rememberModalBottomSheetState(
     initialDetent = SheetDetent.Hidden,
+    animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
     dismissAnimationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
   ),
   sheetMaxWidth: Dp = BottomSheetDefaults.SheetMaxWidth,
@@ -3122,8 +3123,8 @@ fun ModalBottomSheet(
     overlay = {
       UnstyledScrim(
         scrimColor = scrimColor,
-        enter = fadeIn(animationSpec = tween(DialogEnterDurationMillis)),
-        exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)),
+        enter = fadeIn(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()),
+        exit = fadeOut(animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()),
       )
     },
   ) {
