@@ -40,6 +40,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -57,7 +60,6 @@ import com.composeunstyled.UnstyledDisclosureHeading
 import com.composeunstyled.UnstyledDisclosurePanel
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSeparator
-import com.composeunstyled.rememberDisclosureState
 
 @Composable
 fun DisclosureDemo() {
@@ -95,15 +97,18 @@ fun DisclosureDemo() {
           UnstyledSeparator(color = Color.Black.copy(0.2f))
         }
 
-        val state = rememberDisclosureState(initiallyExpanded = i == 0)
-        UnstyledDisclosure(state = state) {
+        var expanded by remember { mutableStateOf(i == 0) }
+        UnstyledDisclosure(
+          expanded = expanded,
+          onExpandedChange = { expanded = it },
+        ) {
           UnstyledDisclosureHeading(
             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
             indication = LocalIndication.current,
           ) {
             Text(faq.question, modifier = Modifier.weight(1f))
 
-            val degrees by animateFloatAsState(if (state.expanded) -180f else 0f, tween())
+            val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
             UnstyledIcon(
               imageVector = Lucide.ChevronDown,
               contentDescription = null,
