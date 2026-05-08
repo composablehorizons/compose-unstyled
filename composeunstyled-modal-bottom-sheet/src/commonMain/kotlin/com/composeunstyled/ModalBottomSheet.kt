@@ -103,7 +103,6 @@ class ModalBottomSheetState internal constructor(
   internal var pendingDetentChange: Job? = null
   internal var modalDetent by mutableStateOf(bottomSheetState.currentDetent)
   internal var dismissAnimationSpec by mutableStateOf(dismissAnimationSpec)
-  internal var dismissAnimationInProgress by mutableStateOf(false)
   private var pendingTargetDetent: SheetDetent? by mutableStateOf(null)
 
   val currentDetent: SheetDetent
@@ -239,15 +238,10 @@ fun UnstyledModalBottomSheet(
 
   fun requestDismiss() {
     dispatchDismiss()
-    state.dismissAnimationInProgress = true
     state.pendingDetentChange?.cancel()
     state.launchPendingDetentChange {
-      try {
-        state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
-        completeDismiss(notifyDismiss = false)
-      } finally {
-        state.dismissAnimationInProgress = false
-      }
+      state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
+      completeDismiss(notifyDismiss = false)
     }
   }
 
@@ -261,12 +255,14 @@ fun UnstyledModalBottomSheet(
       LaunchedEffect(
         state.bottomSheetState.isIdle,
         state.bottomSheetState.currentDetent,
-        state.dismissAnimationInProgress,
+        state.bottomSheetState.targetDetent,
+        state.offset,
       ) {
         if (
-          state.dismissAnimationInProgress.not() &&
           state.bottomSheetState.isIdle &&
-          state.bottomSheetState.currentDetent == SheetDetent.Hidden
+          state.bottomSheetState.currentDetent == SheetDetent.Hidden &&
+          state.bottomSheetState.targetDetent == SheetDetent.Hidden &&
+          state.offset <= 0.5f
         ) {
           completeDismiss()
         }
