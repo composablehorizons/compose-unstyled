@@ -52,8 +52,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.SwitchThumb
 import com.composeunstyled.UnstyledSwitch
-import com.composeunstyled.UnstyledSwitchThumb
 
 @Composable
 fun ToggleSwitchDemo() {
@@ -92,7 +92,7 @@ fun ToggleSwitchDemo() {
             .clip(RoundedCornerShape(100))
             .background(animatedColor, RoundedCornerShape(100)),
         ) {
-          UnstyledSwitchThumb(
+          SwitchThumb(
             modifier = Modifier
               .padding(4.dp)
               .shadow(elevation = 4.dp, CircleShape)

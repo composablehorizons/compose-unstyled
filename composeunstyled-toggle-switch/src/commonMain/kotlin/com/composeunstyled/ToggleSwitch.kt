@@ -51,18 +51,18 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 @Stable
-interface UnstyledSwitchScope : BoxScope {
+interface SwitchScope : BoxScope {
   val checked: Boolean
   val enabled: Boolean
   val interactionSource: MutableInteractionSource
 }
 
-private class UnstyledSwitchScopeImpl(
+private class SwitchScopeImpl(
   override val checked: Boolean,
   override val enabled: Boolean,
   override val interactionSource: MutableInteractionSource,
   private val boxScope: BoxScope,
-) : UnstyledSwitchScope,
+) : SwitchScope,
   BoxScope by boxScope
 
 @Composable
@@ -73,7 +73,7 @@ fun UnstyledSwitch(
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
-  content: @Composable UnstyledSwitchScope.() -> Unit,
+  content: @Composable SwitchScope.() -> Unit,
 ) {
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
 
@@ -93,7 +93,7 @@ fun UnstyledSwitch(
       }
     },
   ) {
-    val scope = UnstyledSwitchScopeImpl(
+    val scope = SwitchScopeImpl(
       checked = checked,
       enabled = enabled,
       interactionSource = resolvedInteractionSource,
@@ -104,7 +104,7 @@ fun UnstyledSwitch(
 }
 
 @Composable
-fun UnstyledSwitchScope.UnstyledSwitchThumb(
+fun SwitchScope.SwitchThumb(
   modifier: Modifier = Modifier,
   animationSpec: FiniteAnimationSpec<Dp> = tween(),
   contentAlignment: Alignment = Alignment.Center,

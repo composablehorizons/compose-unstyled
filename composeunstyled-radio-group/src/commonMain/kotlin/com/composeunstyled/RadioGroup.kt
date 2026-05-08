@@ -125,12 +125,12 @@ fun UnstyledRadioButton(
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
-  content: @Composable UnstyledRadioButtonScope.() -> Unit,
+  content: @Composable RadioButtonScope.() -> Unit,
 ) {
   val state = LocalInnerRadioGroupState.current
   val selected = state.value == value
   val radioInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
-  val scope = UnstyledRadioButtonScope(
+  val scope = RadioButtonScope(
     selected = selected,
     enabled = enabled,
     interactionSource = radioInteractionSource,
@@ -157,14 +157,14 @@ fun UnstyledRadioButton(
   }
 }
 
-class UnstyledRadioButtonScope internal constructor(
+class RadioButtonScope internal constructor(
   internal val selected: Boolean,
   internal val enabled: Boolean,
   internal val interactionSource: MutableInteractionSource,
 )
 
 @Composable
-fun UnstyledRadioButtonScope.SelectedIndicator(
+fun RadioButtonScope.SelectedIndicator(
   modifier: Modifier = Modifier,
   indication: Indication? = null,
   enter: EnterTransition = EnterTransition.None,

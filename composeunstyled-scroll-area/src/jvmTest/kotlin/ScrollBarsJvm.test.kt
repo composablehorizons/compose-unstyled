@@ -52,8 +52,8 @@ class ScrollBarsJvmTest {
             BasicText("Item $index")
           }
         }
-        UnstyledVerticalScrollbar(modifier = Modifier.testTag("track")) {
-          UnstyledThumb(
+        VerticalScrollbar(modifier = Modifier.testTag("track")) {
+          Thumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,

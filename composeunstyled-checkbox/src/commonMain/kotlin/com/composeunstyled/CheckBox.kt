@@ -48,10 +48,10 @@ fun UnstyledCheckbox(
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
   accessibilityLabel: String? = null,
-  content: @Composable UnstyledCheckboxScope.() -> Unit,
+  content: @Composable CheckboxScope.() -> Unit,
 ) {
   val checkboxInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
-  val scope = UnstyledCheckboxScope(
+  val scope = CheckboxScope(
     checked = checked,
     enabled = enabled,
     interactionSource = checkboxInteractionSource,
@@ -80,14 +80,14 @@ fun UnstyledCheckbox(
   }
 }
 
-class UnstyledCheckboxScope internal constructor(
+class CheckboxScope internal constructor(
   internal val checked: Boolean,
   internal val enabled: Boolean,
   internal val interactionSource: MutableInteractionSource,
 )
 
 @Composable
-fun UnstyledCheckboxScope.CheckedIndicator(
+fun CheckboxScope.CheckedIndicator(
   modifier: Modifier = Modifier,
   indication: Indication? = null,
   enter: EnterTransition = EnterTransition.None,
