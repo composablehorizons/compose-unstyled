@@ -60,7 +60,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel(paneTitle = null) {
+        DialogPanel {
         }
       }
     }
@@ -78,7 +78,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
     }
@@ -102,7 +102,7 @@ class DialogTest {
           Box(Modifier.testTag("dialog_overlay"))
         },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
     }
@@ -137,7 +137,7 @@ class DialogTest {
         visible = true,
         onDismissRequest = {},
       ) {
-        DialogPanel(Modifier.testTag("dialog_panel"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_panel")) {
         }
       }
     }
@@ -178,7 +178,7 @@ class DialogTest {
         visible = visible,
         onDismissRequest = { visible = false },
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
         }
       }
     }
@@ -199,7 +199,7 @@ class DialogTest {
         visible = true,
         onDismissRequest = {},
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = "",
             onValueChange = {},
@@ -223,7 +223,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = true),
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -256,7 +256,7 @@ class DialogTest {
         onDismissRequest = { visible = false },
         properties = DialogProperties(dismissOnBackPress = false),
       ) {
-        DialogPanel(Modifier.testTag("dialog_content"), paneTitle = null) {
+        DialogPanel(Modifier.testTag("dialog_content")) {
           BasicTextField(
             value = value,
             onValueChange = { value = it },
@@ -289,7 +289,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = true),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        DialogPanel(Modifier.testTag("dialog_content").size(100.dp), paneTitle = null) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
 
@@ -315,7 +315,7 @@ class DialogTest {
         properties = DialogProperties(dismissOnClickOutside = false),
       ) {
         TestModalFragment(Modifier.testTag("dialog_backdrop"))
-        DialogPanel(Modifier.testTag("dialog_content").size(100.dp), paneTitle = null) {}
+        DialogPanel(Modifier.testTag("dialog_content").size(100.dp)) {}
       }
     }
 
