@@ -100,19 +100,17 @@ fun UnstyledDialog(
     onKeyEvent = onKeyEvent,
   ) {
     Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .then(
-          if (properties.dismissOnClickOutside) {
+      modifier = Modifier.fillMaxSize() then buildModifier {
+        if (properties.dismissOnClickOutside) {
+          add(
             Modifier.pointerInput(Unit) {
               detectTapGestures {
                 dismiss()
               }
-            }
-          } else {
-            Modifier
-          },
-        ),
+            },
+          )
+        }
+      },
       contentAlignment = Alignment.Center,
     ) {
       overlay?.invoke(this@Modal)
@@ -124,7 +122,7 @@ fun UnstyledDialog(
 @Composable
 fun DialogScope.DialogPanel(
   modifier: Modifier = Modifier,
-  paneTitle: String?,
+  paneTitle: String? = null,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
   contentPadding: PaddingValues = NoPadding,
@@ -142,20 +140,21 @@ fun DialogScope.DialogPanel(
       panelFocusRequester.requestFocus()
     }
     Box(
-      modifier
-        .modalFragment()
-        .then(
-          if (paneTitle != null) {
+      modifier = modifier.modalFragment() then buildModifier {
+        if (paneTitle != null) {
+          add(
             Modifier.semantics {
               this.paneTitle = paneTitle
-            }
-          } else {
-            Modifier
-          },
+            },
+          )
+        }
+        add(
+          Modifier
+            .focusRequester(panelFocusRequester)
+            .pointerInput(Unit) { detectTapGestures { } }
+            .padding(contentPadding),
         )
-        .focusRequester(panelFocusRequester)
-        .pointerInput(Unit) { detectTapGestures { } }
-        .padding(contentPadding),
+      },
     ) {
       content()
     }
