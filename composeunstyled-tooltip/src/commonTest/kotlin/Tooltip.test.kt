@@ -280,9 +280,12 @@ class TooltipCommonTest {
     content: @Composable () -> Unit,
   ) {
     Box(
-      modifier = modifier
-        .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier)
-        .padding(8.dp),
+      modifier = modifier then buildModifier {
+        if (enabled) {
+          add(Modifier.clickable(onClick = onClick))
+        }
+        add(Modifier.padding(8.dp))
+      },
     ) {
       content()
     }

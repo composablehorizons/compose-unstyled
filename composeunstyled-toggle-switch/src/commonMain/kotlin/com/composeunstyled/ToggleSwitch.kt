@@ -78,9 +78,9 @@ fun UnstyledSwitch(
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
 
   Box(
-    modifier = modifier
-      .then(
-        if (onCheckedChange != null) {
+    modifier = modifier then buildModifier {
+      if (onCheckedChange != null) {
+        add(
           Modifier.toggleable(
             value = checked,
             enabled = enabled,
@@ -88,11 +88,10 @@ fun UnstyledSwitch(
             indication = indication,
             role = Role.Switch,
             onValueChange = onCheckedChange,
-          )
-        } else {
-          Modifier
-        },
-      ),
+          ),
+        )
+      }
+    },
   ) {
     val scope = UnstyledSwitchScopeImpl(
       checked = checked,
