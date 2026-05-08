@@ -27,7 +27,9 @@ package com.composeunstyled.demo.material3api
 import androidx.annotation.IntRange
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.snap
@@ -80,6 +82,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
@@ -118,18 +121,12 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ModalBottomSheetProperties
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItemColors
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.NavigationDrawerItemColors
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.NavigationRailItemColors
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.RichTooltipColors
+import androidx.compose.material3.RangeSliderState
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.SelectableChipElevation
@@ -148,7 +145,6 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldLabelScope
 import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TooltipScope
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.ripple
@@ -158,9 +154,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -188,7 +187,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -201,12 +202,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.zIndex
+import com.composeunstyled.AnchorAlignment
+import com.composeunstyled.AnchorSide
 import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.ModalBottomSheetState
 import com.composeunstyled.ModalSheetProperties
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.StateIndicator
+import com.composeunstyled.TabKey
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledCheckbox
@@ -223,13 +228,18 @@ import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.UnstyledScrim
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.UnstyledSwitch
+import com.composeunstyled.UnstyledTab
+import com.composeunstyled.UnstyledTabGroup
+import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTextField
+import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.rememberDialogState
 import com.composeunstyled.rememberModalBottomSheetState
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import androidx.compose.material3.Surface as M3Surface
 
@@ -264,6 +274,13 @@ private val SliderStopIndicatorSize = 4.dp
 private val LinearProgressHeight = 4.dp
 private val LinearProgressWidth = 240.dp
 private val CircularProgressSize = 40.dp
+private val PrimaryTabHeight = 48.dp
+private val PrimaryTabIndicatorHeight = 3.dp
+private val SecondaryTabIndicatorHeight = 3.dp
+private val TabDividerHeight = 1.dp
+private val TabHorizontalPadding = 16.dp
+private val TabIconSize = 24.dp
+private val TabIconTextPadding = 8.dp
 private val TextFieldContainerHeight = 56.dp
 private val TextFieldHorizontalPadding = 16.dp
 private val TextFieldIconHorizontalPadding = 12.dp
@@ -285,12 +302,7 @@ private val FloatingActionButtonSize = 56.dp
 private val SmallFloatingActionButtonSize = 40.dp
 private val LargeFloatingActionButtonSize = 96.dp
 private val FloatingActionButtonShadowElevation = 6.dp
-private val NavigationBarHeight = 80.dp
-private val NavigationItemIndicatorWidth = 64.dp
 private val NavigationItemIndicatorHeight = 32.dp
-private val NavigationRailItemIndicatorWidth = 56.dp
-private val NavigationRailItemHeight = 56.dp
-private val NavigationDrawerItemHeight = 56.dp
 private const val DropdownMenuEnterDurationMillis = 120
 private const val DropdownMenuExitDurationMillis = 75
 private const val DropdownMenuFadeInDurationMillis = 30
@@ -434,34 +446,6 @@ private fun SliderColors.tickColorFor(enabled: Boolean, active: Boolean): Color 
     enabled && !active -> inactiveTickColor
     !enabled && active -> disabledActiveTickColor
     else -> disabledInactiveTickColor
-  }
-
-private fun NavigationBarItemColors.iconColorFor(selected: Boolean, enabled: Boolean): Color =
-  when {
-    !enabled -> disabledIconColor
-    selected -> selectedIconColor
-    else -> unselectedIconColor
-  }
-
-private fun NavigationBarItemColors.textColorFor(selected: Boolean, enabled: Boolean): Color =
-  when {
-    !enabled -> disabledTextColor
-    selected -> selectedTextColor
-    else -> unselectedTextColor
-  }
-
-private fun NavigationRailItemColors.iconColorFor(selected: Boolean, enabled: Boolean): Color =
-  when {
-    !enabled -> disabledIconColor
-    selected -> selectedIconColor
-    else -> unselectedIconColor
-  }
-
-private fun NavigationRailItemColors.textColorFor(selected: Boolean, enabled: Boolean): Color =
-  when {
-    !enabled -> disabledTextColor
-    selected -> selectedTextColor
-    else -> unselectedTextColor
   }
 
 private fun CardColors.containerColorFor(enabled: Boolean): Color =
@@ -1503,6 +1487,51 @@ fun Slider(
 }
 
 @Composable
+fun RangeSlider(
+  value: ClosedFloatingPointRange<Float>,
+  onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+  @IntRange(from = 0) steps: Int = 0,
+  onValueChangeFinished: (() -> Unit)? = null,
+  colors: SliderColors = SliderDefaults.colors(),
+) {
+}
+
+@Composable
+fun RangeSlider(
+  value: ClosedFloatingPointRange<Float>,
+  onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+  onValueChangeFinished: (() -> Unit)? = null,
+  colors: SliderColors = SliderDefaults.colors(),
+  startInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  endInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  startThumb: @Composable (RangeSliderState) -> Unit = {},
+  endThumb: @Composable (RangeSliderState) -> Unit = {},
+  track: @Composable (RangeSliderState) -> Unit = {},
+  @IntRange(from = 0) steps: Int = 0,
+) {
+}
+
+@Composable
+fun RangeSlider(
+  state: RangeSliderState,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  colors: SliderColors = SliderDefaults.colors(),
+  startInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  endInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  startThumb: @Composable (RangeSliderState) -> Unit = {},
+  endThumb: @Composable (RangeSliderState) -> Unit = {},
+  track: @Composable (RangeSliderState) -> Unit = {},
+) {
+}
+
+@Composable
 fun LinearProgressIndicator(
   progress: () -> Float,
   modifier: Modifier = Modifier,
@@ -1512,31 +1541,36 @@ fun LinearProgressIndicator(
   gapSize: Dp = ProgressIndicatorDefaults.LinearIndicatorTrackGapSize,
   drawStopIndicator: DrawScope.() -> Unit = {},
 ) {
-  Canvas(modifier.width(LinearProgressWidth).height(LinearProgressHeight)) {
-    val coercedProgress = progress().coerceIn(0f, 1f)
-    val gapPx = gapSize.toPx()
-    val stopRadius = size.height / 2f
-    val stopCenter = Offset(size.width - stopRadius, size.height / 2f)
-    val activeEnd = (size.width * coercedProgress - gapPx / 2f).coerceAtLeast(0f)
-    val inactiveStart = (size.width * coercedProgress + gapPx / 2f).coerceAtMost(size.width)
-    val cornerRadius = CornerRadius(size.height / 2f, size.height / 2f)
+  val coercedProgress = progress().coerceIn(0f, 1f)
+  UnstyledProgress(
+    progress = coercedProgress,
+    modifier = modifier.width(LinearProgressWidth).height(LinearProgressHeight),
+  ) {
+    Canvas(Modifier.fillMaxSize()) {
+      val gapPx = gapSize.toPx()
+      val stopRadius = size.height / 2f
+      val stopCenter = Offset(size.width - stopRadius, size.height / 2f)
+      val activeEnd = (size.width * coercedProgress - gapPx / 2f).coerceAtLeast(0f)
+      val inactiveStart = (size.width * coercedProgress + gapPx / 2f).coerceAtMost(size.width)
+      val cornerRadius = CornerRadius(size.height / 2f, size.height / 2f)
 
-    if (activeEnd > 0f) {
-      drawRoundRect(
-        color = color,
-        size = Size(activeEnd, size.height),
-        cornerRadius = cornerRadius,
-      )
+      if (activeEnd > 0f) {
+        drawRoundRect(
+          color = color,
+          size = Size(activeEnd, size.height),
+          cornerRadius = cornerRadius,
+        )
+      }
+      if (inactiveStart < size.width - stopRadius * 3f) {
+        drawRoundRect(
+          color = trackColor,
+          topLeft = Offset(inactiveStart, 0f),
+          size = Size(size.width - inactiveStart - stopRadius * 3f, size.height),
+          cornerRadius = cornerRadius,
+        )
+      }
+      drawCircle(color = color, radius = stopRadius, center = stopCenter)
     }
-    if (inactiveStart < size.width - stopRadius * 3f) {
-      drawRoundRect(
-        color = trackColor,
-        topLeft = Offset(inactiveStart, 0f),
-        size = Size(size.width - inactiveStart - stopRadius * 3f, size.height),
-        cornerRadius = cornerRadius,
-      )
-    }
-    drawCircle(color = color, radius = stopRadius, center = stopCenter)
   }
 }
 
@@ -1548,13 +1582,15 @@ fun LinearProgressIndicator(
   strokeCap: StrokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
 ) {
   UnstyledProgress(
-    modifier = modifier
-      .width(LinearProgressWidth)
-      .height(LinearProgressHeight)
-      .clip(MaterialTheme.shapes.extraSmall)
-      .background(trackColor),
+    modifier = modifier.width(LinearProgressWidth).height(LinearProgressHeight),
   ) {
-    Box(Modifier.fillMaxWidth(0.35f).fillMaxHeight().background(color))
+    Box(Modifier.fillMaxSize().background(trackColor, MaterialTheme.shapes.extraSmall))
+    Box(
+      Modifier
+        .fillMaxWidth(0.35f)
+        .fillMaxHeight()
+        .background(color, MaterialTheme.shapes.extraSmall),
+    )
   }
 }
 
@@ -2393,8 +2429,45 @@ fun SuggestionChip(
   )
 }
 
+private class MaterialTabRowContext(
+  private val tabKeys: List<TabKey>,
+) {
+  var nextIndex = 0
+  private val tabContentWidths = mutableStateMapOf<TabKey, Dp>()
+
+  fun nextTabKey(): TabKey {
+    val index = nextIndex++
+    return tabKeys.getOrNull(index)
+      ?: error("PrimaryTabRow received more tabs than tabKeys. Add a stable key for every tab.")
+  }
+
+  fun setContentWidth(tabKey: TabKey, width: Dp) {
+    tabContentWidths[tabKey] = width
+  }
+
+  fun indicatorWidth(tabKey: TabKey): Dp {
+    val contentWidth = tabContentWidths[tabKey] ?: 0.dp
+    return if (contentWidth > 24.dp) contentWidth else 24.dp
+  }
+
+  fun hasContentWidth(tabKey: TabKey): Boolean = tabContentWidths.containsKey(tabKey)
+}
+
+private class MaterialTabIndicatorState(
+  initialOffset: Dp,
+  initialWidth: Dp,
+) {
+  val offset = Animatable(initialOffset, Dp.VectorConverter)
+  val width = Animatable(initialWidth, Dp.VectorConverter)
+}
+
+private val LocalMaterialTabRowContext = staticCompositionLocalOf<MaterialTabRowContext?> { null }
+
+private fun MaterialTabRowContext?.nextTabKey(): TabKey =
+  this?.nextTabKey() ?: error("Tab must be placed inside PrimaryTabRow or SecondaryTabRow.")
+
 @Composable
-fun Tab(
+fun RowScope.Tab(
   selected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -2402,51 +2475,104 @@ fun Tab(
   text: @Composable (() -> Unit)? = null,
   icon: @Composable (() -> Unit)? = null,
   selectedContentColor: Color = LocalContentColor.current,
-  unselectedContentColor: Color = selectedContentColor,
+  unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   interactionSource: MutableInteractionSource? = null,
 ) {
+  val height = if (icon == null) PrimaryTabHeight else 64.dp
+  val tabRowContext = LocalMaterialTabRowContext.current
+  val tabKey = tabRowContext.nextTabKey()
+  val density = LocalDensity.current
+  val tabIndication = ripple(bounded = true, color = selectedContentColor)
+
   CompositionLocalProvider(
     LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
   ) {
-    UnstyledButton(
-      onClick = onClick,
+    UnstyledTab(
+      key = tabKey,
+      selected = selected,
+      onSelected = onClick,
       enabled = enabled,
-      modifier = modifier,
-      backgroundColor = Color.Transparent,
-      contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+      activateOnFocus = false,
+      modifier = modifier
+        .weight(1f)
+        .height(height),
+      contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
+      indication = tabIndication,
       interactionSource = interactionSource,
     ) {
-      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        icon?.invoke()
-        text?.invoke()
+      Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+          modifier = Modifier.onSizeChanged { size ->
+            tabRowContext?.setContentWidth(
+              tabKey = tabKey,
+              width = with(density) { size.width.toDp() },
+            )
+          },
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center,
+        ) {
+          icon?.let {
+            Box(Modifier.size(TabIconSize), contentAlignment = Alignment.Center) {
+              it()
+            }
+            if (text != null) {
+              Spacer(Modifier.height(TabIconTextPadding))
+            }
+          }
+          ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+            text?.invoke()
+          }
+        }
       }
     }
   }
 }
 
 @Composable
-fun Tab(
+fun RowScope.Tab(
   selected: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   selectedContentColor: Color = LocalContentColor.current,
-  unselectedContentColor: Color = selectedContentColor,
+  unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   interactionSource: MutableInteractionSource? = null,
   content: @Composable ColumnScope.() -> Unit,
 ) {
+  val tabRowContext = LocalMaterialTabRowContext.current
+  val tabKey = tabRowContext.nextTabKey()
+  val density = LocalDensity.current
+  val tabIndication = ripple(bounded = true, color = selectedContentColor)
+
   CompositionLocalProvider(
     LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
   ) {
-    UnstyledButton(
-      onClick = onClick,
+    UnstyledTab(
+      key = tabKey,
+      selected = selected,
+      onSelected = onClick,
       enabled = enabled,
-      modifier = modifier,
-      backgroundColor = Color.Transparent,
-      contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+      activateOnFocus = false,
+      modifier = modifier
+        .weight(1f)
+        .fillMaxHeight(),
+      contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
+      indication = tabIndication,
       interactionSource = interactionSource,
     ) {
-      Column(content = content)
+      Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+          modifier = Modifier.onSizeChanged { size ->
+            tabRowContext?.setContentWidth(
+              tabKey = tabKey,
+              width = with(density) { size.width.toDp() },
+            )
+          },
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center,
+          content = content,
+        )
+      }
     }
   }
 }
@@ -2454,19 +2580,112 @@ fun Tab(
 @Composable
 fun PrimaryTabRow(
   selectedTabIndex: Int,
+  tabKeys: List<TabKey>,
   modifier: Modifier = Modifier,
   containerColor: Color = TabRowDefaults.primaryContainerColor,
   contentColor: Color = TabRowDefaults.primaryContentColor,
   indicator: @Composable TabIndicatorScope.() -> Unit = {},
   divider: @Composable () -> Unit = {},
-  tabs: @Composable () -> Unit,
+  tabs: @Composable RowScope.() -> Unit,
 ) {
+  val selectedTab = tabKeys.getOrNull(selectedTabIndex)
+    ?: error("selectedTabIndex must reference an entry in tabKeys.")
+  val tabRowContext = remember(tabKeys) { MaterialTabRowContext(tabKeys) }
+  var indicatorState by remember { mutableStateOf<MaterialTabIndicatorState?>(null) }
+  val indicatorAnimationSpec = MaterialTheme.motionScheme.defaultSpatialSpec<Dp>()
+  val indicatorScope = rememberCoroutineScope()
+  val selectedIndicatorWidth = tabRowContext.indicatorWidth(selectedTab)
+
   CompositionLocalProvider(LocalContentColor provides contentColor) {
-    Column(modifier.background(containerColor)) {
-      Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-        tabs()
+    UnstyledTabGroup(
+      selectedTab = selectedTab,
+      tabs = tabKeys,
+      modifier = modifier.background(containerColor),
+    ) {
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(PrimaryTabHeight),
+      ) {
+        val density = LocalDensity.current
+        var tabRowSize by remember { mutableStateOf(IntSize.Zero) }
+        val tabSlotWidth = with(density) {
+          if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
+        }
+        val targetIndicatorOffset = tabSlotWidth * selectedTabIndex +
+          (tabSlotWidth - selectedIndicatorWidth) / 2
+        val isIndicatorReady = tabRowSize != IntSize.Zero &&
+          tabRowContext.hasContentWidth(selectedTab)
+        LaunchedEffect(
+          targetIndicatorOffset,
+          selectedIndicatorWidth,
+          tabRowSize,
+          isIndicatorReady,
+        ) {
+          if (!isIndicatorReady) {
+            return@LaunchedEffect
+          }
+
+          val currentIndicatorState = indicatorState
+          if (currentIndicatorState == null) {
+            indicatorState = MaterialTabIndicatorState(
+              initialOffset = targetIndicatorOffset,
+              initialWidth = selectedIndicatorWidth,
+            )
+          } else {
+            indicatorScope.launch {
+              currentIndicatorState.offset.animateTo(targetIndicatorOffset, indicatorAnimationSpec)
+            }
+            indicatorScope.launch {
+              currentIndicatorState.width.animateTo(selectedIndicatorWidth, indicatorAnimationSpec)
+            }
+          }
+        }
+
+        tabRowContext.nextIndex = 0
+        UnstyledTabList(
+          modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged { tabRowSize = it },
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          CompositionLocalProvider(LocalMaterialTabRowContext provides tabRowContext) {
+            tabs()
+          }
+        }
+
+        Box(
+          modifier = Modifier
+            .align(Alignment.BottomStart)
+            .fillMaxWidth()
+            .height(TabDividerHeight)
+            .background(MaterialTheme.colorScheme.outlineVariant),
+        )
+        divider()
+        val currentIndicatorState = indicatorState
+        if (isIndicatorReady) {
+          val indicatorOffset = currentIndicatorState?.offset?.value ?: targetIndicatorOffset
+          val indicatorWidth = currentIndicatorState?.width?.value ?: selectedIndicatorWidth
+          Box(
+            modifier = Modifier
+              .align(Alignment.BottomStart)
+              .height(PrimaryTabIndicatorHeight)
+              .layout { measurable, constraints ->
+                val placeable = measurable.measure(
+                  constraints.copy(
+                    minWidth = indicatorWidth.roundToPx(),
+                    maxWidth = indicatorWidth.roundToPx(),
+                  ),
+                )
+                layout(placeable.width, placeable.height) {
+                  placeable.place(indicatorOffset.roundToPx(), 0)
+                }
+              }
+              .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp))
+              .background(contentColor),
+          )
+        }
       }
-      divider()
     }
   }
 }
@@ -2474,166 +2693,102 @@ fun PrimaryTabRow(
 @Composable
 fun SecondaryTabRow(
   selectedTabIndex: Int,
+  tabKeys: List<TabKey>,
   modifier: Modifier = Modifier,
   containerColor: Color = TabRowDefaults.secondaryContainerColor,
   contentColor: Color = TabRowDefaults.secondaryContentColor,
   indicator: @Composable TabIndicatorScope.() -> Unit = {},
   divider: @Composable () -> Unit = {},
-  tabs: @Composable () -> Unit,
+  tabs: @Composable RowScope.() -> Unit,
 ) {
-  PrimaryTabRow(
-    selectedTabIndex = selectedTabIndex,
-    modifier = modifier,
-    containerColor = containerColor,
-    contentColor = contentColor,
-    indicator = indicator,
-    divider = divider,
-    tabs = tabs,
-  )
-}
+  val selectedTab = tabKeys.getOrNull(selectedTabIndex)
+    ?: error("selectedTabIndex must reference an entry in tabKeys.")
+  val tabRowContext = remember(tabKeys) { MaterialTabRowContext(tabKeys) }
+  var indicatorState by remember { mutableStateOf<MaterialTabIndicatorState?>(null) }
+  val indicatorAnimationSpec = MaterialTheme.motionScheme.defaultSpatialSpec<Dp>()
+  val indicatorScope = rememberCoroutineScope()
 
-@Composable
-fun NavigationBar(
-  modifier: Modifier = Modifier,
-  containerColor: Color = NavigationBarDefaults.containerColor,
-  contentColor: Color = androidx.compose.material3.contentColorFor(containerColor),
-  tonalElevation: Dp = NavigationBarDefaults.Elevation,
-  windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
-  content: @Composable RowScope.() -> Unit,
-) {
   CompositionLocalProvider(LocalContentColor provides contentColor) {
-    Row(
-      modifier
-        .fillMaxWidth()
-        .height(NavigationBarHeight)
-        .background(containerColor),
-      horizontalArrangement = Arrangement.SpaceEvenly,
-      verticalAlignment = Alignment.CenterVertically,
-      content = content,
-    )
-  }
-}
-
-@Composable
-fun RowScope.NavigationBarItem(
-  selected: Boolean,
-  onClick: () -> Unit,
-  icon: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  label: @Composable (() -> Unit)? = null,
-  alwaysShowLabel: Boolean = true,
-  colors: NavigationBarItemColors = NavigationBarItemDefaults.colors(),
-  interactionSource: MutableInteractionSource? = null,
-) {
-  val itemIconColor = colors.iconColorFor(selected = selected, enabled = enabled)
-  val itemTextColor = colors.textColorFor(selected = selected, enabled = enabled)
-  UnstyledButton(
-    onClick = onClick,
-    enabled = enabled,
-    modifier = modifier.weight(1f),
-    backgroundColor = Color.Transparent,
-    shape = MaterialTheme.shapes.extraLarge,
-    contentPadding = PaddingValues(0.dp),
-    interactionSource = interactionSource,
-  ) {
-    Column(
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
+    UnstyledTabGroup(
+      selectedTab = selectedTab,
+      tabs = tabKeys,
+      modifier = modifier.background(containerColor),
     ) {
       Box(
-        Modifier
-          .size(NavigationItemIndicatorWidth, NavigationItemIndicatorHeight)
-          .background(
-            if (selected) colors.selectedIndicatorColor else Color.Transparent,
-            MaterialTheme.shapes.extraLarge,
-          ),
-        contentAlignment = Alignment.Center,
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(PrimaryTabHeight),
       ) {
-        CompositionLocalProvider(LocalContentColor provides itemIconColor) {
-          icon()
+        val density = LocalDensity.current
+        var tabRowSize by remember { mutableStateOf(IntSize.Zero) }
+        val tabSlotWidth = with(density) {
+          if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
         }
-      }
-      CompositionLocalProvider(LocalContentColor provides itemTextColor) {
-        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
-          if (label != null && (alwaysShowLabel || selected)) {
-            label()
+        val targetIndicatorOffset = tabSlotWidth * selectedTabIndex
+        val isIndicatorReady = tabRowSize != IntSize.Zero
+
+        LaunchedEffect(targetIndicatorOffset, tabSlotWidth, tabRowSize, isIndicatorReady) {
+          if (!isIndicatorReady) {
+            return@LaunchedEffect
+          }
+
+          val currentIndicatorState = indicatorState
+          if (currentIndicatorState == null) {
+            indicatorState = MaterialTabIndicatorState(
+              initialOffset = targetIndicatorOffset,
+              initialWidth = tabSlotWidth,
+            )
+          } else {
+            indicatorScope.launch {
+              currentIndicatorState.offset.animateTo(targetIndicatorOffset, indicatorAnimationSpec)
+            }
+            indicatorScope.launch {
+              currentIndicatorState.width.animateTo(tabSlotWidth, indicatorAnimationSpec)
+            }
           }
         }
-      }
-    }
-  }
-}
 
-@Composable
-fun NavigationRail(
-  modifier: Modifier = Modifier,
-  containerColor: Color = androidx.compose.material3.NavigationRailDefaults.ContainerColor,
-  contentColor: Color = androidx.compose.material3.contentColorFor(containerColor),
-  header: @Composable (ColumnScope.() -> Unit)? = null,
-  windowInsets: WindowInsets = androidx.compose.material3.NavigationRailDefaults.windowInsets,
-  content: @Composable ColumnScope.() -> Unit,
-) {
-  CompositionLocalProvider(LocalContentColor provides contentColor) {
-    Column(
-      modifier
-        .fillMaxHeight()
-        .background(containerColor)
-        .padding(horizontal = 8.dp, vertical = 12.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      header?.invoke(this)
-      content()
-    }
-  }
-}
-
-@Composable
-fun NavigationRailItem(
-  selected: Boolean,
-  onClick: () -> Unit,
-  icon: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  label: @Composable (() -> Unit)? = null,
-  alwaysShowLabel: Boolean = true,
-  colors: NavigationRailItemColors = androidx.compose.material3.NavigationRailItemDefaults.colors(),
-  interactionSource: MutableInteractionSource? = null,
-) {
-  val itemIconColor = colors.iconColorFor(selected = selected, enabled = enabled)
-  val itemTextColor = colors.textColorFor(selected = selected, enabled = enabled)
-  UnstyledButton(
-    onClick = onClick,
-    enabled = enabled,
-    modifier = modifier,
-    backgroundColor = Color.Transparent,
-    shape = MaterialTheme.shapes.extraLarge,
-    contentPadding = PaddingValues(vertical = 4.dp),
-    interactionSource = interactionSource,
-  ) {
-    Column(
-      modifier = Modifier.height(NavigationRailItemHeight),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-    ) {
-      Box(
-        Modifier
-          .size(NavigationRailItemIndicatorWidth, NavigationItemIndicatorHeight)
-          .background(
-            if (selected) colors.selectedIndicatorColor else Color.Transparent,
-            MaterialTheme.shapes.extraLarge,
-          ),
-        contentAlignment = Alignment.Center,
-      ) {
-        CompositionLocalProvider(LocalContentColor provides itemIconColor) {
-          icon()
-        }
-      }
-      CompositionLocalProvider(LocalContentColor provides itemTextColor) {
-        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
-          if (label != null && (alwaysShowLabel || selected)) {
-            label()
+        tabRowContext.nextIndex = 0
+        UnstyledTabList(
+          modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged { tabRowSize = it },
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          CompositionLocalProvider(LocalMaterialTabRowContext provides tabRowContext) {
+            tabs()
           }
+        }
+
+        Box(
+          modifier = Modifier
+            .align(Alignment.BottomStart)
+            .fillMaxWidth()
+            .height(TabDividerHeight)
+            .background(MaterialTheme.colorScheme.outlineVariant),
+        )
+        divider()
+        val currentIndicatorState = indicatorState
+        if (isIndicatorReady) {
+          val indicatorOffset = currentIndicatorState?.offset?.value ?: targetIndicatorOffset
+          val indicatorWidth = currentIndicatorState?.width?.value ?: tabSlotWidth
+          Box(
+            modifier = Modifier
+              .align(Alignment.BottomStart)
+              .height(SecondaryTabIndicatorHeight)
+              .layout { measurable, constraints ->
+                val placeable = measurable.measure(
+                  constraints.copy(
+                    minWidth = indicatorWidth.roundToPx(),
+                    maxWidth = indicatorWidth.roundToPx(),
+                  ),
+                )
+                layout(placeable.width, placeable.height) {
+                  placeable.place(indicatorOffset.roundToPx(), 0)
+                }
+              }
+              .background(MaterialTheme.colorScheme.primary),
+          )
         }
       }
     }
@@ -2660,53 +2815,6 @@ fun ModalNavigationDrawer(
         androidx.compose.material3.contentColorFor(DrawerDefaults.modalContainerColor),
       ) {
         drawerContent()
-      }
-    }
-  }
-}
-
-@Composable
-fun NavigationDrawerItem(
-  label: @Composable () -> Unit,
-  selected: Boolean,
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  icon: @Composable (() -> Unit)? = null,
-  badge: @Composable (() -> Unit)? = null,
-  shape: Shape = DrawerDefaults.shape,
-  colors: NavigationDrawerItemColors = NavigationDrawerItemDefaults.colors(),
-  interactionSource: MutableInteractionSource? = null,
-) {
-  val containerColor by colors.containerColor(selected)
-  val iconColor by colors.iconColor(selected)
-  val textColor by colors.textColor(selected)
-  val badgeColor by colors.badgeColor(selected)
-  UnstyledButton(
-    onClick = onClick,
-    modifier = modifier,
-    shape = shape,
-    backgroundColor = containerColor,
-    contentPadding = PaddingValues(start = 16.dp, end = 24.dp),
-    interactionSource = interactionSource,
-  ) {
-    Box(Modifier.height(NavigationDrawerItemHeight), contentAlignment = Alignment.CenterStart) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        if (icon != null) {
-          CompositionLocalProvider(LocalContentColor provides iconColor) {
-            icon()
-          }
-          Spacer(Modifier.width(12.dp))
-        }
-        CompositionLocalProvider(LocalContentColor provides textColor) {
-          label()
-        }
-      }
-    }
-    Spacer(Modifier.weight(1f))
-    if (badge != null) {
-      Spacer(Modifier.width(12.dp))
-      CompositionLocalProvider(LocalContentColor provides badgeColor) {
-        badge()
       }
     }
   }
@@ -3269,20 +3377,29 @@ fun VerticalDivider(
   UnstyledVerticalSeparator(color = color, modifier = modifier, thickness = thickness)
 }
 
-// @Composable
-// fun TooltipBox(
-//   positionProvider: androidx.compose.ui.window.PopupPositionProvider,
-//   tooltip: @Composable TooltipScope.() -> Unit,
-//   state: TooltipState,
-//   modifier: Modifier = Modifier,
-//   focusable: Boolean = true,
-//   enableUserInput: Boolean = true,
-//   content: @Composable () -> Unit,
-// ) {
-//   error(
-//     "TooltipBox cannot be implemented: TooltipScope is sealed with internal implementations.",
-//   )
-// }
+interface TooltipScope
+
+private object MaterialTooltipScope : TooltipScope
+
+@Composable
+fun TooltipBox(
+  tooltip: @Composable TooltipScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  enableUserInput: Boolean = true,
+  content: @Composable () -> Unit,
+) {
+  val scope = remember { MaterialTooltipScope }
+
+  Box(modifier = modifier) {
+    UnstyledTooltip(
+      enabled = enableUserInput,
+      side = AnchorSide.Top,
+      alignment = AnchorAlignment.Center,
+      panel = { scope.tooltip() },
+      anchor = content,
+    )
+  }
+}
 
 @Composable
 fun TooltipScope.PlainTooltip(
@@ -3297,41 +3414,37 @@ fun TooltipScope.PlainTooltip(
   content: @Composable () -> Unit,
 ) {
   UnstyledTooltipPanel(
-    modifier = modifier.widthIn(max = maxWidth),
-    shape = shape,
-    backgroundColor = containerColor,
-    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+    modifier = modifier
+      .zIndex(1f)
+      .offset(y = (-4).dp),
+    enter = fadeIn(animationSpec = tween(durationMillis = 150)) +
+      scaleIn(
+        animationSpec = tween(durationMillis = 150),
+        initialScale = 0.8f,
+        transformOrigin = TransformOrigin(0.5f, 1f),
+      ),
+    exit = fadeOut(animationSpec = tween(durationMillis = 75)) +
+      scaleOut(
+        animationSpec = tween(durationMillis = 75),
+        targetScale = 0.8f,
+        transformOrigin = TransformOrigin(0.5f, 1f),
+      ),
   ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-      content()
-    }
-  }
-}
-
-@Composable
-fun TooltipScope.RichTooltip(
-  modifier: Modifier = Modifier,
-  title: (@Composable () -> Unit)? = null,
-  action: (@Composable () -> Unit)? = null,
-  caretShape: Shape? = null,
-  maxWidth: Dp = TooltipDefaults.richTooltipMaxWidth,
-  shape: Shape = TooltipDefaults.richTooltipContainerShape,
-  colors: RichTooltipColors = TooltipDefaults.richTooltipColors(),
-  tonalElevation: Dp = 0.dp,
-  shadowElevation: Dp = 0.dp,
-  text: @Composable () -> Unit,
-) {
-  UnstyledTooltipPanel(
-    modifier = modifier.widthIn(max = maxWidth),
-    shape = shape,
-    backgroundColor = colors.containerColor,
-    contentPadding = PaddingValues(16.dp),
-  ) {
-    CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
-      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        title?.invoke()
-        text()
-        action?.invoke()
+    Box(
+      Modifier
+        .sizeIn(
+          minWidth = 40.dp,
+          maxWidth = maxWidth,
+          minHeight = 24.dp,
+        )
+        .background(containerColor, shape)
+        .padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+      CompositionLocalProvider(
+        LocalContentColor provides contentColor,
+        LocalTextStyle provides MaterialTheme.typography.bodySmall,
+      ) {
+        content()
       }
     }
   }

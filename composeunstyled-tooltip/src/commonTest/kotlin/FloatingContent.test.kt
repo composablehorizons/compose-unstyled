@@ -71,13 +71,14 @@ class FloatingContentTest {
   @Test
   fun placementChangesFloatingContentPosition() = runComposeUiTest {
     // Test that different placements result in different positions
-    var placement by mutableStateOf<RelativeAlignment>(RelativeAlignment.TopStart)
+    var side by mutableStateOf(AnchorSide.Top)
     var topStartY = 0f
     var bottomStartY = 0f
 
     setContent {
       FloatingContent(
-        placement = placement,
+        side = side,
+        alignment = AnchorAlignment.Start,
         floatingContent = {
           Box(Modifier.size(50.dp)) {
             BasicText("Floating")
@@ -94,7 +95,7 @@ class FloatingContentTest {
     waitForIdle()
     topStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
-    placement = RelativeAlignment.BottomStart
+    side = AnchorSide.Bottom
     waitForIdle()
     bottomStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
@@ -111,7 +112,8 @@ class FloatingContentTest {
     // FloatingContent clamps to window bounds like a Popup
     setContent {
       FloatingContent(
-        placement = RelativeAlignment.TopStart,
+        side = AnchorSide.Top,
+        alignment = AnchorAlignment.Start,
         floatingContent = {
           Box(Modifier.size(100.dp)) {
             BasicText("Floating")
@@ -142,7 +144,8 @@ class FloatingContentTest {
     // it should be clamped to start at 0 to maximize visible area
     setContent {
       FloatingContent(
-        placement = RelativeAlignment.BottomStart,
+        side = AnchorSide.Bottom,
+        alignment = AnchorAlignment.Start,
         floatingContent = {
           // Make floating content very large (larger than typical window)
           Box(Modifier.size(10000.dp)) {

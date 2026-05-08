@@ -53,7 +53,8 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.RelativeAlignment
+import com.composeunstyled.AnchorAlignment
+import com.composeunstyled.AnchorSide
 import com.composeunstyled.TooltipArrowDirection
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
@@ -71,7 +72,8 @@ fun TooltipDemo() {
   ) {
     Row {
       UnstyledTooltip(
-        placement = RelativeAlignment.TopCenter,
+        side = AnchorSide.Top,
+        alignment = AnchorAlignment.Center,
         panel = {
           UnstyledTooltipPanel(
             enter = slideInVertically(tween(150), initialOffsetY = { (it * 0.25).toInt() }) +

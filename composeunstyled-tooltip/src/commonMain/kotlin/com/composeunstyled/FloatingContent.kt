@@ -24,160 +24,162 @@
 package com.composeunstyled
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.round
 
 @Composable
 internal fun FloatingContent(
   floatingContent: @Composable () -> Unit,
   modifier: Modifier = Modifier,
-  placement: RelativeAlignment = RelativeAlignment.TopStart,
+  side: AnchorSide = AnchorSide.Top,
+  alignment: AnchorAlignment = AnchorAlignment.Center,
+  sideOffset: Dp = 0.dp,
+  alignmentOffset: Dp = 0.dp,
+  onOffsetFromIdealPositionChanged: (IntOffset) -> Unit = {},
   anchor: @Composable () -> Unit,
 ) {
   val layoutDirection = LocalLayoutDirection.current
   val density = LocalDensity.current
   val windowSize = currentWindowContainerSize().toIntSize(density)
+  var anchorBounds by remember { mutableStateOf<AnchorBounds?>(null) }
 
-  SubcomposeLayout(
-    modifier = modifier,
-  ) { constraints ->
-    // Measure anchor
-    val anchorPlaceable = subcompose("anchor", anchor)
-      .firstOrNull()
-      ?.measure(constraints)
+  Layout(
+    content = anchor,
+    modifier = modifier.onGloballyPositioned {
+      anchorBounds = if (it.size == IntSize.Zero) {
+        null
+      } else {
+        AnchorBounds(
+          positionInWindow = it.positionInWindow().round(),
+          size = it.size,
+        )
+      }
+    },
+  ) { measurables, constraints ->
+    val anchorPlaceable = measurables.firstOrNull()?.measure(constraints)
 
-    // If there's no anchor, don't render anything
     if (anchorPlaceable == null) {
-      return@SubcomposeLayout layout(0, 0) {}
+      return@Layout layout(0, 0) {}
     }
 
-    // Measure floating content if visible
-    val floatingPlaceable = subcompose("anchored", floatingContent)
-      .firstOrNull()
-      ?.measure(Constraints())
-
-    // Layout size = anchor only
     layout(anchorPlaceable.width, anchorPlaceable.height) {
-      // Place anchor
       anchorPlaceable.place(0, 0)
-
-      // Calculate floating content position relative to anchor
-      if (floatingPlaceable != null) {
-        val x = calculateX(
-          placement = placement,
-          layoutDirection = layoutDirection,
-          anchorWidth = anchorPlaceable.width,
-          contentWidth = floatingPlaceable.width,
-        )
-
-        val y = calculateY(
-          placement = placement,
-          anchorHeight = anchorPlaceable.height,
-          contentHeight = floatingPlaceable.height,
-        )
-
-        // Clamp to window bounds using this layout's position in window
-        val layoutCoordinates = coordinates
-        val clampedX: Int
-        val clampedY: Int
-
-        if (layoutCoordinates != null) {
-          val layoutPositionX = layoutCoordinates.positionInWindow().x.toInt()
-          val layoutPositionY = layoutCoordinates.positionInWindow().y.toInt()
-
-          // Calculate clamping bounds
-          val minX = -layoutPositionX
-          val maxX = windowSize.width - floatingPlaceable.width - layoutPositionX
-          val minY = -layoutPositionY
-          val maxY = windowSize.height - floatingPlaceable.height - layoutPositionY
-
-          // When content is larger than window, prefer showing top-left (0, 0)
-          clampedX = if (maxX < minX) {
-            // Content larger than window - clamp to 0
-            -layoutPositionX
-          } else {
-            x.coerceIn(minX, maxX)
-          }
-
-          clampedY = if (maxY < minY) {
-            // Content larger than window - clamp to 0
-            -layoutPositionY
-          } else {
-            y.coerceIn(minY, maxY)
-          }
-        } else {
-          // If coordinates not available yet, don't clamp
-          clampedX = x
-          clampedY = y
-        }
-
-        floatingPlaceable.place(clampedX, clampedY)
-      }
     }
   }
+
+  val currentAnchorBounds = anchorBounds
+  if (currentAnchorBounds != null) {
+    Overlay {
+      FloatingOverlayContent(
+        anchorBounds = currentAnchorBounds,
+        side = side,
+        alignment = alignment,
+        sideOffset = sideOffset,
+        alignmentOffset = alignmentOffset,
+        onOffsetFromIdealPositionChanged = onOffsetFromIdealPositionChanged,
+        density = density,
+        layoutDirection = layoutDirection,
+        windowSize = windowSize,
+        floatingContent = floatingContent,
+      )
+    }
+  }
+}
+
+@Composable
+private fun FloatingOverlayContent(
+  anchorBounds: AnchorBounds,
+  side: AnchorSide,
+  alignment: AnchorAlignment,
+  sideOffset: Dp,
+  alignmentOffset: Dp,
+  onOffsetFromIdealPositionChanged: (IntOffset) -> Unit,
+  density: Density,
+  layoutDirection: LayoutDirection,
+  windowSize: IntSize,
+  floatingContent: @Composable () -> Unit,
+) {
+  var overlayPositionInWindow by remember { mutableStateOf<IntOffset?>(null) }
+
+  Layout(
+    content = floatingContent,
+    modifier = Modifier
+      .onGloballyPositioned {
+        overlayPositionInWindow = it.positionInWindow().round()
+      },
+  ) { measurables, constraints ->
+    val floatingPlaceable = measurables.firstOrNull()?.measure(Constraints())
+
+    if (floatingPlaceable == null) {
+      return@Layout layout(0, 0) {}
+    }
+    val overlayPosition = overlayPositionInWindow
+
+    if (overlayPosition == null) {
+      return@Layout layout(constraints.maxWidth, constraints.maxHeight) {}
+    }
+
+    val contentPosition = calculateAnchoredPosition(
+      density = density,
+      anchorBounds = anchorBounds.toIntRect(),
+      windowSize = windowSize,
+      layoutDirection = layoutDirection,
+      contentSize = IntSize(floatingPlaceable.width, floatingPlaceable.height),
+      side = side,
+      alignment = alignment,
+      sideOffset = sideOffset,
+      alignmentOffset = alignmentOffset,
+    )
+
+    val overlayX = contentPosition.x - overlayPosition.x
+    val overlayY = contentPosition.y - overlayPosition.y
+
+    layout(constraints.maxWidth, constraints.maxHeight) {
+      onOffsetFromIdealPositionChanged(IntOffset.Zero)
+      floatingPlaceable.place(overlayX, overlayY)
+    }
+  }
+}
+
+private data class AnchorBounds(
+  val positionInWindow: IntOffset,
+  val size: IntSize,
+) {
+  val left: Int get() = positionInWindow.x
+  val top: Int get() = positionInWindow.y
+  val width: Int get() = size.width
+  val height: Int get() = size.height
+  val right: Int get() = left + width
+  val bottom: Int get() = top + height
+
+  fun toIntRect(): IntRect = IntRect(
+    left = left,
+    top = top,
+    right = right,
+    bottom = bottom,
+  )
 }
 
 private fun DpSize.toIntSize(density: Density): IntSize {
   return with(density) {
     IntSize(width.roundToPx(), height.roundToPx())
-  }
-}
-
-private fun calculateX(
-  placement: RelativeAlignment,
-  layoutDirection: LayoutDirection,
-  anchorWidth: Int,
-  contentWidth: Int,
-): Int {
-  return when (placement) {
-    RelativeAlignment.TopStart, RelativeAlignment.BottomStart -> {
-      if (layoutDirection == LayoutDirection.Ltr) 0 else anchorWidth - contentWidth
-    }
-
-    RelativeAlignment.TopEnd, RelativeAlignment.BottomEnd -> {
-      if (layoutDirection == LayoutDirection.Ltr) anchorWidth - contentWidth else 0
-    }
-
-    RelativeAlignment.CenterStart -> {
-      // CenterStart: content positioned to the LEFT of anchor
-      if (layoutDirection == LayoutDirection.Ltr) -contentWidth else anchorWidth
-    }
-
-    RelativeAlignment.CenterEnd -> {
-      // CenterEnd: content positioned to the RIGHT of anchor
-      if (layoutDirection == LayoutDirection.Ltr) anchorWidth else -contentWidth
-    }
-
-    RelativeAlignment.TopCenter, RelativeAlignment.BottomCenter -> {
-      (anchorWidth - contentWidth) / 2
-    }
-  }
-}
-
-private fun calculateY(
-  placement: RelativeAlignment,
-  anchorHeight: Int,
-  contentHeight: Int,
-): Int {
-  return when (placement) {
-    RelativeAlignment.TopStart, RelativeAlignment.TopEnd, RelativeAlignment.TopCenter -> {
-      -contentHeight
-    }
-
-    RelativeAlignment.CenterStart, RelativeAlignment.CenterEnd -> {
-      (anchorHeight - contentHeight) / 2
-    }
-
-    RelativeAlignment.BottomStart, RelativeAlignment.BottomEnd, RelativeAlignment.BottomCenter -> {
-      anchorHeight
-    }
   }
 }

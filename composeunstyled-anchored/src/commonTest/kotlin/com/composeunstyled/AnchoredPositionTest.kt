@@ -108,12 +108,23 @@ class AnchoredPositionTest {
     assertEquals(IntOffset(x = 0, y = 0), position)
   }
 
+  @Test
+  fun clampsOversizedContentToWindowOrigin() {
+    val position = calculatePosition(
+      windowSize = IntSize(width = 80, height = 40),
+      contentSize = IntSize(width = 160, height = 120),
+    )
+
+    assertEquals(IntOffset(x = 0, y = 0), position)
+  }
+
   private fun calculatePosition(
     side: AnchorSide = AnchorSide.Bottom,
     alignment: AnchorAlignment = AnchorAlignment.Start,
     sideOffset: Dp = 0.dp,
     alignmentOffset: Dp = 0.dp,
     windowSize: IntSize = this.windowSize,
+    contentSize: IntSize = this.contentSize,
     layoutDirection: LayoutDirection = LayoutDirection.Ltr,
   ) = calculateAnchoredPosition(
     density = Density(1f),

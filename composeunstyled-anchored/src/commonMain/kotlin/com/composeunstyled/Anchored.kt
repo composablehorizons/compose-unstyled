@@ -108,7 +108,16 @@ fun calculateAnchoredPosition(
   }
 
   return IntOffset(
-    x = (x + offsetX).coerceIn(0, windowSize.width - contentSize.width),
-    y = (y + offsetY).coerceIn(0, windowSize.height - contentSize.height),
+    x = (x + offsetX).coerceInWindowAxis(windowSize.width, contentSize.width),
+    y = (y + offsetY).coerceInWindowAxis(windowSize.height, contentSize.height),
   )
+}
+
+private fun Int.coerceInWindowAxis(windowSize: Int, contentSize: Int): Int {
+  val max = windowSize - contentSize
+  return if (max < 0) {
+    0
+  } else {
+    coerceIn(0, max)
+  }
 }

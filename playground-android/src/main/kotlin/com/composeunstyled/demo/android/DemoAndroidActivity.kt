@@ -38,7 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.RelativeAlignment
+import com.composeunstyled.AnchorAlignment
+import com.composeunstyled.AnchorSide
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledTooltip
@@ -68,18 +69,20 @@ private fun TooltipCrashRepro() {
     contentAlignment = Alignment.Center,
   ) {
     UnstyledTooltip(
-      placement = RelativeAlignment.TopCenter,
+      side = AnchorSide.Top,
+      alignment = AnchorAlignment.Center,
       panel = {
-        UnstyledTooltipPanel(
-          modifier = Modifier
-            .background(Color(0xFF0F172A), RoundedCornerShape(10.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-          // contentColor = Color.White,
-        ) {
-          BasicText(
-            "Tooltip panel",
-            style = TextStyle(color = Color.White, fontSize = 14.sp),
-          )
+        UnstyledTooltipPanel {
+          Box(
+            modifier = Modifier
+              .background(Color(0xFF0F172A), RoundedCornerShape(10.dp))
+              .padding(horizontal = 12.dp, vertical = 8.dp),
+          ) {
+            BasicText(
+              "Tooltip panel",
+              style = TextStyle(color = Color.White, fontSize = 14.sp),
+            )
+          }
         }
       },
     ) {

@@ -79,6 +79,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
+        api(projects.composeunstyledAnchored)
+        api(projects.composeunstyledOverlay)
         implementation(projects.composeunstyledBuildModifier)
         implementation(projects.composeunstyledEscapeHandler)
         implementation(projects.composeunstyledWindowContainerSize)

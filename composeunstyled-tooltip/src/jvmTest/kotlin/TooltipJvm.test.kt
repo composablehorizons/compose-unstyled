@@ -35,12 +35,10 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.SemanticsNodeInteraction
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
-import androidx.compose.ui.test.isPopup
-import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performKeyInput
@@ -132,6 +130,34 @@ class TooltipJvmTest {
     onNodeWithText("Tooltip content").assertIsDisplayed()
 
     onNodeWithText("Another button").requestFocus()
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+  }
+
+  @Test
+  fun escapeDismissesVisibleTooltip() = runComposeUiTest {
+    setPaddedContent {
+      UnstyledTooltip(
+        panel = {
+          UnstyledTooltipPanel {
+            BasicText("Tooltip content")
+          }
+        },
+      ) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
+          BasicText("Trigger")
+        }
+      }
+    }
+
+    onNodeWithTag("trigger").requestFocus()
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+
+    onNodeWithTag("trigger").performKeyInput {
+      pressKey(Key.Escape)
+    }
     waitForIdle()
 
     onNodeWithText("Tooltip content").assertDoesNotExist()
@@ -264,6 +290,77 @@ class TooltipJvmTest {
   }
 
   @Test
+  fun tooltipDisappearsOnMouseOutAfterMouseClickFocusesAnchor() = runComposeUiTest {
+    setPaddedContent {
+      Row {
+        UnstyledTooltip(
+          panel = {
+            UnstyledTooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
+            BasicText("Trigger")
+          }
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("other")) {
+          BasicText("Other")
+        }
+      }
+    }
+
+    onNodeWithTag("trigger").performMouseInput {
+      enter(center)
+    }
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+
+    onNodeWithTag("trigger").performMouseInput {
+      click(center)
+    }
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+
+    onNodeWithTag("trigger").performMouseInput { exit() }
+    onNodeWithTag("other").performMouseInput { enter(center) }
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+  }
+
+  @Test
+  fun tooltipRemainsVisibleAfterMouseClickWhileAnchorIsHovered() = runComposeUiTest {
+    setPaddedContent {
+      UnstyledTooltip(
+        panel = {
+          UnstyledTooltipPanel {
+            BasicText("Tooltip content")
+          }
+        },
+      ) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
+          BasicText("Trigger")
+        }
+      }
+    }
+
+    onNodeWithTag("trigger").performMouseInput {
+      enter(center)
+    }
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+
+    onNodeWithTag("trigger").performMouseInput {
+      click(center)
+    }
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+  }
+
+  @Test
   fun tooltipRemainsVisibleWhenBothHoveredAndFocused() = runComposeUiTest {
     // W3C requirement: Tooltip should remain visible when both hovered and focused
     setPaddedContent {
@@ -329,7 +426,11 @@ class TooltipJvmTest {
 
     onNodeWithText("Tooltip content").assertIsDisplayed()
     onNodeWithTag("trigger_button").assertIsFocused()
-    // Tooltip content should not be focused
+
+    val tooltipConfig = onNodeWithTag("tooltip_content").fetchSemanticsNode().config
+    assert(SemanticsProperties.Focused !in tooltipConfig) {
+      "Expected tooltip content to not expose focused semantics"
+    }
   }
 
   @Test
@@ -355,7 +456,6 @@ class TooltipJvmTest {
 
     // Verify tooltip is displayed (positioning is handled by PopoverPanel)
     onNodeWithText("Tooltip content").assertIsDisplayed()
-    onAllNodes(isPopup()).assertCountEquals(1)
   }
 
   @Test
@@ -363,7 +463,8 @@ class TooltipJvmTest {
     // Test that UnstyledTooltipPanel accepts placement parameter
     setPaddedContent {
       UnstyledTooltip(
-        placement = RelativeAlignment.BottomStart,
+        side = AnchorSide.Bottom,
+        alignment = AnchorAlignment.Start,
         panel = {
           UnstyledTooltipPanel {
             BasicText("Bottom tooltip")
@@ -676,7 +777,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          UnstyledTooltipPanel(modifier = Modifier.testTag("tooltip_panel")) {
             BasicText("Tooltip content")
           }
         },
@@ -697,10 +798,8 @@ class TooltipJvmTest {
     // Tooltip should be visible
     onNodeWithText("Tooltip content").assertIsDisplayed()
 
-    // When shown, verify tooltip has live region with assertive politeness
-    // The live region is set on the AnimatedVisibility root, which has the popup semantic
-    val tooltipNode = onAllNodes(isPopup()).onFirst()
-    val tooltipSemanticsNode = tooltipNode.fetchSemanticsNode()
+    // When shown, verify tooltip has live region with assertive politeness.
+    val tooltipSemanticsNode = onNodeWithTag("tooltip_panel").fetchSemanticsNode()
     val hasLiveRegion = SemanticsProperties.LiveRegion in tooltipSemanticsNode.config
     assert(hasLiveRegion) { "Expected LiveRegion to be set" }
 
@@ -715,7 +814,10 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel(arrow = { BasicText("Arrow") }) {
+          UnstyledTooltipPanel(
+            modifier = Modifier.testTag("tooltip_panel"),
+            arrow = { BasicText("Arrow") },
+          ) {
             BasicText("Tooltip content")
           }
         },
@@ -736,10 +838,8 @@ class TooltipJvmTest {
     // Tooltip should be visible
     onNodeWithText("Tooltip content").assertIsDisplayed()
 
-    // When shown, verify tooltip has live region with assertive politeness
-    // The live region is set on the AnimatedVisibility root, which has the popup semantic
-    val tooltipNode = onAllNodes(isPopup()).onFirst()
-    val tooltipSemanticsNode = tooltipNode.fetchSemanticsNode()
+    // When shown, verify tooltip has live region with assertive politeness.
+    val tooltipSemanticsNode = onNodeWithTag("tooltip_panel").fetchSemanticsNode()
     val hasLiveRegion = SemanticsProperties.LiveRegion in tooltipSemanticsNode.config
     assert(hasLiveRegion) { "Expected LiveRegion to be set" }
 

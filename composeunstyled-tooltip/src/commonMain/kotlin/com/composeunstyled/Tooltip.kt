@@ -29,13 +29,10 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -48,19 +45,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.popup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import core.com.composeunstyled.interceptingLongClickable
@@ -72,7 +68,8 @@ internal class TooltipState {
   var show by mutableStateOf(false)
   var arrowDirection by mutableStateOf(TooltipArrowDirection.Down)
   var arrowOffset by mutableStateOf(IntOffset.Zero)
-  var placement by mutableStateOf<RelativeAlignment>(RelativeAlignment.TopCenter)
+  var side by mutableStateOf(AnchorSide.Top)
+  var alignment by mutableStateOf(AnchorAlignment.Center)
 }
 
 enum class TooltipArrowDirection {
@@ -83,20 +80,25 @@ internal val LocalTooltipState = staticCompositionLocalOf<TooltipState?> { null 
 
 private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
 private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
-private val NoPadding = PaddingValues(0.dp)
 
 @Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
   panel: @Composable () -> Unit,
-  placement: RelativeAlignment = RelativeAlignment.TopCenter,
+  side: AnchorSide = AnchorSide.Top,
+  alignment: AnchorAlignment = AnchorAlignment.Center,
+  sideOffset: Dp = 0.dp,
+  alignmentOffset: Dp = 0.dp,
   longPressShowDurationMillis: Long = 1500L,
   hoverDelayMillis: Long = 0L,
   anchor: @Composable () -> Unit,
 ) {
   val state = remember { TooltipState() }
   var focused by remember { mutableStateOf(false) }
+  var focusKeepsTooltipVisible by remember { mutableStateOf(false) }
   var entered by remember { mutableStateOf(false) }
+  var pointerFocusPending by remember { mutableStateOf(false) }
+  var focusedByPointer by remember { mutableStateOf(false) }
   val scope = rememberCoroutineScope()
 
   var timerJob: Job? by remember { mutableStateOf(null) }
@@ -110,21 +112,33 @@ fun UnstyledTooltip(
     }
   }
 
+  fun dismissTooltip() {
+    entered = false
+    focused = false
+    focusKeepsTooltipVisible = false
+    focusedByPointer = false
+    hoverDelayJob?.cancel()
+    timerJob?.cancel()
+    hoverDelayJob = null
+    timerJob = null
+    state.show = false
+  }
+
   if (state.show) {
     EscapeHandler {
-      entered = false
-      focused = false
+      dismissTooltip()
     }
   }
 
   SideEffect {
-    state.arrowDirection = arrowDirection(placement)
-    state.placement = placement
+    state.arrowDirection = arrowDirection(side)
+    state.side = side
+    state.alignment = alignment
   }
 
   // focus handling - show instantly when focused
-  LaunchedEffect(focused, enabled) {
-    if (enabled && focused) {
+  LaunchedEffect(focused, focusKeepsTooltipVisible, enabled) {
+    if (enabled && focused && focusKeepsTooltipVisible) {
       state.show = true
 
       hoverDelayJob?.cancel()
@@ -132,7 +146,7 @@ fun UnstyledTooltip(
 
       hoverDelayJob = null
       timerJob = null
-    } else if (!focused && !entered) {
+    } else if ((!focused || !focusKeepsTooltipVisible) && !entered) {
       state.show = false
     }
   }
@@ -150,7 +164,7 @@ fun UnstyledTooltip(
       // Mouse left - cancel hover delay and hide tooltip
       hoverDelayJob?.cancel()
       hoverDelayJob = null
-      if (!focused) {
+      if (!focused || !focusKeepsTooltipVisible || focusedByPointer) {
         state.show = false
       }
     }
@@ -163,7 +177,23 @@ fun UnstyledTooltip(
           showTooltip(longPressShowDurationMillis)
         },
       )
+      .onPreviewKeyEvent { event ->
+        if (event.type == KeyEventType.KeyDown && event.key == Key.Escape && state.show) {
+          dismissTooltip()
+          true
+        } else {
+          false
+        }
+      }
       .onFocusChanged {
+        if (it.hasFocus && !focused) {
+          focusKeepsTooltipVisible = !pointerFocusPending && !entered
+          focusedByPointer = pointerFocusPending
+          pointerFocusPending = false
+        } else if (!it.hasFocus) {
+          focusKeepsTooltipVisible = false
+          focusedByPointer = false
+        }
         focused = it.hasFocus
       }
       .pointerInput(Unit) {
@@ -171,18 +201,34 @@ fun UnstyledTooltip(
           while (true) {
             val event = awaitPointerEvent()
             when (event.type) {
+              PointerEventType.Press -> {
+                pointerFocusPending = true
+                focusedByPointer = true
+                focusKeepsTooltipVisible = false
+              }
+
               PointerEventType.Enter -> {
+                pointerFocusPending = true
                 entered = true
               }
 
               PointerEventType.Exit -> {
                 entered = false
+                if (focusedByPointer) {
+                  state.show = false
+                }
               }
             }
           }
         }
       },
-    placement = placement,
+    side = side,
+    alignment = alignment,
+    sideOffset = sideOffset,
+    alignmentOffset = alignmentOffset,
+    onOffsetFromIdealPositionChanged = {
+      state.arrowOffset = it
+    },
     floatingContent = {
       CompositionLocalProvider(LocalTooltipState provides state) {
         panel()
@@ -197,9 +243,6 @@ fun UnstyledTooltipPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = AppearInstantly,
   exit: ExitTransition = DisappearInstantly,
-  shape: Shape = RectangleShape,
-  backgroundColor: Color = Color.Unspecified,
-  contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
   val state = LocalTooltipState.current
@@ -210,16 +253,9 @@ fun UnstyledTooltipPanel(
     visible = showTooltip,
     enter = enter,
     exit = exit,
-    modifier = Modifier.tooltipPanelSemantics(),
+    modifier = modifier.tooltipPanelSemantics(),
   ) {
-    Box(
-      modifier = modifier
-        .clip(shape)
-        .background(backgroundColor)
-        .padding(contentPadding),
-    ) {
-      content()
-    }
+    content()
   }
 }
 
@@ -236,60 +272,12 @@ fun UnstyledTooltipPanel(
   val showTooltip = state?.show ?: false
   val arrowDirection = state?.arrowDirection ?: TooltipArrowDirection.Down
   val arrowOffset = state?.arrowOffset ?: IntOffset.Zero
-  val placement = state?.placement ?: RelativeAlignment.TopCenter
 
   AnimatedVisibility(
     visible = showTooltip,
     enter = enter,
     exit = exit,
-    modifier = modifier.tooltipPanelSemantics() then buildModifier {
-      if (showTooltip) {
-        add(
-          Modifier.onGloballyPositioned { panelCoordinates ->
-            panelCoordinates.parentLayoutCoordinates?.let { parentCoordinates ->
-              val panelPosition = parentCoordinates.localPositionOf(panelCoordinates, Offset.Zero)
-              val anchorSize = parentCoordinates.size
-              val panelSize = panelCoordinates.size
-
-              val idealX = when (placement) {
-                RelativeAlignment.TopCenter,
-                RelativeAlignment.BottomCenter,
-                -> (anchorSize.width - panelSize.width) / 2f
-
-                RelativeAlignment.TopStart, RelativeAlignment.BottomStart -> 0f
-                RelativeAlignment.TopEnd,
-                RelativeAlignment.BottomEnd,
-                -> (anchorSize.width - panelSize.width).toFloat()
-
-                RelativeAlignment.CenterStart -> -panelSize.width.toFloat()
-                RelativeAlignment.CenterEnd -> anchorSize.width.toFloat()
-              }
-
-              val idealY = when (placement) {
-                RelativeAlignment.TopStart,
-                RelativeAlignment.TopCenter,
-                RelativeAlignment.TopEnd,
-                -> -panelSize.height.toFloat()
-
-                RelativeAlignment.CenterStart,
-                RelativeAlignment.CenterEnd,
-                -> (anchorSize.height - panelSize.height) / 2f
-
-                RelativeAlignment.BottomStart,
-                RelativeAlignment.BottomCenter,
-                RelativeAlignment.BottomEnd,
-                -> anchorSize.height.toFloat()
-              }
-
-              state.arrowOffset = IntOffset(
-                x = (panelPosition.x - idealX).toInt(),
-                y = (panelPosition.y - idealY).toInt(),
-              )
-            }
-          },
-        )
-      }
-    },
+    modifier = modifier.tooltipPanelSemantics(),
   ) {
     when (arrowDirection) {
       TooltipArrowDirection.Up -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -323,20 +311,12 @@ fun UnstyledTooltipPanel(
   }
 }
 
-private fun arrowDirection(alignment: RelativeAlignment): TooltipArrowDirection {
-  return when (alignment) {
-    RelativeAlignment.TopStart,
-    RelativeAlignment.TopCenter,
-    RelativeAlignment.TopEnd,
-    -> TooltipArrowDirection.Down
-
-    RelativeAlignment.BottomStart,
-    RelativeAlignment.BottomCenter,
-    RelativeAlignment.BottomEnd,
-    -> TooltipArrowDirection.Up
-
-    RelativeAlignment.CenterStart -> TooltipArrowDirection.Right
-    RelativeAlignment.CenterEnd -> TooltipArrowDirection.Left
+private fun arrowDirection(side: AnchorSide): TooltipArrowDirection {
+  return when (side) {
+    AnchorSide.Top -> TooltipArrowDirection.Down
+    AnchorSide.Bottom -> TooltipArrowDirection.Up
+    AnchorSide.Start -> TooltipArrowDirection.Right
+    AnchorSide.End -> TooltipArrowDirection.Left
   }
 }
 
@@ -345,7 +325,6 @@ private fun Modifier.tooltipPanelSemantics(): Modifier {
   val showTooltip = LocalTooltipState.current?.show ?: false
 
   return this then Modifier.semantics {
-    popup()
     if (showTooltip) {
       liveRegion = LiveRegionMode.Assertive
     }
