@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.sp
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
 import com.composeunstyled.Text
+import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledTooltip
-import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.platformtheme.buildPlatformTheme
 
 class DemoAndroidActivity : ComponentActivity() {
@@ -73,7 +73,7 @@ private fun TooltipCrashRepro() {
       side = AnchorSide.Top,
       alignment = AnchorAlignment.Center,
       panel = {
-        UnstyledTooltipPanel {
+        TooltipPanel {
           Box(
             modifier = Modifier
               .background(Color(0xFF0F172A), RoundedCornerShape(10.dp))

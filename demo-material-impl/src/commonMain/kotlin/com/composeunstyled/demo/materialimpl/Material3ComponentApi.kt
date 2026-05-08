@@ -204,6 +204,8 @@ import androidx.compose.ui.zIndex
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
 import com.composeunstyled.CheckedIndicator
+import com.composeunstyled.DialogPanel
+import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.ModalBottomSheetState
 import com.composeunstyled.ModalSheetProperties
 import com.composeunstyled.Sheet
@@ -211,12 +213,11 @@ import com.composeunstyled.SheetDetent
 import com.composeunstyled.StateIndicator
 import com.composeunstyled.TabKey
 import com.composeunstyled.TextInput
+import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledDropdownMenu
-import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledModalBottomSheet
@@ -231,7 +232,6 @@ import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.UnstyledTooltip
-import com.composeunstyled.UnstyledTooltipPanel
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.currentWindowContainerSize
@@ -2906,7 +2906,7 @@ fun DropdownMenu(
     sideOffset = offset.y,
     alignmentOffset = offset.x,
     panel = {
-      UnstyledDropdownMenuPanel(
+      DropdownMenuPanel(
         modifier = modifier
           .width(IntrinsicSize.Max)
           .graphicsLayer {
@@ -2959,7 +2959,7 @@ fun ExposedDropdownMenuBoxScope.ExposedDropdownMenu(
     expanded = expanded,
     onExpandedChange = onExpandedChange,
     panel = {
-      UnstyledDropdownMenuPanel(
+      DropdownMenuPanel(
         modifier = modifier
           .width(IntrinsicSize.Max)
           .graphicsLayer {
@@ -3013,7 +3013,7 @@ fun AlertDialog(
       enter = fadeIn(animationSpec = tween(DialogEnterDurationMillis)),
       exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)),
     )
-    UnstyledDialogPanel(
+    DialogPanel(
       modifier = modifier
         .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
         .clip(shape)
@@ -3373,7 +3373,7 @@ fun VerticalDivider(
   UnstyledVerticalSeparator(color = color, modifier = modifier, thickness = thickness)
 }
 
-interface TooltipScope
+interface TooltipScope : com.composeunstyled.TooltipScope
 
 private object MaterialTooltipScope : TooltipScope
 
@@ -3409,7 +3409,7 @@ fun TooltipScope.PlainTooltip(
   shadowElevation: Dp = 0.dp,
   content: @Composable () -> Unit,
 ) {
-  UnstyledTooltipPanel(
+  TooltipPanel(
     modifier = modifier
       .zIndex(1f)
       .offset(y = (-4).dp),

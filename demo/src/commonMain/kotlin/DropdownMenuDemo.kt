@@ -63,10 +63,10 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Maximize
 import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
+import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
-import com.composeunstyled.UnstyledDropdownMenuPanel
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSeparator
 import kotlinx.coroutines.delay
@@ -106,7 +106,7 @@ fun DropdownMenuDemo() {
       onExpandedChange = { expanded = it },
       sideOffset = 4.dp,
       panel = {
-        UnstyledDropdownMenuPanel(
+        DropdownMenuPanel(
           modifier = Modifier
             .width(240.dp)
             .dropShadow(

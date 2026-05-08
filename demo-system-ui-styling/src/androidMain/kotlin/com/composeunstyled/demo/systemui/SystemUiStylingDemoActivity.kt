@@ -60,10 +60,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
 import com.composables.compose.ripple.rememberRippleIndication
+import com.composeunstyled.DialogPanel
 import com.composeunstyled.LocalModalWindow
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import com.composeunstyled.UnstyledDialogPanel
 import com.composeunstyled.UnstyledScrim
 
 class SystemUiStylingDemoActivity : ComponentActivity() {
@@ -122,7 +122,7 @@ private fun ModalSystemUiStylingDemo() {
         windowInsetsController.isAppearanceLightNavigationBars = true
       }
       UnstyledScrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-      UnstyledDialogPanel(
+      DialogPanel(
         // contentColor = Color.Black,
         modifier = Modifier
           .padding(20.dp)

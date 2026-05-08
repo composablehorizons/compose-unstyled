@@ -67,7 +67,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -87,7 +87,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -111,7 +111,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -142,7 +142,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -171,7 +171,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -201,7 +201,7 @@ class TooltipJvmTest {
       UnstyledTooltip(
         enabled = false,
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -233,7 +233,7 @@ class TooltipJvmTest {
       OverlayHost {
         UnstyledTooltip(
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -260,7 +260,7 @@ class TooltipJvmTest {
       Row {
         UnstyledTooltip(
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -299,7 +299,7 @@ class TooltipJvmTest {
       Row {
         UnstyledTooltip(
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -339,7 +339,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -370,7 +370,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -412,7 +412,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             Box(Modifier.testTag("tooltip_content")) {
               BasicText("Tooltip content")
             }
@@ -444,7 +444,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -464,13 +464,13 @@ class TooltipJvmTest {
 
   @Test
   fun tooltipSupportsCustomPlacement() = runComposeUiTest {
-    // Test that UnstyledTooltipPanel accepts placement parameter
+    // Test that TooltipPanel accepts placement parameter
     setPaddedContent {
       UnstyledTooltip(
         side = AnchorSide.Bottom,
         alignment = AnchorAlignment.Start,
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Bottom tooltip")
           }
         },
@@ -498,7 +498,7 @@ class TooltipJvmTest {
 
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -533,7 +533,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip for disabled element")
           }
         },
@@ -565,7 +565,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -604,7 +604,7 @@ class TooltipJvmTest {
         UnstyledTooltip(
           hoverDelayMillis = 500,
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -657,7 +657,7 @@ class TooltipJvmTest {
         UnstyledTooltip(
           hoverDelayMillis = 500,
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -708,7 +708,7 @@ class TooltipJvmTest {
         UnstyledTooltip(
           hoverDelayMillis = 500,
           panel = {
-            UnstyledTooltipPanel {
+            TooltipPanel {
               BasicText("Tooltip content")
             }
           },
@@ -755,7 +755,7 @@ class TooltipJvmTest {
       UnstyledTooltip(
         hoverDelayMillis = 500,
         panel = {
-          UnstyledTooltipPanel {
+          TooltipPanel {
             BasicText("Tooltip content")
           }
         },
@@ -781,7 +781,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel(modifier = Modifier.testTag("tooltip_panel")) {
+          TooltipPanel(modifier = Modifier.testTag("tooltip_panel")) {
             BasicText("Tooltip content")
           }
         },
@@ -818,7 +818,7 @@ class TooltipJvmTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
-          UnstyledTooltipPanel(
+          TooltipPanel(
             modifier = Modifier.testTag("tooltip_panel"),
             arrow = { BasicText("Arrow") },
           ) {
