@@ -23,9 +23,6 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -88,8 +85,8 @@ class ScrollBarsTest {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
+              enter = EnterTransition.None,
+              exit = ExitTransition.None,
               hideDelay = 5.seconds,
             ),
           )
@@ -114,8 +111,8 @@ class ScrollBarsTest {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
+              enter = EnterTransition.None,
+              exit = ExitTransition.None,
               hideDelay = 5.seconds,
             ),
           )
@@ -149,8 +146,8 @@ class ScrollBarsTest {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
+              enter = EnterTransition.None,
+              exit = ExitTransition.None,
               hideDelay = 5.seconds,
             ),
           )
@@ -196,8 +193,8 @@ class ScrollBarsTest {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
+              enter = EnterTransition.None,
+              exit = ExitTransition.None,
               hideDelay = 2.seconds,
             ),
           )
@@ -256,8 +253,8 @@ class ScrollBarsTest {
           UnstyledThumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = AppearInstantly,
-              exit = DisappearInstantly,
+              enter = EnterTransition.None,
+              exit = ExitTransition.None,
               hideDelay = 5.seconds,
             ),
           )
@@ -306,8 +303,8 @@ class ScrollBarsTest {
             UnstyledThumb(
               modifier = Modifier.testTag("thumb"),
               thumbVisibility = ThumbVisibility.HideWhileIdle(
-                enter = AppearInstantly,
-                exit = DisappearInstantly,
+                enter = EnterTransition.None,
+                exit = ExitTransition.None,
                 hideDelay = 2.seconds,
               ),
             )
@@ -373,6 +370,3 @@ class ScrollBarsTest {
     onNodeWithTag("thumb").assertHeightIsEqualTo(48.dp)
   }
 }
-
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))

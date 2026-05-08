@@ -24,9 +24,6 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,8 +47,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 private val NoPadding = PaddingValues(0.dp)
 
 data class DialogProperties(
@@ -127,8 +122,8 @@ fun UnstyledDialog(
 @Composable
 fun DialogScope.DialogPanel(
   modifier: Modifier = Modifier,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
   contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {

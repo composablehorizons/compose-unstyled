@@ -26,9 +26,6 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -75,9 +72,6 @@ internal class TooltipState {
 enum class TooltipArrowDirection {
   Up, Down, Left, Right
 }
-
-private val AppearInstantly: EnterTransition = fadeIn(animationSpec = tween(durationMillis = 0))
-private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(durationMillis = 0))
 
 interface TooltipScope
 
@@ -247,8 +241,8 @@ fun UnstyledTooltip(
 @Composable
 fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
   content: @Composable () -> Unit,
 ) {
   val state = LocalTooltipState.current
@@ -268,8 +262,8 @@ fun TooltipScope.TooltipPanel(
 fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,
   arrow: @Composable (TooltipArrowDirection) -> Unit,
-  enter: EnterTransition = AppearInstantly,
-  exit: ExitTransition = DisappearInstantly,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
   content: @Composable () -> Unit,
 ) {
   val state = LocalTooltipState.current
