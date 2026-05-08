@@ -46,7 +46,7 @@ fun UnstyledTriStateCheckbox(
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
   accessibilityLabel: String? = null,
-  content: @Composable UnstyledTriStateCheckboxScope.() -> Unit,
+  content: @Composable TriStateCheckboxScope.() -> Unit,
 ) {
   val checkboxInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
 
@@ -69,7 +69,7 @@ fun UnstyledTriStateCheckbox(
     },
     contentAlignment = Alignment.Center,
   ) {
-    UnstyledTriStateCheckboxScope(
+    TriStateCheckboxScope(
       value = value,
       enabled = enabled,
       interactionSource = checkboxInteractionSource,
@@ -77,14 +77,14 @@ fun UnstyledTriStateCheckbox(
   }
 }
 
-class UnstyledTriStateCheckboxScope internal constructor(
+class TriStateCheckboxScope internal constructor(
   internal val value: ToggleableState,
   internal val enabled: Boolean,
   internal val interactionSource: MutableInteractionSource,
 )
 
 @Composable
-fun UnstyledTriStateCheckboxScope.StateIndicator(
+fun TriStateCheckboxScope.StateIndicator(
   modifier: Modifier = Modifier,
   indication: Indication? = null,
   content: @Composable BoxScope.(ToggleableState) -> Unit,

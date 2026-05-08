@@ -85,7 +85,7 @@ sealed class ThumbVisibility {
 }
 
 @Composable
-fun ScrollAreaScope.UnstyledVerticalScrollbar(
+fun ScrollAreaScope.VerticalScrollbar(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
@@ -94,7 +94,7 @@ fun ScrollAreaScope.UnstyledVerticalScrollbar(
 ) = ScrollBar(modifier, enabled, interactionSource, reverseLayout, true, thumb)
 
 @Composable
-fun ScrollAreaScope.UnstyledHorizontalScrollbar(
+fun ScrollAreaScope.HorizontalScrollbar(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
@@ -193,7 +193,7 @@ private fun ScrollAreaScope.ScrollBar(
 }
 
 @Composable
-fun ScrollbarScope.UnstyledThumb(
+fun ScrollbarScope.Thumb(
   modifier: Modifier = Modifier,
   thumbVisibility: ThumbVisibility = ThumbVisibility.AlwaysVisible,
   enabled: Boolean = true,
