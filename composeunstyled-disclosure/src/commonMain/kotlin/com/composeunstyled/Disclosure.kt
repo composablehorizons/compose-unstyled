@@ -37,10 +37,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,27 +55,29 @@ private val DisappearInstantly: ExitTransition = fadeOut(animationSpec = tween(d
 private val NoPadding = PaddingValues(0.dp)
 
 @Stable
-class DisclosureState(expanded: Boolean = false) {
-  var expanded: Boolean by mutableStateOf(expanded)
-}
+class DisclosureScope internal constructor(
+  val expanded: Boolean,
+  internal val onExpandedChange: (Boolean) -> Unit,
+)
 
 @Composable
-fun rememberDisclosureState(initiallyExpanded: Boolean = false): DisclosureState {
-  return remember { DisclosureState(initiallyExpanded) }
-}
-
-@Stable
-class DisclosureScope internal constructor(state: DisclosureState) {
-  internal var state by mutableStateOf(state)
+private fun rememberDisclosureScope(
+  expanded: Boolean,
+  onExpandedChange: (Boolean) -> Unit,
+): DisclosureScope {
+  return remember(expanded, onExpandedChange) {
+    DisclosureScope(expanded, onExpandedChange)
+  }
 }
 
 @Composable
 fun UnstyledDisclosure(
-  state: DisclosureState = rememberDisclosureState(),
+  expanded: Boolean,
+  onExpandedChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
   content: @Composable DisclosureScope.() -> Unit,
 ) {
-  val scope = remember { DisclosureScope(state) }
+  val scope = rememberDisclosureScope(expanded, onExpandedChange)
 
   Column(modifier) {
     scope.content()
@@ -103,19 +102,19 @@ fun DisclosureScope.UnstyledDisclosureHeading(
   UnstyledButton(
     modifier = modifier.semantics {
       heading()
-      if (state.expanded) {
+      if (expanded) {
         collapse {
-          state.expanded = false
+          onExpandedChange(false)
           true
         }
       } else {
         expand {
-          state.expanded = true
+          onExpandedChange(true)
           true
         }
       }
     },
-    onClick = { state.expanded = state.expanded.not() },
+    onClick = { onExpandedChange(expanded.not()) },
     interactionSource = interactionSource,
     indication = indication,
     enabled = enabled,
@@ -174,7 +173,7 @@ fun DisclosureScope.UnstyledDisclosurePanel(
 ) {
   AnimatedVisibility(
     modifier = modifier,
-    visible = state.expanded,
+    visible = expanded,
     enter = enter,
     exit = exit,
   ) {
