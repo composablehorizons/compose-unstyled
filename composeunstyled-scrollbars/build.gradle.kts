@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledScrollArea"
+      baseName = "ComposeUnstyledScrollbars"
       isStatic = true
     }
   }
@@ -80,6 +80,7 @@ kotlin {
       dependencies {
         implementation(libs.compose.foundation)
         implementation(projects.composeunstyledBuildModifier)
+        implementation(projects.composeunstyledScrollArea)
       }
     }
 
@@ -128,7 +129,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.scrollarea"
+  namespace = "com.composeunstyled.scrollbars"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -147,13 +148,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-scroll-area",
+    artifactId = "composeunstyled-scrollbars",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Scroll Area")
-    description.set("Scroll area primitives for Compose Unstyled - foundational APIs for custom scroll containers in Compose Multiplatform.")
+    name.set("Compose Unstyled Scrollbars")
+    description.set("Scrollbar primitives for Compose Unstyled - foundational APIs for custom scrollbars in Compose Multiplatform.")
     url.set(projectUrl)
 
     licenses {

@@ -59,11 +59,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.HorizontalScrollbar
 import com.composeunstyled.ScrollArea
 import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
-import com.composeunstyled.VerticalScrollbar
+import com.composeunstyled.UnstyledHorizontalScrollbar
+import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.rememberScrollAreaState
 import kotlin.time.Duration.Companion.seconds
 
@@ -109,9 +109,10 @@ fun VerticalScrollAreaDemo() {
     )
 
     val state = rememberScrollState()
+    val scrollAreaState = rememberScrollAreaState(state)
 
     ScrollArea(
-      state = rememberScrollAreaState(state),
+      state = scrollAreaState,
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -136,7 +137,8 @@ fun VerticalScrollAreaDemo() {
           Spacer(Modifier.height(12.dp))
         }
       }
-      VerticalScrollbar(
+      UnstyledVerticalScrollbar(
+        scrollAreaState = scrollAreaState,
         modifier = Modifier
           .align(Alignment.TopEnd)
           .width(12.dp)
@@ -163,9 +165,10 @@ fun HorizontalScrollAreaDemo() {
     contentAlignment = Alignment.TopCenter,
   ) {
     val state = rememberScrollState()
+    val scrollAreaState = rememberScrollAreaState(state)
 
     ScrollArea(
-      state = rememberScrollAreaState(state),
+      state = scrollAreaState,
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -186,7 +189,8 @@ fun HorizontalScrollAreaDemo() {
           Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Red))
         }
       }
-      HorizontalScrollbar(
+      UnstyledHorizontalScrollbar(
+        scrollAreaState = scrollAreaState,
         modifier = Modifier
           .align(Alignment.BottomCenter)
           .height(12.dp)

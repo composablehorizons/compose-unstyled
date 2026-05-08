@@ -103,6 +103,7 @@ kotlin {
         api(projects.composeunstyledDropdownMenu)
         api(projects.composeunstyledTooltip)
         api(projects.composeunstyledScrollArea)
+        api(projects.composeunstyledScrollbars)
         api(projects.composeunstyledOverlay)
       }
     }

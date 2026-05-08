@@ -51,13 +51,17 @@ class ScrollBarsTest {
   fun always_visible_keeps_the_thumb_visible() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
-        Column(modifier = Modifier.height(200.dp)) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
+        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState)) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
+          modifier = Modifier.testTag("scrollbar"),
+        ) {
           Thumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.AlwaysVisible,
@@ -75,13 +79,17 @@ class ScrollBarsTest {
   fun hide_while_idle_starts_with_thumb_out_of_composition() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
-        Column(modifier = Modifier.height(200.dp)) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
+        Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState)) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
+          modifier = Modifier.testTag("scrollbar"),
+        ) {
           Thumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -101,13 +109,17 @@ class ScrollBarsTest {
   fun hide_while_idle_shows_thumb_when_list_is_scrolled() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
+          modifier = Modifier.testTag("scrollbar"),
+        ) {
           Thumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -131,15 +143,15 @@ class ScrollBarsTest {
     // TODO this checks for drags, not scrolls
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(
-        state = rememberScrollAreaState(scrollState),
-      ) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
           modifier = Modifier.testTag("scrollbar")
             .align(Alignment.CenterEnd),
         ) {
@@ -176,7 +188,8 @@ class ScrollBarsTest {
   fun hide_while_idle_does_not_hide_thumb_while_dragging() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
         Column(
           modifier = Modifier
             .height(200.dp)
@@ -185,7 +198,8 @@ class ScrollBarsTest {
         ) {
           repeat(100) { BasicText("Item $it") }
         }
-        VerticalScrollbar(
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
           modifier = Modifier
             .testTag("scrollbar")
             .align(Alignment.CenterEnd),
@@ -243,13 +257,17 @@ class ScrollBarsTest {
   fun hide_while_idle_does_not_hide_thumb_while_dragging_the_thumb() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      ScrollArea(state = rememberScrollAreaState(scrollState)) {
+      val scrollAreaState = rememberScrollAreaState(scrollState)
+      ScrollArea(state = scrollAreaState) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
+          modifier = Modifier.testTag("scrollbar"),
+        ) {
           Thumb(
             modifier = Modifier.testTag("thumb"),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -293,13 +311,17 @@ class ScrollBarsTest {
     runComposeUiTest {
       setContent {
         val scrollState = rememberScrollState()
-        ScrollArea(state = rememberScrollAreaState(scrollState)) {
+        val scrollAreaState = rememberScrollAreaState(scrollState)
+        ScrollArea(state = scrollAreaState) {
           Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
             repeat(100) { index ->
               BasicText("Item $index")
             }
           }
-          VerticalScrollbar(modifier = Modifier.testTag("track")) {
+          UnstyledVerticalScrollbar(
+            scrollAreaState = scrollAreaState,
+            modifier = Modifier.testTag("track"),
+          ) {
             Thumb(
               modifier = Modifier.testTag("thumb"),
               thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -349,13 +371,17 @@ class ScrollBarsTest {
   fun vertical_scrollbar_respects_explicit_thumb_height_modifier() = runComposeUiTest {
     setContent {
       val lazyListState = rememberLazyListState()
-      ScrollArea(state = rememberScrollAreaState(lazyListState)) {
+      val scrollAreaState = rememberScrollAreaState(lazyListState)
+      ScrollArea(state = scrollAreaState) {
         LazyColumn(modifier = Modifier.height(200.dp).testTag("list"), state = lazyListState) {
           items((0 until 36_000).toList()) { index ->
             BasicText("Item $index")
           }
         }
-        VerticalScrollbar(modifier = Modifier.testTag("scrollbar")) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
+          modifier = Modifier.testTag("scrollbar"),
+        ) {
           Thumb(
             modifier = Modifier
               .testTag("thumb")
