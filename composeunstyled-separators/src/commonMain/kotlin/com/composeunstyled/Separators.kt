@@ -24,8 +24,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -66,22 +64,4 @@ fun UnstyledVerticalSeparator(
       end = Offset(thickness.toPx() / 2, size.height),
     )
   }
-}
-
-@Composable
-fun ColumnScope.UnstyledSeparator(
-  modifier: Modifier = Modifier,
-  color: Color = Color.Unspecified,
-  thickness: Dp = Dp.Hairline,
-) {
-  UnstyledHorizontalSeparator(color = color, modifier = modifier, thickness = thickness)
-}
-
-@Composable
-fun RowScope.UnstyledSeparator(
-  modifier: Modifier = Modifier,
-  color: Color = Color.Unspecified,
-  thickness: Dp = Dp.Hairline,
-) {
-  UnstyledVerticalSeparator(color = color, modifier = modifier, thickness = thickness)
 }

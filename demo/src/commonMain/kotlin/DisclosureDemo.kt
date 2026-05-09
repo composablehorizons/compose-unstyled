@@ -58,8 +58,8 @@ import com.composables.icons.lucide.Lucide
 import com.composeunstyled.DisclosedContent
 import com.composeunstyled.DisclosureButton
 import com.composeunstyled.UnstyledDisclosure
+import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.UnstyledSeparator
 
 @Composable
 fun DisclosureDemo() {
@@ -94,7 +94,7 @@ fun DisclosureDemo() {
     ) {
       faqs.forEachIndexed { i, faq ->
         if (i != 0) {
-          UnstyledSeparator(color = Color.Black.copy(0.2f))
+          UnstyledHorizontalSeparator(color = Color.Black.copy(0.2f))
         }
 
         var expanded by remember { mutableStateOf(i == 0) }
