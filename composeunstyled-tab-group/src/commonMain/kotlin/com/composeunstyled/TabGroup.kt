@@ -31,12 +31,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -83,13 +80,11 @@ internal class TabsRegistry<T>(
 
 class TabGroupScope<T> internal constructor(
   internal val registry: TabsRegistry<T>,
-  columnScope: ColumnScope,
-) : ColumnScope by columnScope
+)
 
 class TabListScope<T> internal constructor(
   internal val registry: TabsRegistry<T>,
-  rowScope: RowScope,
-) : RowScope by rowScope
+)
 
 class TabScope internal constructor(
   val selected: Boolean,
@@ -131,8 +126,8 @@ fun <T> UnstyledTabGroup(
       }
       .focusGroup(),
   ) {
-    val tabGroupScope = remember(registry, this) {
-      TabGroupScope(registry, this)
+    val tabGroupScope = remember(registry) {
+      TabGroupScope(registry)
     }
     tabGroupScope.content()
   }
@@ -239,8 +234,8 @@ fun <T> TabGroupScope<T>.TabList(
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment,
   ) {
-    val tabListScope = remember(registry, this) {
-      TabListScope(registry, this)
+    val tabListScope = remember(registry) {
+      TabListScope(registry)
     }
     tabListScope.content()
   }
@@ -302,7 +297,7 @@ fun <T> TabGroupScope<T>.TabPanel(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = NoPadding,
   contentAlignment: Alignment = Alignment.TopStart,
-  content: @Composable BoxScope.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   val registry = registry
 

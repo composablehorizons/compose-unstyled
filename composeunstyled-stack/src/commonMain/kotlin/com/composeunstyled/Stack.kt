@@ -23,12 +23,9 @@
 
 package com.composeunstyled
 
-import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,7 +40,7 @@ fun Stack(
   mainAxisArrangement: MainAxisArrangement = MainAxisArrangement.Start,
   crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Start,
   spacing: Dp = 0.dp,
-  content: @Composable StackScope.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   when (orientation) {
     StackOrientation.Vertical -> {
@@ -52,8 +49,7 @@ fun Stack(
         verticalArrangement = rememberVerticalArrangement(mainAxisArrangement, spacing),
         horizontalAlignment = rememberHorizontalAlignment(crossAxisAlignment),
       ) {
-        val scope = remember(this) { ColumnStackScope(this) }
-        scope.content()
+        content()
       }
     }
 
@@ -63,8 +59,7 @@ fun Stack(
         horizontalArrangement = rememberHorizontalArrangement(mainAxisArrangement, spacing),
         verticalAlignment = rememberVerticalAlignment(crossAxisAlignment),
       ) {
-        val scope = remember(this) { RowStackScope(this) }
-        scope.content()
+        content()
       }
     }
   }
@@ -165,25 +160,5 @@ private fun crossAxisToVerticalAlignment(crossAxisAlignment: CrossAxisAlignment)
     CrossAxisAlignment.Start -> Alignment.Top
     CrossAxisAlignment.Center -> Alignment.CenterVertically
     CrossAxisAlignment.End -> Alignment.Bottom
-  }
-}
-
-interface StackScope {
-  fun Modifier.weight(
-    @FloatRange(from = 0.0, fromInclusive = false)
-    weight: Float,
-    fill: Boolean = true,
-  ): Modifier
-}
-
-private class RowStackScope(private val rowScope: RowScope) : StackScope {
-  override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
-    return with(rowScope) { this@weight.weight(weight, fill) }
-  }
-}
-
-private class ColumnStackScope(private val columnScope: ColumnScope) : StackScope {
-  override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
-    return with(columnScope) { this@weight.weight(weight, fill) }
   }
 }

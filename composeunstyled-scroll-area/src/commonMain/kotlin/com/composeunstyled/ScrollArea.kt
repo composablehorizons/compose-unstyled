@@ -28,7 +28,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -36,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlin.js.JsName
 import kotlin.math.abs
@@ -63,24 +61,10 @@ fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState =
 fun ScrollArea(
   state: ScrollAreaState,
   modifier: Modifier = Modifier,
-  content: @Composable ScrollAreaScope.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   Box(modifier) {
-    val boxScope = this
-    val scrollAreaScope = remember(boxScope) {
-      ScrollAreaScope(boxScope)
-    }
-    scrollAreaScope.content()
-  }
-}
-
-class ScrollAreaScope internal constructor(
-  private val boxScope: BoxScope,
-) {
-  fun Modifier.align(alignment: Alignment): Modifier {
-    return with(boxScope) {
-      align(alignment)
-    }
+    content()
   }
 }
 

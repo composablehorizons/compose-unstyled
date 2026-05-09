@@ -137,20 +137,22 @@ fun VerticalScrollAreaDemo() {
           Spacer(Modifier.height(12.dp))
         }
       }
-      UnstyledVerticalScrollbar(
-        scrollAreaState = scrollAreaState,
-        modifier = Modifier
-          .align(Alignment.TopEnd)
-          .width(12.dp)
-          .fillMaxHeight(),
-      ) {
-        Thumb(
+      Box(Modifier.fillMaxSize()) {
+        UnstyledVerticalScrollbar(
+          scrollAreaState = scrollAreaState,
           modifier = Modifier
-            .padding(2.dp)
-            .height(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
-          thumbVisibility = ThumbVisibility.AlwaysVisible,
-        )
+            .align(Alignment.TopEnd)
+            .width(12.dp)
+            .fillMaxHeight(),
+        ) {
+          Thumb(
+            modifier = Modifier
+              .padding(2.dp)
+              .height(12.dp)
+              .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+            thumbVisibility = ThumbVisibility.AlwaysVisible,
+          )
+        }
       }
     }
   }
@@ -189,24 +191,25 @@ fun HorizontalScrollAreaDemo() {
           Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Red))
         }
       }
-      UnstyledHorizontalScrollbar(
-        scrollAreaState = scrollAreaState,
-        modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .height(12.dp)
-          .fillMaxWidth(),
-      ) {
-        Thumb(
+      Box(Modifier.fillMaxWidth()) {
+        UnstyledHorizontalScrollbar(
+          scrollAreaState = scrollAreaState,
           modifier = Modifier
-            .padding(2.dp)
-            .width(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
-          thumbVisibility = ThumbVisibility.HideWhileIdle(
-            enter = fadeIn(),
-            exit = fadeOut(),
-            hideDelay = 1.seconds,
-          ),
-        )
+            .height(12.dp)
+            .fillMaxWidth(),
+        ) {
+          Thumb(
+            modifier = Modifier
+              .padding(2.dp)
+              .width(12.dp)
+              .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+            thumbVisibility = ThumbVisibility.HideWhileIdle(
+              enter = fadeIn(),
+              exit = fadeOut(),
+              hideDelay = 1.seconds,
+            ),
+          )
+        }
       }
     }
   }

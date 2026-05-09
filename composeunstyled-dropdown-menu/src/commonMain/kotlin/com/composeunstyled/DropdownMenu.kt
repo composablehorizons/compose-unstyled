@@ -27,14 +27,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -42,7 +36,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -52,10 +45,7 @@ import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Density
@@ -78,8 +68,6 @@ internal class DropdownMenuState(
 interface DropdownMenuScope
 
 private object DropdownMenuScopeInstance : DropdownMenuScope
-
-class DropdownMenuPanelScope internal constructor()
 
 internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState> {
   DropdownMenuState(
@@ -121,22 +109,14 @@ fun UnstyledDropdownMenu(
   }
 
   Box(
-    modifier.onPreviewKeyEvent { event ->
-      if (!event.isKeyDown) {
-        return@onPreviewKeyEvent false
-      }
-      when (event.key) {
-        Key.DirectionDown, Key.Enter, Key.Spacebar -> {
+    modifier.onKeyEvent { event ->
+      if (event.key == Key.DirectionDown) {
+        if (event.type == KeyEventType.KeyDown) {
           onExpandedChange(true)
-          true
         }
-
-        Key.DirectionUp -> {
-          onExpandedChange(true)
-          true
-        }
-
-        else -> false
+        true
+      } else {
+        false
       }
     },
   ) {
@@ -167,12 +147,11 @@ fun DropdownMenuScope.DropdownMenuPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
-  content: @Composable DropdownMenuPanelScope.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   val state = LocalDropdownMenuState.current
   val menuFocusRequester = remember { FocusRequester() }
   val currentFocusManager = LocalFocusManager.current
-  val scope = remember { DropdownMenuPanelScope() }
 
   AnimatedVisibility(
     visibleState = state.transitionState,
@@ -214,46 +193,8 @@ fun DropdownMenuScope.DropdownMenuPanel(
           menuFocusRequester.requestFocus()
         }
       }
-      scope.content()
+      content()
     }
-  }
-}
-
-@Composable
-fun DropdownMenuPanelScope.MenuItem(
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  closeOnClick: Boolean = true,
-  interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
-  content: @Composable () -> Unit,
-) {
-  val state = LocalDropdownMenuState.current
-
-  Row(
-    modifier = modifier then buildModifier {
-      add(
-        Modifier.clickable(
-          onClick = {
-            onClick()
-            if (closeOnClick) {
-              state.onExpandedChange(false)
-            }
-          },
-          enabled = enabled,
-          interactionSource = interactionSource,
-          indication = indication,
-        ),
-      )
-      if (enabled) {
-        add(Modifier.pointerHoverIcon(PointerIcon.Default))
-      }
-    },
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
-  ) {
-    content()
   }
 }
 

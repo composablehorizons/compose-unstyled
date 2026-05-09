@@ -33,7 +33,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -106,14 +108,19 @@ fun DisclosureDemo() {
             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
             indication = LocalIndication.current,
           ) {
-            Text(faq.question, modifier = Modifier.weight(1f))
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              verticalAlignment = Alignment.CenterVertically,
+            ) {
+              Text(faq.question, modifier = Modifier.weight(1f))
 
-            val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
-            UnstyledIcon(
-              imageVector = Lucide.ChevronDown,
-              contentDescription = null,
-              modifier = Modifier.rotate(degrees),
-            )
+              val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
+              UnstyledIcon(
+                imageVector = Lucide.ChevronDown,
+                contentDescription = null,
+                modifier = Modifier.rotate(degrees),
+              )
+            }
           }
           DisclosedContent(
             enter = expandVertically(

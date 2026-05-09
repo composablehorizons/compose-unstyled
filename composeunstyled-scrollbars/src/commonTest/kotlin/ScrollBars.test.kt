@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -150,19 +151,21 @@ class ScrollBarsTest {
             BasicText("Item $index")
           }
         }
-        UnstyledVerticalScrollbar(
-          scrollAreaState = scrollAreaState,
-          modifier = Modifier.testTag("scrollbar")
-            .align(Alignment.CenterEnd),
-        ) {
-          Thumb(
-            modifier = Modifier.testTag("thumb"),
-            thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = EnterTransition.None,
-              exit = ExitTransition.None,
-              hideDelay = 5.seconds,
-            ),
-          )
+        Box {
+          UnstyledVerticalScrollbar(
+            scrollAreaState = scrollAreaState,
+            modifier = Modifier.testTag("scrollbar")
+              .align(Alignment.CenterEnd),
+          ) {
+            Thumb(
+              modifier = Modifier.testTag("thumb"),
+              thumbVisibility = ThumbVisibility.HideWhileIdle(
+                enter = EnterTransition.None,
+                exit = ExitTransition.None,
+                hideDelay = 5.seconds,
+              ),
+            )
+          }
         }
       }
     }
@@ -198,20 +201,22 @@ class ScrollBarsTest {
         ) {
           repeat(100) { BasicText("Item $it") }
         }
-        UnstyledVerticalScrollbar(
-          scrollAreaState = scrollAreaState,
-          modifier = Modifier
-            .testTag("scrollbar")
-            .align(Alignment.CenterEnd),
-        ) {
-          Thumb(
-            modifier = Modifier.testTag("thumb"),
-            thumbVisibility = ThumbVisibility.HideWhileIdle(
-              enter = EnterTransition.None,
-              exit = ExitTransition.None,
-              hideDelay = 2.seconds,
-            ),
-          )
+        Box {
+          UnstyledVerticalScrollbar(
+            scrollAreaState = scrollAreaState,
+            modifier = Modifier
+              .testTag("scrollbar")
+              .align(Alignment.CenterEnd),
+          ) {
+            Thumb(
+              modifier = Modifier.testTag("thumb"),
+              thumbVisibility = ThumbVisibility.HideWhileIdle(
+                enter = EnterTransition.None,
+                exit = ExitTransition.None,
+                hideDelay = 2.seconds,
+              ),
+            )
+          }
         }
       }
     }

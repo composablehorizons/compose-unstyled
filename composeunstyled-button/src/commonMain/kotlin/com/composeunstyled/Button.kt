@@ -30,7 +30,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,7 +50,7 @@ fun UnstyledButton(
   role: Role = Role.Button,
   indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
-  content: @Composable (RowScope.() -> Unit),
+  content: @Composable () -> Unit,
 ) {
   Row(
     modifier = modifier then buildModifier {

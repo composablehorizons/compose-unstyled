@@ -130,7 +130,7 @@ fun TabGroupDemo() {
         categories.forEach { (key, _) ->
           Tab(
             key = key,
-            modifier = Modifier.weight(1f).fillMaxHeight(),
+            modifier = Modifier.fillMaxHeight(),
           ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
               Text(

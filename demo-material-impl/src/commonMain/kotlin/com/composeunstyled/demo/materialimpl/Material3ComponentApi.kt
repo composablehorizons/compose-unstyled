@@ -490,8 +490,13 @@ private fun ButtonSurface(
             add(Modifier.border(border, shape))
           }
         },
-        content = content,
-      )
+      ) {
+        Row(
+          horizontalArrangement = Arrangement.Center,
+          verticalAlignment = Alignment.CenterVertically,
+          content = content,
+        )
+      }
     }
   }
 }
@@ -1366,35 +1371,37 @@ fun Switch(
       .wrapContentSize(Alignment.Center)
       .size(SwitchWidth, SwitchHeight),
   ) {
-    Box(
-      Modifier
-        .matchParentSize()
-        .background(colors.trackColorFor(enabled, checked), trackShape)
-        .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
-    )
+    Box(Modifier.fillMaxSize()) {
+      Box(
+        Modifier
+          .matchParentSize()
+          .background(colors.trackColorFor(enabled, checked), trackShape)
+          .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
+      )
 
-    Box(
-      Modifier
-        .align(Alignment.CenterStart)
-        .offset(x = thumbOffset)
-        .size(thumbSize)
-        .indication(
-          interactionSource = resolvedInteractionSource,
-          indication = ripple(
-            bounded = false,
-            radius = SwitchStateLayerSize / 2,
+      Box(
+        Modifier
+          .align(Alignment.CenterStart)
+          .offset(x = thumbOffset)
+          .size(thumbSize)
+          .indication(
+            interactionSource = resolvedInteractionSource,
+            indication = ripple(
+              bounded = false,
+              radius = SwitchStateLayerSize / 2,
+            ),
+          )
+          .background(
+            colors.thumbColorFor(enabled, checked),
+            trackShape,
           ),
-        )
-        .background(
-          colors.thumbColorFor(enabled, checked),
-          trackShape,
-        ),
-      contentAlignment = Alignment.Center,
-    ) {
-      CompositionLocalProvider(
-        LocalContentColor provides colors.iconColorFor(enabled, checked),
+        contentAlignment = Alignment.Center,
       ) {
-        thumbContent?.invoke()
+        CompositionLocalProvider(
+          LocalContentColor provides colors.iconColorFor(enabled, checked),
+        ) {
+          thumbContent?.invoke()
+        }
       }
     }
   }
@@ -2501,7 +2508,6 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .weight(1f)
         .height(height),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
@@ -2562,7 +2568,6 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .weight(1f)
         .fillMaxHeight(),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
