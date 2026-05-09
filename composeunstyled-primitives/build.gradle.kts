@@ -104,7 +104,7 @@ kotlin {
         api(projects.composeunstyledTooltip)
         api(projects.composeunstyledScrollArea)
         api(projects.composeunstyledScrollbars)
-        api(projects.composeunstyledOverlay)
+        api(projects.composeunstyledPortal)
       }
     }
 

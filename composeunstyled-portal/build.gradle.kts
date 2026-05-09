@@ -39,11 +39,11 @@ val publishGroupId = "com.composables"
 val publishVersion = libs.versions.unstyled.get()
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
-val pomArtifactId = "composeunstyled-overlay"
-val pomName = "Compose Unstyled Overlay"
-val pomDescription = "Same-window overlay utility for Jetpack Compose."
-val frameworkBaseName = "ComposeUnstyledOverlay"
-val androidNamespace = "com.composeunstyled.overlay"
+val pomArtifactId = "composeunstyled-portal"
+val pomName = "Compose Unstyled Portal"
+val pomDescription = "Same-window portal utility for Jetpack Compose."
+val frameworkBaseName = "ComposeUnstyledPortal"
+val androidNamespace = "com.composeunstyled.portal"
 
 java {
   toolchain {

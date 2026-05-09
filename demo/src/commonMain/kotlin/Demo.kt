@@ -80,7 +80,7 @@ import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.X
-import com.composeunstyled.OverlayHost
+import com.composeunstyled.PortalHost
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -90,7 +90,7 @@ import com.composeunstyled.outline
 @Composable
 fun Demo(demoId: String? = null) {
   MaterialTheme {
-    OverlayHost {
+    PortalHost {
       Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
         if (demoId == null) {
           DemoSelection()

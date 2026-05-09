@@ -26,29 +26,29 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 
-class OverlayTest {
+class PortalTest {
 
   @Test
-  fun rendersContentInsideOverlayHost() = runComposeUiTest {
+  fun rendersContentInsidePortalHost() = runComposeUiTest {
     setContent {
-      OverlayHost {
-        Overlay {
-          BasicText("Overlay content")
+      PortalHost {
+        Portal {
+          BasicText("Portal content")
         }
       }
     }
 
-    onNodeWithText("Overlay content").assertExists()
+    onNodeWithText("Portal content").assertExists()
   }
 
   @Test
-  fun rendersNothingWithoutOverlayHost() = runComposeUiTest {
+  fun rendersNothingWithoutPortalHost() = runComposeUiTest {
     setContent {
-      Overlay {
-        BasicText("Overlay content")
+      Portal {
+        BasicText("Portal content")
       }
     }
 
-    onNodeWithText("Overlay content").assertDoesNotExist()
+    onNodeWithText("Portal content").assertDoesNotExist()
   }
 }

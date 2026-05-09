@@ -80,7 +80,7 @@ kotlin {
       dependencies {
         implementation(libs.compose.foundation)
         api(projects.composeunstyledAnchored)
-        api(projects.composeunstyledOverlay)
+        api(projects.composeunstyledPortal)
         implementation(projects.composeunstyledBuildModifier)
         implementation(projects.composeunstyledEscapeHandler)
         implementation(projects.composeunstyledWindowContainerSize)
