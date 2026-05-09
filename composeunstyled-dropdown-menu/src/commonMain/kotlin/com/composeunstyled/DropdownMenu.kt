@@ -37,9 +37,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -73,7 +75,9 @@ import androidx.compose.ui.window.PopupProperties
 internal class DropdownMenuState(
   val onExpandedChange: (Boolean) -> Unit,
   val transitionState: MutableTransitionState<Boolean>,
-)
+) {
+  val itemFocusRequesters = mutableStateListOf<FocusRequester>()
+}
 
 interface DropdownMenuScope
 
@@ -179,25 +183,32 @@ fun DropdownMenuScope.DropdownMenuPanel(
     enter = enter,
     exit = exit,
     modifier = Modifier.onKeyEvent { event ->
+      if (!event.isKeyDown) {
+        return@onKeyEvent false
+      }
       when (event.key) {
         Key.DirectionDown -> {
-          if (event.isKeyDown) {
-            currentFocusManager.moveFocus(FocusDirection.Next)
-          }
+          currentFocusManager.moveFocus(FocusDirection.Next)
           true
         }
 
         Key.DirectionUp -> {
-          if (event.isKeyDown) {
-            currentFocusManager.moveFocus(FocusDirection.Previous)
-          }
+          currentFocusManager.moveFocus(FocusDirection.Previous)
           true
         }
 
         Key.Escape -> {
-          if (event.isKeyDown) {
-            state.onExpandedChange(false)
-          }
+          state.onExpandedChange(false)
+          true
+        }
+
+        Key.Home -> {
+          state.itemFocusRequesters.firstOrNull()?.requestFocus()
+          true
+        }
+
+        Key.MoveEnd -> {
+          state.itemFocusRequesters.lastOrNull()?.requestFocus()
           true
         }
 
@@ -230,9 +241,18 @@ fun DropdownMenuPanelScope.MenuItem(
   content: @Composable () -> Unit,
 ) {
   val state = LocalDropdownMenuState.current
+  val itemFocusRequester = remember { FocusRequester() }
+
+  DisposableEffect(state, itemFocusRequester) {
+    state.itemFocusRequesters += itemFocusRequester
+    onDispose {
+      state.itemFocusRequesters -= itemFocusRequester
+    }
+  }
 
   Row(
     modifier = modifier then buildModifier {
+      add(Modifier.focusRequester(itemFocusRequester))
       add(
         Modifier.clickable(
           onClick = {
