@@ -26,7 +26,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.selection.triStateToggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -87,7 +86,7 @@ class TriStateCheckboxScope internal constructor(
 fun TriStateCheckboxScope.StateIndicator(
   modifier: Modifier = Modifier,
   indication: Indication? = null,
-  content: @Composable BoxScope.(ToggleableState) -> Unit,
+  content: @Composable (ToggleableState) -> Unit,
 ) {
   Box(
     modifier = modifier then buildModifier {
