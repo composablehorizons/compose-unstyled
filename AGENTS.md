@@ -38,6 +38,10 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 
 - Never use the old `shadow()` API as it uses Material Design's specs. Always prefer using `dropShadow()` (`androidx.compose.ui.draw.dropShadow`) instead.
 
+## Kotlin style
+
+- Use `.not()` instead of the unary `!` operator for Boolean negation.
+
 ## Git commit etiquette
 
 - Commit messages should describe how the codebase changed, not just the bug that was fixed.
