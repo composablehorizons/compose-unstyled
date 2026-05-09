@@ -26,18 +26,32 @@ package com.composeunstyled
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isCloseTo
@@ -102,6 +116,43 @@ class ModalBottomSheetTest {
       }
       onNodeWithTag("sheet").assertExists()
       assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
+    }
+
+    testCase("sheet is visible, when detents do not include Hidden") {
+      val peek = SheetDetent("peek") { _, _ -> 100.dp }
+
+      setContent {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(
+            initialDetent = peek,
+            detents = listOf(peek, SheetDetent.FullyExpanded),
+          ),
+          overlay = { Scrim() },
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
+        }
+      }
+
+      onNodeWithTag("sheet").assertExists()
+    }
+
+    testCase("content respects LocalLayoutDirection") {
+      setContent {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+          UnstyledModalBottomSheet(
+            state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+            overlay = { Scrim() },
+          ) {
+            Sheet {
+              val layoutDirection =
+                if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
+              BasicText(layoutDirection, Modifier.testTag("layout_direction"))
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("layout_direction").assertTextEquals("rtl")
     }
 
     testCase("scrim is visible, when initial detent is fully expanded") {
@@ -449,6 +500,53 @@ class ModalBottomSheetTest {
       onNode(isDialog()).assertExists()
     }
 
+    testCase("updated properties are used for outside tap dismissal") {
+      var dismissOnClickOutside by mutableStateOf(false)
+
+      setContent {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+          properties = ModalSheetProperties(dismissOnClickOutside = dismissOnClickOutside),
+          overlay = { Scrim(Modifier.testTag("scrim")) },
+        ) {
+          Sheet { Box(Modifier.size(40.dp)) }
+        }
+      }
+
+      onNodeWithTag("scrim").performClick()
+      waitForIdle()
+      onNode(isDialog()).assertExists()
+
+      dismissOnClickOutside = true
+      waitForIdle()
+
+      onNodeWithTag("scrim").performClick()
+      waitForIdle()
+      onNode(isDialog()).assertDoesNotExist()
+    }
+
+    testCase("non-fixed height sheet dismisses with one outside tap") {
+      setContent {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+          properties = ModalSheetProperties(dismissOnClickOutside = true),
+          overlay = { Scrim(Modifier.testTag("scrim")) },
+        ) {
+          Sheet {
+            Column(Modifier.fillMaxWidth()) {
+              DragIndication()
+              BasicText("Some text")
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("scrim").performClick()
+      waitForIdle()
+
+      onNode(isDialog()).assertDoesNotExist()
+    }
+
     testCase("modal is dismissed, when sheet is dismissed programmatically") {
       lateinit var state: ModalBottomSheetState
       setContent {
@@ -762,6 +860,116 @@ class ModalBottomSheetTest {
       assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
       assertThat(state.offset).isCloseTo(600.dp.toPx(), DensityTolerance.toPx())
       onNode(isDialog()).assertExists()
+    }
+  }
+
+  @Test
+  fun scrollable_content() = runTestSuite {
+    testCase("scrollable content without fixed height does not clip last item") {
+      val expanded = SheetDetent("expanded") { containerHeight, _ ->
+        containerHeight * 0.7f
+      }
+
+      setContent {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(
+            initialDetent = expanded,
+            detents = listOf(SheetDetent.Hidden, expanded),
+          ),
+          overlay = { Scrim() },
+        ) {
+          Sheet {
+            Column(
+              Modifier
+                .testTag("scrollable_content")
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(10) { index ->
+                BasicText(
+                  text = "index = $index",
+                  modifier = Modifier
+                    .testTag("item_$index")
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("item_9").performScrollTo()
+      onNodeWithTag("item_9").assertIsDisplayed()
+    }
+
+    testCase("onDismiss is called, when hiding after scrollable content was scrolled") {
+      lateinit var state: ModalBottomSheetState
+      var dismissCallCount = 0
+
+      setContent {
+        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
+        UnstyledModalBottomSheet(
+          state = state,
+          onDismiss = { dismissCallCount++ },
+          overlay = { Scrim() },
+        ) {
+          Sheet {
+            Column(
+              Modifier
+                .testTag("scrollable_content")
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(10) { index ->
+                BasicText(
+                  text = "index = $index",
+                  modifier = Modifier
+                    .testTag("item_$index")
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("item_9").performScrollTo()
+      state.targetDetent = SheetDetent.Hidden
+      waitForIdle()
+
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+      assertThat(dismissCallCount).isEqualTo(1)
+    }
+
+    testCase("modal remains visible, when content size changes after showing") {
+      var linesOfText by mutableStateOf(10)
+
+      setContent {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+          overlay = { Scrim(Modifier.testTag("scrim")) },
+        ) {
+          Sheet {
+            Column(Modifier.fillMaxWidth()) {
+              DragIndication()
+              repeat(linesOfText) { index ->
+                BasicText("line $index", Modifier.testTag("line_$index"))
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("scrim").assertExists()
+
+      linesOfText = 5
+      waitForIdle()
+
+      onNode(isDialog()).assertExists()
+      onNodeWithTag("scrim").assertExists()
+      onNodeWithTag("line_4").assertExists()
     }
   }
 
