@@ -150,7 +150,7 @@ fun UnstyledTooltip(
 
       hoverDelayJob = null
       timerJob = null
-    } else if (!keyboardFocusShowsTooltip && !hovered) {
+    } else if (keyboardFocusShowsTooltip.not() && hovered.not()) {
       state.show = false
     }
   }
@@ -168,7 +168,7 @@ fun UnstyledTooltip(
       // Mouse left - cancel hover delay and hide tooltip
       hoverDelayJob?.cancel()
       hoverDelayJob = null
-      if (!keyboardFocusShowsTooltip) {
+      if (keyboardFocusShowsTooltip.not()) {
         state.show = false
       }
     }
@@ -190,14 +190,14 @@ fun UnstyledTooltip(
         }
       }
       .onFocusChanged {
-        if (it.hasFocus && !focused) {
+        if (it.hasFocus && focused.not()) {
           focusTrigger = nextFocusTrigger ?: if (hovered) {
             TooltipFocusTrigger.Pointer
           } else {
             TooltipFocusTrigger.Keyboard
           }
           nextFocusTrigger = null
-        } else if (!it.hasFocus) {
+        } else if (it.hasFocus.not()) {
           focusTrigger = null
           nextFocusTrigger = null
         }

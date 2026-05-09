@@ -475,7 +475,7 @@ class TooltipJvmTest {
     onNodeWithTag("trigger_button").assertIsFocused()
 
     val tooltipConfig = onNodeWithTag("tooltip_content").fetchSemanticsNode().config
-    assert(SemanticsProperties.Focused !in tooltipConfig) {
+    assert((SemanticsProperties.Focused in tooltipConfig).not()) {
       "Expected tooltip content to not expose focused semantics"
     }
   }

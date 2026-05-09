@@ -66,32 +66,32 @@ private val SwitchTrackOutlineWidth = 2.dp
 private fun SwitchColors.trackColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedTrackColor
-    enabled && !checked -> uncheckedTrackColor
-    !enabled && checked -> disabledCheckedTrackColor
+    enabled && checked.not() -> uncheckedTrackColor
+    enabled.not() && checked -> disabledCheckedTrackColor
     else -> disabledUncheckedTrackColor
   }
 
 private fun SwitchColors.thumbColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedThumbColor
-    enabled && !checked -> uncheckedThumbColor
-    !enabled && checked -> disabledCheckedThumbColor
+    enabled && checked.not() -> uncheckedThumbColor
+    enabled.not() && checked -> disabledCheckedThumbColor
     else -> disabledUncheckedThumbColor
   }
 
 private fun SwitchColors.borderColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedBorderColor
-    enabled && !checked -> uncheckedBorderColor
-    !enabled && checked -> disabledCheckedBorderColor
+    enabled && checked.not() -> uncheckedBorderColor
+    enabled.not() && checked -> disabledCheckedBorderColor
     else -> disabledUncheckedBorderColor
   }
 
 private fun SwitchColors.iconColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedIconColor
-    enabled && !checked -> uncheckedIconColor
-    !enabled && checked -> disabledCheckedIconColor
+    enabled && checked.not() -> uncheckedIconColor
+    enabled.not() && checked -> disabledCheckedIconColor
     else -> disabledUncheckedIconColor
   }
 private fun Modifier.minimumInteractiveComponentSize(enabled: Boolean): Modifier =
@@ -130,7 +130,7 @@ fun Switch(
   val checkedThumbOffset = SwitchWidth - SwitchThumbSize - (SwitchHeight - SwitchThumbSize) / 2
   val thumbOffsetTarget = when {
     pressed && checked -> checkedThumbOffset - SwitchTrackOutlineWidth
-    pressed && !checked -> SwitchTrackOutlineWidth
+    pressed && checked.not() -> SwitchTrackOutlineWidth
     checked -> checkedThumbOffset
     else -> (SwitchHeight - thumbTargetSize) / 2
   }

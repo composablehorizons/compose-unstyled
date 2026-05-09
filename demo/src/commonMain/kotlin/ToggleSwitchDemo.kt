@@ -72,7 +72,7 @@ fun ToggleSwitchDemo() {
           .clip(RoundedCornerShape(12.dp))
           .selectable(
             selected = toggled,
-            onClick = { toggled = !toggled },
+            onClick = { toggled = toggled.not() },
             indication = LocalIndication.current,
             interactionSource = null,
             role = Role.Switch,

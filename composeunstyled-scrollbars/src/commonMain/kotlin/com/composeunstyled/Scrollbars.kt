@@ -429,7 +429,7 @@ private fun ScrollBar(
   isVertical: Boolean,
   thumb: @Composable (ScrollbarScope.() -> Unit),
 ) {
-  val reverseLayout = if (LocalLayoutDirection.current == LayoutDirection.Rtl) !reverse else reverse
+  val reverseLayout = if (LocalLayoutDirection.current == LayoutDirection.Rtl) reverse.not() else reverse
   val dragInteraction = remember { mutableStateOf<DragInteraction.Start?>(null) }
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
   androidx.compose.runtime.DisposableEffect(resolvedInteractionSource) {
@@ -533,7 +533,7 @@ fun ScrollbarScope.Thumb(
         } else {
           thumbVisibilityJob = scope.launch {
             delay(thumbVisibility.hideDelay)
-            if (!shouldKeepThumbVisible()) {
+            if (shouldKeepThumbVisible().not()) {
               showThumb = false
             }
           }
@@ -901,7 +901,7 @@ private suspend fun PointerInputScope.detectScrollViaTrackGestures(
       if (drag == null) {
         scroller.onGestureCancelled()
         break
-      } else if (!drag.pressed) {
+      } else if (drag.pressed.not()) {
         scroller.onRelease()
         break
       } else {

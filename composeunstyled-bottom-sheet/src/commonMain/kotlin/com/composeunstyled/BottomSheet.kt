@@ -449,7 +449,7 @@ class BottomSheetState(
 
     // Capture the direction we were moving BEFORE updating anchors
     // We determine this by comparing the target position to the current detent position
-    val wasMovingUp = if (!isIdle && newTarget != currentDetent) {
+    val wasMovingUp = if (isIdle.not() && newTarget != currentDetent) {
       val targetPosition = anchoredDraggableState.anchors.positionOf(newTarget)
       val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
       targetPosition < currentPosition

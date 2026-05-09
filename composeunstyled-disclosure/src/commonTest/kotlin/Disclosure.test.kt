@@ -140,12 +140,12 @@ private fun hasCollapseAction(): SemanticsMatcher {
 
 private fun hasNoExpandAction(): SemanticsMatcher {
   return SemanticsMatcher("has no expand action") { node ->
-    SemanticsActions.Expand !in node.config
+    (SemanticsActions.Expand in node.config).not()
   }
 }
 
 private fun hasNoCollapseAction(): SemanticsMatcher {
   return SemanticsMatcher("has no collapse action") { node ->
-    SemanticsActions.Collapse !in node.config
+    (SemanticsActions.Collapse in node.config).not()
   }
 }

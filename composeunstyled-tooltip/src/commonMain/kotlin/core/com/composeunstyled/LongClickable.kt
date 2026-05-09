@@ -184,13 +184,13 @@ internal class PressGestureScopeImpl(density: Density) : PressGestureScope, Dens
   }
 
   override suspend fun awaitRelease() {
-    if (!tryAwaitRelease()) {
+    if (tryAwaitRelease().not()) {
       throw GestureCancellationException("The press gesture was canceled.")
     }
   }
 
   override suspend fun tryAwaitRelease(): Boolean {
-    if (!isReleased && !isCanceled) {
+    if (isReleased.not() && isCanceled.not()) {
       mutex.lock()
       mutex.unlock()
     }

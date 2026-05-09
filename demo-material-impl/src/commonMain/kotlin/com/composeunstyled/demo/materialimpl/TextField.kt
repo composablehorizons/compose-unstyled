@@ -226,13 +226,13 @@ private fun TextFieldContent(
   }
 
   val activeColor = when {
-    !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    enabled.not() -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
     isError -> MaterialTheme.colorScheme.error
     isFocused -> MaterialTheme.colorScheme.primary
     else -> MaterialTheme.colorScheme.onSurfaceVariant
   }
   val indicatorColor = when {
-    !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+    enabled.not() -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
     isError -> MaterialTheme.colorScheme.error
     isFocused -> MaterialTheme.colorScheme.primary
     isHovered -> MaterialTheme.colorScheme.onSurface
@@ -292,7 +292,7 @@ private fun TextFieldContent(
   Column(modifier) {
     UnstyledTextField(
       state = state,
-      editable = enabled && !readOnly,
+      editable = enabled && readOnly.not(),
       textStyle = textStyle,
       textColor = MaterialTheme.colorScheme.onSurface,
       keyboardOptions = keyboardOptions,

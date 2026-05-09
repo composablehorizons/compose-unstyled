@@ -77,8 +77,8 @@ fun RadioButton(
   ) {
     val radioColorTarget = when {
       enabled && selected -> colors.selectedColor
-      enabled && !selected -> colors.unselectedColor
-      !enabled && selected -> colors.disabledSelectedColor
+      enabled && selected.not() -> colors.unselectedColor
+      enabled.not() && selected -> colors.disabledSelectedColor
       else -> colors.disabledUnselectedColor
     }
     val radioColor by animateColorAsState(

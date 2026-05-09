@@ -76,16 +76,16 @@ private fun SliderColors.thumbColorFor(enabled: Boolean): Color =
 private fun SliderColors.trackColorFor(enabled: Boolean, active: Boolean): Color =
   when {
     enabled && active -> activeTrackColor
-    enabled && !active -> inactiveTrackColor
-    !enabled && active -> disabledActiveTrackColor
+    enabled && active.not() -> inactiveTrackColor
+    enabled.not() && active -> disabledActiveTrackColor
     else -> disabledInactiveTrackColor
   }
 
 private fun SliderColors.tickColorFor(enabled: Boolean, active: Boolean): Color =
   when {
     enabled && active -> activeTickColor
-    enabled && !active -> inactiveTickColor
-    !enabled && active -> disabledActiveTickColor
+    enabled && active.not() -> inactiveTickColor
+    enabled.not() && active -> disabledActiveTickColor
     else -> disabledInactiveTickColor
   }
 private fun Modifier.minimumInteractiveComponentSize(enabled: Boolean): Modifier =
@@ -183,7 +183,7 @@ private fun PlainSliderTrack(
       for (step in 1..steps) {
         val tickFraction = step.toFloat() / (steps + 1)
         val tickX = lerp(cornerRadius, trackWidth - cornerRadius, tickFraction)
-        if (tickX !in (thumbCenter - thumbGap)..(thumbCenter + thumbGap)) {
+        if ((tickX in (thumbCenter - thumbGap)..(thumbCenter + thumbGap)).not()) {
           drawCircle(
             color = if (tickFraction <= fraction) activeTickColor else inactiveTickColor,
             radius = stopRadius,
