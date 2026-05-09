@@ -553,7 +553,7 @@ fun UnstyledBottomSheet(
   state: BottomSheetState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  imeAware: Boolean = false,
+  offsetForIme: Boolean = false,
   content: @Composable BottomSheetScope.() -> Unit,
 ) {
   val context = remember(state) { BottomSheetContext(state = state, enabled = enabled) }
@@ -581,7 +581,7 @@ fun UnstyledBottomSheet(
     CompositionLocalProvider(LocalBottomSheetContext provides context) {
       Box(
         modifier = buildModifier {
-          add(Modifier.sheetOffset(state = state, imeAware = imeAware))
+          add(Modifier.sheetOffset(state = state, offsetForIme = offsetForIme))
           if (context.enabled && state.detents.size > 1) {
             add(
               Modifier
@@ -695,12 +695,12 @@ fun BottomSheetScope.Sheet(
 }
 
 @Composable
-private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Modifier {
+private fun Modifier.sheetOffset(state: BottomSheetState, offsetForIme: Boolean): Modifier {
   val density = LocalDensity.current
   val ime = WindowInsets.ime
   val imeHeight by remember {
     derivedStateOf {
-      if (imeAware) ime.getBottom(density) else 0
+      if (offsetForIme) ime.getBottom(density) else 0
     }
   }
 
@@ -729,7 +729,7 @@ private fun Modifier.sheetOffset(state: BottomSheetState, imeAware: Boolean): Mo
         }
       },
     )
-    if (imeAware) {
+    if (offsetForIme) {
       add(Modifier.consumeWindowInsets(ime))
     }
   }
