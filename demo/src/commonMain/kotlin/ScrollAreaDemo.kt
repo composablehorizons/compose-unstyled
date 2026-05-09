@@ -59,7 +59,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.ScrollArea
 import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
@@ -111,8 +110,7 @@ fun VerticalScrollAreaDemo() {
     val state = rememberScrollState()
     val scrollbarState = rememberScrollbarState(state)
 
-    ScrollArea(
-      state = scrollbarState,
+    Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -167,8 +165,7 @@ fun HorizontalScrollAreaDemo() {
     val state = rememberScrollState()
     val scrollbarState = rememberScrollbarState(state)
 
-    ScrollArea(
-      state = scrollbarState,
+    Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))

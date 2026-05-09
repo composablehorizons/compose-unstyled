@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -54,7 +55,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState)) {
           repeat(100) { index ->
             BasicText("Item $index")
@@ -82,7 +83,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState)) {
           repeat(100) { index ->
             BasicText("Item $index")
@@ -112,7 +113,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
@@ -146,7 +147,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
@@ -191,7 +192,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(
           modifier = Modifier
             .height(200.dp)
@@ -260,7 +261,7 @@ class ScrollBarsTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
@@ -314,7 +315,7 @@ class ScrollBarsTest {
       setContent {
         val scrollState = rememberScrollState()
         val scrollbarState = rememberScrollbarState(scrollState)
-        ScrollArea(state = scrollbarState) {
+        Box {
           Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
             repeat(100) { index ->
               BasicText("Item $index")
@@ -374,7 +375,7 @@ class ScrollBarsTest {
     setContent {
       val lazyListState = rememberLazyListState()
       val scrollbarState = rememberScrollbarState(lazyListState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         LazyColumn(modifier = Modifier.height(200.dp).testTag("list"), state = lazyListState) {
           items((0 until 36_000).toList()) { index ->
             BasicText("Item $index")

@@ -40,7 +40,6 @@ import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -54,7 +53,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
@@ -95,31 +93,6 @@ fun rememberScrollbarState(lazyGridState: LazyGridState): ScrollbarState =
   remember(lazyGridState) {
     LazyGridScrollbarState(lazyGridState)
   }
-
-@Composable
-fun ScrollArea(
-  state: ScrollbarState,
-  modifier: Modifier = Modifier,
-  content: @Composable ScrollAreaScope.() -> Unit,
-) {
-  Box(modifier) {
-    val boxScope = this
-    val scrollAreaScope = remember(boxScope) {
-      ScrollAreaScope(boxScope)
-    }
-    scrollAreaScope.content()
-  }
-}
-
-class ScrollAreaScope internal constructor(
-  private val boxScope: BoxScope,
-) {
-  fun Modifier.align(alignment: Alignment): Modifier {
-    return with(boxScope) {
-      align(alignment)
-    }
-  }
-}
 
 interface ScrollbarState {
 
