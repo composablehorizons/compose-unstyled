@@ -156,7 +156,6 @@ class ModalBottomSheetState internal constructor(
         modalState.transitionState.targetState = true
         pendingDetentChange?.cancel()
         pendingDetentChange = scope.launch {
-          modalState.awaitAttachedToWindow()
           bottomSheetState.animateTo(value)
         }
         pendingDetentChange?.join()
@@ -185,9 +184,6 @@ class ModalBottomSheetState internal constructor(
     pendingDetentChange?.cancel()
     pendingDetentChange = scope.launch {
       modalState.transitionState.targetState = value != SheetDetent.Hidden
-      if (value != SheetDetent.Hidden) {
-        modalState.awaitAttachedToWindow()
-      }
       bottomSheetState.jumpTo(value)
     }
   }
