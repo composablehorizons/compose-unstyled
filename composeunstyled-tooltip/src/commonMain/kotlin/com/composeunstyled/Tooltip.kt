@@ -81,6 +81,10 @@ internal val LocalTooltipState = staticCompositionLocalOf<TooltipState> {
   TooltipState()
 }
 
+private enum class TooltipFocusTrigger {
+  Keyboard, Pointer
+}
+
 @Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
@@ -95,14 +99,14 @@ fun UnstyledTooltip(
 ) {
   val state = remember { TooltipState() }
   var focused by remember { mutableStateOf(false) }
-  var focusKeepsTooltipVisible by remember { mutableStateOf(false) }
-  var entered by remember { mutableStateOf(false) }
-  var pointerFocusPending by remember { mutableStateOf(false) }
-  var focusedByPointer by remember { mutableStateOf(false) }
+  var focusTrigger by remember { mutableStateOf<TooltipFocusTrigger?>(null) }
+  var hovered by remember { mutableStateOf(false) }
+  var nextFocusTrigger by remember { mutableStateOf<TooltipFocusTrigger?>(null) }
   val scope = rememberCoroutineScope()
 
   var timerJob: Job? by remember { mutableStateOf(null) }
   var hoverDelayJob: Job? by remember { mutableStateOf(null) }
+  val keyboardFocusShowsTooltip = focused && focusTrigger == TooltipFocusTrigger.Keyboard
 
   fun showTooltip(duration: Long) {
     timerJob = scope.launch {
@@ -113,10 +117,10 @@ fun UnstyledTooltip(
   }
 
   fun dismissTooltip() {
-    entered = false
+    hovered = false
     focused = false
-    focusKeepsTooltipVisible = false
-    focusedByPointer = false
+    focusTrigger = null
+    nextFocusTrigger = null
     hoverDelayJob?.cancel()
     timerJob?.cancel()
     hoverDelayJob = null
@@ -137,8 +141,8 @@ fun UnstyledTooltip(
   }
 
   // focus handling - show instantly when focused
-  LaunchedEffect(focused, focusKeepsTooltipVisible, enabled) {
-    if (enabled && focused && focusKeepsTooltipVisible) {
+  LaunchedEffect(focused, focusTrigger, hovered, enabled) {
+    if (enabled && keyboardFocusShowsTooltip) {
       state.show = true
 
       hoverDelayJob?.cancel()
@@ -146,14 +150,14 @@ fun UnstyledTooltip(
 
       hoverDelayJob = null
       timerJob = null
-    } else if ((!focused || !focusKeepsTooltipVisible) && !entered) {
+    } else if (!keyboardFocusShowsTooltip && !hovered) {
       state.show = false
     }
   }
 
   // hover handling - show after hoverDelayMillis
-  LaunchedEffect(entered, enabled, hoverDelayMillis) {
-    if (enabled && entered) {
+  LaunchedEffect(hovered, enabled, hoverDelayMillis) {
+    if (enabled && hovered) {
       hoverDelayJob?.cancel()
 
       hoverDelayJob = scope.launch {
@@ -164,7 +168,7 @@ fun UnstyledTooltip(
       // Mouse left - cancel hover delay and hide tooltip
       hoverDelayJob?.cancel()
       hoverDelayJob = null
-      if (!focused || !focusKeepsTooltipVisible || focusedByPointer) {
+      if (!keyboardFocusShowsTooltip) {
         state.show = false
       }
     }
@@ -187,12 +191,15 @@ fun UnstyledTooltip(
       }
       .onFocusChanged {
         if (it.hasFocus && !focused) {
-          focusKeepsTooltipVisible = !pointerFocusPending && !entered
-          focusedByPointer = pointerFocusPending
-          pointerFocusPending = false
+          focusTrigger = nextFocusTrigger ?: if (hovered) {
+            TooltipFocusTrigger.Pointer
+          } else {
+            TooltipFocusTrigger.Keyboard
+          }
+          nextFocusTrigger = null
         } else if (!it.hasFocus) {
-          focusKeepsTooltipVisible = false
-          focusedByPointer = false
+          focusTrigger = null
+          nextFocusTrigger = null
         }
         focused = it.hasFocus
       }
@@ -202,22 +209,19 @@ fun UnstyledTooltip(
             val event = awaitPointerEvent()
             when (event.type) {
               PointerEventType.Press -> {
-                pointerFocusPending = true
-                focusedByPointer = true
-                focusKeepsTooltipVisible = false
+                nextFocusTrigger = TooltipFocusTrigger.Pointer
+                if (focused) {
+                  focusTrigger = TooltipFocusTrigger.Pointer
+                }
               }
 
               PointerEventType.Enter -> {
-                pointerFocusPending = true
-                entered = true
+                hovered = true
               }
 
               PointerEventType.Exit -> {
-                entered = false
-                pointerFocusPending = false
-                if (focusedByPointer) {
-                  state.show = false
-                }
+                hovered = false
+                nextFocusTrigger = null
               }
             }
           }
