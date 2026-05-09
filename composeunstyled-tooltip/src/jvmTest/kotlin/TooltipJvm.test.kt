@@ -335,6 +335,49 @@ class TooltipJvmTest {
   }
 
   @Test
+  fun tooltipAppearsOnKeyboardFocusAfterHoverEnds() = runComposeUiTest {
+    setPaddedContent {
+      Row {
+        UnstyledTooltip(
+          panel = {
+            TooltipPanel {
+              BasicText("Tooltip content")
+            }
+          },
+        ) {
+          UnstyledButton(onClick = {}, modifier = Modifier.testTag("trigger")) {
+            BasicText("Trigger")
+          }
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("other")) {
+          BasicText("Other")
+        }
+      }
+    }
+
+    onNodeWithTag("trigger").performMouseInput {
+      enter(center)
+    }
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+
+    onNodeWithTag("trigger").performMouseInput {
+      exit()
+    }
+    onNodeWithTag("other").performMouseInput {
+      enter(center)
+    }
+    waitForIdle()
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+
+    onNodeWithTag("trigger").requestFocus()
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+  }
+
+  @Test
   fun tooltipRemainsVisibleAfterMouseClickWhileAnchorIsHovered() = runComposeUiTest {
     setPaddedContent {
       UnstyledTooltip(
