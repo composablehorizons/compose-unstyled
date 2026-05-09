@@ -1270,7 +1270,6 @@ fun RadioButton(
   UnstyledRadioGroup(
     value = if (selected) "selected" else null,
     onValueChange = { onClick?.invoke() },
-    contentDescription = null,
   ) {
     val radioColorTarget = when {
       enabled && selected -> colors.selectedColor

@@ -25,7 +25,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
@@ -48,7 +51,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = selectedValue,
         onValueChange = { selectedValue = it },
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",
@@ -71,7 +73,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = selectedValue,
         onValueChange = { selectedValue = it },
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = 1,
@@ -94,7 +95,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = selectedValue,
         onValueChange = { selectedValue = it },
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",
@@ -117,7 +117,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = null,
         onValueChange = {},
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",
@@ -132,12 +131,34 @@ class RadioGroupTest {
   }
 
   @Test
+  fun exposesAccessibilityLabelSemantics() = runComposeUiTest {
+    setContent {
+      UnstyledRadioGroup(
+        value = "option",
+        onValueChange = {},
+        modifier = Modifier.testTag("group"),
+        accessibilityLabel = "Theme selection",
+      ) {
+        UnstyledRadioButton(value = "option") {
+          Box(Modifier.size(20.dp))
+        }
+      }
+    }
+
+    onNodeWithTag("group").assert(
+      SemanticsMatcher.expectValue(
+        SemanticsProperties.ContentDescription,
+        listOf("Theme selection"),
+      ),
+    )
+  }
+
+  @Test
   fun exposesSelectedSemantics() = runComposeUiTest {
     setContent {
       UnstyledRadioGroup(
         value = "option",
         onValueChange = {},
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",
@@ -157,7 +178,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = null,
         onValueChange = {},
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",
@@ -179,7 +199,6 @@ class RadioGroupTest {
       UnstyledRadioGroup(
         value = "option",
         onValueChange = {},
-        contentDescription = null,
       ) {
         UnstyledRadioButton(
           value = "option",

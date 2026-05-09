@@ -67,8 +67,8 @@ private val LocalInnerRadioGroupState = staticCompositionLocalOf { InnerRadioGro
 fun <T> UnstyledRadioGroup(
   value: T?,
   onValueChange: (T) -> Unit,
-  contentDescription: String?,
   modifier: Modifier = Modifier,
+  accessibilityLabel: String? = null,
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val focusManager = LocalFocusManager.current
@@ -86,8 +86,8 @@ fun <T> UnstyledRadioGroup(
     modifier
       .selectableGroup()
       .semantics {
-        if (contentDescription != null) {
-          this.contentDescription = contentDescription
+        if (accessibilityLabel != null) {
+          this.contentDescription = accessibilityLabel
         }
       }
       .onKeyEvent { event ->

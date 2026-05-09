@@ -71,7 +71,7 @@ fun RadioGroupDemo() {
         value = selectedValue,
         onValueChange = { selectedValue = it },
         modifier = Modifier.fillMaxWidth(),
-        contentDescription = "Theme selection",
+        accessibilityLabel = "Theme selection",
       ) {
         Column(
           horizontalAlignment = Alignment.Start,
