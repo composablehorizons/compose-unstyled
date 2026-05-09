@@ -41,6 +41,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,10 +57,16 @@ import com.composeunstyled.DialogPanel
 import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
+import kotlinx.coroutines.delay
 
 @Composable
 fun DialogDemo() {
   var dialogVisible by remember { mutableStateOf(false) }
+
+  LaunchedEffect(Unit) {
+    delay(500)
+    dialogVisible = true
+  }
 
   Box(
     modifier = Modifier.fillMaxSize()
