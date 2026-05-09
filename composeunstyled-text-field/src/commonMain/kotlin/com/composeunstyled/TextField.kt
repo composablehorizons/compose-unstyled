@@ -133,7 +133,7 @@ fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
   editable: Boolean = true,
-  cursorBrush: Brush = SolidColor(Color.Black),
+  cursorBrush: Brush = SolidColor(Color.Unspecified),
   textStyle: TextStyle = TextStyle.Default,
   textAlign: TextAlign = TextAlign.Unspecified,
   lineHeight: TextUnit = TextUnit.Unspecified,
