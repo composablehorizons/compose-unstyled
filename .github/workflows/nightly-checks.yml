@@ -1,0 +1,203 @@
+name: Nightly Checks
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  API_LEVEL: 23
+  ARCH: x86_64
+  DISK_SIZE: 2048M
+
+jobs:
+  jvm-and-assemble:
+    env:
+      ORG_GRADLE_JVMARGS: "-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: JVM Tests and Assemble
+        run: ./gradlew --console=plain spotlessCheck jvmTest assemble
+
+  discover-android-modules:
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.discover.outputs.modules }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Discover Android modules
+        id: discover
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          modules="$(
+            ./gradlew --console=plain tasks --all |
+              awk -F: '/^composeunstyled-[^:]+:connectedDebugAndroidTest / { print ":" $1 }' |
+              sort -u
+          )"
+
+          if [ -z "$modules" ]; then
+            echo "No composeunstyled-* connectedDebugAndroidTest tasks found."
+            exit 1
+          fi
+
+          modules_json="$(printf '%s\n' "$modules" | jq -R . | jq -s -c .)"
+          echo "modules=$modules_json" >> "$GITHUB_OUTPUT"
+
+  android-tests:
+    name: ${{ matrix.module }}-android-tests
+    needs: discover-android-modules
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJson(needs.discover-android-modules.outputs.modules) }}
+    steps:
+      - name: Enable Hardware Acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Restore AVD
+        uses: actions/cache@v5
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.API_LEVEL }}-${{ env.ARCH }}-${{ env.DISK_SIZE }}
+
+      - name: Create AVD
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
+          disk-size: ${{ env.DISK_SIZE }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Android Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          arch: ${{ env.ARCH }}
+          disk-size: ${{ env.DISK_SIZE }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
+
+  report-failure:
+    needs: [ jvm-and-assemble, discover-android-modules, android-tests ]
+    if: ${{ always() && (needs.jvm-and-assemble.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open GitHub issue
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = 'Nightly checks are failing';
+            const labels = ['nightly-failure'];
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const results = {
+              'jvm-and-assemble': '${{ needs.jvm-and-assemble.result }}',
+              'discover-android-modules': '${{ needs.discover-android-modules.result }}',
+              'android-tests': '${{ needs.android-tests.result }}',
+            };
+
+            const body = [
+              'Nightly checks failed on `main`.',
+              '',
+              `Workflow run: ${runUrl}`,
+              '',
+              'Job results:',
+              ...Object.entries(results).map(([job, result]) => `- \`${job}\`: ${result}`),
+              '',
+              'Please inspect the failed job logs and fix `main` before cutting a release.',
+            ].join('\n');
+
+            const { data: existingIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: labels.join(','),
+              per_page: 10,
+            });
+            const existingIssue = existingIssues.find(issue => issue.title === title);
+
+            if (existingIssue) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existingIssue.number,
+                body,
+              });
+              return;
+            }
+
+            try {
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: labels[0],
+                color: 'd73a4a',
+                description: 'Main branch nightly validation is failing.',
+              });
+            } catch (error) {
+              if (error.status !== 422) {
+                throw error;
+              }
+            }
+
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels,
+            });
