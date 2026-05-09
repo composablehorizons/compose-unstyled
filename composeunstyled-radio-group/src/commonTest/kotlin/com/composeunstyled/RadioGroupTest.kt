@@ -65,6 +65,29 @@ class RadioGroupTest {
   }
 
   @Test
+  fun supportsNonStringRadioButtonValues() = runComposeUiTest {
+    var selectedValue: Int? = null
+    setContent {
+      UnstyledRadioGroup(
+        value = selectedValue,
+        onValueChange = { selectedValue = it },
+        contentDescription = null,
+      ) {
+        UnstyledRadioButton(
+          value = 1,
+          modifier = Modifier.testTag("radio"),
+        ) {
+          Box(Modifier.size(20.dp))
+        }
+      }
+    }
+
+    onNodeWithTag("radio").performClick()
+
+    assertEquals(1, selectedValue)
+  }
+
+  @Test
   fun clickDoesNotSelectRadioButtonWhenDisabled() = runComposeUiTest {
     var selectedValue: String? = null
     setContent {

@@ -64,9 +64,9 @@ private val KeyEvent.isKeyDown: Boolean
 private val LocalInnerRadioGroupState = staticCompositionLocalOf { InnerRadioGroupState() }
 
 @Composable
-fun UnstyledRadioGroup(
-  value: String?,
-  onValueChange: (String) -> Unit,
+fun <T> UnstyledRadioGroup(
+  value: T?,
+  onValueChange: (T) -> Unit,
   contentDescription: String?,
   modifier: Modifier = Modifier,
   content: @Composable ColumnScope.() -> Unit,
@@ -76,7 +76,10 @@ fun UnstyledRadioGroup(
 
   SideEffect {
     state.value = value
-    state.onValueChange = onValueChange
+    state.onValueChange = { nextValue ->
+      @Suppress("UNCHECKED_CAST")
+      onValueChange(nextValue as T)
+    }
   }
 
   Column(
@@ -114,13 +117,13 @@ fun UnstyledRadioGroup(
 }
 
 private class InnerRadioGroupState {
-  var value by mutableStateOf<String?>(null)
-  var onValueChange by mutableStateOf<(String) -> Unit>({})
+  var value by mutableStateOf<Any?>(null)
+  var onValueChange by mutableStateOf<(Any?) -> Unit>({})
 }
 
 @Composable
-fun UnstyledRadioButton(
-  value: String,
+fun <T> UnstyledRadioButton(
+  value: T,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
