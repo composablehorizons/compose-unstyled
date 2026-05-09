@@ -65,7 +65,6 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
@@ -576,7 +575,6 @@ fun UnstyledBottomSheet(
       state.containerHeightPx = it.height.toFloat()
       state.invalidateDetents()
     },
-    contentAlignment = Alignment.TopCenter,
   ) {
     CompositionLocalProvider(LocalBottomSheetContext provides context) {
       Box(
@@ -606,7 +604,6 @@ fun UnstyledBottomSheet(
           }
           add(modifier.pointerInput(Unit) { detectTapGestures { } })
         },
-        contentAlignment = Alignment.TopCenter,
       ) {
         BottomSheetScopeInstance.content()
       }

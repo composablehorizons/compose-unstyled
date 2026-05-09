@@ -21,13 +21,13 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -134,37 +134,42 @@ fun TextFieldDemo() {
             PasswordOutputTransformation
           },
         ) {
-          Text(
-            "Password",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = MaterialTheme.typography.bodyLarge,
-          )
-          TextInput(
-            modifier = Modifier
-              .fillMaxWidth()
-              .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-              .background(Color.White, RoundedCornerShape(8.dp))
-              .padding(vertical = 4.dp)
-              .padding(start = 16.dp, end = 4.dp),
-            accessibilityLabel = "Password",
-            placeholder = {
-              Text(
-                text = "8-12 characters",
-                style = MaterialTheme.typography.bodyMedium.merge(
-                  TextStyle(
-                    color = Color.Black.copy(
-                      0.6f,
+          Column {
+            Text(
+              "Password",
+              modifier = Modifier.padding(bottom = 8.dp),
+              style = MaterialTheme.typography.bodyLarge,
+            )
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .padding(vertical = 4.dp)
+                .padding(start = 16.dp, end = 4.dp),
+              verticalAlignment = Alignment.CenterVertically,
+              horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+              TextInput(
+                modifier = Modifier.weight(1f),
+                accessibilityLabel = "Password",
+                placeholder = {
+                  Text(
+                    text = "8-12 characters",
+                    style = MaterialTheme.typography.bodyMedium.merge(
+                      TextStyle(
+                        color = Color.Black.copy(
+                          0.6f,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  )
+                },
               )
-            },
-            trailing = {
               UnstyledButton(
                 onClick = { showPassword = showPassword.not() },
                 contentPadding = PaddingValues(4.dp),
                 modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-                indication = LocalIndication.current,
               ) {
                 UnstyledIcon(
                   imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
@@ -172,8 +177,8 @@ fun TextFieldDemo() {
                   tint = Color(0xFF757575),
                 )
               }
-            },
-          )
+            }
+          }
         }
 
         UnstyledButton(

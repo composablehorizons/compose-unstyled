@@ -95,7 +95,7 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun sheet_panel_is_horizontally_centered_in_bottom_sheet_container() = runComposeUiTest {
+  fun sheet_panel_does_not_choose_horizontal_alignment() = runComposeUiTest {
     lateinit var state: BottomSheetState
 
     setContent {
@@ -124,11 +124,9 @@ class BottomSheetCommonTest {
 
     waitForIdle()
 
-    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
     val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
 
-    val expectedLeft = (rootBounds.width - panelBounds.width) / 2f
-    assertThat(panelBounds.left).isCloseTo(expectedLeft, 0.5f)
+    assertThat(panelBounds.left).isCloseTo(0f, 0.5f)
   }
 
   @Test

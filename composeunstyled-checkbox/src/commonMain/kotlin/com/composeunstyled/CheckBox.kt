@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -74,7 +73,6 @@ fun UnstyledCheckbox(
         )
       }
     },
-    contentAlignment = Alignment.Center,
   ) {
     scope.content()
   }
@@ -100,7 +98,6 @@ fun CheckboxScope.CheckedIndicator(
         add(Modifier.indication(interactionSource, indication))
       }
     },
-    contentAlignment = Alignment.Center,
   ) {
     AnimatedVisibility(
       visible = checked,

@@ -27,12 +27,10 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -52,7 +50,7 @@ fun UnstyledButton(
   interactionSource: MutableInteractionSource? = null,
   content: @Composable () -> Unit,
 ) {
-  Row(
+  Box(
     modifier = modifier then buildModifier {
       add(
         Modifier.clickable(
@@ -68,8 +66,6 @@ fun UnstyledButton(
       }
       add(Modifier.padding(contentPadding))
     },
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
   ) {
     content()
   }

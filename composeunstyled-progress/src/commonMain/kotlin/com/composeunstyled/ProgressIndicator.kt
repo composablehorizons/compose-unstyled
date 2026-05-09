@@ -25,8 +25,6 @@ package com.composeunstyled
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -78,5 +76,5 @@ fun UnstyledProgress(
 fun ProgressScope.Indicator(
   modifier: Modifier = Modifier,
 ) {
-  Box(modifier.fillMaxWidth(progress).fillMaxHeight())
+  Box(modifier)
 }

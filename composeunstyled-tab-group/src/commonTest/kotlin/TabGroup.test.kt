@@ -21,6 +21,8 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +34,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
 class TabGroupCommonTest {
@@ -50,7 +53,7 @@ class TabGroupCommonTest {
         onSelectedTabChange = { selectedTab = it },
         tabs = listOf("tab1", "tab2", "tab3"),
       ) {
-        TabList(Modifier.testTag("tablist")) {
+        TabList(Modifier.testTag("tablist").requiredWidth(160.dp)) {
           Tab(
             key = "tab1",
             modifier = Modifier.testTag("tab1"),
@@ -59,13 +62,13 @@ class TabGroupCommonTest {
           }
           Tab(
             key = "tab2",
-            modifier = Modifier.testTag("tab2"),
+            modifier = Modifier.testTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             key = "tab3",
-            modifier = Modifier.testTag("tab3"),
+            modifier = Modifier.testTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }

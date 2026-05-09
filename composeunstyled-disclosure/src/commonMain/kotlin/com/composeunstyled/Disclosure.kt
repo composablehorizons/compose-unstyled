@@ -29,7 +29,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -67,7 +67,7 @@ fun UnstyledDisclosure(
 ) {
   val scope = rememberDisclosureScope(expanded, onExpandedChange)
 
-  Column(modifier) {
+  Box(modifier) {
     scope.content()
   }
 }

@@ -54,6 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   scrim.
 - Scroll area state APIs moved into the scrollbars module and were renamed to `ScrollbarState`.
   The `ScrollArea` container was removed so scrollbars do not impose layout or styling choices.
+- Component primitives no longer choose internal layout, alignment, or sizing for their content.
+  Design systems are now responsible for arranging primitive slots and indicators.
 
 ### Fixed
 - Tooltips now hide on Escape only while visible and keep keyboard focus and hover visibility

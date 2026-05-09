@@ -297,7 +297,7 @@ class DialogTest {
     onNodeWithTag("dialog_content").assertExists()
 
     onNodeWithTag("dialog_backdrop").performTouchInput {
-      click(Offset(1f, 1f))
+      click(Offset(150f, 150f))
     }
     waitForIdle()
 
