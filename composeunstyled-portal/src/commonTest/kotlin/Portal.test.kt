@@ -21,9 +21,17 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 
 class PortalTest {
@@ -50,5 +58,18 @@ class PortalTest {
     }
 
     onNodeWithText("Portal content").assertDoesNotExist()
+  }
+
+  @Test
+  fun portalHostDoesNotFillAvailableSizeByDefault() = runComposeUiTest {
+    setContent {
+      PortalHost(Modifier.testTag("host")) {
+        Box(Modifier.size(24.dp))
+      }
+    }
+
+    onNodeWithTag("host")
+      .assertWidthIsEqualTo(24.dp)
+      .assertHeightIsEqualTo(24.dp)
   }
 }

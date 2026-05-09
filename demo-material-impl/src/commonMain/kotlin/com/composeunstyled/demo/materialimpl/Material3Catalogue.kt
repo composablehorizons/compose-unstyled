@@ -112,7 +112,7 @@ import androidx.compose.material3.rememberModalBottomSheetState as rememberM3Mod
 @Composable
 fun Material3ImplementationDemo() {
   MaterialTheme {
-    PortalHost {
+    PortalHost(Modifier.fillMaxSize()) {
       val navController = rememberNavController()
       Surface(
         modifier = Modifier.fillMaxSize(),
