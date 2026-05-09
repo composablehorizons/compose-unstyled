@@ -400,7 +400,7 @@ class BottomSheetState(
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
     }
-    if (currentDetent == value && targetDetent == value) {
+    if (currentDetent == value && targetDetent == value && isIdle) {
       return
     }
     awaitAnchors()

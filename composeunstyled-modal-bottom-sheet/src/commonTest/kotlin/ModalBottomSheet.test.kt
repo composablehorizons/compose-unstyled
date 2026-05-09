@@ -452,6 +452,7 @@ class ModalBottomSheetTest {
     onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
     mainClock.advanceTimeByFrame()
 
+    val offsetAfterDismiss = state.offset
     val dialogBottomAfterDismiss = onNode(isDialog()).fetchSemanticsNode().boundsInRoot.bottom
     val sheetTopAfterDismiss = onNodeWithTag("sheet").fetchSemanticsNode().boundsInRoot.top
 
@@ -459,6 +460,9 @@ class ModalBottomSheetTest {
     assertThat(sheetTopAfterDismiss).isLessThan(dialogBottomAfterDismiss)
     onNode(isDialog()).assertExists()
     onNodeWithTag("sheet").assertExists()
+
+    mainClock.advanceTimeBy(250)
+    assertThat(state.offset).isLessThan(offsetAfterDismiss)
     mainClock.autoAdvance = true
   }
 
