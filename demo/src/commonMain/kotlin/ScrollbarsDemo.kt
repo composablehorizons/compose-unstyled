@@ -67,12 +67,12 @@ import com.composeunstyled.rememberScrollbarState
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ScrollAreaDemo() {
-  VerticalScrollAreaDemo()
+fun ScrollbarsDemo() {
+  VerticalScrollbarsDemo()
 }
 
 @Composable
-fun VerticalScrollAreaDemo() {
+fun VerticalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
       .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
@@ -155,7 +155,7 @@ fun VerticalScrollAreaDemo() {
 }
 
 @Composable
-fun HorizontalScrollAreaDemo() {
+fun HorizontalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
       .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))

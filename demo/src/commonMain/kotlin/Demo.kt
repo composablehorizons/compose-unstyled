@@ -121,7 +121,7 @@ private val availablePrimitives = listOf(
   DemoItem("Modal", "modal", { ModalDemo() }),
   DemoItem("Progress Indicator", "progressindicator", { ProgressIndicatorDemo() }),
   DemoItem("Radio Group", "radiogroup", { RadioGroupDemo() }),
-  DemoItem("Scroll Area", "scrollarea", { ScrollAreaDemo() }),
+  DemoItem("Scrollbars", "scrollbars", { ScrollbarsDemo() }),
   DemoItem("Separators", "separators", { SeparatorsDemo() }),
   DemoItem("Slider", "slider", { SliderDemo() }),
   DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
