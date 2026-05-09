@@ -73,7 +73,7 @@ class ScrollBarsTest {
     }
 
     onNodeWithTag("thumb").assertIsDisplayed()
-    advanceTimeBy(60.seconds)
+    mainClock.advanceTimeBy(60.seconds.inWholeMilliseconds)
     onNodeWithTag("thumb").assertIsDisplayed()
   }
 
@@ -178,11 +178,11 @@ class ScrollBarsTest {
     onNodeWithTag("thumb").assertIsDisplayed()
 
     // time = 4.second
-    advanceTimeBy(3.seconds)
+    mainClock.advanceTimeBy(3.seconds.inWholeMilliseconds)
     onNodeWithTag("thumb").assertIsDisplayed()
 
     // time = 6.second
-    advanceTimeBy(2.seconds)
+    mainClock.advanceTimeBy(2.seconds.inWholeMilliseconds)
     onNodeWithTag("thumb").assertDoesNotExist()
   }
 
@@ -234,7 +234,7 @@ class ScrollBarsTest {
     onNodeWithTag("thumb").assertIsDisplayed()
 
     // Advance time beyond hideDelay while still dragging
-    advanceTimeBy(3.seconds)
+    mainClock.advanceTimeBy(3.seconds.inWholeMilliseconds)
     waitForIdle()
 
     // must still be visible while drag is active
@@ -250,7 +250,7 @@ class ScrollBarsTest {
     onNodeWithTag("thumb").assertIsDisplayed()
 
     // After hideDelay → hidden
-    advanceTimeBy(2.seconds)
+    mainClock.advanceTimeBy(2.seconds.inWholeMilliseconds)
     waitForIdle()
     onNodeWithTag("thumb").assertDoesNotExist()
   }
@@ -296,14 +296,14 @@ class ScrollBarsTest {
     onNodeWithTag("thumb").assertIsDisplayed()
 
     // Advance time beyond hideDelay while dragging
-    advanceTimeBy(6.seconds)
+    mainClock.advanceTimeBy(6.seconds.inWholeMilliseconds)
     onNodeWithTag("thumb").assertIsDisplayed() // Should still be visible
 
     // Stop dragging
     onNodeWithTag("thumb").performTouchInput { up() }
 
     // Advance time beyond hideDelay
-    advanceTimeBy(6.seconds)
+    mainClock.advanceTimeBy(6.seconds.inWholeMilliseconds)
     waitForIdle()
     onNodeWithTag("thumb").assertDoesNotExist()
   }
@@ -354,7 +354,7 @@ class ScrollBarsTest {
       // Pointer has moved outside track bounds while drag is still active.
 
       // Even after hideDelay, thumb must remain visible while drag is active.
-      advanceTimeBy(3.seconds)
+      mainClock.advanceTimeBy(3.seconds.inWholeMilliseconds)
       waitForIdle()
       onNodeWithTag("thumb").assertIsDisplayed()
 
@@ -364,7 +364,7 @@ class ScrollBarsTest {
       onNodeWithTag("thumb").assertIsDisplayed()
 
       // Now it may hide after idle delay.
-      advanceTimeBy(2.seconds)
+      mainClock.advanceTimeBy(2.seconds.inWholeMilliseconds)
       waitForIdle()
       onNodeWithTag("thumb").assertDoesNotExist()
     }

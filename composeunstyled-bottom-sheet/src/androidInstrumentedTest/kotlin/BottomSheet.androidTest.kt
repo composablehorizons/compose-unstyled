@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
@@ -42,51 +43,49 @@ import kotlin.test.assertFalse
 class BottomSheetTest {
 
   @Test
-  fun stateChangesDuringInteractions() = runTestSuite {
-    testCase("isIdle is false, when dragging sheet with scrollable content") {
-      lateinit var sheetState: BottomSheetState
-      setContent {
-        val Peek = SheetDetent(identifier = "peek") { containerHeight, _ ->
-          containerHeight * 0.6f
-        }
-        sheetState = rememberBottomSheetState(
-          initialDetent = Peek,
-          detents = listOf(Peek, SheetDetent.FullyExpanded),
-        )
+  fun isidle_is_false_when_dragging_sheet_with_scrollable_content() = runComposeUiTest {
+    lateinit var sheetState: BottomSheetState
+    setContent {
+      val Peek = SheetDetent(identifier = "peek") { containerHeight, _ ->
+        containerHeight * 0.6f
+      }
+      sheetState = rememberBottomSheetState(
+        initialDetent = Peek,
+        detents = listOf(Peek, SheetDetent.FullyExpanded),
+      )
 
-        UnstyledBottomSheet(
-          state = sheetState,
-          modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .testTag("sheet"),
-        ) {
-          Column(modifier = Modifier.fillMaxWidth()) {
-            LazyColumn {
-              repeat(50) {
-                item {
-                  BasicText(
-                    text = "Item #${(it + 1)}",
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(10.dp),
-                  )
-                }
+      UnstyledBottomSheet(
+        state = sheetState,
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(Color.White)
+          .testTag("sheet"),
+      ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+          LazyColumn {
+            repeat(50) {
+              item {
+                BasicText(
+                  text = "Item #${(it + 1)}",
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                )
               }
             }
           }
         }
       }
-
-      // Drag the sheet
-      onNodeWithTag("sheet").performTouchInput {
-        swipeDown(
-          startY = centerY,
-          endY = centerY + 200f,
-        )
-      }
-
-      assertFalse(sheetState.isIdle)
     }
+
+    // Drag the sheet
+    onNodeWithTag("sheet").performTouchInput {
+      swipeDown(
+        startY = centerY,
+        endY = centerY + 200f,
+      )
+    }
+
+    assertFalse(sheetState.isIdle)
   }
 }

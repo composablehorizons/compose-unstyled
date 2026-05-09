@@ -90,14 +90,12 @@ kotlin {
       implementation(libs.androidx.compose.test)
       implementation(libs.androidx.compose.test.manifest)
       implementation(libs.androidx.espresso)
-      implementation(project(":testcase"))
       implementation(projects.composeunstyledScrim)
     }
 
     commonTest.dependencies {
       implementation(kotlin("test"))
       implementation(libs.assertk)
-      implementation(project(":testcase"))
       implementation(projects.composeunstyledScrim)
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
