@@ -25,7 +25,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -39,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
@@ -102,8 +101,7 @@ fun UnstyledSwitch(
 @Composable
 fun SwitchScope.SwitchThumb(
   modifier: Modifier = Modifier,
-  animationSpec: FiniteAnimationSpec<Dp> = tween(),
-  contentAlignment: Alignment = Alignment.Center,
+  animationSpec: FiniteAnimationSpec<Dp> = snap(),
   content: @Composable () -> Unit = {},
 ) {
   var trackWidth by remember { mutableStateOf(0.dp) }
@@ -128,7 +126,6 @@ fun SwitchScope.SwitchThumb(
         .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
         .alpha(if (hasMeasured) 1f else 0f)
         .then(modifier),
-      contentAlignment = contentAlignment,
     ) {
       content()
     }

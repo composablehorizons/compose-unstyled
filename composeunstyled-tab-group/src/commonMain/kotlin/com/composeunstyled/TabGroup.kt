@@ -29,7 +29,6 @@ import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -138,8 +136,6 @@ fun <T> TabGroupScope<T>.TabList(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = NoPadding,
   orientation: Orientation = Orientation.Horizontal,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-  verticalAlignment: Alignment.Vertical = Alignment.Top,
   content: @Composable TabListScope<T>.() -> Unit,
 ) {
   val registry = registry
@@ -231,8 +227,6 @@ fun <T> TabGroupScope<T>.TabList(
           registry.tabFocusRequesters[tabKeys.firstOrNull()]?.requestFocus()
         }
       },
-    horizontalArrangement = horizontalArrangement,
-    verticalAlignment = verticalAlignment,
   ) {
     val tabListScope = remember(registry) {
       TabListScope(registry)
@@ -296,7 +290,6 @@ fun <T> TabGroupScope<T>.TabPanel(
   key: T,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = NoPadding,
-  contentAlignment: Alignment = Alignment.TopStart,
   content: @Composable () -> Unit,
 ) {
   val registry = registry
@@ -310,7 +303,6 @@ fun <T> TabGroupScope<T>.TabPanel(
         .focusRequester(focusRequester)
         .focusable()
         .focusGroup(),
-      contentAlignment = contentAlignment,
     ) {
       content()
     }
