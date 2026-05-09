@@ -24,6 +24,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Modifier chains in public composables must always start with the `modifier` parameter before adding internal modifiers.
 - Use `buildModifier` for conditional modifiers instead of branching inside `Modifier.then(...)`.
 - Scoped composables must be extension functions on the scope, not members of the scope interface or class.
+- State object constructors should stay available to users so they can wrap primitive state in their own state objects. Keep implementation details hidden, but do not hide a state constructor only because `remember...State` exists.
 - Public `interactionSource` parameters should be nullable and default to `null`. Resolve a non-null interaction source internally only when the primitive needs one for behavior or slot state.
 - Public `indication` parameters should be nullable and default to `LocalIndication.current`: `indication: Indication? = LocalIndication.current`.
 
