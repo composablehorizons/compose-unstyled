@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -128,34 +127,36 @@ fun TabGroupDemo() {
           .clip(RoundedCornerShape(8.dp))
           .background(Color.White),
       ) {
-        categories.forEach { (key, _) ->
-          Tab(
-            key = key,
-            modifier = Modifier.width(120.dp).fillMaxHeight(),
-          ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-              Text(
-                text = key,
-                style = TextStyle(
-                  fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                  color = if (selected) {
-                    Color(0xFF2196F3)
-                  } else {
-                    Color(0xFF757575)
-                  },
-                ),
-              )
-              if (selected) {
-                Box(
-                  modifier = Modifier
-                    .background(
-                      color = Color(0xFF2196F3),
-                      shape = RoundedCornerShape(2.dp),
-                    )
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .align(Alignment.BottomCenter),
+        Row(Modifier.fillMaxSize()) {
+          categories.forEach { (key, _) ->
+            Tab(
+              key = key,
+              modifier = Modifier.weight(1f).fillMaxHeight(),
+            ) {
+              Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                  text = key,
+                  style = TextStyle(
+                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                    color = if (selected) {
+                      Color(0xFF2196F3)
+                    } else {
+                      Color(0xFF757575)
+                    },
+                  ),
                 )
+                if (selected) {
+                  Box(
+                    modifier = Modifier
+                      .background(
+                        color = Color(0xFF2196F3),
+                        shape = RoundedCornerShape(2.dp),
+                      )
+                      .fillMaxWidth()
+                      .height(3.dp)
+                      .align(Alignment.BottomCenter),
+                  )
+                }
               }
             }
           }
