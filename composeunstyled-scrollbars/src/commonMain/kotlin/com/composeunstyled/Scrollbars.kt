@@ -49,6 +49,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.Layout
@@ -68,6 +70,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 
@@ -189,7 +192,12 @@ private fun ScrollBar(
     content = { scrollbarScope.thumb() },
     modifier = modifier.hoverable(interactionSource = resolvedInteractionSource).let {
       if (enabled) {
-        it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
+        it.touchDragOnLongPress(
+          isVertical = isVertical,
+          interactionSource = resolvedInteractionSource,
+          draggedInteraction = dragInteraction,
+          sliderAdapter = sliderAdapter,
+        ).scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
       } else {
         it
       }
@@ -510,6 +518,50 @@ private fun Modifier.scrollOnPressTrack(
       isVertical = isVertical,
       scroller = scroller,
     )
+  }
+}
+
+private fun Modifier.touchDragOnLongPress(
+  isVertical: Boolean,
+  interactionSource: MutableInteractionSource,
+  draggedInteraction: MutableState<DragInteraction.Start?>,
+  sliderAdapter: SliderAdapter,
+): Modifier = composed {
+  val currentInteractionSource by rememberUpdatedState(interactionSource)
+  val currentDraggedInteraction by rememberUpdatedState(draggedInteraction)
+  val currentSliderAdapter by rememberUpdatedState(sliderAdapter)
+
+  pointerInput(Unit) {
+    awaitEachGesture {
+      val down = awaitFirstDown(requireUnconsumed = false)
+      val downPosition = if (isVertical) down.position.y else down.position.x
+      if (down.type != PointerType.Touch || downPosition.toInt() !in currentSliderAdapter.thumbPixelRange) {
+        return@awaitEachGesture
+      }
+
+      val longPressed = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
+        do {
+          val event = awaitPointerEvent()
+        } while (event.changes.none { it.changedToUp() || it.isConsumed })
+      } == null
+      if (!longPressed) return@awaitEachGesture
+
+      val interaction = DragInteraction.Start()
+      currentInteractionSource.tryEmit(interaction)
+      currentDraggedInteraction.value = interaction
+      currentSliderAdapter.onDragStarted()
+      val isSuccess = drag(down.id) { change ->
+        currentSliderAdapter.onDragDelta(change.positionChange())
+        change.consume()
+      }
+      val finishInteraction = if (isSuccess) {
+        DragInteraction.Stop(interaction)
+      } else {
+        DragInteraction.Cancel(interaction)
+      }
+      currentInteractionSource.tryEmit(finishInteraction)
+      currentDraggedInteraction.value = null
+    }
   }
 }
 
