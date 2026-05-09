@@ -25,6 +25,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -37,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
@@ -63,7 +65,7 @@ class ScrollBarsTest {
           modifier = Modifier.testTag("scrollbar"),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.AlwaysVisible,
           )
         }
@@ -91,7 +93,7 @@ class ScrollBarsTest {
           modifier = Modifier.testTag("scrollbar"),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,
@@ -121,7 +123,7 @@ class ScrollBarsTest {
           modifier = Modifier.testTag("scrollbar"),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,
@@ -156,7 +158,7 @@ class ScrollBarsTest {
             .align(Alignment.CenterEnd),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,
@@ -205,7 +207,7 @@ class ScrollBarsTest {
             .align(Alignment.CenterEnd),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,
@@ -269,7 +271,7 @@ class ScrollBarsTest {
           modifier = Modifier.testTag("scrollbar"),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,
@@ -323,7 +325,7 @@ class ScrollBarsTest {
             modifier = Modifier.testTag("track"),
           ) {
             Thumb(
-              modifier = Modifier.testTag("thumb"),
+              modifier = Modifier.testTag("thumb").width(8.dp),
               thumbVisibility = ThumbVisibility.HideWhileIdle(
                 enter = EnterTransition.None,
                 exit = ExitTransition.None,
@@ -368,7 +370,7 @@ class ScrollBarsTest {
     }
 
   @Test
-  fun vertical_scrollbar_respects_explicit_thumb_height_modifier() = runComposeUiTest {
+  fun vertical_scrollbar_uses_thumb_modifiers_for_minimum_size_and_thickness() = runComposeUiTest {
     setContent {
       val lazyListState = rememberLazyListState()
       val scrollAreaState = rememberScrollAreaState(lazyListState)
@@ -385,7 +387,8 @@ class ScrollBarsTest {
           Thumb(
             modifier = Modifier
               .testTag("thumb")
-              .height(48.dp),
+              .width(3.dp)
+              .height(4.dp),
             thumbVisibility = ThumbVisibility.AlwaysVisible,
           )
         }
@@ -393,6 +396,7 @@ class ScrollBarsTest {
     }
 
     onNodeWithTag("thumb").assertIsDisplayed()
-    onNodeWithTag("thumb").assertHeightIsEqualTo(48.dp)
+    onNodeWithTag("thumb").assertWidthIsEqualTo(3.dp)
+    onNodeWithTag("thumb").assertHeightIsEqualTo(4.dp)
   }
 }

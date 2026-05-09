@@ -25,6 +25,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -58,7 +59,7 @@ class ScrollBarsJvmTest {
           modifier = Modifier.testTag("track"),
         ) {
           Thumb(
-            modifier = Modifier.testTag("thumb"),
+            modifier = Modifier.testTag("thumb").width(8.dp),
             thumbVisibility = ThumbVisibility.HideWhileIdle(
               enter = EnterTransition.None,
               exit = ExitTransition.None,

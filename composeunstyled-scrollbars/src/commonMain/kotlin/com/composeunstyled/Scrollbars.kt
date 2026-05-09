@@ -54,13 +54,9 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasurePolicy
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.constrainHeight
-import androidx.compose.ui.unit.constrainWidth
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -116,7 +112,7 @@ private fun ScrollBar(
   reverse: Boolean = false,
   isVertical: Boolean,
   thumb: @Composable (ScrollbarScope.() -> Unit),
-) = with(LocalDensity.current) {
+) {
   val reverseLayout = if (LocalLayoutDirection.current == LayoutDirection.Rtl) !reverse else reverse
   val dragInteraction = remember { mutableStateOf<DragInteraction.Start?>(null) }
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
@@ -131,8 +127,7 @@ private fun ScrollBar(
 
   var containerSize by remember { mutableStateOf(0) }
 
-  val defaultMinThumbSize = 16.dp.toPx()
-  var preferredMinThumbSize by remember { mutableStateOf(defaultMinThumbSize) }
+  var preferredMinThumbSize by remember { mutableStateOf(0f) }
 
   val coroutineScope = rememberCoroutineScope()
   val sliderAdapter = remember(
@@ -161,25 +156,19 @@ private fun ScrollBar(
       scrollAreaState,
     )
   }
-  val scrollThickness = 8.dp.roundToPx()
-
   val measurePolicy = if (isVertical) {
-    remember(sliderAdapter, scrollThickness, defaultMinThumbSize) {
+    remember(sliderAdapter) {
       verticalMeasurePolicy(
         sliderAdapter = sliderAdapter,
         setContainerSize = { containerSize = it },
-        scrollThickness = scrollThickness,
-        defaultMinThumbSize = defaultMinThumbSize,
         setPreferredMinThumbSize = { preferredMinThumbSize = it },
       )
     }
   } else {
-    remember(sliderAdapter, scrollThickness, defaultMinThumbSize) {
+    remember(sliderAdapter) {
       horizontalMeasurePolicy(
         sliderAdapter = sliderAdapter,
         setContainerSize = { containerSize = it },
-        scrollThickness = scrollThickness,
-        defaultMinThumbSize = defaultMinThumbSize,
         setPreferredMinThumbSize = { preferredMinThumbSize = it },
       )
     }
@@ -387,23 +376,22 @@ internal class SliderAdapter internal constructor(
 private fun verticalMeasurePolicy(
   sliderAdapter: SliderAdapter,
   setContainerSize: (Int) -> Unit,
-  scrollThickness: Int,
-  defaultMinThumbSize: Float,
   setPreferredMinThumbSize: (Float) -> Unit,
 ) = MeasurePolicy { measurables, constraints ->
   updatePreferredMinThumbSize(
     measurable = measurables.firstOrNull(),
     isVertical = true,
-    crossAxisSize = scrollThickness,
-    defaultMinThumbSize = defaultMinThumbSize,
+    crossAxisSize = constraints.maxWidth,
     setPreferredMinThumbSize = setPreferredMinThumbSize,
   )
   setContainerSize(constraints.maxHeight)
   val pixelRange = sliderAdapter.thumbPixelRange
   val placeable = measurables.firstOrNull()?.measure(
-    Constraints.fixed(
-      constraints.constrainWidth(scrollThickness),
-      pixelRange.size,
+    Constraints(
+      minWidth = 0,
+      maxWidth = constraints.maxWidth,
+      minHeight = pixelRange.size,
+      maxHeight = pixelRange.size,
     ),
   )
   if (placeable == null) {
@@ -418,15 +406,12 @@ private fun verticalMeasurePolicy(
 private fun horizontalMeasurePolicy(
   sliderAdapter: SliderAdapter,
   setContainerSize: (Int) -> Unit,
-  scrollThickness: Int,
-  defaultMinThumbSize: Float,
   setPreferredMinThumbSize: (Float) -> Unit,
 ) = MeasurePolicy { measurables, constraints ->
   updatePreferredMinThumbSize(
     measurable = measurables.firstOrNull(),
     isVertical = false,
-    crossAxisSize = scrollThickness,
-    defaultMinThumbSize = defaultMinThumbSize,
+    crossAxisSize = constraints.maxHeight,
     setPreferredMinThumbSize = setPreferredMinThumbSize,
   )
   setContainerSize(constraints.maxWidth)
@@ -437,9 +422,11 @@ private fun horizontalMeasurePolicy(
     }
   } else {
     val placeable = measurables.first().measure(
-      Constraints.fixed(
-        pixelRange.size,
-        constraints.constrainHeight(scrollThickness),
+      Constraints(
+        minWidth = pixelRange.size,
+        maxWidth = pixelRange.size,
+        minHeight = 0,
+        maxHeight = constraints.maxHeight,
       ),
     )
     layout(constraints.maxWidth, placeable.height) {
@@ -452,7 +439,6 @@ private fun updatePreferredMinThumbSize(
   measurable: Measurable?,
   isVertical: Boolean,
   crossAxisSize: Int,
-  defaultMinThumbSize: Float,
   setPreferredMinThumbSize: (Float) -> Unit,
 ) {
   if (measurable == null) return
@@ -461,7 +447,7 @@ private fun updatePreferredMinThumbSize(
   } else {
     measurable.minIntrinsicWidth(crossAxisSize)
   }.coerceAtLeast(0)
-  val preferredMinThumbSize = intrinsicMainAxisSize.toFloat().coerceAtLeast(defaultMinThumbSize)
+  val preferredMinThumbSize = intrinsicMainAxisSize.toFloat()
   setPreferredMinThumbSize(preferredMinThumbSize)
 }
 
