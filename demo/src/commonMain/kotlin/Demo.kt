@@ -90,7 +90,7 @@ import com.composeunstyled.outline
 @Composable
 fun Demo(demoId: String? = null) {
   MaterialTheme {
-    PortalHost {
+    PortalHost(Modifier.fillMaxSize()) {
       Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
         if (demoId == null) {
           DemoSelection()

@@ -22,8 +22,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -42,12 +40,13 @@ private class PortalState {
 
 @Composable
 fun PortalHost(
-  content: @Composable BoxScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) {
   val state = remember { PortalState() }
 
   CompositionLocalProvider(LocalPortalState provides state) {
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier) {
       content()
       state.entries.forEach { (id, content) ->
         key(id) {
