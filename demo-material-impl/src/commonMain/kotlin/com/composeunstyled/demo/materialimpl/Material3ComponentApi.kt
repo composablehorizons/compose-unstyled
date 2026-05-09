@@ -209,6 +209,7 @@ import com.composeunstyled.DialogPanel
 import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.ModalBottomSheetState
 import com.composeunstyled.ModalSheetProperties
+import com.composeunstyled.RadioButton
 import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
@@ -226,7 +227,6 @@ import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.UnstyledProgress
-import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.UnstyledSwitch
@@ -1285,7 +1285,7 @@ fun RadioButton(
       targetValue = if (selected) RadioButtonDotSize / 2 else 0.dp,
       animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
     )
-    UnstyledRadioButton(
+    RadioButton(
       value = "selected",
       modifier = modifier.minimumInteractiveComponentSize(onClick != null),
       enabled = enabled,
@@ -1914,7 +1914,7 @@ private fun TextFieldContent(
               .graphicsLayer {
                 scaleX = labelScale
                 scaleY = labelScale
-                transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0f, 0f)
+                transformOrigin = TransformOrigin(0f, 0f)
               },
           ) {
             CompositionLocalProvider(LocalContentColor provides activeColor) {
@@ -2382,7 +2382,7 @@ fun InputChip(
   leadingIcon: @Composable (() -> Unit)? = null,
   trailingIcon: @Composable (() -> Unit)? = null,
   shape: Shape = InputChipDefaults.shape,
-  colors: androidx.compose.material3.SelectableChipColors = InputChipDefaults.inputChipColors(),
+  colors: SelectableChipColors = InputChipDefaults.inputChipColors(),
   elevation: SelectableChipElevation? = InputChipDefaults.inputChipElevation(),
   border: BorderStroke? = InputChipDefaults.inputChipBorder(enabled, selected),
   interactionSource: MutableInteractionSource? = null,
@@ -3204,7 +3204,7 @@ fun Scaffold(
   snackbarHost: @Composable () -> Unit = {},
   floatingActionButton: @Composable () -> Unit = {},
   floatingActionButtonPosition: FabPosition = FabPosition.End,
-  containerColor: Color = androidx.compose.material3.MaterialTheme.colorScheme.background,
+  containerColor: Color = MaterialTheme.colorScheme.background,
   contentColor: Color = androidx.compose.material3.contentColorFor(containerColor),
   contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
   content: @Composable (PaddingValues) -> Unit,
@@ -3240,7 +3240,7 @@ fun Scaffold(
 fun Surface(
   modifier: Modifier = Modifier,
   shape: Shape = androidx.compose.ui.graphics.RectangleShape,
-  color: Color = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+  color: Color = MaterialTheme.colorScheme.surface,
   contentColor: Color = androidx.compose.material3.contentColorFor(color),
   tonalElevation: Dp = 0.dp,
   shadowElevation: Dp = 0.dp,
