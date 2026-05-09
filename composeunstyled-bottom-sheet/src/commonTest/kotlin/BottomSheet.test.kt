@@ -970,6 +970,47 @@ class BottomSheetCommonTest {
       // During animation, target should be FullyExpanded
       assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
+
+    testCase("waits for anchors, when animating before sheet is mounted") {
+      lateinit var state: BottomSheetState
+      lateinit var scope: CoroutineScope
+      var showSheet by mutableStateOf(false)
+      var animationCompleted = false
+
+      setContent {
+        scope = rememberCoroutineScope()
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.Hidden,
+          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+        )
+
+        if (showSheet) {
+          Box(Modifier.requiredSize(600.dp)) {
+            UnstyledBottomSheet(state) {
+              Sheet {
+                Box(Modifier.testTag("sheet_contents").size(600.dp))
+              }
+            }
+          }
+        }
+      }
+
+      scope.launch {
+        state.animateTo(SheetDetent.FullyExpanded)
+        animationCompleted = true
+      }
+      mainClock.advanceTimeByFrame()
+
+      assertThat(animationCompleted).isFalse()
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+
+      showSheet = true
+      waitForIdle()
+
+      assertThat(animationCompleted).isTrue()
+      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+      assertThat(state.offset).isCloseTo(600.dp.toPx(), DensityTolerance.toPx())
+    }
   }
 
   @Test
