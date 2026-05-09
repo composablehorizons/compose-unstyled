@@ -214,6 +214,7 @@ fun UnstyledTooltip(
 
               PointerEventType.Exit -> {
                 entered = false
+                pointerFocusPending = false
                 if (focusedByPointer) {
                   state.show = false
                 }
