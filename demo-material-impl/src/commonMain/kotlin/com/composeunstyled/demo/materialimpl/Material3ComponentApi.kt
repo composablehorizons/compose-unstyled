@@ -490,8 +490,9 @@ private fun ButtonSurface(
             add(Modifier.border(border, shape))
           }
         },
-        content = content,
-      )
+      ) {
+        Row(content = content)
+      }
     }
   }
 }
@@ -1367,34 +1368,38 @@ fun Switch(
       .size(SwitchWidth, SwitchHeight),
   ) {
     Box(
-      Modifier
-        .matchParentSize()
-        .background(colors.trackColorFor(enabled, checked), trackShape)
-        .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
-    )
-
-    Box(
-      Modifier
-        .align(Alignment.CenterStart)
-        .offset(x = thumbOffset)
-        .size(thumbSize)
-        .indication(
-          interactionSource = resolvedInteractionSource,
-          indication = ripple(
-            bounded = false,
-            radius = SwitchStateLayerSize / 2,
-          ),
-        )
-        .background(
-          colors.thumbColorFor(enabled, checked),
-          trackShape,
-        ),
-      contentAlignment = Alignment.Center,
+      Modifier.fillMaxSize(),
     ) {
-      CompositionLocalProvider(
-        LocalContentColor provides colors.iconColorFor(enabled, checked),
+      Box(
+        Modifier
+          .matchParentSize()
+          .background(colors.trackColorFor(enabled, checked), trackShape)
+          .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
+      )
+
+      Box(
+        Modifier
+          .align(Alignment.CenterStart)
+          .offset(x = thumbOffset)
+          .size(thumbSize)
+          .indication(
+            interactionSource = resolvedInteractionSource,
+            indication = ripple(
+              bounded = false,
+              radius = SwitchStateLayerSize / 2,
+            ),
+          )
+          .background(
+            colors.thumbColorFor(enabled, checked),
+            trackShape,
+          ),
+        contentAlignment = Alignment.Center,
       ) {
-        thumbContent?.invoke()
+        CompositionLocalProvider(
+          LocalContentColor provides colors.iconColorFor(enabled, checked),
+        ) {
+          thumbContent?.invoke()
+        }
       }
     }
   }

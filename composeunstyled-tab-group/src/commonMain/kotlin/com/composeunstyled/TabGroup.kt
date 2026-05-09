@@ -23,6 +23,7 @@
 
 package com.composeunstyled
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.focusGroup
@@ -31,12 +32,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -83,13 +81,29 @@ internal class TabsRegistry<T>(
 
 class TabGroupScope<T> internal constructor(
   internal val registry: TabsRegistry<T>,
-  columnScope: ColumnScope,
-) : ColumnScope by columnScope
+  private val weightModifier: Modifier.(weight: Float, fill: Boolean) -> Modifier,
+) {
+  fun Modifier.weight(
+    @FloatRange(from = 0.0, fromInclusive = false)
+    weight: Float,
+    fill: Boolean = true,
+  ): Modifier {
+    return weightModifier(weight, fill)
+  }
+}
 
 class TabListScope<T> internal constructor(
   internal val registry: TabsRegistry<T>,
-  rowScope: RowScope,
-) : RowScope by rowScope
+  private val weightModifier: Modifier.(weight: Float, fill: Boolean) -> Modifier,
+) {
+  fun Modifier.weight(
+    @FloatRange(from = 0.0, fromInclusive = false)
+    weight: Float,
+    fill: Boolean = true,
+  ): Modifier {
+    return weightModifier(weight, fill)
+  }
+}
 
 class TabScope internal constructor(
   val selected: Boolean,
@@ -131,8 +145,11 @@ fun <T> UnstyledTabGroup(
       }
       .focusGroup(),
   ) {
+    val columnScope = this
     val tabGroupScope = remember(registry, this) {
-      TabGroupScope(registry, this)
+      TabGroupScope(registry) weightModifier@{ weight, fill ->
+        with(columnScope) { this@weightModifier.weight(weight, fill) }
+      }
     }
     tabGroupScope.content()
   }
@@ -239,8 +256,11 @@ fun <T> TabGroupScope<T>.TabList(
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment,
   ) {
+    val rowScope = this
     val tabListScope = remember(registry, this) {
-      TabListScope(registry, this)
+      TabListScope(registry) weightModifier@{ weight, fill ->
+        with(rowScope) { this@weightModifier.weight(weight, fill) }
+      }
     }
     tabListScope.content()
   }
@@ -302,7 +322,7 @@ fun <T> TabGroupScope<T>.TabPanel(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = NoPadding,
   contentAlignment: Alignment = Alignment.TopStart,
-  content: @Composable BoxScope.() -> Unit,
+  content: @Composable () -> Unit,
 ) {
   val registry = registry
 

@@ -30,7 +30,6 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.selection.toggleable
@@ -51,7 +50,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 @Stable
-interface SwitchScope : BoxScope {
+interface SwitchScope {
   val checked: Boolean
   val enabled: Boolean
   val interactionSource: MutableInteractionSource
@@ -61,9 +60,7 @@ private class SwitchScopeImpl(
   override val checked: Boolean,
   override val enabled: Boolean,
   override val interactionSource: MutableInteractionSource,
-  private val boxScope: BoxScope,
-) : SwitchScope,
-  BoxScope by boxScope
+) : SwitchScope
 
 @Composable
 fun UnstyledSwitch(
@@ -97,7 +94,6 @@ fun UnstyledSwitch(
       checked = checked,
       enabled = enabled,
       interactionSource = resolvedInteractionSource,
-      boxScope = this,
     )
     scope.content()
   }
@@ -108,7 +104,7 @@ fun SwitchScope.SwitchThumb(
   modifier: Modifier = Modifier,
   animationSpec: FiniteAnimationSpec<Dp> = tween(),
   contentAlignment: Alignment = Alignment.Center,
-  content: @Composable BoxScope.() -> Unit = {},
+  content: @Composable () -> Unit = {},
 ) {
   var trackWidth by remember { mutableStateOf(0.dp) }
   var thumbWidth by remember { mutableStateOf(0.dp) }
@@ -127,13 +123,13 @@ fun SwitchScope.SwitchThumb(
       .onSizeChanged { trackWidth = with(density) { it.width.toDp() } },
   ) {
     Box(
-      modifier = Modifier
-        .offset { IntOffset(offset.roundToPx(), 0) }
-        .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
-        .alpha(if (hasMeasured) 1f else 0f)
-        .then(modifier),
+      modifier = modifier then buildModifier {
+        add(Modifier.offset { IntOffset(offset.roundToPx(), 0) })
+        add(Modifier.onSizeChanged { thumbWidth = with(density) { it.width.toDp() } })
+        add(Modifier.alpha(if (hasMeasured) 1f else 0f))
+      },
       contentAlignment = contentAlignment,
-      content = content,
+      content = { content() },
     )
   }
 }
