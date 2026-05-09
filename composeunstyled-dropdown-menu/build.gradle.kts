@@ -80,6 +80,7 @@ kotlin {
       dependencies {
         implementation(libs.compose.foundation)
         api(projects.composeunstyledAnchored)
+        implementation(projects.composeunstyledBuildModifier)
       }
     }
 

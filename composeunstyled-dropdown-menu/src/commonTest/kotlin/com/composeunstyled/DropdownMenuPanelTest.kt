@@ -21,10 +21,18 @@
  */
 package com.composeunstyled
 
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class DropdownMenuPanelTest {
   @Test
@@ -38,6 +46,69 @@ class DropdownMenuPanelTest {
     }
 
     onNodeWithText("Menu content").assertDoesNotExist()
+  }
+
+  @Test
+  fun menuItemInvokesClickAndClosesMenu() = runComposeUiTest {
+    var clicked = false
+    var expanded = true
+
+    setContent {
+      with(FakeDropdownMenuScope) {
+        CompositionLocalProvider(
+          LocalDropdownMenuState provides DropdownMenuState(
+            onExpandedChange = { expanded = it },
+            transitionState = MutableTransitionState(true),
+          ),
+        ) {
+          DropdownMenuPanel {
+            MenuItem(
+              onClick = { clicked = true },
+              modifier = Modifier.testTag("item"),
+            ) {
+              BasicText("Item")
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("item").performClick()
+
+    assertTrue(clicked)
+    assertFalse(expanded)
+  }
+
+  @Test
+  fun menuItemCanKeepMenuOpenOnClick() = runComposeUiTest {
+    var clicked = false
+    var expanded = true
+
+    setContent {
+      with(FakeDropdownMenuScope) {
+        CompositionLocalProvider(
+          LocalDropdownMenuState provides DropdownMenuState(
+            onExpandedChange = { expanded = it },
+            transitionState = MutableTransitionState(true),
+          ),
+        ) {
+          DropdownMenuPanel {
+            MenuItem(
+              onClick = { clicked = true },
+              closeOnClick = false,
+              modifier = Modifier.testTag("item"),
+            ) {
+              BasicText("Item")
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("item").performClick()
+
+    assertTrue(clicked)
+    assertTrue(expanded)
   }
 }
 
