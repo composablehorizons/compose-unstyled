@@ -490,8 +490,13 @@ private fun ButtonSurface(
             add(Modifier.border(border, shape))
           }
         },
-        content = content,
-      )
+      ) {
+        Row(
+          horizontalArrangement = Arrangement.Center,
+          verticalAlignment = Alignment.CenterVertically,
+          content = content,
+        )
+      }
     }
   }
 }
@@ -1367,34 +1372,38 @@ fun Switch(
       .size(SwitchWidth, SwitchHeight),
   ) {
     Box(
-      Modifier
-        .matchParentSize()
-        .background(colors.trackColorFor(enabled, checked), trackShape)
-        .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
-    )
-
-    Box(
-      Modifier
-        .align(Alignment.CenterStart)
-        .offset(x = thumbOffset)
-        .size(thumbSize)
-        .indication(
-          interactionSource = resolvedInteractionSource,
-          indication = ripple(
-            bounded = false,
-            radius = SwitchStateLayerSize / 2,
-          ),
-        )
-        .background(
-          colors.thumbColorFor(enabled, checked),
-          trackShape,
-        ),
-      contentAlignment = Alignment.Center,
+      Modifier.fillMaxSize(),
     ) {
-      CompositionLocalProvider(
-        LocalContentColor provides colors.iconColorFor(enabled, checked),
+      Box(
+        Modifier
+          .matchParentSize()
+          .background(colors.trackColorFor(enabled, checked), trackShape)
+          .border(SwitchTrackOutlineWidth, colors.borderColorFor(enabled, checked), trackShape),
+      )
+
+      Box(
+        Modifier
+          .align(Alignment.CenterStart)
+          .offset(x = thumbOffset)
+          .size(thumbSize)
+          .indication(
+            interactionSource = resolvedInteractionSource,
+            indication = ripple(
+              bounded = false,
+              radius = SwitchStateLayerSize / 2,
+            ),
+          )
+          .background(
+            colors.thumbColorFor(enabled, checked),
+            trackShape,
+          ),
+        contentAlignment = Alignment.Center,
       ) {
-        thumbContent?.invoke()
+        CompositionLocalProvider(
+          LocalContentColor provides colors.iconColorFor(enabled, checked),
+        ) {
+          thumbContent?.invoke()
+        }
       }
     }
   }
@@ -2430,6 +2439,7 @@ private class MaterialTabRowContext(
   private val tabKeys: List<TabKey>,
 ) {
   var nextIndex = 0
+  var tabSlotWidth by mutableStateOf(0.dp)
   private val tabContentWidths = mutableStateMapOf<TabKey, Dp>()
   private val tabSelectionCallbacks = mutableStateMapOf<TabKey, () -> Unit>()
 
@@ -2501,7 +2511,7 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .weight(1f)
+        .width(tabRowContext?.tabSlotWidth ?: 0.dp)
         .height(height),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
@@ -2562,7 +2572,7 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .weight(1f)
+        .width(tabRowContext?.tabSlotWidth ?: 0.dp)
         .fillMaxHeight(),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
@@ -2622,6 +2632,7 @@ fun PrimaryTabRow(
         val tabSlotWidth = with(density) {
           if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
         }
+        tabRowContext.tabSlotWidth = tabSlotWidth
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex +
           (tabSlotWidth - selectedIndicatorWidth) / 2
         val isIndicatorReady = tabRowSize != IntSize.Zero &&
@@ -2736,6 +2747,7 @@ fun SecondaryTabRow(
         val tabSlotWidth = with(density) {
           if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
         }
+        tabRowContext.tabSlotWidth = tabSlotWidth
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex
         val isIndicatorReady = tabRowSize != IntSize.Zero
 

@@ -28,7 +28,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -68,19 +67,21 @@ fun ScrollArea(
   Box(modifier) {
     val boxScope = this
     val scrollAreaScope = remember(boxScope) {
-      ScrollAreaScope(boxScope)
+      ScrollAreaScope { alignment ->
+        with(boxScope) {
+          align(alignment)
+        }
+      }
     }
     scrollAreaScope.content()
   }
 }
 
 class ScrollAreaScope internal constructor(
-  private val boxScope: BoxScope,
+  private val alignModifier: Modifier.(Alignment) -> Modifier,
 ) {
   fun Modifier.align(alignment: Alignment): Modifier {
-    return with(boxScope) {
-      align(alignment)
-    }
+    return alignModifier(alignment)
   }
 }
 
