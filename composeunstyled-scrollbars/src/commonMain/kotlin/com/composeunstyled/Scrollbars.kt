@@ -75,7 +75,7 @@ class ScrollbarScope internal constructor(
   internal val dragInteraction: MutableState<DragInteraction.Start?>,
   internal val sliderAdapter: SliderAdapter,
   internal val mutableInteractionSource: MutableInteractionSource,
-  internal val scrollAreaState: ScrollAreaState,
+  internal val scrollbarsState: ScrollbarsState,
 )
 
 sealed class ThumbVisibility {
@@ -89,27 +89,27 @@ sealed class ThumbVisibility {
 
 @Composable
 fun UnstyledVerticalScrollbar(
-  scrollAreaState: ScrollAreaState,
+  scrollbarsState: ScrollbarsState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
-) = ScrollBar(scrollAreaState, modifier, enabled, interactionSource, reverseLayout, true, thumb)
+) = ScrollBar(scrollbarsState, modifier, enabled, interactionSource, reverseLayout, true, thumb)
 
 @Composable
 fun UnstyledHorizontalScrollbar(
-  scrollAreaState: ScrollAreaState,
+  scrollbarsState: ScrollbarsState,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   reverseLayout: Boolean = false,
   thumb: @Composable (ScrollbarScope.() -> Unit),
-) = ScrollBar(scrollAreaState, modifier, enabled, interactionSource, reverseLayout, false, thumb)
+) = ScrollBar(scrollbarsState, modifier, enabled, interactionSource, reverseLayout, false, thumb)
 
 @Composable
 private fun ScrollBar(
-  scrollAreaState: ScrollAreaState,
+  scrollbarsState: ScrollbarsState,
   modifier: Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
@@ -136,7 +136,7 @@ private fun ScrollBar(
 
   val coroutineScope = rememberCoroutineScope()
   val sliderAdapter = remember(
-    scrollAreaState,
+    scrollbarsState,
     containerSize,
     preferredMinThumbSize,
     reverseLayout,
@@ -144,7 +144,7 @@ private fun ScrollBar(
     coroutineScope,
   ) {
     SliderAdapter(
-      scrollAreaState,
+      scrollbarsState,
       containerSize,
       preferredMinThumbSize,
       reverseLayout,
@@ -153,12 +153,12 @@ private fun ScrollBar(
     )
   }
 
-  val scrollbarScope = remember(sliderAdapter, resolvedInteractionSource, scrollAreaState) {
+  val scrollbarScope = remember(sliderAdapter, resolvedInteractionSource, scrollbarsState) {
     ScrollbarScope(
       dragInteraction,
       sliderAdapter,
       resolvedInteractionSource,
-      scrollAreaState,
+      scrollbarsState,
     )
   }
   val scrollThickness = 8.dp.roundToPx()
@@ -217,7 +217,7 @@ fun ScrollbarScope.Thumb(
       var thumbVisibilityJob: Job? by remember { mutableStateOf(null) }
 
       fun shouldKeepThumbVisible(): Boolean {
-        return scrollAreaState.isScrollInProgress || isScrollDragging || isThumbDragging || isTrackHovered
+        return scrollbarsState.isScrollInProgress || isScrollDragging || isThumbDragging || isTrackHovered
       }
 
       fun syncThumbVisibility() {
@@ -236,7 +236,7 @@ fun ScrollbarScope.Thumb(
       }
 
       LaunchedEffect(
-        scrollAreaState.isScrollInProgress,
+        scrollbarsState.isScrollInProgress,
         isScrollDragging,
         isThumbDragging,
         isTrackHovered,
@@ -245,7 +245,7 @@ fun ScrollbarScope.Thumb(
       }
 
       LaunchedEffect(Unit) {
-        scrollAreaState.interactionSource.interactions
+        scrollbarsState.interactionSource.interactions
           .collect { interaction ->
             if (interaction is DragInteraction.Start) {
               isScrollDragging = true
@@ -314,7 +314,7 @@ private val SliderAdapter.thumbPixelRange: IntRange
 private val IntRange.size get() = last + 1 - first
 
 internal class SliderAdapter internal constructor(
-  val adapter: ScrollAreaState,
+  val adapter: ScrollbarsState,
   private val trackSize: Int,
   private val minHeight: Float,
   private val reverseLayout: Boolean,

@@ -43,25 +43,25 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 @Composable
-fun rememberScrollAreaState(scrollState: ScrollState): ScrollAreaState = remember(scrollState) {
-  ScrollStateScrollAreaState(scrollState)
+fun rememberScrollbarsState(scrollState: ScrollState): ScrollbarsState = remember(scrollState) {
+  ScrollStateScrollbarsState(scrollState)
 }
 
 @Composable
-fun rememberScrollAreaState(lazyListState: LazyListState): ScrollAreaState =
+fun rememberScrollbarsState(lazyListState: LazyListState): ScrollbarsState =
   remember(lazyListState) {
-    LazyListScrollAreaState(lazyListState)
+    LazyListScrollbarsState(lazyListState)
   }
 
 @Composable
-fun rememberScrollAreaState(lazyGridState: LazyGridState): ScrollAreaState =
+fun rememberScrollbarsState(lazyGridState: LazyGridState): ScrollbarsState =
   remember(lazyGridState) {
-    LazyGridScrollAreaScrollAreaState(lazyGridState)
+    LazyGridScrollbarsState(lazyGridState)
   }
 
 @Composable
 fun ScrollArea(
-  state: ScrollAreaState,
+  state: ScrollbarsState,
   modifier: Modifier = Modifier,
   content: @Composable ScrollAreaScope.() -> Unit,
 ) {
@@ -84,7 +84,7 @@ class ScrollAreaScope internal constructor(
   }
 }
 
-interface ScrollAreaState {
+interface ScrollbarsState {
 
   val scrollOffset: Double
 
@@ -99,12 +99,12 @@ interface ScrollAreaState {
   val isScrollInProgress: Boolean
 }
 
-val ScrollAreaState.maxScrollOffset: Double
+val ScrollbarsState.maxScrollOffset: Double
   get() = (contentSize - viewportSize).coerceAtLeast(0.0)
 
-internal class ScrollStateScrollAreaState(
+internal class ScrollStateScrollbarsState(
   private val scrollState: ScrollState,
-) : ScrollAreaState {
+) : ScrollbarsState {
 
   override val isScrollInProgress: Boolean
     get() = scrollState.isScrollInProgress
@@ -125,7 +125,7 @@ internal class ScrollStateScrollAreaState(
     get() = scrollState.viewportSize.toDouble()
 }
 
-internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
+internal abstract class LazyLineContentScrollbarsState : ScrollbarsState {
 
   class VisibleLine(
     val index: Int,
@@ -179,7 +179,7 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
     }
 
   override suspend fun scrollTo(scrollOffset: Double) {
-    val distance = scrollOffset - this@LazyLineContentScrollAreaState.scrollOffset
+    val distance = scrollOffset - this@LazyLineContentScrollbarsState.scrollOffset
     if (abs(distance) <= viewportSize) {
       scrollBy(distance.toFloat())
     } else {
@@ -200,9 +200,9 @@ internal abstract class LazyLineContentScrollAreaState : ScrollAreaState {
   }
 }
 
-internal class LazyListScrollAreaState(
+internal class LazyListScrollbarsState(
   private val scrollState: LazyListState,
-) : LazyLineContentScrollAreaState() {
+) : LazyLineContentScrollbarsState() {
 
   override val interactionSource: InteractionSource
     get() = scrollState.interactionSource
@@ -269,9 +269,9 @@ internal class LazyListScrollAreaState(
   override val lineSpacing get() = scrollState.layoutInfo.mainAxisItemSpacing
 }
 
-internal class LazyGridScrollAreaScrollAreaState(
+internal class LazyGridScrollbarsState(
   private val scrollState: LazyGridState,
-) : LazyLineContentScrollAreaState() {
+) : LazyLineContentScrollbarsState() {
 
   override val isScrollInProgress: Boolean
     get() = scrollState.isScrollInProgress

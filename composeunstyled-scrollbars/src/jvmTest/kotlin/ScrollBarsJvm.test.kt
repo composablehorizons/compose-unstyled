@@ -46,15 +46,15 @@ class ScrollBarsJvmTest {
   fun hide_while_idle_does_not_hide_thumb_while_track_is_hovered() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      val scrollAreaState = rememberScrollAreaState(scrollState)
-      ScrollArea(state = scrollAreaState) {
+      val scrollbarsState = rememberScrollbarsState(scrollState)
+      ScrollArea(state = scrollbarsState) {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
         UnstyledVerticalScrollbar(
-          scrollAreaState = scrollAreaState,
+          scrollbarsState = scrollbarsState,
           modifier = Modifier.testTag("track"),
         ) {
           Thumb(
