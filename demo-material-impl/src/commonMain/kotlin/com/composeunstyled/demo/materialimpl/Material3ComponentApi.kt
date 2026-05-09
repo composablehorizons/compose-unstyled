@@ -2439,7 +2439,6 @@ private class MaterialTabRowContext(
   private val tabKeys: List<TabKey>,
 ) {
   var nextIndex = 0
-  var tabSlotWidth by mutableStateOf(0.dp)
   private val tabContentWidths = mutableStateMapOf<TabKey, Dp>()
   private val tabSelectionCallbacks = mutableStateMapOf<TabKey, () -> Unit>()
 
@@ -2478,6 +2477,7 @@ private class MaterialTabIndicatorState(
 }
 
 private val LocalMaterialTabRowContext = staticCompositionLocalOf<MaterialTabRowContext?> { null }
+private val LocalMaterialTabModifier = staticCompositionLocalOf<Modifier> { Modifier }
 
 private fun MaterialTabRowContext?.nextTabKey(): TabKey =
   this?.nextTabKey() ?: error("Tab must be placed inside PrimaryTabRow or SecondaryTabRow.")
@@ -2511,7 +2511,7 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .width(tabRowContext?.tabSlotWidth ?: 0.dp)
+        .then(LocalMaterialTabModifier.current)
         .height(height),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
@@ -2572,7 +2572,7 @@ fun TabListScope<TabKey>.Tab(
       enabled = enabled,
       activateOnFocus = false,
       modifier = modifier
-        .width(tabRowContext?.tabSlotWidth ?: 0.dp)
+        .then(LocalMaterialTabModifier.current)
         .fillMaxHeight(),
       contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
       indication = tabIndication,
@@ -2632,7 +2632,6 @@ fun PrimaryTabRow(
         val tabSlotWidth = with(density) {
           if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
         }
-        tabRowContext.tabSlotWidth = tabSlotWidth
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex +
           (tabSlotWidth - selectedIndicatorWidth) / 2
         val isIndicatorReady = tabRowSize != IntSize.Zero &&
@@ -2670,8 +2669,16 @@ fun PrimaryTabRow(
             .onSizeChanged { tabRowSize = it },
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          CompositionLocalProvider(LocalMaterialTabRowContext provides tabRowContext) {
-            tabs()
+          val tabListScope = this
+          Row(Modifier.fillMaxSize()) {
+            CompositionLocalProvider(
+              LocalMaterialTabRowContext provides tabRowContext,
+              LocalMaterialTabModifier provides Modifier.weight(1f),
+            ) {
+              with(tabListScope) {
+                tabs()
+              }
+            }
           }
         }
 
@@ -2747,7 +2754,6 @@ fun SecondaryTabRow(
         val tabSlotWidth = with(density) {
           if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
         }
-        tabRowContext.tabSlotWidth = tabSlotWidth
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex
         val isIndicatorReady = tabRowSize != IntSize.Zero
 
@@ -2779,8 +2785,16 @@ fun SecondaryTabRow(
             .onSizeChanged { tabRowSize = it },
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          CompositionLocalProvider(LocalMaterialTabRowContext provides tabRowContext) {
-            tabs()
+          val tabListScope = this
+          Row(Modifier.fillMaxSize()) {
+            CompositionLocalProvider(
+              LocalMaterialTabRowContext provides tabRowContext,
+              LocalMaterialTabModifier provides Modifier.weight(1f),
+            ) {
+              with(tabListScope) {
+                tabs()
+              }
+            }
           }
         }
 
