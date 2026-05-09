@@ -87,8 +87,8 @@ internal fun FloatingContent(
 
   val currentAnchorBounds = anchorBounds
   if (currentAnchorBounds != null) {
-    Overlay {
-      FloatingOverlayContent(
+    Portal {
+      FloatingPortalContent(
         anchorBounds = currentAnchorBounds,
         side = side,
         alignment = alignment,
@@ -105,7 +105,7 @@ internal fun FloatingContent(
 }
 
 @Composable
-private fun FloatingOverlayContent(
+private fun FloatingPortalContent(
   anchorBounds: AnchorBounds,
   side: AnchorSide,
   alignment: AnchorAlignment,
@@ -117,13 +117,13 @@ private fun FloatingOverlayContent(
   windowSize: IntSize,
   floatingContent: @Composable () -> Unit,
 ) {
-  var overlayPositionInWindow by remember { mutableStateOf<IntOffset?>(null) }
+  var portalPositionInWindow by remember { mutableStateOf<IntOffset?>(null) }
 
   Layout(
     content = floatingContent,
     modifier = Modifier
       .onGloballyPositioned {
-        overlayPositionInWindow = it.positionInWindow().round()
+        portalPositionInWindow = it.positionInWindow().round()
       },
   ) { measurables, constraints ->
     val floatingPlaceable = measurables.firstOrNull()?.measure(Constraints())
@@ -131,9 +131,9 @@ private fun FloatingOverlayContent(
     if (floatingPlaceable == null) {
       return@Layout layout(0, 0) {}
     }
-    val overlayPosition = overlayPositionInWindow
+    val portalPosition = portalPositionInWindow
 
-    if (overlayPosition == null) {
+    if (portalPosition == null) {
       return@Layout layout(constraints.maxWidth, constraints.maxHeight) {}
     }
 
@@ -149,12 +149,12 @@ private fun FloatingOverlayContent(
       alignmentOffset = alignmentOffset,
     )
 
-    val overlayX = contentPosition.x - overlayPosition.x
-    val overlayY = contentPosition.y - overlayPosition.y
+    val portalX = contentPosition.x - portalPosition.x
+    val portalY = contentPosition.y - portalPosition.y
 
     layout(constraints.maxWidth, constraints.maxHeight) {
       onOffsetFromIdealPositionChanged(IntOffset.Zero)
-      floatingPlaceable.place(overlayX, overlayY)
+      floatingPlaceable.place(portalX, portalY)
     }
   }
 }

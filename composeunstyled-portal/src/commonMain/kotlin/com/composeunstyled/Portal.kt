@@ -34,19 +34,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
-private val LocalOverlayState = staticCompositionLocalOf<OverlayState?> { null }
+private val LocalPortalState = staticCompositionLocalOf<PortalState?> { null }
 
-private class OverlayState {
+private class PortalState {
   val entries = mutableStateMapOf<Any, @Composable () -> Unit>()
 }
 
 @Composable
-fun OverlayHost(
+fun PortalHost(
   content: @Composable BoxScope.() -> Unit,
 ) {
-  val state = remember { OverlayState() }
+  val state = remember { PortalState() }
 
-  CompositionLocalProvider(LocalOverlayState provides state) {
+  CompositionLocalProvider(LocalPortalState provides state) {
     Box(Modifier.fillMaxSize()) {
       content()
       state.entries.forEach { (id, content) ->
@@ -61,10 +61,10 @@ fun OverlayHost(
 }
 
 @Composable
-fun Overlay(
+fun Portal(
   content: @Composable () -> Unit,
 ) {
-  val state = LocalOverlayState.current
+  val state = LocalPortalState.current
   val id = remember { Any() }
 
   if (state == null) {
