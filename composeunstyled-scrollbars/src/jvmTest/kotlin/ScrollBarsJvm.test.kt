@@ -82,12 +82,12 @@ class ScrollBarsJvmTest {
     onNodeWithTag("track").performMouseInput { enter() }
     onNodeWithTag("thumb").assertIsDisplayed()
 
-    advanceTimeBy(6.seconds)
+    mainClock.advanceTimeBy(6.seconds.inWholeMilliseconds)
     onNodeWithTag("thumb").assertIsDisplayed()
 
     onNodeWithTag("track").performMouseInput { exit() }
 
-    advanceTimeBy(6.seconds)
+    mainClock.advanceTimeBy(6.seconds.inWholeMilliseconds)
     waitForIdle()
     onNodeWithTag("thumb").assertDoesNotExist()
   }

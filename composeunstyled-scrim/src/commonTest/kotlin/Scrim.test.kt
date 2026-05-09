@@ -27,53 +27,54 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 
 class ScrimTest {
 
   @Test
-  fun scrim() = runTestSuite {
-    testCase("scrim is removed from composition, when modal is hidden") {
-      setContent {
-        val modalState = rememberModalState(initiallyVisible = true)
+  fun scrim_is_removed_from_composition_when_modal_is_hidden() = runComposeUiTest {
+    setContent {
+      val modalState = rememberModalState(initiallyVisible = true)
 
-        Modal(state = modalState) {
-          Scrim(Modifier.testTag("scrim"))
-        }
-
-        modalState.transitionState.targetState = false
+      Modal(state = modalState) {
+        Scrim(Modifier.testTag("scrim"))
       }
 
-      waitForIdle()
-      onNodeWithTag("scrim").assertDoesNotExist()
+      modalState.transitionState.targetState = false
     }
 
-    testCase("scrim exists in composition, when modal is visible") {
-      setContent {
-        val modalState = rememberModalState(initiallyVisible = true)
-        Modal(state = modalState) {
-          Scrim(Modifier.testTag("scrim"))
-        }
+    waitForIdle()
+    onNodeWithTag("scrim").assertDoesNotExist()
+  }
+
+  @Test
+  fun scrim_exists_in_composition_when_modal_is_visible() = runComposeUiTest {
+    setContent {
+      val modalState = rememberModalState(initiallyVisible = true)
+      Modal(state = modalState) {
+        Scrim(Modifier.testTag("scrim"))
       }
-
-      onNodeWithTag("scrim").assertExists()
     }
 
-    testCase("scrim appears when state changes to visible") {
-      var visible by mutableStateOf(false)
+    onNodeWithTag("scrim").assertExists()
+  }
 
-      setContent {
-        val modalState = rememberModalState(initiallyVisible = visible)
-        modalState.transitionState.targetState = visible
+  @Test
+  fun scrim_appears_when_state_changes_to_visible() = runComposeUiTest {
+    var visible by mutableStateOf(false)
 
-        Modal(state = modalState) {
-          Scrim(Modifier.testTag("scrim"))
-        }
+    setContent {
+      val modalState = rememberModalState(initiallyVisible = visible)
+      modalState.transitionState.targetState = visible
+
+      Modal(state = modalState) {
+        Scrim(Modifier.testTag("scrim"))
       }
-
-      visible = true
-      waitForIdle()
-      onNodeWithTag("scrim").assertExists()
     }
+
+    visible = true
+    waitForIdle()
+    onNodeWithTag("scrim").assertExists()
   }
 }

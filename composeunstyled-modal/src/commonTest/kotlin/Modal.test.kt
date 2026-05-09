@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
@@ -41,37 +42,36 @@ import kotlin.test.Test
 class ModalTest {
 
   @Test
-  fun semantics() = runTestSuite {
-    testCase("add isDialog semantic") {
-      var showModal by mutableStateOf(false)
+  fun add_isdialog_semantic() = runComposeUiTest {
+    var showModal by mutableStateOf(false)
 
-      setContent {
-        if (showModal) {
-          Modal(
-            state = rememberModalState(initiallyVisible = true),
-            onKeyEvent = { false },
-          ) {
-            Box(Modifier.testTag("modal_contents").size(40.dp))
-          }
+    setContent {
+      if (showModal) {
+        Modal(
+          state = rememberModalState(initiallyVisible = true),
+          onKeyEvent = { false },
+        ) {
+          Box(Modifier.testTag("modal_contents").size(40.dp))
         }
       }
-      onNode(isDialog()).assertDoesNotExist()
-      showModal = true
-      onNode(isDialog()).assertExists()
     }
+    onNode(isDialog()).assertDoesNotExist()
+    showModal = true
+    onNode(isDialog()).assertExists()
+  }
 
-    testCase("content respects LocalLayoutDirection") {
-      setContent {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-          Modal(state = rememberModalState(initiallyVisible = true)) {
-            val layoutDirection =
-              if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
-            BasicText(layoutDirection, Modifier.testTag("layout_direction"))
-          }
+  @Test
+  fun content_respects_locallayoutdirection() = runComposeUiTest {
+    setContent {
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          val layoutDirection =
+            if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
+          BasicText(layoutDirection, Modifier.testTag("layout_direction"))
         }
       }
-
-      onNodeWithTag("layout_direction").assertTextEquals("rtl")
     }
+
+    onNodeWithTag("layout_direction").assertTextEquals("rtl")
   }
 }

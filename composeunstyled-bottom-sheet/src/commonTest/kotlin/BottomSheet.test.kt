@@ -76,6 +76,7 @@ import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class BottomSheetCommonTest {
   private val DensityTolerance = 0.5.dp
@@ -167,527 +168,117 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun ensure_valid_state_created() = runTestSuite {
-    testCase(
-      name = "throws exception, when creating state without detents",
-      expected = IllegalStateException::class,
-    ) {
-      setContent {
-        BottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-          detents = emptyList(),
-          coroutineScope = rememberCoroutineScope(),
-          animationSpec = tween(),
-          density = { density },
-          velocityThreshold = { 0f },
-          positionalThreshold = { 0f },
-          confirmDetentChange = { true },
-          decayAnimationSpec = rememberSplineBasedDecay(),
-        )
-      }
-    }
-
-    testCase(
-      name = "throws exception, when initial detent not in detents list",
-      expected = IllegalStateException::class,
-    ) {
-      val customDetent = SheetDetent("custom") { _, _ -> 0.dp }
-      setContent {
-        BottomSheetState(
-          initialDetent = customDetent,
-          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-          coroutineScope = rememberCoroutineScope(),
-          animationSpec = tween(),
-          density = { density },
-          velocityThreshold = { 0f },
-          positionalThreshold = { 0f },
-          confirmDetentChange = { true },
-          decayAnimationSpec = rememberSplineBasedDecay(),
-        )
-      }
-    }
-
-    testCase(
-      name = "throws exception, when creating state with duplicate detents",
-      expected = IllegalStateException::class,
-    ) {
-      setContent {
-        BottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-          detents = listOf(SheetDetent.Hidden, SheetDetent.Hidden),
-          coroutineScope = rememberCoroutineScope(),
-          animationSpec = tween(),
-          density = { density },
-          velocityThreshold = { 0f },
-          positionalThreshold = { 0f },
-          confirmDetentChange = { true },
-          decayAnimationSpec = rememberSplineBasedDecay(),
-        )
-      }
-    }
-
-    testCase(
-      name = "throws exception, when creating state with rememberBottomSheetState without detents",
-      expected = IllegalStateException::class,
-    ) {
-      setContent {
-        rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-          detents = emptyList(),
-        )
-      }
-    }
-
-    testCase(
-      name = "throws exception, when creating state with rememberBottomSheetState with initial detent not in list",
-      expected = IllegalStateException::class,
-    ) {
-      setContent {
-        rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-          detents = listOf(SheetDetent.Hidden),
-        )
-      }
-    }
-  }
-
-  @Test
-  fun state_properties() = runTestSuite {
-    testCase("setting state enabled to false, blocks dragging") {
-      val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
-        containerHeight * 0.5f
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.fillMaxSize()) {
-          state = rememberBottomSheetState(
-            initialDetent = halfExpandedDetent,
-            detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
+  fun throws_exception_when_creating_state_without_detents() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        setContent {
+          BottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = emptyList(),
+            coroutineScope = rememberCoroutineScope(),
+            animationSpec = tween(),
+            density = { density },
+            velocityThreshold = { 0f },
+            positionalThreshold = { 0f },
+            confirmDetentChange = { true },
+            decayAnimationSpec = rememberSplineBasedDecay(),
           )
-
-          UnstyledBottomSheet(
-            state = state,
-            enabled = false,
-            modifier = Modifier.testTag("sheet"),
-          ) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxWidth()
-                  .height(200.dp),
-              )
-            }
-          }
         }
       }
-
-      // Initially at half expanded
-      val initialOffset = state.offset
-
-      // Try to swipe up - should not move the sheet
-      onNodeWithTag("sheet").performTouchInput {
-        swipeUp()
-      }
-      waitForIdle()
-
-      // Sheet should remain at the same detent and offset
-      assertThat(state.currentDetent).isEqualTo(halfExpandedDetent)
-      assertThat(state.offset).isEqualTo(initialOffset)
-    }
-
-    testCase("isIdle is false, when dragging sheet") {
-      val halfDetent = SheetDetent("half") { _, _ ->
-        100.dp
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = halfDetent,
-          detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(
-              Modifier
-                .testTag("sheet_contents")
-                .fillMaxWidth()
-                .height(150.dp),
-            )
-          }
-        }
-      }
-
-      waitForIdle()
-      assertThat(state.isIdle).isTrue()
-
-      mainClock.autoAdvance = false
-
-      // Start dragging and move
-      onNodeWithTag("sheet").performTouchInput {
-        down(center)
-        moveTo(center.copy(y = center.y - 50f))
-      }
-      mainClock.advanceTimeBy(50)
-
-      assertThat(state.isIdle).isFalse()
-    }
-
-    testCase("isIdle is false during animation, when sheet animates to new detent") {
-      val halfDetent = SheetDetent("half") { _, _ ->
-        100.dp
-      }
-
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = halfDetent,
-          detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
-          animationSpec = tween(1000),
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(
-              Modifier
-                .testTag("sheet_contents")
-                .fillMaxWidth()
-                .height(150.dp),
-            )
-          }
-        }
-      }
-
-      waitForIdle()
-      mainClock.autoAdvance = false
-
-      scope.launch {
-        state.animateTo(SheetDetent.FullyExpanded)
-      }
-      mainClock.advanceTimeBy(50)
-
-      assertThat(state.isIdle).isFalse()
-
-      mainClock.autoAdvance = true
-      waitForIdle()
-
-      assertThat(state.isIdle).isTrue()
     }
   }
 
   @Test
-  fun initial_state_offset() = runTestSuite {
-    testCase("offset is 0, when sheet is created with hidden detent") {
-      lateinit var state: BottomSheetState
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-        )
-        UnstyledBottomSheet(state = state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-
-      onNodeWithTag("sheet_contents").assertIsNotDisplayed()
-      assertThat(state.offset).isEqualTo(0f)
-    }
-
-    testCase("offset is height of content, when sheet is created with hidden detent") {
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-        )
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-
-      onNodeWithTag("sheet_contents").assertIsDisplayed()
-      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
-    }
-
-    testCase("offset is custom detent height, when creating sheet with custom initial detent") {
-      val customDetent = SheetDetent("custom") { _, _ -> 50.dp }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = customDetent,
-          detents = listOf(SheetDetent.Hidden, customDetent, SheetDetent.FullyExpanded),
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(60.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(customDetent)
-      assertThat(state.offset).isCloseTo(50.dp.toPx(), DensityTolerance.toPx())
-    }
-
-    testCase("offset is zero, when sheet is created at hidden detent") {
-      lateinit var state: BottomSheetState
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-        )
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-
-      assertThat(state.offset).isEqualTo(0f)
-    }
-
-    testCase("offset equals content height, when sheet is created at fully expanded detent") {
-      lateinit var state: BottomSheetState
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-        )
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-
-      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
-    }
-  }
-
-  @Test
-  fun setting_target_detent() = runTestSuite {
-    testCase(
-      "sheet stops at height of content, when target detent set to fully expanded from hidden",
-    ) {
-      lateinit var state: BottomSheetState
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-      state.targetDetent = SheetDetent.FullyExpanded
-      onNodeWithTag("sheet_contents").assertIsDisplayed()
-      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
-    }
-
-    testCase(
-      "sheet stops at detent fixed height, when target detent set to detent with fixed height from hidden",
-    ) {
-      val customDetent = SheetDetent("fixed") { _, _ -> 40.dp }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-          detents = listOf(SheetDetent.Hidden, customDetent),
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("content").height(70.dp).fillMaxWidth())
-          }
-        }
-      }
-
-      // Set to custom detent
-      state.targetDetent = customDetent
-
-      // Content should be displayed
-      onNodeWithTag("content").assertIsDisplayed()
-      assertThat(state.offset).isCloseTo(40.dp.toPx(), DensityTolerance.toPx())
-    }
-
-    testCase("isIdle correctly reflects animation state, when sheet settles at detent") {
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(100.dp))
-          }
-        }
-      }
-
-      // Start animation to FullyExpanded
-      state.targetDetent = SheetDetent.FullyExpanded
-
-      // Should not be idle during animation
-      mainClock.advanceTimeBy(50)
-      assertThat(state.isIdle).isFalse()
-    }
-
-    testCase("isIdle becomes true after settling, when detents are updated") {
-      val detent25 = SheetDetent("25") { containerHeight, _ -> containerHeight * 0.25f }
-      val detent50 = SheetDetent("50") { containerHeight, _ -> containerHeight * 0.5f }
-      val detent75 = SheetDetent("75") { containerHeight, _ -> containerHeight * 0.75f }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.requiredSize(100.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = detent50,
-            detents = listOf(detent25, detent50, detent75),
+  fun throws_exception_when_initial_detent_not_in_detents_list() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        val customDetent = SheetDetent("custom") { _, _ -> 0.dp }
+        setContent {
+          BottomSheetState(
+            initialDetent = customDetent,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+            coroutineScope = rememberCoroutineScope(),
+            animationSpec = tween(),
+            density = { density },
+            velocityThreshold = { 0f },
+            positionalThreshold = { 0f },
+            confirmDetentChange = { true },
+            decayAnimationSpec = rememberSplineBasedDecay(),
           )
-
-          UnstyledBottomSheet(state) {
-            Sheet {
-              Box(Modifier.fillMaxWidth().height(100.dp))
-            }
-          }
         }
       }
-
-      // Update detents while at 50% - removing the current detent
-      state.detents = listOf(detent25, detent75)
-
-      // Should eventually settle and become idle
-      waitUntil { state.isIdle }
-      assertThat(state.isIdle).isTrue()
-    }
-
-    testCase("current and target detents update correctly, when dragging") {
-      val halfDetent = SheetDetent("half") { _, _ ->
-        150.dp
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = halfDetent,
-          detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(
-              Modifier
-                .testTag("sheet_contents")
-                .fillMaxWidth()
-                .height(300.dp),
-            )
-          }
-        }
-      }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(halfDetent)
-      assertThat(state.targetDetent).isEqualTo(halfDetent)
-
-      mainClock.autoAdvance = false
-      val dragDistance = with(density) { 150.dp.toPx() }
-
-      // Start dragging upward
-      onNodeWithTag("sheet").performTouchInput {
-        down(center)
-      }
-      mainClock.advanceTimeBy(50)
-
-      onNodeWithTag("sheet").performTouchInput {
-        moveTo(center.copy(y = center.y - dragDistance))
-      }
-      mainClock.advanceTimeBy(50)
-
-      // During drag, target should change to FullyExpanded, current stays at half
-      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
-      assertThat(state.currentDetent).isEqualTo(halfDetent)
-
-      // Release
-      onNodeWithTag("sheet").performTouchInput {
-        up()
-      }
-
-      mainClock.autoAdvance = true
-      waitForIdle()
-
-      // After settling, both should be FullyExpanded
-      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
   }
 
   @Test
-  fun custom_detents() = runTestSuite {
-    testCase("sheet matches container size, when using container-based detent") {
-      val containerDetent = SheetDetent("container") { containerHeight, _ ->
-        containerHeight
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.requiredSize(300.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = containerDetent,
-            detents = listOf(containerDetent),
+  fun throws_exception_when_creating_state_with_duplicate_detents() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        setContent {
+          BottomSheetState(
+            initialDetent = SheetDetent.Hidden,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.Hidden),
+            coroutineScope = rememberCoroutineScope(),
+            animationSpec = tween(),
+            density = { density },
+            velocityThreshold = { 0f },
+            positionalThreshold = { 0f },
+            confirmDetentChange = { true },
+            decayAnimationSpec = rememberSplineBasedDecay(),
           )
-
-          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxSize(),
-              )
-            }
-          }
         }
       }
-
-      waitForIdle()
-
-      assertThat(state.offset).isCloseTo(300.dp.toPx(), DensityTolerance.toPx())
-      onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
     }
-    testCase("sheet matches sheet content height, when using content-sized detent") {
-      val contentDetent = SheetDetent("content") { _, sheetHeight ->
-        sheetHeight
+  }
+
+  @Test
+  fun throws_exception_when_creating_state_with_rememberbottomsheetstate_without_detents() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        setContent {
+          rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = emptyList(),
+          )
+        }
       }
+    }
+  }
 
-      lateinit var state: BottomSheetState
+  @Test
+  fun throws_exception_when_creating_state_with_rememberbottomsheetstate_with_initial_detent_not_in_list() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        setContent {
+          rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = listOf(SheetDetent.Hidden),
+          )
+        }
+      }
+    }
+  }
 
-      setContent {
+  @Test
+  fun setting_state_enabled_to_false_blocks_dragging() = runComposeUiTest {
+    val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
+      containerHeight * 0.5f
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.fillMaxSize()) {
         state = rememberBottomSheetState(
-          initialDetent = contentDetent,
-          detents = listOf(contentDetent),
+          initialDetent = halfExpandedDetent,
+          detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state = state,
+          enabled = false,
+          modifier = Modifier.testTag("sheet"),
+        ) {
           Sheet {
             Box(
               Modifier
@@ -698,107 +289,404 @@ class BottomSheetCommonTest {
           }
         }
       }
-
-      waitForIdle()
-
-      assertThat(state.offset).isCloseTo(200.dp.toPx(), DensityTolerance.toPx())
-      onNodeWithTag("sheet").assertHeightIsEqualTo(200.dp)
     }
-    testCase("sheet uses fixed height, when using fixed-height detent") {
-      // Fixed height detent - always returns 150.dp regardless of container or content
-      val fixedDetent = SheetDetent("fixed") { _, _ ->
-        150.dp
-      }
 
-      lateinit var state: BottomSheetState
+    // Initially at half expanded
+    val initialOffset = state.offset
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = fixedDetent,
-          detents = listOf(fixedDetent),
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Column(Modifier.testTag("sheet_contents")) {
-              Box(Modifier.testTag("visible_content").height(150.dp).fillMaxWidth())
-              Box(Modifier.testTag("hidden_content").height(100.dp).fillMaxWidth())
-            }
-          }
-        }
-      }
-
-      waitForIdle()
-
-      // Sheet should be at exactly 150.dp
-      assertThat(state.offset).isCloseTo(150.dp.toPx(), DensityTolerance.toPx())
+    // Try to swipe up - should not move the sheet
+    onNodeWithTag("sheet").performTouchInput {
+      swipeUp()
     }
-    testCase(
-      "sheet takes full container size, when using content-sized detent and content is fillMaxSize()",
-    ) {
-      val contentDetent = SheetDetent("content") { _, sheetHeight ->
-        sheetHeight
-      }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.requiredSize(300.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = contentDetent,
-            detents = listOf(contentDetent),
-          )
-
-          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxSize(),
-              )
-            }
-          }
-        }
-      }
-
-      waitForIdle()
-
-      assertThat(state.offset).isCloseTo(300.dp.toPx(), DensityTolerance.toPx())
-      onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
-    }
+    // Sheet should remain at the same detent and offset
+    assertThat(state.currentDetent).isEqualTo(halfExpandedDetent)
+    assertThat(state.offset).isEqualTo(initialOffset)
   }
 
   @Test
-  fun dynamic_content_sizing() = runTestSuite {
-    testCase("offset matches sheet content height, when sheet contents grow") {
-      var contentSize by mutableStateOf(40.dp)
+  fun isidle_is_false_when_dragging_sheet() = runComposeUiTest {
+    val halfDetent = SheetDetent("half") { _, _ ->
+      100.dp
+    }
 
-      setContent {
-        val state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = halfDetent,
+        detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(150.dp),
+          )
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.isIdle).isTrue()
+
+    mainClock.autoAdvance = false
+
+    // Start dragging and move
+    onNodeWithTag("sheet").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y - 50f))
+    }
+    mainClock.advanceTimeBy(50)
+
+    assertThat(state.isIdle).isFalse()
+  }
+
+  @Test
+  fun isidle_is_false_during_animation_when_sheet_animates_to_new_detent() = runComposeUiTest {
+    val halfDetent = SheetDetent("half") { _, _ ->
+      100.dp
+    }
+
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = halfDetent,
+        detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
+        animationSpec = tween(1000),
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(150.dp),
+          )
+        }
+      }
+    }
+
+    waitForIdle()
+    mainClock.autoAdvance = false
+
+    scope.launch {
+      state.animateTo(SheetDetent.FullyExpanded)
+    }
+    mainClock.advanceTimeBy(50)
+
+    assertThat(state.isIdle).isFalse()
+
+    mainClock.autoAdvance = true
+    waitForIdle()
+
+    assertThat(state.isIdle).isTrue()
+  }
+
+  @Test
+  fun offset_is_0_when_sheet_is_created_with_hidden_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+      )
+      UnstyledBottomSheet(state = state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
+        }
+      }
+    }
+
+    onNodeWithTag("sheet_contents").assertIsNotDisplayed()
+    assertThat(state.offset).isEqualTo(0f)
+  }
+
+  @Test
+  fun offset_is_height_of_content_when_sheet_is_created_with_hidden_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
+        }
+      }
+    }
+
+    onNodeWithTag("sheet_contents").assertIsDisplayed()
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        40.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun offset_is_custom_detent_height_when_creating_sheet_with_custom_initial_detent() = runComposeUiTest {
+    val customDetent = SheetDetent("custom") { _, _ -> 50.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = customDetent,
+        detents = listOf(SheetDetent.Hidden, customDetent, SheetDetent.FullyExpanded),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(60.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(customDetent)
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        50.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun offset_is_zero_when_sheet_is_created_at_hidden_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+      )
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
+        }
+      }
+    }
+
+    assertThat(state.offset).isEqualTo(0f)
+  }
+
+  @Test
+  fun offset_equals_content_height_when_sheet_is_created_at_fully_expanded_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
+        }
+      }
+    }
+
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        40.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun sheet_stops_at_height_of_content_when_target_detent_set_to_fully_expanded_from_hidden() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
+        }
+      }
+    }
+    state.targetDetent = SheetDetent.FullyExpanded
+    onNodeWithTag("sheet_contents").assertIsDisplayed()
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        40.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun sheet_stops_at_detent_fixed_height_when_target_detent_set_to_detent_with_fixed_height_from_hidden() = runComposeUiTest {
+    val customDetent = SheetDetent("fixed") { _, _ -> 40.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+        detents = listOf(SheetDetent.Hidden, customDetent),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("content").height(70.dp).fillMaxWidth())
+        }
+      }
+    }
+
+    // Set to custom detent
+    state.targetDetent = customDetent
+
+    // Content should be displayed
+    onNodeWithTag("content").assertIsDisplayed()
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        40.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun isidle_correctly_reflects_animation_state_when_sheet_settles_at_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+        detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(100.dp))
+        }
+      }
+    }
+
+    // Start animation to FullyExpanded
+    state.targetDetent = SheetDetent.FullyExpanded
+
+    // Should not be idle during animation
+    mainClock.advanceTimeBy(50)
+    assertThat(state.isIdle).isFalse()
+  }
+
+  @Test
+  fun isidle_becomes_true_after_settling_when_detents_are_updated() = runComposeUiTest {
+    val detent25 = SheetDetent("25") { containerHeight, _ -> containerHeight * 0.25f }
+    val detent50 = SheetDetent("50") { containerHeight, _ -> containerHeight * 0.5f }
+    val detent75 = SheetDetent("75") { containerHeight, _ -> containerHeight * 0.75f }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(100.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = detent50,
+          detents = listOf(detent25, detent50, detent75),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(state) {
           Sheet {
-            Box(Modifier.testTag("sheet_contents").size(contentSize))
+            Box(Modifier.fillMaxWidth().height(100.dp))
           }
         }
       }
-
-      mainClock.advanceTimeBy(50)
-      contentSize = 150.dp
-      mainClock.advanceTimeByFrame()
-
-      onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
     }
 
-    testCase("offset matches sheet content height, when sheet contents shrink") {
-      var contentHeight by mutableStateOf(200.dp)
-      lateinit var state: BottomSheetState
+    // Update detents while at 50% - removing the current detent
+    state.detents = listOf(detent25, detent75)
 
-      setContent {
+    // Should eventually settle and become idle
+    waitUntil { state.isIdle }
+    assertThat(state.isIdle).isTrue()
+  }
+
+  @Test
+  fun current_and_target_detents_update_correctly_when_dragging() = runComposeUiTest {
+    val halfDetent = SheetDetent("half") { _, _ ->
+      150.dp
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = halfDetent,
+        detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(300.dp),
+          )
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(halfDetent)
+    assertThat(state.targetDetent).isEqualTo(halfDetent)
+
+    mainClock.autoAdvance = false
+    val dragDistance = with(density) { 150.dp.toPx() }
+
+    // Start dragging upward
+    onNodeWithTag("sheet").performTouchInput {
+      down(center)
+    }
+    mainClock.advanceTimeBy(50)
+
+    onNodeWithTag("sheet").performTouchInput {
+      moveTo(center.copy(y = center.y - dragDistance))
+    }
+    mainClock.advanceTimeBy(50)
+
+    // During drag, target should change to FullyExpanded, current stays at half
+    assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+    assertThat(state.currentDetent).isEqualTo(halfDetent)
+
+    // Release
+    onNodeWithTag("sheet").performTouchInput {
+      up()
+    }
+
+    mainClock.autoAdvance = true
+    waitForIdle()
+
+    // After settling, both should be FullyExpanded
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+    assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+  }
+
+  @Test
+  fun sheet_matches_container_size_when_using_container_based_detent() = runComposeUiTest {
+    val containerDetent = SheetDetent("container") { containerHeight, _ ->
+      containerHeight
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(300.dp)) {
         state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
+          initialDetent = containerDetent,
+          detents = listOf(containerDetent),
         )
 
         UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
@@ -806,668 +694,1010 @@ class BottomSheetCommonTest {
             Box(
               Modifier
                 .testTag("sheet_contents")
-                .fillMaxWidth()
-                .height(contentHeight),
+                .fillMaxSize(),
             )
           }
         }
       }
-
-      // Shrink content
-      contentHeight = 100.dp
-
-      onNodeWithTag("sheet").assertHeightIsEqualTo(100.dp)
     }
 
-    testCase("sheet content keeps its height, when dragged toward hidden") {
-      lateinit var state: BottomSheetState
+    waitForIdle()
 
-      setContent {
-        Box(Modifier.requiredSize(800.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = SheetDetent.FullyExpanded,
-            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-          )
-
-          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            Sheet(Modifier.testTag("panel")) {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxWidth()
-                  .height(400.dp),
-              )
-            }
-          }
-        }
-      }
-
-      waitForIdle()
-      onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
-
-      mainClock.autoAdvance = false
-      val dragDistance = with(density) { 200.dp.toPx() }
-
-      onNodeWithTag("sheet").performTouchInput {
-        down(center)
-        moveTo(center.copy(y = center.y + dragDistance))
-      }
-      mainClock.advanceTimeByFrame()
-
-      onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
-
-      onNodeWithTag("sheet").performTouchInput {
-        up()
-      }
-      mainClock.autoAdvance = true
-    }
-
-    testCase("offset matches detent fixed height, when sheet contents changes") {
-      // Fixed height detent - always 100.dp
-      val fixedDetent = SheetDetent("fixed100") { _, _ ->
-        100.dp
-      }
-
-      var containerSize by mutableStateOf(200.dp)
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.requiredSize(containerSize)) {
-          state = rememberBottomSheetState(
-            initialDetent = fixedDetent,
-            detents = listOf(fixedDetent),
-          )
-
-          UnstyledBottomSheet(state) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxWidth()
-                  .height(150.dp),
-              )
-            }
-          }
-        }
-      }
-
-      // Change container size to 400.dp
-      containerSize = 400.dp
-      state.invalidateDetents()
-      mainClock.advanceTimeByFrame()
-      waitForIdle()
-
-      // Even though container changed from 200.dp to 400.dp,
-      // fixed detent should still be at 100.dp (not affected by container size)
-      assertThat(state.offset).isCloseTo(100.dp.toPx(), DensityTolerance.toPx())
-    }
-
-    testCase(
-      "sheet takes full container size, when using content-sized detent and content is fillMaxSize",
-    ) {
-      // Content-sized detent that uses the sheet's content height
-      val contentDetent = SheetDetent("content") { _, sheetHeight ->
-        sheetHeight
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(Modifier.requiredSize(400.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = contentDetent,
-            detents = listOf(contentDetent),
-          )
-
-          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxSize()
-                  .background(Color.White),
-              )
-            }
-          }
-        }
-      }
-
-      waitForIdle()
-
-      // When content uses fillMaxSize(), it should match the container height (400.dp)
-      assertThat(state.offset).isCloseTo(400.dp.toPx(), DensityTolerance.toPx())
-      onNodeWithTag("sheet").assertHeightIsEqualTo(400.dp)
-    }
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        300.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+    onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
   }
 
   @Test
-  fun animateTo() = runTestSuite {
-    testCase("current and target detents update correctly, when sheet animates to new position") {
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-      val settleDuration = 5000L
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-          animationSpec = tween(settleDuration.toInt()),
-          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-        )
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.testTag("sheet_contents").size(40.dp))
-          }
-        }
-      }
-
-      // sheet starting moving towards at FullyExpanded
-      scope.launch {
-        state.animateTo(SheetDetent.FullyExpanded)
-      }
-      mainClock.advanceTimeBy(1000L)
-
-      // During animation, target should be FullyExpanded
-      assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+  fun sheet_matches_sheet_content_height_when_using_content_sized_detent() = runComposeUiTest {
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
     }
 
-    testCase("waits for anchors, when animating before sheet is mounted") {
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-      var showSheet by mutableStateOf(false)
-      var animationCompleted = false
+    lateinit var state: BottomSheetState
 
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
-        )
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = contentDetent,
+        detents = listOf(contentDetent),
+      )
 
-        if (showSheet) {
-          Box(Modifier.requiredSize(600.dp)) {
-            UnstyledBottomSheet(state) {
-              Sheet {
-                Box(Modifier.testTag("sheet_contents").size(600.dp))
-              }
-            }
-          }
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(200.dp),
+          )
         }
       }
-
-      scope.launch {
-        state.animateTo(SheetDetent.FullyExpanded)
-        animationCompleted = true
-      }
-      mainClock.advanceTimeByFrame()
-
-      assertThat(animationCompleted).isFalse()
-      assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-
-      showSheet = true
-      waitForIdle()
-
-      assertThat(animationCompleted).isTrue()
-      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-      assertThat(state.offset).isCloseTo(600.dp.toPx(), DensityTolerance.toPx())
     }
+
+    waitForIdle()
+
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        200.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+    onNodeWithTag("sheet").assertHeightIsEqualTo(200.dp)
   }
 
   @Test
-  fun invalidateDetents() = runTestSuite {
-    testCase("detent updates, when invalidateDetents is called on dynamic detent") {
-      lateinit var state: BottomSheetState
-      var detentHeight by mutableStateOf(50.dp)
-      val dynamicDetent = SheetDetent("dynamic") { _, _ ->
-        detentHeight
-      }
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = dynamicDetent,
-          detents = listOf(dynamicDetent),
-        )
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Column(Modifier.testTag("sheet_contents").size(100.dp)) {
-              BasicText("Top")
-              Spacer(Modifier.weight(1f))
-              BasicText("Bottom")
-            }
+  fun sheet_uses_fixed_height_when_using_fixed_height_detent() = runComposeUiTest {
+    // Fixed height detent - always returns 150.dp regardless of container or content
+    val fixedDetent = SheetDetent("fixed") { _, _ ->
+      150.dp
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = fixedDetent,
+        detents = listOf(fixedDetent),
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Column(Modifier.testTag("sheet_contents")) {
+            Box(Modifier.testTag("visible_content").height(150.dp).fillMaxWidth())
+            Box(Modifier.testTag("hidden_content").height(100.dp).fillMaxWidth())
           }
         }
       }
-      detentHeight += 50.dp
-      state.invalidateDetents()
-      onNodeWithText("Bottom").assertIsDisplayed()
     }
 
-    testCase("target detent stays the same, when invalidating detents mid-drag") {
-      val halfDetent = SheetDetent("half") { containerHeight, _ ->
-        containerHeight * 0.5f
-      }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    // Sheet should be at exactly 150.dp
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        150.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
 
-      setContent {
-        Box(Modifier.requiredSize(400.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = halfDetent,
-            detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
-          )
-
-          UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-            Sheet {
-              Box(
-                Modifier
-                  .testTag("sheet_contents")
-                  .fillMaxWidth()
-                  .height(100.dp),
-              )
-            }
-          }
-        }
-      }
-
-      mainClock.autoAdvance = false
-
-      // Start manual drag gesture
-      onNodeWithTag("sheet").performTouchInput {
-        down(bottomCenter)
-      }
-
-      mainClock.advanceTimeBy(50)
-
-      // Move up to trigger upward gesture
-      onNodeWithTag("sheet").performTouchInput {
-        moveTo(center.copy(y = center.y - 300f))
-      }
-
-      mainClock.advanceTimeBy(100)
-
-      // Capture target detent before invalidation
-      val originalDetent = state.targetDetent
-
-      // Invalidate detents mid-drag
-      state.invalidateDetents()
-      mainClock.advanceTimeByFrame()
-
-      // Target detent should remain the same after invalidation
-      assertThat(state.targetDetent).isEqualTo(originalDetent)
+  @Test
+  fun sheet_takes_full_container_size_when_using_content_sized_detent_and_content_is_fillmaxsize() = runComposeUiTest {
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
     }
 
-    testCase("sheet moves with content, when content changes at content-based detent") {
-      var contentHeight by mutableStateOf(100.dp)
+    lateinit var state: BottomSheetState
 
-      // Content-based detent that returns the content height
-      val contentDetent = SheetDetent("content") { _, sheetHeight ->
-        sheetHeight
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
+    setContent {
+      Box(Modifier.requiredSize(300.dp)) {
         state = rememberBottomSheetState(
           initialDetent = contentDetent,
           detents = listOf(contentDetent),
         )
 
+        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+          Sheet {
+            Box(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxSize(),
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        300.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+    onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
+  }
+
+  @Test
+  fun offset_matches_sheet_content_height_when_sheet_contents_grow() = runComposeUiTest {
+    var contentSize by mutableStateOf(40.dp)
+
+    setContent {
+      val state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(contentSize))
+        }
+      }
+    }
+
+    mainClock.advanceTimeBy(50)
+    contentSize = 150.dp
+    mainClock.advanceTimeByFrame()
+
+    onNodeWithTag("sheet").assertHeightIsEqualTo(150.dp)
+  }
+
+  @Test
+  fun offset_matches_sheet_content_height_when_sheet_contents_shrink() = runComposeUiTest {
+    var contentHeight by mutableStateOf(200.dp)
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(contentHeight),
+          )
+        }
+      }
+    }
+
+    // Shrink content
+    contentHeight = 100.dp
+
+    onNodeWithTag("sheet").assertHeightIsEqualTo(100.dp)
+  }
+
+  @Test
+  fun sheet_content_keeps_its_height_when_dragged_toward_hidden() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(800.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+          Sheet(Modifier.testTag("panel")) {
+            Box(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxWidth()
+                .height(400.dp),
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
+
+    mainClock.autoAdvance = false
+    val dragDistance = with(density) { 200.dp.toPx() }
+
+    onNodeWithTag("sheet").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y + dragDistance))
+    }
+    mainClock.advanceTimeByFrame()
+
+    onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
+
+    onNodeWithTag("sheet").performTouchInput {
+      up()
+    }
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun offset_matches_detent_fixed_height_when_sheet_contents_changes() = runComposeUiTest {
+    // Fixed height detent - always 100.dp
+    val fixedDetent = SheetDetent("fixed100") { _, _ ->
+      100.dp
+    }
+
+    var containerSize by mutableStateOf(200.dp)
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(containerSize)) {
+        state = rememberBottomSheetState(
+          initialDetent = fixedDetent,
+          detents = listOf(fixedDetent),
+        )
+
         UnstyledBottomSheet(state) {
           Sheet {
             Box(
               Modifier
                 .testTag("sheet_contents")
                 .fillMaxWidth()
-                .height(contentHeight),
+                .height(150.dp),
             )
           }
         }
       }
-
-      // Grow content
-      contentHeight = 200.dp
-      state.invalidateDetents()
-      mainClock.advanceTimeByFrame()
-      waitForIdle()
-
-      // Offset should move with content to new height
-      assertThat(state.offset).isCloseTo(200.dp.toPx(), DensityTolerance.toPx())
     }
+
+    // Change container size to 400.dp
+    containerSize = 400.dp
+    state.invalidateDetents()
+    mainClock.advanceTimeByFrame()
+    waitForIdle()
+
+    // Even though container changed from 200.dp to 400.dp,
+    // fixed detent should still be at 100.dp (not affected by container size)
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        100.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
   }
 
   @Test
-  fun updating_detents() = runTestSuite {
-    testCase("state.detents updates, when setting new detents list") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+  fun dynamic_content_sizing_sheet_takes_full_container_size_when_using_content_sized_detent_and_content_is_fillmaxsize() = runComposeUiTest {
+    // Content-sized detent that uses the sheet's content height
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
+    }
 
-      lateinit var state: BottomSheetState
+    lateinit var state: BottomSheetState
 
-      setContent {
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
         state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
+          initialDetent = contentDetent,
+          detents = listOf(contentDetent),
         )
 
-        UnstyledBottomSheet(state) {
+        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
           Sheet {
-            Box(Modifier.fillMaxWidth().height(400.dp))
+            Box(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxSize()
+                .background(Color.White),
+            )
           }
         }
       }
-
-      waitForIdle()
-      assertThat(state.detents).isEqualTo(listOf(detent100, detent200))
-
-      state.detents = listOf(detent100, detent200, detent300)
-      waitForIdle()
-
-      assertThat(state.detents).isEqualTo(listOf(detent100, detent200, detent300))
     }
 
-    testCase("sheet moves to closest detent upward, when current detent removed while moving up") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
-      val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
+    // When content uses fillMaxSize(), it should match the container height (400.dp)
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        400.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+    onNodeWithTag("sheet").assertHeightIsEqualTo(400.dp)
+  }
 
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200, detent300, detent400),
-          animationSpec = tween(2000),
-        )
+  @Test
+  fun current_and_target_detents_update_correctly_when_sheet_animates_to_new_position() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+    val settleDuration = 5000L
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+        animationSpec = tween(settleDuration.toInt()),
+        detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+      )
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
       }
-
-      // Start moving up toward detent200
-      scope.launch {
-        state.animateTo(detent200)
-      }
-      // Verify we're actually moving toward detent200
-      assertThat(state.targetDetent).isEqualTo(detent200)
-      assertThat(state.isIdle).isFalse()
-
-      // Remove detent200 while animating toward it
-      state.detents = listOf(detent100, detent300, detent400)
-
-      // Should move to detent300 (closest upward)
-      assertThat(state.targetDetent).isEqualTo(detent300)
-      awaitIdle()
-      assertThat(state.currentDetent).isEqualTo(detent300)
     }
 
-    testCase(
-      "sheet moves to closest detent downward, when current detent removed while moving down",
-    ) {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
-      val detent400 = SheetDetent("400") { _, _ -> 400.dp }
-
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = detent400,
-          detents = listOf(detent100, detent200, detent300, detent400),
-          animationSpec = tween(2000),
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(500.dp))
-          }
-        }
-      }
-
-      waitUntil { state.isIdle }
-      mainClock.autoAdvance = false
-
-      // Start moving down toward detent300
-      scope.launch {
-        state.animateTo(detent300)
-      }
-      mainClock.advanceTimeBy(100)
-
-      // Verify we're actually moving toward detent300
-      assertThat(state.targetDetent).isEqualTo(detent300)
-      assertThat(state.isIdle).isFalse()
-
-      // Remove detent300 while animating toward it
-      state.detents = listOf(detent100, detent200, detent400)
-
-      mainClock.autoAdvance = true
-      mainClock.advanceTimeBy(2500)
-      waitForIdle()
-
-      // Should move to detent200 (closest downward)
-      assertThat(state.currentDetent).isEqualTo(detent200)
+    // sheet starting moving towards at FullyExpanded
+    scope.launch {
+      state.animateTo(SheetDetent.FullyExpanded)
     }
+    mainClock.advanceTimeBy(1000L)
 
-    testCase(
-      name = "throws exception, when setting detents to empty list",
-      expected = IllegalStateException::class,
-    ) {
-      lateinit var state: BottomSheetState
+    // During animation, target should be FullyExpanded
+    assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+  }
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-        )
+  @Test
+  fun waits_for_anchors_when_animating_before_sheet_is_mounted() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+    var showSheet by mutableStateOf(false)
+    var animationCompleted = false
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
-        }
-      }
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+        detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+      )
 
-      state.detents = emptyList()
-    }
-
-    testCase("sheet moves to first detent, when no detent found in search direction") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
-      val detent400 = SheetDetent("400") { _, _ -> 400.dp }
-      val detent500 = SheetDetent("500") { _, _ -> 500.dp }
-
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = detent400,
-          detents = listOf(detent100, detent200, detent300, detent400, detent500),
-          animationSpec = tween(2000),
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(500.dp))
-          }
-        }
-      }
-
-      waitUntil { state.isIdle }
-      mainClock.autoAdvance = false
-
-      // Start moving down toward detent300
-      scope.launch {
-        state.animateTo(detent300)
-      }
-      mainClock.advanceTimeBy(100)
-
-      // Verify we're actually moving toward detent300
-      assertThat(state.targetDetent).isEqualTo(detent300)
-      assertThat(state.isIdle).isFalse()
-
-      // Remove all detents below detent400, leaving only detent400 and detent500
-      // No valid detent in downward direction - should fall back to first detent
-      state.detents = listOf(detent400, detent500)
-
-      mainClock.autoAdvance = true
-      mainClock.advanceTimeBy(2500)
-      waitForIdle()
-
-      // Should move to first detent (detent400)
-      assertThat(state.currentDetent).isEqualTo(detent400)
-    }
-
-    testCase("detents update successfully, when new list has same length but different detents") {
-      val Header = SheetDetent(identifier = "Header") { _, _ -> 150.dp }
-      val Middle = SheetDetent(identifier = "Middle") { _, _ -> 500.dp }
-      val Tall = SheetDetent(identifier = "Tall") { _, _ -> 1000.dp }
-
-      lateinit var sheetState: BottomSheetState
-      setContent {
-        sheetState = rememberBottomSheetState(
-          initialDetent = Header,
-          detents = listOf(Header, Middle),
-        )
-
-        UnstyledBottomSheet(
-          state = sheetState,
-          modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White),
-        ) {
-          Sheet {
-            Column(modifier = Modifier.fillMaxWidth().height(1200.dp)) {
-              BasicText("Test")
+      if (showSheet) {
+        Box(Modifier.requiredSize(600.dp)) {
+          UnstyledBottomSheet(state) {
+            Sheet {
+              Box(Modifier.testTag("sheet_contents").size(600.dp))
             }
           }
         }
       }
+    }
 
-      waitForIdle()
+    scope.launch {
+      state.animateTo(SheetDetent.FullyExpanded)
+      animationCompleted = true
+    }
+    mainClock.advanceTimeByFrame()
 
-      // Update detents to same length but with different detents
-      sheetState.detents = listOf(Header, Tall)
+    assertThat(animationCompleted).isFalse()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
 
-      waitForIdle()
+    showSheet = true
+    waitForIdle()
 
-      // If we reach here without crashing, the test passes
-      assertThat(sheetState.detents.size).isEqualTo(2)
-      assertThat(sheetState.detents).contains(Header)
-      assertThat(sheetState.detents).contains(Tall)
+    assertThat(animationCompleted).isTrue()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        600.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun detent_updates_when_invalidatedetents_is_called_on_dynamic_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+    var detentHeight by mutableStateOf(50.dp)
+    val dynamicDetent = SheetDetent("dynamic") { _, _ ->
+      detentHeight
+    }
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = dynamicDetent,
+        detents = listOf(dynamicDetent),
+      )
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Column(Modifier.testTag("sheet_contents").size(100.dp)) {
+            BasicText("Top")
+            Spacer(Modifier.weight(1f))
+            BasicText("Bottom")
+          }
+        }
+      }
+    }
+    detentHeight += 50.dp
+    state.invalidateDetents()
+    onNodeWithText("Bottom").assertIsDisplayed()
+  }
+
+  @Test
+  fun target_detent_stays_the_same_when_invalidating_detents_mid_drag() = runComposeUiTest {
+    val halfDetent = SheetDetent("half") { containerHeight, _ ->
+      containerHeight * 0.5f
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = halfDetent,
+          detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+          Sheet {
+            Box(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxWidth()
+                .height(100.dp),
+            )
+          }
+        }
+      }
+    }
+
+    mainClock.autoAdvance = false
+
+    // Start manual drag gesture
+    onNodeWithTag("sheet").performTouchInput {
+      down(bottomCenter)
+    }
+
+    mainClock.advanceTimeBy(50)
+
+    // Move up to trigger upward gesture
+    onNodeWithTag("sheet").performTouchInput {
+      moveTo(center.copy(y = center.y - 300f))
+    }
+
+    mainClock.advanceTimeBy(100)
+
+    // Capture target detent before invalidation
+    val originalDetent = state.targetDetent
+
+    // Invalidate detents mid-drag
+    state.invalidateDetents()
+    mainClock.advanceTimeByFrame()
+
+    // Target detent should remain the same after invalidation
+    assertThat(state.targetDetent).isEqualTo(originalDetent)
+  }
+
+  @Test
+  fun sheet_moves_with_content_when_content_changes_at_content_based_detent() = runComposeUiTest {
+    var contentHeight by mutableStateOf(100.dp)
+
+    // Content-based detent that returns the content height
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = contentDetent,
+        detents = listOf(contentDetent),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(contentHeight),
+          )
+        }
+      }
+    }
+
+    // Grow content
+    contentHeight = 200.dp
+    state.invalidateDetents()
+    mainClock.advanceTimeByFrame()
+    waitForIdle()
+
+    // Offset should move with content to new height
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        200.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun state_detents_updates_when_setting_new_detents_list() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.detents).isEqualTo(listOf(detent100, detent200))
+
+    state.detents = listOf(detent100, detent200, detent300)
+    waitForIdle()
+
+    assertThat(state.detents).isEqualTo(listOf(detent100, detent200, detent300))
+  }
+
+  @Test
+  fun sheet_moves_to_closest_detent_upward_when_current_detent_removed_while_moving_up() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200, detent300, detent400),
+        animationSpec = tween(2000),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    // Start moving up toward detent200
+    scope.launch {
+      state.animateTo(detent200)
+    }
+    // Verify we're actually moving toward detent200
+    assertThat(state.targetDetent).isEqualTo(detent200)
+    assertThat(state.isIdle).isFalse()
+
+    // Remove detent200 while animating toward it
+    state.detents = listOf(detent100, detent300, detent400)
+
+    // Should move to detent300 (closest upward)
+    assertThat(state.targetDetent).isEqualTo(detent300)
+    awaitIdle()
+    assertThat(state.currentDetent).isEqualTo(detent300)
+  }
+
+  @Test
+  fun sheet_moves_to_closest_detent_downward_when_current_detent_removed_while_moving_down() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = detent400,
+        detents = listOf(detent100, detent200, detent300, detent400),
+        animationSpec = tween(2000),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(500.dp))
+        }
+      }
+    }
+
+    waitUntil { state.isIdle }
+    mainClock.autoAdvance = false
+
+    // Start moving down toward detent300
+    scope.launch {
+      state.animateTo(detent300)
+    }
+    mainClock.advanceTimeBy(100)
+
+    // Verify we're actually moving toward detent300
+    assertThat(state.targetDetent).isEqualTo(detent300)
+    assertThat(state.isIdle).isFalse()
+
+    // Remove detent300 while animating toward it
+    state.detents = listOf(detent100, detent200, detent400)
+
+    mainClock.autoAdvance = true
+    mainClock.advanceTimeBy(2500)
+    waitForIdle()
+
+    // Should move to detent200 (closest downward)
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
+
+  @Test
+  fun throws_exception_when_setting_detents_to_empty_list() {
+    assertFailsWith<IllegalStateException> {
+      runComposeUiTest {
+        lateinit var state: BottomSheetState
+
+        setContent {
+          state = rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+          )
+
+          UnstyledBottomSheet(state) {
+            Sheet {
+              Box(Modifier.fillMaxWidth().height(400.dp))
+            }
+          }
+        }
+
+        state.detents = emptyList()
+      }
     }
   }
 
   @Test
-  fun accessibility_semantics() = runTestSuite {
-    testCase("drag indication has expand action, when sheet can be expanded") {
-      lateinit var state: BottomSheetState
+  fun sheet_moves_to_first_detent_when_no_detent_found_in_search_direction() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+    val detent500 = SheetDetent("500") { _, _ -> 500.dp }
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-        )
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = detent400,
+        detents = listOf(detent100, detent200, detent300, detent400, detent500),
+        animationSpec = tween(2000),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(500.dp))
         }
       }
-
-      waitForIdle()
-
-      onNodeWithTag("drag_indication")
-        .assert(hasExpandAction())
     }
 
-    testCase("drag indication has collapse action, when sheet is expanded") {
-      lateinit var state: BottomSheetState
+    waitUntil { state.isIdle }
+    mainClock.autoAdvance = false
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      onNodeWithTag("drag_indication")
-        .assert(hasCollapseAction())
+    // Start moving down toward detent300
+    scope.launch {
+      state.animateTo(detent300)
     }
+    mainClock.advanceTimeBy(100)
 
-    testCase("drag indication has no expand action, when sheet is at topmost detent") {
-      lateinit var state: BottomSheetState
+    // Verify we're actually moving toward detent300
+    assertThat(state.targetDetent).isEqualTo(detent300)
+    assertThat(state.isIdle).isFalse()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-        )
+    // Remove all detents below detent400, leaving only detent400 and detent500
+    // No valid detent in downward direction - should fall back to first detent
+    state.detents = listOf(detent400, detent500)
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
+    mainClock.autoAdvance = true
+    mainClock.advanceTimeBy(2500)
+    waitForIdle()
 
-      waitForIdle()
-
-      onNodeWithTag("drag_indication")
-        .assert(hasNoExpandAction())
-    }
-
-    testCase("drag indication has no collapse action, when sheet is at bottommost detent") {
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.Hidden,
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      onNodeWithTag("drag_indication")
-        .assert(hasNoCollapseAction())
-    }
+    // Should move to first detent (detent400)
+    assertThat(state.currentDetent).isEqualTo(detent400)
   }
 
   @Test
-  fun scrollable_content() = runTestSuite {
-    testCase("scrolls content, when only one detent") {
-      val customDetent = SheetDetent("custom") { _, _ -> 70.dp }
-      lateinit var state: BottomSheetState
+  fun detents_update_successfully_when_new_list_has_same_length_but_different_detents() = runComposeUiTest {
+    val Header = SheetDetent(identifier = "Header") { _, _ -> 150.dp }
+    val Middle = SheetDetent(identifier = "Middle") { _, _ -> 500.dp }
+    val Tall = SheetDetent(identifier = "Tall") { _, _ -> 1000.dp }
 
-      setContent {
+    lateinit var sheetState: BottomSheetState
+    setContent {
+      sheetState = rememberBottomSheetState(
+        initialDetent = Header,
+        detents = listOf(Header, Middle),
+      )
+
+      UnstyledBottomSheet(
+        state = sheetState,
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(Color.White),
+      ) {
+        Sheet {
+          Column(modifier = Modifier.fillMaxWidth().height(1200.dp)) {
+            BasicText("Test")
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    // Update detents to same length but with different detents
+    sheetState.detents = listOf(Header, Tall)
+
+    waitForIdle()
+
+    // If we reach here without crashing, the test passes
+    assertThat(sheetState.detents.size).isEqualTo(2)
+    assertThat(sheetState.detents).contains(Header)
+    assertThat(sheetState.detents).contains(Tall)
+  }
+
+  @Test
+  fun drag_indication_has_expand_action_when_sheet_can_be_expanded() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(300.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("drag_indication")
+      .assert(hasExpandAction())
+  }
+
+  @Test
+  fun drag_indication_has_collapse_action_when_sheet_is_expanded() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(300.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("drag_indication")
+      .assert(hasCollapseAction())
+  }
+
+  @Test
+  fun drag_indication_has_no_expand_action_when_sheet_is_at_topmost_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(300.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("drag_indication")
+      .assert(hasNoExpandAction())
+  }
+
+  @Test
+  fun drag_indication_has_no_collapse_action_when_sheet_is_at_bottommost_detent() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = SheetDetent.Hidden,
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(300.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("drag_indication")
+      .assert(hasNoCollapseAction())
+  }
+
+  @Test
+  fun scrolls_content_when_only_one_detent() = runComposeUiTest {
+    val customDetent = SheetDetent("custom") { _, _ -> 70.dp }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = customDetent,
+        detents = listOf(customDetent), // Only ONE detent
+      )
+
+      UnstyledBottomSheet(
+        state = state,
+        modifier = Modifier.testTag("sheet"),
+      ) {
+        Sheet {
+          Column(
+            Modifier
+              .testTag("scrollable_content")
+              .verticalScroll(rememberScrollState()),
+          ) {
+            repeat(10) { index ->
+              Box(
+                Modifier
+                  .testTag("item_$index")
+                  .size(width = 100.dp, height = 100.dp),
+              )
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("sheet"))
+
+    // Sheet should be at fixed detent
+    val initialOffset = state.offset
+
+    // Scroll to last item
+    onNodeWithTag("item_9").performScrollTo()
+
+    // Sheet offset should NOT change - only content scrolls
+    assertThat(state.offset).isEqualTo(initialOffset)
+  }
+
+  @Test
+  fun supports_lazycolumn_content() = runComposeUiTest {
+    val customDetent = SheetDetent("custom") { _, _ -> 280.dp }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = customDetent,
+        detents = listOf(customDetent),
+      )
+
+      UnstyledBottomSheet(
+        state = state,
+      ) {
+        Sheet {
+          LazyColumn(
+            Modifier
+              .testTag("lazy_content")
+              .fillMaxWidth(),
+          ) {
+            items(10) { index ->
+              BasicText(
+                text = "item_$index",
+                modifier = Modifier
+                  .testTag("item_$index")
+                  .fillMaxWidth()
+                  .height(56.dp),
+              )
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("lazy_content"))
+    onNodeWithTag("item_0").assertIsDisplayed()
+
+    val initialOffset = state.offset
+
+    onNodeWithTag("lazy_content").performScrollToIndex(9)
+
+    onNodeWithTag("item_9").assertIsDisplayed()
+    assertThat(state.offset).isEqualTo(initialOffset)
+  }
+
+  @Test
+  fun expands_to_fullyexpanded_with_weighted_lazycolumn_content() = runComposeUiTest {
+    val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
         state = rememberBottomSheetState(
-          initialDetent = customDetent,
-          detents = listOf(customDetent), // Only ONE detent
+          initialDetent = miniDetent,
+          detents = listOf(miniDetent, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(state = state) {
+          Sheet {
+            Column(Modifier.fillMaxWidth()) {
+              Box(
+                Modifier
+                  .testTag("header")
+                  .fillMaxWidth()
+                  .height(74.dp),
+              )
+
+              LazyColumn(
+                Modifier
+                  .testTag("lazy_content")
+                  .fillMaxWidth()
+                  .weight(1f),
+              ) {
+                items(10) { index ->
+                  BasicText(
+                    text = "item_$index",
+                    modifier = Modifier
+                      .testTag("item_$index")
+                      .fillMaxWidth()
+                      .height(56.dp),
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("header"))
+    waitForIdle()
+
+    val initialOffset = state.offset
+    assertThat(initialOffset).isCloseTo(
+      with(density) {
+        74.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+
+    state.targetDetent = SheetDetent.FullyExpanded
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+    assertThat(state.offset).isGreaterThan(initialOffset + with(density) { 200.dp.toPx() })
+  }
+
+  @Test
+  fun does_not_change_content_height_while_dragging_between_detents() = runComposeUiTest {
+    val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
+    lateinit var state: BottomSheetState
+    var measuredContentHeight = 0
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = miniDetent,
+          detents = listOf(miniDetent, SheetDetent.FullyExpanded),
         )
 
         UnstyledBottomSheet(
@@ -1477,302 +1707,162 @@ class BottomSheetCommonTest {
           Sheet {
             Column(
               Modifier
-                .testTag("scrollable_content")
-                .verticalScroll(rememberScrollState()),
+                .fillMaxWidth()
+                .onSizeChanged { measuredContentHeight = it.height },
             ) {
-              repeat(10) { index ->
-                Box(
-                  Modifier
-                    .testTag("item_$index")
-                    .size(width = 100.dp, height = 100.dp),
-                )
+              Box(
+                Modifier
+                  .testTag("header")
+                  .fillMaxWidth()
+                  .height(74.dp),
+              )
+
+              LazyColumn(
+                Modifier
+                  .fillMaxWidth()
+                  .weight(1f),
+              ) {
+                items(10) { index ->
+                  BasicText(
+                    text = "item_$index",
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .height(56.dp),
+                  )
+                }
               }
             }
           }
         }
       }
-
-      waitUntilExactlyOneExists(hasTestTag("sheet"))
-
-      // Sheet should be at fixed detent
-      val initialOffset = state.offset
-
-      // Scroll to last item
-      onNodeWithTag("item_9").performScrollTo()
-
-      // Sheet offset should NOT change - only content scrolls
-      assertThat(state.offset).isEqualTo(initialOffset)
     }
 
-    testCase("supports LazyColumn content") {
-      val customDetent = SheetDetent("custom") { _, _ -> 280.dp }
-      lateinit var state: BottomSheetState
+    waitUntilExactlyOneExists(hasTestTag("header"))
+    waitForIdle()
 
-      setContent {
+    val expandedContentHeight = measuredContentHeight
+    assertThat(expandedContentHeight.toFloat()).isCloseTo(
+      with(density) {
+        400.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+
+    mainClock.autoAdvance = false
+    onNodeWithTag("sheet").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y - with(density) { 150.dp.toPx() }))
+    }
+    mainClock.advanceTimeByFrame()
+
+    assertThat(measuredContentHeight).isEqualTo(expandedContentHeight)
+
+    onNodeWithTag("sheet").performTouchInput {
+      up()
+    }
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun expands_sheet_before_scrolling_content_when_swiping_up_with_multiple_detents() = runComposeUiTest {
+    val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
+      containerHeight * 0.5f
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(
+        Modifier
+          .fillMaxSize()
+          .background(Color.Black),
+      ) {
         state = rememberBottomSheetState(
-          initialDetent = customDetent,
-          detents = listOf(customDetent),
+          initialDetent = halfExpandedDetent,
+          detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
         )
 
         UnstyledBottomSheet(
           state = state,
+          modifier = Modifier
+            .background(Color.White)
+            .testTag("sheet")
+            .verticalScroll(rememberScrollState()),
         ) {
           Sheet {
-            LazyColumn(
-              Modifier
-                .testTag("lazy_content")
-                .fillMaxWidth(),
-            ) {
-              items(10) { index ->
+            Column {
+              repeat(5) { index ->
                 BasicText(
                   text = "item_$index",
                   modifier = Modifier
                     .testTag("item_$index")
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(100.dp),
                 )
               }
             }
           }
         }
       }
-
-      waitUntilExactlyOneExists(hasTestTag("lazy_content"))
-      onNodeWithTag("item_0").assertIsDisplayed()
-
-      val initialOffset = state.offset
-
-      onNodeWithTag("lazy_content").performScrollToIndex(9)
-
-      onNodeWithTag("item_9").assertIsDisplayed()
-      assertThat(state.offset).isEqualTo(initialOffset)
     }
 
-    testCase("expands to FullyExpanded with weighted LazyColumn content") {
-      val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
-      lateinit var state: BottomSheetState
+    // Swipe up on the sheet - this should move the sheet to FullyExpanded first
+    onNodeWithTag("sheet").performTouchInput {
+      swipeUp()
+    }
+    awaitIdle()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+  }
 
-      setContent {
-        Box(Modifier.requiredSize(400.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = miniDetent,
-            detents = listOf(miniDetent, SheetDetent.FullyExpanded),
-          )
-
-          UnstyledBottomSheet(state = state) {
-            Sheet {
-              Column(Modifier.fillMaxWidth()) {
-                Box(
-                  Modifier
-                    .testTag("header")
-                    .fillMaxWidth()
-                    .height(74.dp),
-                )
-
-                LazyColumn(
-                  Modifier
-                    .testTag("lazy_content")
-                    .fillMaxWidth()
-                    .weight(1f),
-                ) {
-                  items(10) { index ->
-                    BasicText(
-                      text = "item_$index",
-                      modifier = Modifier
-                        .testTag("item_$index")
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    )
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      waitUntilExactlyOneExists(hasTestTag("header"))
-      waitForIdle()
-
-      val initialOffset = state.offset
-      assertThat(initialOffset).isCloseTo(74.dp.toPx(), DensityTolerance.toPx())
-
-      state.targetDetent = SheetDetent.FullyExpanded
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-      assertThat(state.offset).isGreaterThan(initialOffset + 200.dp.toPx())
+  @Test
+  fun bottom_of_scrollable_sheet_is_not_clipped() = runComposeUiTest {
+    val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
+      containerHeight * 0.5f
     }
 
-    testCase("does not change content height while dragging between detents") {
-      val miniDetent = SheetDetent("mini") { _, _ -> 74.dp }
-      lateinit var state: BottomSheetState
-      var measuredContentHeight = 0
+    lateinit var state: BottomSheetState
 
-      setContent {
-        Box(Modifier.requiredSize(400.dp)) {
-          state = rememberBottomSheetState(
-            initialDetent = miniDetent,
-            detents = listOf(miniDetent, SheetDetent.FullyExpanded),
-          )
+    setContent {
+      Box(
+        Modifier
+          .fillMaxSize()
+          .background(Color.Black),
+      ) {
+        state = rememberBottomSheetState(
+          initialDetent = halfExpandedDetent,
+          detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
+        )
 
-          UnstyledBottomSheet(
-            state = state,
-            modifier = Modifier.testTag("sheet"),
-          ) {
-            Sheet {
-              Column(
-                Modifier
-                  .fillMaxWidth()
-                  .onSizeChanged { measuredContentHeight = it.height },
-              ) {
-                Box(
-                  Modifier
-                    .testTag("header")
-                    .fillMaxWidth()
-                    .height(74.dp),
-                )
-
-                LazyColumn(
-                  Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                ) {
-                  items(10) { index ->
-                    BasicText(
-                      text = "item_$index",
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    )
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      waitUntilExactlyOneExists(hasTestTag("header"))
-      waitForIdle()
-
-      val expandedContentHeight = measuredContentHeight
-      assertThat(expandedContentHeight.toFloat()).isCloseTo(400.dp.toPx(), DensityTolerance.toPx())
-
-      mainClock.autoAdvance = false
-      onNodeWithTag("sheet").performTouchInput {
-        down(center)
-        moveTo(center.copy(y = center.y - 150.dp.toPx()))
-      }
-      mainClock.advanceTimeByFrame()
-
-      assertThat(measuredContentHeight).isEqualTo(expandedContentHeight)
-
-      onNodeWithTag("sheet").performTouchInput {
-        up()
-      }
-      mainClock.autoAdvance = true
-    }
-
-    testCase("expands sheet before scrolling content, when swiping up with multiple detents") {
-      val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
-        containerHeight * 0.5f
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(
-          Modifier
-            .fillMaxSize()
-            .background(Color.Black),
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier
+            .background(Color.White)
+            .testTag("sheet")
+            .verticalScroll(rememberScrollState()),
         ) {
-          state = rememberBottomSheetState(
-            initialDetent = halfExpandedDetent,
-            detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
-          )
-
-          UnstyledBottomSheet(
-            state = state,
-            modifier = Modifier
-              .background(Color.White)
-              .testTag("sheet")
-              .verticalScroll(rememberScrollState()),
-          ) {
-            Sheet {
-              Column {
-                repeat(5) { index ->
-                  BasicText(
-                    text = "item_$index",
-                    modifier = Modifier
-                      .testTag("item_$index")
-                      .fillMaxWidth()
-                      .height(100.dp),
-                  )
-                }
+          Sheet {
+            Column {
+              repeat(5) { index ->
+                BasicText(
+                  text = "item_$index",
+                  modifier = Modifier
+                    .testTag("item_$index")
+                    .fillMaxWidth()
+                    .height(100.dp),
+                )
               }
             }
           }
         }
       }
-
-      // Swipe up on the sheet - this should move the sheet to FullyExpanded first
-      onNodeWithTag("sheet").performTouchInput {
-        swipeUp()
-      }
-      awaitIdle()
-      assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
     }
 
-    testCase("bottom of scrollable sheet is not clipped") {
-      val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
-        containerHeight * 0.5f
-      }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        Box(
-          Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        ) {
-          state = rememberBottomSheetState(
-            initialDetent = halfExpandedDetent,
-            detents = listOf(halfExpandedDetent, SheetDetent.FullyExpanded),
-          )
-
-          UnstyledBottomSheet(
-            state = state,
-            modifier = Modifier
-              .background(Color.White)
-              .testTag("sheet")
-              .verticalScroll(rememberScrollState()),
-          ) {
-            Sheet {
-              Column {
-                repeat(5) { index ->
-                  BasicText(
-                    text = "item_$index",
-                    modifier = Modifier
-                      .testTag("item_$index")
-                      .fillMaxWidth()
-                      .height(100.dp),
-                  )
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Swipe up on the sheet - this should move the sheet to FullyExpanded first
-      onNodeWithTag("sheet").performTouchInput {
-        swipeUp()
-      }
-      awaitIdle()
-      onNodeWithTag("item_4").assertIsDisplayed()
+    // Swipe up on the sheet - this should move the sheet to FullyExpanded first
+    onNodeWithTag("sheet").performTouchInput {
+      swipeUp()
     }
+    awaitIdle()
+    onNodeWithTag("item_4").assertIsDisplayed()
   }
 
   @Test
@@ -1932,586 +2022,592 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun confirmDetentChange() = runTestSuite {
-    testCase("detent change is blocked, when confirmDetentChange returns false for targetDetent") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+  fun detent_change_is_blocked_when_confirmdetentchange_returns_false_for_targetdetent() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
 
-      lateinit var state: BottomSheetState
+    lateinit var state: BottomSheetState
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { false },
-        )
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { false },
+      )
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-      state.targetDetent = detent200
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
-    testCase("detent change proceeds, when confirmDetentChange returns true") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    waitForIdle()
+    state.targetDetent = detent200
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { true },
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-      state.targetDetent = detent200
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent200)
-    }
-
-    testCase("sheet returns to original detent, when drag is blocked by confirmDetentChange") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { newDetent -> newDetent != detent200 },
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-      val initialOffset = state.offset
-
-      // Try to drag upward toward detent200
-      onNodeWithTag("sheet").performTouchInput {
-        swipeUp()
-      }
-      waitForIdle()
-
-      // Should return to original detent
-      assertThat(state.currentDetent).isEqualTo(detent100)
-      assertThat(state.offset).isEqualTo(initialOffset)
-    }
-
-    testCase(
-      "programmatic detent change is blocked, when confirmDetentChange returns false for animateTo",
-    ) {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { newDetent -> newDetent != detent200 },
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      scope.launch {
-        state.animateTo(detent200)
-      }
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent100)
-    }
-
-    testCase("sheet stays at current detent, when confirmDetentChange blocks all other detents") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
-
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent200,
-          detents = listOf(detent100, detent200, detent300),
-          confirmDetentChange = { newDetent -> newDetent == detent200 },
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      // Try to swipe up
-      onNodeWithTag("sheet").performTouchInput { swipeUp() }
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
-
-      // Try to swipe down
-      onNodeWithTag("sheet").performTouchInput { swipeDown() }
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
-    }
-
-    testCase("confirmDetentChange is called with correct detent, when dragging upward") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-
-      var receivedDetent: SheetDetent? = null
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { newDetent ->
-            receivedDetent = newDetent
-            true
-          },
-        )
-
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      onNodeWithTag("sheet").performTouchInput { swipeUp() }
-      waitForIdle()
-
-      assertThat(receivedDetent).isEqualTo(detent200)
-    }
-
-    testCase("confirmDetentChange is called with correct detent, when using targetDetent setter") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-
-      var receivedDetent: SheetDetent? = null
-      lateinit var state: BottomSheetState
-
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { newDetent ->
-            receivedDetent = newDetent
-            true
-          },
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-      state.targetDetent = detent200
-      waitForIdle()
-
-      assertThat(receivedDetent).isEqualTo(detent200)
-    }
-
-    testCase("confirmDetentChange is called with correct detent, when using animateTo") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-
-      var receivedDetent: SheetDetent? = null
-      lateinit var state: BottomSheetState
-      lateinit var scope: CoroutineScope
-
-      setContent {
-        scope = rememberCoroutineScope()
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-          confirmDetentChange = { newDetent ->
-            receivedDetent = newDetent
-            true
-          },
-        )
-
-        UnstyledBottomSheet(state) {
-          Sheet {
-            Box(Modifier.fillMaxWidth().height(300.dp))
-          }
-        }
-      }
-
-      waitForIdle()
-
-      scope.launch {
-        state.animateTo(detent200)
-      }
-      waitForIdle()
-
-      assertThat(receivedDetent).isEqualTo(detent200)
-    }
+    assertThat(state.currentDetent).isEqualTo(detent100)
   }
 
   @Test
-  fun dragIndication() = runTestSuite {
-    testCase("sheet moves to next detent up, when drag indication clicked from bottom") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+  fun detent_change_proceeds_when_confirmdetentchange_returns_true() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
 
-      lateinit var state: BottomSheetState
+    lateinit var state: BottomSheetState
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200, detent300),
-        )
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { true },
+      )
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent100)
-
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
-    testCase("sheet moves to next detent down, when drag indication clicked from top") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    waitForIdle()
+    state.targetDetent = detent200
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent300,
-          detents = listOf(detent100, detent200, detent300),
-        )
+  @Test
+  fun sheet_returns_to_original_detent_when_drag_is_blocked_by_confirmdetentchange() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { newDetent -> newDetent != detent200 },
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent300)
-
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
-    testCase("drag indication is disabled, when only one detent") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    waitForIdle()
+    val initialOffset = state.offset
 
-      lateinit var state: BottomSheetState
+    // Try to drag upward toward detent200
+    onNodeWithTag("sheet").performTouchInput {
+      swipeUp()
+    }
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100),
-        )
+    // Should return to original detent
+    assertThat(state.currentDetent).isEqualTo(detent100)
+    assertThat(state.offset).isEqualTo(initialOffset)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun programmatic_detent_change_is_blocked_when_confirmdetentchange_returns_false_for_animateto() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { newDetent -> newDetent != detent200 },
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-      onNodeWithTag("drag_indication").assertIsNotEnabled()
     }
 
-    testCase(
-      "sheet cycles through all detents upward, when clicking drag indication multiple times",
-    ) {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    scope.launch {
+      state.animateTo(detent200)
+    }
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200, detent300),
-        )
+    assertThat(state.currentDetent).isEqualTo(detent100)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun sheet_stays_at_current_detent_when_confirmdetentchange_blocks_all_other_detents() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent200,
+        detents = listOf(detent100, detent200, detent300),
+        confirmDetentChange = { newDetent -> newDetent == detent200 },
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(400.dp))
         }
       }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent100)
-
-      // Click to move to detent200
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
-
-      // Click to move to detent300
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent300)
     }
 
-    testCase("sheet reverses direction, when reaching top detent") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    // Try to swipe up
+    onNodeWithTag("sheet").performTouchInput { swipeUp() }
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent200,
-          detents = listOf(detent100, detent200, detent300),
-        )
+    // Try to swipe down
+    onNodeWithTag("sheet").performTouchInput { swipeDown() }
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun confirmdetentchange_is_called_with_correct_detent_when_dragging_upward() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+
+    var receivedDetent: SheetDetent? = null
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { newDetent ->
+          receivedDetent = newDetent
+          true
+        },
+      )
+
+      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-
-      // Click to move up to detent300
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent300)
-
-      // Click again - should reverse and go down to detent200
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
-    testCase("sheet reverses direction, when reaching bottom detent") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    onNodeWithTag("sheet").performTouchInput { swipeUp() }
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent200,
-          detents = listOf(detent100, detent200, detent300),
-        )
+    assertThat(receivedDetent).isEqualTo(detent200)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun confirmdetentchange_is_called_with_correct_detent_when_using_targetdetent_setter() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+
+    var receivedDetent: SheetDetent? = null
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { newDetent ->
+          receivedDetent = newDetent
+          true
+        },
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-
-      // First move to top
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-
-      // Then start going down
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
-
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent100)
-
-      // Click again - should reverse and go up to detent200
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent200)
     }
 
-    testCase("drag indication respects confirmDetentChange, when moving to blocked detent") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    waitForIdle()
+    state.targetDetent = detent200
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    assertThat(receivedDetent).isEqualTo(detent200)
+  }
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200, detent300),
-          confirmDetentChange = { newDetent ->
-            newDetent != detent200
-          },
-        )
+  @Test
+  fun confirmdetentchange_is_called_with_correct_detent_when_using_animateto() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+    var receivedDetent: SheetDetent? = null
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+        confirmDetentChange = { newDetent ->
+          receivedDetent = newDetent
+          true
+        },
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          Box(Modifier.fillMaxWidth().height(300.dp))
         }
       }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent100)
-
-      // Try to click - should be blocked from moving to detent200
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
-    testCase(
-      "drag indication stays at current detent, when next detent is blocked by confirmDetentChange",
-    ) {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
-      val detent300 = SheetDetent("300") { _, _ -> 300.dp }
-      val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+    waitForIdle()
 
-      lateinit var state: BottomSheetState
+    scope.launch {
+      state.animateTo(detent200)
+    }
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200, detent300, detent400),
-          confirmDetentChange = { newDetent ->
-            // Block detent200, allow all others
-            newDetent != detent200
-          },
-        )
+    assertThat(receivedDetent).isEqualTo(detent200)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(500.dp))
-          }
+  @Test
+  fun sheet_moves_to_next_detent_up_when_drag_indication_clicked_from_bottom() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200, detent300),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
         }
       }
-
-      waitForIdle()
-      assertThat(state.currentDetent).isEqualTo(detent100)
-
-      // Click drag indication - detent200 is blocked, so sheet stays at detent100
-      onNodeWithTag("drag_indication").performClick()
-      waitForIdle()
-
-      assertThat(state.currentDetent).isEqualTo(detent100)
     }
 
-    testCase("drag indication has button role, when multiple detents exist") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
-      val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent100)
 
-      lateinit var state: BottomSheetState
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100, detent200),
-        )
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun sheet_moves_to_next_detent_down_when_drag_indication_clicked_from_top() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent300,
+        detents = listOf(detent100, detent200, detent300),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
         }
       }
-
-      waitForIdle()
-
-      // Verify drag indication has button role for accessibility
-      onNodeWithTag("drag_indication")
-        .assertHasClickAction()
-        .assertIsEnabled()
     }
 
-    testCase("drag indication is not enabled, when only one detent exists") {
-      val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent300)
 
-      lateinit var state: BottomSheetState
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
 
-      setContent {
-        state = rememberBottomSheetState(
-          initialDetent = detent100,
-          detents = listOf(detent100),
-        )
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
 
-        UnstyledBottomSheet(state) {
-          Sheet {
-            DragIndication(Modifier.testTag("drag_indication").size(32.dp))
-            Box(Modifier.fillMaxWidth().height(400.dp))
-          }
+  @Test
+  fun drag_indication_is_disabled_when_only_one_detent() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
         }
       }
-
-      waitForIdle()
-
-      // Verify drag indication is disabled when only one detent
-      onNodeWithTag("drag_indication")
-        .assertIsNotEnabled()
     }
+
+    waitForIdle()
+    onNodeWithTag("drag_indication").assertIsNotEnabled()
+  }
+
+  @Test
+  fun sheet_cycles_through_all_detents_upward_when_clicking_drag_indication_multiple_times() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200, detent300),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent100)
+
+    // Click to move to detent200
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
+
+    // Click to move to detent300
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent300)
+  }
+
+  @Test
+  fun sheet_reverses_direction_when_reaching_top_detent() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent200,
+        detents = listOf(detent100, detent200, detent300),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    // Click to move up to detent300
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent300)
+
+    // Click again - should reverse and go down to detent200
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
+
+  @Test
+  fun sheet_reverses_direction_when_reaching_bottom_detent() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent200,
+        detents = listOf(detent100, detent200, detent300),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    // First move to top
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+
+    // Then start going down
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
+
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent100)
+
+    // Click again - should reverse and go up to detent200
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent200)
+  }
+
+  @Test
+  fun drag_indication_respects_confirmdetentchange_when_moving_to_blocked_detent() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200, detent300),
+        confirmDetentChange = { newDetent ->
+          newDetent != detent200
+        },
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent100)
+
+    // Try to click - should be blocked from moving to detent200
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(detent100)
+  }
+
+  @Test
+  fun drag_indication_stays_at_current_detent_when_next_detent_is_blocked_by_confirmdetentchange() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+    val detent300 = SheetDetent("300") { _, _ -> 300.dp }
+    val detent400 = SheetDetent("400") { _, _ -> 400.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200, detent300, detent400),
+        confirmDetentChange = { newDetent ->
+          // Block detent200, allow all others
+          newDetent != detent200
+        },
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(500.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(detent100)
+
+    // Click drag indication - detent200 is blocked, so sheet stays at detent100
+    onNodeWithTag("drag_indication").performClick()
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(detent100)
+  }
+
+  @Test
+  fun drag_indication_has_button_role_when_multiple_detents_exist() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+    val detent200 = SheetDetent("200") { _, _ -> 200.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100, detent200),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    // Verify drag indication has button role for accessibility
+    onNodeWithTag("drag_indication")
+      .assertHasClickAction()
+      .assertIsEnabled()
+  }
+
+  @Test
+  fun drag_indication_is_not_enabled_when_only_one_detent_exists() = runComposeUiTest {
+    val detent100 = SheetDetent("100") { _, _ -> 100.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = detent100,
+        detents = listOf(detent100),
+      )
+
+      UnstyledBottomSheet(state) {
+        Sheet {
+          DragIndication(Modifier.testTag("drag_indication").size(32.dp))
+          Box(Modifier.fillMaxWidth().height(400.dp))
+        }
+      }
+    }
+
+    waitForIdle()
+
+    // Verify drag indication is disabled when only one detent
+    onNodeWithTag("drag_indication")
+      .assertIsNotEnabled()
   }
 
   // Helper functions for semantic assertions

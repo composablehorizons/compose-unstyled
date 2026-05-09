@@ -28,28 +28,27 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import kotlin.test.Test
 
 class ModalAndroidTest {
 
   @Test
-  fun contentRespectsLocalLayoutDirection() = runTestSuite {
-    testCase("content respects LocalLayoutDirection") {
-      val state = ModalState(initiallyVisible = true)
-      setContent {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-          Modal(state) {
-            val layoutDirection =
-              if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
-            BasicText(layoutDirection, Modifier.testTag("layout_direction"))
-          }
+  fun content_respects_locallayoutdirection() = runComposeUiTest {
+    val state = ModalState(initiallyVisible = true)
+    setContent {
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        Modal(state) {
+          val layoutDirection =
+            if (LocalLayoutDirection.current == LayoutDirection.Rtl) "rtl" else "ltr"
+          BasicText(layoutDirection, Modifier.testTag("layout_direction"))
         }
       }
-
-      onNodeWithTag("layout_direction").assertTextEquals("rtl")
-      state.transitionState.targetState = false
-      waitForIdle()
     }
+
+    onNodeWithTag("layout_direction").assertTextEquals("rtl")
+    state.transitionState.targetState = false
+    waitForIdle()
   }
 }
