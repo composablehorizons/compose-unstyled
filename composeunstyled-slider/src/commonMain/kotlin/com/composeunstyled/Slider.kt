@@ -134,7 +134,7 @@ private fun CorrectValueSideEffect(
   }
 }
 
-suspend fun AwaitPointerEventScope.waitRelease(
+internal suspend fun AwaitPointerEventScope.waitRelease(
   pass: PointerEventPass = PointerEventPass.Main,
 ): PointerInputChange {
   while (true) {
