@@ -53,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modal Bottom Sheet now has a separate `overlay` slot for passing any dimming overlay such as a
   scrim.
 - Scroll area state APIs moved into the scrollbars module and were renamed to `ScrollbarState`.
+  The `ScrollArea` container was removed so scrollbars do not impose layout or styling choices.
 
 ### Fixed
 - Tooltips now hide on Escape only while visible and keep keyboard focus and hover visibility

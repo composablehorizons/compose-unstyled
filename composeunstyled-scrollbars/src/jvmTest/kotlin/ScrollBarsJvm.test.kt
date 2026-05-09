@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -48,7 +49,7 @@ class ScrollBarsJvmTest {
     setContent {
       val scrollState = rememberScrollState()
       val scrollbarState = rememberScrollbarState(scrollState)
-      ScrollArea(state = scrollbarState) {
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
