@@ -26,7 +26,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -102,7 +101,6 @@ fun TooltipDemo() {
             .background(Color.White)
             .focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
           interactionSource = interactionSource,
-          indication = LocalIndication.current,
         ) {
           UnstyledIcon(Lucide.BellDot, contentDescription = null)
         }

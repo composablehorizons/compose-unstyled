@@ -21,7 +21,6 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -58,7 +57,6 @@ fun ButtonDemo() {
         .shadow(elevation = 4.dp, RoundedCornerShape(12.dp))
         .clip(RoundedCornerShape(12.dp))
         .background(Color.White),
-      indication = LocalIndication.current,
     ) {
       UnstyledIcon(Lucide.Pencil, contentDescription = null)
       Spacer(Modifier.width(12.dp))

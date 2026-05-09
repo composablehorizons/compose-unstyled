@@ -26,7 +26,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,7 +71,6 @@ fun DialogDemo() {
       onClick = { dialogVisible = true },
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White),
-      indication = LocalIndication.current,
     ) {
       Text("Show dialog")
     }
@@ -113,7 +111,6 @@ fun DialogDemo() {
               .align(Alignment.End)
               .clip(RoundedCornerShape(6.dp)),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-            indication = LocalIndication.current,
           ) {
             Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
           }

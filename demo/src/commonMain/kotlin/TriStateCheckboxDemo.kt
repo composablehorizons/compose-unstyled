@@ -21,7 +21,6 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -97,7 +96,6 @@ fun TriStateCheckboxDemo() {
           verticalAlignment = Alignment.CenterVertically,
         ) {
           StateIndicator(
-            indication = LocalIndication.current,
             modifier = Modifier
               .size(24.dp)
               .background(Color.White, triStateShape)
@@ -143,7 +141,6 @@ fun TriStateCheckboxDemo() {
             verticalAlignment = Alignment.CenterVertically,
           ) {
             CheckedIndicator(
-              indication = LocalIndication.current,
               modifier = Modifier
                 .size(24.dp)
                 .background(Color.White, checkboxShape)

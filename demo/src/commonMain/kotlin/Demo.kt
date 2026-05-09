@@ -23,7 +23,6 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -54,7 +53,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -71,7 +69,6 @@ import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -80,7 +77,11 @@ import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.X
+import com.composeunstyled.CrossAxisAlignment
+import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.PortalHost
+import com.composeunstyled.Stack
+import com.composeunstyled.StackOrientation
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -163,10 +164,12 @@ fun ModifierDemo(content: @Composable () -> Unit) {
   val size = currentWindowContainerSize()
   val isWide = size.width > 600.dp
   val spacedBy = if (isWide) 60.dp else 30.dp
-  Flex(
+  Stack(
     modifier = Modifier.fillMaxSize().background(Color.White),
-    orientation = if (isWide) FlexOrientation.Horizontal else FlexOrientation.Vertical,
-    spacedBy = spacedBy,
+    orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical,
+    mainAxisArrangement = MainAxisArrangement.Center,
+    crossAxisAlignment = CrossAxisAlignment.Center,
+    spacing = spacedBy,
   ) {
     content()
   }
@@ -318,7 +321,7 @@ private fun DemoSection(
 ) {
   Title(title)
   demos.forEach { demo ->
-    OutlinedButton(
+    DemoListButton(
       onClick = { onClick(demo) },
       modifier = Modifier.fillMaxWidth(),
     ) {
@@ -377,7 +380,6 @@ private fun DemoFilterBox(
       onClick = onDismiss,
       interactionSource = interactionSource,
       contentPadding = PaddingValues(6.dp),
-      indication = LocalIndication.current,
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
@@ -412,7 +414,6 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       onClick = onUpClick,
       interactionSource = interactionSource,
       contentPadding = PaddingValues(12.dp),
-      indication = LocalIndication.current,
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
@@ -425,7 +426,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
 }
 
 @Composable
-private fun OutlinedButton(
+private fun DemoListButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
@@ -442,41 +443,13 @@ private fun OutlinedButton(
       .background(Color.White)
       .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-    indication = LocalIndication.current,
   ) {
-    content()
-  }
-}
-
-sealed interface FlexOrientation {
-  object Horizontal : FlexOrientation
-  object Vertical : FlexOrientation
-}
-
-@Composable
-private fun Flex(
-  orientation: FlexOrientation = FlexOrientation.Horizontal,
-  spacedBy: Dp = 0.dp,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  val movableContent = remember { movableContentOf { content() } }
-
-  if (orientation == FlexOrientation.Vertical) {
-    Column(
-      modifier = modifier,
-      verticalArrangement = Arrangement.spacedBy(spacedBy, Alignment.CenterVertically),
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      movableContent()
-    }
-  } else {
     Row(
-      modifier = modifier,
-      horizontalArrangement = Arrangement.spacedBy(spacedBy, Alignment.CenterHorizontally),
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      movableContent()
+      content()
     }
   }
 }
