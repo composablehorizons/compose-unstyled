@@ -227,6 +227,44 @@ class DropdownMenuPanelTest {
   }
 
   @Test
+  fun homeKeyMovesFocusToFirstEnabledItem() = runComposeUiTest {
+    setContent {
+      with(FakeDropdownMenuScope) {
+        CompositionLocalProvider(
+          LocalDropdownMenuState provides DropdownMenuState(
+            onExpandedChange = {},
+            transitionState = MutableTransitionState(true),
+          ),
+        ) {
+          DropdownMenuPanel {
+            MenuItem(
+              onClick = {},
+              enabled = false,
+              modifier = Modifier.testTag("first"),
+            ) {
+              BasicText("First")
+            }
+            MenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
+              BasicText("Middle")
+            }
+            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+              BasicText("Last")
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("last").requestFocus()
+    onNodeWithTag("last").assertIsFocused()
+    onNodeWithTag("last").performKeyInput {
+      pressKey(Key.Home)
+    }
+
+    onNodeWithTag("middle").assertIsFocused()
+  }
+
+  @Test
   fun endKeyMovesFocusToLastItem() = runComposeUiTest {
     setContent {
       with(FakeDropdownMenuScope) {
@@ -258,6 +296,44 @@ class DropdownMenuPanelTest {
     }
 
     onNodeWithTag("last").assertIsFocused()
+  }
+
+  @Test
+  fun endKeyMovesFocusToLastEnabledItem() = runComposeUiTest {
+    setContent {
+      with(FakeDropdownMenuScope) {
+        CompositionLocalProvider(
+          LocalDropdownMenuState provides DropdownMenuState(
+            onExpandedChange = {},
+            transitionState = MutableTransitionState(true),
+          ),
+        ) {
+          DropdownMenuPanel {
+            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+              BasicText("First")
+            }
+            MenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
+              BasicText("Middle")
+            }
+            MenuItem(
+              onClick = {},
+              enabled = false,
+              modifier = Modifier.testTag("last"),
+            ) {
+              BasicText("Last")
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("first").requestFocus()
+    onNodeWithTag("first").assertIsFocused()
+    onNodeWithTag("first").performKeyInput {
+      pressKey(Key.MoveEnd)
+    }
+
+    onNodeWithTag("middle").assertIsFocused()
   }
 }
 

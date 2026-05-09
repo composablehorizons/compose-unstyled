@@ -243,10 +243,14 @@ fun DropdownMenuPanelScope.MenuItem(
   val state = LocalDropdownMenuState.current
   val itemFocusRequester = remember { FocusRequester() }
 
-  DisposableEffect(state, itemFocusRequester) {
-    state.itemFocusRequesters += itemFocusRequester
+  DisposableEffect(enabled, state, itemFocusRequester) {
+    if (enabled) {
+      state.itemFocusRequesters += itemFocusRequester
+    }
     onDispose {
-      state.itemFocusRequesters -= itemFocusRequester
+      if (enabled) {
+        state.itemFocusRequesters -= itemFocusRequester
+      }
     }
   }
 
