@@ -21,10 +21,13 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,18 +51,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.ScrollArea
+import com.composeunstyled.ScrollbarScope
 import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
@@ -141,16 +152,10 @@ fun VerticalScrollAreaDemo() {
         scrollAreaState = scrollAreaState,
         modifier = Modifier
           .align(Alignment.TopEnd)
-          .width(12.dp)
+          .width(8.dp)
           .fillMaxHeight(),
       ) {
-        Thumb(
-          modifier = Modifier
-            .padding(2.dp)
-            .height(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
-          thumbVisibility = ThumbVisibility.AlwaysVisible,
-        )
+        IosVerticalScrollbarThumb(thumbVisibility = ThumbVisibility.AlwaysVisible)
       }
     }
   }
@@ -193,14 +198,10 @@ fun HorizontalScrollAreaDemo() {
         scrollAreaState = scrollAreaState,
         modifier = Modifier
           .align(Alignment.BottomCenter)
-          .height(12.dp)
+          .height(8.dp)
           .fillMaxWidth(),
       ) {
-        Thumb(
-          modifier = Modifier
-            .padding(2.dp)
-            .width(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+        IosHorizontalScrollbarThumb(
           thumbVisibility = ThumbVisibility.HideWhileIdle(
             enter = fadeIn(),
             exit = fadeOut(),
@@ -211,3 +212,58 @@ fun HorizontalScrollAreaDemo() {
     }
   }
 }
+
+@Composable
+private fun ScrollbarScope.IosVerticalScrollbarThumb(
+  thumbVisibility: ThumbVisibility,
+) {
+  var touchPressed by remember { mutableStateOf(false) }
+  val width by animateDpAsState(if (touchPressed) 6.dp else 3.dp)
+  val horizontalPadding = (8.dp - width) / 2
+
+  Thumb(
+    modifier = Modifier
+      .touchPressState { touchPressed = it }
+      .padding(horizontal = horizontalPadding, vertical = 2.dp)
+      .height(12.dp)
+      .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+    thumbVisibility = thumbVisibility,
+  )
+}
+
+@Composable
+private fun ScrollbarScope.IosHorizontalScrollbarThumb(
+  thumbVisibility: ThumbVisibility,
+) {
+  var touchPressed by remember { mutableStateOf(false) }
+  val height by animateDpAsState(if (touchPressed) 6.dp else 3.dp)
+  val verticalPadding = (8.dp - height) / 2
+
+  Thumb(
+    modifier = Modifier
+      .touchPressState { touchPressed = it }
+      .padding(horizontal = 2.dp, vertical = verticalPadding)
+      .width(12.dp)
+      .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+    thumbVisibility = thumbVisibility,
+  )
+}
+
+private fun Modifier.touchPressState(onTouchPressedChange: (Boolean) -> Unit): Modifier =
+  pointerInput(onTouchPressedChange) {
+    awaitEachGesture {
+      val down = awaitFirstDown(requireUnconsumed = false)
+      if (down.type != PointerType.Touch) {
+        return@awaitEachGesture
+      }
+
+      onTouchPressedChange(true)
+      try {
+        do {
+          val event = awaitPointerEvent()
+        } while (event.changes.none { it.changedToUp() || it.isConsumed })
+      } finally {
+        onTouchPressedChange(false)
+      }
+    }
+  }
