@@ -2939,8 +2939,9 @@ fun DropdownMenu(
         },
         enter = DropdownMenuEnterTransition,
         exit = DropdownMenuExitTransition,
-        content = content,
-      )
+      ) {
+        Column(content = content)
+      }
     },
     anchor = anchor,
   )
@@ -2996,8 +2997,9 @@ fun ExposedDropdownMenuBoxScope.ExposedDropdownMenu(
         },
         enter = DropdownMenuEnterTransition,
         exit = DropdownMenuExitTransition,
-        content = content,
-      )
+      ) {
+        Column(content = content)
+      }
     },
     anchor = {
       anchor()

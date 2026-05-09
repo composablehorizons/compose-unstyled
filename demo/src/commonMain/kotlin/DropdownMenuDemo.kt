@@ -66,10 +66,11 @@ import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.MenuItem
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
+import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.UnstyledSeparator
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -134,20 +135,21 @@ fun DropdownMenuDemo() {
         ) {
           options.forEachIndexed { index, option ->
             if (index == 1 || index == options.lastIndex) {
-              UnstyledSeparator(color = Color(0xFFBDBDBD))
+              UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
             }
-            UnstyledButton(
-              onClick = { expanded = false },
+            MenuItem(
+              onClick = {},
               enabled = option.enabled,
               modifier = Modifier
                 .padding(4.dp)
                 .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
-              contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
             ) {
               Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 8.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
               ) {
