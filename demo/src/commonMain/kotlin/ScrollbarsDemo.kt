@@ -144,6 +144,7 @@ fun VerticalScrollbarsDemo() {
       ) {
         Thumb(
           modifier = Modifier
+            .fillMaxWidth()
             .padding(2.dp)
             .height(12.dp)
             .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
@@ -195,6 +196,7 @@ fun HorizontalScrollbarsDemo() {
       ) {
         Thumb(
           modifier = Modifier
+            .fillMaxHeight()
             .padding(2.dp)
             .width(12.dp)
             .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
