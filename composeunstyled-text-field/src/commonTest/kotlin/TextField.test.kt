@@ -39,6 +39,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.assertTextEquals
@@ -89,6 +92,28 @@ class TextFieldTest {
     onNodeWithTag("textfield").requestFocus()
     onNodeWithTag("textfield", useUnmergedTree = true).assertIsFocused()
     onNodeWithTag("trailing", useUnmergedTree = true).assertIsNotFocused()
+  }
+
+  @Test
+  fun exposesAccessibilityLabelSemantics() = runComposeUiTest {
+    setContent {
+      UnstyledTextField(
+        state = rememberTextFieldState(),
+      ) {
+        TextInput(
+          modifier = Modifier.testTag("input"),
+          accessibilityLabel = "Email",
+        )
+      }
+    }
+
+    onNodeWithTag("input", useUnmergedTree = true)
+      .assert(
+        SemanticsMatcher.expectValue(
+          SemanticsProperties.ContentDescription,
+          listOf("Email"),
+        ),
+      )
   }
 
   @Test

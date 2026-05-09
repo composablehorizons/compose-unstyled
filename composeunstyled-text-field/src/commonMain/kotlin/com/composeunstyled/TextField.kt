@@ -78,7 +78,7 @@ class TextFieldScope {
 fun TextFieldScope.TextInput(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
-  label: String? = null,
+  accessibilityLabel: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
   leading: (@Composable () -> Unit)? = null,
   trailing: (@Composable () -> Unit)? = null,
@@ -87,8 +87,8 @@ fun TextFieldScope.TextInput(
   Row(
     modifier = modifier
       .pointerHoverIcon(PointerIcon.Text) then buildModifier {
-      if (label != null) {
-        add(Modifier.semantics { contentDescription = label })
+      if (accessibilityLabel != null) {
+        add(Modifier.semantics { contentDescription = accessibilityLabel })
       }
     }.padding(contentPadding),
     verticalAlignment = verticalAlignment,

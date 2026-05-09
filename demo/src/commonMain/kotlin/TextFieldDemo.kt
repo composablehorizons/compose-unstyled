@@ -108,6 +108,7 @@ fun TextFieldDemo() {
               .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
               .background(Color.White, RoundedCornerShape(8.dp))
               .padding(horizontal = 16.dp, vertical = 12.dp),
+            accessibilityLabel = "Email",
             placeholder = {
               Text(
                 "email@example.com",
@@ -145,6 +146,7 @@ fun TextFieldDemo() {
               .background(Color.White, RoundedCornerShape(8.dp))
               .padding(vertical = 4.dp)
               .padding(start = 16.dp, end = 4.dp),
+            accessibilityLabel = "Password",
             placeholder = {
               Text(
                 text = "8-12 characters",
