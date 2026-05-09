@@ -51,8 +51,6 @@ fun UnstyledButton(
   role: Role = Role.Button,
   indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
-  horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
   content: @Composable (RowScope.() -> Unit),
 ) {
   Row(
@@ -71,8 +69,8 @@ fun UnstyledButton(
       }
       add(Modifier.padding(contentPadding))
     },
-    verticalAlignment = verticalAlignment,
-    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center,
   ) {
     content()
   }

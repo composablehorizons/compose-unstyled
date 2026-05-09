@@ -31,6 +31,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -144,26 +145,31 @@ fun DropdownMenuDemo() {
                 .clip(RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
               contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-              horizontalArrangement = Arrangement.Start,
             ) {
-              val contentColor = (
-                if (option.dangerous) {
-                  Color(0xFFC62828)
-                } else {
-                  LocalContentColor.current
-                }
-                ).copy(alpha = if (option.enabled) 1f else 0.5f)
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+              ) {
+                val contentColor = (
+                  if (option.dangerous) {
+                    Color(0xFFC62828)
+                  } else {
+                    LocalContentColor.current
+                  }
+                  ).copy(alpha = if (option.enabled) 1f else 0.5f)
 
-              UnstyledIcon(
-                imageVector = option.icon,
-                contentDescription = null,
-                tint = contentColor,
-              )
-              Spacer(Modifier.width(12.dp))
-              Text(
-                text = option.text,
-                color = contentColor,
-              )
+                UnstyledIcon(
+                  imageVector = option.icon,
+                  contentDescription = null,
+                  tint = contentColor,
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                  text = option.text,
+                  color = contentColor,
+                )
+              }
             }
           }
         }
