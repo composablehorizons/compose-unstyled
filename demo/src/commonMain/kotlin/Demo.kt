@@ -450,12 +450,6 @@ private fun DemoListButton(
       .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
   ) {
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      content()
-    }
+    content()
   }
 }

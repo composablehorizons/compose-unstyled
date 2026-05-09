@@ -19,57 +19,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
-
 package com.composeunstyled
 
-import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import kotlin.test.Test
 
-private val NoPadding = PaddingValues(0.dp)
+class ButtonTest {
+  @Test
+  fun centersContentByDefault() = runComposeUiTest {
+    setContent {
+      TestButton()
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true)
+      .assertLeftPositionInRootIsEqualTo(40.dp)
+      .assertTopPositionInRootIsEqualTo(40.dp)
+  }
+
+  @Test
+  fun usesProvidedContentAlignment() = runComposeUiTest {
+    setContent {
+      TestButton(contentAlignment = Alignment.BottomEnd)
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true)
+      .assertLeftPositionInRootIsEqualTo(80.dp)
+      .assertTopPositionInRootIsEqualTo(80.dp)
+  }
+}
 
 @Composable
-fun UnstyledButton(
-  onClick: () -> Unit,
-  enabled: Boolean = true,
-  contentPadding: PaddingValues = NoPadding,
-  modifier: Modifier = Modifier,
-  role: Role = Role.Button,
-  indication: Indication? = LocalIndication.current,
-  interactionSource: MutableInteractionSource? = null,
+private fun TestButton(
   contentAlignment: Alignment = Alignment.Center,
-  content: @Composable () -> Unit,
 ) {
-  Box(
-    modifier = modifier then buildModifier {
-      add(
-        Modifier.clickable(
-          onClick = onClick,
-          role = role,
-          enabled = enabled,
-          indication = indication,
-          interactionSource = interactionSource,
-        ),
-      )
-      if (enabled) {
-        add(Modifier.pointerHoverIcon(PointerIcon.Default))
-      }
-      add(Modifier.padding(contentPadding))
-    },
+  UnstyledButton(
+    onClick = {},
+    modifier = Modifier.size(100.dp).testTag("button"),
     contentAlignment = contentAlignment,
   ) {
-    content()
+    Box(Modifier.size(20.dp).testTag("content"))
   }
 }
