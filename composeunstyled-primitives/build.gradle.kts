@@ -102,7 +102,6 @@ kotlin {
         api(projects.composeunstyledModalBottomSheet)
         api(projects.composeunstyledDropdownMenu)
         api(projects.composeunstyledTooltip)
-        api(projects.composeunstyledScrollArea)
         api(projects.composeunstyledScrollbars)
         api(projects.composeunstyledPortal)
       }

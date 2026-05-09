@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `composeunstyled-escape-handler`, `composeunstyled-focus-ring`, `composeunstyled-icon`,
   `composeunstyled-modal`, `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
   `composeunstyled-progress`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
-  `composeunstyled-scroll-area`, `composeunstyled-separators`, `composeunstyled-slider`,
+  `composeunstyled-scrollbars`, `composeunstyled-separators`, `composeunstyled-slider`,
   `composeunstyled-stack`, `composeunstyled-tab-group`, `composeunstyled-text-field`,
   `composeunstyled-toggle-switch`, `composeunstyled-tri-state-checkbox`, and
   `composeunstyled-window-container-size`.
@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `BottomSheet`'s.
 - Modal Bottom Sheet now has a separate `overlay` slot for passing any dimming overlay such as a
   scrim.
+- Scroll area state APIs moved into the scrollbars module and were renamed to `ScrollbarState`.
 
 ### Fixed
 - Tooltips now hide on Escape only while visible and keep keyboard focus and hover visibility
