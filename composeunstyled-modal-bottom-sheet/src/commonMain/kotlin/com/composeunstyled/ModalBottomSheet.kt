@@ -61,6 +61,7 @@ class ModalBottomSheetScope internal constructor(
 data class ModalSheetProperties(
   val dismissOnBackPress: Boolean = true,
   val dismissOnClickOutside: Boolean = true,
+  val offsetForIme: Boolean = true,
 )
 
 @Composable
@@ -287,6 +288,7 @@ fun UnstyledModalBottomSheet(
       UnstyledBottomSheet(
         state = state.bottomSheetState,
         modifier = Modifier.fillMaxSize(),
+        offsetForIme = properties.offsetForIme,
       ) {
         val modalBottomSheetScope = remember(this) {
           ModalBottomSheetScope(bottomSheetScope = this)
