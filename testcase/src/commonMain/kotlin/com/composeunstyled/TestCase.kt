@@ -23,8 +23,6 @@ package com.composeunstyled
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.runComposeUiTest
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
 import kotlin.reflect.KClass
 import kotlin.time.Duration
@@ -104,47 +102,45 @@ fun runTestSuite(block: TestSuiteScope.() -> Unit) {
   scope.block()
   runTest {
     val results = scope.testCases.map { testCase ->
-      async {
-        if (testCase.ignored) {
-          println("👋 Ignoring '${testCase.name}'")
-          return@async TestResult(testCase.name, passed = true, ignored = true)
+      if (testCase.ignored) {
+        println("👋 Ignoring '${testCase.name}'")
+        return@map TestResult(testCase.name, passed = true, ignored = true)
+      }
+      val result = runCatching { runComposeUiTest { testCase.assertions(this) } }
+      when {
+        result.isSuccess && testCase.expected == null -> {
+          TestResult(testCase.name, passed = true)
         }
-        val result = runCatching { runComposeUiTest { testCase.assertions(this) } }
-        when {
-          result.isSuccess && testCase.expected == null -> {
+
+        result.isSuccess && testCase.expected != null -> {
+          val error = AssertionError("Expected ${testCase.expected.simpleName} but none thrown.")
+          TestResult(testCase.name, passed = false, error = error)
+        }
+
+        result.isFailure && testCase.expected == null -> {
+          val error = result.exceptionOrNull() ?: AssertionError("Unknown error")
+          TestResult(testCase.name, passed = false, error = error)
+        }
+
+        result.isFailure && testCase.expected != null -> {
+          val ex = result.exceptionOrNull()!!
+          if (testCase.expected.isInstance(ex)) {
             TestResult(testCase.name, passed = true)
-          }
-
-          result.isSuccess && testCase.expected != null -> {
-            val error = AssertionError("Expected ${testCase.expected.simpleName} but none thrown.")
+          } else {
+            val error =
+              AssertionError(
+                "Expected ${testCase.expected.simpleName}, got ${ex::class.simpleName}",
+              )
             TestResult(testCase.name, passed = false, error = error)
           }
+        }
 
-          result.isFailure && testCase.expected == null -> {
-            val error = result.exceptionOrNull() ?: AssertionError("Unknown error")
-            TestResult(testCase.name, passed = false, error = error)
-          }
-
-          result.isFailure && testCase.expected != null -> {
-            val ex = result.exceptionOrNull()!!
-            if (testCase.expected.isInstance(ex)) {
-              TestResult(testCase.name, passed = true)
-            } else {
-              val error =
-                AssertionError(
-                  "Expected ${testCase.expected.simpleName}, got ${ex::class.simpleName}",
-                )
-              TestResult(testCase.name, passed = false, error = error)
-            }
-          }
-
-          else -> {
-            val error = AssertionError("Unexpected test state.")
-            TestResult(testCase.name, passed = false, error = error)
-          }
+        else -> {
+          val error = AssertionError("Unexpected test state.")
+          TestResult(testCase.name, passed = false, error = error)
         }
       }
-    }.awaitAll()
+    }
 
     // Report results and throw if any tests failed
     val failedTests = results.filter { !it.passed && !it.ignored }
@@ -179,7 +175,7 @@ class TestSuiteScope {
     ignored: Boolean = false,
     assertions: suspend ComposeUiTest.() -> Unit,
   ) {
-    // Just register the test case for later parallel execution
+    // Just register the test case for later execution
     testCases.add(TestCase(name, expected, ignored, assertions))
   }
 }
