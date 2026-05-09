@@ -44,15 +44,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 private val DoNothing: () -> Unit = {}
@@ -159,7 +156,7 @@ class ModalBottomSheetState internal constructor(
         modalState.transitionState.targetState = true
         pendingDetentChange?.cancel()
         pendingDetentChange = scope.launch {
-          awaitModalAndSheetAnchors()
+          modalState.awaitAttachedToWindow()
           bottomSheetState.animateTo(value)
         }
         pendingDetentChange?.join()
@@ -187,24 +184,12 @@ class ModalBottomSheetState internal constructor(
 
     pendingDetentChange?.cancel()
     pendingDetentChange = scope.launch {
-      if (value == SheetDetent.Hidden) {
-        modalState.transitionState.targetState = false
-      } else {
-        modalState.transitionState.targetState = true
-      }
+      modalState.transitionState.targetState = value != SheetDetent.Hidden
       if (value != SheetDetent.Hidden) {
-        awaitModalAndSheetAnchors()
+        modalState.awaitAttachedToWindow()
       }
       bottomSheetState.jumpTo(value)
     }
-  }
-
-  private suspend fun awaitModalAndSheetAnchors() {
-    modalState.awaitAttachedToWindow()
-
-    // wait until the anchored state is used and is measured
-    snapshotFlow { bottomSheetState.anchoredDraggableState.offset.isNaN().not() }.filter { it }
-      .first()
   }
 
   fun invalidateDetents() {

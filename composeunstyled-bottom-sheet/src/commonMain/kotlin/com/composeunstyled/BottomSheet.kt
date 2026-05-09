@@ -64,6 +64,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -88,6 +89,8 @@ import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
 import kotlin.math.abs
@@ -252,7 +255,7 @@ class BottomSheetState(
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var isDragging: Boolean by mutableStateOf(false)
 
-  val anchoredDraggableState = AnchoredDraggableState(
+  internal val anchoredDraggableState = AnchoredDraggableState(
     initialValue = initialDetent,
     positionalThreshold = positionalThreshold,
     velocityThreshold = velocityThreshold,
@@ -284,7 +287,7 @@ class BottomSheetState(
         return
       }
       coroutineScope.launch {
-        anchoredDraggableState.animateTo(value)
+        animateTo(value)
       }
     }
 
@@ -397,6 +400,10 @@ class BottomSheetState(
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
     }
+    if (currentDetent == value && targetDetent == value) {
+      return
+    }
+    awaitAnchors()
     if (animationSpec == null) {
       anchoredDraggableState.animateTo(value)
     } else {
@@ -408,7 +415,19 @@ class BottomSheetState(
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
     }
-    coroutineScope.launch { anchoredDraggableState.snapTo(value) }
+    if (currentDetent == value && targetDetent == value) {
+      return
+    }
+    coroutineScope.launch {
+      awaitAnchors()
+      anchoredDraggableState.snapTo(value)
+    }
+  }
+
+  private suspend fun awaitAnchors() {
+    if (anchoredDraggableState.offset.isNaN().not()) return
+
+    snapshotFlow { anchoredDraggableState.offset.isNaN().not() }.first { it }
   }
 
   fun invalidateDetents() {
