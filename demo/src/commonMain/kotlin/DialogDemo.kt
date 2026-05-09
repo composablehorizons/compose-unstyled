@@ -88,38 +88,43 @@ fun DialogDemo() {
         Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       },
     ) {
-      DialogPanel(
-        modifier = Modifier
-          .padding(20.dp)
-          .displayCutoutPadding()
-          .systemBarsPadding()
-          .widthIn(max = 560.dp)
-          .padding(20.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .background(Color.White),
-        paneTitle = "Dialog",
-        enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
-        exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+      Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
       ) {
-        Column {
-          Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            Text("Update Available", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            Text(
-              text = "A new version of the app is available. Please update to the latest version.",
-              style = TextStyle(color = Color(0xFF1A1A1A)),
-            )
-          }
-          Spacer(Modifier.height(24.dp))
-          UnstyledButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier
-              .padding(12.dp)
-              .align(Alignment.End)
-              .clip(RoundedCornerShape(6.dp)),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-          ) {
-            Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
+        DialogPanel(
+          modifier = Modifier
+            .padding(20.dp)
+            .displayCutoutPadding()
+            .systemBarsPadding()
+            .widthIn(max = 560.dp)
+            .padding(20.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White),
+          paneTitle = "Dialog",
+          enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
+          exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+        ) {
+          Column {
+            Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
+              Text("Update Available", style = MaterialTheme.typography.titleMedium)
+              Spacer(Modifier.height(8.dp))
+              Text(
+                text = "A new version of the app is available. Please update to the latest version.",
+                style = TextStyle(color = Color(0xFF1A1A1A)),
+              )
+            }
+            Spacer(Modifier.height(24.dp))
+            UnstyledButton(
+              onClick = { /* TODO */ },
+              modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.End)
+                .clip(RoundedCornerShape(6.dp)),
+              contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            ) {
+              Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
+            }
           }
         }
       }
