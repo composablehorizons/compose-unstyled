@@ -288,6 +288,7 @@ class ScrollBarsTest {
     // Drag the thumb
     onNodeWithTag("thumb").performTouchInput {
       down(Offset(5f, 5f)) // assuming thumb is small
+      advanceEventTime(600)
       moveTo(Offset(5f, 50f))
       // Keep dragging, don't up yet
     }
@@ -345,6 +346,7 @@ class ScrollBarsTest {
       // Start thumb drag and keep pointer down.
       onNodeWithTag("thumb").performTouchInput {
         down(Offset(5f, 5f))
+        advanceEventTime(600)
         moveTo(Offset(350f, 350f))
       }
       onNodeWithTag("thumb").assertIsDisplayed()

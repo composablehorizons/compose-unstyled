@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.changedToUp
@@ -192,12 +193,7 @@ private fun ScrollBar(
     content = { scrollbarScope.thumb() },
     modifier = modifier.hoverable(interactionSource = resolvedInteractionSource).let {
       if (enabled) {
-        it.touchDragOnLongPress(
-          isVertical = isVertical,
-          interactionSource = resolvedInteractionSource,
-          draggedInteraction = dragInteraction,
-          sliderAdapter = sliderAdapter,
-        ).scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
+        it.scrollOnPressTrack(isVertical, reverseLayout, sliderAdapter)
       } else {
         it
       }
@@ -485,6 +481,9 @@ private fun Modifier.scrollbarDrag(
   pointerInput(Unit) {
     awaitEachGesture {
       val down = awaitFirstDown(requireUnconsumed = false)
+      if (down.type == PointerType.Touch && !awaitTouchLongPress()) {
+        return@awaitEachGesture
+      }
       val interaction = DragInteraction.Start()
       currentInteractionSource.tryEmit(interaction)
       currentDraggedInteraction.value = interaction
@@ -502,6 +501,14 @@ private fun Modifier.scrollbarDrag(
       currentDraggedInteraction.value = null
     }
   }
+}
+
+private suspend fun AwaitPointerEventScope.awaitTouchLongPress(): Boolean {
+  return withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
+    do {
+      val event = awaitPointerEvent()
+    } while (event.changes.none { it.changedToUp() || it.isConsumed })
+  } == null
 }
 
 private fun Modifier.scrollOnPressTrack(
@@ -518,50 +525,6 @@ private fun Modifier.scrollOnPressTrack(
       isVertical = isVertical,
       scroller = scroller,
     )
-  }
-}
-
-private fun Modifier.touchDragOnLongPress(
-  isVertical: Boolean,
-  interactionSource: MutableInteractionSource,
-  draggedInteraction: MutableState<DragInteraction.Start?>,
-  sliderAdapter: SliderAdapter,
-): Modifier = composed {
-  val currentInteractionSource by rememberUpdatedState(interactionSource)
-  val currentDraggedInteraction by rememberUpdatedState(draggedInteraction)
-  val currentSliderAdapter by rememberUpdatedState(sliderAdapter)
-
-  pointerInput(Unit) {
-    awaitEachGesture {
-      val down = awaitFirstDown(requireUnconsumed = false)
-      val downPosition = if (isVertical) down.position.y else down.position.x
-      if (down.type != PointerType.Touch || downPosition.toInt() !in currentSliderAdapter.thumbPixelRange) {
-        return@awaitEachGesture
-      }
-
-      val longPressed = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-        do {
-          val event = awaitPointerEvent()
-        } while (event.changes.none { it.changedToUp() || it.isConsumed })
-      } == null
-      if (!longPressed) return@awaitEachGesture
-
-      val interaction = DragInteraction.Start()
-      currentInteractionSource.tryEmit(interaction)
-      currentDraggedInteraction.value = interaction
-      currentSliderAdapter.onDragStarted()
-      val isSuccess = drag(down.id) { change ->
-        currentSliderAdapter.onDragDelta(change.positionChange())
-        change.consume()
-      }
-      val finishInteraction = if (isSuccess) {
-        DragInteraction.Stop(interaction)
-      } else {
-        DragInteraction.Cancel(interaction)
-      }
-      currentInteractionSource.tryEmit(finishInteraction)
-      currentDraggedInteraction.value = null
-    }
   }
 }
 
