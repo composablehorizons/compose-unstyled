@@ -33,7 +33,6 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
@@ -69,10 +68,11 @@ fun <T> UnstyledRadioGroup(
   onValueChange: (T) -> Unit,
   modifier: Modifier = Modifier,
   accessibilityLabel: String? = null,
-  content: @Composable ColumnScope.() -> Unit,
+  content: @Composable RadioGroupScope.() -> Unit,
 ) {
   val focusManager = LocalFocusManager.current
   val state = remember { InnerRadioGroupState() }
+  val scope = remember { RadioGroupScope() }
 
   SideEffect {
     state.value = value
@@ -111,10 +111,12 @@ fun <T> UnstyledRadioGroup(
       },
   ) {
     CompositionLocalProvider(LocalInnerRadioGroupState provides state) {
-      content()
+      scope.content()
     }
   }
 }
+
+class RadioGroupScope internal constructor()
 
 private class InnerRadioGroupState {
   var value by mutableStateOf<Any?>(null)
@@ -122,7 +124,7 @@ private class InnerRadioGroupState {
 }
 
 @Composable
-fun <T> UnstyledRadioButton(
+fun <T> RadioGroupScope.RadioButton(
   value: T,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,

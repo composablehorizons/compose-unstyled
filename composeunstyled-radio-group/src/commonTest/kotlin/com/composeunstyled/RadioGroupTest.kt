@@ -52,7 +52,7 @@ class RadioGroupTest {
         value = selectedValue,
         onValueChange = { selectedValue = it },
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
         ) {
@@ -74,7 +74,7 @@ class RadioGroupTest {
         value = selectedValue,
         onValueChange = { selectedValue = it },
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = 1,
           modifier = Modifier.testTag("radio"),
         ) {
@@ -96,7 +96,7 @@ class RadioGroupTest {
         value = selectedValue,
         onValueChange = { selectedValue = it },
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
           enabled = false,
@@ -118,7 +118,7 @@ class RadioGroupTest {
         value = null,
         onValueChange = {},
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
         ) {
@@ -139,7 +139,7 @@ class RadioGroupTest {
         modifier = Modifier.testTag("group"),
         accessibilityLabel = "Theme selection",
       ) {
-        UnstyledRadioButton(value = "option") {
+        RadioButton(value = "option") {
           Box(Modifier.size(20.dp))
         }
       }
@@ -160,7 +160,7 @@ class RadioGroupTest {
         value = "option",
         onValueChange = {},
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
         ) {
@@ -179,7 +179,7 @@ class RadioGroupTest {
         value = null,
         onValueChange = {},
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
         ) {
@@ -200,7 +200,7 @@ class RadioGroupTest {
         value = "option",
         onValueChange = {},
       ) {
-        UnstyledRadioButton(
+        RadioButton(
           value = "option",
           modifier = Modifier.testTag("radio"),
         ) {
