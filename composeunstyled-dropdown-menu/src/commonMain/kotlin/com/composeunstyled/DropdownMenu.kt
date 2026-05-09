@@ -37,9 +37,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -79,7 +81,9 @@ interface DropdownMenuScope
 
 private object DropdownMenuScopeInstance : DropdownMenuScope
 
-class DropdownMenuPanelScope internal constructor()
+class DropdownMenuPanelScope internal constructor() {
+  internal val itemFocusRequesters = mutableStateListOf<FocusRequester>()
+}
 
 internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState> {
   DropdownMenuState(
@@ -194,6 +198,20 @@ fun DropdownMenuScope.DropdownMenuPanel(
           true
         }
 
+        Key.Home -> {
+          if (event.isKeyDown) {
+            scope.itemFocusRequesters.firstOrNull()?.requestFocus()
+          }
+          true
+        }
+
+        Key.MoveEnd -> {
+          if (event.isKeyDown) {
+            scope.itemFocusRequesters.lastOrNull()?.requestFocus()
+          }
+          true
+        }
+
         Key.Escape -> {
           if (event.isKeyDown) {
             state.onExpandedChange(false)
@@ -230,9 +248,18 @@ fun DropdownMenuPanelScope.MenuItem(
   content: @Composable () -> Unit,
 ) {
   val state = LocalDropdownMenuState.current
+  val focusRequester = remember { FocusRequester() }
+
+  DisposableEffect(focusRequester) {
+    itemFocusRequesters.add(focusRequester)
+    onDispose {
+      itemFocusRequesters.remove(focusRequester)
+    }
+  }
 
   Row(
     modifier = modifier then buildModifier {
+      add(Modifier.focusRequester(focusRequester))
       add(
         Modifier.clickable(
           onClick = {
