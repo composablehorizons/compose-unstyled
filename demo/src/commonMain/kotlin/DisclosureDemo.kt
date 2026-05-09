@@ -33,7 +33,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -101,28 +103,36 @@ fun DisclosureDemo() {
           expanded = expanded,
           onExpandedChange = { expanded = it },
         ) {
-          DisclosureButton(
-            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-          ) {
-            Text(faq.question, modifier = Modifier.weight(1f))
+          Column {
+            DisclosureButton(
+              modifier = Modifier.fillMaxWidth(),
+              contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+            ) {
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+              ) {
+                Text(faq.question, modifier = Modifier.weight(1f))
 
-            val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
-            UnstyledIcon(
-              imageVector = Lucide.ChevronDown,
-              contentDescription = null,
-              modifier = Modifier.rotate(degrees),
-            )
-          }
-          DisclosedContent(
-            enter = expandVertically(
-              spring(
-                stiffness = Spring.StiffnessMediumLow,
-                visibilityThreshold = IntSize.VisibilityThreshold,
+                val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
+                UnstyledIcon(
+                  imageVector = Lucide.ChevronDown,
+                  contentDescription = null,
+                  modifier = Modifier.rotate(degrees),
+                )
+              }
+            }
+            DisclosedContent(
+              enter = expandVertically(
+                spring(
+                  stiffness = Spring.StiffnessMediumLow,
+                  visibilityThreshold = IntSize.VisibilityThreshold,
+                ),
               ),
-            ),
-            exit = shrinkVertically(),
-          ) {
-            Text(faq.answer, modifier = Modifier.padding(16.dp).alpha(0.66f))
+              exit = shrinkVertically(),
+            ) {
+              Text(faq.answer, modifier = Modifier.padding(16.dp).alpha(0.66f))
+            }
           }
         }
       }

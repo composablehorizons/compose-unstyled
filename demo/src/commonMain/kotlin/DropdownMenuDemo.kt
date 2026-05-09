@@ -30,6 +30,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -133,44 +134,46 @@ fun DropdownMenuDemo() {
           ) +
             fadeOut(tween(durationMillis = 75)),
         ) {
-          options.forEachIndexed { index, option ->
-            if (index == 1 || index == options.lastIndex) {
-              UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
-            }
-            MenuItem(
-              onClick = {},
-              enabled = option.enabled,
-              modifier = Modifier
-                .padding(4.dp)
-                .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .fillMaxWidth(),
-            ) {
-              Row(
+          Column {
+            options.forEachIndexed { index, option ->
+              if (index == 1 || index == options.lastIndex) {
+                UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
+              }
+              MenuItem(
+                onClick = {},
+                enabled = option.enabled,
                 modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 8.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
+                  .padding(4.dp)
+                  .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+                  .clip(RoundedCornerShape(8.dp))
+                  .fillMaxWidth(),
               ) {
-                val contentColor = (
-                  if (option.dangerous) {
-                    Color(0xFFC62828)
-                  } else {
-                    LocalContentColor.current
-                  }
-                  ).copy(alpha = if (option.enabled) 1f else 0.5f)
+                Row(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                  horizontalArrangement = Arrangement.Start,
+                  verticalAlignment = Alignment.CenterVertically,
+                ) {
+                  val contentColor = (
+                    if (option.dangerous) {
+                      Color(0xFFC62828)
+                    } else {
+                      LocalContentColor.current
+                    }
+                    ).copy(alpha = if (option.enabled) 1f else 0.5f)
 
-                UnstyledIcon(
-                  imageVector = option.icon,
-                  contentDescription = null,
-                  tint = contentColor,
-                )
-                Spacer(Modifier.width(12.dp))
-                Text(
-                  text = option.text,
-                  color = contentColor,
-                )
+                  UnstyledIcon(
+                    imageVector = option.icon,
+                    contentDescription = null,
+                    tint = contentColor,
+                  )
+                  Spacer(Modifier.width(12.dp))
+                  Text(
+                    text = option.text,
+                    color = contentColor,
+                  )
+                }
               }
             }
           }
@@ -185,9 +188,11 @@ fun DropdownMenuDemo() {
             .clip(RoundedCornerShape(6.dp))
             .background(Color.White),
         ) {
-          Text("Options")
-          Spacer(Modifier.width(8.dp))
-          UnstyledIcon(Lucide.ChevronDown, null)
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Options")
+            Spacer(Modifier.width(8.dp))
+            UnstyledIcon(Lucide.ChevronDown, null)
+          }
         }
       },
     )
