@@ -64,7 +64,7 @@ import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.UnstyledVerticalScrollbar
-import com.composeunstyled.rememberScrollAreaState
+import com.composeunstyled.rememberScrollbarState
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -109,10 +109,10 @@ fun VerticalScrollAreaDemo() {
     )
 
     val state = rememberScrollState()
-    val scrollAreaState = rememberScrollAreaState(state)
+    val scrollbarState = rememberScrollbarState(state)
 
     ScrollArea(
-      state = scrollAreaState,
+      state = scrollbarState,
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -138,7 +138,7 @@ fun VerticalScrollAreaDemo() {
         }
       }
       UnstyledVerticalScrollbar(
-        scrollAreaState = scrollAreaState,
+        scrollbarState = scrollbarState,
         modifier = Modifier
           .align(Alignment.TopEnd)
           .width(12.dp)
@@ -165,10 +165,10 @@ fun HorizontalScrollAreaDemo() {
     contentAlignment = Alignment.TopCenter,
   ) {
     val state = rememberScrollState()
-    val scrollAreaState = rememberScrollAreaState(state)
+    val scrollbarState = rememberScrollbarState(state)
 
     ScrollArea(
-      state = scrollAreaState,
+      state = scrollbarState,
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -190,7 +190,7 @@ fun HorizontalScrollAreaDemo() {
         }
       }
       UnstyledHorizontalScrollbar(
-        scrollAreaState = scrollAreaState,
+        scrollbarState = scrollbarState,
         modifier = Modifier
           .align(Alignment.BottomCenter)
           .height(12.dp)
