@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.PointerType
@@ -58,6 +59,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
@@ -474,15 +476,20 @@ private fun Modifier.scrollbarDrag(
   draggedInteraction: MutableState<DragInteraction.Start?>,
   sliderAdapter: SliderAdapter,
 ): Modifier = composed {
+  val hapticFeedback = LocalHapticFeedback.current
   val currentInteractionSource by rememberUpdatedState(interactionSource)
   val currentDraggedInteraction by rememberUpdatedState(draggedInteraction)
   val currentSliderAdapter by rememberUpdatedState(sliderAdapter)
+  val currentHapticFeedback by rememberUpdatedState(hapticFeedback)
 
   pointerInput(Unit) {
     awaitEachGesture {
       val down = awaitFirstDown(requireUnconsumed = false)
-      if (down.type == PointerType.Touch && !awaitTouchLongPress()) {
-        return@awaitEachGesture
+      if (down.type == PointerType.Touch) {
+        if (!awaitTouchLongPress()) {
+          return@awaitEachGesture
+        }
+        currentHapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
       }
       val interaction = DragInteraction.Start()
       currentInteractionSource.tryEmit(interaction)
