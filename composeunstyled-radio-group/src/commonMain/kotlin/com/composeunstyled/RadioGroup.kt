@@ -67,10 +67,11 @@ fun <T> UnstyledRadioGroup(
   onValueChange: (T) -> Unit,
   modifier: Modifier = Modifier,
   accessibilityLabel: String? = null,
-  content: @Composable () -> Unit,
+  content: @Composable RadioGroupScope.() -> Unit,
 ) {
   val focusManager = LocalFocusManager.current
   val state = remember { InnerRadioGroupState() }
+  val scope = remember { RadioGroupScope() }
 
   SideEffect {
     state.value = value
@@ -109,10 +110,12 @@ fun <T> UnstyledRadioGroup(
       },
   ) {
     CompositionLocalProvider(LocalInnerRadioGroupState provides state) {
-      content()
+      scope.content()
     }
   }
 }
+
+class RadioGroupScope internal constructor()
 
 private class InnerRadioGroupState {
   var value by mutableStateOf<Any?>(null)
@@ -120,7 +123,7 @@ private class InnerRadioGroupState {
 }
 
 @Composable
-fun <T> UnstyledRadioButton(
+fun <T> RadioGroupScope.RadioButton(
   value: T,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
