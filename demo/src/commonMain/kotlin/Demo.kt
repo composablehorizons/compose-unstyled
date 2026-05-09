@@ -126,24 +126,14 @@ private val availablePrimitives = listOf(
   DemoItem("Separators", "separators", { SeparatorsDemo() }),
   DemoItem("Slider", "slider", { SliderDemo() }),
   DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
-  DemoItem("Text", "text", { TextDemo() }),
-  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Text Field", "textfield", { TextFieldDemo() }),
+  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
-  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
 )
 
 private val availableModifiers = listOf(
-  DemoItem("Outline Basic", "outline-basic", { OutlineBasicDemo() }),
-  DemoItem("Outline Width", "outline-width", { OutlineWidthDemo() }),
-  DemoItem("Outline Shape", "outline-shape", { OutlineShapeDemo() }),
-  DemoItem("Outline Offset", "outline-offset", { OutlineOffsetDemo() }),
-  DemoItem("Outline Color", "outline-color", { OutlineColorDemo() }),
-  DemoItem("Focus Ring Basic", "focus-ring-basic", { FocusRingBasicDemo() }),
-  DemoItem("Focus Ring Width", "focus-ring-width", { FocusRingWidthDemo() }),
-  DemoItem("Focus Ring Shape", "focus-ring-shape", { FocusRingShapeDemo() }),
-  DemoItem("Focus Ring Offset", "focus-ring-offset", { FocusRingOffsetDemo() }),
-  DemoItem("Focus Ring Color", "focus-ring-color", { FocusRingColorDemo() }),
+  DemoItem("Focus Ring", "focus-ring", { FocusRingDemo() }),
+  DemoItem("Outline", "outline", { OutlineDemo() }),
 ).map { it ->
   it.copy(demo = {
     ModifierDemo {
@@ -153,11 +143,16 @@ private val availableModifiers = listOf(
 }
 
 private val themingDemos = listOf(
-  DemoItem("Theming", "theme") { ThemingDemo() },
   DemoItem("Platform Theme", "platform-theme") { PlatformThemeDemo() },
+  DemoItem("Theming", "theme") { ThemingDemo() },
 )
+
+private val utilityDemos = listOf(
+  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
+)
+
 private val availableDemos: List<DemoItem> =
-  availablePrimitives + availableModifiers + themingDemos
+  availablePrimitives + availableModifiers + themingDemos + utilityDemos
 
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
@@ -207,6 +202,9 @@ private fun DemoSelection() {
       val filteredModifiers = remember(filterQuery) {
         availableModifiers.filterBy(filterQuery)
       }
+      val filteredUtilities = remember(filterQuery) {
+        utilityDemos.filterBy(filterQuery)
+      }
       val homeFocusRequester = remember { FocusRequester() }
 
       LaunchedEffect(Unit) {
@@ -241,15 +239,15 @@ private fun DemoSelection() {
             .widthIn(max = 600.dp).fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-          if (filteredThemingDemos.isNotEmpty()) {
-            DemoSection("Theme", filteredThemingDemos) { demo ->
+          if (filteredPrimitives.isNotEmpty()) {
+            DemoSection("Components", filteredPrimitives) { demo ->
               navController.navigate(demo.id)
             }
           }
 
-          if (filteredPrimitives.isNotEmpty()) {
+          if (filteredThemingDemos.isNotEmpty()) {
             Spacer(Modifier.height(8.dp))
-            DemoSection("Primitives", filteredPrimitives) { demo ->
+            DemoSection("Theme", filteredThemingDemos) { demo ->
               navController.navigate(demo.id)
             }
           }
@@ -261,10 +259,18 @@ private fun DemoSelection() {
             }
           }
 
+          if (filteredUtilities.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            DemoSection("Utilities", filteredUtilities) { demo ->
+              navController.navigate(demo.id)
+            }
+          }
+
           if (
             filteredThemingDemos.isEmpty() &&
             filteredPrimitives.isEmpty() &&
-            filteredModifiers.isEmpty()
+            filteredModifiers.isEmpty() &&
+            filteredUtilities.isEmpty()
           ) {
             Text(
               "No demos match \"$filterQuery\"",

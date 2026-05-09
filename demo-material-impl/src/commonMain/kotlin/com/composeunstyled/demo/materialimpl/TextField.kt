@@ -305,7 +305,7 @@ private fun TextFieldContent(
       scrollState = scrollState,
     ) {
       Box(Modifier.fillMaxWidth()) {
-        TextInput(
+        Row(
           modifier = (
             Modifier
               .fillMaxWidth()
@@ -322,69 +322,58 @@ private fun TextFieldContent(
                     .border(indicatorWidth, indicatorColor, shape),
                 )
             }
-          },
-          contentPadding = PaddingValues(
+          }.padding(
             start = horizontalPadding,
             top = inputTopPadding,
             end = TextFieldHorizontalPadding,
             bottom = inputBottomPadding,
           ),
-          placeholder = if (label == null || labelMinimized) placeholder else null,
-          leading = if (leadingIcon != null || prefix != null) {
-            {
-              Row(verticalAlignment = Alignment.CenterVertically) {
-                leadingIcon?.let {
-                  Box(
-                    Modifier
-                      .padding(end = TextFieldHorizontalPadding)
-                      .size(TextFieldIconSize),
-                    contentAlignment = Alignment.Center,
-                  ) {
-                    CompositionLocalProvider(LocalContentColor provides activeColor) {
-                      it()
-                    }
-                  }
-                }
-                prefix?.let {
-                  CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
-                  ) {
-                    it()
-                  }
-                }
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          leadingIcon?.let {
+            Box(
+              Modifier
+                .padding(end = TextFieldIconHorizontalPadding)
+                .size(TextFieldIconSize),
+              contentAlignment = Alignment.Center,
+            ) {
+              CompositionLocalProvider(LocalContentColor provides activeColor) {
+                it()
               }
             }
-          } else {
-            null
-          },
-          trailing = if (suffix != null || trailingIcon != null) {
-            {
-              Row(verticalAlignment = Alignment.CenterVertically) {
-                suffix?.let {
-                  CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
-                  ) {
-                    it()
-                  }
-                }
-                trailingIcon?.let {
-                  Box(
-                    Modifier
-                      .padding(start = TextFieldHorizontalPadding)
-                      .size(TextFieldIconSize),
-                    contentAlignment = Alignment.Center,
-                  ) {
-                    CompositionLocalProvider(LocalContentColor provides activeColor) {
-                      it()
-                    }
-                  }
-                }
+          }
+          prefix?.let {
+            CompositionLocalProvider(
+              LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+            ) {
+              it()
+            }
+          }
+          TextInput(
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(),
+            placeholder = if (label == null || labelMinimized) placeholder else null,
+          )
+          suffix?.let {
+            CompositionLocalProvider(
+              LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+            ) {
+              it()
+            }
+          }
+          trailingIcon?.let {
+            Box(
+              Modifier
+                .padding(start = TextFieldIconHorizontalPadding)
+                .size(TextFieldIconSize),
+              contentAlignment = Alignment.Center,
+            ) {
+              CompositionLocalProvider(LocalContentColor provides activeColor) {
+                it()
               }
             }
-          } else {
-            null
-          },
-        )
+          }
+        }
         if (variant == TextFieldVariant.Filled) {
           Box(
             Modifier
