@@ -319,7 +319,6 @@ fun PrimaryTabRow(
           modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { tabRowSize = it },
-          verticalAlignment = Alignment.CenterVertically,
         ) {
           val tabListScope = this
           Row(Modifier.fillMaxSize()) {
@@ -435,7 +434,6 @@ fun SecondaryTabRow(
           modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { tabRowSize = it },
-          verticalAlignment = Alignment.CenterVertically,
         ) {
           val tabListScope = this
           Row(Modifier.fillMaxSize()) {

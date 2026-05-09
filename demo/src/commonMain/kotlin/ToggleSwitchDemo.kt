@@ -22,6 +22,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -93,6 +94,7 @@ fun ToggleSwitchDemo() {
             .background(animatedColor, RoundedCornerShape(100)),
         ) {
           SwitchThumb(
+            animationSpec = tween(),
             modifier = Modifier
               .padding(4.dp)
               .shadow(elevation = 4.dp, CircleShape)
