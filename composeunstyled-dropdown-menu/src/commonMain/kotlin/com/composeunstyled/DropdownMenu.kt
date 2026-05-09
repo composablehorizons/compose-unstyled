@@ -52,6 +52,7 @@ import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -120,14 +121,22 @@ fun UnstyledDropdownMenu(
   }
 
   Box(
-    modifier.onKeyEvent { event ->
-      if (event.key == Key.DirectionDown) {
-        if (event.type == KeyEventType.KeyDown) {
+    modifier.onPreviewKeyEvent { event ->
+      if (!event.isKeyDown) {
+        return@onPreviewKeyEvent false
+      }
+      when (event.key) {
+        Key.DirectionDown, Key.Enter, Key.Spacebar -> {
           onExpandedChange(true)
+          true
         }
-        true
-      } else {
-        false
+
+        Key.DirectionUp -> {
+          onExpandedChange(true)
+          true
+        }
+
+        else -> false
       }
     },
   ) {
