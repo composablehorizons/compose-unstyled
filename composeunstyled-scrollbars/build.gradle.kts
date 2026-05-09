@@ -80,7 +80,6 @@ kotlin {
       dependencies {
         implementation(libs.compose.foundation)
         implementation(projects.composeunstyledBuildModifier)
-        implementation(projects.composeunstyledScrollArea)
       }
     }
 

@@ -59,21 +59,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.ScrollArea
 import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.UnstyledVerticalScrollbar
-import com.composeunstyled.rememberScrollAreaState
+import com.composeunstyled.rememberScrollbarState
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ScrollAreaDemo() {
-  VerticalScrollAreaDemo()
+fun ScrollbarsDemo() {
+  VerticalScrollbarsDemo()
 }
 
 @Composable
-fun VerticalScrollAreaDemo() {
+fun VerticalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
       .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
@@ -109,10 +108,9 @@ fun VerticalScrollAreaDemo() {
     )
 
     val state = rememberScrollState()
-    val scrollAreaState = rememberScrollAreaState(state)
+    val scrollbarState = rememberScrollbarState(state)
 
-    ScrollArea(
-      state = scrollAreaState,
+    Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -139,7 +137,7 @@ fun VerticalScrollAreaDemo() {
       }
       Box(Modifier.fillMaxSize()) {
         UnstyledVerticalScrollbar(
-          scrollAreaState = scrollAreaState,
+          scrollbarState = scrollbarState,
           modifier = Modifier
             .align(Alignment.TopEnd)
             .width(12.dp)
@@ -159,7 +157,7 @@ fun VerticalScrollAreaDemo() {
 }
 
 @Composable
-fun HorizontalScrollAreaDemo() {
+fun HorizontalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
       .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
@@ -167,10 +165,9 @@ fun HorizontalScrollAreaDemo() {
     contentAlignment = Alignment.TopCenter,
   ) {
     val state = rememberScrollState()
-    val scrollAreaState = rememberScrollAreaState(state)
+    val scrollbarState = rememberScrollbarState(state)
 
-    ScrollArea(
-      state = scrollAreaState,
+    Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -193,7 +190,7 @@ fun HorizontalScrollAreaDemo() {
       }
       Box(Modifier.fillMaxWidth()) {
         UnstyledHorizontalScrollbar(
-          scrollAreaState = scrollAreaState,
+          scrollbarState = scrollbarState,
           modifier = Modifier
             .height(12.dp)
             .fillMaxWidth(),

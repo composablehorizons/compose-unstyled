@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
@@ -46,15 +47,15 @@ class ScrollBarsJvmTest {
   fun hide_while_idle_does_not_hide_thumb_while_track_is_hovered() = runComposeUiTest {
     setContent {
       val scrollState = rememberScrollState()
-      val scrollAreaState = rememberScrollAreaState(scrollState)
-      ScrollArea(state = scrollAreaState) {
+      val scrollbarState = rememberScrollbarState(scrollState)
+      Box {
         Column(modifier = Modifier.height(200.dp).verticalScroll(scrollState).testTag("list")) {
           repeat(100) { index ->
             BasicText("Item $index")
           }
         }
         UnstyledVerticalScrollbar(
-          scrollAreaState = scrollAreaState,
+          scrollbarState = scrollbarState,
           modifier = Modifier.testTag("track"),
         ) {
           Thumb(
