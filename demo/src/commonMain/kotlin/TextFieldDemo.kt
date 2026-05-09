@@ -161,7 +161,7 @@ fun TextFieldDemo() {
             },
             trailing = {
               UnstyledButton(
-                onClick = { showPassword = !showPassword },
+                onClick = { showPassword = showPassword.not() },
                 contentPadding = PaddingValues(4.dp),
                 modifier = Modifier.clip(RoundedCornerShape(4.dp)),
                 indication = LocalIndication.current,

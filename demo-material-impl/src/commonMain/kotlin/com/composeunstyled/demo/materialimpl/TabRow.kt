@@ -294,7 +294,7 @@ fun PrimaryTabRow(
           tabRowSize,
           isIndicatorReady,
         ) {
-          if (!isIndicatorReady) {
+          if (isIndicatorReady.not()) {
             return@LaunchedEffect
           }
 
@@ -409,7 +409,7 @@ fun SecondaryTabRow(
         val isIndicatorReady = tabRowSize != IntSize.Zero
 
         LaunchedEffect(targetIndicatorOffset, tabSlotWidth, tabRowSize, isIndicatorReady) {
-          if (!isIndicatorReady) {
+          if (isIndicatorReady.not()) {
             return@LaunchedEffect
           }
 

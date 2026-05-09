@@ -256,7 +256,7 @@ fun UnstyledSlider(
   )
 
   SideEffect {
-    if (!dragging) {
+    if (dragging.not()) {
       rawOffset = scaleToOffset(coerced)
     }
   }

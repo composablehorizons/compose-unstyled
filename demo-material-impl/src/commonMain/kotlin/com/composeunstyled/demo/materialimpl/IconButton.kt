@@ -73,14 +73,14 @@ private fun IconButtonColors.contentColorFor(enabled: Boolean): Color =
 private fun IconToggleButtonColors.containerColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedContainerColor
-    enabled && !checked -> containerColor
+    enabled && checked.not() -> containerColor
     else -> disabledContainerColor
   }
 
 private fun IconToggleButtonColors.contentColorFor(enabled: Boolean, checked: Boolean): Color =
   when {
     enabled && checked -> checkedContentColor
-    enabled && !checked -> contentColor
+    enabled && checked.not() -> contentColor
     else -> disabledContentColor
   }
 

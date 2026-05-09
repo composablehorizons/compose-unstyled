@@ -126,7 +126,7 @@ fun UnstyledDropdownMenu(
 
   Box(
     modifier.onPreviewKeyEvent { event ->
-      if (!event.isKeyDown) {
+      if (event.isKeyDown.not()) {
         return@onPreviewKeyEvent false
       }
       when (event.key) {
@@ -146,7 +146,7 @@ fun UnstyledDropdownMenu(
   ) {
     anchor()
 
-    if (expanded || transitionState.currentState || !transitionState.isIdle) {
+    if (expanded || transitionState.currentState || transitionState.isIdle.not()) {
       Popup(
         properties = PopupProperties(
           focusable = true,
