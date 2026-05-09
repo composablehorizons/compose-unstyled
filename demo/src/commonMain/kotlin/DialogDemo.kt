@@ -110,7 +110,8 @@ fun DialogDemo() {
               Text("Update Available", style = MaterialTheme.typography.titleMedium)
               Spacer(Modifier.height(8.dp))
               Text(
-                text = "A new version of the app is available. Please update to the latest version.",
+                text = "A new version of the app is available. " +
+                  "Please update to the latest version.",
                 style = TextStyle(color = Color(0xFF1A1A1A)),
               )
             }
