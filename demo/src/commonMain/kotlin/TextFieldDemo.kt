@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -92,6 +93,7 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = email,
           modifier = Modifier.fillMaxWidth(),
+          cursorBrush = SolidColor(Color(0xFF8E44AD)),
           lineLimits = TextFieldLineLimits.SingleLine,
           keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
@@ -129,6 +131,7 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = password,
           modifier = Modifier.fillMaxWidth(),
+          cursorBrush = SolidColor(Color(0xFF8E44AD)),
           lineLimits = TextFieldLineLimits.SingleLine,
           outputTransformation = if (showPassword) {
             null
