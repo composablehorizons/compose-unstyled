@@ -26,6 +26,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,13 +40,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
@@ -55,46 +58,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
-class TextFieldScope {
+class TextInputScope internal constructor() {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
+  internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
+  internal var textStyle by mutableStateOf(TextStyle.Default)
 }
 
 @Composable
-fun TextFieldScope.TextInput(
+fun TextInputScope.Editable(
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
-  accessibilityLabel: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
 ) {
   Box(
     modifier = modifier
-      .pointerHoverIcon(PointerIcon.Text) then buildModifier {
-      if (accessibilityLabel != null) {
-        add(Modifier.semantics { contentDescription = accessibilityLabel })
-      }
-    }.padding(contentPadding),
+      .then(TextInputEditableParentDataModifier)
+      .widthIn(min = 2.dp)
+      .clipToBounds(),
   ) {
-    Box {
-      innerTextField!!.invoke()
-
-      if (placeholder != null && text.isEmpty()) {
-        Box(Modifier.matchParentSize()) {
-          placeholder()
-        }
+    if (placeholder != null && text.isEmpty()) {
+      Box(
+        modifier = Modifier.matchParentSize(),
+        contentAlignment = textAlignment.toContentAlignment(),
+      ) {
+        placeholder()
       }
     }
+    innerTextField?.invoke()
   }
 }
 
 @Composable
-fun UnstyledTextField(
+fun UnstyledTextInput(
   state: TextFieldState,
   modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  contentAlignment: Alignment = Alignment.TopStart,
+  accessibilityLabel: String? = null,
   editable: Boolean = true,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
   textStyle: TextStyle = TextStyle.Default,
@@ -114,9 +119,9 @@ fun UnstyledTextField(
   interactionSource: MutableInteractionSource? = null,
   textColor: Color = Color.Unspecified,
   scrollState: ScrollState = rememberScrollState(),
-  content: @Composable TextFieldScope.() -> Unit,
+  content: @Composable TextInputScope.() -> Unit,
 ) {
-  val scope = remember { TextFieldScope() }
+  val scope = remember { TextInputScope() }
 
   scope.text = state.text.toString()
 
@@ -130,6 +135,9 @@ fun UnstyledTextField(
     letterSpacing = letterSpacing,
     color = textColor,
   )
+  scope.textAlignment = newTextStyle.textAlign
+  scope.textStyle = newTextStyle
+
   BasicTextField(
     scrollState = scrollState,
     state = state,
@@ -138,7 +146,12 @@ fun UnstyledTextField(
     readOnly = editable.not(),
     outputTransformation = outputTransformation,
     inputTransformation = inputTransformation,
-    modifier = modifier.semantics(mergeDescendants = true) {},
+    modifier = modifier then buildModifier {
+      add(Modifier.semantics(mergeDescendants = true) {})
+      if (accessibilityLabel != null) {
+        add(Modifier.semantics { contentDescription = accessibilityLabel })
+      }
+    },
     cursorBrush = cursorBrush,
     lineLimits = lineLimits,
     onTextLayout = onTextLayout,
@@ -146,15 +159,67 @@ fun UnstyledTextField(
     onKeyboardAction = onKeyboardAction,
     decorator = { innerTextField ->
       scope.innerTextField = innerTextField
-      Box(
-        Modifier
-          // we are handling pointerIcons in TextInput()
-          .pointerHoverIcon(PointerIcon.Default),
+      TextInputContentLayout(
+        modifier = Modifier.padding(contentPadding).clipToBounds(),
+        contentAlignment = contentAlignment,
       ) {
         scope.content()
       }
     },
   )
+}
+
+@Composable
+private fun TextInputContentLayout(
+  modifier: Modifier = Modifier,
+  contentAlignment: Alignment,
+  content: @Composable () -> Unit,
+) {
+  Layout(
+    content = content,
+    modifier = modifier,
+  ) { measurables, constraints ->
+    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+    val childConstraints = if (
+      constraints.hasFixedWidth &&
+      measurables.size == 1 &&
+      measurables.single().parentData == TextInputEditableParentData
+    ) {
+      looseConstraints.copy(minWidth = constraints.maxWidth)
+    } else {
+      looseConstraints
+    }
+    val placeables = measurables.map { it.measure(childConstraints) }
+    val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
+    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
+    val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
+    val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
+
+    layout(width, height) {
+      placeables.forEach { placeable ->
+        val position = contentAlignment.align(
+          size = IntSize(placeable.width, placeable.height),
+          space = IntSize(width, height),
+          layoutDirection = layoutDirection,
+        )
+        placeable.placeRelative(position)
+      }
+    }
+  }
+}
+
+private data object TextInputEditableParentData
+
+private data object TextInputEditableParentDataModifier : ParentDataModifier {
+  override fun Density.modifyParentData(parentData: Any?): Any = TextInputEditableParentData
+}
+
+private fun TextAlign.toContentAlignment(): Alignment {
+  return when (this) {
+    TextAlign.End -> Alignment.TopEnd
+    TextAlign.Center -> Alignment.TopCenter
+    else -> Alignment.TopStart
+  }
 }
 
 @Composable

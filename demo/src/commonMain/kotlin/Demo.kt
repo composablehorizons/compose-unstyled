@@ -126,7 +126,7 @@ private val availablePrimitives = listOf(
   DemoItem("Separators", "separators", { SeparatorsDemo() }),
   DemoItem("Slider", "slider", { SliderDemo() }),
   DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
-  DemoItem("Text Field", "textfield", { TextFieldDemo() }),
+  DemoItem("Text Input", "textinput", { TextInputDemo() }),
   DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
 )

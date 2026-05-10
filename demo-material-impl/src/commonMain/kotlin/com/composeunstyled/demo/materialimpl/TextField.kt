@@ -36,7 +36,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -76,7 +75,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
@@ -89,8 +87,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import com.composeunstyled.TextInput
-import com.composeunstyled.UnstyledTextField
+import com.composeunstyled.Editable
+import com.composeunstyled.UnstyledTextInput
 import com.composeunstyled.buildModifier
 
 private val TextFieldContainerHeight = 56.dp
@@ -291,10 +289,9 @@ private fun TextFieldContent(
   val inputBottomPadding = if (label == null) 8.dp else 8.dp
 
   Column(modifier) {
-    UnstyledTextField(
+    UnstyledTextInput(
       state = state,
       editable = enabled && readOnly.not(),
-      cursorBrush = SolidColor(activeColor),
       textStyle = textStyle,
       textColor = MaterialTheme.colorScheme.onSurface,
       keyboardOptions = keyboardOptions,
@@ -305,6 +302,7 @@ private fun TextFieldContent(
       onTextLayout = onTextLayout,
       interactionSource = resolvedInteractionSource,
       scrollState = scrollState,
+      contentAlignment = Alignment.CenterStart,
     ) {
       Box(Modifier.fillMaxWidth()) {
         Row(
@@ -351,9 +349,8 @@ private fun TextFieldContent(
               it()
             }
           }
-          TextInput(
+          Editable(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(),
             placeholder = if (label == null || labelMinimized) placeholder else null,
           )
           suffix?.let {
