@@ -30,23 +30,24 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.max
 
 @Stable
 interface SwitchScope {
@@ -59,6 +60,8 @@ private class SwitchScopeImpl(
   override val checked: Boolean,
   override val enabled: Boolean,
   override val interactionSource: MutableInteractionSource,
+  val trackWidth: Int,
+  val thumbWidth: Int,
 ) : SwitchScope
 
 @Composable
@@ -72,29 +75,62 @@ fun UnstyledSwitch(
   content: @Composable SwitchScope.() -> Unit,
 ) {
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
+  var trackWidth by remember { mutableIntStateOf(0) }
+  var thumbWidth by remember { mutableIntStateOf(0) }
 
-  Box(
-    modifier = modifier then buildModifier {
-      if (onCheckedChange != null) {
-        add(
-          Modifier.toggleable(
-            value = checked,
-            enabled = enabled,
-            interactionSource = resolvedInteractionSource,
-            indication = indication,
-            role = Role.Switch,
-            onValueChange = onCheckedChange,
-          ),
-        )
-      }
+  Layout(
+    modifier = modifier
+      .onSizeChanged { trackWidth = it.width }
+      .then(
+        buildModifier {
+          if (onCheckedChange != null) {
+            add(
+              Modifier.toggleable(
+                value = checked,
+                enabled = enabled,
+                interactionSource = resolvedInteractionSource,
+                indication = indication,
+                role = Role.Switch,
+                onValueChange = onCheckedChange,
+              ),
+            )
+          }
+        },
+      ),
+    content = {
+      val scope = SwitchScopeImpl(
+        checked = checked,
+        enabled = enabled,
+        interactionSource = resolvedInteractionSource,
+        trackWidth = trackWidth,
+        thumbWidth = thumbWidth,
+      )
+      scope.content()
     },
   ) {
-    val scope = SwitchScopeImpl(
-      checked = checked,
-      enabled = enabled,
-      interactionSource = resolvedInteractionSource,
-    )
-    scope.content()
+      measurables,
+      constraints,
+    ->
+    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+    val placeables = measurables.map { it.measure(looseConstraints) }
+    val measuredThumbWidth = placeables
+      .filter { it.parentData is SwitchThumbParentData }
+      .maxOfOrNull { it.width } ?: 0
+    if (thumbWidth != measuredThumbWidth) {
+      thumbWidth = measuredThumbWidth
+    }
+    val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
+    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
+    val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
+    val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
+
+    layout(width, height) {
+      placeables.forEach { placeable ->
+        val thumbData = placeable.parentData as? SwitchThumbParentData
+        val x = thumbData?.let { it.offset.roundToPx() } ?: 0
+        placeable.placeRelative(x = max(0, x), y = 0)
+      }
+    }
   }
 }
 
@@ -104,30 +140,37 @@ fun SwitchScope.SwitchThumb(
   animationSpec: FiniteAnimationSpec<Dp> = snap(),
   content: @Composable () -> Unit = {},
 ) {
-  var trackWidth by remember { mutableStateOf(0.dp) }
-  var thumbWidth by remember { mutableStateOf(0.dp) }
-  val hasMeasured = trackWidth > 0.dp && thumbWidth > 0.dp
-  val targetOffset = if (checked) trackWidth - thumbWidth else 0.dp
-  val offset by if (hasMeasured) {
-    animateDpAsState(targetValue = targetOffset, animationSpec = animationSpec)
-  } else {
-    remember { mutableStateOf(0.dp) }
-  }
+  val scope = this as? SwitchScopeImpl
+  val trackWidth = scope?.trackWidth ?: 0
+  val thumbWidth = scope?.thumbWidth ?: 0
   val density = LocalDensity.current
-
-  Box(
-    Modifier
-      .fillMaxSize()
-      .onSizeChanged { trackWidth = with(density) { it.width.toDp() } },
-  ) {
-    Box(
-      modifier = Modifier
-        .offset { IntOffset(offset.roundToPx(), 0) }
-        .onSizeChanged { thumbWidth = with(density) { it.width.toDp() } }
-        .alpha(if (hasMeasured) 1f else 0f)
-        .then(modifier),
-    ) {
-      content()
+  val hasMeasured = trackWidth > 0 && thumbWidth > 0
+  val targetOffset = with(density) {
+    if (checked && hasMeasured) {
+      (trackWidth - thumbWidth).toDp()
+    } else {
+      0.dp
     }
   }
+  val offset by animateDpAsState(targetValue = targetOffset, animationSpec = animationSpec)
+
+  Box(
+    modifier = modifier
+      .then(SwitchThumbParentDataModifier(offset))
+      // Hide the thumb until the parent has measured the track and thumb,
+      // otherwise checked switches briefly draw the thumb at the start.
+      .alpha(if (hasMeasured) 1f else 0f),
+  ) {
+    content()
+  }
+}
+
+private data class SwitchThumbParentData(
+  val offset: Dp,
+)
+
+private data class SwitchThumbParentDataModifier(
+  val offset: Dp,
+) : ParentDataModifier {
+  override fun Density.modifyParentData(parentData: Any?): Any = SwitchThumbParentData(offset)
 }

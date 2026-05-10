@@ -43,7 +43,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
@@ -599,8 +598,8 @@ fun UnstyledBottomSheet(
     }
   }
   BoxWithConstraints(
-    modifier = Modifier.fillMaxSize().onSizeChanged {
-      state.containerHeightPx = it.height.toFloat()
+    modifier = modifier.onSizeChanged { measuredSize ->
+      state.containerHeightPx = measuredSize.height.toFloat()
       state.invalidateDetents()
     },
   ) {
@@ -630,7 +629,7 @@ fun UnstyledBottomSheet(
                 ),
             )
           }
-          add(modifier.pointerInput(Unit) { detectTapGestures { } })
+          add(Modifier.pointerInput(Unit) { detectTapGestures { } })
         },
       ) {
         BottomSheetScopeInstance.content()
