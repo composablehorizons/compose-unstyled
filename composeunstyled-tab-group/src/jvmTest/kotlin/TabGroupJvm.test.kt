@@ -23,6 +23,10 @@
 
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.text.BasicText
@@ -320,6 +324,435 @@ class TabGroupTest {
       onNodeWithTag("panelA").isDisplayed()
       onNodeWithTag("panelA").assertIsFocused()
       onNodeWithTag("panelB").assertDoesNotExist()
+    }
+
+  @Test
+  fun givenTabGroupHasNoPanels_whenPressingTab_thenMovesFocusAfterTabGroup() = runComposeUiTest {
+    var selectedTab by mutableStateOf("tab1")
+
+    setContent {
+      UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+        BasicText("Before")
+      }
+
+      UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+        selectedTab = it
+      }, tabs = listOf("tab1", "tab2", "tab3")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
+          Tab(
+            key = "tab1",
+            modifier = Modifier.testFocusTag("tab1"),
+            activateOnFocus = false,
+          ) {
+            BasicText("Tab #1")
+          }
+          Tab(
+            key = "tab2",
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
+            activateOnFocus = false,
+          ) {
+            BasicText("Tab #2")
+          }
+          Tab(
+            key = "tab3",
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
+            activateOnFocus = false,
+          ) {
+            BasicText("Tab #3")
+          }
+        }
+      }
+
+      UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("after")) {
+        BasicText("After")
+      }
+    }
+
+    onNodeWithTag("before").requestFocus()
+    onRoot().performKeyInput {
+      keyPress(Key.Tab)
+    }
+    onNodeWithTag("tab1").assertIsFocused()
+
+    onRoot().performKeyInput {
+      keyPress(Key.Tab)
+    }
+    onNodeWithTag("after").assertIsFocused()
+  }
+
+  @Test
+  fun givenTabGroupHasNoPanels_whenReturningAfterActivation_thenCanMoveAndActivatePreviousTab() =
+    runComposeUiTest {
+      var selectedTab by mutableStateOf("tab1")
+
+      setContent {
+        UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+          BasicText("Before")
+        }
+
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2", "tab3")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
+            Tab(
+              key = "tab1",
+              modifier = Modifier.testFocusTag("tab1"),
+              activateOnFocus = false,
+            ) {
+              BasicText("Tab #1")
+            }
+            Tab(
+              key = "tab2",
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
+              activateOnFocus = false,
+            ) {
+              BasicText("Tab #2")
+            }
+            Tab(
+              key = "tab3",
+              modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
+              activateOnFocus = false,
+            ) {
+              BasicText("Tab #3")
+            }
+          }
+        }
+
+        UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("after")) {
+          BasicText("After")
+        }
+      }
+
+      onNodeWithTag("before").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+      assertThat(selectedTab).isEqualTo("tab3")
+
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+      onNodeWithTag("after").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+
+      onRoot().performKeyInput {
+        keyPress(Key.DirectionLeft)
+      }
+      onNodeWithTag("tab2").assertIsFocused()
+
+      onNodeWithTag("tab2").performClick()
+
+      assertThat(selectedTab).isEqualTo("tab2")
+    }
+
+  @Test
+  fun givenTwoTabGroupsHaveNoPanels_whenReturningToFirstAfterActivation_thenCanMoveAndActivatePreviousTab() =
+    runComposeUiTest {
+      var firstSelectedTab by mutableStateOf("tab1")
+      var secondSelectedTab by mutableStateOf("material1")
+
+      setContent {
+        Column {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+            BasicText("Before")
+          }
+
+          UnstyledTabGroup(selectedTab = firstSelectedTab, onSelectedTabChange = {
+            firstSelectedTab = it
+          }, tabs = listOf("tab1", "tab2", "tab3")) {
+            TabList(Modifier.testFocusTag("firstTabList").requiredWidth(160.dp)) {
+              Tab(
+                key = "tab1",
+                modifier = Modifier.testFocusTag("tab1"),
+                activateOnFocus = false,
+              ) {
+                BasicText("Tab #1")
+              }
+              Tab(
+                key = "tab2",
+                modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
+                activateOnFocus = false,
+              ) {
+                BasicText("Tab #2")
+              }
+              Tab(
+                key = "tab3",
+                modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
+                activateOnFocus = false,
+              ) {
+                BasicText("Tab #3")
+              }
+            }
+          }
+
+          UnstyledTabGroup(selectedTab = secondSelectedTab, onSelectedTabChange = {
+            secondSelectedTab = it
+          }, tabs = listOf("material1", "material2", "material3")) {
+            TabList(Modifier.testFocusTag("secondTabList").requiredWidth(160.dp)) {
+              Tab(
+                key = "material1",
+                modifier = Modifier.testFocusTag("material1"),
+                activateOnFocus = false,
+              ) {
+                BasicText("Material #1")
+              }
+              Tab(
+                key = "material2",
+                modifier = Modifier.testFocusTag("material2").offset(x = 48.dp),
+                activateOnFocus = false,
+              ) {
+                BasicText("Material #2")
+              }
+              Tab(
+                key = "material3",
+                modifier = Modifier.testFocusTag("material3").offset(x = 96.dp),
+                activateOnFocus = false,
+              ) {
+                BasicText("Material #3")
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("before").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+      assertThat(firstSelectedTab).isEqualTo("tab3")
+
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+      onNodeWithTag("material1").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+
+      onRoot().performKeyInput {
+        keyPress(Key.DirectionLeft)
+      }
+      onNodeWithTag("tab2").assertIsFocused()
+
+      onNodeWithTag("tab2").performClick()
+
+      assertThat(firstSelectedTab).isEqualTo("tab2")
+    }
+
+  @Test
+  fun givenNestedTabRowsHaveNoPanels_whenReturningToActivatedTab_thenCanMoveAndActivatePreviousTab() =
+    runComposeUiTest {
+      var firstSelectedTab by mutableStateOf("tab1")
+      var secondSelectedTab by mutableStateOf("material1")
+
+      setContent {
+        Column {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+            BasicText("Before")
+          }
+
+          UnstyledTabGroup(selectedTab = firstSelectedTab, onSelectedTabChange = {
+            firstSelectedTab = it
+          }, tabs = listOf("tab1", "tab2", "tab3")) {
+            TabList(Modifier.testFocusTag("firstTabList").requiredWidth(180.dp).height(48.dp)) {
+              Row(Modifier.fillMaxSize()) {
+                Tab(
+                  key = "tab1",
+                  modifier = Modifier.testFocusTag("tab1").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #1")
+                }
+                Tab(
+                  key = "tab2",
+                  modifier = Modifier.testFocusTag("tab2").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #2")
+                }
+                Tab(
+                  key = "tab3",
+                  modifier = Modifier.testFocusTag("tab3").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #3")
+                }
+              }
+            }
+          }
+
+          UnstyledTabGroup(selectedTab = secondSelectedTab, onSelectedTabChange = {
+            secondSelectedTab = it
+          }, tabs = listOf("material1", "material2", "material3")) {
+            TabList(Modifier.testFocusTag("secondTabList").requiredWidth(180.dp).height(48.dp)) {
+              Row(Modifier.fillMaxSize()) {
+                Tab(
+                  key = "material1",
+                  modifier = Modifier.testFocusTag("material1").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #1")
+                }
+                Tab(
+                  key = "material2",
+                  modifier = Modifier.testFocusTag("material2").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #2")
+                }
+                Tab(
+                  key = "material3",
+                  modifier = Modifier.testFocusTag("material3").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #3")
+                }
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("before").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+      assertThat(firstSelectedTab).isEqualTo("tab3")
+
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+      onNodeWithTag("material1").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+
+      onRoot().performKeyInput {
+        keyPress(Key.DirectionLeft)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab2").assertIsFocused()
+      assertThat(firstSelectedTab).isEqualTo("tab2")
+    }
+
+  @Test
+  fun givenNestedTabRowsHaveNoPanels_whenReturningToActivatedTab_thenCanMoveAndActivateNextTab() =
+    runComposeUiTest {
+      var firstSelectedTab by mutableStateOf("tab1")
+      var secondSelectedTab by mutableStateOf("material1")
+
+      setContent {
+        Column {
+          UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+            BasicText("Before")
+          }
+
+          UnstyledTabGroup(selectedTab = firstSelectedTab, onSelectedTabChange = {
+            firstSelectedTab = it
+          }, tabs = listOf("tab1", "tab2", "tab3")) {
+            TabList(Modifier.testFocusTag("firstTabList").requiredWidth(180.dp).height(48.dp)) {
+              Row(Modifier.fillMaxSize()) {
+                Tab(
+                  key = "tab1",
+                  modifier = Modifier.testFocusTag("tab1").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #1")
+                }
+                Tab(
+                  key = "tab2",
+                  modifier = Modifier.testFocusTag("tab2").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #2")
+                }
+                Tab(
+                  key = "tab3",
+                  modifier = Modifier.testFocusTag("tab3").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Tab #3")
+                }
+              }
+            }
+          }
+
+          UnstyledTabGroup(selectedTab = secondSelectedTab, onSelectedTabChange = {
+            secondSelectedTab = it
+          }, tabs = listOf("material1", "material2", "material3")) {
+            TabList(Modifier.testFocusTag("secondTabList").requiredWidth(180.dp).height(48.dp)) {
+              Row(Modifier.fillMaxSize()) {
+                Tab(
+                  key = "material1",
+                  modifier = Modifier.testFocusTag("material1").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #1")
+                }
+                Tab(
+                  key = "material2",
+                  modifier = Modifier.testFocusTag("material2").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #2")
+                }
+                Tab(
+                  key = "material3",
+                  modifier = Modifier.testFocusTag("material3").weight(1f),
+                  activateOnFocus = false,
+                ) {
+                  BasicText("Material #3")
+                }
+              }
+            }
+          }
+        }
+      }
+
+      onNodeWithTag("before").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab1").assertIsFocused()
+      assertThat(firstSelectedTab).isEqualTo("tab1")
+
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+      onNodeWithTag("material1").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("tab1").assertIsFocused()
+
+      onRoot().performKeyInput {
+        keyPress(Key.DirectionRight)
+        keyPress(Key.Spacebar)
+      }
+      onNodeWithTag("tab2").assertIsFocused()
+      assertThat(firstSelectedTab).isEqualTo("tab2")
     }
 
   @Test
