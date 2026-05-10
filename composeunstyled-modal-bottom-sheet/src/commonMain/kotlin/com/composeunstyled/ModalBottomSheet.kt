@@ -90,7 +90,7 @@ fun rememberModalBottomSheetState(
     ModalBottomSheetState(
       bottomSheetState = sheetState,
       modalState = modalState,
-      scope = scope,
+      coroutineScope = scope,
       dismissAnimationSpec = dismissAnimationSpec,
     )
   }
@@ -100,10 +100,10 @@ fun rememberModalBottomSheetState(
   return state
 }
 
-class ModalBottomSheetState internal constructor(
-  internal val bottomSheetState: BottomSheetState,
-  internal val modalState: ModalState,
-  private val scope: CoroutineScope,
+class ModalBottomSheetState(
+  val bottomSheetState: BottomSheetState,
+  val modalState: ModalState,
+  private val coroutineScope: CoroutineScope,
   dismissAnimationSpec: AnimationSpec<Float>? = null,
 ) {
   internal var pendingDetentChange: Job? = null
@@ -118,7 +118,7 @@ class ModalBottomSheetState internal constructor(
   var targetDetent: SheetDetent
     get() = pendingTargetDetent ?: bottomSheetState.targetDetent
     set(value) {
-      scope.launch {
+      coroutineScope.launch {
         animateTo(value)
       }
     }
@@ -156,7 +156,7 @@ class ModalBottomSheetState internal constructor(
         }
         modalState.transitionState.targetState = true
         pendingDetentChange?.cancel()
-        pendingDetentChange = scope.launch {
+        pendingDetentChange = coroutineScope.launch {
           bottomSheetState.animateTo(value)
         }
         pendingDetentChange?.join()
@@ -183,7 +183,7 @@ class ModalBottomSheetState internal constructor(
     }
 
     pendingDetentChange?.cancel()
-    pendingDetentChange = scope.launch {
+    pendingDetentChange = coroutineScope.launch {
       modalState.transitionState.targetState = value != SheetDetent.Hidden
       bottomSheetState.jumpTo(value)
     }
@@ -194,7 +194,7 @@ class ModalBottomSheetState internal constructor(
   }
 
   internal fun launchPendingDetentChange(block: suspend () -> Unit) {
-    pendingDetentChange = scope.launch {
+    pendingDetentChange = coroutineScope.launch {
       block()
     }
   }
