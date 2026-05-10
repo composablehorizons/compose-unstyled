@@ -97,31 +97,33 @@ fun TextFieldDemo() {
             keyboardType = KeyboardType.Email,
           ),
         ) {
-          Text(
-            text = "Email",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = MaterialTheme.typography.bodyLarge,
-          )
-          TextInput(
-            Modifier
-              .fillMaxWidth()
-              .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-              .background(Color.White, RoundedCornerShape(8.dp))
-              .padding(horizontal = 16.dp, vertical = 12.dp),
-            accessibilityLabel = "Email",
-            placeholder = {
-              Text(
-                "email@example.com",
-                style = MaterialTheme.typography.bodyMedium.merge(
-                  TextStyle(
-                    color = Color.Black.copy(
-                      0.6f,
+          Column {
+            Text(
+              text = "Email",
+              modifier = Modifier.padding(bottom = 8.dp),
+              style = MaterialTheme.typography.bodyLarge,
+            )
+            TextInput(
+              Modifier
+                .fillMaxWidth()
+                .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+              accessibilityLabel = "Email",
+              placeholder = {
+                Text(
+                  "email@example.com",
+                  style = MaterialTheme.typography.bodyMedium.merge(
+                    TextStyle(
+                      color = Color.Black.copy(
+                        0.6f,
+                      ),
                     ),
                   ),
-                ),
-              )
-            },
-          )
+                )
+              },
+            )
+          }
         }
 
         UnstyledTextField(

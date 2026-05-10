@@ -26,6 +26,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -42,14 +44,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
+import com.composeunstyled.TooltipArrowDirection
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
@@ -77,6 +82,15 @@ fun TooltipDemo() {
                 initialScale = 0.65f,
               ) + fadeIn(tween(150)),
             exit = fadeOut(tween(250)),
+            arrow = { side ->
+              val degrees = when (side) {
+                TooltipArrowDirection.Up -> 0f
+                TooltipArrowDirection.Down -> 180f
+                TooltipArrowDirection.Left -> 90f
+                TooltipArrowDirection.Right -> 270f
+              }
+              ArrowUp(Modifier.rotate(degrees), Color.Black.copy(0.8f))
+            },
           ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
               Box(
@@ -106,5 +120,18 @@ fun TooltipDemo() {
         }
       }
     }
+  }
+}
+
+@Composable
+private fun ArrowUp(modifier: Modifier = Modifier, color: Color) {
+  Canvas(modifier = modifier.size(8.dp, 4.dp)) {
+    val path = Path().apply {
+      moveTo(size.width / 2f, 0f)
+      lineTo(0f, size.height)
+      lineTo(size.width, size.height)
+      close()
+    }
+    drawPath(path, color = color)
   }
 }
