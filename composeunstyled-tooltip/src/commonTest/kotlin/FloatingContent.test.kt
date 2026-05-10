@@ -33,6 +33,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class FloatingContentTest {
 
@@ -155,9 +156,10 @@ class FloatingContentTest {
 
     // With TopStart placement at the top of the window,
     // floating content should be clamped to not go negative
-    assert(floatingY >= 0f) {
-      "Floating content should be clamped to window bounds (floatingY=$floatingY should be >= 0)"
-    }
+    assertTrue(
+      floatingY >= 0f,
+      "Floating content should be clamped to window bounds (floatingY=$floatingY should be >= 0)",
+    )
   }
 
   @Test
@@ -192,11 +194,13 @@ class FloatingContentTest {
 
     // When content is larger than window, it should be clamped to 0
     // to maximize the visible portion at the top-left
-    assert(floatingX >= 0f) {
-      "Large floating content should be clamped to x >= 0 (got x=$floatingX)"
-    }
-    assert(floatingY >= 0f) {
-      "Large floating content should be clamped to y >= 0 (got y=$floatingY)"
-    }
+    assertTrue(
+      floatingX >= 0f,
+      "Large floating content should be clamped to x >= 0 (got x=$floatingX)",
+    )
+    assertTrue(
+      floatingY >= 0f,
+      "Large floating content should be clamped to y >= 0 (got y=$floatingY)",
+    )
   }
 }
