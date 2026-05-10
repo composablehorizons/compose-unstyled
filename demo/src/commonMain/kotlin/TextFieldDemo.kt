@@ -49,12 +49,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.EyeOff
@@ -69,9 +71,11 @@ fun TextFieldDemo() {
   val email = rememberTextFieldState()
   val password = rememberTextFieldState()
   var showPassword by remember { mutableStateOf(false) }
+  val fieldShape = RoundedCornerShape(8.dp)
 
   Box(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier
+      .fillMaxSize()
       .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
       .padding(horizontal = 16.dp)
       .padding(top = 16.dp)
@@ -81,8 +85,17 @@ fun TextFieldDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 500.dp)
-        .shadow(8.dp, RoundedCornerShape(16.dp))
-        .background(Color.White, RoundedCornerShape(16.dp))
+        .dropShadow(
+          shape = RoundedCornerShape(16.dp),
+          shadow = Shadow(
+            radius = 8.dp,
+            spread = 0.dp,
+            color = Color.Black.copy(alpha = 0.22f),
+            offset = DpOffset(x = 0.dp, y = 2.dp),
+          ),
+        )
+        .clip(RoundedCornerShape(16.dp))
+        .background(Color.White)
         .padding(24.dp),
       contentAlignment = Alignment.Center,
     ) {
@@ -93,35 +106,29 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = email,
           modifier = Modifier.fillMaxWidth(),
-          cursorBrush = SolidColor(Color(0xFF8E44AD)),
           lineLimits = TextFieldLineLimits.SingleLine,
           keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
           ),
+          textStyle = MaterialTheme.typography.bodyMedium,
         ) {
           Column {
             Text(
-              text = "Email",
+              "Email",
               modifier = Modifier.padding(bottom = 8.dp),
               style = MaterialTheme.typography.bodyLarge,
             )
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-                .background(Color.White, RoundedCornerShape(8.dp))
+                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+                .background(Color.White, fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
-              accessibilityLabel = "Email",
               placeholder = {
                 Text(
                   "email@example.com",
-                  style = MaterialTheme.typography.bodyMedium.merge(
-                    TextStyle(
-                      color = Color.Black.copy(
-                        0.6f,
-                      ),
-                    ),
-                  ),
+                  color = Color.Black.copy(0.6f),
+                  style = MaterialTheme.typography.bodyMedium,
                 )
               },
             )
@@ -131,13 +138,9 @@ fun TextFieldDemo() {
         UnstyledTextField(
           state = password,
           modifier = Modifier.fillMaxWidth(),
-          cursorBrush = SolidColor(Color(0xFF8E44AD)),
           lineLimits = TextFieldLineLimits.SingleLine,
-          outputTransformation = if (showPassword) {
-            null
-          } else {
-            PasswordOutputTransformation
-          },
+          outputTransformation = if (showPassword) null else PasswordOutputTransformation,
+          textStyle = MaterialTheme.typography.bodyMedium,
         ) {
           Column {
             Text(
@@ -148,33 +151,26 @@ fun TextFieldDemo() {
             Row(
               modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp))
-                .background(Color.White, RoundedCornerShape(8.dp))
+                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+                .background(Color.White, fieldShape)
                 .padding(vertical = 4.dp)
                 .padding(start = 16.dp, end = 4.dp),
               verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.SpaceBetween,
             ) {
               TextInput(
                 modifier = Modifier.weight(1f),
-                accessibilityLabel = "Password",
                 placeholder = {
                   Text(
                     text = "8-12 characters",
-                    style = MaterialTheme.typography.bodyMedium.merge(
-                      TextStyle(
-                        color = Color.Black.copy(
-                          0.6f,
-                        ),
-                      ),
-                    ),
+                    color = Color.Black.copy(0.6f),
+                    style = MaterialTheme.typography.bodyMedium,
                   )
                 },
               )
               UnstyledButton(
                 onClick = { showPassword = showPassword.not() },
-                contentPadding = PaddingValues(4.dp),
                 modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(4.dp),
               ) {
                 UnstyledIcon(
                   imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
@@ -190,13 +186,17 @@ fun TextFieldDemo() {
           onClick = { /* TODO */ },
           modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(fieldShape)
             .background(Color(0xFF8E44AD)),
           contentPadding = PaddingValues(12.dp),
         ) {
           Text(
-            text = "Submit",
+            "Submit",
             color = Color.White,
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.bodyMedium.merge(
+              TextStyle(fontWeight = FontWeight.Medium),
+            ),
           )
         }
       }
@@ -207,7 +207,7 @@ fun TextFieldDemo() {
 private val PasswordOutputTransformation = object : OutputTransformation {
   override fun TextFieldBuffer.transformOutput() {
     for (index in 0 until length) {
-      replace(index, index + 1, "•")
+      replace(index, index + 1, "*")
     }
   }
 }

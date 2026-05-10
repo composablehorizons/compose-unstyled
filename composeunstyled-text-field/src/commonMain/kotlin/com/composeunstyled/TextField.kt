@@ -24,8 +24,6 @@ package com.composeunstyled
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,10 +34,13 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -56,38 +57,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
-class TextFieldScope {
+class TextFieldScope internal constructor() {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
+  internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
+  internal var enabled by mutableStateOf(true)
 }
 
 @Composable
 fun TextFieldScope.TextInput(
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
-  accessibilityLabel: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
 ) {
   Box(
     modifier = modifier
-      .pointerHoverIcon(PointerIcon.Text) then buildModifier {
-      if (accessibilityLabel != null) {
-        add(Modifier.semantics { contentDescription = accessibilityLabel })
-      }
-    }.padding(contentPadding),
+      .pointerHoverIcon(
+        icon = if (enabled) PointerIcon.Text else PointerIcon.Default,
+        overrideDescendants = true,
+      )
+      .clipToBounds(),
   ) {
-    Box {
-      innerTextField!!.invoke()
-
-      if (placeholder != null && text.isEmpty()) {
-        Box(Modifier.matchParentSize()) {
-          placeholder()
-        }
+    if (placeholder != null && text.isEmpty()) {
+      Box(
+        modifier = Modifier.matchParentSize(),
+        contentAlignment = textAlignment.toContentAlignment(),
+      ) {
+        placeholder()
       }
     }
+    innerTextField?.invoke()
   }
 }
 
@@ -95,7 +95,9 @@ fun TextFieldScope.TextInput(
 fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
-  editable: Boolean = true,
+  enabled: Boolean = true,
+  accessibilityLabel: String? = null,
+  readOnly: Boolean = false,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
   textStyle: TextStyle = TextStyle.Default,
   textAlign: TextAlign = TextAlign.Unspecified,
@@ -119,6 +121,7 @@ fun UnstyledTextField(
   val scope = remember { TextFieldScope() }
 
   scope.text = state.text.toString()
+  scope.enabled = enabled
 
   val newTextStyle = textStyle.mergeSafely(
     textAlign = textAlign,
@@ -130,31 +133,43 @@ fun UnstyledTextField(
     letterSpacing = letterSpacing,
     color = textColor,
   )
-  BasicTextField(
-    scrollState = scrollState,
-    state = state,
-    interactionSource = interactionSource,
-    textStyle = newTextStyle,
-    readOnly = editable.not(),
-    outputTransformation = outputTransformation,
-    inputTransformation = inputTransformation,
-    modifier = modifier.semantics(mergeDescendants = true) {},
-    cursorBrush = cursorBrush,
-    lineLimits = lineLimits,
-    onTextLayout = onTextLayout,
-    keyboardOptions = keyboardOptions,
-    onKeyboardAction = onKeyboardAction,
-    decorator = { innerTextField ->
-      scope.innerTextField = innerTextField
-      Box(
-        Modifier
-          // we are handling pointerIcons in TextInput()
-          .pointerHoverIcon(PointerIcon.Default),
-      ) {
+  scope.textAlignment = newTextStyle.textAlign
+
+  key(lineLimits) {
+    BasicTextField(
+      scrollState = scrollState,
+      state = state,
+      interactionSource = interactionSource,
+      textStyle = newTextStyle,
+      enabled = enabled,
+      readOnly = readOnly,
+      outputTransformation = outputTransformation,
+      inputTransformation = inputTransformation,
+      modifier = modifier then buildModifier {
+        add(Modifier.semantics(mergeDescendants = true) {})
+        if (accessibilityLabel != null) {
+          add(Modifier.semantics { contentDescription = accessibilityLabel })
+        }
+      },
+      cursorBrush = cursorBrush,
+      lineLimits = lineLimits,
+      onTextLayout = onTextLayout,
+      keyboardOptions = keyboardOptions,
+      onKeyboardAction = onKeyboardAction,
+      decorator = { innerTextField ->
+        scope.innerTextField = innerTextField
         scope.content()
-      }
-    },
-  )
+      },
+    )
+  }
+}
+
+private fun TextAlign.toContentAlignment(): Alignment {
+  return when (this) {
+    TextAlign.End -> Alignment.TopEnd
+    TextAlign.Center -> Alignment.TopCenter
+    else -> Alignment.TopStart
+  }
 }
 
 @Composable

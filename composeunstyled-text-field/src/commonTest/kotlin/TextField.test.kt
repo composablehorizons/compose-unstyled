@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -76,11 +77,10 @@ class TextFieldTest {
     setContent {
       UnstyledTextField(
         state = rememberTextFieldState(),
+        modifier = Modifier.testTag("input"),
+        accessibilityLabel = "Email",
       ) {
-        TextInput(
-          modifier = Modifier.testTag("input"),
-          accessibilityLabel = "Email",
-        )
+        TextInput()
       }
     }
 
@@ -147,13 +147,13 @@ class TextFieldTest {
   }
 
   @Test
-  fun outputTransformationTransformsNonEditableText() = runComposeUiTest {
+  fun outputTransformationTransformsReadOnlyText() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
-        editable = false,
+        readOnly = true,
         outputTransformation = PasswordOutputTransformation,
       ) {
         TextInput()
@@ -164,19 +164,36 @@ class TextFieldTest {
   }
 
   @Test
-  fun nonEditableTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
+  fun readOnlyTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
-        editable = false,
+        readOnly = true,
       ) {
         TextInput()
       }
     }
 
     onNodeWithText("secret", useUnmergedTree = true).assertTextEquals("secret")
+  }
+
+  @Test
+  fun disabledTextFieldExposesDisabledSemantics() = runComposeUiTest {
+    setContent {
+      UnstyledTextField(
+        state = rememberTextFieldState(),
+        modifier = Modifier
+          .testTag("textfield")
+          .size(50.dp),
+        enabled = false,
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithTag("textfield").assertIsNotEnabled()
   }
 
   @Test

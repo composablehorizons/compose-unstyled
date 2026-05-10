@@ -36,7 +36,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -76,7 +75,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
@@ -293,8 +291,8 @@ private fun TextFieldContent(
   Column(modifier) {
     UnstyledTextField(
       state = state,
-      editable = enabled && readOnly.not(),
-      cursorBrush = SolidColor(activeColor),
+      enabled = enabled,
+      readOnly = readOnly,
       textStyle = textStyle,
       textColor = MaterialTheme.colorScheme.onSurface,
       keyboardOptions = keyboardOptions,
@@ -353,7 +351,6 @@ private fun TextFieldContent(
           }
           TextInput(
             modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(),
             placeholder = if (label == null || labelMinimized) placeholder else null,
           )
           suffix?.let {
