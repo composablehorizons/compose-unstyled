@@ -291,7 +291,7 @@ internal data class MenuContentPositionProvider(
     windowSize: IntSize,
     layoutDirection: LayoutDirection,
     popupContentSize: IntSize,
-  ): IntOffset = calculateAnchoredPosition(
+  ): IntOffset = calculateFloatingPlacement(
     density = density,
     anchorBounds = anchorBounds,
     windowSize = windowSize,
@@ -301,7 +301,7 @@ internal data class MenuContentPositionProvider(
     alignment = alignment,
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
-  )
+  ).position
 }
 
 private val KeyEvent.isKeyDown: Boolean

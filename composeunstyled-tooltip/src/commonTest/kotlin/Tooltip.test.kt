@@ -38,6 +38,7 @@ import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TooltipCommonTest {
 
@@ -107,6 +108,35 @@ class TooltipCommonTest {
     waitForIdle()
 
     onNodeWithText("Tooltip content").assertIsDisplayed()
+  }
+
+  @Test
+  fun exposesTooltipPlacementToPanelContent() = runComposeUiTest {
+    var placement: TooltipPlacement? = null
+
+    setPaddedContent {
+      UnstyledTooltip(
+        side = AnchorSide.Bottom,
+        alignment = AnchorAlignment.End,
+        panel = {
+          TooltipPanel {
+            placement = it
+            BasicText("Tooltip content")
+          }
+        },
+      ) {
+        UnstyledButton(onClick = {}, modifier = Modifier.testTag("hover_target")) {
+          BasicText("Hover me")
+        }
+      }
+    }
+
+    onNodeWithTag("hover_target").performHover()
+    waitForIdle()
+
+    onNodeWithText("Tooltip content").assertIsDisplayed()
+    assertEquals(AnchorSide.Bottom, placement?.side)
+    assertEquals(AnchorAlignment.End, placement?.alignment)
   }
 
   @Test

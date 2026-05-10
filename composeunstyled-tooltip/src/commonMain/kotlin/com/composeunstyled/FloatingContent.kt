@@ -53,7 +53,7 @@ internal fun FloatingContent(
   alignment: AnchorAlignment = AnchorAlignment.Center,
   sideOffset: Dp = 0.dp,
   alignmentOffset: Dp = 0.dp,
-  onOffsetFromIdealPositionChanged: (IntOffset) -> Unit = {},
+  onFloatingPlaced: (FloatingPlacement) -> Unit = {},
   anchor: @Composable () -> Unit,
 ) {
   val layoutDirection = LocalLayoutDirection.current
@@ -94,7 +94,7 @@ internal fun FloatingContent(
         alignment = alignment,
         sideOffset = sideOffset,
         alignmentOffset = alignmentOffset,
-        onOffsetFromIdealPositionChanged = onOffsetFromIdealPositionChanged,
+        onFloatingPlaced = onFloatingPlaced,
         density = density,
         layoutDirection = layoutDirection,
         windowSize = windowSize,
@@ -111,7 +111,7 @@ private fun FloatingPortalContent(
   alignment: AnchorAlignment,
   sideOffset: Dp,
   alignmentOffset: Dp,
-  onOffsetFromIdealPositionChanged: (IntOffset) -> Unit,
+  onFloatingPlaced: (FloatingPlacement) -> Unit,
   density: Density,
   layoutDirection: LayoutDirection,
   windowSize: IntSize,
@@ -137,7 +137,7 @@ private fun FloatingPortalContent(
       return@Layout layout(constraints.maxWidth, constraints.maxHeight) {}
     }
 
-    val contentPosition = calculateAnchoredPosition(
+    val floatingPlacement = calculateFloatingPlacement(
       density = density,
       anchorBounds = anchorBounds.toIntRect(),
       windowSize = windowSize,
@@ -148,12 +148,13 @@ private fun FloatingPortalContent(
       sideOffset = sideOffset,
       alignmentOffset = alignmentOffset,
     )
+    val contentPosition = floatingPlacement.position
 
     val portalX = contentPosition.x - portalPosition.x
     val portalY = contentPosition.y - portalPosition.y
 
     layout(constraints.maxWidth, constraints.maxHeight) {
-      onOffsetFromIdealPositionChanged(IntOffset.Zero)
+      onFloatingPlaced(floatingPlacement)
       floatingPlaceable.place(portalX, portalY)
     }
   }
