@@ -31,38 +31,32 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.TabIndicatorScope
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,7 +67,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.TabKey
 import com.composeunstyled.TabList
 import com.composeunstyled.TabListScope
 import com.composeunstyled.UnstyledTabGroup
@@ -87,37 +80,34 @@ private val TabDividerHeight = 1.dp
 private val TabHorizontalPadding = 16.dp
 private val TabIconSize = 24.dp
 private val TabIconTextPadding = 8.dp
-private class MaterialTabRowContext(
-  private val tabKeys: List<TabKey>,
+
+class MaterialTabRowScope<T> internal constructor(
+  internal val tabListScope: TabListScope<T>,
+  internal val tabModifier: Modifier,
+  internal val rowContent: MaterialTabRowContent<T>,
+  internal val onSelectedTabChange: (T) -> Unit,
+  val selectedTab: T,
 ) {
-  var nextIndex = 0
-  private val tabContentWidths = mutableStateMapOf<TabKey, Dp>()
-  private val tabSelectionCallbacks = mutableStateMapOf<TabKey, () -> Unit>()
+  fun isSelected(tabKey: T): Boolean = selectedTab == tabKey
 
-  fun nextTabKey(): TabKey {
-    val index = nextIndex++
-    return tabKeys.getOrNull(index)
-      ?: error("PrimaryTabRow received more tabs than tabKeys. Add a stable key for every tab.")
+  fun selectTab(tabKey: T) {
+    onSelectedTabChange(tabKey)
   }
+}
 
-  fun setContentWidth(tabKey: TabKey, width: Dp) {
+internal class MaterialTabRowContent<T> {
+  private val tabContentWidths = mutableStateMapOf<T, Dp>()
+
+  fun setContentWidth(tabKey: T, width: Dp) {
     tabContentWidths[tabKey] = width
   }
 
-  fun indicatorWidth(tabKey: TabKey): Dp {
+  fun indicatorWidth(tabKey: T): Dp {
     val contentWidth = tabContentWidths[tabKey] ?: 0.dp
     return if (contentWidth > 24.dp) contentWidth else 24.dp
   }
 
-  fun hasContentWidth(tabKey: TabKey): Boolean = tabContentWidths.containsKey(tabKey)
-
-  fun setSelectionCallback(tabKey: TabKey, onClick: () -> Unit) {
-    tabSelectionCallbacks[tabKey] = onClick
-  }
-
-  fun select(tabKey: TabKey) {
-    tabSelectionCallbacks[tabKey]?.invoke()
-  }
+  fun hasContentWidth(tabKey: T): Boolean = tabContentWidths.containsKey(tabKey)
 }
 
 private class MaterialTabIndicatorState(
@@ -128,68 +118,59 @@ private class MaterialTabIndicatorState(
   val width = Animatable(initialWidth, Dp.VectorConverter)
 }
 
-private val LocalMaterialTabRowContext = staticCompositionLocalOf<MaterialTabRowContext?> { null }
-private val LocalMaterialTabModifier = staticCompositionLocalOf<Modifier> { Modifier }
-
-private fun MaterialTabRowContext?.nextTabKey(): TabKey =
-  this?.nextTabKey() ?: error("Tab must be placed inside PrimaryTabRow or SecondaryTabRow.")
-
 @Composable
-fun TabListScope<TabKey>.Tab(
-  selected: Boolean,
-  onClick: () -> Unit,
+fun <T> MaterialTabRowScope<T>.Tab(
+  key: T,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  text: @Composable (() -> Unit)? = null,
   icon: @Composable (() -> Unit)? = null,
   selectedContentColor: Color = LocalContentColor.current,
   unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
   interactionSource: MutableInteractionSource? = null,
+  text: @Composable (() -> Unit)? = null,
 ) {
+  val selected = isSelected(key)
   val height = if (icon == null) PrimaryTabHeight else 64.dp
-  val tabRowContext = LocalMaterialTabRowContext.current
-  val tabKey = remember(tabRowContext) { tabRowContext.nextTabKey() }
   val density = LocalDensity.current
   val tabIndication = ripple(bounded = true, color = selectedContentColor)
-  SideEffect {
-    tabRowContext?.setSelectionCallback(tabKey, onClick)
-  }
 
   CompositionLocalProvider(
     LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
   ) {
-    UnstyledTab(
-      key = tabKey,
-      enabled = enabled,
-      activateOnFocus = false,
-      modifier = modifier
-        .then(LocalMaterialTabModifier.current)
-        .height(height),
-      contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
-      indication = tabIndication,
-      interactionSource = interactionSource,
-    ) {
-      Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(
-          modifier = Modifier.onSizeChanged { size ->
-            tabRowContext?.setContentWidth(
-              tabKey = tabKey,
-              width = with(density) { size.width.toDp() },
-            )
-          },
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
-        ) {
-          icon?.let {
-            Box(Modifier.size(TabIconSize), contentAlignment = Alignment.Center) {
-              it()
+    with(tabListScope) {
+      UnstyledTab(
+        key = key,
+        enabled = enabled,
+        activateOnFocus = false,
+        modifier = modifier
+          .then(tabModifier)
+          .height(height),
+        contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
+        indication = tabIndication,
+        interactionSource = interactionSource,
+      ) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+          Column(
+            modifier = Modifier.onSizeChanged { size ->
+              rowContent.setContentWidth(
+                tabKey = key,
+                width = with(density) { size.width.toDp() },
+              )
+            },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+          ) {
+            icon?.let {
+              Box(Modifier.size(TabIconSize), contentAlignment = Alignment.Center) {
+                it()
+              }
+              if (text != null) {
+                Spacer(Modifier.height(TabIconTextPadding))
+              }
             }
-            if (text != null) {
-              Spacer(Modifier.height(TabIconTextPadding))
+            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+              text?.invoke()
             }
-          }
-          ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-            text?.invoke()
           }
         }
       }
@@ -198,79 +179,37 @@ fun TabListScope<TabKey>.Tab(
 }
 
 @Composable
-fun TabListScope<TabKey>.Tab(
-  selected: Boolean,
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  selectedContentColor: Color = LocalContentColor.current,
-  unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-  interactionSource: MutableInteractionSource? = null,
-  content: @Composable ColumnScope.() -> Unit,
-) {
-  val tabRowContext = LocalMaterialTabRowContext.current
-  val tabKey = remember(tabRowContext) { tabRowContext.nextTabKey() }
-  val density = LocalDensity.current
-  val tabIndication = ripple(bounded = true, color = selectedContentColor)
-  SideEffect {
-    tabRowContext?.setSelectionCallback(tabKey, onClick)
-  }
-
-  CompositionLocalProvider(
-    LocalContentColor provides if (selected) selectedContentColor else unselectedContentColor,
-  ) {
-    UnstyledTab(
-      key = tabKey,
-      enabled = enabled,
-      activateOnFocus = false,
-      modifier = modifier
-        .then(LocalMaterialTabModifier.current)
-        .fillMaxHeight(),
-      contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
-      indication = tabIndication,
-      interactionSource = interactionSource,
-    ) {
-      Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(
-          modifier = Modifier.onSizeChanged { size ->
-            tabRowContext?.setContentWidth(
-              tabKey = tabKey,
-              width = with(density) { size.width.toDp() },
-            )
-          },
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
-          content = content,
-        )
-      }
-    }
-  }
-}
-
-@Composable
-fun PrimaryTabRow(
-  selectedTabIndex: Int,
-  tabKeys: List<TabKey>,
+fun <T> PrimaryTabRow(
+  selectedTab: T,
+  onSelectedTabChange: (T) -> Unit,
+  tabs: List<T>,
   modifier: Modifier = Modifier,
   containerColor: Color = TabRowDefaults.primaryContainerColor,
   contentColor: Color = TabRowDefaults.primaryContentColor,
-  indicator: @Composable TabIndicatorScope.() -> Unit = {},
-  divider: @Composable () -> Unit = {},
-  tabs: @Composable TabListScope<TabKey>.() -> Unit,
+  divider: @Composable BoxScope.() -> Unit = {
+    Box(
+      modifier = Modifier
+        .align(Alignment.BottomStart)
+        .fillMaxWidth()
+        .height(TabDividerHeight)
+        .background(MaterialTheme.colorScheme.outlineVariant),
+    )
+  },
+  content: @Composable MaterialTabRowScope<T>.() -> Unit,
 ) {
-  val selectedTab = tabKeys.getOrNull(selectedTabIndex)
-    ?: error("selectedTabIndex must reference an entry in tabKeys.")
-  val tabRowContext = remember(tabKeys) { MaterialTabRowContext(tabKeys) }
+  val selectedTabIndex = tabs.indexOf(selectedTab)
+  require(selectedTabIndex != -1) { "selectedTab must reference an entry in tabs." }
+  val rowContent = remember(tabs) { MaterialTabRowContent<T>() }
   var indicatorState by remember { mutableStateOf<MaterialTabIndicatorState?>(null) }
   val indicatorAnimationSpec = MaterialTheme.motionScheme.defaultSpatialSpec<Dp>()
   val indicatorScope = rememberCoroutineScope()
-  val selectedIndicatorWidth = tabRowContext.indicatorWidth(selectedTab)
+  val selectedIndicatorWidth = rowContent.indicatorWidth(selectedTab)
 
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     UnstyledTabGroup(
       selectedTab = selectedTab,
-      onSelectedTabChange = { tabRowContext.select(it) },
-      tabs = tabKeys,
+      onSelectedTabChange = onSelectedTabChange,
+      tabs = tabs,
       modifier = modifier.background(containerColor),
     ) {
       val tabGroup = this
@@ -282,12 +221,12 @@ fun PrimaryTabRow(
         val density = LocalDensity.current
         var tabRowSize by remember { mutableStateOf(IntSize.Zero) }
         val tabSlotWidth = with(density) {
-          if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
+          if (tabs.isNotEmpty()) (tabRowSize.width / tabs.size).toDp() else 0.dp
         }
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex +
           (tabSlotWidth - selectedIndicatorWidth) / 2
         val isIndicatorReady = tabRowSize != IntSize.Zero &&
-          tabRowContext.hasContentWidth(selectedTab)
+          rowContent.hasContentWidth(selectedTab)
         LaunchedEffect(
           targetIndicatorOffset,
           selectedIndicatorWidth,
@@ -314,7 +253,6 @@ fun PrimaryTabRow(
           }
         }
 
-        tabRowContext.nextIndex = 0
         tabGroup.TabList(
           modifier = Modifier
             .fillMaxSize()
@@ -322,24 +260,21 @@ fun PrimaryTabRow(
         ) {
           val tabListScope = this
           Row(Modifier.fillMaxSize()) {
-            CompositionLocalProvider(
-              LocalMaterialTabRowContext provides tabRowContext,
-              LocalMaterialTabModifier provides Modifier.weight(1f),
-            ) {
-              with(tabListScope) {
-                tabs()
-              }
+            val rowScope = remember(tabListScope, rowContent, onSelectedTabChange, selectedTab) {
+              MaterialTabRowScope(
+                tabListScope = tabListScope,
+                tabModifier = Modifier.weight(1f),
+                rowContent = rowContent,
+                onSelectedTabChange = onSelectedTabChange,
+                selectedTab = selectedTab,
+              )
+            }
+            with(rowScope) {
+              content()
             }
           }
         }
 
-        Box(
-          modifier = Modifier
-            .align(Alignment.BottomStart)
-            .fillMaxWidth()
-            .height(TabDividerHeight)
-            .background(MaterialTheme.colorScheme.outlineVariant),
-        )
         divider()
         val currentIndicatorState = indicatorState
         if (isIndicatorReady) {
@@ -370,19 +305,27 @@ fun PrimaryTabRow(
 }
 
 @Composable
-fun SecondaryTabRow(
-  selectedTabIndex: Int,
-  tabKeys: List<TabKey>,
+fun <T> SecondaryTabRow(
+  selectedTab: T,
+  onSelectedTabChange: (T) -> Unit,
+  tabs: List<T>,
   modifier: Modifier = Modifier,
   containerColor: Color = TabRowDefaults.secondaryContainerColor,
   contentColor: Color = TabRowDefaults.secondaryContentColor,
-  indicator: @Composable TabIndicatorScope.() -> Unit = {},
-  divider: @Composable () -> Unit = {},
-  tabs: @Composable TabListScope<TabKey>.() -> Unit,
+  divider: @Composable BoxScope.() -> Unit = {
+    Box(
+      modifier = Modifier
+        .align(Alignment.BottomStart)
+        .fillMaxWidth()
+        .height(TabDividerHeight)
+        .background(MaterialTheme.colorScheme.outlineVariant),
+    )
+  },
+  content: @Composable MaterialTabRowScope<T>.() -> Unit,
 ) {
-  val selectedTab = tabKeys.getOrNull(selectedTabIndex)
-    ?: error("selectedTabIndex must reference an entry in tabKeys.")
-  val tabRowContext = remember(tabKeys) { MaterialTabRowContext(tabKeys) }
+  val selectedTabIndex = tabs.indexOf(selectedTab)
+  require(selectedTabIndex != -1) { "selectedTab must reference an entry in tabs." }
+  val rowContent = remember(tabs) { MaterialTabRowContent<T>() }
   var indicatorState by remember { mutableStateOf<MaterialTabIndicatorState?>(null) }
   val indicatorAnimationSpec = MaterialTheme.motionScheme.defaultSpatialSpec<Dp>()
   val indicatorScope = rememberCoroutineScope()
@@ -390,8 +333,8 @@ fun SecondaryTabRow(
   CompositionLocalProvider(LocalContentColor provides contentColor) {
     UnstyledTabGroup(
       selectedTab = selectedTab,
-      onSelectedTabChange = { tabRowContext.select(it) },
-      tabs = tabKeys,
+      onSelectedTabChange = onSelectedTabChange,
+      tabs = tabs,
       modifier = modifier.background(containerColor),
     ) {
       val tabGroup = this
@@ -403,7 +346,7 @@ fun SecondaryTabRow(
         val density = LocalDensity.current
         var tabRowSize by remember { mutableStateOf(IntSize.Zero) }
         val tabSlotWidth = with(density) {
-          if (tabKeys.isNotEmpty()) (tabRowSize.width / tabKeys.size).toDp() else 0.dp
+          if (tabs.isNotEmpty()) (tabRowSize.width / tabs.size).toDp() else 0.dp
         }
         val targetIndicatorOffset = tabSlotWidth * selectedTabIndex
         val isIndicatorReady = tabRowSize != IntSize.Zero
@@ -429,7 +372,6 @@ fun SecondaryTabRow(
           }
         }
 
-        tabRowContext.nextIndex = 0
         tabGroup.TabList(
           modifier = Modifier
             .fillMaxSize()
@@ -437,24 +379,21 @@ fun SecondaryTabRow(
         ) {
           val tabListScope = this
           Row(Modifier.fillMaxSize()) {
-            CompositionLocalProvider(
-              LocalMaterialTabRowContext provides tabRowContext,
-              LocalMaterialTabModifier provides Modifier.weight(1f),
-            ) {
-              with(tabListScope) {
-                tabs()
-              }
+            val rowScope = remember(tabListScope, rowContent, onSelectedTabChange, selectedTab) {
+              MaterialTabRowScope(
+                tabListScope = tabListScope,
+                tabModifier = Modifier.weight(1f),
+                rowContent = rowContent,
+                onSelectedTabChange = onSelectedTabChange,
+                selectedTab = selectedTab,
+              )
+            }
+            with(rowScope) {
+              content()
             }
           }
         }
 
-        Box(
-          modifier = Modifier
-            .align(Alignment.BottomStart)
-            .fillMaxWidth()
-            .height(TabDividerHeight)
-            .background(MaterialTheme.colorScheme.outlineVariant),
-        )
         divider()
         val currentIndicatorState = indicatorState
         if (isIndicatorReady) {
