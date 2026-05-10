@@ -53,6 +53,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithTag
@@ -192,6 +193,23 @@ class TextFieldTest {
     }
 
     onNodeWithText("secret", useUnmergedTree = true).assertTextEquals("secret")
+  }
+
+  @Test
+  fun disabledTextFieldExposesDisabledSemantics() = runComposeUiTest {
+    setContent {
+      UnstyledTextField(
+        state = rememberTextFieldState(),
+        modifier = Modifier
+          .testTag("textfield")
+          .size(50.dp),
+        enabled = false,
+      ) {
+        TextInput()
+      }
+    }
+
+    onNodeWithTag("textfield").assertIsNotEnabled()
   }
 
   @Test

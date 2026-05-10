@@ -89,6 +89,7 @@ fun TextFieldScope.TextInput(
 fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   accessibilityLabel: String? = null,
   readOnly: Boolean = false,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
@@ -134,6 +135,7 @@ fun UnstyledTextField(
       state = state,
       interactionSource = interactionSource,
       textStyle = newTextStyle,
+      enabled = enabled,
       readOnly = readOnly,
       outputTransformation = outputTransformation,
       inputTransformation = inputTransformation,

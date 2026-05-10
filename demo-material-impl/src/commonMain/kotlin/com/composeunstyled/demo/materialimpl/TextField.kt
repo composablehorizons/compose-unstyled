@@ -291,7 +291,8 @@ private fun TextFieldContent(
   Column(modifier) {
     UnstyledTextField(
       state = state,
-      readOnly = readOnly || enabled.not(),
+      enabled = enabled,
+      readOnly = readOnly,
       textStyle = textStyle,
       textColor = MaterialTheme.colorScheme.onSurface,
       keyboardOptions = keyboardOptions,
