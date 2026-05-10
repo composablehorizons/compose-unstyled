@@ -88,7 +88,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.composeunstyled.Editable
-import com.composeunstyled.UnstyledTextInput
+import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.buildModifier
 
 private val TextFieldContainerHeight = 56.dp
@@ -289,7 +289,7 @@ private fun TextFieldContent(
   val inputBottomPadding = if (label == null) 8.dp else 8.dp
 
   Column(modifier) {
-    UnstyledTextInput(
+    UnstyledTextField(
       state = state,
       editable = enabled && readOnly.not(),
       textStyle = textStyle,

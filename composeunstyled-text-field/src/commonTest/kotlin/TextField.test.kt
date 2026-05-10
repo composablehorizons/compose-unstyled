@@ -71,11 +71,11 @@ import assertk.assertions.isLessThan
 import assertk.assertions.isTrue
 import kotlin.test.Test
 
-class TextInputTest {
+class TextFieldTest {
   @Test
-  fun movesFocusToInputWhenTextInputIsFocused() = runComposeUiTest {
+  fun movesFocusToInputWhenTextFieldIsFocused() = runComposeUiTest {
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield"),
       ) {
@@ -89,7 +89,7 @@ class TextInputTest {
   @Test
   fun exposesAccessibilityLabelSemantics() = runComposeUiTest {
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("input"),
         accessibilityLabel = "Email",
@@ -108,10 +108,10 @@ class TextInputTest {
   }
 
   @Test
-  fun typingTextWhileTextInputIsFocused_entersText() = runComposeUiTest {
+  fun typingTextWhileTextFieldIsFocused_entersText() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield")
           // setting size as test can't click otherwise
@@ -129,7 +129,7 @@ class TextInputTest {
   fun changingValueUpdatesRenderedText() = runComposeUiTest {
     val state = TextFieldState("initial")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
       ) {
@@ -148,7 +148,7 @@ class TextInputTest {
   fun outputTransformationTransformsText() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
         outputTransformation = PasswordOutputTransformation,
@@ -164,7 +164,7 @@ class TextInputTest {
   fun outputTransformationTransformsNonEditableText() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
         editable = false,
@@ -181,7 +181,7 @@ class TextInputTest {
   fun nonEditableTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
         editable = false,
@@ -198,7 +198,7 @@ class TextInputTest {
     var focused by mutableStateOf(false)
 
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier
           .testTag("textfield")
@@ -221,7 +221,7 @@ class TextInputTest {
 
     setContent {
       val isFocused by interactionSource.collectIsFocusedAsState()
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield"),
         interactionSource = interactionSource,
@@ -242,7 +242,7 @@ class TextInputTest {
   fun placeholderIsVisibleWhenTextIsEmpty() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(state = state, modifier = Modifier.testTag("textfield")) {
+      UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
         Editable(
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
@@ -255,10 +255,10 @@ class TextInputTest {
   }
 
   @Test
-  fun textInputDoesNotFillParentByDefault() = runComposeUiTest {
+  fun textFieldDoesNotFillParentByDefault() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(400.dp, 100.dp)) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
@@ -280,7 +280,7 @@ class TextInputTest {
   fun editableDoesNotFillParentByDefault() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(400.dp, 100.dp)) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState("A"),
           modifier = Modifier.testTag("textfield"),
         ) {
@@ -295,16 +295,16 @@ class TextInputTest {
   }
 
   @Test
-  fun placeholderDoesNotAffectTextInputSize() = runComposeUiTest {
+  fun placeholderDoesNotAffectTextFieldSize() = runComposeUiTest {
     setContent {
       Row(Modifier.testTag("root").size(400.dp, 100.dp)) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("without-placeholder"),
         ) {
           Editable()
         }
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("with-placeholder"),
         ) {
@@ -337,7 +337,7 @@ class TextInputTest {
           .size(400.dp, 100.dp)
           .background(Color.White),
       ) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
@@ -374,7 +374,7 @@ class TextInputTest {
           .size(400.dp, 100.dp)
           .background(Color.White),
       ) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
@@ -411,7 +411,7 @@ class TextInputTest {
           .size(400.dp, 160.dp)
           .background(Color.White),
       ) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
@@ -443,7 +443,7 @@ class TextInputTest {
   @Test
   fun placeholderFollowsTextAlignment() = runComposeUiTest {
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield").size(100.dp),
         contentAlignment = Alignment.TopStart,
@@ -471,7 +471,7 @@ class TextInputTest {
   fun editableContentFollowsContentAlignment() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(100.dp)) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.fillMaxWidth().size(100.dp),
           contentAlignment = Alignment.CenterStart,
@@ -498,7 +498,7 @@ class TextInputTest {
   fun contentAlignmentPositionsAllContent() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(200.dp, 100.dp)) {
-        UnstyledTextInput(
+        UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.size(200.dp, 100.dp),
           contentAlignment = Alignment.CenterEnd,
@@ -533,7 +533,7 @@ class TextInputTest {
   fun placeholderHidesWhenNonWhitespaceTextIsEntered() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier
           .testTag("textfield")
@@ -556,7 +556,7 @@ class TextInputTest {
   fun placeholderHidesWhenWhitespaceOnlyTextIsEntered() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(state = state, modifier = Modifier.testTag("textfield")) {
+      UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
         Editable(
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
@@ -574,7 +574,7 @@ class TextInputTest {
   fun outputTransformationWithLongerOutputWorksWithStateBasedTextField() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").size(120.dp),
         outputTransformation = CreditCardOutputTransformation,
@@ -592,7 +592,7 @@ class TextInputTest {
   fun inputTransformationFiltersUserInput() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").size(120.dp),
         inputTransformation = InputTransformation.maxLength(2),
@@ -613,7 +613,7 @@ class TextInputTest {
   fun outputTransformationChangesRenderedTextWithoutChangingState() = runComposeUiTest {
     val state = TextFieldState("")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").size(120.dp),
         outputTransformation = object : OutputTransformation {
@@ -639,7 +639,7 @@ class TextInputTest {
     val state = TextFieldState("")
     var lineCount = 0
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").size(120.dp),
         lineLimits = TextFieldLineLimits.SingleLine,
@@ -659,11 +659,11 @@ class TextInputTest {
   }
 
   @Test
-  fun multiLineTextInputAcceptsEnterKey() = runComposeUiTest {
+  fun multiLineTextFieldAcceptsEnterKey() = runComposeUiTest {
     val state = TextFieldState("")
     var lineCount = 0
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
@@ -693,7 +693,7 @@ class TextInputTest {
     var layoutText = ""
     var lineCount = 0
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
@@ -722,7 +722,7 @@ class TextInputTest {
     var layoutText = ""
     var lineCount = 0
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
@@ -749,7 +749,7 @@ class TextInputTest {
   fun multiLineEnteredTextMeasuresEmptyMiddleLines() = runComposeUiTest {
     val state = TextFieldState("e\nwhat")
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
@@ -769,11 +769,11 @@ class TextInputTest {
   }
 
   @Test
-  fun multiLineTextInputKeepsTrailingBlankLinesVisible() = runComposeUiTest {
+  fun multiLineTextFieldKeepsTrailingBlankLinesVisible() = runComposeUiTest {
     val state = TextFieldState("")
     var lineCount = 0
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
@@ -806,7 +806,7 @@ class TextInputTest {
   fun onTextLayoutIsForwardedToEditable() = runComposeUiTest {
     var layoutText = ""
     setContent {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = rememberTextFieldState("layout"),
         modifier = Modifier.testTag("textfield"),
         onTextLayout = { getResult ->

@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
-class TextInputScope internal constructor() {
+class TextFieldScope internal constructor() {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
   internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
@@ -67,7 +67,7 @@ class TextInputScope internal constructor() {
 }
 
 @Composable
-fun TextInputScope.Editable(
+fun TextFieldScope.Editable(
   modifier: Modifier = Modifier,
   placeholder: (@Composable () -> Unit)? = null,
 ) {
@@ -88,7 +88,7 @@ fun TextInputScope.Editable(
 }
 
 @Composable
-fun UnstyledTextInput(
+fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -113,9 +113,9 @@ fun UnstyledTextInput(
   interactionSource: MutableInteractionSource? = null,
   textColor: Color = Color.Unspecified,
   scrollState: ScrollState = rememberScrollState(),
-  content: @Composable TextInputScope.() -> Unit,
+  content: @Composable TextFieldScope.() -> Unit,
 ) {
-  val scope = remember { TextInputScope() }
+  val scope = remember { TextFieldScope() }
 
   scope.text = state.text.toString()
 

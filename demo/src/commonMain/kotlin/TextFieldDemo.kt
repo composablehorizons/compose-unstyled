@@ -60,10 +60,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Editable
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledTextInput
+import com.composeunstyled.UnstyledTextField
 
 @Composable
-fun TextInputDemo() {
+fun TextFieldDemo() {
   val state = rememberTextFieldState()
   var contentAlignment by remember { mutableStateOf(Alignment.CenterStart) }
   var sizeMode by remember { mutableStateOf(SizeMode.Wrap) }
@@ -176,16 +176,16 @@ fun TextInputDemo() {
         .padding(16.dp),
       contentAlignment = Alignment.Center,
     ) {
-      UnstyledTextInput(
+      UnstyledTextField(
         state = state,
-        modifier = textInputModifier(
+        modifier = textFieldModifier(
           sizeMode = sizeMode,
           borderEnabled = borderEnabled,
           backgroundEnabled = backgroundEnabled,
         ),
         contentPadding = paddingMode.padding,
         contentAlignment = contentAlignment,
-        accessibilityLabel = "Smoke test text input",
+        accessibilityLabel = "Smoke test text field",
         lineLimits = when (lineMode) {
           LineMode.Single -> TextFieldLineLimits.SingleLine
           LineMode.Multi -> TextFieldLineLimits.MultiLine()
@@ -323,7 +323,7 @@ private fun SmokeButton(
   }
 }
 
-private fun textInputModifier(
+private fun textFieldModifier(
   sizeMode: SizeMode,
   borderEnabled: Boolean,
   backgroundEnabled: Boolean,
