@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.AlertDialogDefaults
@@ -101,74 +102,79 @@ fun AlertDialog(
       )
     },
   ) {
-    DialogPanel(
-      modifier = modifier
-        .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
-        .clip(shape)
-        .background(containerColor, shape),
-      paneTitle = "Dialog",
-      enter = fadeIn(animationSpec = tween(DialogFadeInDurationMillis)) +
-        scaleIn(
-          initialScale = 0.8f,
-          animationSpec = tween(DialogEnterDurationMillis),
-        ),
-      exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)) +
-        scaleOut(
-          targetScale = 0.95f,
-          animationSpec = tween(DialogExitDurationMillis),
-        ),
-      contentPadding = DialogPadding,
+    Box(
+      modifier = Modifier.fillMaxSize(),
+      contentAlignment = Alignment.Center,
     ) {
-      Column {
-        icon?.let {
-          CompositionLocalProvider(LocalContentColor provides iconContentColor) {
-            Box(Modifier.padding(DialogIconPadding).align(Alignment.CenterHorizontally)) {
-              it()
-            }
-          }
-        }
-        title?.let {
-          CompositionLocalProvider(LocalContentColor provides titleContentColor) {
-            ProvideTextStyle(MaterialTheme.typography.headlineSmall) {
-              Box(
-                Modifier
-                  .padding(DialogTitlePadding)
-                  .align(
-                    if (icon == null) {
-                      Alignment.Start
-                    } else {
-                      Alignment.CenterHorizontally
-                    },
-                  ),
-              ) {
+      DialogPanel(
+        modifier = modifier
+          .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
+          .clip(shape)
+          .background(containerColor, shape),
+        paneTitle = "Dialog",
+        enter = fadeIn(animationSpec = tween(DialogFadeInDurationMillis)) +
+          scaleIn(
+            initialScale = 0.8f,
+            animationSpec = tween(DialogEnterDurationMillis),
+          ),
+        exit = fadeOut(animationSpec = tween(DialogExitDurationMillis)) +
+          scaleOut(
+            targetScale = 0.95f,
+            animationSpec = tween(DialogExitDurationMillis),
+          ),
+        contentPadding = DialogPadding,
+      ) {
+        Column {
+          icon?.let {
+            CompositionLocalProvider(LocalContentColor provides iconContentColor) {
+              Box(Modifier.padding(DialogIconPadding).align(Alignment.CenterHorizontally)) {
                 it()
               }
             }
           }
-        }
-        text?.let {
-          CompositionLocalProvider(LocalContentColor provides textContentColor) {
-            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-              Box(
-                Modifier
-                  .weight(weight = 1f, fill = false)
-                  .padding(DialogTextPadding)
-                  .align(Alignment.Start),
-              ) {
-                it()
+          title?.let {
+            CompositionLocalProvider(LocalContentColor provides titleContentColor) {
+              ProvideTextStyle(MaterialTheme.typography.headlineSmall) {
+                Box(
+                  Modifier
+                    .padding(DialogTitlePadding)
+                    .align(
+                      if (icon == null) {
+                        Alignment.Start
+                      } else {
+                        Alignment.CenterHorizontally
+                      },
+                    ),
+                ) {
+                  it()
+                }
               }
             }
           }
-        }
-        Box(modifier = Modifier.align(Alignment.End)) {
-          CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.primary) {
-            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-              Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-              ) {
-                dismissButton?.invoke()
-                confirmButton()
+          text?.let {
+            CompositionLocalProvider(LocalContentColor provides textContentColor) {
+              ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                Box(
+                  Modifier
+                    .weight(weight = 1f, fill = false)
+                    .padding(DialogTextPadding)
+                    .align(Alignment.Start),
+                ) {
+                  it()
+                }
+              }
+            }
+          }
+          Box(modifier = Modifier.align(Alignment.End)) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.primary) {
+              ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                Row(
+                  horizontalArrangement = Arrangement.spacedBy(8.dp),
+                  verticalAlignment = Alignment.CenterVertically,
+                ) {
+                  dismissButton?.invoke()
+                  confirmButton()
+                }
               }
             }
           }

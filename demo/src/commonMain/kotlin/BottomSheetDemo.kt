@@ -66,7 +66,7 @@ fun BottomSheetDemo() {
     peekHeight
   }
   val sheetState = rememberBottomSheetState(
-    initialDetent = mini,
+    initialDetent = FullyExpanded,
     detents = listOf(mini, FullyExpanded),
   )
   val coverUrl = "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=512"
@@ -85,6 +85,7 @@ fun BottomSheetDemo() {
   ) {
     Sheet(
       modifier = Modifier
+        .padding(top = 24.dp)
         .dropShadow(
           shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
           shadow = Shadow(
