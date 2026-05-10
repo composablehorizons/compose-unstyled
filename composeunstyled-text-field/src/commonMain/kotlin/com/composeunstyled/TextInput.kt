@@ -154,7 +154,7 @@ fun UnstyledTextInput(
     decorator = { innerTextField ->
       scope.innerTextField = innerTextField
       Box(
-        modifier = Modifier.padding(contentPadding).clipToBounds(),
+        modifier = Modifier.padding(contentPadding),
         contentAlignment = contentAlignment,
       ) {
         scope.content()
