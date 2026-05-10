@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,9 +67,12 @@ fun BottomSheetDemo() {
     peekHeight
   }
   val sheetState = rememberBottomSheetState(
-    initialDetent = FullyExpanded,
+    initialDetent = mini,
     detents = listOf(mini, FullyExpanded),
   )
+  LaunchedEffect(sheetState) {
+    sheetState.targetDetent = FullyExpanded
+  }
   val coverUrl = "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=512"
   val tracks = listOf(
     "Memory Leak",
