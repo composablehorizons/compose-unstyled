@@ -59,6 +59,7 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberBottomSheetState
+import kotlinx.coroutines.delay
 
 @Composable
 fun BottomSheetDemo() {
@@ -70,7 +71,8 @@ fun BottomSheetDemo() {
     initialDetent = mini,
     detents = listOf(mini, FullyExpanded),
   )
-  LaunchedEffect(sheetState) {
+  LaunchedEffect(Unit) {
+    delay(500)
     sheetState.targetDetent = FullyExpanded
   }
   val coverUrl = "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=512"
