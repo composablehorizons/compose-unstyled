@@ -717,6 +717,38 @@ class TextFieldTest {
   }
 
   @Test
+  fun changingLineLimitsToMultiLineDisplaysNewLines() = runComposeUiTest {
+    val enteredText = "first line\n\nsecond line"
+    val state = TextFieldState(enteredText)
+    var lineLimits: TextFieldLineLimits by mutableStateOf(TextFieldLineLimits.SingleLine)
+    var layoutText = ""
+    var lineCount = 0
+    setContent {
+      UnstyledTextField(
+        state = state,
+        modifier = Modifier.testTag("textfield").width(240.dp),
+        lineLimits = lineLimits,
+        onTextLayout = { getResult ->
+          val result = getResult()
+          layoutText = result?.layoutInput?.text?.text.orEmpty()
+          lineCount = result?.lineCount ?: 0
+        },
+      ) {
+        Editable()
+      }
+    }
+
+    runOnIdle {
+      lineLimits = TextFieldLineLimits.MultiLine()
+    }
+    waitForIdle()
+
+    onNodeWithTag("textfield").assertTextEquals(enteredText)
+    assertThat(layoutText).isEqualTo(enteredText)
+    assertThat(lineCount).isEqualTo(3)
+  }
+
+  @Test
   fun multiLineEnteredTextDisplaysEmptyLines() = runComposeUiTest {
     val enteredText = "email is\n\nso cool"
     var layoutText = ""

@@ -36,6 +36,7 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -132,35 +133,37 @@ fun UnstyledTextField(
   scope.textAlignment = newTextStyle.textAlign
   scope.textStyle = newTextStyle
 
-  BasicTextField(
-    scrollState = scrollState,
-    state = state,
-    interactionSource = interactionSource,
-    textStyle = newTextStyle,
-    readOnly = editable.not(),
-    outputTransformation = outputTransformation,
-    inputTransformation = inputTransformation,
-    modifier = modifier then buildModifier {
-      add(Modifier.semantics(mergeDescendants = true) {})
-      if (accessibilityLabel != null) {
-        add(Modifier.semantics { contentDescription = accessibilityLabel })
-      }
-    },
-    cursorBrush = cursorBrush,
-    lineLimits = lineLimits,
-    onTextLayout = onTextLayout,
-    keyboardOptions = keyboardOptions,
-    onKeyboardAction = onKeyboardAction,
-    decorator = { innerTextField ->
-      scope.innerTextField = innerTextField
-      Box(
-        modifier = Modifier.padding(contentPadding),
-        contentAlignment = contentAlignment,
-      ) {
-        scope.content()
-      }
-    },
-  )
+  key(lineLimits) {
+    BasicTextField(
+      scrollState = scrollState,
+      state = state,
+      interactionSource = interactionSource,
+      textStyle = newTextStyle,
+      readOnly = editable.not(),
+      outputTransformation = outputTransformation,
+      inputTransformation = inputTransformation,
+      modifier = modifier then buildModifier {
+        add(Modifier.semantics(mergeDescendants = true) {})
+        if (accessibilityLabel != null) {
+          add(Modifier.semantics { contentDescription = accessibilityLabel })
+        }
+      },
+      cursorBrush = cursorBrush,
+      lineLimits = lineLimits,
+      onTextLayout = onTextLayout,
+      keyboardOptions = keyboardOptions,
+      onKeyboardAction = onKeyboardAction,
+      decorator = { innerTextField ->
+        scope.innerTextField = innerTextField
+        Box(
+          modifier = Modifier.padding(contentPadding),
+          contentAlignment = contentAlignment,
+        ) {
+          scope.content()
+        }
+      },
+    )
+  }
 }
 
 private fun TextAlign.toContentAlignment(): Alignment {
