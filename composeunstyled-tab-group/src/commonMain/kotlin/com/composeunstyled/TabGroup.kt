@@ -35,10 +35,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -66,12 +68,13 @@ private val NoPadding = PaddingValues(0.dp)
 private val KeyEvent.isKeyDown: Boolean
   get() = type == KeyEventType.KeyDown
 
-internal class TabsRegistry<T>(
-  val onSelectedTabChange: (T) -> Unit = {},
-) {
+internal class TabsRegistry<T> {
+  var onSelectedTabChange: (T) -> Unit by mutableStateOf({})
   var focusedTab: T? by mutableStateOf(null)
   var activatedTab: T? by mutableStateOf(null)
+  var isMovingFocusForwardOutOfTabList: Boolean by mutableStateOf(false)
   var isMovingFocusBackwardOutOfTabList: Boolean by mutableStateOf(false)
+  var attachedPanelKeys: Set<T> by mutableStateOf(emptySet())
 
   var tabKeys: List<T> by mutableStateOf(emptyList())
   var tabFocusRequesters: Map<T, FocusRequester> by mutableStateOf(emptyMap())
@@ -99,17 +102,21 @@ fun <T> UnstyledTabGroup(
   modifier: Modifier = Modifier,
   content: @Composable TabGroupScope<T>.() -> Unit,
 ) {
-  val registry = remember(tabs, onSelectedTabChange) {
+  val currentOnSelectedTabChange by rememberUpdatedState(onSelectedTabChange)
+  val registry = remember(tabs) {
     val tabsRequesters = tabs.associateWith { FocusRequester() }
     val panelsRequesters = tabs.associateWith { FocusRequester() }
-    TabsRegistry(onSelectedTabChange = onSelectedTabChange).apply {
+    TabsRegistry<T>().apply {
       tabKeys = tabs
       tabFocusRequesters = tabsRequesters
       panelsFocusRequesters = panelsRequesters
     }
   }
 
-  SideEffect { registry.activatedTab = selectedTab }
+  SideEffect {
+    registry.onSelectedTabChange = currentOnSelectedTabChange
+    registry.activatedTab = selectedTab
+  }
 
   Box(
     modifier = modifier
@@ -120,6 +127,7 @@ fun <T> UnstyledTabGroup(
             (requestedFocusDirection == FocusDirection.Next || requestedFocusDirection == FocusDirection.Previous)
           ) {
             // Using FocusDirection to know if we are moving due Tab press
+            registry.focusedTab = currentTab
             registry.tabFocusRequesters.getValue(currentTab).requestFocus()
           }
         }
@@ -145,6 +153,18 @@ fun <T> TabGroupScope<T>.TabList(
 
   Box(
     modifier = modifier
+      .focusProperties {
+        onEnter = {
+          val currentTab = registry.activatedTab
+          if (currentTab != null &&
+            (requestedFocusDirection == FocusDirection.Next || requestedFocusDirection == FocusDirection.Previous)
+          ) {
+            // Using FocusDirection to know if we are moving due Tab press
+            registry.focusedTab = currentTab
+            registry.tabFocusRequesters.getValue(currentTab).requestFocus()
+          }
+        }
+      }
       .focusRestorer()
       .focusGroup()
       .selectableGroup()
@@ -264,7 +284,17 @@ fun <T> TabListScope<T>.Tab(
     modifier = modifier
       .focusRequester(focusRequester)
       .onPreviewKeyEvent { event ->
-        if (event.isKeyDown && event.key == Key.Tab && event.isShiftPressed) {
+        if (event.isKeyDown && event.key == Key.Tab && event.isShiftPressed.not() &&
+          activatedTab !in registry.attachedPanelKeys
+        ) {
+          registry.isMovingFocusForwardOutOfTabList = true
+          try {
+            focusManager.moveFocus(FocusDirection.Next)
+          } finally {
+            registry.isMovingFocusForwardOutOfTabList = false
+          }
+          true
+        } else if (event.isKeyDown && event.key == Key.Tab && event.isShiftPressed) {
           registry.isMovingFocusBackwardOutOfTabList = true
           try {
             focusManager.moveFocus(FocusDirection.Previous)
@@ -277,10 +307,17 @@ fun <T> TabListScope<T>.Tab(
         }
       }
       .focusProperties {
-        if (registry.isMovingFocusBackwardOutOfTabList && registry.focusedTab != key) {
+        if ((
+            registry.isMovingFocusForwardOutOfTabList ||
+              registry.isMovingFocusBackwardOutOfTabList
+            ) &&
+          registry.focusedTab != key
+        ) {
           canFocus = false
         }
-        next = registry.panelsFocusRequesters[activatedTab] ?: FocusRequester.Default
+        if (activatedTab in registry.attachedPanelKeys) {
+          next = registry.panelsFocusRequesters[activatedTab] ?: FocusRequester.Default
+        }
       }
       .onFocusChanged {
         if (it.isFocused) {
@@ -315,6 +352,12 @@ fun <T> TabGroupScope<T>.TabPanel(
 
   if (registry.activatedTab == key) {
     val focusRequester = registry.panelsFocusRequesters[key] ?: FocusRequester.Default
+    DisposableEffect(registry, key) {
+      registry.attachedPanelKeys = registry.attachedPanelKeys + key
+      onDispose {
+        registry.attachedPanelKeys = registry.attachedPanelKeys - key
+      }
+    }
 
     Box(
       modifier = modifier

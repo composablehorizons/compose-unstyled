@@ -148,7 +148,7 @@ fun TabListScope<TabKey>.Tab(
 ) {
   val height = if (icon == null) PrimaryTabHeight else 64.dp
   val tabRowContext = LocalMaterialTabRowContext.current
-  val tabKey = tabRowContext.nextTabKey()
+  val tabKey = remember(tabRowContext) { tabRowContext.nextTabKey() }
   val density = LocalDensity.current
   val tabIndication = ripple(bounded = true, color = selectedContentColor)
   SideEffect {
@@ -209,7 +209,7 @@ fun TabListScope<TabKey>.Tab(
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val tabRowContext = LocalMaterialTabRowContext.current
-  val tabKey = tabRowContext.nextTabKey()
+  val tabKey = remember(tabRowContext) { tabRowContext.nextTabKey() }
   val density = LocalDensity.current
   val tabIndication = ripple(bounded = true, color = selectedContentColor)
   SideEffect {
