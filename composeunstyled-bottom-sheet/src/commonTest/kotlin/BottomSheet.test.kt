@@ -131,6 +131,31 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun bottom_sheet_does_not_fill_parent_without_caller_sizing_modifier() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(300.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.testTag("bottom_sheet"),
+        ) {
+          Sheet(Modifier.size(80.dp)) {}
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("bottom_sheet").assertHeightIsEqualTo(80.dp)
+  }
+
+  @Test
   fun throws_exception_when_creating_state_without_detents() {
     assertFailsWith<IllegalStateException> {
       runComposeUiTest {
@@ -282,7 +307,10 @@ class BottomSheetCommonTest {
         detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.fillMaxSize().testTag("sheet"),
+      ) {
         Sheet {
           Box(
             Modifier
@@ -300,7 +328,7 @@ class BottomSheetCommonTest {
     mainClock.autoAdvance = false
 
     // Start dragging and move
-    onNodeWithTag("sheet").performTouchInput {
+    onNodeWithTag("sheet_contents").performTouchInput {
       down(center)
       moveTo(center.copy(y = center.y - 50f))
     }
@@ -326,7 +354,10 @@ class BottomSheetCommonTest {
         animationSpec = tween(1000),
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.fillMaxSize().testTag("sheet"),
+      ) {
         Sheet {
           Box(
             Modifier
@@ -361,7 +392,7 @@ class BottomSheetCommonTest {
       state = rememberBottomSheetState(
         initialDetent = SheetDetent.Hidden,
       )
-      UnstyledBottomSheet(state = state) {
+      UnstyledBottomSheet(state = state, modifier = Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -380,7 +411,7 @@ class BottomSheetCommonTest {
       state = rememberBottomSheetState(
         initialDetent = SheetDetent.FullyExpanded,
       )
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -408,7 +439,7 @@ class BottomSheetCommonTest {
         detents = listOf(SheetDetent.Hidden, customDetent, SheetDetent.FullyExpanded),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(60.dp))
         }
@@ -432,7 +463,7 @@ class BottomSheetCommonTest {
       state = rememberBottomSheetState(
         initialDetent = SheetDetent.Hidden,
       )
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -449,7 +480,7 @@ class BottomSheetCommonTest {
       state = rememberBottomSheetState(
         initialDetent = SheetDetent.FullyExpanded,
       )
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -472,7 +503,7 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.Hidden,
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -500,7 +531,7 @@ class BottomSheetCommonTest {
         detents = listOf(SheetDetent.Hidden, customDetent),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("content").height(70.dp).fillMaxWidth())
         }
@@ -530,7 +561,7 @@ class BottomSheetCommonTest {
         detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(100.dp))
         }
@@ -560,7 +591,7 @@ class BottomSheetCommonTest {
           detents = listOf(detent25, detent50, detent75),
         )
 
-        UnstyledBottomSheet(state) {
+        UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
           Sheet {
             Box(Modifier.fillMaxWidth().height(100.dp))
           }
@@ -590,7 +621,10 @@ class BottomSheetCommonTest {
         detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.fillMaxSize(),
+      ) {
         Sheet {
           Box(
             Modifier
@@ -610,12 +644,12 @@ class BottomSheetCommonTest {
     val dragDistance = with(density) { 150.dp.toPx() }
 
     // Start dragging upward
-    onNodeWithTag("sheet").performTouchInput {
+    onNodeWithTag("sheet_contents").performTouchInput {
       down(center)
     }
     mainClock.advanceTimeBy(50)
 
-    onNodeWithTag("sheet").performTouchInput {
+    onNodeWithTag("sheet_contents").performTouchInput {
       moveTo(center.copy(y = center.y - dragDistance))
     }
     mainClock.advanceTimeBy(50)
@@ -625,7 +659,7 @@ class BottomSheetCommonTest {
     assertThat(state.currentDetent).isEqualTo(halfDetent)
 
     // Release
-    onNodeWithTag("sheet").performTouchInput {
+    onNodeWithTag("sheet_contents").performTouchInput {
       up()
     }
 
@@ -652,7 +686,10 @@ class BottomSheetCommonTest {
           detents = listOf(containerDetent),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
           Sheet {
             Box(
               Modifier
@@ -689,7 +726,10 @@ class BottomSheetCommonTest {
         detents = listOf(contentDetent),
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Box(
             Modifier
@@ -727,7 +767,10 @@ class BottomSheetCommonTest {
         detents = listOf(fixedDetent),
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Column(Modifier.testTag("sheet_contents")) {
             Box(Modifier.testTag("visible_content").height(150.dp).fillMaxWidth())
@@ -763,7 +806,10 @@ class BottomSheetCommonTest {
           detents = listOf(contentDetent),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
           Sheet {
             Box(
               Modifier
@@ -795,8 +841,11 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.FullyExpanded,
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
-        Sheet {
+      UnstyledBottomSheet(
+        state,
+        Modifier.fillMaxSize(),
+      ) {
+        Sheet(Modifier.testTag("sheet")) {
           Box(Modifier.testTag("sheet_contents").size(contentSize))
         }
       }
@@ -819,7 +868,10 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.FullyExpanded,
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Box(
             Modifier
@@ -848,7 +900,10 @@ class BottomSheetCommonTest {
           detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
           Sheet(Modifier.testTag("panel")) {
             Box(
               Modifier
@@ -898,7 +953,7 @@ class BottomSheetCommonTest {
           detents = listOf(fixedDetent),
         )
 
-        UnstyledBottomSheet(state) {
+        UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
           Sheet {
             Box(
               Modifier
@@ -943,7 +998,10 @@ class BottomSheetCommonTest {
           detents = listOf(contentDetent),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
           Sheet {
             Box(
               Modifier
@@ -981,7 +1039,7 @@ class BottomSheetCommonTest {
         animationSpec = tween(settleDuration.toInt()),
         detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
       )
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.testTag("sheet_contents").size(40.dp))
         }
@@ -1014,7 +1072,7 @@ class BottomSheetCommonTest {
 
       if (showSheet) {
         Box(Modifier.requiredSize(600.dp)) {
-          UnstyledBottomSheet(state) {
+          UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
             Sheet {
               Box(Modifier.testTag("sheet_contents").size(600.dp))
             }
@@ -1057,7 +1115,7 @@ class BottomSheetCommonTest {
         initialDetent = dynamicDetent,
         detents = listOf(dynamicDetent),
       )
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Column(Modifier.testTag("sheet_contents").size(100.dp)) {
             BasicText("Top")
@@ -1087,7 +1145,10 @@ class BottomSheetCommonTest {
           detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
         )
 
-        UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
           Sheet {
             Box(
               Modifier
@@ -1144,7 +1205,7 @@ class BottomSheetCommonTest {
         detents = listOf(contentDetent),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(
             Modifier
@@ -1185,7 +1246,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(400.dp))
         }
@@ -1219,7 +1280,7 @@ class BottomSheetCommonTest {
         animationSpec = tween(2000),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(400.dp))
         }
@@ -1261,7 +1322,7 @@ class BottomSheetCommonTest {
         animationSpec = tween(2000),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(500.dp))
         }
@@ -1303,7 +1364,7 @@ class BottomSheetCommonTest {
             initialDetent = SheetDetent.FullyExpanded,
           )
 
-          UnstyledBottomSheet(state) {
+          UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
             Sheet {
               Box(Modifier.fillMaxWidth().height(400.dp))
             }
@@ -1334,7 +1395,7 @@ class BottomSheetCommonTest {
         animationSpec = tween(2000),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(500.dp))
         }
@@ -1415,7 +1476,7 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.Hidden,
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(300.dp))
@@ -1438,7 +1499,7 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.FullyExpanded,
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(300.dp))
@@ -1461,7 +1522,7 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.FullyExpanded,
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(300.dp))
@@ -1484,7 +1545,7 @@ class BottomSheetCommonTest {
         initialDetent = SheetDetent.Hidden,
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(300.dp))
@@ -1600,7 +1661,7 @@ class BottomSheetCommonTest {
           detents = listOf(miniDetent, SheetDetent.FullyExpanded),
         )
 
-        UnstyledBottomSheet(state = state) {
+        UnstyledBottomSheet(state = state, modifier = Modifier.fillMaxSize()) {
           Sheet {
             Column(Modifier.fillMaxWidth()) {
               Box(
@@ -1665,7 +1726,7 @@ class BottomSheetCommonTest {
 
         UnstyledBottomSheet(
           state = state,
-          modifier = Modifier.testTag("sheet"),
+          modifier = Modifier.fillMaxSize().testTag("sheet"),
         ) {
           Sheet {
             Column(
@@ -1747,12 +1808,14 @@ class BottomSheetCommonTest {
 
         UnstyledBottomSheet(
           state = state,
-          modifier = Modifier
-            .background(Color.White)
-            .testTag("sheet")
-            .verticalScroll(rememberScrollState()),
+          modifier = Modifier.fillMaxSize(),
         ) {
-          Sheet {
+          Sheet(
+            Modifier
+              .background(Color.White)
+              .testTag("sheet")
+              .verticalScroll(rememberScrollState()),
+          ) {
             Column {
               repeat(5) { index ->
                 BasicText(
@@ -1798,12 +1861,14 @@ class BottomSheetCommonTest {
 
         UnstyledBottomSheet(
           state = state,
-          modifier = Modifier
-            .background(Color.White)
-            .testTag("sheet")
-            .verticalScroll(rememberScrollState()),
+          modifier = Modifier.fillMaxSize(),
         ) {
-          Sheet {
+          Sheet(
+            Modifier
+              .background(Color.White)
+              .testTag("sheet")
+              .verticalScroll(rememberScrollState()),
+          ) {
             Column {
               repeat(5) { index ->
                 BasicText(
@@ -1847,7 +1912,7 @@ class BottomSheetCommonTest {
 
         UnstyledBottomSheet(
           state = state,
-          modifier = Modifier.testTag("sheet"),
+          modifier = Modifier.fillMaxSize().testTag("sheet"),
         ) {
           Sheet(Modifier.testTag("panel")) {
             Column(
@@ -1998,7 +2063,7 @@ class BottomSheetCommonTest {
         confirmDetentChange = { false },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2026,7 +2091,7 @@ class BottomSheetCommonTest {
         confirmDetentChange = { true },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2054,7 +2119,10 @@ class BottomSheetCommonTest {
         confirmDetentChange = { newDetent -> newDetent != detent200 },
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2091,7 +2159,7 @@ class BottomSheetCommonTest {
         confirmDetentChange = { newDetent -> newDetent != detent200 },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2123,7 +2191,10 @@ class BottomSheetCommonTest {
         confirmDetentChange = { newDetent -> newDetent == detent200 },
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(400.dp))
         }
@@ -2161,7 +2232,10 @@ class BottomSheetCommonTest {
         },
       )
 
-      UnstyledBottomSheet(state, Modifier.testTag("sheet")) {
+      UnstyledBottomSheet(
+        state,
+        Modifier.testTag("sheet"),
+      ) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2194,7 +2268,7 @@ class BottomSheetCommonTest {
         },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2228,7 +2302,7 @@ class BottomSheetCommonTest {
         },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           Box(Modifier.fillMaxWidth().height(300.dp))
         }
@@ -2259,7 +2333,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200, detent300),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2290,7 +2364,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200, detent300),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2319,7 +2393,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2345,7 +2419,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200, detent300),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2381,7 +2455,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200, detent300),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2416,7 +2490,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200, detent300),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2462,7 +2536,7 @@ class BottomSheetCommonTest {
         },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2499,7 +2573,7 @@ class BottomSheetCommonTest {
         },
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(500.dp))
@@ -2530,7 +2604,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100, detent200),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))
@@ -2558,7 +2632,7 @@ class BottomSheetCommonTest {
         detents = listOf(detent100),
       )
 
-      UnstyledBottomSheet(state) {
+      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
         Sheet {
           DragIndication(Modifier.testTag("drag_indication").size(32.dp))
           Box(Modifier.fillMaxWidth().height(400.dp))

@@ -22,16 +22,22 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -114,5 +120,88 @@ class ToggleSwitchTest {
     }
 
     onNodeWithText("checked=true enabled=false").assertIsDisplayed()
+  }
+
+  @Test
+  fun thumbDoesNotForceSwitchSize() = runComposeUiTest {
+    setContent {
+      UnstyledSwitch(
+        checked = false,
+        onCheckedChange = {},
+        modifier = Modifier.testTag("switch"),
+      ) {
+        SwitchThumb(
+          modifier = Modifier
+            .width(24.dp)
+            .height(16.dp),
+        )
+      }
+    }
+
+    onNodeWithTag("switch")
+      .assertWidthIsEqualTo(24.dp)
+      .assertHeightIsEqualTo(16.dp)
+  }
+
+  @Test
+  fun thumbMovesToEndWhenSwitchIsChecked() = runComposeUiTest {
+    var checked by mutableStateOf(false)
+
+    setContent {
+      UnstyledSwitch(
+        checked = checked,
+        onCheckedChange = { checked = it },
+        modifier = Modifier
+          .width(58.dp)
+          .height(32.dp)
+          .testTag("switch"),
+      ) {
+        SwitchThumb(
+          modifier = Modifier.size(24.dp),
+        ) {
+          Box(Modifier.size(1.dp).testTag("thumb-content"))
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(0.dp)
+
+    onNodeWithTag("switch").performClick()
+    waitForIdle()
+
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
+  }
+
+  @Test
+  fun paddedThumbMovesToEndUsingItsOuterSize() = runComposeUiTest {
+    var checked by mutableStateOf(false)
+
+    setContent {
+      UnstyledSwitch(
+        checked = checked,
+        onCheckedChange = { checked = it },
+        modifier = Modifier
+          .width(58.dp)
+          .height(32.dp)
+          .testTag("switch"),
+      ) {
+        SwitchThumb(
+          modifier = Modifier
+            .padding(4.dp)
+            .size(24.dp),
+        ) {
+          Box(Modifier.size(1.dp).testTag("thumb-content"))
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(4.dp)
+
+    onNodeWithTag("switch").performClick()
+    waitForIdle()
+
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(30.dp)
   }
 }
