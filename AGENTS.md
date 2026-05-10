@@ -22,6 +22,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 ## API design choices
 
 - Compose Unstyled promises that it will never take or force design choices on the user. Keep APIs focused on behavior, state, semantics, and slots so design systems can provide their own visuals, icons, animation, layout, and styling.
+- Every non-side-effect composable must expose a `modifier: Modifier = Modifier` parameter as the first optional parameter. That `modifier` must be applied to the top-level composable emitted by the function.
 - Modifier chains in public composables must always start with the `modifier` parameter before adding internal modifiers.
 - Component primitives must never affect parent layout by forcing their own size. Do not use `fillMaxSize()` or other fill modifiers internally; primitives must wrap their content unless the caller sizes them with a modifier.
 - Use `buildModifier` for conditional modifiers instead of branching inside `Modifier.then(...)`.
