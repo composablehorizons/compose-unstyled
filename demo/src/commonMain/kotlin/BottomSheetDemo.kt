@@ -64,8 +64,9 @@ import kotlinx.coroutines.delay
 @Composable
 fun BottomSheetDemo() {
   val peekHeight = 74.dp
+  val sheetTopPadding = 24.dp
   val mini = SheetDetent("mini") { _, _ ->
-    peekHeight
+    peekHeight + sheetTopPadding
   }
   val sheetState = rememberBottomSheetState(
     initialDetent = mini,
@@ -91,7 +92,7 @@ fun BottomSheetDemo() {
   ) {
     Sheet(
       modifier = Modifier
-        .padding(top = 24.dp)
+        .padding(top = sheetTopPadding)
         .dropShadow(
           shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
           shadow = Shadow(
