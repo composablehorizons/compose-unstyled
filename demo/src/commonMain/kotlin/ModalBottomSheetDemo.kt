@@ -102,6 +102,7 @@ fun ModalBottomSheetDemo() {
 
     UnstyledModalBottomSheet(
       state = modalSheetState,
+      onDismissRequest = { modalSheetState.targetDetent = SheetDetent.Hidden },
       overlay = {
         Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       },

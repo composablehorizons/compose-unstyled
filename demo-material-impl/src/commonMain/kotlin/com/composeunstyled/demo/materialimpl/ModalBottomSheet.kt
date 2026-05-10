@@ -97,7 +97,7 @@ fun ModalBottomSheet(
       dismissOnBackPress = properties.shouldDismissOnBackPress,
       dismissOnClickOutside = true,
     ),
-    onDismiss = onDismissRequest,
+    onDismissRequest = onDismissRequest,
     overlay = {
       Scrim(
         scrimColor = scrimColor,

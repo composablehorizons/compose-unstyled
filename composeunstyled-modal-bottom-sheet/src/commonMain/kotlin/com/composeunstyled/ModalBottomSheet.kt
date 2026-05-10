@@ -109,6 +109,7 @@ class ModalBottomSheetState(
   internal var pendingDetentChange: Job? = null
   internal var modalDetent by mutableStateOf(bottomSheetState.currentDetent)
   internal var dismissAnimationSpec by mutableStateOf(dismissAnimationSpec)
+  internal var isHandlingDismissRequest = false
   private var pendingTargetDetent: SheetDetent? by mutableStateOf(null)
 
   val currentDetent: SheetDetent
@@ -118,8 +119,13 @@ class ModalBottomSheetState(
   var targetDetent: SheetDetent
     get() = pendingTargetDetent ?: bottomSheetState.targetDetent
     set(value) {
+      val animationSpec = if (value == SheetDetent.Hidden && isHandlingDismissRequest) {
+        dismissAnimationSpec
+      } else {
+        null
+      }
       coroutineScope.launch {
-        animateTo(value)
+        animateTo(value, animationSpec)
       }
     }
 
@@ -135,6 +141,10 @@ class ModalBottomSheetState(
   }
 
   suspend fun animateTo(value: SheetDetent) {
+    animateTo(value, animationSpec = null)
+  }
+
+  private suspend fun animateTo(value: SheetDetent, animationSpec: AnimationSpec<Float>?) {
     pendingTargetDetent = value
 
     val isBottomSheetVisible = bottomSheetState.currentDetent != SheetDetent.Hidden ||
@@ -142,7 +152,7 @@ class ModalBottomSheetState(
 
     try {
       if (isBottomSheetVisible) {
-        bottomSheetState.animateTo(value)
+        bottomSheetState.animateTo(value, animationSpec)
         if (value == SheetDetent.Hidden && bottomSheetState.currentDetent == SheetDetent.Hidden) {
           modalDetent = SheetDetent.Hidden
           modalState.transitionState.targetState = false
@@ -150,7 +160,7 @@ class ModalBottomSheetState(
       } else {
         modalDetent = value
         if (value == SheetDetent.Hidden) {
-          bottomSheetState.animateTo(value)
+          bottomSheetState.animateTo(value, animationSpec)
           modalState.transitionState.targetState = false
           return
         }
@@ -192,46 +202,29 @@ class ModalBottomSheetState(
   fun invalidateDetents() {
     bottomSheetState.invalidateDetents()
   }
-
-  internal fun launchPendingDetentChange(block: suspend () -> Unit) {
-    pendingDetentChange = coroutineScope.launch {
-      block()
-    }
-  }
 }
 
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
   properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
-  onDismiss: () -> Unit = DoNothing,
+  onDismissRequest: () -> Unit = DoNothing,
   overlay: (@Composable ModalScope.() -> Unit)? = null,
   content: @Composable ModalBottomSheetScope.() -> Unit,
 ) {
-  val currentDismissCallback by rememberUpdatedState(onDismiss)
-  var dismissRequested by remember { mutableStateOf(false) }
+  val currentOnDismissRequest by rememberUpdatedState(onDismissRequest)
 
-  fun dispatchDismiss() {
-    if (dismissRequested.not()) {
-      dismissRequested = true
-      currentDismissCallback()
-    }
-  }
-
-  fun completeDismiss(notifyDismiss: Boolean = true) {
-    if (notifyDismiss) {
-      dispatchDismiss()
-    }
+  fun completeDismiss() {
     state.modalDetent = SheetDetent.Hidden
     state.modalState.transitionState.targetState = false
   }
 
   fun requestDismiss() {
-    dispatchDismiss()
-    state.pendingDetentChange?.cancel()
-    state.launchPendingDetentChange {
-      state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
-      completeDismiss(notifyDismiss = false)
+    state.isHandlingDismissRequest = true
+    try {
+      currentOnDismissRequest()
+    } finally {
+      state.isHandlingDismissRequest = false
     }
   }
 
@@ -254,11 +247,6 @@ fun UnstyledModalBottomSheet(
         ) {
           completeDismiss()
         }
-      }
-    }
-    LaunchedEffect(state.bottomSheetState.currentDetent) {
-      if (state.bottomSheetState.currentDetent != SheetDetent.Hidden) {
-        dismissRequested = false
       }
     }
     if (properties.dismissOnBackPress) {

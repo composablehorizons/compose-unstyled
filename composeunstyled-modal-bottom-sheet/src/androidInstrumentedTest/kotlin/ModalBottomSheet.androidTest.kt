@@ -40,12 +40,17 @@ class ModalBottomSheet {
 
   @Test
   fun sheet_is_dismissed_when_pressing_back_with_dismissonbackpress_true() = runComposeUiTest {
+    lateinit var state: ModalBottomSheetState
     var dismissCalled = false
     setContent {
+      state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
-        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        state = state,
         properties = ModalBottomSheetProperties(dismissOnBackPress = true),
-        onDismiss = { dismissCalled = true },
+        onDismissRequest = {
+          dismissCalled = true
+          state.targetDetent = SheetDetent.Hidden
+        },
         overlay = { Scrim() },
       ) {
         Sheet(
@@ -75,7 +80,7 @@ class ModalBottomSheet {
       UnstyledModalBottomSheet(
         rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
         properties = ModalBottomSheetProperties(dismissOnBackPress = false),
-        onDismiss = { dismissCalled = true },
+        onDismissRequest = { dismissCalled = true },
         overlay = { Scrim() },
       ) {
         Sheet {

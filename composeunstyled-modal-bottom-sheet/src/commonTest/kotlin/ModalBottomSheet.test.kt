@@ -332,10 +332,13 @@ class ModalBottomSheetTest {
 
   @Test
   fun sheet_is_dismissed_when_tapping_outside_with_dismissonclickoutside_true() = runComposeUiTest {
+    lateinit var state: ModalBottomSheetState
     setContent {
+      state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
-        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
 
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
@@ -359,6 +362,7 @@ class ModalBottomSheetTest {
       UnstyledModalBottomSheet(
         state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
         Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
@@ -391,6 +395,7 @@ class ModalBottomSheetTest {
       UnstyledModalBottomSheet(
         state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
         Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
@@ -425,6 +430,7 @@ class ModalBottomSheetTest {
       UnstyledModalBottomSheet(
         state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
         Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
@@ -478,6 +484,7 @@ class ModalBottomSheetTest {
       UnstyledModalBottomSheet(
         state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = {
           Scrim(
             modifier = Modifier.testTag("scrim"),
@@ -522,11 +529,14 @@ class ModalBottomSheetTest {
   @Test
   fun updated_properties_are_used_for_outside_tap_dismissal() = runComposeUiTest {
     var dismissOnClickOutside by mutableStateOf(false)
+    lateinit var state: ModalBottomSheetState
 
     setContent {
+      state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
-        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = dismissOnClickOutside),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
         Sheet { Box(Modifier.size(40.dp)) }
@@ -547,10 +557,13 @@ class ModalBottomSheetTest {
 
   @Test
   fun non_fixed_height_sheet_dismisses_with_one_outside_tap() = runComposeUiTest {
+    lateinit var state: ModalBottomSheetState
     setContent {
+      state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
-        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        onDismissRequest = { state.targetDetent = SheetDetent.Hidden },
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
         Sheet {
@@ -936,7 +949,7 @@ class ModalBottomSheetTest {
   }
 
   @Test
-  fun ondismiss_is_called_when_hiding_after_scrollable_content_was_scrolled() = runComposeUiTest {
+  fun ondismissrequest_is_not_called_when_hiding_programmatically_after_scrollable_content_was_scrolled() = runComposeUiTest {
     lateinit var state: ModalBottomSheetState
     var dismissCallCount = 0
 
@@ -944,7 +957,7 @@ class ModalBottomSheetTest {
       state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
         state = state,
-        onDismiss = { dismissCallCount++ },
+        onDismissRequest = { dismissCallCount++ },
         overlay = { Scrim() },
       ) {
         Sheet {
@@ -973,7 +986,7 @@ class ModalBottomSheetTest {
     waitForIdle()
 
     assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-    assertThat(dismissCallCount).isEqualTo(1)
+    assertThat(dismissCallCount).isEqualTo(0)
   }
 
   @Test
@@ -1007,13 +1020,15 @@ class ModalBottomSheetTest {
   }
 
   @Test
-  fun given_sheet_is_fully_expanded_and_dismissonclickoutside_is_true_when_tapping_outside_then_ondismiss() = runComposeUiTest {
+  fun given_sheet_is_fully_expanded_and_dismissonclickoutside_is_true_when_tapping_outside_then_ondismissrequest() = runComposeUiTest {
+    lateinit var state: ModalBottomSheetState
     var dismissCallCount = 0
     setContent {
+      state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
       UnstyledModalBottomSheet(
-        state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
-        onDismiss = { dismissCallCount++ },
+        onDismissRequest = { dismissCallCount++ },
 
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
@@ -1022,17 +1037,18 @@ class ModalBottomSheetTest {
     }
     onNodeWithTag("scrim").performClick()
     waitForIdle()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
     assertThat(dismissCallCount).isEqualTo(1)
   }
 
   @Test
-  fun given_sheet_is_fully_expanded_and_dismissonclickoutside_is_false_when_tapping_outside_then_ondismiss() = runComposeUiTest {
+  fun given_sheet_is_fully_expanded_and_dismissonclickoutside_is_false_when_tapping_outside_then_ondismissrequest() = runComposeUiTest {
     var dismissCallCount = 0
     setContent {
       UnstyledModalBottomSheet(
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
         properties = ModalBottomSheetProperties(dismissOnClickOutside = false),
-        onDismiss = { dismissCallCount++ },
+        onDismissRequest = { dismissCallCount++ },
 
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
@@ -1045,7 +1061,7 @@ class ModalBottomSheetTest {
   }
 
   @Test
-  fun given_sheet_is_fully_expanded_when_sheet_is_swiped_to_hidden_then_ondismiss_is_called() = runComposeUiTest {
+  fun given_sheet_is_fully_expanded_when_sheet_is_swiped_to_hidden_then_ondismissrequest_is_not_called() = runComposeUiTest {
     lateinit var state: ModalBottomSheetState
     var dismissCallCount = 0
     setContent {
@@ -1053,7 +1069,7 @@ class ModalBottomSheetTest {
         initialDetent = SheetDetent.FullyExpanded,
         detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
       )
-      UnstyledModalBottomSheet(state = state, onDismiss = {
+      UnstyledModalBottomSheet(state = state, onDismissRequest = {
         dismissCallCount++
       }, overlay = {
         Scrim(Modifier.testTag("scrim"))
@@ -1070,11 +1086,11 @@ class ModalBottomSheetTest {
     waitForIdle()
 
     assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
-    assertThat(dismissCallCount).isEqualTo(1)
+    assertThat(dismissCallCount).isEqualTo(0)
   }
 
   @Test
-  fun given_sheet_started_hidden_and_was_shown_when_clicking_outside_then_ondismiss_is_called() = runComposeUiTest {
+  fun given_sheet_started_hidden_and_was_shown_when_clicking_outside_then_accepted_ondismissrequest_hides_sheet() = runComposeUiTest {
     lateinit var state: ModalBottomSheetState
     var dismissCallCount = 0
     setContent {
@@ -1085,7 +1101,10 @@ class ModalBottomSheetTest {
       UnstyledModalBottomSheet(
         state = state,
         properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
-        onDismiss = { dismissCallCount++ },
+        onDismissRequest = {
+          dismissCallCount++
+          state.targetDetent = SheetDetent.Hidden
+        },
 
         overlay = { Scrim(Modifier.testTag("scrim")) },
       ) {
@@ -1099,11 +1118,9 @@ class ModalBottomSheetTest {
     onNode(isDialog()).assertExists()
 
     // Dismiss by clicking outside
-    println("--- CLICKING OUTSIDE")
     onNodeWithTag("scrim").performClick()
 
     waitForIdle()
-    println("--- ASSERTING")
     assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
     assertThat(dismissCallCount).isEqualTo(1)
   }
