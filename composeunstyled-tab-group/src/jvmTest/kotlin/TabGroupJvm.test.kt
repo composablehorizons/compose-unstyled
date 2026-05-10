@@ -323,6 +323,74 @@ class TabGroupTest {
     }
 
   @Test
+  fun givenFocusReturnsFromPanelToTab_whenPressingShiftTab_thenMovesFocusBeforeTabGroup() =
+    runComposeUiTest {
+      var selectedTab by mutableStateOf("tab1")
+
+      setContent {
+        UnstyledButton(onClick = {}, modifier = Modifier.testFocusTag("before")) {
+          BasicText("Before")
+        }
+
+        UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
+          selectedTab = it
+        }, tabs = listOf("tab1", "tab2", "tab3")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
+            Tab(
+              key = "tab1",
+              modifier = Modifier.testFocusTag("tab1"),
+            ) {
+              BasicText("Tab #1")
+            }
+            Tab(
+              key = "tab2",
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
+            ) {
+              BasicText("Tab #2")
+            }
+            Tab(
+              key = "tab3",
+              modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
+            ) {
+              BasicText("Tab #3")
+            }
+          }
+          TabPanel(key = "tab1", modifier = Modifier.testFocusTag("panelA")) {
+            BasicText("Panel A")
+          }
+          TabPanel(key = "tab2", modifier = Modifier.testFocusTag("panelB")) {
+            BasicText("Panel B")
+          }
+          TabPanel(key = "tab3", modifier = Modifier.testFocusTag("panelC")) {
+            BasicText("Panel C")
+          }
+        }
+      }
+
+      onNodeWithTag("before").requestFocus()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+        keyPress(Key.DirectionRight)
+        keyPress(Key.DirectionRight)
+      }
+      waitForIdle()
+      onRoot().performKeyInput {
+        keyPress(Key.Tab)
+      }
+      onNodeWithTag("panelC").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("tab3").assertIsFocused()
+
+      onRoot().performKeyInput {
+        shiftTab()
+      }
+      onNodeWithTag("before").assertIsFocused()
+    }
+
+  @Test
   fun canFocusSecondTabDirectly() = runComposeUiTest {
     var selectedTab by mutableStateOf("tab2")
 
@@ -604,6 +672,12 @@ class TabGroupTest {
     keyDown(key)
     println("👆 Key Up: $key")
     keyUp(key)
+  }
+
+  fun KeyInjectionScope.shiftTab() {
+    keyDown(Key.ShiftLeft)
+    keyPress(Key.Tab)
+    keyUp(Key.ShiftLeft)
   }
 
   fun Modifier.testFocusTag(key: String): Modifier {
