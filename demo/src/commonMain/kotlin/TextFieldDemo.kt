@@ -103,11 +103,6 @@ fun TextFieldDemo() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
-        Text(
-          "Email",
-          modifier = Modifier.fillMaxWidth(),
-          style = MaterialTheme.typography.bodyLarge,
-        )
         UnstyledTextField(
           state = email,
           modifier = Modifier.fillMaxWidth(),
@@ -117,29 +112,29 @@ fun TextFieldDemo() {
           ),
           textStyle = MaterialTheme.typography.bodyMedium,
         ) {
-          TextInput(
-            Modifier
-              .fillMaxWidth()
-              .border(1.dp, Color(0xFFBDBDBD), fieldShape)
-              .background(Color.White, fieldShape)
-              .padding(horizontal = 16.dp, vertical = 12.dp),
-            placeholder = {
-              Text(
-                "email@example.com",
-                color = Color.Black.copy(0.6f),
-                style = MaterialTheme.typography.bodyMedium,
-              )
-            },
-          )
+          Column {
+            Text(
+              "Email",
+              modifier = Modifier.padding(bottom = 8.dp),
+              style = MaterialTheme.typography.bodyLarge,
+            )
+            TextInput(
+              Modifier
+                .fillMaxWidth()
+                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+                .background(Color.White, fieldShape)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+              placeholder = {
+                Text(
+                  "email@example.com",
+                  color = Color.Black.copy(0.6f),
+                  style = MaterialTheme.typography.bodyMedium,
+                )
+              },
+            )
+          }
         }
 
-        Text(
-          "Password",
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-          style = MaterialTheme.typography.bodyLarge,
-        )
         UnstyledTextField(
           state = password,
           modifier = Modifier.fillMaxWidth(),
@@ -147,35 +142,42 @@ fun TextFieldDemo() {
           outputTransformation = if (showPassword) null else PasswordOutputTransformation,
           textStyle = MaterialTheme.typography.bodyMedium,
         ) {
-          Row(
-            modifier = Modifier
-              .fillMaxWidth()
-              .border(1.dp, Color(0xFFBDBDBD), fieldShape)
-              .background(Color.White, fieldShape)
-              .padding(vertical = 4.dp)
-              .padding(start = 16.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            TextInput(
-              modifier = Modifier.weight(1f),
-              placeholder = {
-                Text(
-                  text = "8-12 characters",
-                  color = Color.Black.copy(0.6f),
-                  style = MaterialTheme.typography.bodyMedium,
-                )
-              },
+          Column {
+            Text(
+              "Password",
+              modifier = Modifier.padding(bottom = 8.dp),
+              style = MaterialTheme.typography.bodyLarge,
             )
-            UnstyledButton(
-              onClick = { showPassword = showPassword.not() },
-              modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-              contentPadding = PaddingValues(4.dp),
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+                .background(Color.White, fieldShape)
+                .padding(vertical = 4.dp)
+                .padding(start = 16.dp, end = 4.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              UnstyledIcon(
-                imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
-                contentDescription = if (showPassword) "Hide password" else "Show password",
-                tint = Color(0xFF757575),
+              TextInput(
+                modifier = Modifier.weight(1f),
+                placeholder = {
+                  Text(
+                    text = "8-12 characters",
+                    color = Color.Black.copy(0.6f),
+                    style = MaterialTheme.typography.bodyMedium,
+                  )
+                },
               )
+              UnstyledButton(
+                onClick = { showPassword = showPassword.not() },
+                modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(4.dp),
+              ) {
+                UnstyledIcon(
+                  imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
+                  contentDescription = if (showPassword) "Hide password" else "Show password",
+                  tint = Color(0xFF757575),
+                )
+              }
             }
           }
         }
