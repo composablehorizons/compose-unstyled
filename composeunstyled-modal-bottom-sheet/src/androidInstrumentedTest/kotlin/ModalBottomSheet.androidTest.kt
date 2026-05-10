@@ -44,7 +44,7 @@ class ModalBottomSheet {
     setContent {
       UnstyledModalBottomSheet(
         state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
-        properties = ModalSheetProperties(dismissOnBackPress = true),
+        properties = ModalBottomSheetProperties(dismissOnBackPress = true),
         onDismiss = { dismissCalled = true },
         overlay = { Scrim() },
       ) {
@@ -74,7 +74,7 @@ class ModalBottomSheet {
     setContent {
       UnstyledModalBottomSheet(
         rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
-        properties = ModalSheetProperties(dismissOnBackPress = false),
+        properties = ModalBottomSheetProperties(dismissOnBackPress = false),
         onDismiss = { dismissCalled = true },
         overlay = { Scrim() },
       ) {

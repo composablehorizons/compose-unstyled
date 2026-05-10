@@ -42,7 +42,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -54,8 +53,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
+import com.composeunstyled.ModalBottomSheetProperties
 import com.composeunstyled.ModalBottomSheetState
-import com.composeunstyled.ModalSheetProperties
 import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
@@ -63,6 +62,7 @@ import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.rememberModalBottomSheetState
 import kotlin.math.max
+import androidx.compose.material3.ModalBottomSheetProperties as M3ModalBottomSheetProperties
 import androidx.compose.material3.Surface as M3Surface
 
 private val ModalBottomSheetTopMargin = 72.dp
@@ -88,12 +88,12 @@ fun ModalBottomSheet(
   scrimColor: Color = BottomSheetDefaults.ScrimColor,
   dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
   contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
-  properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
+  properties: M3ModalBottomSheetProperties = M3ModalBottomSheetProperties(),
   content: @Composable ColumnScope.() -> Unit,
 ) {
   UnstyledModalBottomSheet(
     state = sheetState,
-    properties = ModalSheetProperties(
+    properties = ModalBottomSheetProperties(
       dismissOnBackPress = properties.shouldDismissOnBackPress,
       dismissOnClickOutside = true,
     ),

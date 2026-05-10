@@ -58,7 +58,7 @@ class ModalBottomSheetScope internal constructor(
   internal val bottomSheetScope: BottomSheetScope,
 )
 
-data class ModalSheetProperties(
+data class ModalBottomSheetProperties(
   val dismissOnBackPress: Boolean = true,
   val dismissOnClickOutside: Boolean = true,
   val offsetForIme: Boolean = true,
@@ -203,7 +203,7 @@ class ModalBottomSheetState internal constructor(
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
-  properties: ModalSheetProperties = ModalSheetProperties(),
+  properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
   overlay: (@Composable ModalScope.() -> Unit)? = null,
   content: @Composable ModalBottomSheetScope.() -> Unit,
