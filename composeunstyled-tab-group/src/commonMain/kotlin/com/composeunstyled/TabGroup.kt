@@ -50,9 +50,12 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
@@ -68,6 +71,7 @@ internal class TabsRegistry<T>(
 ) {
   var focusedTab: T? by mutableStateOf(null)
   var activatedTab: T? by mutableStateOf(null)
+  var isMovingFocusBackwardOutOfTabList: Boolean by mutableStateOf(false)
 
   var tabKeys: List<T> by mutableStateOf(emptyList())
   var tabFocusRequesters: Map<T, FocusRequester> by mutableStateOf(emptyMap())
@@ -245,6 +249,7 @@ fun <T> TabListScope<T>.Tab(
   content: @Composable TabScope.() -> Unit,
 ) {
   val registry = registry
+  val focusManager = LocalFocusManager.current
   val focusRequester = registry.tabFocusRequesters[key] ?: FocusRequester.Default
   val activatedTab = registry.activatedTab
   val selected = activatedTab == key
@@ -258,7 +263,23 @@ fun <T> TabListScope<T>.Tab(
   Box(
     modifier = modifier
       .focusRequester(focusRequester)
+      .onPreviewKeyEvent { event ->
+        if (event.isKeyDown && event.key == Key.Tab && event.isShiftPressed) {
+          registry.isMovingFocusBackwardOutOfTabList = true
+          try {
+            focusManager.moveFocus(FocusDirection.Previous)
+          } finally {
+            registry.isMovingFocusBackwardOutOfTabList = false
+          }
+          true
+        } else {
+          false
+        }
+      }
       .focusProperties {
+        if (registry.isMovingFocusBackwardOutOfTabList && registry.focusedTab != key) {
+          canFocus = false
+        }
         next = registry.panelsFocusRequesters[activatedTab] ?: FocusRequester.Default
       }
       .onFocusChanged {
