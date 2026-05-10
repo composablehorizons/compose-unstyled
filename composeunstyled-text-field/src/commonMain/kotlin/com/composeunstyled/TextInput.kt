@@ -26,7 +26,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,8 +46,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
@@ -58,7 +55,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
@@ -77,8 +73,6 @@ fun TextInputScope.Editable(
 ) {
   Box(
     modifier = modifier
-      .then(TextInputEditableParentDataModifier)
-      .widthIn(min = 2.dp)
       .clipToBounds(),
   ) {
     if (placeholder != null && text.isEmpty()) {
@@ -159,7 +153,7 @@ fun UnstyledTextInput(
     onKeyboardAction = onKeyboardAction,
     decorator = { innerTextField ->
       scope.innerTextField = innerTextField
-      TextInputContentLayout(
+      Box(
         modifier = Modifier.padding(contentPadding).clipToBounds(),
         contentAlignment = contentAlignment,
       ) {
@@ -167,51 +161,6 @@ fun UnstyledTextInput(
       }
     },
   )
-}
-
-@Composable
-private fun TextInputContentLayout(
-  modifier: Modifier = Modifier,
-  contentAlignment: Alignment,
-  content: @Composable () -> Unit,
-) {
-  Layout(
-    content = content,
-    modifier = modifier,
-  ) { measurables, constraints ->
-    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-    val childConstraints = if (
-      constraints.hasFixedWidth &&
-      measurables.size == 1 &&
-      measurables.single().parentData == TextInputEditableParentData
-    ) {
-      looseConstraints.copy(minWidth = constraints.maxWidth)
-    } else {
-      looseConstraints
-    }
-    val placeables = measurables.map { it.measure(childConstraints) }
-    val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
-    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
-    val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
-    val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
-
-    layout(width, height) {
-      placeables.forEach { placeable ->
-        val position = contentAlignment.align(
-          size = IntSize(placeable.width, placeable.height),
-          space = IntSize(width, height),
-          layoutDirection = layoutDirection,
-        )
-        placeable.placeRelative(position)
-      }
-    }
-  }
-}
-
-private data object TextInputEditableParentData
-
-private data object TextInputEditableParentDataModifier : ParentDataModifier {
-  override fun Density.modifyParentData(parentData: Any?): Any = TextInputEditableParentData
 }
 
 private fun TextAlign.toContentAlignment(): Alignment {

@@ -366,7 +366,7 @@ class TextInputTest {
   }
 
   @Test
-  fun placeholderCanUseCallerProvidedTextInputWidth() = runComposeUiTest {
+  fun placeholderCanUseCallerProvidedEditableWidth() = runComposeUiTest {
     setContent {
       Box(
         Modifier
@@ -376,11 +376,10 @@ class TextInputTest {
       ) {
         UnstyledTextInput(
           state = rememberTextFieldState(),
-          modifier = Modifier
-            .testTag("textfield")
-            .size(200.dp, 40.dp),
+          modifier = Modifier.testTag("textfield"),
         ) {
           Editable(
+            modifier = Modifier.size(200.dp, 40.dp),
             placeholder = {
               Box(
                 Modifier
@@ -414,11 +413,10 @@ class TextInputTest {
       ) {
         UnstyledTextInput(
           state = rememberTextFieldState(),
-          modifier = Modifier
-            .testTag("textfield")
-            .width(200.dp),
+          modifier = Modifier.testTag("textfield"),
         ) {
           Editable(
+            modifier = Modifier.width(200.dp),
             placeholder = {
               Box(
                 Modifier
