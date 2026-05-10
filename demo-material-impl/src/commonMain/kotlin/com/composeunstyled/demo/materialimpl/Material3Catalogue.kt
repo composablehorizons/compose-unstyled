@@ -728,12 +728,16 @@ private fun LinearProgressDemo() {
 private fun PrimaryTabRowDemo() {
   ComparisonLayout(
     top = {
-      var selected by remember { mutableIntStateOf(0) }
+      var selected by remember { mutableStateOf("one") }
       SampleBlock("Primary tab row") {
-        PrimaryTabRow(selectedTabIndex = selected, tabKeys = listOf("one", "two", "three")) {
-          Tab(selected = selected == 0, onClick = { selected = 0 }, text = { Text("One") })
-          Tab(selected = selected == 1, onClick = { selected = 1 }, text = { Text("Two") })
-          Tab(selected = selected == 2, onClick = { selected = 2 }, text = { Text("Three") })
+        PrimaryTabRow(
+          selectedTab = selected,
+          onSelectedTabChange = { selected = it },
+          tabs = listOf("one", "two", "three"),
+        ) {
+          Tab(key = "one") { Text("One") }
+          Tab(key = "two") { Text("Two") }
+          Tab(key = "three") { Text("Three") }
         }
       }
     },
@@ -754,15 +758,23 @@ private fun PrimaryTabRowDemo() {
 private fun SecondaryTabRowDemo() {
   ComparisonLayout(
     top = {
-      var selected by remember { mutableIntStateOf(0) }
+      var selected by remember { mutableStateOf("apps") }
       SampleBlock("Secondary tab row") {
-        SecondaryTabRow(selectedTabIndex = selected, tabKeys = listOf("apps", "settings")) {
-          Tab(selected = selected == 0, onClick = { selected = 0 }) {
-            Icon(MaterialSymbols.Rounded.Apps, contentDescription = "Apps")
+        SecondaryTabRow(
+          selectedTab = selected,
+          onSelectedTabChange = { selected = it },
+          tabs = listOf("apps", "settings"),
+        ) {
+          Tab(
+            key = "apps",
+            icon = { Icon(MaterialSymbols.Rounded.Apps, contentDescription = "Apps") },
+          ) {
             Text("Apps")
           }
-          Tab(selected = selected == 1, onClick = { selected = 1 }) {
-            Icon(MaterialSymbols.Rounded.Settings, contentDescription = "Settings")
+          Tab(
+            key = "settings",
+            icon = { Icon(MaterialSymbols.Rounded.Settings, contentDescription = "Settings") },
+          ) {
             Text("Settings")
           }
         }
