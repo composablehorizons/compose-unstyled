@@ -28,10 +28,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.CrossAxisAlignment
+import com.composeunstyled.MainAxisArrangement
+import com.composeunstyled.Stack
+import com.composeunstyled.StackOrientation
 import com.composeunstyled.outline
 
 @Composable
-fun OutlineBasicDemo() {
+fun OutlineDemo() {
+  Stack(
+    orientation = StackOrientation.Vertical,
+    mainAxisArrangement = MainAxisArrangement.Center,
+    crossAxisAlignment = CrossAxisAlignment.Center,
+    spacing = 32.dp,
+  ) {
+    OutlineBasicDemo()
+    OutlineWidthDemo()
+    OutlineShapeDemo()
+    OutlineOffsetDemo()
+    OutlineColorDemo()
+  }
+}
+
+@Composable
+private fun OutlineBasicDemo() {
   SimpleButton(
     modifier = Modifier.outline(
       width = 2.dp,
@@ -43,116 +63,136 @@ fun OutlineBasicDemo() {
 }
 
 @Composable
-fun OutlineWidthDemo() {
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 1.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 4.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
+private fun OutlineWidthDemo() {
+  ModifierDemoRow {
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 1.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 4.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+  }
 }
 
 @Composable
-fun OutlineShapeDemo() {
-  SimpleButton(
-    shape = RectangleShape,
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
+private fun OutlineShapeDemo() {
+  ModifierDemoRow {
+    SimpleButton(
       shape = RectangleShape,
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    shape = RoundedCornerShape(8.dp),
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RectangleShape,
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
       shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    shape = CircleShape,
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
       shape = CircleShape,
-      offset = 2.dp,
-    ),
-  )
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = CircleShape,
+        offset = 2.dp,
+      ),
+    )
+  }
 }
 
 @Composable
-fun OutlineOffsetDemo() {
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 0.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 4.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 8.dp,
-    ),
-  )
+private fun OutlineOffsetDemo() {
+  ModifierDemoRow {
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 0.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 4.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF3B82F6),
+        shape = RoundedCornerShape(8.dp),
+        offset = 8.dp,
+      ),
+    )
+  }
 }
 
 @Composable
-fun OutlineColorDemo() {
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFFEF4444), // red-500
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF10B981), // emerald-500
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
-  SimpleButton(
-    modifier = Modifier.outline(
-      width = 2.dp,
-      color = Color(0xFF8B5CF6), // violet-500
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-    ),
-  )
+private fun OutlineColorDemo() {
+  ModifierDemoRow {
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFFEF4444), // red-500
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF10B981), // emerald-500
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+    SimpleButton(
+      modifier = Modifier.outline(
+        width = 2.dp,
+        color = Color(0xFF8B5CF6), // violet-500
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+      ),
+    )
+  }
+}
+
+@Composable
+private fun ModifierDemoRow(content: @Composable () -> Unit) {
+  Stack(
+    orientation = StackOrientation.Horizontal,
+    mainAxisArrangement = MainAxisArrangement.Center,
+    crossAxisAlignment = CrossAxisAlignment.Center,
+    spacing = 32.dp,
+  ) {
+    content()
+  }
 }

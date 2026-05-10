@@ -23,6 +23,8 @@
 
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +42,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
@@ -58,7 +61,7 @@ class TabGroupTest {
         UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
           selectedTab = it
         }, tabs = listOf("tab1", "tab2", "tab3")) {
-          TabList(Modifier.testFocusTag("tablist")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
             Tab(
               key = "tab1",
               modifier = Modifier.testFocusTag("tab1"),
@@ -67,13 +70,13 @@ class TabGroupTest {
             }
             Tab(
               key = "tab2",
-              modifier = Modifier.testFocusTag("tab2"),
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
             ) {
               BasicText("Tab #2")
             }
             Tab(
               key = "tab3",
-              modifier = Modifier.testFocusTag("tab3"),
+              modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
             ) {
               BasicText("Tab #3")
             }
@@ -100,7 +103,7 @@ class TabGroupTest {
         UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
           selectedTab = it
         }, tabs = listOf("tab1", "tab2", "tab3")) {
-          TabList(Modifier.testFocusTag("tablist")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
             Tab(
               key = "tab1",
               modifier = Modifier.testFocusTag("tab1"),
@@ -109,13 +112,13 @@ class TabGroupTest {
             }
             Tab(
               key = "tab2",
-              modifier = Modifier.testFocusTag("tab2"),
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
             ) {
               BasicText("Tab #2")
             }
             Tab(
               key = "tab3",
-              modifier = Modifier.testFocusTag("tab3"),
+              modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
             ) {
               BasicText("Tab #3")
             }
@@ -141,7 +144,7 @@ class TabGroupTest {
         UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
           selectedTab = it
         }, tabs = listOf("tab1", "tab2", "tab3")) {
-          TabList(Modifier.testFocusTag("tablist")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
             Tab(
               "tab1",
               modifier = Modifier.testFocusTag("tab1"),
@@ -150,13 +153,13 @@ class TabGroupTest {
             }
             Tab(
               "tab2",
-              modifier = Modifier.testFocusTag("tab2"),
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
             ) {
               BasicText("Tab #2")
             }
             Tab(
               "tab3",
-              modifier = Modifier.testFocusTag("tab3"),
+              modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
             ) {
               BasicText("Tab #3")
             }
@@ -187,7 +190,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist").testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1").testFocusTag("tab1"),
@@ -196,13 +199,13 @@ class TabGroupTest {
           }
           Tab(
             "tab2",
-            modifier = Modifier.testFocusTag("tab2").testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp).testFocusTag("tab2"),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             "tab3",
-            modifier = Modifier.testFocusTag("tab3").testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp).testFocusTag("tab3"),
           ) {
             BasicText("Tab #3")
           }
@@ -224,7 +227,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -233,13 +236,13 @@ class TabGroupTest {
           }
           Tab(
             key = "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             key = "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -280,7 +283,7 @@ class TabGroupTest {
         UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
           selectedTab = it
         }, tabs = listOf("tab1", "tab2")) {
-          TabList(Modifier.testFocusTag("tablist")) {
+          TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
             Tab(
               key = "tab1",
               modifier = Modifier.testFocusTag("tab1"),
@@ -289,7 +292,7 @@ class TabGroupTest {
             }
             Tab(
               key = "tab2",
-              modifier = Modifier.testFocusTag("tab2"),
+              modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
             ) {
               BasicText("Tab #2")
             }
@@ -327,7 +330,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -336,13 +339,13 @@ class TabGroupTest {
           }
           Tab(
             "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -362,7 +365,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -371,13 +374,13 @@ class TabGroupTest {
           }
           Tab(
             "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -406,7 +409,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -415,13 +418,13 @@ class TabGroupTest {
           }
           Tab(
             "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -450,7 +453,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -459,13 +462,13 @@ class TabGroupTest {
           }
           Tab(
             key = "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             key = "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -503,7 +506,7 @@ class TabGroupTest {
         onSelectedTabChange = { selectedTab = it },
         tabs = listOf("tab1", "tab2", "tab3"),
       ) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -512,13 +515,13 @@ class TabGroupTest {
           }
           Tab(
             key = "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
           ) {
             BasicText("Tab #2")
           }
           Tab(
             key = "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
           ) {
             BasicText("Tab #3")
           }
@@ -559,7 +562,7 @@ class TabGroupTest {
       UnstyledTabGroup(selectedTab = selectedTab, onSelectedTabChange = {
         selectedTab = it
       }, tabs = listOf("tab1", "tab2", "tab3")) {
-        TabList(Modifier.testFocusTag("tablist")) {
+        TabList(Modifier.testFocusTag("tablist").requiredWidth(160.dp)) {
           Tab(
             key = "tab1",
             modifier = Modifier.testFocusTag("tab1"),
@@ -569,14 +572,14 @@ class TabGroupTest {
           }
           Tab(
             key = "tab2",
-            modifier = Modifier.testFocusTag("tab2"),
+            modifier = Modifier.testFocusTag("tab2").offset(x = 48.dp),
             activateOnFocus = true,
           ) {
             BasicText("Tab #2")
           }
           Tab(
             key = "tab3",
-            modifier = Modifier.testFocusTag("tab3"),
+            modifier = Modifier.testFocusTag("tab3").offset(x = 96.dp),
             activateOnFocus = true,
           ) {
             BasicText("Tab #3")

@@ -32,7 +32,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
@@ -43,7 +42,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.key.Key
@@ -82,7 +80,7 @@ fun <T> UnstyledRadioGroup(
     }
   }
 
-  Column(
+  Box(
     modifier
       .selectableGroup()
       .semantics {
@@ -156,7 +154,6 @@ fun <T> RadioGroupScope.RadioButton(
         interactionSource = radioInteractionSource,
       )
       .semantics(mergeDescendants = true) { },
-    contentAlignment = Alignment.Center,
   ) {
     scope.content()
   }
@@ -182,7 +179,6 @@ fun RadioButtonScope.SelectedIndicator(
     } else {
       modifier
     },
-    contentAlignment = Alignment.Center,
   ) {
     AnimatedVisibility(
       visible = selected,

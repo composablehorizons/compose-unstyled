@@ -23,7 +23,6 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -54,7 +53,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -71,7 +69,6 @@ import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -80,7 +77,11 @@ import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Search
 import com.composables.icons.lucide.X
+import com.composeunstyled.CrossAxisAlignment
+import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.PortalHost
+import com.composeunstyled.Stack
+import com.composeunstyled.StackOrientation
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
@@ -125,24 +126,14 @@ private val availablePrimitives = listOf(
   DemoItem("Separators", "separators", { SeparatorsDemo() }),
   DemoItem("Slider", "slider", { SliderDemo() }),
   DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
-  DemoItem("Text", "text", { TextDemo() }),
-  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Text Field", "textfield", { TextFieldDemo() }),
+  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
   DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
-  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
 )
 
 private val availableModifiers = listOf(
-  DemoItem("Outline Basic", "outline-basic", { OutlineBasicDemo() }),
-  DemoItem("Outline Width", "outline-width", { OutlineWidthDemo() }),
-  DemoItem("Outline Shape", "outline-shape", { OutlineShapeDemo() }),
-  DemoItem("Outline Offset", "outline-offset", { OutlineOffsetDemo() }),
-  DemoItem("Outline Color", "outline-color", { OutlineColorDemo() }),
-  DemoItem("Focus Ring Basic", "focus-ring-basic", { FocusRingBasicDemo() }),
-  DemoItem("Focus Ring Width", "focus-ring-width", { FocusRingWidthDemo() }),
-  DemoItem("Focus Ring Shape", "focus-ring-shape", { FocusRingShapeDemo() }),
-  DemoItem("Focus Ring Offset", "focus-ring-offset", { FocusRingOffsetDemo() }),
-  DemoItem("Focus Ring Color", "focus-ring-color", { FocusRingColorDemo() }),
+  DemoItem("Focus Ring", "focus-ring", { FocusRingDemo() }),
+  DemoItem("Outline", "outline", { OutlineDemo() }),
 ).map { it ->
   it.copy(demo = {
     ModifierDemo {
@@ -152,21 +143,28 @@ private val availableModifiers = listOf(
 }
 
 private val themingDemos = listOf(
-  DemoItem("Theming", "theme") { ThemingDemo() },
   DemoItem("Platform Theme", "platform-theme") { PlatformThemeDemo() },
+  DemoItem("Theming", "theme") { ThemingDemo() },
 )
+
+private val utilityDemos = listOf(
+  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
+)
+
 private val availableDemos: List<DemoItem> =
-  availablePrimitives + availableModifiers + themingDemos
+  availablePrimitives + availableModifiers + themingDemos + utilityDemos
 
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
   val size = currentWindowContainerSize()
   val isWide = size.width > 600.dp
   val spacedBy = if (isWide) 60.dp else 30.dp
-  Flex(
+  Stack(
     modifier = Modifier.fillMaxSize().background(Color.White),
-    orientation = if (isWide) FlexOrientation.Horizontal else FlexOrientation.Vertical,
-    spacedBy = spacedBy,
+    orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical,
+    mainAxisArrangement = MainAxisArrangement.Center,
+    crossAxisAlignment = CrossAxisAlignment.Center,
+    spacing = spacedBy,
   ) {
     content()
   }
@@ -204,6 +202,9 @@ private fun DemoSelection() {
       val filteredModifiers = remember(filterQuery) {
         availableModifiers.filterBy(filterQuery)
       }
+      val filteredUtilities = remember(filterQuery) {
+        utilityDemos.filterBy(filterQuery)
+      }
       val homeFocusRequester = remember { FocusRequester() }
 
       LaunchedEffect(Unit) {
@@ -238,15 +239,15 @@ private fun DemoSelection() {
             .widthIn(max = 600.dp).fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-          if (filteredThemingDemos.isNotEmpty()) {
-            DemoSection("Theme", filteredThemingDemos) { demo ->
+          if (filteredPrimitives.isNotEmpty()) {
+            DemoSection("Components", filteredPrimitives) { demo ->
               navController.navigate(demo.id)
             }
           }
 
-          if (filteredPrimitives.isNotEmpty()) {
+          if (filteredThemingDemos.isNotEmpty()) {
             Spacer(Modifier.height(8.dp))
-            DemoSection("Primitives", filteredPrimitives) { demo ->
+            DemoSection("Theme", filteredThemingDemos) { demo ->
               navController.navigate(demo.id)
             }
           }
@@ -258,10 +259,18 @@ private fun DemoSelection() {
             }
           }
 
+          if (filteredUtilities.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            DemoSection("Utilities", filteredUtilities) { demo ->
+              navController.navigate(demo.id)
+            }
+          }
+
           if (
             filteredThemingDemos.isEmpty() &&
             filteredPrimitives.isEmpty() &&
-            filteredModifiers.isEmpty()
+            filteredModifiers.isEmpty() &&
+            filteredUtilities.isEmpty()
           ) {
             Text(
               "No demos match \"$filterQuery\"",
@@ -318,7 +327,7 @@ private fun DemoSection(
 ) {
   Title(title)
   demos.forEach { demo ->
-    OutlinedButton(
+    DemoListButton(
       onClick = { onClick(demo) },
       modifier = Modifier.fillMaxWidth(),
     ) {
@@ -377,7 +386,6 @@ private fun DemoFilterBox(
       onClick = onDismiss,
       interactionSource = interactionSource,
       contentPadding = PaddingValues(6.dp),
-      indication = LocalIndication.current,
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
@@ -412,7 +420,6 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       onClick = onUpClick,
       interactionSource = interactionSource,
       contentPadding = PaddingValues(12.dp),
-      indication = LocalIndication.current,
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
@@ -425,7 +432,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
 }
 
 @Composable
-private fun OutlinedButton(
+private fun DemoListButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
@@ -442,41 +449,7 @@ private fun OutlinedButton(
       .background(Color.White)
       .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-    indication = LocalIndication.current,
   ) {
     content()
-  }
-}
-
-sealed interface FlexOrientation {
-  object Horizontal : FlexOrientation
-  object Vertical : FlexOrientation
-}
-
-@Composable
-private fun Flex(
-  orientation: FlexOrientation = FlexOrientation.Horizontal,
-  spacedBy: Dp = 0.dp,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  val movableContent = remember { movableContentOf { content() } }
-
-  if (orientation == FlexOrientation.Vertical) {
-    Column(
-      modifier = modifier,
-      verticalArrangement = Arrangement.spacedBy(spacedBy, Alignment.CenterVertically),
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      movableContent()
-    }
-  } else {
-    Row(
-      modifier = modifier,
-      horizontalArrangement = Arrangement.spacedBy(spacedBy, Alignment.CenterHorizontally),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      movableContent()
-    }
   }
 }

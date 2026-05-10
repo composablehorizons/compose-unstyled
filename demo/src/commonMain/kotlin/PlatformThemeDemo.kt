@@ -23,35 +23,24 @@
 
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
-import com.composeunstyled.UnstyledButton
 import com.composeunstyled.currentWindowContainerSize
-import com.composeunstyled.outline
 import com.composeunstyled.platformtheme.EmojiVariant
 import com.composeunstyled.platformtheme.SpokenLanguage
 import com.composeunstyled.platformtheme.WebFontOptions
-import com.composeunstyled.platformtheme.bright
 import com.composeunstyled.platformtheme.buildPlatformTheme
-import com.composeunstyled.platformtheme.dimmed
 import com.composeunstyled.platformtheme.heading1
 import com.composeunstyled.platformtheme.heading2
 import com.composeunstyled.platformtheme.heading3
@@ -61,13 +50,6 @@ import com.composeunstyled.platformtheme.heading6
 import com.composeunstyled.platformtheme.heading7
 import com.composeunstyled.platformtheme.heading8
 import com.composeunstyled.platformtheme.heading9
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.interactiveSize
-import com.composeunstyled.platformtheme.interactiveSizes
-import com.composeunstyled.platformtheme.roundedFull
-import com.composeunstyled.platformtheme.shapes
-import com.composeunstyled.platformtheme.sizeDefault
-import com.composeunstyled.platformtheme.sizeMinimum
 import com.composeunstyled.platformtheme.text1
 import com.composeunstyled.platformtheme.text2
 import com.composeunstyled.platformtheme.text3
@@ -104,16 +86,6 @@ fun PlatformThemeDemo() {
     ) {
       TypographyDemo()
       TextStylesDemo()
-      Column(
-        modifier = Modifier.fillMaxWidth().widthIn(max = 1200.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-      ) {
-        ThemedText("Indications", style = Theme[textStyles][text9])
-        MaterialButtons()
-        IosButtons()
-        MacOsButtons()
-        ShadcnButtons()
-      }
     }
   }
 }
@@ -137,327 +109,6 @@ fun TypographyDemo() {
   )
   ThemedText("Chinese Simplified: 敏捷的棕色狐狸跳过懒狗")
   ThemedText("Chinese Traditional: 敏捷的棕色狐狸跳過懶狗")
-}
-
-@Composable
-private fun MaterialButtons() {
-  val isWide = currentWindowContainerSize().width >= 600.dp
-  val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    val MaterialContentPaddingValues = PaddingValues(horizontal = 24.dp)
-
-    ThemedText("Material 3", style = Theme[textStyles][text5])
-    Stack(
-      orientation = orientation,
-      modifier = Modifier.fillMaxWidth(),
-      spacing = 20.dp,
-    ) {
-      // Filled Button (Material 3 Filled)
-      val filledInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = MaterialContentPaddingValues,
-        interactionSource = filledInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(100.dp))
-          .background(Color(0xFF6750A4))
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Filled")
-      }
-
-      // Outlined Button (Material 3 Outlined)
-      val outlinedInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = MaterialContentPaddingValues,
-        interactionSource = outlinedInteraction,
-        indication = Theme[indications][dimmed],
-        modifier = Modifier
-          .clip(RoundedCornerShape(100.dp))
-          .outline(
-            width = 1.dp,
-            color = Color(0xFF79747E),
-            shape = RoundedCornerShape(100.dp),
-            offset = 0.dp,
-          )
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Outlined")
-      }
-
-      // Text Button (Material 3 Text)
-      val textInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = MaterialContentPaddingValues,
-        interactionSource = textInteraction,
-        indication = Theme[indications][dimmed],
-        modifier = Modifier
-          .clip(RoundedCornerShape(100.dp))
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Text")
-      }
-
-      // Tonal Button (Material 3 Filled Tonal)
-      val tonalInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = MaterialContentPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = tonalInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(100.dp))
-          .background(Color(0xFFE8DEF8))
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Tonal")
-      }
-    }
-  }
-}
-
-@Composable
-private fun IosButtons() {
-  val isWide = currentWindowContainerSize().width >= 600.dp
-  val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    ThemedText("iOS", style = Theme[textStyles][text5])
-    Stack(
-      orientation = orientation,
-      modifier = Modifier.fillMaxWidth(),
-      spacing = 20.dp,
-    ) {
-      val iosPaddingValues = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-      val iosAccent = Color(0xFF0088FF)
-
-      // Bordered Prominent Button (SwiftUI .borderedProminent - iOS 15+)
-      val prominentInteraction = remember { MutableInteractionSource() }
-      val interactiveSize = Theme[interactiveSizes][sizeMinimum]
-
-      UnstyledButton(
-        onClick = {},
-        contentPadding = iosPaddingValues,
-        interactionSource = prominentInteraction,
-        modifier = Modifier
-          .clip(Theme[shapes][roundedFull])
-          .background(iosAccent)
-          .interactiveSize(interactiveSize),
-      ) {
-        ThemedText("Bordered Prominent")
-      }
-
-      // Bordered Button (SwiftUI .bordered - iOS 15+)
-      val borderedInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = iosPaddingValues,
-        indication = Theme[indications][bright],
-        interactionSource = borderedInteraction,
-        modifier = Modifier
-          .clip(Theme[shapes][roundedFull])
-          .background(Color(0xFFE9E9EB)) // iOS system gray 6
-          .interactiveSize(interactiveSize),
-      ) {
-        ThemedText("Bordered")
-      }
-
-      // Borderless Button (SwiftUI .borderless)
-      // Default style on iOS - applies tint color
-      val borderlessInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = iosPaddingValues,
-        indication = Theme[indications][bright],
-        interactionSource = borderlessInteraction,
-        modifier = Modifier
-          .interactiveSize(interactiveSize),
-      ) {
-        ThemedText("Borderless")
-      }
-
-      // Plain Button (SwiftUI .plain)
-      val plainInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = iosPaddingValues,
-        interactionSource = plainInteraction,
-        modifier = Modifier
-          .interactiveSize(interactiveSize),
-      ) {
-        ThemedText("Plain")
-      }
-    }
-  }
-}
-
-@Composable
-private fun MacOsButtons() {
-  val isWide = currentWindowContainerSize().width >= 600.dp
-  val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    ThemedText("macOS", style = Theme[textStyles][text5])
-    Stack(
-      orientation = orientation,
-      modifier = Modifier.fillMaxWidth(),
-      spacing = 20.dp,
-    ) {
-      val macPaddingValues = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-      val macSecondary = Color(0xFFECECEC)
-
-      // Bordered Prominent Button (SwiftUI .borderedProminent)
-      val prominentInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = macPaddingValues,
-        interactionSource = prominentInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFF007AFF))
-          .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
-      ) {
-        ThemedText("Bordered Prominent")
-      }
-
-      // Bordered Button (SwiftUI .bordered)
-      val borderedInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = macPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = borderedInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .background(macSecondary)
-          .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
-      ) {
-        ThemedText("Bordered")
-      }
-
-      // Borderless Button (SwiftUI .borderless)
-      val borderlessInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = macPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = borderlessInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
-      ) {
-        ThemedText("Borderless")
-      }
-
-      // Plain Button (SwiftUI .plain)
-      val plainInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = macPaddingValues,
-        interactionSource = plainInteraction,
-        modifier = Modifier
-          .interactiveSize(Theme[interactiveSizes][sizeMinimum]),
-      ) {
-        ThemedText("Plain")
-      }
-    }
-  }
-}
-
-@Composable
-private fun ShadcnButtons() {
-  val isWide = currentWindowContainerSize().width >= 600.dp
-  val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-
-  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-    ThemedText("Shadcn/ui", style = Theme[textStyles][text5])
-    Stack(
-      orientation = orientation,
-      modifier = Modifier.fillMaxWidth(),
-      spacing = 20.dp,
-    ) {
-      val shadcnPaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-
-      // Primary Button
-      val primaryInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = shadcnPaddingValues,
-        interactionSource = primaryInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFF0F172A)) // slate-900
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Primary")
-      }
-
-      // Secondary Button
-      val secondaryInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = shadcnPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = secondaryInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFFF1F5F9)) // slate-100
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Secondary")
-      }
-
-      // Outline Button
-      val outlineInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = shadcnPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = outlineInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .outline(
-            width = 1.dp,
-            color = Color(0xFFE2E8F0), // slate-200
-            shape = RoundedCornerShape(6.dp),
-            offset = 0.dp,
-          )
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Outline")
-      }
-
-      // Ghost Button
-      val ghostInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = shadcnPaddingValues,
-        indication = Theme[indications][dimmed],
-        interactionSource = ghostInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Ghost")
-      }
-
-      // Destructive Button
-      val destructiveInteraction = remember { MutableInteractionSource() }
-      UnstyledButton(
-        onClick = {},
-        contentPadding = shadcnPaddingValues,
-        interactionSource = destructiveInteraction,
-        modifier = Modifier
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFFEF4444)) // red-500
-          .interactiveSize(Theme[interactiveSizes][sizeDefault]),
-      ) {
-        ThemedText("Destructive")
-      }
-    }
-  }
 }
 
 @Composable

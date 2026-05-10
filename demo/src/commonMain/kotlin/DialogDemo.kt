@@ -26,7 +26,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +41,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,10 +57,16 @@ import com.composeunstyled.DialogPanel
 import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
+import kotlinx.coroutines.delay
 
 @Composable
 fun DialogDemo() {
   var dialogVisible by remember { mutableStateOf(false) }
+
+  LaunchedEffect(Unit) {
+    delay(500)
+    dialogVisible = true
+  }
 
   Box(
     modifier = Modifier.fillMaxSize()
@@ -72,7 +78,6 @@ fun DialogDemo() {
       onClick = { dialogVisible = true },
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White),
-      indication = LocalIndication.current,
     ) {
       Text("Show dialog")
     }
@@ -83,39 +88,44 @@ fun DialogDemo() {
         Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       },
     ) {
-      DialogPanel(
-        modifier = Modifier
-          .padding(20.dp)
-          .displayCutoutPadding()
-          .systemBarsPadding()
-          .widthIn(max = 560.dp)
-          .padding(20.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .background(Color.White),
-        paneTitle = "Dialog",
-        enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
-        exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+      Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
       ) {
-        Column {
-          Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            Text("Update Available", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            Text(
-              text = "A new version of the app is available. Please update to the latest version.",
-              style = TextStyle(color = Color(0xFF1A1A1A)),
-            )
-          }
-          Spacer(Modifier.height(24.dp))
-          UnstyledButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier
-              .padding(12.dp)
-              .align(Alignment.End)
-              .clip(RoundedCornerShape(6.dp)),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-            indication = LocalIndication.current,
-          ) {
-            Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
+        DialogPanel(
+          modifier = Modifier
+            .padding(20.dp)
+            .displayCutoutPadding()
+            .systemBarsPadding()
+            .widthIn(max = 560.dp)
+            .padding(20.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White),
+          paneTitle = "Dialog",
+          enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
+          exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+        ) {
+          Column {
+            Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
+              Text("Update Available", style = MaterialTheme.typography.titleMedium)
+              Spacer(Modifier.height(8.dp))
+              Text(
+                text = "A new version of the app is available. " +
+                  "Please update to the latest version.",
+                style = TextStyle(color = Color(0xFF1A1A1A)),
+              )
+            }
+            Spacer(Modifier.height(24.dp))
+            UnstyledButton(
+              onClick = { /* TODO */ },
+              modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.End)
+                .clip(RoundedCornerShape(6.dp)),
+              contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            ) {
+              Text("Update", style = TextStyle(color = Color(0xFF0D99FF)))
+            }
           }
         }
       }

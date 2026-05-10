@@ -27,7 +27,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -116,7 +115,6 @@ fun TooltipDemo() {
             .background(Color.White)
             .focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
           interactionSource = interactionSource,
-          indication = LocalIndication.current,
         ) {
           UnstyledIcon(Lucide.BellDot, contentDescription = null)
         }
@@ -126,7 +124,7 @@ fun TooltipDemo() {
 }
 
 @Composable
-fun ArrowUp(modifier: Modifier = Modifier, color: Color) {
+private fun ArrowUp(modifier: Modifier = Modifier, color: Color) {
   Canvas(modifier = modifier.size(8.dp, 4.dp)) {
     val path = Path().apply {
       moveTo(size.width / 2f, 0f)

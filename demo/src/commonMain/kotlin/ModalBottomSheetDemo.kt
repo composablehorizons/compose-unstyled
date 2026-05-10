@@ -23,7 +23,6 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -95,7 +94,6 @@ fun ModalBottomSheetDemo() {
         .clip(RoundedCornerShape(6.dp))
         .background(Color.White),
       contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
-      indication = LocalIndication.current,
     ) {
       Text("Show Sheet")
     }

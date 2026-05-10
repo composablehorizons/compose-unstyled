@@ -31,10 +31,7 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -44,7 +41,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -223,7 +219,7 @@ fun DropdownMenuScope.DropdownMenuPanel(
       }
     },
   ) {
-    Column(
+    Box(
       modifier = modifier.focusRequester(menuFocusRequester),
     ) {
       // Request focus when the menu becomes visible
@@ -257,7 +253,7 @@ fun DropdownMenuPanelScope.MenuItem(
     }
   }
 
-  Row(
+  Box(
     modifier = modifier then buildModifier {
       add(Modifier.focusRequester(focusRequester))
       add(
@@ -277,8 +273,6 @@ fun DropdownMenuPanelScope.MenuItem(
         add(Modifier.pointerHoverIcon(PointerIcon.Default))
       }
     },
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
   ) {
     content()
   }

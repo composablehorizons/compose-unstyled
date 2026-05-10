@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.triStateToggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -66,7 +65,6 @@ fun UnstyledTriStateCheckbox(
         )
       }
     },
-    contentAlignment = Alignment.Center,
   ) {
     TriStateCheckboxScope(
       value = value,
@@ -94,7 +92,6 @@ fun TriStateCheckboxScope.StateIndicator(
         add(Modifier.indication(interactionSource, indication))
       }
     },
-    contentAlignment = Alignment.Center,
   ) {
     content(value)
   }

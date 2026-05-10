@@ -23,7 +23,6 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,7 +72,6 @@ fun ToggleSwitchDemo() {
           .selectable(
             selected = toggled,
             onClick = { toggled = toggled.not() },
-            indication = LocalIndication.current,
             interactionSource = null,
             role = Role.Switch,
           ).padding(8.dp),

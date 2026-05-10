@@ -30,9 +30,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -109,7 +107,7 @@ fun <T> UnstyledTabGroup(
 
   SideEffect { registry.activatedTab = selectedTab }
 
-  Column(
+  Box(
     modifier = modifier
       .focusProperties {
         onEnter = {
@@ -141,7 +139,7 @@ fun <T> TabGroupScope<T>.TabList(
   val registry = registry
   val tabKeys = registry.tabKeys
 
-  Row(
+  Box(
     modifier = modifier
       .focusRestorer()
       .focusGroup()

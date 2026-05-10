@@ -19,39 +19,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composeunstyled.demo
+package com.composeunstyled
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.composeunstyled.Text
+import kotlin.test.Test
+
+class ButtonTest {
+  @Test
+  fun centersContentByDefault() = runComposeUiTest {
+    setContent {
+      TestButton()
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true)
+      .assertLeftPositionInRootIsEqualTo(40.dp)
+      .assertTopPositionInRootIsEqualTo(40.dp)
+  }
+
+  @Test
+  fun usesProvidedContentAlignment() = runComposeUiTest {
+    setContent {
+      TestButton(contentAlignment = Alignment.BottomEnd)
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true)
+      .assertLeftPositionInRootIsEqualTo(80.dp)
+      .assertTopPositionInRootIsEqualTo(80.dp)
+  }
+}
 
 @Composable
-fun TextDemo() {
-  Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFFFFFF), Color(0xFFF0F0F0))))
-      .padding(24.dp),
-    contentAlignment = Alignment.Center,
+private fun TestButton(
+  contentAlignment: Alignment = Alignment.Center,
+) {
+  UnstyledButton(
+    onClick = {},
+    modifier = Modifier.size(100.dp).testTag("button"),
+    contentAlignment = contentAlignment,
   ) {
-    Text(
-      text = "The quick brown fox jumps over the lazy dog",
-      fontSize = 32.sp,
-      fontWeight = FontWeight.SemiBold,
-      textAlign = TextAlign.End,
-      color = Color(0xFF2C3E50),
-      modifier = Modifier.width(500.dp),
-    )
+    Box(Modifier.size(20.dp).testTag("content"))
   }
 }

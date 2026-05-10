@@ -36,10 +36,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class ProgressIndicatorTest {
 
@@ -84,27 +82,25 @@ class ProgressIndicatorTest {
   }
 
   @Test
-  fun indicatorSizesItselfFromProgress() = runComposeUiTest {
-    var rootSize = IntSize.Zero
+  fun indicatorUsesCallerModifierForSize() = runComposeUiTest {
     var indicatorSize = IntSize.Zero
 
     setContent {
       UnstyledProgress(
         progress = 0.5f,
-        modifier = Modifier.size(width = 100.dp, height = 20.dp)
-          .onSizeChanged { rootSize = it },
+        modifier = Modifier.size(width = 100.dp, height = 20.dp),
       ) {
-        Indicator(Modifier.onSizeChanged { indicatorSize = it })
+        Indicator(
+          Modifier
+            .size(width = 24.dp, height = 8.dp)
+            .onSizeChanged { indicatorSize = it },
+        )
       }
     }
 
     waitForIdle()
 
-    assertTrue(
-      abs(indicatorSize.width - rootSize.width * 0.5f) <= 1f,
-      "Expected indicator width to be half of $rootSize, but was $indicatorSize",
-    )
-    assertEquals(rootSize.height, indicatorSize.height)
+    assertEquals(IntSize(width = 24, height = 8), indicatorSize)
   }
 
   private fun hasProgressBarRangeInfo(rangeInfo: ProgressBarRangeInfo): SemanticsMatcher {

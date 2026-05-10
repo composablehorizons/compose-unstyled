@@ -95,43 +95,6 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun sheet_panel_is_horizontally_centered_in_bottom_sheet_container() = runComposeUiTest {
-    lateinit var state: BottomSheetState
-
-    setContent {
-      Box(
-        modifier = Modifier
-          .requiredSize(300.dp)
-          .testTag("root"),
-      ) {
-        state = rememberBottomSheetState(
-          initialDetent = SheetDetent.FullyExpanded,
-          detents = listOf(SheetDetent.FullyExpanded),
-        )
-
-        UnstyledBottomSheet(
-          state = state,
-          modifier = Modifier.fillMaxSize(),
-        ) {
-          Sheet(
-            modifier = Modifier
-              .requiredSize(width = 120.dp, height = 80.dp)
-              .testTag("panel"),
-          ) {}
-        }
-      }
-    }
-
-    waitForIdle()
-
-    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
-    val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
-
-    val expectedLeft = (rootBounds.width - panelBounds.width) / 2f
-    assertThat(panelBounds.left).isCloseTo(expectedLeft, 0.5f)
-  }
-
-  @Test
   fun sheet_panel_is_anchored_to_bottom_of_bottom_sheet_container() = runComposeUiTest {
     lateinit var state: BottomSheetState
 

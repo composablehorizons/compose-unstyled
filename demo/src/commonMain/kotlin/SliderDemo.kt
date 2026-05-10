@@ -23,7 +23,6 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -84,7 +83,6 @@ fun SliderDemo() {
         onClick = { value = (value - 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
         contentPadding = PaddingValues(8.dp),
-        indication = LocalIndication.current,
       ) {
         UnstyledIcon(Lucide.Volume1, "Decrease")
       }
@@ -147,7 +145,6 @@ fun SliderDemo() {
         onClick = { value = (value + 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
         contentPadding = PaddingValues(8.dp),
-        indication = LocalIndication.current,
       ) {
         UnstyledIcon(Lucide.Volume2, "Increase")
       }

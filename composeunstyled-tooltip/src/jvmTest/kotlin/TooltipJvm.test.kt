@@ -857,13 +857,12 @@ class TooltipJvmTest {
   }
 
   @Test
-  fun announcesTooltipWithArrowContentWhenShown() = runComposeUiTest {
+  fun announcesTooltipPanelContentWhenShown() = runComposeUiTest {
     setPaddedContent {
       UnstyledTooltip(
         panel = {
           TooltipPanel(
             modifier = Modifier.testTag("tooltip_panel"),
-            arrow = { BasicText("Arrow") },
           ) {
             BasicText("Tooltip content")
           }

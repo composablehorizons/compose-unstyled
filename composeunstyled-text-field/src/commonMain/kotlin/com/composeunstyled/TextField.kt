@@ -23,11 +23,8 @@ package com.composeunstyled
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -37,15 +34,12 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.then
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -68,10 +62,6 @@ import androidx.compose.ui.unit.isSpecified
 class TextFieldScope {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
-  internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
-
-  internal var isLeadingFocused by mutableStateOf(false)
-  internal var isTrailingFocused by mutableStateOf(false)
 }
 
 @Composable
@@ -80,49 +70,22 @@ fun TextFieldScope.TextInput(
   contentPadding: PaddingValues = PaddingValues(0.dp),
   accessibilityLabel: String? = null,
   placeholder: (@Composable () -> Unit)? = null,
-  leading: (@Composable () -> Unit)? = null,
-  trailing: (@Composable () -> Unit)? = null,
-  verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
-  Row(
+  Box(
     modifier = modifier
       .pointerHoverIcon(PointerIcon.Text) then buildModifier {
       if (accessibilityLabel != null) {
         add(Modifier.semantics { contentDescription = accessibilityLabel })
       }
     }.padding(contentPadding),
-    verticalAlignment = verticalAlignment,
-    horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-    if (leading != null) {
-      Box(
-        Modifier.pointerHoverIcon(PointerIcon.Default).onFocusChanged {
-          isLeadingFocused = it.hasFocus
-        },
-      ) {
-        leading()
-      }
-    }
-    val contentAlignment: Alignment = when (textAlignment) {
-      TextAlign.End -> Alignment.TopEnd
-      TextAlign.Center -> Alignment.Center
-      else -> Alignment.TopStart
-    }
-    Box(contentAlignment = contentAlignment, modifier = Modifier.weight(1f)) {
+    Box {
       innerTextField!!.invoke()
 
       if (placeholder != null && text.isEmpty()) {
-        Box(Modifier.matchParentSize(), contentAlignment = contentAlignment) {
+        Box(Modifier.matchParentSize()) {
           placeholder()
         }
-      }
-    }
-    if (trailing != null) {
-      Box(
-        Modifier.pointerHoverIcon(PointerIcon.Default)
-          .onFocusChanged { isTrailingFocused = it.hasFocus },
-      ) {
-        trailing()
       }
     }
   }
@@ -167,19 +130,6 @@ fun UnstyledTextField(
     letterSpacing = letterSpacing,
     color = textColor,
   )
-  scope.textAlignment = newTextStyle.textAlign
-
-  val inputIsFocused = scope.isTrailingFocused.not() && scope.isLeadingFocused.not()
-  val focusTransformation = InputTransformation {
-    // block any value changes, unless the actual text input is focused
-    if (inputIsFocused.not()) {
-      revertAllChanges()
-    }
-  }
-  val resolvedInputTransformation = inputTransformation?.let {
-    focusTransformation.then(it)
-  } ?: focusTransformation
-
   BasicTextField(
     scrollState = scrollState,
     state = state,
@@ -187,7 +137,7 @@ fun UnstyledTextField(
     textStyle = newTextStyle,
     readOnly = editable.not(),
     outputTransformation = outputTransformation,
-    inputTransformation = resolvedInputTransformation,
+    inputTransformation = inputTransformation,
     modifier = modifier.semantics(mergeDescendants = true) {},
     cursorBrush = cursorBrush,
     lineLimits = lineLimits,
@@ -196,7 +146,7 @@ fun UnstyledTextField(
     onKeyboardAction = onKeyboardAction,
     decorator = { innerTextField ->
       scope.innerTextField = innerTextField
-      Column(
+      Box(
         Modifier
           // we are handling pointerIcons in TextInput()
           .pointerHoverIcon(PointerIcon.Default),

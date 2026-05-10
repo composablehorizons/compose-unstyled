@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,17 +59,23 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberBottomSheetState
+import kotlinx.coroutines.delay
 
 @Composable
 fun BottomSheetDemo() {
   val peekHeight = 74.dp
+  val sheetTopPadding = 24.dp
   val mini = SheetDetent("mini") { _, _ ->
-    peekHeight
+    peekHeight + sheetTopPadding
   }
   val sheetState = rememberBottomSheetState(
     initialDetent = mini,
     detents = listOf(mini, FullyExpanded),
   )
+  LaunchedEffect(Unit) {
+    delay(500)
+    sheetState.targetDetent = FullyExpanded
+  }
   val coverUrl = "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=512"
   val tracks = listOf(
     "Memory Leak",
@@ -85,6 +92,7 @@ fun BottomSheetDemo() {
   ) {
     Sheet(
       modifier = Modifier
+        .padding(top = sheetTopPadding)
         .dropShadow(
           shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
           shadow = Shadow(

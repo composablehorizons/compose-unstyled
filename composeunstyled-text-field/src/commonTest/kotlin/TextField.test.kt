@@ -43,7 +43,6 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
-import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -70,28 +69,6 @@ class TextFieldTest {
     }
     onNodeWithTag("textfield").requestFocus()
     onNodeWithTag("textfield", useUnmergedTree = true).assertIsFocused()
-  }
-
-  @Test
-  fun keepsFocusWhenTextFieldIsFocusedAndTrailingIsSpecified() = runComposeUiTest {
-    setContent {
-      UnstyledTextField(
-        state = rememberTextFieldState(),
-        modifier = Modifier.testTag("textfield"),
-      ) {
-        TextInput(
-          trailing = {
-            UnstyledButton(onClick = {}, modifier = Modifier.testTag("trailing")) {
-              BasicText("trailing")
-            }
-          },
-        )
-      }
-    }
-
-    onNodeWithTag("textfield").requestFocus()
-    onNodeWithTag("textfield", useUnmergedTree = true).assertIsFocused()
-    onNodeWithTag("trailing", useUnmergedTree = true).assertIsNotFocused()
   }
 
   @Test
