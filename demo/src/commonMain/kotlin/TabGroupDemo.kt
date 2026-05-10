@@ -121,83 +121,85 @@ fun TabGroupDemo() {
       tabs = categories.keys.toList(),
       modifier = Modifier.widthIn(max = 450.dp),
     ) {
-      TabList(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(48.dp)
-          .shadow(4.dp, RoundedCornerShape(8.dp))
-          .clip(RoundedCornerShape(8.dp))
-          .background(Color.White),
-      ) {
-        Row(Modifier.fillMaxSize()) {
-          categories.forEach { (key, _) ->
-            Tab(
-              key = key,
-              modifier = Modifier.weight(1f).fillMaxHeight(),
-            ) {
-              Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                  text = key,
-                  style = TextStyle(
-                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                    color = if (selected) {
-                      Color(0xFF2196F3)
-                    } else {
-                      Color(0xFF757575)
-                    },
-                  ),
-                )
-                if (selected) {
-                  Box(
-                    modifier = Modifier
-                      .background(
-                        color = Color(0xFF2196F3),
-                        shape = RoundedCornerShape(2.dp),
-                      )
-                      .fillMaxWidth()
-                      .height(3.dp)
-                      .align(Alignment.BottomCenter),
+      Column {
+        TabList(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .shadow(4.dp, RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White),
+        ) {
+          Row(Modifier.fillMaxSize()) {
+            categories.forEach { (key, _) ->
+              Tab(
+                key = key,
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+              ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                  Text(
+                    text = key,
+                    style = TextStyle(
+                      fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                      color = if (selected) {
+                        Color(0xFF2196F3)
+                      } else {
+                        Color(0xFF757575)
+                      },
+                    ),
                   )
+                  if (selected) {
+                    Box(
+                      modifier = Modifier
+                        .background(
+                          color = Color(0xFF2196F3),
+                          shape = RoundedCornerShape(2.dp),
+                        )
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .align(Alignment.BottomCenter),
+                    )
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      Spacer(modifier = Modifier.height(16.dp))
-      categories.forEach { (key, items) ->
-        TabPanel(
-          key = key,
-          modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(8.dp))
-            .background(
-              color = Color.White,
-              shape = RoundedCornerShape(8.dp),
-            ),
-          contentPadding = PaddingValues(16.dp),
-        ) {
-          Column {
-            items.forEach { item ->
-              UnstyledButton(
-                onClick = { /* TODO */ },
-                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                contentPadding = PaddingValues(12.dp),
-              ) {
-                Column {
-                  Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
-                  Spacer(Modifier.height(4.dp))
-                  Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().alpha(0.6f),
-                  ) {
-                    Text(item.relativeTime)
-                    Text("·")
-                    Text("${item.comments} comments")
-                    Text("·")
-                    Text("${item.points} shares")
+        Spacer(modifier = Modifier.height(16.dp))
+        categories.forEach { (key, items) ->
+          TabPanel(
+            key = key,
+            modifier = Modifier
+              .fillMaxWidth()
+              .shadow(4.dp, RoundedCornerShape(8.dp))
+              .background(
+                color = Color.White,
+                shape = RoundedCornerShape(8.dp),
+              ),
+            contentPadding = PaddingValues(16.dp),
+          ) {
+            Column {
+              items.forEach { item ->
+                UnstyledButton(
+                  onClick = { /* TODO */ },
+                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                  contentPadding = PaddingValues(12.dp),
+                ) {
+                  Column {
+                    Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                      horizontalArrangement = Arrangement.spacedBy(4.dp),
+                      verticalAlignment = Alignment.CenterVertically,
+                      modifier = Modifier.fillMaxWidth().alpha(0.6f),
+                    ) {
+                      Text(item.relativeTime)
+                      Text("·")
+                      Text("${item.comments} comments")
+                      Text("·")
+                      Text("${item.points} shares")
+                    }
                   }
                 }
               }
