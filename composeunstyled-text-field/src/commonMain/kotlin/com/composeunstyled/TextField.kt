@@ -45,6 +45,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
@@ -62,6 +64,7 @@ class TextFieldScope internal constructor() {
   internal var text: String by mutableStateOf("")
   internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
   internal var textStyle by mutableStateOf(TextStyle.Default)
+  internal var enabled by mutableStateOf(true)
 }
 
 @Composable
@@ -71,6 +74,10 @@ fun TextFieldScope.TextInput(
 ) {
   Box(
     modifier = modifier
+      .pointerHoverIcon(
+        icon = if (enabled) PointerIcon.Text else PointerIcon.Default,
+        overrideDescendants = true,
+      )
       .clipToBounds(),
   ) {
     if (placeholder != null && text.isEmpty()) {
@@ -115,6 +122,7 @@ fun UnstyledTextField(
   val scope = remember { TextFieldScope() }
 
   scope.text = state.text.toString()
+  scope.enabled = enabled
 
   val newTextStyle = textStyle.mergeSafely(
     textAlign = textAlign,
