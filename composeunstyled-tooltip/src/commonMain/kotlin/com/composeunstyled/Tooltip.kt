@@ -26,12 +26,9 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
@@ -63,21 +59,21 @@ import kotlinx.coroutines.launch
 
 internal class TooltipState {
   var show by mutableStateOf(false)
-  var arrowDirection by mutableStateOf(TooltipArrowDirection.Down)
-  var arrowOffset by mutableStateOf(IntOffset.Zero)
-  var side by mutableStateOf(AnchorSide.Top)
-  var alignment by mutableStateOf(AnchorAlignment.Center)
+  var placement by mutableStateOf(TooltipPlacement())
 }
 
-enum class TooltipArrowDirection {
-  Up, Down, Left, Right
-}
+@Immutable
+data class TooltipPlacement(
+  val side: AnchorSide = AnchorSide.Top,
+  val alignment: AnchorAlignment = AnchorAlignment.Center,
+  val positionAdjustment: IntOffset = IntOffset.Zero,
+)
 
 interface TooltipScope
 
 private object TooltipScopeInstance : TooltipScope
 
-internal val LocalTooltipState = staticCompositionLocalOf<TooltipState> {
+private val LocalTooltipState = staticCompositionLocalOf<TooltipState> {
   TooltipState()
 }
 
@@ -135,9 +131,10 @@ fun UnstyledTooltip(
   }
 
   SideEffect {
-    state.arrowDirection = arrowDirection(side)
-    state.side = side
-    state.alignment = alignment
+    state.placement = state.placement.copy(
+      side = side,
+      alignment = alignment,
+    )
   }
 
   // focus handling - show instantly when focused
@@ -231,8 +228,8 @@ fun UnstyledTooltip(
     alignment = alignment,
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
-    onOffsetFromIdealPositionChanged = {
-      state.arrowOffset = it
+    onFloatingPlaced = {
+      state.placement = state.placement.copy(positionAdjustment = it.positionAdjustment)
     },
     floatingContent = {
       CompositionLocalProvider(LocalTooltipState provides state) {
@@ -248,10 +245,11 @@ fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
-  content: @Composable () -> Unit,
+  content: @Composable (TooltipPlacement) -> Unit,
 ) {
   val state = LocalTooltipState.current
   val showTooltip = state.show
+  val placement = state.placement
 
   AnimatedVisibility(
     visible = showTooltip,
@@ -259,67 +257,7 @@ fun TooltipScope.TooltipPanel(
     exit = exit,
     modifier = modifier.tooltipPanelSemantics(showTooltip),
   ) {
-    content()
-  }
-}
-
-@Composable
-fun TooltipScope.TooltipPanel(
-  modifier: Modifier = Modifier,
-  arrow: @Composable (TooltipArrowDirection) -> Unit,
-  enter: EnterTransition = EnterTransition.None,
-  exit: ExitTransition = ExitTransition.None,
-  content: @Composable () -> Unit,
-) {
-  val state = LocalTooltipState.current
-  val showTooltip = state.show
-  val arrowDirection = state.arrowDirection
-  val arrowOffset = state.arrowOffset
-
-  AnimatedVisibility(
-    visible = showTooltip,
-    enter = enter,
-    exit = exit,
-    modifier = modifier.tooltipPanelSemantics(showTooltip),
-  ) {
-    when (arrowDirection) {
-      TooltipArrowDirection.Up -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier.offset { IntOffset(-arrowOffset.x, 0) }) {
-          arrow(arrowDirection)
-        }
-        content()
-      }
-
-      TooltipArrowDirection.Down -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        content()
-        Box(modifier = Modifier.offset { IntOffset(-arrowOffset.x, 0) }) {
-          arrow(arrowDirection)
-        }
-      }
-
-      TooltipArrowDirection.Left -> Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(modifier = Modifier.offset { IntOffset(0, -arrowOffset.y) }) {
-          arrow(arrowDirection)
-        }
-        content()
-      }
-
-      TooltipArrowDirection.Right -> Row(verticalAlignment = Alignment.CenterVertically) {
-        content()
-        Box(modifier = Modifier.offset { IntOffset(0, -arrowOffset.y) }) {
-          arrow(arrowDirection)
-        }
-      }
-    }
-  }
-}
-
-private fun arrowDirection(side: AnchorSide): TooltipArrowDirection {
-  return when (side) {
-    AnchorSide.Top -> TooltipArrowDirection.Down
-    AnchorSide.Bottom -> TooltipArrowDirection.Up
-    AnchorSide.Start -> TooltipArrowDirection.Right
-    AnchorSide.End -> TooltipArrowDirection.Left
+    content(placement)
   }
 }
 

@@ -42,7 +42,12 @@ enum class AnchorAlignment {
   End,
 }
 
-fun calculateAnchoredPosition(
+data class FloatingPlacement(
+  val position: IntOffset,
+  val positionAdjustment: IntOffset,
+)
+
+fun calculateFloatingPlacement(
   density: Density,
   anchorBounds: IntRect,
   windowSize: IntSize,
@@ -52,7 +57,7 @@ fun calculateAnchoredPosition(
   alignment: AnchorAlignment,
   sideOffset: Dp = 0.dp,
   alignmentOffset: Dp = 0.dp,
-): IntOffset {
+): FloatingPlacement {
   val x = when (side) {
     AnchorSide.Top, AnchorSide.Bottom -> when (alignment) {
       AnchorAlignment.Start -> if (layoutDirection == LayoutDirection.Ltr) {
@@ -107,9 +112,17 @@ fun calculateAnchoredPosition(
     AnchorSide.Start, AnchorSide.End -> alignmentOffsetPx
   }
 
-  return IntOffset(
+  val idealPosition = IntOffset(
+    x = x + offsetX,
+    y = y + offsetY,
+  )
+  val position = IntOffset(
     x = (x + offsetX).coerceInWindowAxis(windowSize.width, contentSize.width),
     y = (y + offsetY).coerceInWindowAxis(windowSize.height, contentSize.height),
+  )
+  return FloatingPlacement(
+    position = position,
+    positionAdjustment = position - idealPosition,
   )
 }
 

@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -49,13 +50,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
-import com.composeunstyled.TooltipArrowDirection
 import com.composeunstyled.TooltipPanel
+import com.composeunstyled.TooltipPlacement
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
@@ -82,26 +84,8 @@ fun TooltipDemo() {
                 initialScale = 0.65f,
               ) + fadeIn(tween(150)),
             exit = fadeOut(tween(250)),
-            arrow = { side ->
-              val degrees = when (side) {
-                TooltipArrowDirection.Up -> 0f
-                TooltipArrowDirection.Down -> 180f
-                TooltipArrowDirection.Left -> 90f
-                TooltipArrowDirection.Right -> 270f
-              }
-              ArrowUp(Modifier.rotate(degrees), Color.Black.copy(0.8f))
-            },
           ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-              Box(
-                modifier = Modifier
-                  .clip(RoundedCornerShape(100))
-                  .background(Color.Black.copy(0.8f))
-                  .padding(vertical = 8.dp, horizontal = 12.dp),
-              ) {
-                Text("Notifications", color = Color.White)
-              }
-            }
+            TooltipBubble(it)
           }
         },
       ) {
@@ -121,6 +105,65 @@ fun TooltipDemo() {
       }
     }
   }
+}
+
+@Composable
+private fun TooltipBubble(placement: TooltipPlacement) {
+  when (placement.side) {
+    AnchorSide.Top -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      TooltipContainer()
+      TooltipArrow(placement)
+    }
+
+    AnchorSide.Bottom -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      TooltipArrow(placement)
+      TooltipContainer()
+    }
+
+    AnchorSide.Start -> Row(verticalAlignment = Alignment.CenterVertically) {
+      TooltipContainer()
+      TooltipArrow(placement)
+    }
+
+    AnchorSide.End -> Row(verticalAlignment = Alignment.CenterVertically) {
+      TooltipArrow(placement)
+      TooltipContainer()
+    }
+  }
+}
+
+@Composable
+private fun TooltipContainer() {
+  Box(
+    modifier = Modifier
+      .clip(RoundedCornerShape(100))
+      .background(Color.Black.copy(0.8f))
+      .padding(vertical = 8.dp, horizontal = 12.dp),
+  ) {
+    Text("Notifications", color = Color.White)
+  }
+}
+
+@Composable
+private fun TooltipArrow(placement: TooltipPlacement) {
+  val arrowOffset = placement.positionAdjustment
+  val modifier = when (placement.side) {
+    AnchorSide.Top,
+    AnchorSide.Bottom,
+    -> Modifier.offset { IntOffset(-arrowOffset.x, 0) }
+
+    AnchorSide.Start,
+    AnchorSide.End,
+    -> Modifier.offset { IntOffset(0, -arrowOffset.y) }
+  }
+  val degrees = when (placement.side) {
+    AnchorSide.Top -> 180f
+    AnchorSide.Bottom -> 0f
+    AnchorSide.Start -> 270f
+    AnchorSide.End -> 90f
+  }
+
+  ArrowUp(modifier.rotate(degrees), Color.Black.copy(0.8f))
 }
 
 @Composable

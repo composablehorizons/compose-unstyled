@@ -109,6 +109,24 @@ class AnchoredPositionTest {
   }
 
   @Test
+  fun reportsPositionAdjustmentWhenClamped() {
+    val position = calculateFloatingPlacement(
+      density = Density(1f),
+      anchorBounds = anchorBounds,
+      windowSize = IntSize(width = 120, height = 80),
+      layoutDirection = LayoutDirection.Ltr,
+      contentSize = contentSize,
+      side = AnchorSide.Top,
+      alignment = AnchorAlignment.Start,
+      sideOffset = 200.dp,
+      alignmentOffset = (-200).dp,
+    )
+
+    assertEquals(IntOffset(x = 0, y = 0), position.position)
+    assertEquals(IntOffset(x = 100, y = 190), position.positionAdjustment)
+  }
+
+  @Test
   fun clampsOversizedContentToWindowOrigin() {
     val position = calculatePosition(
       windowSize = IntSize(width = 80, height = 40),
@@ -126,7 +144,7 @@ class AnchoredPositionTest {
     windowSize: IntSize = this.windowSize,
     contentSize: IntSize = this.contentSize,
     layoutDirection: LayoutDirection = LayoutDirection.Ltr,
-  ) = calculateAnchoredPosition(
+  ) = calculateFloatingPlacement(
     density = Density(1f),
     anchorBounds = anchorBounds,
     windowSize = windowSize,
@@ -136,5 +154,5 @@ class AnchoredPositionTest {
     alignment = alignment,
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
-  )
+  ).position
 }
