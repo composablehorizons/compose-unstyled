@@ -35,6 +35,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class StackTest {
 
@@ -59,9 +60,10 @@ class StackTest {
     val item2Bounds = onNodeWithTag("item2").getBoundsInRoot()
 
     // Items should be placed horizontally (item2's left edge should be at or after item1's right edge)
-    assert(item2Bounds.left >= item1Bounds.right) {
-      "Items should be placed horizontally, but item2 (left=${item2Bounds.left}) is not to the right of item1 (right=${item1Bounds.right})"
-    }
+    assertTrue(
+      item2Bounds.left >= item1Bounds.right,
+      "Items should be placed horizontally, but item2 (left=${item2Bounds.left}) is not to the right of item1 (right=${item1Bounds.right})",
+    )
   }
 
   @Test
@@ -85,9 +87,10 @@ class StackTest {
     val item2Bounds = onNodeWithTag("item2").getBoundsInRoot()
 
     // Items should be placed vertically (item2's top edge should be at or below item1's bottom edge)
-    assert(item2Bounds.top >= item1Bounds.bottom) {
-      "Items should be placed vertically, but item2 (top=${item2Bounds.top}) is not below item1 (bottom=${item1Bounds.bottom})"
-    }
+    assertTrue(
+      item2Bounds.top >= item1Bounds.bottom,
+      "Items should be placed vertically, but item2 (top=${item2Bounds.top}) is not below item1 (bottom=${item1Bounds.bottom})",
+    )
   }
 
   @Test
@@ -112,7 +115,7 @@ class StackTest {
     // Initial horizontal placement
     val horizontalItem1Bounds = onNodeWithTag("item1").getBoundsInRoot()
     val horizontalItem2Bounds = onNodeWithTag("item2").getBoundsInRoot()
-    assert(horizontalItem2Bounds.left >= horizontalItem1Bounds.right)
+    assertTrue(horizontalItem2Bounds.left >= horizontalItem1Bounds.right)
 
     // Change to vertical
     orientation = StackOrientation.Vertical
@@ -120,6 +123,6 @@ class StackTest {
     // Verify vertical placement
     val verticalItem1Bounds = onNodeWithTag("item1").getBoundsInRoot()
     val verticalItem2Bounds = onNodeWithTag("item2").getBoundsInRoot()
-    assert(verticalItem2Bounds.top >= verticalItem1Bounds.bottom)
+    assertTrue(verticalItem2Bounds.top >= verticalItem1Bounds.bottom)
   }
 }
