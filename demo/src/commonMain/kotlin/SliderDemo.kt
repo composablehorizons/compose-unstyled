@@ -31,7 +31,6 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -82,9 +81,10 @@ fun SliderDemo() {
       UnstyledButton(
         onClick = { value = (value - 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
-        contentPadding = PaddingValues(8.dp),
       ) {
-        UnstyledIcon(Lucide.Volume1, "Decrease")
+        Box(Modifier.padding(8.dp)) {
+          UnstyledIcon(Lucide.Volume1, "Decrease")
+        }
       }
 
       UnstyledSlider(
@@ -144,9 +144,10 @@ fun SliderDemo() {
       UnstyledButton(
         onClick = { value = (value + 0.1f).coerceIn(0f, 1f) },
         modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
-        contentPadding = PaddingValues(8.dp),
       ) {
-        UnstyledIcon(Lucide.Volume2, "Increase")
+        Box(Modifier.padding(8.dp)) {
+          UnstyledIcon(Lucide.Volume2, "Increase")
+        }
       }
     }
   }

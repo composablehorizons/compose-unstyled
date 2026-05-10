@@ -30,8 +30,6 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
@@ -59,11 +57,8 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 
 typealias TabKey = String
-
-private val NoPadding = PaddingValues(0.dp)
 
 private val KeyEvent.isKeyDown: Boolean
   get() = type == KeyEventType.KeyDown
@@ -144,7 +139,6 @@ fun <T> UnstyledTabGroup(
 @Composable
 fun <T> TabGroupScope<T>.TabList(
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = NoPadding,
   orientation: Orientation = Orientation.Horizontal,
   content: @Composable TabListScope<T>.() -> Unit,
 ) {
@@ -168,7 +162,6 @@ fun <T> TabGroupScope<T>.TabList(
       .focusRestorer()
       .focusGroup()
       .selectableGroup()
-      .padding(contentPadding)
       .onKeyEvent { event ->
         when {
           orientation == Orientation.Horizontal && event.key == Key.DirectionLeft -> {
@@ -265,7 +258,6 @@ fun <T> TabListScope<T>.Tab(
   activateOnFocus: Boolean = true,
   indication: Indication? = LocalIndication.current,
   interactionSource: MutableInteractionSource? = null,
-  contentPadding: PaddingValues = NoPadding,
   content: @Composable TabScope.() -> Unit,
 ) {
   val registry = registry
@@ -334,8 +326,7 @@ fun <T> TabListScope<T>.Tab(
         interactionSource = interactionSource,
         enabled = enabled,
         role = Role.Tab,
-      )
-      .padding(contentPadding),
+      ),
   ) {
     tabScope.content()
   }
@@ -345,7 +336,6 @@ fun <T> TabListScope<T>.Tab(
 fun <T> TabGroupScope<T>.TabPanel(
   key: T,
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
   val registry = registry
@@ -361,7 +351,6 @@ fun <T> TabGroupScope<T>.TabPanel(
 
     Box(
       modifier = modifier
-        .padding(contentPadding)
         .focusRequester(focusRequester)
         .focusable()
         .focusGroup(),

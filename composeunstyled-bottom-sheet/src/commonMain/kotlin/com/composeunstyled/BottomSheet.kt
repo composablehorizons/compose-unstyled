@@ -41,13 +41,11 @@ import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -644,16 +642,13 @@ fun UnstyledBottomSheet(
 @Composable
 fun BottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
   content: @Composable () -> Unit,
 ) {
   val context = LocalBottomSheetContext.current
   val state = context.state
 
   Layout(
-    modifier = modifier
-      .clipToBounds()
-      .padding(contentPadding),
+    modifier = modifier.clipToBounds(),
     content = content,
   ) { measurables, constraints ->
     val fallbackContentHeight = when {

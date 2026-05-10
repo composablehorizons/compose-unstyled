@@ -29,10 +29,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -139,12 +139,11 @@ fun App() {
 
           UnstyledButton(
             onClick = {},
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             modifier = Modifier
               .clip(RoundedCornerShape(100))
               .background(Theme[colors][primary]),
           ) {
-            Text("Click Me")
+            Text("Click Me", modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
           }
         }
       }

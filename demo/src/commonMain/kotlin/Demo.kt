@@ -29,7 +29,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -385,12 +384,13 @@ private fun DemoFilterBox(
     UnstyledButton(
       onClick = onDismiss,
       interactionSource = interactionSource,
-      contentPadding = PaddingValues(6.dp),
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
-      UnstyledIcon(Lucide.X, contentDescription = "Close filter", tint = Color.Black)
+      Box(Modifier.padding(6.dp)) {
+        UnstyledIcon(Lucide.X, contentDescription = "Close filter", tint = Color.Black)
+      }
     }
   }
 }
@@ -419,12 +419,13 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
     UnstyledButton(
       onClick = onUpClick,
       interactionSource = interactionSource,
-      contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .clip(CircleShape)
         .focusRing(interactionSource, 1.dp, Color.Blue, CircleShape),
     ) {
-      UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
+      Box(Modifier.padding(12.dp)) {
+        UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
+      }
     }
     Spacer(Modifier.width(8.dp))
     Text(title, style = MaterialTheme.typography.titleMedium)
@@ -448,8 +449,9 @@ private fun DemoListButton(
       .clip(RoundedCornerShape(8.dp))
       .background(Color.White)
       .outline(1.dp, Color.Black.copy(0.1f), RoundedCornerShape(8.dp)),
-    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
   ) {
-    content()
+    Box(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+      content()
+    }
   }
 }

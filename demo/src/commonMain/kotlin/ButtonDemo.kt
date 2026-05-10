@@ -23,10 +23,10 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -53,13 +53,15 @@ fun ButtonDemo() {
   ) {
     UnstyledButton(
       onClick = { },
-      contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
       modifier = Modifier
         .shadow(elevation = 4.dp, RoundedCornerShape(12.dp))
         .clip(RoundedCornerShape(12.dp))
         .background(Color.White),
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
+      Row(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
         UnstyledIcon(Lucide.Pencil, contentDescription = null)
         Spacer(Modifier.width(12.dp))
         Text("Compose")

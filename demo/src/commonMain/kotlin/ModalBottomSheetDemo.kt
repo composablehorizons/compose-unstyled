@@ -26,19 +26,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -60,7 +52,6 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledModalBottomSheet
-import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.focusRing
 import com.composeunstyled.rememberModalBottomSheetState
 import kotlinx.coroutines.delay
@@ -90,15 +81,11 @@ fun ModalBottomSheetDemo() {
       onClick = { modalSheetState.targetDetent = Peek },
       modifier = Modifier
         .align(Alignment.Center)
-        .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
         .clip(RoundedCornerShape(6.dp))
         .background(Color.White),
-      contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
     ) {
-      Text("Show Sheet")
+      Text("Show Sheet", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
     }
-
-    val isCompact = currentWindowContainerSize().width < 600.dp
 
     UnstyledModalBottomSheet(
       state = modalSheetState,
@@ -106,36 +93,39 @@ fun ModalBottomSheetDemo() {
         Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
       },
     ) {
-      Sheet(
+      Box(
         modifier = Modifier
-          .padding(top = 12.dp)
-          .let { if (isCompact) it else it.padding(horizontal = 56.dp) }
-          .displayCutoutPadding()
-          .statusBarsPadding()
-          .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-          .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .background(Color.White)
-          .widthIn(max = 640.dp)
+          .padding(horizontal = 56.dp)
           .fillMaxWidth(),
+        contentAlignment = Alignment.TopCenter,
       ) {
-        Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
-          val interactionSource = remember { MutableInteractionSource() }
+        Sheet(
+          modifier = Modifier
+            .padding(top = 12.dp)
+            .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+            .background(Color.White)
+            .widthIn(max = 640.dp)
+            .fillMaxWidth(),
+        ) {
+          Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
+            val interactionSource = remember { MutableInteractionSource() }
 
-          DragIndication(
-            interactionSource = interactionSource,
-            modifier = Modifier
-              .padding(top = 22.dp)
-              .focusRing(
-                interactionSource,
-                width = 2.dp,
-                Color(0XFF2563EB),
-                RoundedCornerShape(100),
-                offset = 4.dp,
-              )
-              .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-              .size(32.dp, 4.dp),
-          )
+            DragIndication(
+              interactionSource = interactionSource,
+              modifier = Modifier
+                .padding(top = 22.dp)
+                .focusRing(
+                  interactionSource,
+                  width = 2.dp,
+                  Color(0XFF2563EB),
+                  RoundedCornerShape(100),
+                  offset = 4.dp,
+                )
+                .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
+                .size(32.dp, 4.dp),
+            )
+          }
         }
       }
     }

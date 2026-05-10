@@ -26,7 +26,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -90,10 +89,10 @@ private fun TooltipCrashRepro() {
       UnstyledButton(
         onClick = { },
         modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(Color(0xFF1D4ED8)),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
       ) {
         Text(
           "Long press me",
+          modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
           style = TextStyle(color = Color.White, fontSize = 16.sp),
         )
       }

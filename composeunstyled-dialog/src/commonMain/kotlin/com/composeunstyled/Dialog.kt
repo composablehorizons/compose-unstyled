@@ -26,9 +26,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -46,9 +44,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
-
-private val NoPadding = PaddingValues(0.dp)
 
 data class DialogProperties(
   val dismissOnBackPress: Boolean = true,
@@ -123,7 +118,6 @@ fun DialogScope.DialogPanel(
   paneTitle: String? = null,
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
-  contentPadding: PaddingValues = NoPadding,
   content: @Composable () -> Unit,
 ) {
   val modalState = LocalModalState.current
@@ -149,8 +143,7 @@ fun DialogScope.DialogPanel(
         add(
           Modifier
             .focusRequester(panelFocusRequester)
-            .pointerInput(Unit) { detectTapGestures { } }
-            .padding(contentPadding),
+            .pointerInput(Unit) { detectTapGestures { } },
         )
       },
     ) {

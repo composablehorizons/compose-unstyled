@@ -31,7 +31,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -93,14 +92,15 @@ fun TooltipDemo() {
 
         UnstyledButton(
           onClick = { },
-          contentPadding = PaddingValues(8.dp),
           modifier = Modifier
             .clip(CircleShape)
             .background(Color.White)
             .focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
           interactionSource = interactionSource,
         ) {
-          UnstyledIcon(Lucide.BellDot, contentDescription = null)
+          Box(Modifier.padding(8.dp)) {
+            UnstyledIcon(Lucide.BellDot, contentDescription = null)
+          }
         }
       }
     }

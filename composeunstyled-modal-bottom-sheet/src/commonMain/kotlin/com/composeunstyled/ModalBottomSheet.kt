@@ -32,7 +32,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -302,12 +301,10 @@ fun UnstyledModalBottomSheet(
 @Composable
 fun ModalBottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
   content: @Composable () -> Unit,
 ) {
   bottomSheetScope.Sheet(
     modifier = modifier,
-    contentPadding = contentPadding,
     content = content,
   )
 }

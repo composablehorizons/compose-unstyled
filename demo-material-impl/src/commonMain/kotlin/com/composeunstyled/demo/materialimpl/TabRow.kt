@@ -33,12 +33,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -145,11 +145,15 @@ fun <T> MaterialTabRowScope<T>.Tab(
         modifier = modifier
           .then(tabModifier)
           .height(height),
-        contentPadding = PaddingValues(horizontal = TabHorizontalPadding),
         indication = tabIndication,
         interactionSource = interactionSource,
       ) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+          Modifier
+            .fillMaxSize()
+            .padding(horizontal = TabHorizontalPadding),
+          contentAlignment = Alignment.Center,
+        ) {
           Column(
             modifier = Modifier.onSizeChanged { size ->
               rowContent.setContentWidth(
