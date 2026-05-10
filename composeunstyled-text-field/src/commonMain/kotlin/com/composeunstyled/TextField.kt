@@ -24,8 +24,6 @@ package com.composeunstyled
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 
 class TextFieldScope internal constructor() {
@@ -68,7 +65,7 @@ class TextFieldScope internal constructor() {
 }
 
 @Composable
-fun TextFieldScope.Editable(
+fun TextFieldScope.TextInput(
   modifier: Modifier = Modifier,
   placeholder: (@Composable () -> Unit)? = null,
 ) {
@@ -92,8 +89,6 @@ fun TextFieldScope.Editable(
 fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
-  contentPadding: PaddingValues = PaddingValues(0.dp),
-  contentAlignment: Alignment = Alignment.TopStart,
   accessibilityLabel: String? = null,
   editable: Boolean = true,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
@@ -155,12 +150,7 @@ fun UnstyledTextField(
       onKeyboardAction = onKeyboardAction,
       decorator = { innerTextField ->
         scope.innerTextField = innerTextField
-        Box(
-          modifier = Modifier.padding(contentPadding),
-          contentAlignment = contentAlignment,
-        ) {
-          scope.content()
-        }
+        scope.content()
       },
     )
   }

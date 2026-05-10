@@ -26,6 +26,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -79,7 +80,7 @@ class TextFieldTest {
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield"),
       ) {
-        Editable()
+        TextInput()
       }
     }
     onNodeWithTag("textfield").requestFocus()
@@ -94,7 +95,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("input"),
         accessibilityLabel = "Email",
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -133,7 +134,7 @@ class TextFieldTest {
         state = state,
         modifier = Modifier.testTag("textfield"),
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -153,7 +154,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield"),
         outputTransformation = PasswordOutputTransformation,
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -170,7 +171,7 @@ class TextFieldTest {
         editable = false,
         outputTransformation = PasswordOutputTransformation,
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -186,7 +187,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield"),
         editable = false,
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -206,7 +207,7 @@ class TextFieldTest {
             focused = focusState.isFocused
           },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -226,7 +227,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield"),
         interactionSource = interactionSource,
       ) {
-        Editable()
+        TextInput()
         if (isFocused) {
           BasicText("focused", modifier = Modifier.testTag("focus-indicator"))
         }
@@ -243,7 +244,7 @@ class TextFieldTest {
     val state = TextFieldState("")
     setContent {
       UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
-        Editable(
+        TextInput(
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
@@ -262,7 +263,7 @@ class TextFieldTest {
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
-          Editable(
+          TextInput(
             placeholder = {
               BasicText("Search", modifier = Modifier.testTag("placeholder"))
             },
@@ -284,7 +285,7 @@ class TextFieldTest {
           state = rememberTextFieldState("A"),
           modifier = Modifier.testTag("textfield"),
         ) {
-          Editable()
+          TextInput()
         }
       }
     }
@@ -302,13 +303,13 @@ class TextFieldTest {
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("without-placeholder"),
         ) {
-          Editable()
+          TextInput()
         }
         UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("with-placeholder"),
         ) {
-          Editable(
+          TextInput(
             placeholder = {
               BasicText(
                 "This placeholder is intentionally much wider than the editable",
@@ -341,7 +342,7 @@ class TextFieldTest {
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
-          Editable(
+          TextInput(
             placeholder = {
               Box(
                 Modifier
@@ -378,7 +379,7 @@ class TextFieldTest {
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
-          Editable(
+          TextInput(
             modifier = Modifier.size(200.dp, 40.dp),
             placeholder = {
               Box(
@@ -415,7 +416,7 @@ class TextFieldTest {
           state = rememberTextFieldState(),
           modifier = Modifier.testTag("textfield"),
         ) {
-          Editable(
+          TextInput(
             modifier = Modifier.width(200.dp),
             placeholder = {
               Box(
@@ -446,10 +447,9 @@ class TextFieldTest {
       UnstyledTextField(
         state = rememberTextFieldState(),
         modifier = Modifier.testTag("textfield").size(100.dp),
-        contentAlignment = Alignment.TopStart,
         textAlign = TextAlign.End,
       ) {
-        Editable(
+        TextInput(
           modifier = Modifier.fillMaxWidth(),
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
@@ -468,19 +468,20 @@ class TextFieldTest {
   }
 
   @Test
-  fun editableContentFollowsContentAlignment() = runComposeUiTest {
+  fun callerCanPositionTextInputContent() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(100.dp)) {
         UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.fillMaxWidth().size(100.dp),
-          contentAlignment = Alignment.CenterStart,
         ) {
-          Editable(
-            placeholder = {
-              BasicText("Search", modifier = Modifier.testTag("placeholder"))
-            },
-          )
+          Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
+            TextInput(
+              placeholder = {
+                BasicText("Search", modifier = Modifier.testTag("placeholder"))
+              },
+            )
+          }
         }
       }
     }
@@ -495,21 +496,22 @@ class TextFieldTest {
   }
 
   @Test
-  fun contentAlignmentPositionsAllContent() = runComposeUiTest {
+  fun callerCanPositionTextInputWithOtherContent() = runComposeUiTest {
     setContent {
       Box(Modifier.testTag("root").size(200.dp, 100.dp)) {
         UnstyledTextField(
           state = rememberTextFieldState(),
           modifier = Modifier.size(200.dp, 100.dp),
-          contentAlignment = Alignment.CenterEnd,
         ) {
-          Row {
-            BasicText("Icon", modifier = Modifier.testTag("leading"))
-            Editable(
-              placeholder = {
-                BasicText("Search", modifier = Modifier.testTag("placeholder"))
-              },
-            )
+          Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd) {
+            Row {
+              BasicText("Icon", modifier = Modifier.testTag("leading"))
+              TextInput(
+                placeholder = {
+                  BasicText("Search", modifier = Modifier.testTag("placeholder"))
+                },
+              )
+            }
           }
         }
       }
@@ -539,7 +541,7 @@ class TextFieldTest {
           .testTag("textfield")
           .size(100.dp),
       ) {
-        Editable(
+        TextInput(
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
@@ -557,7 +559,7 @@ class TextFieldTest {
     val state = TextFieldState("")
     setContent {
       UnstyledTextField(state = state, modifier = Modifier.testTag("textfield")) {
-        Editable(
+        TextInput(
           placeholder = {
             BasicText("Search", modifier = Modifier.testTag("placeholder"))
           },
@@ -579,7 +581,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield").size(120.dp),
         outputTransformation = CreditCardOutputTransformation,
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -597,7 +599,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield").size(120.dp),
         inputTransformation = InputTransformation.maxLength(2),
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -623,7 +625,7 @@ class TextFieldTest {
           }
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -635,7 +637,7 @@ class TextFieldTest {
   }
 
   @Test
-  fun lineLimitsAreForwardedToEditable() = runComposeUiTest {
+  fun lineLimitsAreForwardedToTextInput() = runComposeUiTest {
     val state = TextFieldState("")
     var lineCount = 0
     setContent {
@@ -647,7 +649,7 @@ class TextFieldTest {
           lineCount = getResult()?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -671,7 +673,7 @@ class TextFieldTest {
           lineCount = getResult()?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -703,7 +705,7 @@ class TextFieldTest {
           lineCount = result?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -734,7 +736,7 @@ class TextFieldTest {
           lineCount = result?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -764,7 +766,7 @@ class TextFieldTest {
           lineCount = result?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -786,7 +788,7 @@ class TextFieldTest {
         modifier = Modifier.testTag("textfield").width(240.dp),
         lineLimits = TextFieldLineLimits.MultiLine(),
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -813,7 +815,7 @@ class TextFieldTest {
           lineCount = getResult()?.lineCount ?: 0
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 
@@ -835,7 +837,7 @@ class TextFieldTest {
   }
 
   @Test
-  fun onTextLayoutIsForwardedToEditable() = runComposeUiTest {
+  fun onTextLayoutIsForwardedToTextInput() = runComposeUiTest {
     var layoutText = ""
     setContent {
       UnstyledTextField(
@@ -845,7 +847,7 @@ class TextFieldTest {
           layoutText = getResult()?.layoutInput?.text?.text.orEmpty()
         },
       ) {
-        Editable()
+        TextInput()
       }
     }
 

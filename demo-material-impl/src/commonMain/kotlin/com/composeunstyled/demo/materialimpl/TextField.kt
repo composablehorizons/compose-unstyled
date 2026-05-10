@@ -87,7 +87,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import com.composeunstyled.Editable
+import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.buildModifier
 
@@ -302,7 +302,6 @@ private fun TextFieldContent(
       onTextLayout = onTextLayout,
       interactionSource = resolvedInteractionSource,
       scrollState = scrollState,
-      contentAlignment = Alignment.CenterStart,
     ) {
       Box(Modifier.fillMaxWidth()) {
         Row(
@@ -349,7 +348,7 @@ private fun TextFieldContent(
               it()
             }
           }
-          Editable(
+          TextInput(
             modifier = Modifier.weight(1f),
             placeholder = if (label == null || labelMinimized) placeholder else null,
           )

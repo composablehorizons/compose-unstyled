@@ -30,385 +30,182 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.composeunstyled.Editable
+import com.composables.icons.lucide.Eye
+import com.composables.icons.lucide.EyeOff
+import com.composables.icons.lucide.Lucide
+import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTextField
 
 @Composable
 fun TextFieldDemo() {
-  val state = rememberTextFieldState()
-  var contentAlignment by remember { mutableStateOf(Alignment.CenterStart) }
-  var sizeMode by remember { mutableStateOf(SizeMode.Wrap) }
-  var paddingMode by remember { mutableStateOf(PaddingMode.Roomy) }
-  var textAlign by remember { mutableStateOf(TextAlign.Unspecified) }
-  var textSize by remember { mutableIntStateOf(18) }
-  var lineMode by remember { mutableStateOf(LineMode.Single) }
-  var placeholderMode by remember { mutableStateOf(PlaceholderMode.Email) }
-  var borderEnabled by remember { mutableStateOf(true) }
-  var backgroundEnabled by remember { mutableStateOf(true) }
+  val email = rememberTextFieldState()
+  val password = rememberTextFieldState()
+  var showPassword by remember { mutableStateOf(false) }
+  val fieldShape = RoundedCornerShape(8.dp)
 
-  Column(
+  Box(
     modifier = Modifier
       .fillMaxSize()
+      .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
+      .padding(horizontal = 16.dp)
+      .padding(top = 16.dp)
       .imePadding(),
+    contentAlignment = Alignment.Center,
   ) {
-    Column(
+    Box(
       modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState())
-        .padding(16.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
+        .widthIn(max = 500.dp)
+        .dropShadow(
+          shape = RoundedCornerShape(16.dp),
+          shadow = Shadow(
+            radius = 8.dp,
+            spread = 0.dp,
+            color = Color.Black.copy(alpha = 0.22f),
+            offset = DpOffset(x = 0.dp, y = 2.dp),
+          ),
+        )
+        .clip(RoundedCornerShape(16.dp))
+        .background(Color.White)
+        .padding(24.dp),
+      contentAlignment = Alignment.Center,
     ) {
-      ControlGroup("Content alignment") {
-        ContentAlignmentControls(contentAlignment) { contentAlignment = it }
-      }
-      ControlGroup("Size") {
-        ChoiceRow(
-          values = SizeMode.entries,
-          selected = sizeMode,
-          label = { it.label },
-          onSelect = { sizeMode = it },
+      Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        Text(
+          "Email",
+          modifier = Modifier.fillMaxWidth(),
+          style = MaterialTheme.typography.bodyLarge,
         )
-      }
-      ControlGroup("Text align") {
-        ChoiceRow(
-          values = TextAlignMode.entries,
-          selected = textAlign.toMode(),
-          label = { it.label },
-          onSelect = { textAlign = it.textAlign },
-        )
-      }
-      ControlGroup("Text size") {
-        ChoiceRow(
-          values = listOf(12, 18, 28, 44),
-          selected = textSize,
-          label = { "${it}sp" },
-          onSelect = { textSize = it },
-        )
-      }
-      ControlGroup("Padding") {
-        ChoiceRow(
-          values = PaddingMode.entries,
-          selected = paddingMode,
-          label = { it.label },
-          onSelect = { paddingMode = it },
-        )
-      }
-      ControlGroup("Text") {
-        ChoiceRow(
-          values = TextPreset.entries,
-          selected = TextPreset.Custom,
-          label = { it.label },
-          onSelect = { state.setTextAndPlaceCursorAtEnd(it.value) },
-        )
-      }
-      ControlGroup("Placeholder") {
-        ChoiceRow(
-          values = PlaceholderMode.entries,
-          selected = placeholderMode,
-          label = { it.label },
-          onSelect = { placeholderMode = it },
-        )
-      }
-      ControlGroup("Lines and chrome") {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-          SmokeButton(
-            label = "Single",
-            selected = lineMode == LineMode.Single,
-            onClick = { lineMode = LineMode.Single },
+        UnstyledTextField(
+          state = email,
+          modifier = Modifier.fillMaxWidth(),
+          lineLimits = TextFieldLineLimits.SingleLine,
+          keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+          ),
+          textStyle = MaterialTheme.typography.bodyMedium,
+        ) {
+          TextInput(
+            Modifier
+              .fillMaxWidth()
+              .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+              .background(Color.White, fieldShape)
+              .padding(horizontal = 16.dp, vertical = 12.dp),
+            placeholder = {
+              Text(
+                "email@example.com",
+                color = Color.Black.copy(0.6f),
+                style = MaterialTheme.typography.bodyMedium,
+              )
+            },
           )
-          SmokeButton(
-            label = "Multi",
-            selected = lineMode == LineMode.Multi,
-            onClick = { lineMode = LineMode.Multi },
-          )
-          SmokeButton(
-            label = "Border",
-            selected = borderEnabled,
-            onClick = { borderEnabled = !borderEnabled },
-          )
-          SmokeButton(
-            label = "Bg",
-            selected = backgroundEnabled,
-            onClick = { backgroundEnabled = !backgroundEnabled },
+        }
+
+        Text(
+          "Password",
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+          style = MaterialTheme.typography.bodyLarge,
+        )
+        UnstyledTextField(
+          state = password,
+          modifier = Modifier.fillMaxWidth(),
+          lineLimits = TextFieldLineLimits.SingleLine,
+          outputTransformation = if (showPassword) null else PasswordOutputTransformation,
+          textStyle = MaterialTheme.typography.bodyMedium,
+        ) {
+          Row(
+            modifier = Modifier
+              .fillMaxWidth()
+              .border(1.dp, Color(0xFFBDBDBD), fieldShape)
+              .background(Color.White, fieldShape)
+              .padding(vertical = 4.dp)
+              .padding(start = 16.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            TextInput(
+              modifier = Modifier.weight(1f),
+              placeholder = {
+                Text(
+                  text = "8-12 characters",
+                  color = Color.Black.copy(0.6f),
+                  style = MaterialTheme.typography.bodyMedium,
+                )
+              },
+            )
+            UnstyledButton(
+              onClick = { showPassword = showPassword.not() },
+              modifier = Modifier.clip(RoundedCornerShape(4.dp)),
+              contentPadding = PaddingValues(4.dp),
+            ) {
+              UnstyledIcon(
+                imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
+                contentDescription = if (showPassword) "Hide password" else "Show password",
+                tint = Color(0xFF757575),
+              )
+            }
+          }
+        }
+
+        UnstyledButton(
+          onClick = { /* TODO */ },
+          modifier = Modifier
+            .fillMaxWidth()
+            .clip(fieldShape)
+            .background(Color(0xFF8E44AD)),
+          contentPadding = PaddingValues(12.dp),
+        ) {
+          Text(
+            "Submit",
+            color = Color.White,
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.bodyMedium.merge(
+              TextStyle(fontWeight = FontWeight.Medium),
+            ),
           )
         }
       }
-      Text(
-        text = "State: ${state.text.toString().replace("\n", "\\n")}",
-        style = MaterialTheme.typography.labelSmall,
-        color = Color(0xFF555555),
-      )
-    }
-
-    Box(
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxWidth()
-        .padding(16.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      UnstyledTextField(
-        state = state,
-        modifier = textFieldModifier(
-          sizeMode = sizeMode,
-          borderEnabled = borderEnabled,
-          backgroundEnabled = backgroundEnabled,
-        ),
-        contentPadding = paddingMode.padding,
-        contentAlignment = contentAlignment,
-        accessibilityLabel = "Smoke test text field",
-        lineLimits = when (lineMode) {
-          LineMode.Single -> TextFieldLineLimits.SingleLine
-          LineMode.Multi -> TextFieldLineLimits.MultiLine()
-        },
-        cursorBrush = SolidColor(Color(0xFF8E44AD)),
-        textStyle = MaterialTheme.typography.bodyMedium.merge(
-          TextStyle(
-            fontSize = textSize.sp,
-            color = Color.Black,
-          ),
-        ),
-        textAlign = textAlign,
-      ) {
-        Editable(
-          placeholder = {
-            Text(
-              placeholderMode.text,
-              maxLines = when (lineMode) {
-                LineMode.Single -> 1
-                LineMode.Multi -> Int.MAX_VALUE
-              },
-              softWrap = lineMode == LineMode.Multi,
-              style = MaterialTheme.typography.bodyMedium.merge(
-                TextStyle(
-                  fontSize = textSize.sp,
-                  color = Color.Black.copy(0.6f),
-                ),
-              ),
-            )
-          },
-        )
-      }
     }
   }
 }
 
-@Composable
-private fun ControlGroup(
-  label: String,
-  content: @Composable () -> Unit,
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-    Text(label, style = MaterialTheme.typography.labelMedium)
-    content()
-  }
-}
-
-@Composable
-private fun ContentAlignmentControls(
-  selected: Alignment,
-  onSelect: (Alignment) -> Unit,
-) {
-  Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-      SmokeButton("Top start", selected == Alignment.TopStart) { onSelect(Alignment.TopStart) }
-      SmokeButton("Top center", selected == Alignment.TopCenter) { onSelect(Alignment.TopCenter) }
-      SmokeButton("Top end", selected == Alignment.TopEnd) { onSelect(Alignment.TopEnd) }
+private val PasswordOutputTransformation = object : OutputTransformation {
+  override fun TextFieldBuffer.transformOutput() {
+    for (index in 0 until length) {
+      replace(index, index + 1, "*")
     }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-      SmokeButton("Center start", selected == Alignment.CenterStart) {
-        onSelect(Alignment.CenterStart)
-      }
-      SmokeButton("Center", selected == Alignment.Center) { onSelect(Alignment.Center) }
-      SmokeButton("Center end", selected == Alignment.CenterEnd) { onSelect(Alignment.CenterEnd) }
-    }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-      SmokeButton("Bottom start", selected == Alignment.BottomStart) {
-        onSelect(Alignment.BottomStart)
-      }
-      SmokeButton("Bottom center", selected == Alignment.BottomCenter) {
-        onSelect(Alignment.BottomCenter)
-      }
-      SmokeButton("Bottom end", selected == Alignment.BottomEnd) {
-        onSelect(Alignment.BottomEnd)
-      }
-    }
-  }
-}
-
-@Composable
-private fun <T> ChoiceRow(
-  values: List<T>,
-  selected: T,
-  label: (T) -> String,
-  onSelect: (T) -> Unit,
-) {
-  Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-    values.forEach { value ->
-      SmokeButton(
-        label = label(value),
-        selected = value == selected,
-        onClick = { onSelect(value) },
-      )
-    }
-  }
-}
-
-@Composable
-private fun <T> ChoiceRow(
-  values: Array<T>,
-  selected: T,
-  label: (T) -> String,
-  onSelect: (T) -> Unit,
-) {
-  ChoiceRow(values = values.toList(), selected = selected, label = label, onSelect = onSelect)
-}
-
-@Composable
-private fun SmokeButton(
-  label: String,
-  selected: Boolean,
-  onClick: () -> Unit,
-) {
-  val shape = RoundedCornerShape(8.dp)
-  UnstyledButton(
-    onClick = onClick,
-    modifier = Modifier
-      .clip(shape)
-      .background(if (selected) Color(0xFFE9DDF9) else Color.White, shape)
-      .border(
-        width = 1.dp,
-        color = if (selected) Color(0xFF8E44AD) else Color(0xFFBDBDBD),
-        shape = shape,
-      ),
-    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-  ) {
-    Text(
-      text = label,
-      style = MaterialTheme.typography.labelLarge.merge(
-        TextStyle(
-          color = if (selected) Color(0xFF5E2B84) else Color(0xFF4A4A4A),
-        ),
-      ),
-    )
-  }
-}
-
-private fun textFieldModifier(
-  sizeMode: SizeMode,
-  borderEnabled: Boolean,
-  backgroundEnabled: Boolean,
-): Modifier {
-  val shape = RoundedCornerShape(8.dp)
-  var modifier: Modifier = Modifier
-
-  modifier = when (sizeMode) {
-    SizeMode.Wrap -> modifier
-    SizeMode.Narrow -> modifier.width(72.dp)
-    SizeMode.Wide -> modifier.width(340.dp)
-    SizeMode.Tall -> modifier.height(140.dp)
-    SizeMode.Box -> modifier.size(240.dp, 140.dp)
-    SizeMode.Fill -> modifier.fillMaxWidth()
-  }
-
-  if (borderEnabled) {
-    modifier = modifier.border(1.dp, Color(0xFFBDBDBD), shape)
-  }
-  if (backgroundEnabled) {
-    modifier = modifier.background(Color.White, shape)
-  }
-  return modifier
-}
-
-private enum class SizeMode(val label: String) {
-  Wrap("Wrap"),
-  Narrow("72w"),
-  Wide("340w"),
-  Tall("140h"),
-  Box("240x140"),
-  Fill("Fill width"),
-}
-
-private enum class PaddingMode(
-  val label: String,
-  val padding: PaddingValues,
-) {
-  None("None", PaddingValues(0.dp)),
-  Tight("Tight", PaddingValues(horizontal = 6.dp, vertical = 4.dp)),
-  Roomy("Roomy", PaddingValues(horizontal = 16.dp, vertical = 12.dp)),
-  Huge("Huge", PaddingValues(horizontal = 40.dp, vertical = 28.dp)),
-}
-
-private enum class LineMode {
-  Single,
-  Multi,
-}
-
-private enum class PlaceholderMode(
-  val label: String,
-  val text: String,
-) {
-  Email("Email", "email@example.com"),
-  Short("Short", "email"),
-  Long("Long", "a-placeholder-that-is-way-longer-than-the-editable"),
-}
-
-private enum class TextPreset(
-  val label: String,
-  val value: String,
-) {
-  Custom("Custom", ""),
-  Empty("Empty", ""),
-  A("A", "A"),
-  Email("Email", "alex@example.com"),
-  Long("Long", "some very long typed value that should expose sizing behavior"),
-  Multi("Multi", "first line\nsecond line\nthird line"),
-}
-
-private enum class TextAlignMode(
-  val label: String,
-  val textAlign: TextAlign,
-) {
-  Unspecified("Unspecified", TextAlign.Unspecified),
-  Start("Start", TextAlign.Start),
-  Center("Center", TextAlign.Center),
-  End("End", TextAlign.End),
-}
-
-private fun TextAlign.toMode(): TextAlignMode {
-  return when (this) {
-    TextAlign.Start -> TextAlignMode.Start
-    TextAlign.Center -> TextAlignMode.Center
-    TextAlign.End -> TextAlignMode.End
-    else -> TextAlignMode.Unspecified
   }
 }
