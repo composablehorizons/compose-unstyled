@@ -90,7 +90,7 @@ fun UnstyledTextField(
   state: TextFieldState,
   modifier: Modifier = Modifier,
   accessibilityLabel: String? = null,
-  editable: Boolean = true,
+  readOnly: Boolean = false,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
   textStyle: TextStyle = TextStyle.Default,
   textAlign: TextAlign = TextAlign.Unspecified,
@@ -134,7 +134,7 @@ fun UnstyledTextField(
       state = state,
       interactionSource = interactionSource,
       textStyle = newTextStyle,
-      readOnly = editable.not(),
+      readOnly = readOnly,
       outputTransformation = outputTransformation,
       inputTransformation = inputTransformation,
       modifier = modifier then buildModifier {

@@ -162,13 +162,13 @@ class TextFieldTest {
   }
 
   @Test
-  fun outputTransformationTransformsNonEditableText() = runComposeUiTest {
+  fun outputTransformationTransformsReadOnlyText() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
-        editable = false,
+        readOnly = true,
         outputTransformation = PasswordOutputTransformation,
       ) {
         TextInput()
@@ -179,13 +179,13 @@ class TextFieldTest {
   }
 
   @Test
-  fun nonEditableTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
+  fun readOnlyTextFieldRendersTextAsSelectableContent() = runComposeUiTest {
     val state = TextFieldState("secret")
     setContent {
       UnstyledTextField(
         state = state,
         modifier = Modifier.testTag("textfield"),
-        editable = false,
+        readOnly = true,
       ) {
         TextInput()
       }
