@@ -38,9 +38,9 @@ import androidx.compose.ui.state.ToggleableState
 @Composable
 fun UnstyledTriStateCheckbox(
   value: ToggleableState,
-  onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  onClick: () -> Unit,
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
   accessibilityLabel: String? = null,

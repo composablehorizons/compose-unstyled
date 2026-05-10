@@ -41,9 +41,9 @@ import androidx.compose.ui.semantics.semantics
 @Composable
 fun UnstyledCheckbox(
   checked: Boolean,
-  onCheckedChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
+  onCheckedChange: (Boolean) -> Unit,
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = LocalIndication.current,
   accessibilityLabel: String? = null,
