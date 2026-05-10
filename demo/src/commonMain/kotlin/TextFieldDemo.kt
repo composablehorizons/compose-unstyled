@@ -26,7 +26,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -170,13 +169,14 @@ fun TextFieldDemo() {
               UnstyledButton(
                 onClick = { showPassword = showPassword.not() },
                 modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-                contentPadding = PaddingValues(4.dp),
               ) {
-                UnstyledIcon(
-                  imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
-                  contentDescription = if (showPassword) "Hide password" else "Show password",
-                  tint = Color(0xFF757575),
-                )
+                Box(Modifier.padding(4.dp)) {
+                  UnstyledIcon(
+                    imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
+                    contentDescription = if (showPassword) "Hide password" else "Show password",
+                    tint = Color(0xFF757575),
+                  )
+                }
               }
             }
           }
@@ -188,10 +188,10 @@ fun TextFieldDemo() {
             .fillMaxWidth()
             .clip(fieldShape)
             .background(Color(0xFF8E44AD)),
-          contentPadding = PaddingValues(12.dp),
         ) {
           Text(
             "Submit",
+            modifier = Modifier.padding(12.dp),
             color = Color.White,
             fontWeight = FontWeight.Medium,
             style = MaterialTheme.typography.bodyMedium.merge(

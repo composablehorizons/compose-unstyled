@@ -122,9 +122,8 @@ fun AlertDialog(
             targetScale = 0.95f,
             animationSpec = tween(DialogExitDurationMillis),
           ),
-        contentPadding = DialogPadding,
       ) {
-        Column {
+        Column(Modifier.padding(DialogPadding)) {
           icon?.let {
             CompositionLocalProvider(LocalContentColor provides iconContentColor) {
               Box(Modifier.padding(DialogIconPadding).align(Alignment.CenterHorizontally)) {

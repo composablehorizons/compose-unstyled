@@ -176,7 +176,6 @@ fun ModalDemo() {
               selectedIndex = index
               modalState.transitionState.targetState = true
             },
-            contentPadding = PaddingValues(0.dp),
             modifier = Modifier.size(110.dp, 72.dp).clip(RoundedCornerShape(8.dp)),
           ) {
             Image(
@@ -282,7 +281,6 @@ fun ModalDemo() {
                 },
                 enabled = canGoPrevious,
                 interactionSource = remember { MutableInteractionSource() },
-                contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
@@ -290,10 +288,12 @@ fun ModalDemo() {
                   .background(Color.White)
                   .alpha(previousButtonAlpha),
               ) {
-                UnstyledIcon(
-                  imageVector = Lucide.ArrowLeft,
-                  contentDescription = "Previous image",
-                )
+                Box(Modifier.padding(12.dp)) {
+                  UnstyledIcon(
+                    imageVector = Lucide.ArrowLeft,
+                    contentDescription = "Previous image",
+                  )
+                }
               }
 
               UnstyledButton(
@@ -304,7 +304,6 @@ fun ModalDemo() {
                 },
                 enabled = canGoNext,
                 interactionSource = remember { MutableInteractionSource() },
-                contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
@@ -312,10 +311,12 @@ fun ModalDemo() {
                   .background(Color.White)
                   .alpha(nextButtonAlpha),
               ) {
-                UnstyledIcon(
-                  imageVector = Lucide.ArrowRight,
-                  contentDescription = "Next image",
-                )
+                Box(Modifier.padding(12.dp)) {
+                  UnstyledIcon(
+                    imageVector = Lucide.ArrowRight,
+                    contentDescription = "Next image",
+                  )
+                }
               }
             }
           }

@@ -21,10 +21,14 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
@@ -33,9 +37,12 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -123,6 +130,28 @@ class DisclosureTest {
       .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
       .assert(hasCollapseAction())
       .assert(hasNoExpandAction())
+  }
+
+  @Test
+  fun disclosureButtonForwardsButtonLayoutParameters() = runComposeUiTest {
+    setContent {
+      UnstyledDisclosure(
+        expanded = false,
+        onExpandedChange = {},
+      ) {
+        DisclosureButton(
+          modifier = Modifier.size(100.dp).testTag("button"),
+          contentPadding = PaddingValues(10.dp),
+          contentAlignment = Alignment.BottomEnd,
+        ) {
+          Box(Modifier.size(20.dp).testTag("content"))
+        }
+      }
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true)
+      .assertLeftPositionInRootIsEqualTo(70.dp)
+      .assertTopPositionInRootIsEqualTo(70.dp)
   }
 }
 

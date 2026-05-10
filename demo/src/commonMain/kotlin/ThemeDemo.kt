@@ -32,7 +32,6 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -674,40 +673,43 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
         ) {
           UnstyledButton(
             onClick = { },
-            contentPadding = PaddingValues(12.dp),
             modifier = Modifier.clip(Theme[shapes][buttonShape]),
           ) {
-            UnstyledIcon(
-              imageVector = Lucide.SkipBack,
-              contentDescription = "Previous",
-              modifier = Modifier.size(20.dp),
-            )
+            Box(Modifier.padding(12.dp)) {
+              UnstyledIcon(
+                imageVector = Lucide.SkipBack,
+                contentDescription = "Previous",
+                modifier = Modifier.size(20.dp),
+              )
+            }
           }
 
           UnstyledButton(
             onClick = { },
-            contentPadding = PaddingValues(16.dp),
             modifier = Modifier
               .clip(Theme[shapes][buttonShape])
               .background(Theme[colors][primary]),
           ) {
-            UnstyledIcon(
-              imageVector = Lucide.Pause,
-              contentDescription = "Pause",
-              modifier = Modifier.size(24.dp),
-            )
+            Box(Modifier.padding(16.dp)) {
+              UnstyledIcon(
+                imageVector = Lucide.Pause,
+                contentDescription = "Pause",
+                modifier = Modifier.size(24.dp),
+              )
+            }
           }
 
           UnstyledButton(
             onClick = { },
-            contentPadding = PaddingValues(12.dp),
             modifier = Modifier.clip(Theme[shapes][buttonShape]),
           ) {
-            UnstyledIcon(
-              imageVector = Lucide.SkipForward,
-              contentDescription = "Next",
-              modifier = Modifier.size(20.dp),
-            )
+            Box(Modifier.padding(12.dp)) {
+              UnstyledIcon(
+                imageVector = Lucide.SkipForward,
+                contentDescription = "Next",
+                modifier = Modifier.size(20.dp),
+              )
+            }
           }
         }
       }
@@ -747,7 +749,6 @@ private fun SimpleThemeCard(
 
   UnstyledButton(
     onClick = onClick,
-    contentPadding = PaddingValues(0.dp),
     modifier = Modifier
       .size(32.dp)
       .clip(CircleShape)

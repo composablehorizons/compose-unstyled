@@ -22,7 +22,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,9 +43,8 @@ internal fun SimpleButton(
     modifier = modifier
       .clip(shape)
       .border(1.dp, Color.Black.copy(alpha = 0.2f), shape),
-    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     interactionSource = interactionSource,
   ) {
-    Text("Button")
+    Text("Button", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
   }
 }

@@ -34,7 +34,6 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -100,11 +99,10 @@ private fun ModalSystemUiStylingDemo() {
   ) {
     UnstyledButton(
       onClick = { dialogVisible = true },
-      contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
       modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White),
       indication = rememberRippleIndication(),
     ) {
-      BasicText("Show dialog")
+      BasicText("Show dialog", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
     }
     UnstyledDialog(
       visible = dialogVisible,
@@ -153,10 +151,13 @@ private fun ModalSystemUiStylingDemo() {
               .padding(12.dp)
               .align(Alignment.End)
               .clip(RoundedCornerShape(6.dp)),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
             indication = rememberRippleIndication(),
           ) {
-            BasicText("Update", style = TextStyle(color = Color(0xFF0D99FF)))
+            BasicText(
+              "Update",
+              modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+              style = TextStyle(color = Color(0xFF0D99FF)),
+            )
           }
         }
       }

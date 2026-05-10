@@ -123,12 +123,12 @@ jobs:
               module_name="${module#:}"
               module_tasks="$(
                 printf '%s\n' "$all_tasks" |
-                  awk -v module="$module_name" '$0 ~ "^" module ":compileKotlin(Jvm|Desktop)( |$)" { print ":" $1 }' |
+                  awk -v module="$module_name" '$0 ~ "^" module ":compile(Kotlin(Jvm|Desktop)|DebugKotlin(Android)?)( |$)" { print ":" $1 }' |
                   sort -u
               )"
 
               if [ -z "$module_tasks" ]; then
-                echo "No JVM/Desktop Kotlin compile tasks found for $module."
+                echo "No JVM/Desktop/Android Kotlin compile tasks found for $module."
                 exit 1
               fi
 

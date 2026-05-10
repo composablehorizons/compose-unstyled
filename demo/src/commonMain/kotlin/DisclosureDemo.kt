@@ -31,7 +31,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -106,10 +105,9 @@ fun DisclosureDemo() {
           Column {
             DisclosureButton(
               modifier = Modifier.fillMaxWidth(),
-              contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
             ) {
               Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
               ) {
                 Text(faq.question, modifier = Modifier.weight(1f))

@@ -31,7 +31,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -182,13 +181,15 @@ fun DropdownMenuDemo() {
       anchor = {
         UnstyledButton(
           onClick = { expanded = true },
-          contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
           modifier = Modifier
             .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(Color.White),
         ) {
-          Row(verticalAlignment = Alignment.CenterVertically) {
+          Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
             Text("Options")
             Spacer(Modifier.width(8.dp))
             UnstyledIcon(Lucide.ChevronDown, null)
