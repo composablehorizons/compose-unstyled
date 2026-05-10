@@ -113,12 +113,20 @@ private fun Saver(
       initialDetent = sheetDetents.first { it.identifier == selectedDetentName },
       detents = sheetDetents,
       coroutineScope = coroutineScope,
+      density = localDensity(),
       animationSpec = animationSpec,
-      velocityThreshold = velocityThreshold,
-      positionalThreshold = positionalThreshold,
       decayAnimationSpec = decayAnimationSpec,
+      velocityThreshold = {
+        with(localDensity()) {
+          velocityThreshold().toDp()
+        }
+      },
+      positionalThreshold = { totalDistance ->
+        with(localDensity()) {
+          positionalThreshold(totalDistance.toPx()).toDp()
+        }
+      },
       confirmDetentChange = confirmDetentChange,
-      density = localDensity,
     )
   })
 
@@ -158,20 +166,12 @@ fun rememberBottomSheetState(
       initialDetent = initialDetent,
       detents = detents,
       coroutineScope = scope,
+      density = density,
       animationSpec = animationSpec,
-      velocityThreshold = {
-        with(density) {
-          velocityThreshold().toPx()
-        }
-      },
-      positionalThreshold = { totalDistance ->
-        with(density) {
-          positionalThreshold(totalDistance.toDp()).toPx()
-        }
-      },
       decayAnimationSpec = decayAnimationSpec,
+      velocityThreshold = velocityThreshold,
+      positionalThreshold = positionalThreshold,
       confirmDetentChange = confirmDetentChange,
-      density = { density },
     )
   }
 }
@@ -206,7 +206,7 @@ class SheetDetent(
   }
 }
 
-class BottomSheetState(
+class BottomSheetState internal constructor(
   initialDetent: SheetDetent,
   detents: List<SheetDetent>,
   private val coroutineScope: CoroutineScope,
@@ -217,6 +217,36 @@ class BottomSheetState(
   val confirmDetentChange: (SheetDetent) -> Boolean,
   private val density: () -> Density,
 ) {
+  constructor(
+    initialDetent: SheetDetent,
+    detents: List<SheetDetent> = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+    coroutineScope: CoroutineScope,
+    density: Density,
+    decayAnimationSpec: DecayAnimationSpec<Float>,
+    animationSpec: AnimationSpec<Float> = tween(),
+    velocityThreshold: () -> Dp = { 125.dp },
+    positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
+    confirmDetentChange: (SheetDetent) -> Boolean = { true },
+  ) : this(
+    initialDetent = initialDetent,
+    detents = detents,
+    coroutineScope = coroutineScope,
+    animationSpec = animationSpec,
+    velocityThreshold = {
+      with(density) {
+        velocityThreshold().toPx()
+      }
+    },
+    positionalThreshold = { totalDistance ->
+      with(density) {
+        positionalThreshold(totalDistance.toDp()).toPx()
+      }
+    },
+    decayAnimationSpec = decayAnimationSpec,
+    confirmDetentChange = confirmDetentChange,
+    density = { density },
+  )
+
   init {
     checkValidDetents(detents)
     check(detents.contains(initialDetent)) {
