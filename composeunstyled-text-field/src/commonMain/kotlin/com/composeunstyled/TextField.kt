@@ -63,7 +63,6 @@ class TextFieldScope internal constructor() {
   internal var innerTextField: (@Composable () -> Unit)? = null
   internal var text: String by mutableStateOf("")
   internal var textAlignment by mutableStateOf(TextAlign.Unspecified)
-  internal var textStyle by mutableStateOf(TextStyle.Default)
   internal var enabled by mutableStateOf(true)
 }
 
@@ -135,7 +134,6 @@ fun UnstyledTextField(
     color = textColor,
   )
   scope.textAlignment = newTextStyle.textAlign
-  scope.textStyle = newTextStyle
 
   key(lineLimits) {
     BasicTextField(
