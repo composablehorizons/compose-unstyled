@@ -78,6 +78,8 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(libs.compose.foundation)
+
         api(projects.composeunstyledButton)
         api(projects.composeunstyledCheckbox)
         api(projects.composeunstyledTriStateCheckbox)
