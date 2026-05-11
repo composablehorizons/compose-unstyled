@@ -1,8 +1,9 @@
 name: Release
 
 on:
-  release:
-    types: [ published ]
+  push:
+    tags:
+      - '*'
   workflow_dispatch:
     inputs:
       tag:
@@ -11,10 +12,10 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 env:
-  RELEASE_REF: ${{ github.event.release.tag_name || inputs.tag }}
+  RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
 jobs:
   spotless-check:
@@ -155,7 +156,7 @@ jobs:
           script: ./gradlew --console=plain :composeunstyled-${{ matrix.module }}:connectedDebugAndroidTest
 
   publish:
-    if: github.event_name == 'release'
+    if: github.event_name == 'push'
     needs: [ spotless-check, desktop-tests, android-tests ]
     runs-on: ubuntu-latest
     environment: maven-central
@@ -181,3 +182,37 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
         run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
+
+  github-release:
+    if: github.event_name == 'push'
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ env.RELEASE_REF }}
+
+      - name: Generate release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="${RELEASE_REF#v}"
+          changelog_content="$(
+            sed -n "/## \\[$version\\]/,/## \\[/p" CHANGELOG.md |
+              sed '$ d' |
+              tail -n +2
+          )"
+
+          {
+            echo "CHANGELOG_CONTENT<<EOF"
+            echo "$changelog_content"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_REF }}
+          name: ${{ env.RELEASE_REF }}
+          body: ${{ env.CHANGELOG_CONTENT }}
