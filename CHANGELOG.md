@@ -7,26 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-05-11
+
 ### Added
 
 - Modules! You can now pick and choose only the APIs that you want to use instead of being forced
   to add the full library to your codebase. `composeunstyled-primitives` continues to aggregate all
   primitives for users who prefer a single dependency.
-- Added the following new modules: `composeunstyled-bottom-sheet`, `composeunstyled-build-modifier`,
-  `composeunstyled-button`, `composeunstyled-checkbox`, `composeunstyled-colored-indication`,
-  `composeunstyled-dialog`, `composeunstyled-disclosure`, `composeunstyled-dropdown-menu`,
-  `composeunstyled-escape-handler`, `composeunstyled-focus-ring`, `composeunstyled-icon`,
-  `composeunstyled-modal`, `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`,
+- Added the following new modules: `composeunstyled-anchored`, `composeunstyled-bottom-sheet`,
+  `composeunstyled-build-modifier`, `composeunstyled-button`, `composeunstyled-checkbox`,
+  `composeunstyled-colored-indication`, `composeunstyled-dialog`, `composeunstyled-disclosure`,
+  `composeunstyled-dropdown-menu`, `composeunstyled-escape-handler`,
+  `composeunstyled-focus-ring`, `composeunstyled-icon`, `composeunstyled-modal`,
+  `composeunstyled-modal-bottom-sheet`, `composeunstyled-outline`, `composeunstyled-portal`,
   `composeunstyled-progress`, `composeunstyled-radio-group`, `composeunstyled-scrim`,
   `composeunstyled-scrollbars`, `composeunstyled-separators`, `composeunstyled-slider`,
   `composeunstyled-stack`, `composeunstyled-tab-group`, `composeunstyled-text-field`,
-  `composeunstyled-toggle-switch`, `composeunstyled-tri-state-checkbox`, and
-  `composeunstyled-window-container-size`.
-- New Modal API: The Modal API has been revamped in order to make building custom models easier,
-  without having to worry about different.
+  `composeunstyled-toggle-switch`, `composeunstyled-tooltip`, `composeunstyled-tri-state-checkbox`,
+  and `composeunstyled-window-container-size`.
+- New Modal API: The Modal API has been revamped in order to make building custom modals easier,
+  without having to manage platform-specific modal lifecycles directly.
+- Added `PortalHost` and `Portal` for rendering content into a same-window portal without changing
+  parent layout.
+- Added anchored positioning APIs for placing floating content relative to an anchor.
 - Added `Scrim` as a scoped modal primitive.
 - Added `Sheet` as the measured bottom sheet panel and `UnstyledBottomSheet` as the bottom sheet
   container.
+- Added public `BottomSheetState` and `ModalBottomSheetState` constructors so design systems can wrap
+  primitive state in their own state objects.
 - Compose Unstyled now uses Kotlin `2.3.20` and Compose Multiplatform `1.11.0-alpha01`.
 
 ### Removed
@@ -48,12 +56,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `BottomSheet` API has been reworked and split into two composables. `UnstyledBottomSheet`
   works as the area in which the bottom sheet can move on, while the `Sheet` does the actual
   rendering.
-- Modal Bottom Sheet does not have its own independent `Sheet` composable anymore. Instead of reuses
-  `BottomSheet`'s.
+- Bottom sheet animations can now be customized per state change with animation specs, and modal
+  bottom sheets can use a separate dismiss animation spec.
+- Modal Bottom Sheet does not have its own independent `Sheet` composable anymore. It reuses
+  `BottomSheet`'s `Sheet` API.
 - Modal Bottom Sheet now has a separate `overlay` slot for passing any dimming overlay such as a
   scrim.
+- Modal Bottom Sheet is now IME-aware by default through `ModalBottomSheetProperties.offsetForIme`.
+- `UnstyledDialog` visibility is now controlled by a `visible` parameter, and `DialogPanel` supports
+  an optional `paneTitle` for accessibility.
+- `UnstyledDisclosure` is now controlled by `expanded` and `onExpandedChange`.
+- `UnstyledDropdownMenu` now uses scoped `DropdownMenuPanel` and `MenuItem` APIs, supports anchored
+  side/alignment offsets, and supports Home/End keyboard navigation inside menus.
+- `UnstyledTooltip` now uses a scoped `TooltipPanel` API with `TooltipPlacement` instead of
+  arrow-specific parameters.
+- `UnstyledTabGroup` now uses generic tab keys and scoped `TabList`, `Tab`, and `TabPanel` APIs.
+- `UnstyledTextField` now uses `TextFieldState`, exposes a scoped `TextInput` slot, and passes
+  through the newer `BasicTextField` transformation, line limit, keyboard, layout, and scroll
+  parameters.
+- `UnstyledSlider` now exposes `track` and `thumb` slots with `SliderState`, supports horizontal and
+  vertical orientations, reverse direction, stepped values, keyboard control, and custom thumb sizing.
+- Checkbox, tri-state checkbox, and radio group indicators are now scoped child APIs
+  (`CheckedIndicator`, `StateIndicator`, and `SelectedIndicator`) that receive the primitive
+  interaction source.
+- Radio groups now support generic value types and scope `RadioButton` to `RadioGroupScope`.
+- Toggle switch behavior and thumb placement are now split between `UnstyledSwitch` and the scoped
+  `SwitchThumb` API.
 - Scroll area state APIs moved into the scrollbars module and were renamed to `ScrollbarState`.
   The `ScrollArea` container was removed so scrollbars do not impose layout or styling choices.
+- Scrollbars are now standalone vertical and horizontal primitives with caller-provided thumbs and
+  `ThumbVisibility` control.
 - Component primitives no longer choose internal layout, alignment, or sizing for their content.
   Design systems are now responsible for arranging primitive slots and indicators.
 
