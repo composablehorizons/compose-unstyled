@@ -216,3 +216,4 @@ jobs:
           tag_name: ${{ env.RELEASE_REF }}
           name: ${{ env.RELEASE_REF }}
           body: ${{ env.CHANGELOG_CONTENT }}
+          draft: true
