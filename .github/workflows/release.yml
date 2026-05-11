@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to test
+        description: Release tag to publish
         required: true
         type: string
 
@@ -156,7 +156,7 @@ jobs:
           script: ./gradlew --console=plain :composeunstyled-${{ matrix.module }}:connectedDebugAndroidTest
 
   publish:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: [ spotless-check, desktop-tests, android-tests ]
     runs-on: ubuntu-latest
     environment: maven-central
@@ -184,7 +184,7 @@ jobs:
         run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
 
   github-release:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: publish
     runs-on: ubuntu-latest
     steps:
