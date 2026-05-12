@@ -49,7 +49,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.TextStyle
@@ -75,7 +74,7 @@ fun TextFieldDemo() {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
+      .background(Color(0xFFFAFAFA))
       .padding(horizontal = 16.dp)
       .padding(top = 16.dp)
       .imePadding(),

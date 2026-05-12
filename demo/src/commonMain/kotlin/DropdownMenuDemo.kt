@@ -50,7 +50,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.shadow.Shadow
@@ -78,7 +77,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun DropdownMenuDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))
+      .background(Color(0xFFFAFAFA))
       .padding(vertical = 40.dp),
     contentAlignment = Alignment.TopCenter,
   ) {

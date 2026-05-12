@@ -45,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
@@ -67,7 +66,7 @@ fun TooltipDemo() {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))),
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     Row {

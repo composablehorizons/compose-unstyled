@@ -46,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -60,8 +59,9 @@ fun ToggleSwitchDemo() {
   var toggled by remember { mutableStateOf(false) }
 
   Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFADD100), Color(0xFF7B920A)))),
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     Column {

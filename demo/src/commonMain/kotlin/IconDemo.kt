@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Contact
@@ -46,7 +45,7 @@ fun IconDemo() {
   BoxWithConstraints(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFFFFFF), Color(0xFFF0F0F0)))),
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     val isCompact = maxWidth < 600.dp

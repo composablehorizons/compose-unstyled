@@ -52,7 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,7 +74,7 @@ fun ScrollbarsDemo() {
 fun VerticalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
+      .background(Color(0xFFFAFAFA))
       .padding(vertical = 40.dp)
       .padding(horizontal = 16.dp),
     contentAlignment = Alignment.TopCenter,
@@ -159,7 +158,7 @@ fun VerticalScrollbarsDemo() {
 fun HorizontalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
+      .background(Color(0xFFFAFAFA))
       .padding(vertical = 40.dp),
     contentAlignment = Alignment.TopCenter,
   ) {

@@ -34,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
@@ -47,8 +46,9 @@ import com.composeunstyled.outline
 @Composable
 fun CheckboxDemo() {
   Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     var checked by remember { mutableStateOf(false) }

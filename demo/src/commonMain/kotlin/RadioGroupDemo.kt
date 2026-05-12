@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.RadioButton
@@ -59,7 +58,7 @@ fun RadioGroupDemo() {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFEC6F66), Color(0xFFF3A183)))),
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     Column(

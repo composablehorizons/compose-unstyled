@@ -49,7 +49,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -80,7 +79,7 @@ fun DisclosureDemo() {
   )
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF00C6FF), Color(0xFF0072FF))))
+      .background(Color(0xFFFAFAFA))
       .padding(top = 60.dp)
       .padding(horizontal = 16.dp),
     contentAlignment = Alignment.TopCenter,

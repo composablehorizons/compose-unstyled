@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragIndication
@@ -62,11 +61,7 @@ private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
 
 @Composable
 fun ModalBottomSheetDemo() {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6)))),
-  ) {
+  Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
     val modalSheetState = rememberModalBottomSheetState(
       initialDetent = Hidden,
       detents = listOf(Hidden, Peek, FullyExpanded),

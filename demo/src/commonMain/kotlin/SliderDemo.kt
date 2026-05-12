@@ -50,7 +50,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
@@ -64,7 +63,7 @@ import com.composeunstyled.UnstyledSlider
 fun SliderDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFED213A), Color(0xFF93291E)))),
+      .background(Color(0xFFFAFAFA)),
     contentAlignment = Alignment.Center,
   ) {
     val interactionSource = remember { MutableInteractionSource() }

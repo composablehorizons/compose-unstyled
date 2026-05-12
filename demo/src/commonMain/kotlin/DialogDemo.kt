@@ -48,7 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -69,7 +68,7 @@ fun DialogDemo() {
 
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF4A90E2), Color(0xFF50C9C3))))
+      .background(Color(0xFFFAFAFA))
       .padding(vertical = 40.dp),
     contentAlignment = Alignment.Center,
   ) {

@@ -45,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -109,7 +108,7 @@ fun TabGroupDemo() {
 
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5))))
+      .background(Color(0xFFFAFAFA))
       .padding(16.dp)
       .padding(top = 90.dp),
     contentAlignment = Alignment.TopCenter,
