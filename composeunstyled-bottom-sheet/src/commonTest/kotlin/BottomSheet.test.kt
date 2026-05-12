@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -750,6 +751,53 @@ class BottomSheetCommonTest {
       with(density) { DensityTolerance.toPx() },
     )
     onNodeWithTag("sheet").assertHeightIsEqualTo(200.dp)
+  }
+
+  @Test
+  fun fully_expanded_detent_includes_sheet_top_padding_in_measured_height() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(300.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet_container"),
+        ) {
+          Sheet(
+            modifier = Modifier
+              .padding(top = 24.dp)
+              .testTag("sheet"),
+          ) {
+            Box(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxWidth()
+                .height(200.dp),
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(state.contentHeightPx).isCloseTo(
+      with(density) {
+        224.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
+    assertThat(state.offset).isCloseTo(
+      with(density) {
+        224.dp.toPx()
+      },
+      with(density) { DensityTolerance.toPx() },
+    )
   }
 
   @Test

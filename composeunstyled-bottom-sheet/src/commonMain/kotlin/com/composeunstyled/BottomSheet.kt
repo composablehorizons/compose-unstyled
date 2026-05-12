@@ -646,70 +646,76 @@ fun BottomSheetScope.Sheet(
   val context = LocalBottomSheetContext.current
   val state = context.state
 
-  Layout(
-    modifier = modifier.clipToBounds(),
-    content = content,
-  ) { measurables, constraints ->
-    val fallbackContentHeight = when {
-      state == null -> constraints.maxHeight
-      state.hasContentDependentDetents() -> state.containerHeightPx.roundToInt()
-      state.layoutHeightPx.isNaN() -> constraints.maxHeight
-      else -> state.layoutHeightPx.roundToInt()
-    }.coerceIn(constraints.minHeight, constraints.maxHeight)
-    val intrinsicContentHeight = measurables.maxOfOrNull { measurable ->
-      try {
-        measurable.maxIntrinsicHeight(constraints.maxWidth)
-      } catch (_: IllegalStateException) {
-        fallbackContentHeight
+  Box(
+    modifier = Modifier
+      .onSizeChanged { measuredSize ->
+        state?.updateContentHeight(measuredSize.height.toFloat())
       }
-    } ?: 0
-    val estimatedContentHeight = if (intrinsicContentHeight == 0) {
-      fallbackContentHeight
-    } else {
-      intrinsicContentHeight
-    }
+      .then(modifier)
+      .clipToBounds(),
+  ) {
+    Layout(
+      content = content,
+    ) { measurables, constraints ->
+      val fallbackContentHeight = when {
+        state == null -> constraints.maxHeight
+        state.hasContentDependentDetents() -> state.containerHeightPx.roundToInt()
+        state.layoutHeightPx.isNaN() -> constraints.maxHeight
+        else -> state.layoutHeightPx.roundToInt()
+      }.coerceIn(constraints.minHeight, constraints.maxHeight)
+      val intrinsicContentHeight = measurables.maxOfOrNull { measurable ->
+        try {
+          measurable.maxIntrinsicHeight(constraints.maxWidth)
+        } catch (_: IllegalStateException) {
+          fallbackContentHeight
+        }
+      } ?: 0
+      val estimatedContentHeight = if (intrinsicContentHeight == 0) {
+        fallbackContentHeight
+      } else {
+        intrinsicContentHeight
+      }
+      val estimatedSheetHeightPx = max(
+        estimatedContentHeight.toFloat(),
+        state?.contentHeightPx?.takeUnless { it.isNaN() } ?: 0f,
+      )
 
-    val resolvedLayoutHeight = state?.layoutHeightPxFor(estimatedContentHeight.toFloat())
-      ?: estimatedContentHeight.toFloat()
-    val waitingForHiddenAnchors = state != null &&
-      state.anchoredDraggableState.offset.isNaN() &&
-      state.currentDetent == SheetDetent.Hidden &&
-      state.targetDetent == SheetDetent.Hidden
-    val layoutMaxHeight = when {
-      waitingForHiddenAnchors -> constraints.minHeight
-      resolvedLayoutHeight.isNaN() -> constraints.maxHeight
-      else -> resolvedLayoutHeight.roundToInt()
-    }.coerceIn(constraints.minHeight, constraints.maxHeight)
-    val contentMaxHeight = when {
-      waitingForHiddenAnchors -> layoutMaxHeight
-      state?.hasContentDependentDetents() == true -> fallbackContentHeight
-      else -> layoutMaxHeight
-    }
-    val contentConstraints = constraints.copy(maxHeight = contentMaxHeight)
+      val resolvedLayoutHeight = state?.layoutHeightPxFor(estimatedSheetHeightPx)
+        ?: estimatedSheetHeightPx
+      val waitingForHiddenAnchors = state != null &&
+        state.anchoredDraggableState.offset.isNaN() &&
+        state.currentDetent == SheetDetent.Hidden &&
+        state.targetDetent == SheetDetent.Hidden
+      val layoutMaxHeight = when {
+        waitingForHiddenAnchors -> constraints.minHeight
+        resolvedLayoutHeight.isNaN() -> constraints.maxHeight
+        else -> resolvedLayoutHeight.roundToInt()
+      }.coerceIn(constraints.minHeight, constraints.maxHeight)
+      val contentMaxHeight = when {
+        waitingForHiddenAnchors -> layoutMaxHeight
+        state?.hasContentDependentDetents() == true -> fallbackContentHeight
+        else -> layoutMaxHeight
+      }
+      val contentConstraints = constraints.copy(maxHeight = contentMaxHeight)
 
-    val placeables = measurables.map { measurable ->
-      measurable.measure(contentConstraints)
-    }
+      val placeables = measurables.map { measurable ->
+        measurable.measure(contentConstraints)
+      }
 
-    val width = max(
-      constraints.minWidth,
-      placeables.maxOfOrNull { it.width } ?: 0,
-    )
-    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
-    val height = min(
-      contentHeight,
-      layoutMaxHeight,
-    ).coerceIn(constraints.minHeight, constraints.maxHeight)
+      val width = max(
+        constraints.minWidth,
+        placeables.maxOfOrNull { it.width } ?: 0,
+      )
+      val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
+      val height = min(
+        contentHeight,
+        layoutMaxHeight,
+      ).coerceIn(constraints.minHeight, constraints.maxHeight)
 
-    val measuredContentHeight = max(
-      estimatedContentHeight,
-      contentHeight,
-    )
-    state?.updateContentHeight(max(measuredContentHeight, height).toFloat())
-
-    layout(width, height) {
-      placeables.forEach { placeable ->
-        placeable.placeRelative(0, 0)
+      layout(width, height) {
+        placeables.forEach { placeable ->
+          placeable.placeRelative(0, 0)
+        }
       }
     }
   }
