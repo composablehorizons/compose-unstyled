@@ -40,6 +40,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 ## Design with Compose
 
 - Never use the old `shadow()` API as it uses Material Design's specs. Always prefer using `dropShadow()` (`androidx.compose.ui.draw.dropShadow`) instead.
+- Modifier order matters and is applied top to bottom. Do not `clip()` and then apply `shadow()`, because the shadow will be clipped and won't be visible. Similarly, do not call `fillMaxWidth()` and then apply `widthIn()`, because the width has already been set before the constraint is applied.
 
 ## Kotlin style
 
