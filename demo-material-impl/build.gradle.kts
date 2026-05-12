@@ -26,6 +26,7 @@ plugins {
   alias(libs.plugins.compose)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.multiplatform)
+  alias(libs.plugins.android.application)
 }
 
 java {
@@ -40,6 +41,12 @@ kotlin {
   }
 
   jvm("desktop") {
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_17
+    }
+  }
+
+  androidTarget {
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
@@ -63,11 +70,36 @@ kotlin {
         }
       }
     }
+
+    val androidMain by getting {
+      dependencies {
+        implementation(libs.androidx.activitycompose)
+      }
+    }
   }
 }
 
 compose.desktop {
   application {
     mainClass = "com.composeunstyled.demo.materialimpl.MainKt"
+  }
+}
+
+android {
+  namespace = "com.composeunstyled.demo.materialimpl"
+  compileSdk = libs.versions.android.compileSDK.get().toInt()
+
+  defaultConfig {
+    applicationId = "com.composeunstyled.demo.materialimpl"
+    minSdk = 23
+    targetSdk = libs.versions.android.compileSDK.get().toInt()
+    versionCode = 1
+    versionName = "1.0.0"
+  }
+}
+
+androidComponents {
+  beforeVariants(selector().withBuildType("release")) { variantBuilder ->
+    variantBuilder.enable = false
   }
 }

@@ -23,7 +23,9 @@
 
   <application
     android:allowBackup="true"
-    android:label="Compose Unstyled Android Demo"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@android:style/Theme.Material.Light.NoActionBar">
     <activity
