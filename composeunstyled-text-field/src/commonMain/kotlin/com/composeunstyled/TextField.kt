@@ -145,12 +145,16 @@ fun UnstyledTextField(
       readOnly = readOnly,
       outputTransformation = outputTransformation,
       inputTransformation = inputTransformation,
-      modifier = modifier then buildModifier {
-        add(Modifier.semantics(mergeDescendants = true) {})
-        if (accessibilityLabel != null) {
-          add(Modifier.semantics { contentDescription = accessibilityLabel })
-        }
-      },
+      modifier = modifier
+        .pointerHoverIcon(PointerIcon.Default)
+        .then(
+          buildModifier {
+            add(Modifier.semantics(mergeDescendants = true) {})
+            if (accessibilityLabel != null) {
+              add(Modifier.semantics { contentDescription = accessibilityLabel })
+            }
+          },
+        ),
       cursorBrush = cursorBrush,
       lineLimits = lineLimits,
       onTextLayout = onTextLayout,
