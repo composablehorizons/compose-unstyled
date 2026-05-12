@@ -19,24 +19,19 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <uses-permission android:name="android.permission.INTERNET"/>
-
-  <application
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round">
-    <activity
-      android:name="com.composeunstyled.demo.AndroidXmlDemoActivity"
-      android:windowSoftInputMode="adjustResize"
-      android:theme="@style/AppTheme"
-      android:exported="true">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-  </application>
-
-</manifest>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="108dp"
+  android:height="108dp"
+  android:viewportWidth="108"
+  android:viewportHeight="108">
+  <group
+    android:translateX="25"
+    android:translateY="25"
+    android:scaleX="0.58"
+    android:scaleY="0.58">
+    <path
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:pathData="M49.9998,0L94.6898,25.8V74.2L49.9998,100L5.27881,74.2V25.8L49.9998,0ZM49.9998,29.2L68.1308,39.67V60.33L49.9998,70.8L31.8358,60.33V39.67L49.9998,29.2Z" />
+  </group>
+</vector>
