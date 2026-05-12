@@ -95,7 +95,6 @@ fun ModalBottomSheetDemo() {
     ) {
       Box(
         modifier = Modifier
-          .padding(horizontal = 56.dp)
           .fillMaxWidth(),
         contentAlignment = Alignment.TopCenter,
       ) {
