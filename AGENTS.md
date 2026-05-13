@@ -7,7 +7,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Add tests for shared Kotlin/Compose behavior in `commonTest` so they run on both JVM and Android targets. Use platform-specific test source sets only when the behavior is platform-specific.
 - Put touch-specific tests in the Android test source set. Put mouse-specific tests in the JVM test source set.
 - When creating a library module with an Android target, add the Android instrumented test dependencies required for Compose UI tests: `libs.androidx.compose.test`, `libs.androidx.compose.test.manifest`, and `libs.androidx.espresso`.
-- Screenshot tests must only compare screenshots and write failure artifacts under `build/`; they must not update checked-in baselines while running tests. When screenshot baselines need to be updated, use the dedicated screenshot update task, such as `./gradlew :demo:updateDesktopScreenshots`.
+- Screenshot tests must only compare screenshots and write failure artifacts under `build/`; they must not update checked-in baselines while running tests. When screenshot baselines need to be updated, use the dedicated screenshot task, such as `./gradlew :demo:takeScreenshots`.
 
 ## Recomposition testing
 
