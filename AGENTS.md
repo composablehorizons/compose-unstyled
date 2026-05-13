@@ -8,6 +8,14 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Put touch-specific tests in the Android test source set. Put mouse-specific tests in the JVM test source set.
 - When creating a library module with an Android target, add the Android instrumented test dependencies required for Compose UI tests: `libs.androidx.compose.test`, `libs.androidx.compose.test.manifest`, and `libs.androidx.espresso`.
 
+## Recomposition testing
+
+- When changing Compose behavior that can affect composition stability, add focused recomposition tests in `commonTest` using `composeunstyled-test`.
+- Use `runComposeRecompositionTest {}` with `RecompositionCount(name)` placed at the specific subtree whose recomposition behavior matters. Assert with the project's normal assertion framework through `recompositionCount(name)` after calling `resetRecompositionCounts(...)`.
+- Prefer testing user-relevant state transitions, such as opening or closing components, changing detents, invalidating measured state, and resizing dynamic containers.
+- Record the current observed recomposition count unless the change is explicitly intended to improve it.
+- Do not use broad parent-level counters when the behavior under test is scoped to a specific slot or content subtree.
+
 ## Development workflow
 
 - When touching code for any playground or demo module, do not run the app. Instead, use `./gradlew :<module>:hotReloadDesktopMain` to reload the app.
