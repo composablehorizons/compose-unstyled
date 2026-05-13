@@ -22,6 +22,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +35,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -109,7 +108,6 @@ fun TabGroupDemo() {
 
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF00D2FF), Color(0xFF3A7BD5))))
       .padding(16.dp)
       .padding(top = 90.dp),
     contentAlignment = Alignment.TopCenter,
@@ -125,9 +123,9 @@ fun TabGroupDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .shadow(4.dp, RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.White),
+            .background(Color(0xFFF8FAFC))
+            .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -136,12 +134,12 @@ fun TabGroupDemo() {
                 modifier = Modifier.weight(1f).fillMaxHeight(),
               ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                  Text(
+                  BasicText(
                     text = key,
                     style = TextStyle(
                       fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                       color = if (selected) {
-                        Color(0xFF2196F3)
+                        Color.Black
                       } else {
                         Color(0xFF757575)
                       },
@@ -151,7 +149,7 @@ fun TabGroupDemo() {
                     Box(
                       modifier = Modifier
                         .background(
-                          color = Color(0xFF2196F3),
+                          color = Color.Black,
                           shape = RoundedCornerShape(2.dp),
                         )
                         .fillMaxWidth()
@@ -171,11 +169,11 @@ fun TabGroupDemo() {
             key = key,
             modifier = Modifier
               .fillMaxWidth()
-              .shadow(4.dp, RoundedCornerShape(8.dp))
               .background(
-                color = Color.White,
+                color = Color(0xFFF8FAFC),
                 shape = RoundedCornerShape(8.dp),
-              ),
+              )
+              .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->
@@ -184,18 +182,18 @@ fun TabGroupDemo() {
                   modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                 ) {
                   Column(Modifier.padding(12.dp)) {
-                    Text(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
+                    BasicText(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
                     Spacer(Modifier.height(4.dp))
                     Row(
                       horizontalArrangement = Arrangement.spacedBy(4.dp),
                       verticalAlignment = Alignment.CenterVertically,
                       modifier = Modifier.fillMaxWidth().alpha(0.6f),
                     ) {
-                      Text(item.relativeTime)
-                      Text("·")
-                      Text("${item.comments} comments")
-                      Text("·")
-                      Text("${item.points} shares")
+                      BasicText(item.relativeTime)
+                      BasicText("·")
+                      BasicText("${item.comments} comments")
+                      BasicText("·")
+                      BasicText("${item.points} shares")
                     }
                   }
                 }

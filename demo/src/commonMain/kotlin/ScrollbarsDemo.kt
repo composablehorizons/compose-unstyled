@@ -45,18 +45,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Thumb
@@ -75,7 +72,6 @@ fun ScrollbarsDemo() {
 fun VerticalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
       .padding(vertical = 40.dp)
       .padding(horizontal = 16.dp),
     contentAlignment = Alignment.TopCenter,
@@ -113,9 +109,8 @@ fun VerticalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .shadow(4.dp, RoundedCornerShape(8.dp))
-        .border(Dp.Hairline, Color.Black.copy(0.1f), RoundedCornerShape(8.dp))
-        .background(Color.White, RoundedCornerShape(8.dp))
+        .background(Color(0xFFF8FAFC), RoundedCornerShape(8.dp))
+        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp))
         .fillMaxSize(),
     ) {
       Column(
@@ -124,14 +119,14 @@ fun VerticalScrollbarsDemo() {
           .fillMaxWidth()
           .padding(8.dp),
       ) {
-        Text(
+        BasicText(
           "Deserts",
           Modifier.padding(4.dp),
           style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
         )
         Spacer(Modifier.height(12.dp))
         desserts.forEach { i ->
-          Text(i, Modifier.padding(4.dp).fillMaxWidth())
+          BasicText(i, Modifier.padding(4.dp).fillMaxWidth())
           Spacer(Modifier.height(12.dp))
         }
       }
@@ -159,7 +154,6 @@ fun VerticalScrollbarsDemo() {
 fun HorizontalScrollbarsDemo() {
   Box(
     modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFF5F6D), Color(0xFFFFC371))))
       .padding(vertical = 40.dp),
     contentAlignment = Alignment.TopCenter,
   ) {
@@ -169,9 +163,8 @@ fun HorizontalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .shadow(4.dp, RoundedCornerShape(8.dp))
-        .border(Dp.Hairline, Color.Black.copy(0.1f), RoundedCornerShape(8.dp))
-        .background(Color.White, RoundedCornerShape(8.dp))
+        .background(Color(0xFFF8FAFC), RoundedCornerShape(8.dp))
+        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp))
         .wrapContentHeight(),
     ) {
       Row(
@@ -184,7 +177,7 @@ fun HorizontalScrollbarsDemo() {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         (1..100).forEach { i ->
-          Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Red))
+          Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Black))
         }
       }
       UnstyledHorizontalScrollbar(

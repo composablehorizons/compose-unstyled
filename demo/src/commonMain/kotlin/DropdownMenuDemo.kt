@@ -28,18 +28,17 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,13 +48,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
@@ -76,126 +72,112 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun DropdownMenuDemo() {
-  Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66))))
-      .padding(vertical = 40.dp),
-    contentAlignment = Alignment.TopCenter,
-  ) {
-    class DropdownOption(
-      val text: String,
-      val icon: ImageVector,
-      val enabled: Boolean = true,
-      val dangerous: Boolean = false,
-    )
+  class DropdownOption(
+    val text: String,
+    val icon: ImageVector,
+    val enabled: Boolean = true,
+    val dangerous: Boolean = false,
+  )
 
-    val options = listOf(
-      DropdownOption("Select All", Lucide.Maximize),
-      DropdownOption("Copy", Lucide.Copy),
-      DropdownOption("Cut", Lucide.Scissors, enabled = false),
-      DropdownOption("Paste", Lucide.Clipboard),
-      DropdownOption("Delete", Lucide.Trash2, dangerous = true),
-    )
-    var expanded by remember { mutableStateOf(false) }
+  val options = listOf(
+    DropdownOption("Select All", Lucide.Maximize),
+    DropdownOption("Copy", Lucide.Copy),
+    DropdownOption("Cut", Lucide.Scissors, enabled = false),
+    DropdownOption("Paste", Lucide.Clipboard),
+    DropdownOption("Delete", Lucide.Trash2, dangerous = true),
+  )
+  var expanded by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-      delay(500.milliseconds)
-      expanded = true
-    }
+  LaunchedEffect(Unit) {
+    delay(500.milliseconds)
+    expanded = true
+  }
 
-    UnstyledDropdownMenu(
-      expanded = expanded,
-      onExpandedChange = { expanded = it },
-      sideOffset = 4.dp,
-      panel = {
-        DropdownMenuPanel(
-          modifier = Modifier
-            .width(240.dp)
-            .dropShadow(
-              shape = RoundedCornerShape(8.dp),
-              shadow = Shadow(
-                radius = 8.dp,
-                spread = 0.dp,
-                color = Color.Black.copy(alpha = 0.18f),
-                offset = DpOffset(x = 0.dp, y = 2.dp),
-              ),
-            )
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.White),
-          enter = scaleIn(
-            animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
-            initialScale = 0.8f,
-            transformOrigin = TransformOrigin(0f, 0f),
-          ) + fadeIn(tween(durationMillis = 30)),
-          exit = scaleOut(
-            animationSpec = tween(durationMillis = 1, delayMillis = 75),
-            targetScale = 1f,
-          ) +
-            fadeOut(tween(durationMillis = 75)),
-        ) {
-          Column {
-            options.forEachIndexed { index, option ->
-              if (index == 1 || index == options.lastIndex) {
-                UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
-              }
-              MenuItem(
-                onClick = {},
-                enabled = option.enabled,
+  UnstyledDropdownMenu(
+    expanded = expanded,
+    onExpandedChange = { expanded = it },
+    sideOffset = 4.dp,
+    panel = {
+      DropdownMenuPanel(
+        modifier = Modifier
+          .width(240.dp)
+          .clip(RoundedCornerShape(8.dp))
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+        enter = scaleIn(
+          animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
+          initialScale = 0.8f,
+          transformOrigin = TransformOrigin(0f, 0f),
+        ) + fadeIn(tween(durationMillis = 30)),
+        exit = scaleOut(
+          animationSpec = tween(durationMillis = 1, delayMillis = 75),
+          targetScale = 1f,
+        ) +
+          fadeOut(tween(durationMillis = 75)),
+      ) {
+        Column {
+          options.forEachIndexed { index, option ->
+            if (index == 1 || index == options.lastIndex) {
+              UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
+            }
+            MenuItem(
+              onClick = {},
+              enabled = option.enabled,
+              modifier = Modifier
+                .padding(4.dp)
+                .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .fillMaxWidth(),
+            ) {
+              Row(
                 modifier = Modifier
-                  .padding(4.dp)
-                  .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-                  .clip(RoundedCornerShape(8.dp))
-                  .fillMaxWidth(),
+                  .fillMaxWidth()
+                  .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
               ) {
-                Row(
-                  modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                  horizontalArrangement = Arrangement.Start,
-                  verticalAlignment = Alignment.CenterVertically,
-                ) {
-                  val contentColor = (
-                    if (option.dangerous) {
-                      Color(0xFFC62828)
-                    } else {
-                      LocalContentColor.current
-                    }
-                    ).copy(alpha = if (option.enabled) 1f else 0.5f)
+                val contentColor = (
+                  if (option.dangerous) {
+                    Color(0xFFDC2626)
+                  } else {
+                    LocalContentColor.current
+                  }
+                  ).copy(alpha = if (option.enabled) 1f else 0.5f)
 
-                  UnstyledIcon(
-                    imageVector = option.icon,
-                    contentDescription = null,
-                    tint = contentColor,
-                  )
-                  Spacer(Modifier.width(12.dp))
-                  Text(
-                    text = option.text,
-                    color = contentColor,
-                  )
-                }
+                UnstyledIcon(
+                  imageVector = option.icon,
+                  contentDescription = null,
+                  tint = contentColor,
+                )
+                Spacer(Modifier.width(12.dp))
+                BasicText(
+                  text = option.text,
+                  style = TextStyle(color = contentColor),
+                )
               }
             }
           }
         }
-      },
-      anchor = {
-        UnstyledButton(
-          onClick = { expanded = true },
-          modifier = Modifier
-            .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .background(Color.White),
+      }
+    },
+    anchor = {
+      UnstyledButton(
+        onClick = { expanded = true },
+        modifier = Modifier
+          .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+          .clip(RoundedCornerShape(6.dp))
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp)),
+      ) {
+        Row(
+          modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+          verticalAlignment = Alignment.CenterVertically,
         ) {
-          Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            Text("Options")
-            Spacer(Modifier.width(8.dp))
-            UnstyledIcon(Lucide.ChevronDown, null)
-          }
+          BasicText("Options")
+          Spacer(Modifier.width(8.dp))
+          UnstyledIcon(Lucide.ChevronDown, null)
         }
-      },
-    )
-  }
+      }
+    },
+  )
 }

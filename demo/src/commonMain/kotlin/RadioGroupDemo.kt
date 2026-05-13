@@ -22,19 +22,19 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,8 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.RadioButton
@@ -54,72 +52,60 @@ import com.composeunstyled.UnstyledRadioGroup
 @Composable
 fun RadioGroupDemo() {
   val values = listOf("Light", "Dark", "System")
-  var selectedValue by remember { mutableStateOf<String?>(null) }
+  var selectedValue by remember { mutableStateOf("Light") }
 
-  Box(
+  Column(
     modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFEC6F66), Color(0xFFF3A183)))),
-    contentAlignment = Alignment.Center,
+      .width(300.dp)
+      .padding(16.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Column(
-      modifier = Modifier.width(300.dp).padding(16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
+    UnstyledRadioGroup(
+      value = selectedValue,
+      onValueChange = { selectedValue = it },
+      modifier = Modifier.fillMaxWidth(),
+      accessibilityLabel = "Theme selection",
     ) {
-      UnstyledRadioGroup(
-        value = selectedValue,
-        onValueChange = { selectedValue = it },
+      Column(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth(),
-        accessibilityLabel = "Theme selection",
       ) {
-        Column(
-          horizontalAlignment = Alignment.Start,
-          verticalArrangement = Arrangement.spacedBy(8.dp),
-          modifier = Modifier.fillMaxWidth(),
-        ) {
-          values.forEach { value ->
-            val selected = selectedValue == value
-            val itemShape = RoundedCornerShape(14.dp)
-            RadioButton(
-              value = value,
-              modifier = Modifier
-                .fillMaxWidth()
-                .clip(itemShape)
-                .background(
-                  if (selected) {
-                    Color.White.copy(alpha = 0.16f)
-                  } else {
-                    Color.Transparent
-                  },
-                ),
+        values.forEach { value ->
+          val selected = selectedValue == value
+          val itemShape = RoundedCornerShape(14.dp)
+          RadioButton(
+            value = value,
+            modifier = Modifier
+              .fillMaxWidth()
+              .clip(itemShape),
+          ) {
+            Row(
+              modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+              Box(
+                modifier = Modifier
+                  .size(20.dp)
+                  .clip(CircleShape)
+                  .background(
+                    if (selected) Color.Black else Color(0xFFF8FAFC),
+                  )
+                  .border(1.dp, Color(0xFFCACACA), CircleShape),
+                contentAlignment = Alignment.Center,
               ) {
-                Box(
-                  modifier = Modifier
-                    .size(20.dp)
-                    .shadow(elevation = 4.dp, RoundedCornerShape(8.dp))
-                    .clip(CircleShape)
-                    .background(
-                      if (selected) Color(0xFFB23A48) else Color.White,
-                    ),
-                  contentAlignment = Alignment.Center,
-                ) {
-                  SelectedIndicator {
-                    Box(
-                      Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    )
-                  }
+                SelectedIndicator {
+                  Box(
+                    Modifier
+                      .size(8.dp)
+                      .clip(CircleShape)
+                      .background(Color.White),
+                  )
                 }
-                Spacer(Modifier.width(16.dp))
-                Text(value)
               }
+              Spacer(Modifier.width(16.dp))
+              BasicText(value)
             }
           }
         }

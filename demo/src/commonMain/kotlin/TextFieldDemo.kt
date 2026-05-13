@@ -23,59 +23,36 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.OutputTransformation
-import androidx.compose.foundation.text.input.TextFieldBuffer
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Eye
-import com.composables.icons.lucide.EyeOff
-import com.composables.icons.lucide.Lucide
+import androidx.compose.ui.unit.sp
 import com.composeunstyled.TextInput
-import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTextField
 
 @Composable
 fun TextFieldDemo() {
-  val email = rememberTextFieldState()
-  val password = rememberTextFieldState()
-  var showPassword by remember { mutableStateOf(false) }
+  val displayName = rememberTextFieldState()
   val fieldShape = RoundedCornerShape(8.dp)
 
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF9D50BB), Color(0xFF6E48AA))))
       .padding(horizontal = 16.dp)
       .padding(top = 16.dp)
       .imePadding(),
@@ -83,131 +60,53 @@ fun TextFieldDemo() {
   ) {
     Box(
       modifier = Modifier
-        .widthIn(max = 500.dp)
-        .dropShadow(
-          shape = RoundedCornerShape(16.dp),
-          shadow = Shadow(
-            radius = 8.dp,
-            spread = 0.dp,
-            color = Color.Black.copy(alpha = 0.22f),
-            offset = DpOffset(x = 0.dp, y = 2.dp),
-          ),
-        )
-        .clip(RoundedCornerShape(16.dp))
-        .background(Color.White)
-        .padding(24.dp),
+        .widthIn(max = 500.dp),
       contentAlignment = Alignment.Center,
     ) {
       Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
         UnstyledTextField(
-          state = email,
+          state = displayName,
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
-          keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email,
+          cursorBrush = SolidColor(Color.Black),
+          textStyle = TextStyle(
+            color = Color.Black,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
           ),
-          textStyle = MaterialTheme.typography.bodyMedium,
         ) {
           Column {
-            Text(
-              "Email",
+            BasicText(
+              "Display Name",
               modifier = Modifier.padding(bottom = 8.dp),
-              style = MaterialTheme.typography.bodyLarge,
+              style = TextStyle(
+                color = Color.Black,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+              ),
             )
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
-                .background(Color.White, fieldShape)
+                .background(Color(0xFFF8FAFC), fieldShape)
+                .border(1.dp, Color(0xFFCACACA), fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
-                Text(
-                  "email@example.com",
-                  color = Color.Black.copy(0.6f),
-                  style = MaterialTheme.typography.bodyMedium,
+                BasicText(
+                  "Alex",
+                  style = TextStyle(
+                    color = Color.Black.copy(0.6f),
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                  ),
                 )
               },
             )
           }
         }
-
-        UnstyledTextField(
-          state = password,
-          modifier = Modifier.fillMaxWidth(),
-          lineLimits = TextFieldLineLimits.SingleLine,
-          outputTransformation = if (showPassword) null else PasswordOutputTransformation,
-          textStyle = MaterialTheme.typography.bodyMedium,
-        ) {
-          Column {
-            Text(
-              "Password",
-              modifier = Modifier.padding(bottom = 8.dp),
-              style = MaterialTheme.typography.bodyLarge,
-            )
-            Row(
-              modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color(0xFFBDBDBD), fieldShape)
-                .background(Color.White, fieldShape)
-                .padding(vertical = 4.dp)
-                .padding(start = 16.dp, end = 4.dp),
-              verticalAlignment = Alignment.CenterVertically,
-            ) {
-              TextInput(
-                modifier = Modifier.weight(1f),
-                placeholder = {
-                  Text(
-                    text = "8-12 characters",
-                    color = Color.Black.copy(0.6f),
-                    style = MaterialTheme.typography.bodyMedium,
-                  )
-                },
-              )
-              UnstyledButton(
-                onClick = { showPassword = showPassword.not() },
-                modifier = Modifier.clip(RoundedCornerShape(4.dp)),
-              ) {
-                Box(Modifier.padding(4.dp)) {
-                  UnstyledIcon(
-                    imageVector = if (showPassword) Lucide.EyeOff else Lucide.Eye,
-                    contentDescription = if (showPassword) "Hide password" else "Show password",
-                    tint = Color(0xFF757575),
-                  )
-                }
-              }
-            }
-          }
-        }
-
-        UnstyledButton(
-          onClick = { /* TODO */ },
-          modifier = Modifier
-            .fillMaxWidth()
-            .clip(fieldShape)
-            .background(Color(0xFF8E44AD)),
-        ) {
-          Text(
-            "Submit",
-            modifier = Modifier.padding(12.dp),
-            color = Color.White,
-            fontWeight = FontWeight.Medium,
-            style = MaterialTheme.typography.bodyMedium.merge(
-              TextStyle(fontWeight = FontWeight.Medium),
-            ),
-          )
-        }
       }
-    }
-  }
-}
-
-private val PasswordOutputTransformation = object : OutputTransformation {
-  override fun TextFieldBuffer.transformOutput() {
-    for (index in 0 until length) {
-      replace(index, index + 1, "*")
     }
   }
 }

@@ -22,6 +22,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -32,13 +33,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -50,43 +49,42 @@ import com.composeunstyled.UnstyledVerticalSeparator
 fun SeparatorsDemo() {
   BoxWithConstraints(
     modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFF8C42), Color(0xFFD65DB1)))),
+      .fillMaxSize(),
     contentAlignment = Alignment.Center,
   ) {
     Column(
       Modifier
-        .shadow(4.dp, RoundedCornerShape(6.dp))
         .clip(RoundedCornerShape(6.dp))
-        .background(Color.White)
+        .background(Color(0xFFF8FAFC))
+        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp))
         .width(240.dp),
     ) {
-      Text(
+      BasicText(
         "New Window",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
       UnstyledHorizontalSeparator(Color.LightGray)
-      Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
+      BasicText("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
       UnstyledHorizontalSeparator(Color.LightGray)
-      Text(
+      BasicText(
         "New Incognito Tab",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
       UnstyledHorizontalSeparator(Color.LightGray)
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-        Text(
+        BasicText(
           "Copy",
           modifier = Modifier.padding(8.dp).weight(1f),
           style = TextStyle(textAlign = TextAlign.Center),
         )
         UnstyledVerticalSeparator(Color.LightGray)
-        Text(
+        BasicText(
           "Cut",
           modifier = Modifier.padding(8.dp).weight(1f),
           style = TextStyle(textAlign = TextAlign.Center),
         )
         UnstyledVerticalSeparator(Color.LightGray)
-        Text(
+        BasicText(
           "Paste",
           Modifier.padding(8.dp).weight(1f),
           style = TextStyle(textAlign = TextAlign.Center),
