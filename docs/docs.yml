@@ -1,0 +1,85 @@
+sections:
+  - title: Getting Started
+    pages:
+      - title: Overview
+        slug: overview
+      - title: Installation
+        slug: installation
+      - title: Components
+        slug: components
+  - title: Primitives
+    pages:
+      - title: Bottom Sheet
+        slug: bottom-sheet
+      - title: Bottom Sheet (Modal)
+        slug: modal-bottom-sheet
+      - title: Button
+        slug: button
+      - title: Checkbox
+        slug: checkbox
+      - title: Checkbox (TriState)
+        slug: tristatecheckbox
+      - title: Dialog
+        slug: dialog
+      - title: Disclosure
+        slug: disclosure
+      - title: Dropdown Menu
+        slug: dropdown-menu
+      - title: Icon
+        slug: icon
+      - title: Modal
+        slug: modal
+      - title: Progress Indicator
+        slug: progressindicator
+      - title: Radio Group
+        slug: radiogroup
+      - title: Scrim
+        slug: scrim
+      - title: Scroll Area
+        slug: scrollarea
+      - title: Separators
+        slug: separators
+      - title: Slider
+        slug: slider
+      - title: Stack
+        slug: stack
+      - title: Tab Group
+        slug: tabgroup
+      - title: Text Field
+        slug: textfield
+      - title: Toggle Switch
+        slug: toggleswitch
+      - title: Tooltip
+        slug: tooltip
+  - title: Theming
+    pages:
+      - title: Create Custom Themes
+        slug: custom-themes
+      - title: Typography
+        slug: typography
+      - title: Android XML Themes
+        slug: android-xml-themes
+      - title: Dynamic Themes
+        slug: dynamic-themes
+      - title: Theme Overrides
+        slug: theme-overrides
+      - title: Platform Themes
+        slug: platform-themes
+      - title: Minimum Interactive Size
+        slug: defaultMinimumComponentInteractiveSize
+  - title: Styling
+    pages:
+      - title: ColoredIndication
+        slug: coloredindication
+      - title: focusRing
+        slug: focusRing
+      - title: outline
+        slug: outline
+  - title: Utilities
+    pages:
+      - title: Window Container Size
+        slug: window-container-size
+      - title: Escape Handler
+        slug: escape-handler
+      - title: buildModifier
+        slug: buildModifier

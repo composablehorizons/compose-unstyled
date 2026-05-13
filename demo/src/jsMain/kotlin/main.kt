@@ -26,9 +26,12 @@ import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.w3c.dom.HTMLStyleElement
+import org.w3c.dom.url.URLSearchParams
 
 fun main() {
   onWasmReady {
+    val params = URLSearchParams(document.location?.search)
+    val destination = params.get("id") ?: "home"
     val composeTarget = document.getElementById("ComposeTarget") ?: error("No ComposeTarget")
     ComposeViewport(composeTarget) {
       LaunchedEffect(Unit) {
@@ -43,7 +46,7 @@ fun main() {
         }
       }
 
-      Demo()
+      Demo(startDestination = destination)
     }
   }
 }

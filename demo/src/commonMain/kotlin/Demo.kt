@@ -165,10 +165,14 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 @Composable
 private fun DemoSelection(startDestination: String) {
   val navController = rememberNavController()
+  val initialDestination = availableDemos
+    .firstOrNull { it.id == startDestination }
+    ?.id
+    ?: "home"
 
   NavHost(
     navController = navController,
-    startDestination = startDestination,
+    startDestination = initialDestination,
     enterTransition = {
       EnterTransition.None
     },
@@ -224,7 +228,7 @@ private fun DemoSelection(startDestination: String) {
 
     availableDemos.forEach { component ->
       composable(component.id) {
-        val launchedFromDemoList = startDestination == "home"
+        val launchedFromDemoList = initialDestination == "home"
         Column {
           if (launchedFromDemoList) {
             AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
