@@ -36,6 +36,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeunstyled-build-modifier")
+include(":composeunstyled-test")
 include(":composeunstyled-modal")
 include(":composeunstyled-scrim")
 include(":composeunstyled-dialog")
