@@ -40,7 +40,7 @@ kotlin {
     languageVersion = JavaLanguageVersion.of(17)
   }
 
-  jvm("desktop") {
+  jvm {
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
@@ -62,12 +62,10 @@ kotlin {
       implementation(projects.composeunstyledWindowContainerSize)
     }
 
-    val desktopMain by getting {
-      dependencies {
-        implementation(compose.desktop.currentOs) {
-          exclude("org.jetbrains.compose.material")
-          exclude("org.jetbrains.compose.material3")
-        }
+    jvmMain.dependencies {
+      implementation(compose.desktop.currentOs) {
+        exclude("org.jetbrains.compose.material")
+        exclude("org.jetbrains.compose.material3")
       }
     }
 

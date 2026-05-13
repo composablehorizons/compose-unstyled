@@ -81,7 +81,7 @@ kotlin {
   }
 
 
-  jvm("desktop")
+  jvm()
 
   androidTarget {
     compilerOptions {
@@ -138,12 +138,10 @@ kotlin {
       implementation("com.composables:compose-uri-painter:1.0.4")
     }
 
-    val desktopMain by getting {
-      dependencies {
-        implementation(compose.desktop.currentOs) {
-          exclude("org.jetbrains.compose.material")
-          exclude("org.jetbrains.compose.material3")
-        }
+    jvmMain.dependencies {
+      implementation(compose.desktop.currentOs) {
+        exclude("org.jetbrains.compose.material")
+        exclude("org.jetbrains.compose.material3")
       }
     }
 
