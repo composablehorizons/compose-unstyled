@@ -67,24 +67,30 @@ fun ModalBottomSheetDemo() {
       )
     },
   ) {
-    Sheet(
+    Box(
       modifier = Modifier
-        .widthIn(max = 640.dp).fillMaxWidth()
-        .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-        .background(Color(0xFFF8FAFC))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
         .fillMaxWidth(),
+      contentAlignment = Alignment.TopCenter,
     ) {
-      Box(
-        modifier = Modifier.fillMaxWidth().height(600.dp),
-        contentAlignment = Alignment.TopCenter,
+      Sheet(
+        modifier = Modifier
+          .widthIn(max = 640.dp)
+          .fillMaxWidth()
+          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
       ) {
-        DragIndication(
-          modifier = Modifier
-            .padding(top = 22.dp)
-            .background(Color(0xFFCACACA), RoundedCornerShape(100))
-            .size(32.dp, 4.dp),
-        )
+        Box(
+          modifier = Modifier.fillMaxWidth().height(600.dp),
+          contentAlignment = Alignment.TopCenter,
+        ) {
+          DragIndication(
+            modifier = Modifier
+              .padding(top = 22.dp)
+              .background(Color(0xFFCACACA), RoundedCornerShape(100))
+              .size(32.dp, 4.dp),
+          )
+        }
       }
     }
   }
