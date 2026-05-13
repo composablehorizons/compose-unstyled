@@ -145,6 +145,11 @@ kotlin {
       }
     }
 
+    jvmTest.dependencies {
+      implementation(kotlin("test"))
+      implementation(libs.compose.ui.test.junit4)
+    }
+
     val androidMain by getting {
       dependencies {
         implementation(libs.androidx.activitycompose)
@@ -175,4 +180,21 @@ androidComponents {
   beforeVariants(selector().withBuildType("release")) { variantBuilder ->
     variantBuilder.enable = false
   }
+}
+
+val jvmTestCompilation = kotlin.targets
+  .getByName("jvm")
+  .compilations
+  .getByName("test")
+
+tasks.register<JavaExec>("updateDesktopScreenshots") {
+  group = "verification"
+  description = "Updates desktop screenshot test baselines."
+  dependsOn("jvmTestClasses")
+  mainClass.set("com.composeunstyled.demo.BottomSheetDemoScreenshotTestKt")
+  classpath = files(
+    jvmTestCompilation.output.allOutputs,
+    jvmTestCompilation.runtimeDependencyFiles,
+  )
+  workingDir = projectDir
 }

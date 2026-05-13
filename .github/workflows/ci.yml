@@ -23,7 +23,7 @@ jobs:
           set -euo pipefail
 
           test_modules="$(
-            find . \( -path './*/src/commonTest' -o -path './*/src/jvmTest' -o -path './*/src/androidInstrumentedTest' \) -type d |
+            find . \( -path './*/src/commonTest' -o -path './*/src/jvmTest' -o -path './*/src/desktopTest' -o -path './*/src/androidInstrumentedTest' \) -type d |
               awk -F/ '{ print ":" $2 }' |
               sort -u
           )"
@@ -74,7 +74,7 @@ jobs:
           set -euo pipefail
 
           test_modules="$(
-            find . \( -path './*/src/commonTest' -o -path './*/src/jvmTest' -o -path './*/src/androidInstrumentedTest' \) -type d |
+            find . \( -path './*/src/commonTest' -o -path './*/src/jvmTest' -o -path './*/src/desktopTest' -o -path './*/src/androidInstrumentedTest' \) -type d |
               awk -F/ '{ print ":" $2 }' |
               sort -u
           )"
@@ -107,15 +107,37 @@ jobs:
           )"
 
           tasks=(spotlessCheck)
+          all_tasks=""
+
+          load_all_tasks() {
+            if [ -z "$all_tasks" ]; then
+              all_tasks="$(./gradlew --console=plain tasks --all)"
+            fi
+          }
 
           while IFS= read -r module; do
             if [ -n "$module" ]; then
-              tasks+=("$module:jvmTest")
+              load_all_tasks
+              module_name="${module#:}"
+              module_test_tasks="$(
+                printf '%s\n' "$all_tasks" |
+                  awk -v module="$module_name" '$0 ~ "^" module ":(jvmTest|desktopTest)( |$)" { print ":" $1 }' |
+                  sort -u
+              )"
+
+              if [ -z "$module_test_tasks" ]; then
+                echo "No JVM/Desktop test tasks found for $module."
+                exit 1
+              fi
+
+              while IFS= read -r task; do
+                tasks+=("$task")
+              done <<< "$module_test_tasks"
             fi
           done <<< "$jvm_modules"
 
           if [ -n "$compile_modules" ]; then
-            all_tasks="$(./gradlew --console=plain tasks --all)"
+            load_all_tasks
             while IFS= read -r module; do
               if [ -z "$module" ]; then
                 continue
