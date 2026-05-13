@@ -32,9 +32,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -127,7 +129,14 @@ fun UnstyledSwitch(
     layout(width, height) {
       placeables.forEach { placeable ->
         val thumbData = placeable.parentData as? SwitchThumbParentData
-        val x = thumbData?.let { it.offset.roundToPx() } ?: 0
+        val x = thumbData?.let {
+          val offset = if (checked && it.hasMeasured.not()) {
+            width - placeable.width
+          } else {
+            it.offset.roundToPx()
+          }
+          offset
+        } ?: 0
         placeable.placeRelative(x = max(0, x), y = 0)
       }
     }
@@ -145,6 +154,7 @@ fun SwitchScope.SwitchThumb(
   val thumbWidth = scope?.thumbWidth ?: 0
   val density = LocalDensity.current
   val hasMeasured = trackWidth > 0 && thumbWidth > 0
+  var hasPlacedAtMeasuredOffset by remember { mutableStateOf(false) }
   val targetOffset = with(density) {
     if (checked && hasMeasured) {
       (trackWidth - thumbWidth).toDp()
@@ -152,11 +162,22 @@ fun SwitchScope.SwitchThumb(
       0.dp
     }
   }
-  val offset by animateDpAsState(targetValue = targetOffset, animationSpec = animationSpec)
+  val offset = if (hasMeasured && hasPlacedAtMeasuredOffset.not()) {
+    SideEffect {
+      hasPlacedAtMeasuredOffset = true
+    }
+    targetOffset
+  } else {
+    val animatedOffset by animateDpAsState(
+      targetValue = targetOffset,
+      animationSpec = animationSpec,
+    )
+    animatedOffset
+  }
 
   Box(
     modifier = modifier
-      .then(SwitchThumbParentDataModifier(offset))
+      .then(SwitchThumbParentDataModifier(offset, hasMeasured))
       // Hide the thumb until the parent has measured the track and thumb,
       // otherwise checked switches briefly draw the thumb at the start.
       .alpha(if (hasMeasured) 1f else 0f),
@@ -167,10 +188,14 @@ fun SwitchScope.SwitchThumb(
 
 private data class SwitchThumbParentData(
   val offset: Dp,
+  val hasMeasured: Boolean,
 )
 
 private data class SwitchThumbParentDataModifier(
   val offset: Dp,
+  val hasMeasured: Boolean,
 ) : ParentDataModifier {
-  override fun Density.modifyParentData(parentData: Any?): Any = SwitchThumbParentData(offset)
+  override fun Density.modifyParentData(
+    parentData: Any?,
+  ): Any = SwitchThumbParentData(offset, hasMeasured)
 }
