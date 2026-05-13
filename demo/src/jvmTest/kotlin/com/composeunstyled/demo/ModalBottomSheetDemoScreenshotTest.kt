@@ -23,9 +23,9 @@ package com.composeunstyled.demo
 
 import kotlin.test.Test
 
-class BottomSheetDemoScreenshotTest {
+class ModalBottomSheetDemoScreenshotTest {
   @Test
-  fun bottomSheetDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(BottomSheetDemoScreenshot)
+  fun modalBottomSheetDemoMatchesScreenshot() {
+    assertDemoScreenshotMatches(ModalBottomSheetDemoScreenshot)
   }
 }

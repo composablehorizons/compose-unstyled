@@ -81,7 +81,12 @@ kotlin {
   }
 
 
-  jvm()
+  jvm {
+    val mainCompilation = compilations.getByName("main")
+    val screenshot by compilations.creating {
+      associateWith(mainCompilation)
+    }
+  }
 
   androidTarget {
     compilerOptions {
@@ -145,10 +150,24 @@ kotlin {
       }
     }
 
-    jvmTest.dependencies {
-      implementation(kotlin("test"))
-      implementation(libs.compose.ui.test.junit4)
+    val jvmScreenshotSharedDir = "src/jvmScreenshotShared/kotlin"
+
+    val jvmScreenshot by getting {
+      kotlin.srcDir(jvmScreenshotSharedDir)
+      dependencies {
+        implementation(kotlin("test"))
+        implementation(libs.compose.ui.test.junit4)
+      }
     }
+
+    jvmTest {
+      kotlin.srcDir(jvmScreenshotSharedDir)
+      dependencies {
+        implementation(kotlin("test"))
+        implementation(libs.compose.ui.test.junit4)
+      }
+    }
+
 
     val androidMain by getting {
       dependencies {
@@ -182,19 +201,19 @@ androidComponents {
   }
 }
 
-val jvmTestCompilation = kotlin.targets
+val jvmScreenshotCompilation = kotlin.targets
   .getByName("jvm")
   .compilations
-  .getByName("test")
+  .getByName("screenshot")
 
-tasks.register<JavaExec>("updateDesktopScreenshots") {
+tasks.register<JavaExec>("takeScreenshots") {
   group = "verification"
   description = "Updates desktop screenshot test baselines."
-  dependsOn("jvmTestClasses")
-  mainClass.set("com.composeunstyled.demo.BottomSheetDemoScreenshotTestKt")
+  dependsOn(jvmScreenshotCompilation.compileTaskProvider)
+  mainClass.set("com.composeunstyled.demo.DemoScreenshotBaselinesKt")
   classpath = files(
-    jvmTestCompilation.output.allOutputs,
-    jvmTestCompilation.runtimeDependencyFiles,
+    jvmScreenshotCompilation.output.allOutputs,
+    jvmScreenshotCompilation.runtimeDependencyFiles,
   )
   workingDir = projectDir
 }

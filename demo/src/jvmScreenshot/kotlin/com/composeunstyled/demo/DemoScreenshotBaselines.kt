@@ -21,11 +21,6 @@
  */
 package com.composeunstyled.demo
 
-import kotlin.test.Test
-
-class BottomSheetDemoScreenshotTest {
-  @Test
-  fun bottomSheetDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(BottomSheetDemoScreenshot)
-  }
+fun main() {
+  DemoScreenshots.forEach(::updateDemoScreenshot)
 }
