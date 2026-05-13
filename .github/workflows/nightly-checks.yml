@@ -33,7 +33,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: JVM Tests and Assemble
-        run: ./gradlew --console=plain spotlessCheck jvmTest assemble
+        run: ./gradlew --console=plain spotlessCheck jvmTest :demo:jvmTest assemble
 
   discover-android-modules:
     runs-on: ubuntu-latest

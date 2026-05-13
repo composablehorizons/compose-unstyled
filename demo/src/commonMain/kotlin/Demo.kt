@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -67,9 +68,9 @@ import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
 
 @Composable
-fun Demo() {
+fun Demo(startDestination: String = "home") {
   Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
-    DemoSelection()
+    DemoSelection(startDestination)
   }
 }
 
@@ -82,10 +83,16 @@ private data class DemoItem(
 
 private data class PreviewOptions(
   val contentAlignment: Alignment = Alignment.Center,
+  val padding: PaddingValues = PaddingValues(16.dp),
 )
 
 private val availablePrimitives = listOf(
-  DemoItem("Bottom Sheet", "bottom-sheet", { BottomSheetDemo() }),
+  DemoItem(
+    "Bottom Sheet",
+    "bottom-sheet",
+    { BottomSheetDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
   DemoItem("Bottom Sheet (Modal)", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
   DemoItem("Button", "button", { ButtonDemo() }),
   DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
@@ -156,12 +163,12 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun DemoSelection() {
+private fun DemoSelection(startDestination: String) {
   val navController = rememberNavController()
 
   NavHost(
     navController = navController,
-    startDestination = "home",
+    startDestination = startDestination,
     enterTransition = {
       EnterTransition.None
     },
@@ -217,8 +224,11 @@ private fun DemoSelection() {
 
     availableDemos.forEach { component ->
       composable(component.id) {
+        val launchedFromDemoList = startDestination == "home"
         Column {
-          AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+          if (launchedFromDemoList) {
+            AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+          }
           DemoContainer(component.previewOptions) {
             component.demo()
           }
@@ -238,7 +248,7 @@ private fun ColumnScope.DemoContainer(
       .fillMaxWidth()
       .weight(1f)
       .background(Color.White)
-      .padding(16.dp),
+      .padding(previewOptions.padding),
     contentAlignment = previewOptions.contentAlignment,
   ) {
     content()

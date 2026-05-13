@@ -52,7 +52,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Desktop Tests
-        run: ./gradlew --console=plain jvmTest
+        run: ./gradlew --console=plain jvmTest :demo:jvmTest
 
   discover-android-modules:
     runs-on: ubuntu-latest
