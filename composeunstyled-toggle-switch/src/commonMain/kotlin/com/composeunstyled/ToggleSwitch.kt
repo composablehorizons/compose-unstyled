@@ -32,24 +32,18 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 @Stable
 interface SwitchScope {
@@ -62,8 +56,6 @@ private class SwitchScopeImpl(
   override val checked: Boolean,
   override val enabled: Boolean,
   override val interactionSource: MutableInteractionSource,
-  val trackWidth: Int,
-  val thumbWidth: Int,
 ) : SwitchScope
 
 @Composable
@@ -77,12 +69,9 @@ fun UnstyledSwitch(
   content: @Composable SwitchScope.() -> Unit,
 ) {
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
-  var trackWidth by remember { mutableIntStateOf(0) }
-  var thumbWidth by remember { mutableIntStateOf(0) }
 
   Layout(
     modifier = modifier
-      .onSizeChanged { trackWidth = it.width }
       .then(
         buildModifier {
           if (onCheckedChange != null) {
@@ -104,8 +93,6 @@ fun UnstyledSwitch(
         checked = checked,
         enabled = enabled,
         interactionSource = resolvedInteractionSource,
-        trackWidth = trackWidth,
-        thumbWidth = thumbWidth,
       )
       scope.content()
     },
@@ -115,12 +102,6 @@ fun UnstyledSwitch(
     ->
     val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
     val placeables = measurables.map { it.measure(looseConstraints) }
-    val measuredThumbWidth = placeables
-      .filter { it.parentData is SwitchThumbParentData }
-      .maxOfOrNull { it.width } ?: 0
-    if (thumbWidth != measuredThumbWidth) {
-      thumbWidth = measuredThumbWidth
-    }
     val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
     val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
     val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
@@ -130,12 +111,7 @@ fun UnstyledSwitch(
       placeables.forEach { placeable ->
         val thumbData = placeable.parentData as? SwitchThumbParentData
         val x = thumbData?.let {
-          val offset = if (checked && it.hasMeasured.not()) {
-            width - placeable.width
-          } else {
-            it.offset.roundToPx()
-          }
-          offset
+          ((width - placeable.width) * it.offsetFraction).roundToInt()
         } ?: 0
         placeable.placeRelative(x = max(0, x), y = 0)
       }
@@ -149,53 +125,27 @@ fun SwitchScope.SwitchThumb(
   animationSpec: FiniteAnimationSpec<Dp> = snap(),
   content: @Composable () -> Unit = {},
 ) {
-  val scope = this as? SwitchScopeImpl
-  val trackWidth = scope?.trackWidth ?: 0
-  val thumbWidth = scope?.thumbWidth ?: 0
-  val density = LocalDensity.current
-  val hasMeasured = trackWidth > 0 && thumbWidth > 0
-  var hasPlacedAtMeasuredOffset by remember { mutableStateOf(false) }
-  val targetOffset = with(density) {
-    if (checked && hasMeasured) {
-      (trackWidth - thumbWidth).toDp()
-    } else {
-      0.dp
-    }
-  }
-  val offset = if (hasMeasured && hasPlacedAtMeasuredOffset.not()) {
-    SideEffect {
-      hasPlacedAtMeasuredOffset = true
-    }
-    targetOffset
-  } else {
-    val animatedOffset by animateDpAsState(
-      targetValue = targetOffset,
-      animationSpec = animationSpec,
-    )
-    animatedOffset
-  }
+  val offsetFraction by animateDpAsState(
+    targetValue = if (checked) 1.dp else 0.dp,
+    animationSpec = animationSpec,
+  )
 
   Box(
     modifier = modifier
-      .then(SwitchThumbParentDataModifier(offset, hasMeasured))
-      // Hide the thumb until the parent has measured the track and thumb,
-      // otherwise checked switches briefly draw the thumb at the start.
-      .alpha(if (hasMeasured) 1f else 0f),
+      .then(SwitchThumbParentDataModifier(offsetFraction.value)),
   ) {
     content()
   }
 }
 
 private data class SwitchThumbParentData(
-  val offset: Dp,
-  val hasMeasured: Boolean,
+  val offsetFraction: Float,
 )
 
 private data class SwitchThumbParentDataModifier(
-  val offset: Dp,
-  val hasMeasured: Boolean,
+  val offsetFraction: Float,
 ) : ParentDataModifier {
   override fun Density.modifyParentData(
     parentData: Any?,
-  ): Any = SwitchThumbParentData(offset, hasMeasured)
+  ): Any = SwitchThumbParentData(offsetFraction)
 }
