@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @Composable
 fun UnstyledIcon(
   painter: Painter,
-  contentDescription: String?,
+  contentDescription: String? = null,
   modifier: Modifier = Modifier,
   tint: Color = Color.Unspecified,
 ) {
@@ -49,7 +49,7 @@ fun UnstyledIcon(
 @Composable
 fun UnstyledIcon(
   imageBitmap: ImageBitmap,
-  contentDescription: String?,
+  contentDescription: String? = null,
   modifier: Modifier = Modifier,
   tint: Color = Color.Unspecified,
 ) {
@@ -62,7 +62,7 @@ fun UnstyledIcon(
 @Composable
 fun UnstyledIcon(
   imageVector: ImageVector,
-  contentDescription: String?,
+  contentDescription: String? = null,
   modifier: Modifier = Modifier,
   tint: Color = Color.Unspecified,
 ) {
