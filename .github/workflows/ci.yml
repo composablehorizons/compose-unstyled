@@ -106,7 +106,7 @@ jobs:
               <(printf '%s\n' "$test_modules" | sort -u)
           )"
 
-          tasks=(spotlessCheck)
+          tasks=(spotlessCheck :demo:jvmTest)
           all_tasks=""
 
           load_all_tasks() {
