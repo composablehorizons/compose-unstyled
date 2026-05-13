@@ -10,7 +10,7 @@ For full documentation, checkout: https://composables.com/compose-unstyled/docs
 
 ## Community
 
-For help and discussions: [Join the community Discord](http://composables.com/discord)
+For help and discussions: [Join the community Discord](https://discord.gg/QXuntebMMp)
 
 Got an idea you want to share? [Open a Github Issue](https://github.com/composablehorizons/compose-unstyled/issues)
 
