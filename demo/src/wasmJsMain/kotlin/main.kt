@@ -23,9 +23,13 @@
 
 import androidx.compose.ui.window.ComposeViewport
 import com.composeunstyled.demo.Demo
+import kotlinx.browser.document
+import org.w3c.dom.url.URLSearchParams
 
 fun main() {
+  val params = URLSearchParams(document.location?.search?.toJsString())
+  val destination = params.get("id") ?: "home"
   ComposeViewport {
-    Demo()
+    Demo(startDestination = destination)
   }
 }
