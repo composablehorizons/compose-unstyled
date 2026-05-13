@@ -28,6 +28,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,23 +39,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
+import com.composeunstyled.PortalHost
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.TooltipPlacement
 import com.composeunstyled.UnstyledButton
@@ -64,13 +66,11 @@ import com.composeunstyled.focusRing
 
 @Composable
 fun TooltipDemo() {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFFED359), Color(0xFFFFBD66)))),
-    contentAlignment = Alignment.Center,
-  ) {
-    Row {
+  PortalHost(Modifier.fillMaxSize()) {
+    Box(
+      modifier = Modifier.fillMaxSize(),
+      contentAlignment = Alignment.Center,
+    ) {
       UnstyledTooltip(
         side = AnchorSide.Top,
         alignment = AnchorAlignment.Center,
@@ -94,8 +94,9 @@ fun TooltipDemo() {
           onClick = { },
           modifier = Modifier
             .clip(CircleShape)
-            .background(Color.White)
-            .focusRing(interactionSource, 1.dp, Color(0xFF3B82F6), CircleShape),
+            .background(Color(0xFFF8FAFC))
+            .border(1.dp, Color(0xFFCACACA), CircleShape)
+            .focusRing(interactionSource, 1.dp, Color.Black, CircleShape),
           interactionSource = interactionSource,
         ) {
           Box(Modifier.padding(8.dp)) {
@@ -137,10 +138,11 @@ private fun TooltipContainer() {
   Box(
     modifier = Modifier
       .clip(RoundedCornerShape(100))
-      .background(Color.Black.copy(0.8f))
+      .background(Color(0xFFF8FAFC))
+      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100))
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
-    Text("Notifications", color = Color.White)
+    BasicText("Notifications", style = TextStyle(color = Color.Black))
   }
 }
 
@@ -163,7 +165,7 @@ private fun TooltipArrow(placement: TooltipPlacement) {
     AnchorSide.End -> 90f
   }
 
-  ArrowUp(modifier.rotate(degrees), Color.Black.copy(0.8f))
+  ArrowUp(modifier.rotate(degrees), Color(0xFFCACACA))
 }
 
 @Composable

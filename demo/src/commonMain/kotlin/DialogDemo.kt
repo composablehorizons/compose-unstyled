@@ -27,6 +27,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,8 +38,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,85 +48,85 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.composeunstyled.DialogPanel
 import com.composeunstyled.Scrim
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun DialogDemo() {
-  var dialogVisible by remember { mutableStateOf(false) }
+  var dialogVisible by remember { mutableStateOf(true) }
 
-  LaunchedEffect(Unit) {
-    delay(500)
-    dialogVisible = true
+  LaunchedEffect(dialogVisible) {
+    if (dialogVisible.not()) {
+      delay(1.seconds)
+      dialogVisible = true
+    }
   }
 
-  Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF4A90E2), Color(0xFF50C9C3))))
-      .padding(vertical = 40.dp),
-    contentAlignment = Alignment.Center,
+  UnstyledDialog(
+    visible = dialogVisible,
+    onDismissRequest = { dialogVisible = false },
+    overlay = {
+      Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+    },
   ) {
-    UnstyledButton(
-      onClick = { dialogVisible = true },
-      modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White),
+    Box(
+      modifier = Modifier.fillMaxSize(),
+      contentAlignment = Alignment.Center,
     ) {
-      Text("Show dialog", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
-    }
-    UnstyledDialog(
-      visible = dialogVisible,
-      onDismissRequest = { dialogVisible = false },
-      overlay = {
-        Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-      },
-    ) {
-      Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+      DialogPanel(
+        modifier = Modifier
+          .padding(20.dp)
+          .displayCutoutPadding()
+          .systemBarsPadding()
+          .widthIn(max = 560.dp)
+          .padding(20.dp)
+          .clip(RoundedCornerShape(12.dp))
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(12.dp)),
+        paneTitle = "Dialog",
+        enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
+        exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
       ) {
-        DialogPanel(
-          modifier = Modifier
-            .padding(20.dp)
-            .displayCutoutPadding()
-            .systemBarsPadding()
-            .widthIn(max = 560.dp)
-            .padding(20.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(Color.White),
-          paneTitle = "Dialog",
-          enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
-          exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
-        ) {
-          Column {
-            Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-              Text("Update Available", style = MaterialTheme.typography.titleMedium)
-              Spacer(Modifier.height(8.dp))
-              Text(
-                text = "A new version of the app is available. " +
-                  "Please update to the latest version.",
-                style = TextStyle(color = Color(0xFF1A1A1A)),
-              )
-            }
-            Spacer(Modifier.height(24.dp))
-            UnstyledButton(
-              onClick = { /* TODO */ },
-              modifier = Modifier
-                .padding(12.dp)
-                .align(Alignment.End)
-                .clip(RoundedCornerShape(6.dp)),
-            ) {
-              Text(
-                "Update",
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                style = TextStyle(color = Color(0xFF0D99FF)),
-              )
-            }
+        Column {
+          Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
+            BasicText(
+              text = "Update Available",
+              style = TextStyle(
+                color = Color(0xFF1A1A1A),
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                fontWeight = FontWeight.Medium,
+              ),
+            )
+            Spacer(Modifier.height(8.dp))
+            BasicText(
+              text = "A new version of the app is available. " +
+                "Please update to the latest version.",
+              style = TextStyle(color = Color(0xFF1A1A1A)),
+            )
+          }
+          Spacer(Modifier.height(24.dp))
+          UnstyledButton(
+            onClick = { /* TODO */ },
+            modifier = Modifier
+              .padding(12.dp)
+              .align(Alignment.End)
+              .clip(RoundedCornerShape(6.dp)),
+          ) {
+            BasicText(
+              "Update",
+              modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+              style = TextStyle(color = Color.Black),
+            )
           }
         }
       }

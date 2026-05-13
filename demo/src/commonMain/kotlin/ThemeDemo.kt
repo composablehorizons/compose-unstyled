@@ -54,7 +54,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -596,7 +595,6 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
   Box(
     modifier = modifier
       .outline(1.dp, Theme[colors][outline], Theme[shapes][cardShape])
-      .shadow(Theme[elevation][subtle], Theme[shapes][cardShape])
       .background(Theme[colors][card], Theme[shapes][cardShape])
       .padding(24.dp),
   ) {

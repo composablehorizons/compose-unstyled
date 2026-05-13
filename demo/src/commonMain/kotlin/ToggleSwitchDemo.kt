@@ -24,11 +24,9 @@ package com.composeunstyled.demo
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,7 +34,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,8 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -57,51 +53,44 @@ import com.composeunstyled.UnstyledSwitch
 
 @Composable
 fun ToggleSwitchDemo() {
-  var toggled by remember { mutableStateOf(false) }
+  var toggled by remember { mutableStateOf(true) }
 
-  Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFADD100), Color(0xFF7B920A)))),
-    contentAlignment = Alignment.Center,
+  Row(
+    Modifier
+      .width(300.dp)
+      .clip(RoundedCornerShape(10.dp))
+      .selectable(
+        selected = toggled,
+        onClick = { toggled = toggled.not() },
+        interactionSource = null,
+        role = Role.Switch,
+      ).padding(8.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically,
   ) {
-    Column {
-      Row(
-        Modifier
-          .width(300.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .selectable(
-            selected = toggled,
-            onClick = { toggled = toggled.not() },
-            interactionSource = null,
-            role = Role.Switch,
-          ).padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        Text("Airplane Mode", style = TextStyle(fontSize = 18.sp))
-        val animatedColor by animateColorAsState(
-          if (toggled) Color(0xFF4A7023) else Color(0xFFE0E0E0),
-        )
-        UnstyledSwitch(
-          checked = toggled,
-          onCheckedChange = null,
-          modifier = Modifier
-            .width(58.dp)
-            .height(32.dp)
-            .clip(RoundedCornerShape(100))
-            .background(animatedColor, RoundedCornerShape(100)),
-        ) {
-          SwitchThumb(
-            animationSpec = tween(),
-            modifier = Modifier
-              .padding(4.dp)
-              .shadow(elevation = 4.dp, CircleShape)
-              .clip(CircleShape)
-              .background(Color.White)
-              .size(24.dp),
-          )
-        }
-      }
+    BasicText("Airplane Mode", style = TextStyle(fontSize = 18.sp))
+    val animatedColor by animateColorAsState(
+      if (toggled) Color.Black else Color(0xFFE0E0E0),
+    )
+    UnstyledSwitch(
+      checked = toggled,
+      onCheckedChange = null,
+      modifier = Modifier
+        .width(58.dp)
+        .height(32.dp)
+        .clip(RoundedCornerShape(100))
+        .background(animatedColor, RoundedCornerShape(100))
+        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
+    ) {
+      SwitchThumb(
+        animationSpec = tween(),
+        modifier = Modifier
+          .padding(4.dp)
+          .clip(CircleShape)
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), CircleShape)
+          .size(24.dp),
+      )
     }
   }
 }

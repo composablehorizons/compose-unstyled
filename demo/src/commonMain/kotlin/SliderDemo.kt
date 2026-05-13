@@ -29,9 +29,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,22 +47,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Volume1
-import com.composables.icons.lucide.Volume2
-import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledSlider
 
 @Composable
 fun SliderDemo() {
   Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFFED213A), Color(0xFF93291E)))),
+    modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
   ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -73,25 +63,17 @@ fun SliderDemo() {
 
     var value by remember { mutableFloatStateOf(0.7f) }
 
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(12.dp),
-      modifier = Modifier.padding(horizontal = 16.dp).widthIn(max = 480.dp).fillMaxWidth(),
+    Box(
+      modifier = Modifier
+        .padding(horizontal = 16.dp)
+        .widthIn(max = 480.dp)
+        .fillMaxWidth(),
     ) {
-      UnstyledButton(
-        onClick = { value = (value - 0.1f).coerceIn(0f, 1f) },
-        modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
-      ) {
-        Box(Modifier.padding(8.dp)) {
-          UnstyledIcon(Lucide.Volume1, "Decrease")
-        }
-      }
-
       UnstyledSlider(
         interactionSource = interactionSource,
         value = value,
         onValueChange = { value = it },
-        modifier = Modifier.weight(1f),
+        modifier = Modifier.fillMaxWidth(),
         track = { state ->
           Box(
             Modifier
@@ -105,14 +87,14 @@ fun SliderDemo() {
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Color(0xFF93291E)),
+                .background(Color(0xFFCACACA)),
             )
             // the 'completed' part of the track
             Box(
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(state.fraction)
-                .background(Color.White),
+                .background(Color.Black),
             )
           }
         },
@@ -122,7 +104,7 @@ fun SliderDemo() {
           val thumbInteractionSource = remember { MutableInteractionSource() }
           val isHovered by thumbInteractionSource.collectIsHoveredAsState()
           val glowColor by animateColorAsState(
-            if (isFocused || isHovered) Color.White.copy(0.33f) else Color.Transparent,
+            if (isFocused || isHovered) Color.Black.copy(0.16f) else Color.Transparent,
           )
           // keep the size fixed to ensure that the resizing animation is always centered
           Box(
@@ -132,23 +114,13 @@ fun SliderDemo() {
             Box(
               modifier = Modifier
                 .size(thumbSize)
-                .shadow(4.dp, CircleShape)
                 .hoverable(thumbInteractionSource)
                 .clip(CircleShape)
-                .background(Color.White),
+                .background(Color.Black),
             )
           }
         },
       )
-
-      UnstyledButton(
-        onClick = { value = (value + 0.1f).coerceIn(0f, 1f) },
-        modifier = Modifier.shadow(4.dp, CircleShape).clip(CircleShape).background(Color.White),
-      ) {
-        Box(Modifier.padding(8.dp)) {
-          UnstyledIcon(Lucide.Volume2, "Increase")
-        }
-      }
     }
   }
 }

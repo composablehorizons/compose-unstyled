@@ -24,24 +24,18 @@ package com.composeunstyled.demo
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragIndication
@@ -50,82 +44,47 @@ import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
-import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledModalBottomSheet
-import com.composeunstyled.focusRing
 import com.composeunstyled.rememberModalBottomSheetState
-import kotlinx.coroutines.delay
-
-private val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
-  containerHeight * 0.6f
-}
 
 @Composable
 fun ModalBottomSheetDemo() {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF800080), Color(0xFFDA70D6)))),
+  val Peek = SheetDetent("peek") { containerHeight, _ ->
+    containerHeight * 0.6f
+  }
+  val modalSheetState = rememberModalBottomSheetState(
+    initialDetent = Peek,
+    detents = listOf(Hidden, Peek, FullyExpanded),
+  )
+
+  UnstyledModalBottomSheet(
+    state = modalSheetState,
+    overlay = {
+      Scrim(
+        scrimColor = Color.Black.copy(0.3f),
+        enter = fadeIn(),
+        exit = fadeOut(),
+      )
+    },
   ) {
-    val modalSheetState = rememberModalBottomSheetState(
-      initialDetent = Hidden,
-      detents = listOf(Hidden, Peek, FullyExpanded),
-    )
-
-    LaunchedEffect(Unit) {
-      delay(500)
-      modalSheetState.targetDetent = Peek
-    }
-
-    UnstyledButton(
-      onClick = { modalSheetState.targetDetent = Peek },
+    Sheet(
       modifier = Modifier
-        .align(Alignment.Center)
-        .clip(RoundedCornerShape(6.dp))
-        .background(Color.White),
-    ) {
-      Text("Show Sheet", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
-    }
-
-    UnstyledModalBottomSheet(
-      state = modalSheetState,
-      overlay = {
-        Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-      },
+        .widthIn(max = 640.dp).fillMaxWidth()
+        .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+        .background(Color(0xFFF8FAFC))
+        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+        .fillMaxWidth(),
     ) {
       Box(
-        modifier = Modifier
-          .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().height(600.dp),
         contentAlignment = Alignment.TopCenter,
       ) {
-        Sheet(
+        DragIndication(
           modifier = Modifier
-            .padding(top = 12.dp)
-            .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-            .background(Color.White)
-            .widthIn(max = 640.dp)
-            .fillMaxWidth(),
-        ) {
-          Box(Modifier.fillMaxWidth().height(600.dp), contentAlignment = Alignment.TopCenter) {
-            val interactionSource = remember { MutableInteractionSource() }
-
-            DragIndication(
-              interactionSource = interactionSource,
-              modifier = Modifier
-                .padding(top = 22.dp)
-                .focusRing(
-                  interactionSource,
-                  width = 2.dp,
-                  Color(0XFF2563EB),
-                  RoundedCornerShape(100),
-                  offset = 4.dp,
-                )
-                .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
-                .size(32.dp, 4.dp),
-            )
-          }
-        }
+            .padding(top = 22.dp)
+            .background(Color(0xFFCACACA), RoundedCornerShape(100))
+            .size(32.dp, 4.dp),
+        )
       }
     }
   }

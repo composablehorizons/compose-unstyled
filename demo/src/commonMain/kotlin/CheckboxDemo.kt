@@ -22,8 +22,7 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -31,10 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
@@ -42,31 +39,24 @@ import com.composables.icons.lucide.Lucide
 import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.outline
 
 @Composable
 fun CheckboxDemo() {
-  Box(
-    modifier = Modifier.fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
-    contentAlignment = Alignment.Center,
+  var checked by remember { mutableStateOf(true) }
+  val checkboxShape = RoundedCornerShape(4.dp)
+  UnstyledCheckbox(
+    checked = checked,
+    onCheckedChange = { checked = it },
+    modifier = Modifier.clip(checkboxShape),
+    accessibilityLabel = "Add olives",
   ) {
-    var checked by remember { mutableStateOf(false) }
-    val checkboxShape = RoundedCornerShape(4.dp)
-    UnstyledCheckbox(
-      checked = checked,
-      onCheckedChange = { checked = it },
-      modifier = Modifier.clip(checkboxShape),
-      accessibilityLabel = "Add olives",
+    CheckedIndicator(
+      modifier = Modifier
+        .size(24.dp)
+        .background(Color(0xFFF8FAFC), checkboxShape)
+        .border(1.dp, Color(0xFFCACACA), checkboxShape),
     ) {
-      CheckedIndicator(
-        modifier = Modifier
-          .size(24.dp)
-          .background(Color.White, checkboxShape)
-          .outline(1.dp, Color.Black.copy(alpha = 0.10f), checkboxShape),
-      ) {
-        UnstyledIcon(Lucide.Check, contentDescription = null, tint = Color.Black)
-      }
+      UnstyledIcon(Lucide.Check, contentDescription = null, tint = Color.Black)
     }
   }
 }

@@ -30,6 +30,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -176,7 +177,11 @@ fun ModalDemo() {
               selectedIndex = index
               modalState.transitionState.targetState = true
             },
-            modifier = Modifier.size(110.dp, 72.dp).clip(RoundedCornerShape(8.dp)),
+            modifier = Modifier
+              .size(110.dp, 72.dp)
+              .clip(RoundedCornerShape(8.dp))
+              .background(Color(0xFFF8FAFC))
+              .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
           ) {
             Image(
               painter = rememberUriPainter(item.url),
@@ -285,7 +290,8 @@ fun ModalDemo() {
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
                   .clip(CircleShape)
-                  .background(Color.White)
+                  .background(Color(0xFFF8FAFC))
+                  .border(1.dp, Color(0xFFCACACA), CircleShape)
                   .alpha(previousButtonAlpha),
               ) {
                 Box(Modifier.padding(12.dp)) {
@@ -308,7 +314,8 @@ fun ModalDemo() {
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
                   .clip(CircleShape)
-                  .background(Color.White)
+                  .background(Color(0xFFF8FAFC))
+                  .border(1.dp, Color(0xFFCACACA), CircleShape)
                   .alpha(nextButtonAlpha),
               ) {
                 Box(Modifier.padding(12.dp)) {
