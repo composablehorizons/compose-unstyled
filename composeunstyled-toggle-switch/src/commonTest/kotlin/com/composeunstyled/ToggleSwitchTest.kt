@@ -21,6 +21,7 @@
  */
 package com.composeunstyled
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,9 +29,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
@@ -170,6 +174,37 @@ class ToggleSwitchTest {
     onNodeWithTag("switch").performClick()
     waitForIdle()
 
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
+  }
+
+  @Test
+  fun checkedThumbStartsAtEndWhenUsingAnimationSpec() = runComposeUiTest {
+    mainClock.autoAdvance = false
+    val thumbPositions = mutableStateListOf<Int>()
+
+    setContent {
+      UnstyledSwitch(
+        checked = true,
+        onCheckedChange = {},
+        modifier = Modifier
+          .width(58.dp)
+          .height(32.dp)
+          .testTag("switch"),
+      ) {
+        SwitchThumb(
+          animationSpec = tween(durationMillis = 1_000),
+          modifier = Modifier
+            .onPlaced { thumbPositions += it.positionInRoot().x.toInt() }
+            .size(24.dp),
+        ) {
+          Box(Modifier.size(1.dp).testTag("thumb-content"))
+        }
+      }
+    }
+
+    mainClock.advanceTimeByFrame()
+
+    assertEquals(listOf(34), thumbPositions.distinct())
     onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
   }
 
