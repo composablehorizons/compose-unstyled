@@ -1,9 +1,16 @@
 ---
 title: Text Field
-description: A themable component to build text fields with the styling of your choice. Supports placeholders, leading and trailing slots out of the box along with accessibility labels (visual or not).
+description: A text field component with placeholders, transformations, and text styling hooks.
 ---
 
 <UnstyledDemo id="textfield" />
+
+## Features
+
+- State-based text input
+- Placeholder slot
+- Input and output transformations
+- Text style parameters
 
 ## Installation
 
@@ -11,167 +18,91 @@ description: A themable component to build text fields with the styling of your 
 implementation("com.composables:composeunstyled-text-field")
 ```
 
-## Basic Example
-
-To create a text field, use the `TextField` component with `TextFieldState` and use the `TextInput()` component within its content scope.
-
-The `TextField` itself groups together every part of the text field in order to make sense for screen reader technology.
-
-Other than the `TextInput` which handles the part of the text field the user can enter text at, it can contain elements
-such as `Text` for a visual label.
+## Anatomy
 
 ```kotlin
-val state = remember { TextFieldState() }
-
-UnstyledTextField(
-    state = state,
-    singleLine = true
-) {
-    TextInput()
+UnstyledTextField(state = state) {
+  TextInput()
 }
 ```
 
-## Styling
+## Concepts
 
-Every component in Compose Unstyled is renderless. They handle all UX pattern logic, internal state, accessibility (
-according to ARIA standards), and keyboard interactions for you, but they do not render any UI to the screen.
+- `UnstyledTextField` represents the text field container.
+- `TextInput` renders the editable text and optional placeholder.
 
-This is by design so that you can style your components exactly to your needs.
+## Accessibility
 
-Most of the time, styling is done using `Modifiers` of your choice. However, sometimes this is not enough due to the
-order of the `Modifier`s affecting the visual outcome.
-
-For such cases we provide specific styling parameters.
+Use `accessibilityLabel` when the text field does not include a readable label in its content.
 
 ## Code Examples
 
-### Consistent typography through your app
+### Adding placeholder text
 
-It is recommended to use the provided `LocalTextStyle` in order to maintain consistent text styling across your app.
-
-If you need to override a text style for specific cases, you can either override a specific parameter via the `Text`
-modifier or pass an entire different style via the `style` parameter:
+Use the `placeholder` parameter on `TextInput` to render content while the field is empty:
 
 ```kotlin
-val state = remember { TextFieldState() }
+val state = rememberTextFieldState()
 
-CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)) {
-    Column {
-        // this text field will use the provided Text Style
-        UnstyledTextField(
-            state = state,
-        ) {
-            // the provided text style will be used in the text input
-            TextInput()
-        }
-        BasicText("So will this text")
-
-        BasicText("This text is also styled, but slightly modified", style = TextStyle(letterSpacing = 2.sp))
-
-        BasicText("This text is completely different", style = TextStyle())
-    }
+UnstyledTextField(state = state) {
+  TextInput(
+    placeholder = {
+      BasicText("Email")
+    },
+  )
 }
 ```
 
-### Specifying Input Type
+### Creating a single-line text field
 
-You can specify the input type for the `TextField` using the `keyboardOptions` parameter. For example, to specify an
-email input type:
+Use the `lineLimits` parameter to restrict input to one line:
 
 ```kotlin
-val state = remember { TextFieldState() }
-
 UnstyledTextField(
-    state = state,
-    modifier = Modifier.fillMaxWidth(),
-    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+  state = state,
+  lineLimits = TextFieldLineLimits.SingleLine,
 ) {
-    TextInput(
-        placeholder = { BasicText("Email") }
-    )
+  TextInput()
 }
 ```
 
-### Adding a Trailing Icon
+### Setting the keyboard type
 
-You can add a trailing icon to the `TextField` to provide additional functionality, such as toggling password
-visibility:
+Use the `keyboardOptions` parameter to request a specific software keyboard:
 
 ```kotlin
-val state = remember { TextFieldState() }
-var showPassword by remember { mutableStateOf(false) }
-
 UnstyledTextField(
-    state = state,
+  state = state,
+  keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
 ) {
-    TextInput(
-        placeholder = { BasicText("Password") },
-        trailing = {
-            UnstyledButton(
-                onClick = { showPassword = !showPassword },
-                backgroundColor = Color.Transparent,
-                contentPadding = PaddingValues(4.dp),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                UnstyledIcon(
-                    imageVector = if (showPassword) EyeOff else Eye,
-                    contentDescription = if (showPassword) "Hide password" else "Show password",
-                    tint = Color(0xFF757575)
-                )
-            }
-        }
-    )
+  TextInput()
 }
 ```
 
-### Handling Password Input
+### Styling entered text
 
-To handle password input, you can use the `visualTransformation` parameter to obscure the text:
+Use the text style parameters to set the style of the editable text:
 
 ```kotlin
-val state = remember { TextFieldState() }
-var showPassword by remember { mutableStateOf(false) }
-
 UnstyledTextField(
-    state = state,
-    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+  state = state,
+  fontWeight = FontWeight.Medium,
+  textColor = Color.Black,
 ) {
-    TextInput(
-        placeholder = { BasicText("Password") },
-        trailing = {
-            UnstyledButton(
-                onClick = { showPassword = !showPassword },
-                backgroundColor = Color.Transparent,
-                contentPadding = PaddingValues(4.dp),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                UnstyledIcon(
-                    imageVector = if (showPassword) EyeOff else Eye,
-                    contentDescription = if (showPassword) "Hide password" else "Show password",
-                    tint = Color(0xFF757575)
-                )
-            }
-        }
-    )
+  TextInput()
 }
 ```
 
-### Adding an Invisible Label
+### Labeling an icon-only text field
 
-You can add an invisible label to your text field for accessibility purposes.
-
-This is particularly useful when you want to provide context for screen readers without showing a visual label:
+Use the `accessibilityLabel` parameter when the visible text field has no text label:
 
 ```kotlin
-val state = remember { TextFieldState() }
-
 UnstyledTextField(
-    state = state,
+  state = state,
+  accessibilityLabel = "Search",
 ) {
-    TextInput(
-        label = "Email address", // This label is only visible to screen readers
-        placeholder = { BasicText("Enter your email") }
-    )
+  TextInput()
 }
 ```
 

@@ -23,7 +23,9 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,17 +47,18 @@ import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 
 @Composable
-fun CheckboxDemo() {
-  var checked by remember { mutableStateOf(true) }
+fun CheckboxExtendedIndicatorBoundsDemo() {
+  var checked by remember { mutableStateOf(false) }
   val checkboxShape = RoundedCornerShape(4.dp)
   UnstyledCheckbox(
     checked = checked,
     onCheckedChange = { checked = it },
-    modifier = Modifier.clip(checkboxShape),
+    modifier = Modifier.clip(CircleShape),
     accessibilityLabel = "Enable notifications",
   ) {
     CheckedIndicator(
       modifier = Modifier
+        .padding(8.dp)
         .size(24.dp)
         .background(Color(0xFFF8FAFC), checkboxShape)
         .border(1.dp, Color(0xFFCACACA), checkboxShape),

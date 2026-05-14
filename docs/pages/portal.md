@@ -1,11 +1,9 @@
 ---
 title: Portal
-description: Render content into a same-window portal.
+description: A same-window portal utility for rendering content from one place in composition into a shared host.
 ---
 
-`PortalHost` and `Portal` let you render content later in the same Compose hierarchy without changing the parent layout.
-
-Use portals for floating or overlay UI that should escape local layout constraints but still stay in the same window, such as custom menus, popovers, teaching bubbles, or non-modal overlays.
+<UnstyledDemo/>
 
 ## Installation
 
@@ -13,52 +11,72 @@ Use portals for floating or overlay UI that should escape local layout constrain
 implementation("com.composables:composeunstyled-portal")
 ```
 
-## Host content
-
-Wrap the part of your app that should support portals with `PortalHost`.
+## Anatomy
 
 ```kotlin
-@Composable
-fun App() {
-    PortalHost(Modifier.fillMaxSize()) {
-        AppContent()
-    }
+PortalHost {
+  Portal {
+    BasicText("Portal content")
+  }
 }
 ```
 
-`PortalHost` lays out its normal `content` first. Any active `Portal` entries are rendered after that content inside a `Box` that matches the host size.
+## General Usage
 
-## Render into the portal
+- `PortalHost` provides the destination where portal content is rendered.
+- `Portal` sends content to the nearest `PortalHost`, or renders nothing when no host is available.
 
-Call `Portal` from inside a `PortalHost` subtree.
+## Code Examples
+
+### Rendering content in a portal
+
+Place `PortalHost` above the content that needs to render portals:
 
 ```kotlin
-@Composable
-fun PopoverExample(expanded: Boolean) {
-    Button(onClick = { /* update expanded */ }) {
-        Text("Open")
-    }
+PortalHost {
+  BasicText("Screen content")
 
-    if (expanded) {
-        Portal {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.24f))
-            )
-        }
-    }
+  Portal {
+    BasicText("Portal content")
+  }
 }
 ```
 
-The portal content is registered while the composable is in the composition and removed automatically when it leaves the composition.
+### Showing portal content conditionally
 
-## Missing host
+Add or remove the `Portal` from composition to control whether its content is rendered:
 
-If `Portal` is used outside a `PortalHost`, it returns without rendering content. Add a `PortalHost` around the app surface, screen, or component subtree that owns the floating content.
+```kotlin
+var showPortal by remember { mutableStateOf(false) }
 
-## Portal vs Modal
+PortalHost {
+  BasicText(
+    text = "Show portal",
+    modifier = Modifier.clickable { showPortal = true }
+  )
 
-Use `Portal` when content should stay in the same window and you only need a rendering layer.
+  if (showPortal) {
+    Portal {
+      BasicText("Portal content")
+    }
+  }
+}
+```
 
-Use `Modal`, `UnstyledDialog`, or `UnstyledModalBottomSheet` when you need modal lifecycle, focus, accessibility, or platform window behavior.
+### Hosting multiple portals
+
+A single `PortalHost` can render content from multiple `Portal` calls:
+
+```kotlin
+PortalHost {
+  Portal {
+    BasicText("First portal")
+  }
+
+  Portal {
+    BasicText("Second portal")
+  }
+}
+```
+
+<ApiReference id="portal" />

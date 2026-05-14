@@ -1,6 +1,6 @@
 ---
 title: Icon
-description: A component for rendering iconography with the tinting of your choice.
+description: An icon component for tinted painter, bitmap, and vector assets.
 ---
 
 <UnstyledDemo id="icon" />
@@ -11,22 +11,35 @@ description: A component for rendering iconography with the tinting of your choi
 implementation("com.composables:composeunstyled-icon")
 ```
 
-## Basic Example
-
-Basic example using Icons from the Material Extended Library:
+## Anatomy
 
 ```kotlin
 UnstyledIcon(
-    imageVector = Icons.Rounded.Favorite,
-    contentDescription = "This song is in your favorites",
-    tint = Color(0xFF9E9E9E),
+  imageVector = icon,
+  contentDescription = "Favorite",
 )
 ```
 
-<style>
-.parameter {
-    white-space: nowrap
-}
-</style>
+## Concepts
+
+- `UnstyledIcon` renders an icon from an `ImageVector`, `Painter`, or `ImageBitmap`.
+
+## Accessibility
+
+Pass a short `contentDescription` for icons that communicate meaning. Use `null` for decorative icons.
+
+## Code Examples
+
+### Tinting an icon
+
+Use the `tint` parameter to apply one color to the icon:
+
+```kotlin
+UnstyledIcon(
+  imageVector = favoriteIcon,
+  contentDescription = "Favorite",
+  tint = Color.Red,
+)
+```
 
 <ApiReference id="icon" />

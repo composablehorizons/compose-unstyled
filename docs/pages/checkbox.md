@@ -1,9 +1,16 @@
 ---
 title: Checkbox
-description: A foundational component used to build checkboxes in Jetpack Compose and Compose Multiplatform. Accessible out of the box and fully renderless, so that you can apply any styling you like.
+description: A checkbox component with full control over the indicator, bounds, and checked animation.
 ---
 
 <UnstyledDemo id="checkbox" />
+
+## Features
+
+- Custom interaction bounds
+- Custom checked indicator
+- Animated checked content
+- Accessibility label
 
 ## Installation
 
@@ -11,71 +18,99 @@ description: A foundational component used to build checkboxes in Jetpack Compos
 implementation("com.composables:composeunstyled-checkbox")
 ```
 
-## Basic Example
-
-To create a checkbox use the `Checkbox` component. To toggle it you can either click it, or press Enter or Spacebar on your keyboard, while the checkbox is focused.
-
-Depending on its state, the checkbox will show its `checkIcon` or not.
+## Anatomy
 
 ```kotlin
-var checked by remember { mutableStateOf(false) }
-
 UnstyledCheckbox(
-    checked = checked,
-    onCheckedChange = { checked = it },
-    shape = RoundedCornerShape(4.dp),
-    backgroundColor = Color.White,
-    contentColor = Color.Black
+  checked = checked,
+  onCheckedChange = onCheckedChange,
 ) {
-    // will be shown if checked
-    UnstyledIcon(Check, contentDescription = null)
+  CheckedIndicator {
+  }
 }
 ```
 
-## Styling
+## Concepts
 
-Every component in Compose Unstyled is renderless. They all handle all UX pattern's logic, internal state, accessibility and keyboard interactions for you, but they do not display any information on the screen.
+- `UnstyledCheckbox` represents the interactive bounds of the checkbox.
+- `CheckedIndicator` represents the visible checked state. It automatically shows and hides its
+  content based on the `UnstyledCheckbox` state.
+- Give `CheckedIndicator` a fixed size when its content only exists while checked. Without a fixed
+  size, the checkbox can change layout size when the indicator appears or disappears.
 
-This is by design so that you can style your components exactly to your needs.
+## Accessibility
 
-Most of the times, styling is done using `Modifiers` of your choise. However, sometimes this is not enough due to the order of the `Modifier`s affecting the visual outcome.
+Screen readers will automatically read any text placed inside `UnstyledCheckbox`.
 
-For such cases we provide specific styling parameters.
+Use the `accessibilityLabel` parameter when the checkbox has no visible text label.
 
+## Code Examples
 
-## Code Example
+### Making an entire row checkable
 
-Below is a detailed example from `CheckboxDemo.kt`:
+Use the `UnstyledCheckbox` component as the row container to make the full row toggleable. This is useful when the label should also toggle the checkbox:
 
 ```kotlin
-@Composable
-fun CheckboxDemo() {
-    Box(
-        modifier = Modifier.fillMaxSize().background(Brush.linearGradient(listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0)))),
-        contentAlignment = Alignment.Center
-    ) {
-        var checked by remember { mutableStateOf(false) }
-        UnstyledCheckbox(
-            checked = checked,
-            onCheckedChange = { checked = it },
-            shape = RoundedCornerShape(4.dp),
-            backgroundColor = Color.White,
-            borderWidth = 1.dp,
-            borderColor = Color.Black.copy(0.33f),
-            modifier = Modifier.size(24.dp),
-            contentDescription = "Add olives"
-        ) {
-            UnstyledIcon(Check, contentDescription = null)
-        }
+UnstyledCheckbox(
+  checked = checked,
+  onCheckedChange = { checked = it },
+) {
+  Row {
+    CheckedIndicator {
+      BasicText("✓")
     }
+
+    BasicText("Accept all terms")
+  }
 }
 ```
 
-## Keyboard Interactions
+### Creating larger checkbox interaction bounds
 
-| Key                                   | Description                                                   |
-|---------------------------------------|---------------------------------------------------------------|
-| <div class="keyboard-key">Enter</div> | Toggles the checkbox, triggering its onCheckedChange callback |
-| <div class="keyboard-key">Space</div> | Toggles the checkbox, triggering its onCheckedChange callback |
+Use padding on the `CheckedIndicator` component to place the visible checkbox inside a larger
+interaction area. This is useful when the ripple or touch target should be larger than the visible
+checkbox:
+
+<UnstyledDemo id="checkbox-extended-indicator-bounds" />
+
+### Animating the checked indicator
+
+Use the `enter` and `exit` parameters on `CheckedIndicator` to animate the checked content.
+
+```kotlin
+UnstyledCheckbox(
+  checked = checked,
+  onCheckedChange = { checked = it },
+) {
+  CheckedIndicator(
+    enter = fadeIn(),
+    exit = fadeOut(),
+  ) {
+    BasicText("Selected")
+  }
+}
+```
+
+### Creating a custom checked indicator animation
+
+Use the `checked` state value to draw your own indicator instead of `CheckedIndicator`. This is useful when your design system needs a custom checkmark animation:
+
+<UnstyledDemo id="checkbox-custom-checked-indicator" />
+
+### Labeling an icon-only checkbox
+
+Use the `accessibilityLabel` parameter when the checkbox content has no text:
+
+```kotlin
+UnstyledCheckbox(
+  checked = checked,
+  onCheckedChange = { checked = it },
+  accessibilityLabel = "Enable notifications",
+) {
+  CheckedIndicator {
+    BasicText("✓")
+  }
+}
+```
 
 <ApiReference id="checkbox" />

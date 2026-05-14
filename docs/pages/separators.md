@@ -1,6 +1,6 @@
 ---
 title: Separators
-description: Horizontal and Vertical separator component for visually separating content.
+description: Horizontal and vertical separators with caller-defined color and thickness.
 ---
 
 <UnstyledDemo id="separators" />
@@ -11,20 +11,30 @@ description: Horizontal and Vertical separator component for visually separating
 implementation("com.composables:composeunstyled-separators")
 ```
 
-## Basic Example
-
-Basic example showing a horizontal separator:
+## Anatomy
 
 ```kotlin
-UnstyledHorizontalSeparator(color = Color(0xFF9E9E9E))
+UnstyledHorizontalSeparator(color = Color.Black)
 
-UnstyledVerticalSeparator(color = Color(0xFF9E9E9E))
+UnstyledVerticalSeparator(color = Color.Black)
 ```
 
-<style>
-.parameter {
-    white-space: nowrap
-}
-</style>
+## Concepts
+
+- `UnstyledHorizontalSeparator` renders a horizontal line.
+- `UnstyledVerticalSeparator` renders a vertical line.
+
+## Code Examples
+
+### Changing separator thickness
+
+Use the `thickness` parameter to change the line thickness:
+
+```kotlin
+UnstyledHorizontalSeparator(
+  color = Color.Black,
+  thickness = 2.dp,
+)
+```
 
 <ApiReference id="separators" />
