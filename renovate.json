@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Only propose stable Maven and Gradle releases.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "allowedVersions": "!/[-.](alpha|beta|rc|cr|milestone|eap|dev|snapshot|m[0-9]+|M[0-9]+)[-.0-9]*/"
+    },
+    {
+      "description": "Group Compose Multiplatform updates.",
+      "matchPackageNames": [
+        "org.jetbrains.compose",
+        "org.jetbrains.kotlin.plugin.compose",
+        "/^org\\.jetbrains\\.compose[.:]/"
+      ],
+      "groupName": "Compose Multiplatform"
+    }
+  ]
+}
