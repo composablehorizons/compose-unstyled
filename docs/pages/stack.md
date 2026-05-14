@@ -3,8 +3,6 @@ title: Stack
 description: A single layout component for horizontal and vertical stacks.
 ---
 
-<UnstyledDemo id="stack" />
-
 ## Installation
 
 ```kotlin
