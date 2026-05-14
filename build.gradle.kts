@@ -14,9 +14,13 @@ val composeUnstyledDocsAssets = composeUnstyledDocsSource.dir("assets")
 
 val composeUnstyledDemoSources = mapOf(
   "bottom-sheet" to "BottomSheetDemo.kt",
+  "bottom-sheet-scrollable-content" to "BottomSheetScrollableContentDemo.kt",
   "modal-bottom-sheet" to "ModalBottomSheetDemo.kt",
+  "modal-bottom-sheet-scrollable-content" to "ModalBottomSheetScrollableContentDemo.kt",
   "button" to "ButtonDemo.kt",
   "checkbox" to "CheckboxDemo.kt",
+  "checkbox-custom-checked-indicator" to "CheckboxCustomCheckedIndicatorDemo.kt",
+  "checkbox-extended-indicator-bounds" to "CheckboxExtendedIndicatorBoundsDemo.kt",
   "tristatecheckbox" to "TriStateCheckboxDemo.kt",
   "dialog" to "DialogDemo.kt",
   "disclosure" to "DisclosureDemo.kt",

@@ -3,8 +3,6 @@ title: Scrim
 description: A modal scrim that follows the modal transition state.
 ---
 
-<UnstyledDemo id="scrim" />
-
 ## Installation
 
 ```kotlin

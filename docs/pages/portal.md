@@ -3,8 +3,6 @@ title: Portal
 description: A same-window portal utility for rendering content from one place in composition into a shared host.
 ---
 
-<UnstyledDemo/>
-
 ## Installation
 
 ```kotlin

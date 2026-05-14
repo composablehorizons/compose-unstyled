@@ -48,11 +48,30 @@ const apiReferences = {
     ]),
     source('composeunstyled-scrim/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [fn('Scrim', 'ModalScope.Scrim')]),
   ],
+  modal: [
+    source('composeunstyled-modal/src/commonMain/kotlin/com/composeunstyled/Modal.kt', [
+      cls('ModalState'),
+      fn('rememberModalState'),
+      fn('Modal'),
+    ]),
+  ],
+  scrim: [
+    source('composeunstyled-scrim/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [
+      fn('Scrim', 'ModalScope.Scrim'),
+    ]),
+  ],
   disclosure: [
     source('composeunstyled-disclosure/src/commonMain/kotlin/com/composeunstyled/Disclosure.kt', [
       fn('UnstyledDisclosure'),
       fn('DisclosureButton', 'DisclosureScope.DisclosureButton'),
       fn('DisclosedContent', 'DisclosureScope.DisclosedContent'),
+    ]),
+  ],
+  'dropdown-menu': [
+    source('composeunstyled-dropdown-menu/src/commonMain/kotlin/com/composeunstyled/DropdownMenu.kt', [
+      fn('UnstyledDropdownMenu'),
+      fn('DropdownMenuPanel', 'DropdownMenuScope.DropdownMenuPanel'),
+      fn('MenuItem', 'DropdownMenuPanelScope.MenuItem'),
     ]),
   ],
   icon: [source('composeunstyled-icon/src/commonMain/kotlin/com/composeunstyled/Icon.kt', [fn('UnstyledIcon')])],
@@ -68,6 +87,20 @@ const apiReferences = {
       fn('UnstyledRadioGroup'),
       fn('RadioButton', 'RadioGroupScope.RadioButton'),
       fn('SelectedIndicator', 'RadioButtonScope.SelectedIndicator'),
+    ]),
+  ],
+  scrollarea: [
+    source('composeunstyled-scrollbars/src/commonMain/kotlin/com/composeunstyled/Scrollbars.kt', [
+      fn('rememberScrollbarState'),
+      fn('UnstyledVerticalScrollbar'),
+      fn('UnstyledHorizontalScrollbar'),
+      fn('Thumb', 'ScrollbarScope.Thumb'),
+    ]),
+  ],
+  portal: [
+    source('composeunstyled-portal/src/commonMain/kotlin/com/composeunstyled/Portal.kt', [
+      fn('PortalHost'),
+      fn('Portal'),
     ]),
   ],
   separators: [
