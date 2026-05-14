@@ -1,6 +1,6 @@
 ---
 title: TriStateCheckbox
-description: A foundational component for creating three-state checkboxes that can be checked, unchecked, or in an indeterminate state. Perfect for "select all" scenarios and hierarchical selections. Accessible out of the box and fully renderless, so that you can apply any styling you like.
+description: A three-state checkbox component for checked, unchecked, and indeterminate values.
 ---
 
 <UnstyledDemo id="tristatecheckbox" />
@@ -11,127 +11,70 @@ description: A foundational component for creating three-state checkboxes that c
 implementation("com.composables:composeunstyled-tri-state-checkbox")
 ```
 
-## Basic Example
-
-To create a tri-state checkbox use the `TriStateCheckbox` component. The checkbox supports three states: `On`, `Off`, and `Indeterminate`. You can cycle through states by clicking or pressing Enter/Space while focused.
-
-The `checkIcon` composable receives the current `ToggleableState` and should render the appropriate icon for each state.
+## Anatomy
 
 ```kotlin
-var triState by remember { mutableStateOf(ToggleableState.Off) }
-
 UnstyledTriStateCheckbox(
-    value = triState,
-    onClick = {
-        triState = when (triState) {
-            ToggleableState.Off -> ToggleableState.On
-            ToggleableState.On -> ToggleableState.Indeterminate
-            ToggleableState.Indeterminate -> ToggleableState.Off
-        }
-    },
-    shape = RoundedCornerShape(4.dp),
-    backgroundColor = Color.White,
-    borderWidth = 1.dp,
-    borderColor = Color.Black.copy(0.33f),
-    modifier = Modifier.size(24.dp)
-) { state ->
-    when (state) {
-        ToggleableState.On -> UnstyledIcon(Check, contentDescription = null)
-        ToggleableState.Indeterminate -> UnstyledIcon(Minus, contentDescription = null)
-        ToggleableState.Off -> Unit // No icon shown
-    }
+  value = value,
+  onClick = onClick,
+) {
+  StateIndicator {
+  }
 }
 ```
 
-## Styling
+## Concepts
 
-The TriStateCheckbox is fully renderless and handles all UX logic, accessibility and keyboard interactions for you, but does not display any information on the screen by default.
+- `UnstyledTriStateCheckbox` represents the tri-state checkbox interaction target.
+- `StateIndicator` renders content for the current `ToggleableState`.
 
-The `shape` of the checkbox is used to clip the checkbox and applies to both the background and border.
+## Accessibility
 
-The `borderColor` and `borderWidth` parameters place a border around the checkbox, taking the given shape into consideration.
-
-The `backgroundColor` sets the color of the checkbox's surface.
-
-The `checkIcon` composable is where you define what gets displayed for each state. It receives the current `ToggleableState` as a parameter.
+Use tri-state checkboxes for parent selection controls where only some child items are selected.
 
 ## Code Examples
 
-### Select All Pattern
+### Rendering each checkbox state
 
-A common use case for TriStateCheckbox is implementing "select all" functionality with a group of child checkboxes.
+Use the `StateIndicator` component to render content for each `ToggleableState`:
 
 ```kotlin
-val checkboxOptions = listOf("Option 1", "Option 2", "Option 3")
-var selected by remember { mutableStateOf(List(checkboxOptions.size) { false }) }
-
-val triState = when {
-    selected.all { it } -> ToggleableState.On
-    selected.none { it } -> ToggleableState.Off
-    else -> ToggleableState.Indeterminate
-}
-
-Column {
-    // Parent TriState checkbox - "Select All"
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        UnstyledTriStateCheckbox(
-            value = triState,
-            onClick = {
-                val newState = when (triState) {
-                    ToggleableState.Off -> true
-                    ToggleableState.Indeterminate -> true
-                    ToggleableState.On -> false
-                }
-                selected = List(checkboxOptions.size) { newState }
-            },
-            shape = RoundedCornerShape(4.dp),
-            backgroundColor = Color.White,
-            borderWidth = 1.dp,
-            borderColor = Color.Black.copy(0.33f),
-            modifier = Modifier.size(24.dp),
-            contentDescription = "Select all options"
-        ) { state ->
-            when (state) {
-                ToggleableState.On -> UnstyledIcon(Check, contentDescription = null)
-                ToggleableState.Indeterminate -> UnstyledIcon(Minus, contentDescription = null)
-                ToggleableState.Off -> Unit
-            }
-        }
-        Spacer(Modifier.width(12.dp))
-        BasicText("Select All")
+UnstyledTriStateCheckbox(
+  value = value,
+  onClick = { toggleParent() },
+) {
+  StateIndicator { state ->
+    when (state) {
+      ToggleableState.On -> BasicText("Selected")
+      ToggleableState.Off -> BasicText("Not selected")
+      ToggleableState.Indeterminate -> BasicText("Partially selected")
     }
-
-    // Child checkboxes
-    checkboxOptions.forEachIndexed { index, option ->
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            UnstyledCheckbox(
-                checked = selected[index],
-                onCheckedChange = { checked ->
-                    selected = selected.toMutableList().apply {
-                        this[index] = checked
-                    }
-                },
-                shape = RoundedCornerShape(4.dp),
-                backgroundColor = Color.White,
-                borderWidth = 1.dp,
-                borderColor = Color.Black.copy(0.33f),
-                modifier = Modifier.size(24.dp),
-                contentDescription = option
-            ) {
-                UnstyledIcon(Check, contentDescription = null)
-            }
-            Spacer(Modifier.width(12.dp))
-            BasicText(option)
-        }
-    }
+  }
 }
 ```
 
-## Keyboard Interactions
+### Building a select-all checkbox
 
-| Key                                   | Description                                                   |
-|---------------------------------------|---------------------------------------------------------------|
-| <div class="keyboard-key">Enter</div> | Triggers the onClick callback |
-| <div class="keyboard-key">Space</div> | Triggers the onClick callback |
+Use the `ToggleableState.Indeterminate` value when only some items are selected:
+
+```kotlin
+val selectedCount = selectedItems.count()
+val parentState = when (selectedCount) {
+  0 -> ToggleableState.Off
+  items.size -> ToggleableState.On
+  else -> ToggleableState.Indeterminate
+}
+
+UnstyledTriStateCheckbox(
+  value = parentState,
+  onClick = {
+    selectedItems = if (parentState == ToggleableState.On) emptySet() else items.toSet()
+  },
+) {
+  StateIndicator { state ->
+    BasicText(state.toString())
+  }
+}
+```
 
 <ApiReference id="tristatecheckbox" />

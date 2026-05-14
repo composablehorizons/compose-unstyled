@@ -1,9 +1,16 @@
 ---
 title: Scrollbars
-description: Foundational, renderless vertical and horizontal scrollbar components with customizable thumbs. Supports Column, Row, LazyColumn, LazyRow, LazyVerticalGrid and LazyHorizontalGrid.
+description: Scrollbar components for scroll state, lazy lists, and lazy grids.
 ---
 
 <UnstyledDemo id="scrollbars" />
+
+## Features
+
+- ScrollState support
+- LazyListState support
+- LazyGridState support
+- Draggable scrollbar thumbs
 
 ## Installation
 
@@ -11,242 +18,112 @@ description: Foundational, renderless vertical and horizontal scrollbar componen
 implementation("com.composables:composeunstyled-scrollbars")
 ```
 
-## Basic Example
-
-Scrollbars consist of the following components: `rememberScrollbarState`, `UnstyledVerticalScrollbar`, `UnstyledHorizontalScrollbar`, and `Thumb`.
-
-`rememberScrollbarState` adapts a `ScrollState`, `LazyListState`, or `LazyGridState` into the state used by scrollbar primitives.
-
-The `UnstyledVerticalScrollbar`/`UnstyledHorizontalScrollbar` components represent the track of the scrollbar and accept a thumb
-component.
-
-The `Thumb` represents the thumb of a scrollbar and will automatically sync their position and size according to the
-scrolled position of the connected scrollbar state.
-
-Here is a simple example of adding vertical scrollbar to a `LazyColumn`:
+## Anatomy
 
 ```kotlin
-val lazyListState = rememberLazyListState()
-val state = rememberScrollbarState(lazyListState)
+val scrollbarState = rememberScrollbarState(scrollState)
 
-Box {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
-        repeat(50) { i ->
-            item {
-                BasicText("Item #${i}")
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd)
-            .fillMaxHeight()
-            .width(4.dp)
-    ) {
-        Thumb(Modifier.background(Color.LightGray))
-    }
+UnstyledVerticalScrollbar(scrollbarState) {
+  Thumb()
 }
 ```
+
+## Concepts
+
+- `ScrollbarState` represents the scroll position used by a scrollbar.
+- `UnstyledVerticalScrollbar` renders a vertical scrollbar.
+- `UnstyledHorizontalScrollbar` renders a horizontal scrollbar.
+- `Thumb` renders the draggable thumb inside a scrollbar.
 
 ## Code Examples
 
-### Add scrollbars to LazyLists
+### Adding scrollbars to LazyColumn
 
-Create a scrollbar state from your `LazyColumn` or `LazyList` state and pass it to the scrollbar:
+Use the `rememberScrollbarState(LazyListState)` function to connect a scrollbar to lazy list scroll position:
 
 ```kotlin
-val lazyListState = rememberLazyListState()
-val state = rememberScrollbarState(lazyListState)
+val listState = rememberLazyListState()
+val scrollbarState = rememberScrollbarState(listState)
 
-Box {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
-        repeat(50) { i ->
-            item {
-                BasicText("Item #${i}")
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd)
-            .fillMaxHeight()
-            .width(4.dp)
-    ) {
-        Thumb(Modifier.background(Color.LightGray))
-    }
+LazyColumn(state = listState) {
+  items(100) { index ->
+    BasicText("Item $index")
+  }
+}
+
+UnstyledVerticalScrollbar(scrollbarState) {
+  Thumb()
 }
 ```
 
-### Add scrollbars to LazyGrids
+### Adding scrollbars to LazyVerticalGrid
 
-Create a scrollbar state from your `LazyVerticalGrid` or `LazyHorizontalGrid` state and pass it to the scrollbar:
+Use the `rememberScrollbarState(LazyGridState)` function to connect a scrollbar to lazy grid scroll position:
 
 ```kotlin
-val lazyGridState = rememberLazyGridState()
-val state = rememberScrollbarState(lazyGridState)
+val gridState = rememberLazyGridState()
+val scrollbarState = rememberScrollbarState(gridState)
 
-Box {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        state = lazyGridState,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        repeat(50) { i ->
-            item {
-                Box(
-                    Modifier.padding(4.dp).size(48.dp).background(Color.LightGray, RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    BasicText(i.toString())
-                }
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight()
-    ) {
-        Thumb(
-            modifier = Modifier.background(Color.Black.copy(0.3f), RoundedCornerShape(100)),
-        )
-    }
+LazyVerticalGrid(
+  columns = GridCells.Fixed(2),
+  state = gridState,
+) {
+  items(100) { index ->
+    BasicText("Item $index")
+  }
+}
+
+UnstyledVerticalScrollbar(scrollbarState) {
+  Thumb()
 }
 ```
 
-### Add scrollbars to Column and Row
+### Adding scrollbars to scrollable content
 
-Create a scrollbar state from the scroll state you pass to `verticalScroll` or `horizontalScroll`:
+Use the `rememberScrollbarState(ScrollState)` function for content that uses a regular scroll state:
 
 ```kotlin
 val scrollState = rememberScrollState()
-val state = rememberScrollbarState(scrollState)
+val scrollbarState = rememberScrollbarState(scrollState)
 
-Box {
-    Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
-    ) {
-        repeat(50) { i ->
-            BasicText(i.toString())
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight()
-    ) {
-        Thumb(
-            modifier = Modifier.background(
-                Color.Black.copy(0.3f), RoundedCornerShape(100)
-            ),
-        )
-    }
+Column(Modifier.verticalScroll(scrollState)) {
+  repeat(100) { index ->
+    BasicText("Item $index")
+  }
+}
+
+UnstyledVerticalScrollbar(scrollbarState) {
+  Thumb()
 }
 ```
 
-### Styling the scrollbar and thumb
+### Hiding the scrollbar while idle
 
-Pass any styling you need to the `Modifier` of your `Scrollbar` component.
-
-You can customize the looks of your thumb using the modifier of the `Thumb` component.
-
-Here is an example of a semi-transparent scrollbar, with a fully rounded, semi-transparent thumb:
+Use the `thumbVisibility` parameter to hide the thumb when the user is not interacting with the scrollable content:
 
 ```kotlin
-val lazyListState = rememberLazyListState()
-val state = rememberScrollbarState(lazyListState)
-
-Box {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
-        repeat(50) { i ->
-            item {
-                BasicText("Item #${i}")
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd)
-            .background(Color.Black.copy(0.1f))
-            .fillMaxHeight()
-            .width(12.dp)
-            .padding(2.dp)
-    ) {
-        Thumb(Modifier.background(Color.Black.copy(0.3f), RoundedCornerShape(100)))
-    }
+UnstyledVerticalScrollbar(scrollbarState) {
+  Thumb(
+    thumbVisibility = ThumbVisibility.HideWhileIdle(
+      enter = fadeIn(),
+      exit = fadeOut(),
+      hideDelay = 500.milliseconds,
+    ),
+  )
 }
 ```
 
-### Automatically hide the scrollbar
+### Supporting reverse layout
 
-By default, the scrollbar will always remain visible on the screen.
-
-To modify this behavior, pass the customization you need using the `thumbVisibility` parameter of the `Thumb` component.
-
-Here is an example of automatically hiding the scrollbar while idling for 0.5 seconds:
+Use the `reverseLayout` parameter when the scrollable content uses reverse layout:
 
 ```kotlin
-val lazyListState = rememberLazyListState()
-val state = rememberScrollbarState(lazyListState)
-
-Box {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
-        repeat(50) { i ->
-            item {
-                BasicText("Item #${i}")
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight()
-    ) {
-        Thumb(
-            modifier = Modifier.background(Color.Black.copy(0.3f), RoundedCornerShape(100)),
-            thumbVisibility = ThumbVisibility.HideWhileIdle(
-                enter = fadeIn(),
-                exit = fadeOut(),
-                hideDelay = 2.seconds
-            )
-        )
-    }
+UnstyledVerticalScrollbar(
+  scrollbarState = scrollbarState,
+  reverseLayout = true,
+) {
+  Thumb()
 }
 ```
 
-### Overscroll behavior
-
-Scrollbars no longer own scrolling layout or overscroll behavior. Apply overscroll behavior to the scrollable component itself using Compose Foundation's scroll APIs.
-
-### Disable thumb dragging
-
-By default, pressing on the thumb causes the connected content to scroll.
-
-To disable this behavior, pass `enabled = false` to the `Thumb` component:
-
-```kotlin
-val lazyListState = rememberLazyListState()
-val state = rememberScrollbarState(lazyListState)
-
-Box {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
-        repeat(50) { i ->
-            item {
-                BasicText("Item #${i}")
-            }
-        }
-    }
-    UnstyledVerticalScrollbar(
-        scrollbarState = state,
-        modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight()
-    ) {
-        Thumb(
-            modifier = Modifier.background(Color.Black.copy(0.3f), RoundedCornerShape(100)),
-            enabled = false
-        )
-    }
-}
-```
-
-<style>
-.parameter {
-    white-space: nowrap
-}
-</style>
+<ApiReference id="scrollarea" />
