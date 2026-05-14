@@ -7,6 +7,13 @@
   "rangeStrategy": "bump",
   "packageRules": [
     {
+      "description": "Disable dependency updates by default.",
+      "matchPackageNames": [
+        "/.*/"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Only propose stable Maven and Gradle releases.",
       "matchDatasources": [
         "maven"
@@ -14,12 +21,12 @@
       "allowedVersions": "!/[-.](alpha|beta|rc|cr|milestone|eap|dev|snapshot|m[0-9]+|M[0-9]+)[-.0-9]*/"
     },
     {
-      "description": "Group Compose Multiplatform updates.",
+      "description": "Only propose Compose Multiplatform updates.",
       "matchPackageNames": [
         "org.jetbrains.compose",
-        "org.jetbrains.kotlin.plugin.compose",
         "/^org\\.jetbrains\\.compose[.:]/"
       ],
+      "enabled": true,
       "groupName": "Compose Multiplatform"
     }
   ]
