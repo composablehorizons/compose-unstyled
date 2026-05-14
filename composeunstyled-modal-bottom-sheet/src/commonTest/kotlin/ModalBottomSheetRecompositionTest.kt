@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isLessThanOrEqualTo
 import com.composeunstyled.test.runComposeRecompositionTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ import kotlin.test.Test
 
 class ModalBottomSheetRecompositionTest {
   @Test
-  fun expanding_from_hidden_composes_content_twice() = runComposeRecompositionTest {
+  fun expanding_from_hidden_composes_content_at_most_twice() = runComposeRecompositionTest {
     lateinit var state: ModalBottomSheetState
     lateinit var scope: CoroutineScope
 
@@ -67,11 +68,12 @@ class ModalBottomSheetRecompositionTest {
     }
     waitUntil { state.isIdle && state.currentDetent == SheetDetent.FullyExpanded }
 
-    assertThat(recompositionCount("sheet-content")).isEqualTo(2)
+    // Android currently composes this once, while JVM composes it twice.
+    assertThat(recompositionCount("sheet-content")).isLessThanOrEqualTo(2)
   }
 
   @Test
-  fun expanding_to_content_sized_detent_composes_content_twice() = runComposeRecompositionTest {
+  fun expanding_to_content_detent_composes_content_at_most_twice() = runComposeRecompositionTest {
     val contentDetent = SheetDetent("content") { _, sheetHeight ->
       sheetHeight
     }
@@ -101,7 +103,8 @@ class ModalBottomSheetRecompositionTest {
     }
     waitUntil { state.isIdle && state.currentDetent == contentDetent }
 
-    assertThat(recompositionCount("sheet-content")).isEqualTo(2)
+    // Android currently composes this once, while JVM composes it twice.
+    assertThat(recompositionCount("sheet-content")).isLessThanOrEqualTo(2)
   }
 
   @Test
