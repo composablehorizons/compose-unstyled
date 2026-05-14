@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added recomposition test coverage for Bottom Sheet, Modal Bottom Sheet, and Toggle Switch.
+- Added screenshot test coverage for Bottom Sheet and Modal Bottom Sheet demos.
+
+### Changed
+
+- `UnstyledIcon` now defaults `contentDescription` to `null` for decorative icons.
+
+### Fixed
+
+- Fixed `UnstyledSwitch` always animating to enabled even if its original state was enabled.
+
 ## [2.0.0] - 2026-05-11
 
 ### Added
