@@ -7,6 +7,10 @@ sections:
         slug: installation
       - title: Components
         slug: components
+      - title: Migration to 2.0
+        slug: migration-to-2
+      - title: Community
+        slug: community
   - title: Primitives
     pages:
       - title: Bottom Sheet
