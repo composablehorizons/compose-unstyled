@@ -37,6 +37,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -108,16 +109,13 @@ fun UnstyledDropdownMenu(
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
   )
-  val transitionState = remember { MutableTransitionState(false) }
+  val transitionState = remember { MutableTransitionState(expanded) }
+  SideEffect { transitionState.targetState = expanded }
   val state = remember(onExpandedChange, transitionState) {
     DropdownMenuState(
       onExpandedChange = onExpandedChange,
       transitionState = transitionState,
     )
-  }
-
-  LaunchedEffect(expanded) {
-    transitionState.targetState = expanded
   }
 
   Box(
