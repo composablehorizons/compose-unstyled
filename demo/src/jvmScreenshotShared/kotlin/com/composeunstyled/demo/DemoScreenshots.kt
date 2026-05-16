@@ -54,6 +54,11 @@ val ModalBottomSheetDemoScreenshot = DemoScreenshot(
   startDestination = "modal-bottom-sheet",
 )
 
+val ModalBottomSheetInsetDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-inset-demo",
+  startDestination = "modal-bottom-sheet-inset",
+)
+
 val IconDemoScreenshot = DemoScreenshot(
   name = "icon-demo",
   startDestination = "icon",
@@ -62,6 +67,7 @@ val IconDemoScreenshot = DemoScreenshot(
 val DemoScreenshots = listOf(
   BottomSheetDemoScreenshot,
   ModalBottomSheetDemoScreenshot,
+  ModalBottomSheetInsetDemoScreenshot,
   IconDemoScreenshot,
 )
 
