@@ -24,26 +24,9 @@
 package com.composeunstyled
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntRect
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.round
 
 @Composable
 internal fun FloatingContent(
@@ -53,134 +36,22 @@ internal fun FloatingContent(
   alignment: AnchorAlignment = AnchorAlignment.Center,
   sideOffset: Dp = 0.dp,
   alignmentOffset: Dp = 0.dp,
-  onFloatingPlaced: (FloatingPlacement) -> Unit = {},
+  onPlaced: (FloatingPlacement) -> Unit = {},
   anchor: @Composable () -> Unit,
 ) {
-  val layoutDirection = LocalLayoutDirection.current
-  val density = LocalDensity.current
-  val windowSize = currentWindowContainerSize().toIntSize(density)
-  var anchorBounds by remember { mutableStateOf<AnchorBounds?>(null) }
-
-  Layout(
-    content = anchor,
-    modifier = modifier.onGloballyPositioned {
-      anchorBounds = if (it.size == IntSize.Zero) {
-        null
-      } else {
-        AnchorBounds(
-          positionInWindow = it.positionInWindow().round(),
-          size = it.size,
-        )
+  AnchoredFloatingContent(
+    modifier = modifier,
+    layer = { content ->
+      Portal {
+        content()
       }
     },
-  ) { measurables, constraints ->
-    val anchorPlaceable = measurables.firstOrNull()?.measure(constraints)
-
-    if (anchorPlaceable == null) {
-      return@Layout layout(0, 0) {}
-    }
-
-    layout(anchorPlaceable.width, anchorPlaceable.height) {
-      anchorPlaceable.place(0, 0)
-    }
-  }
-
-  val currentAnchorBounds = anchorBounds
-  if (currentAnchorBounds != null) {
-    Portal {
-      FloatingPortalContent(
-        anchorBounds = currentAnchorBounds,
-        side = side,
-        alignment = alignment,
-        sideOffset = sideOffset,
-        alignmentOffset = alignmentOffset,
-        onFloatingPlaced = onFloatingPlaced,
-        density = density,
-        layoutDirection = layoutDirection,
-        windowSize = windowSize,
-        floatingContent = floatingContent,
-      )
-    }
-  }
-}
-
-@Composable
-private fun FloatingPortalContent(
-  anchorBounds: AnchorBounds,
-  side: AnchorSide,
-  alignment: AnchorAlignment,
-  sideOffset: Dp,
-  alignmentOffset: Dp,
-  onFloatingPlaced: (FloatingPlacement) -> Unit,
-  density: Density,
-  layoutDirection: LayoutDirection,
-  windowSize: IntSize,
-  floatingContent: @Composable () -> Unit,
-) {
-  var portalPositionInWindow by remember { mutableStateOf<IntOffset?>(null) }
-
-  Layout(
     content = floatingContent,
-    modifier = Modifier
-      .onGloballyPositioned {
-        portalPositionInWindow = it.positionInWindow().round()
-      },
-  ) { measurables, constraints ->
-    val floatingPlaceable = measurables.firstOrNull()?.measure(Constraints())
-
-    if (floatingPlaceable == null) {
-      return@Layout layout(0, 0) {}
-    }
-    val portalPosition = portalPositionInWindow
-
-    if (portalPosition == null) {
-      return@Layout layout(constraints.maxWidth, constraints.maxHeight) {}
-    }
-
-    val floatingPlacement = calculateFloatingPlacement(
-      density = density,
-      anchorBounds = anchorBounds.toIntRect(),
-      windowSize = windowSize,
-      layoutDirection = layoutDirection,
-      contentSize = IntSize(floatingPlaceable.width, floatingPlaceable.height),
-      side = side,
-      alignment = alignment,
-      sideOffset = sideOffset,
-      alignmentOffset = alignmentOffset,
-    )
-    val contentPosition = floatingPlacement.position
-
-    val portalX = contentPosition.x - portalPosition.x
-    val portalY = contentPosition.y - portalPosition.y
-
-    layout(constraints.maxWidth, constraints.maxHeight) {
-      onFloatingPlaced(floatingPlacement)
-      floatingPlaceable.place(portalX, portalY)
-    }
-  }
-}
-
-private data class AnchorBounds(
-  val positionInWindow: IntOffset,
-  val size: IntSize,
-) {
-  val left: Int get() = positionInWindow.x
-  val top: Int get() = positionInWindow.y
-  val width: Int get() = size.width
-  val height: Int get() = size.height
-  val right: Int get() = left + width
-  val bottom: Int get() = top + height
-
-  fun toIntRect(): IntRect = IntRect(
-    left = left,
-    top = top,
-    right = right,
-    bottom = bottom,
+    side = side,
+    alignment = alignment,
+    sideOffset = sideOffset,
+    alignmentOffset = alignmentOffset,
+    onPlaced = onPlaced,
+    anchor = anchor,
   )
-}
-
-private fun DpSize.toIntSize(density: Density): IntSize {
-  return with(density) {
-    IntSize(width.roundToPx(), height.roundToPx())
-  }
 }

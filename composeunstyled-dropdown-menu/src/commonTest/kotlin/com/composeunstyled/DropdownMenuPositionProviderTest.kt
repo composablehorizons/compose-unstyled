@@ -146,11 +146,22 @@ class DropdownMenuPositionProviderTest {
     alignment: AnchorAlignment = AnchorAlignment.Start,
     sideOffset: Dp = 0.dp,
     alignmentOffset: Dp = 0.dp,
-  ) = MenuContentPositionProvider(
-    density = Density(1f),
-    side = side,
-    alignment = alignment,
-    sideOffset = sideOffset,
-    alignmentOffset = alignmentOffset,
-  )
+  ) = object {
+    fun calculatePosition(
+      anchorBounds: IntRect,
+      windowSize: IntSize,
+      layoutDirection: LayoutDirection,
+      popupContentSize: IntSize,
+    ) = calculateFloatingPlacement(
+      density = Density(1f),
+      anchorBounds = anchorBounds,
+      windowSize = windowSize,
+      layoutDirection = layoutDirection,
+      contentSize = popupContentSize,
+      side = side,
+      alignment = alignment,
+      sideOffset = sideOffset,
+      alignmentOffset = alignmentOffset,
+    ).position
+  }
 }
