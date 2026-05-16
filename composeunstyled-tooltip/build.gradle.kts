@@ -83,7 +83,6 @@ kotlin {
         api(projects.composeunstyledPortal)
         implementation(projects.composeunstyledBuildModifier)
         implementation(projects.composeunstyledEscapeHandler)
-        implementation(projects.composeunstyledWindowContainerSize)
       }
     }
 

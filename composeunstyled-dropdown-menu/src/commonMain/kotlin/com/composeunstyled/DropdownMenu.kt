@@ -30,12 +30,13 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
@@ -55,18 +56,10 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntRect
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
-import androidx.compose.ui.window.PopupProperties
 
 @Stable
 internal class DropdownMenuState(
@@ -101,20 +94,12 @@ fun UnstyledDropdownMenu(
   panel: @Composable DropdownMenuScope.() -> Unit,
   anchor: @Composable () -> Unit,
 ) {
-  val density = LocalDensity.current
-  val positionProvider = MenuContentPositionProvider(
-    density = density,
-    side = side,
-    alignment = alignment,
-    sideOffset = sideOffset,
-    alignmentOffset = alignmentOffset,
-  )
-  val transitionState = remember { MutableTransitionState(expanded) }
-  SideEffect { transitionState.targetState = expanded }
-  val state = remember(onExpandedChange, transitionState) {
+  val modalState = rememberModalState(initiallyVisible = expanded)
+  SideEffect { modalState.transitionState.targetState = expanded }
+  val state = remember(onExpandedChange, modalState.transitionState) {
     DropdownMenuState(
       onExpandedChange = onExpandedChange,
-      transitionState = transitionState,
+      transitionState = modalState.transitionState,
     )
   }
 
@@ -138,25 +123,43 @@ fun UnstyledDropdownMenu(
       }
     },
   ) {
-    anchor()
-
-    if (expanded || transitionState.currentState || transitionState.isIdle.not()) {
-      Popup(
-        properties = PopupProperties(
-          focusable = true,
-          dismissOnBackPress = true,
-          dismissOnClickOutside = true,
-        ),
-        onDismissRequest = {
-          onExpandedChange(false)
-        },
-        popupPositionProvider = positionProvider,
-      ) {
+    AnchoredFloatingContent(
+      anchor = anchor,
+      layer = { content ->
+        Modal(
+          state = modalState,
+          onKeyEvent = { event ->
+            if (
+              event.type == KeyEventType.KeyDown &&
+              (event.key == Key.Back || event.key == Key.Escape)
+            ) {
+              onExpandedChange(false)
+              true
+            } else {
+              false
+            }
+          },
+        ) {
+          content()
+        }
+      },
+      content = {
         CompositionLocalProvider(LocalDropdownMenuState provides state) {
           DropdownMenuScopeInstance.panel()
         }
-      }
-    }
+      },
+      contentModifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+          detectTapGestures {
+            onExpandedChange(false)
+          }
+        },
+      side = side,
+      alignment = alignment,
+      sideOffset = sideOffset,
+      alignmentOffset = alignmentOffset,
+    )
   }
 }
 
@@ -218,7 +221,9 @@ fun DropdownMenuScope.DropdownMenuPanel(
     },
   ) {
     Box(
-      modifier = modifier.focusRequester(menuFocusRequester),
+      modifier = modifier
+        .modalFragment()
+        .focusRequester(menuFocusRequester),
     ) {
       // Request focus when the menu becomes visible
       if (state.transitionState.currentState) {
@@ -274,32 +279,6 @@ fun DropdownMenuPanelScope.MenuItem(
   ) {
     content()
   }
-}
-
-@Immutable
-internal data class MenuContentPositionProvider(
-  val density: Density,
-  val side: AnchorSide,
-  val alignment: AnchorAlignment,
-  val sideOffset: Dp,
-  val alignmentOffset: Dp,
-) : PopupPositionProvider {
-  override fun calculatePosition(
-    anchorBounds: IntRect,
-    windowSize: IntSize,
-    layoutDirection: LayoutDirection,
-    popupContentSize: IntSize,
-  ): IntOffset = calculateFloatingPlacement(
-    density = density,
-    anchorBounds = anchorBounds,
-    windowSize = windowSize,
-    layoutDirection = layoutDirection,
-    contentSize = popupContentSize,
-    side = side,
-    alignment = alignment,
-    sideOffset = sideOffset,
-    alignmentOffset = alignmentOffset,
-  ).position
 }
 
 private val KeyEvent.isKeyDown: Boolean

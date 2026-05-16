@@ -228,7 +228,7 @@ fun UnstyledTooltip(
     alignment = alignment,
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
-    onFloatingPlaced = {
+    onPlaced = {
       state.placement = state.placement.copy(positionAdjustment = it.positionAdjustment)
     },
     floatingContent = {

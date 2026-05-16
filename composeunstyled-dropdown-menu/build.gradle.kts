@@ -81,6 +81,7 @@ kotlin {
         implementation(libs.compose.foundation)
         api(projects.composeunstyledAnchored)
         implementation(projects.composeunstyledBuildModifier)
+        implementation(projects.composeunstyledModal)
       }
     }
 
