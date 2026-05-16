@@ -11,17 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added recomposition test coverage for Bottom Sheet, Modal Bottom Sheet, and Toggle Switch.
 - Added screenshot test coverage for Bottom Sheet and Modal Bottom Sheet demos.
-- Added `TooltipHost` as the destination for tooltip panels.
+- Tooltip now has a dedicated `TooltipHost` for rendering tooltip panels instead of leaking
+  `Portal`.
 
 ### Changed
 
-- `composeunstyled-tooltip` no longer exposes the Portal API transitively. Use `TooltipHost` for
-  tooltips, or add `composeunstyled-portal` directly if you use `PortalHost` or `Portal`.
+- Dropdown menus now render in our own `Modal()` instead of a platform popup.
 - `UnstyledIcon` now defaults `contentDescription` to `null` for decorative icons.
 
 ### Fixed
 
 - Fixed `UnstyledSwitch` always animating to enabled even if its original state was enabled.
+- Fixed bottom sheet content-dependent detent measurement when sheet modifiers add padding or fixed
+  height content is taller than the visible sheet. (#316)
+- Fixed dropdown menus being placed incorrectly on the first frame when initially expanded. (#308)
+- Fixed modal bottom sheets animating before their modal window is attached. (#287)
 
 ## [2.0.0] - 2026-05-11
 
