@@ -70,8 +70,8 @@ import com.composables.icons.materialsymbols.rounded.Help
 import com.composables.icons.materialsymbols.rounded.Info
 import com.composables.icons.materialsymbols.rounded.Settings
 import com.composables.icons.materialsymbols.rounded.Star
-import com.composeunstyled.PortalHost
 import com.composeunstyled.SheetDetent
+import com.composeunstyled.TooltipHost
 import com.composeunstyled.rememberModalBottomSheetState
 import androidx.compose.material3.AlertDialog as M3AlertDialog
 import androidx.compose.material3.Button as M3Button
@@ -112,7 +112,7 @@ import androidx.compose.material3.rememberModalBottomSheetState as rememberM3Mod
 @Composable
 fun Material3ImplementationDemo() {
   MaterialTheme {
-    PortalHost(Modifier.fillMaxSize()) {
+    TooltipHost(Modifier.fillMaxSize()) {
       val navController = rememberNavController()
       Surface(
         modifier = Modifier.fillMaxSize(),

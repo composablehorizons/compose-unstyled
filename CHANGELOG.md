@@ -11,9 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added recomposition test coverage for Bottom Sheet, Modal Bottom Sheet, and Toggle Switch.
 - Added screenshot test coverage for Bottom Sheet and Modal Bottom Sheet demos.
+- Added `TooltipHost` as the destination for tooltip panels.
 
 ### Changed
 
+- `composeunstyled-tooltip` no longer exposes the Portal API transitively. Use `TooltipHost` for
+  tooltips, or add `composeunstyled-portal` directly if you use `PortalHost` or `Portal`.
 - `UnstyledIcon` now defaults `contentDescription` to `null` for decorative icons.
 
 ### Fixed

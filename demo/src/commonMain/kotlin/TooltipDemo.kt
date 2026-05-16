@@ -56,7 +56,7 @@ import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
-import com.composeunstyled.PortalHost
+import com.composeunstyled.TooltipHost
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.TooltipPlacement
 import com.composeunstyled.UnstyledButton
@@ -66,7 +66,7 @@ import com.composeunstyled.focusRing
 
 @Composable
 fun TooltipDemo() {
-  PortalHost(Modifier.fillMaxSize()) {
+  TooltipHost(Modifier.fillMaxSize()) {
     Box(
       modifier = Modifier.fillMaxSize(),
       contentAlignment = Alignment.Center,

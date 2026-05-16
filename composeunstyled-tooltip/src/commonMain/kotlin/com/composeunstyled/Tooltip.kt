@@ -82,6 +82,17 @@ private enum class TooltipFocusTrigger {
 }
 
 @Composable
+fun TooltipHost(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  PortalHost(
+    modifier = modifier,
+    content = content,
+  )
+}
+
+@Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
   panel: @Composable TooltipScope.() -> Unit,

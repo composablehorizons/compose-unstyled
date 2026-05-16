@@ -53,7 +53,7 @@ class TooltipJvmTest {
 
   fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {
-      PortalHost {
+      TooltipHost {
         Box(Modifier.padding(100.dp)) {
           content()
         }
@@ -230,7 +230,7 @@ class TooltipJvmTest {
   @Test
   fun edgeCaseTooltipOnTopOnTarget() = runComposeUiTest {
     setContent {
-      PortalHost {
+      TooltipHost {
         UnstyledTooltip(
           panel = {
             TooltipPanel {

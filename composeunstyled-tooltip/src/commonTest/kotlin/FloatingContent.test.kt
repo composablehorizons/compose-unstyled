@@ -70,7 +70,7 @@ class FloatingContentTest {
   }
 
   @Test
-  fun rendersNoFloatingContentWithoutPortalHost() = runComposeUiTest {
+  fun rendersNoFloatingContentWithoutTooltipHost() = runComposeUiTest {
     setContent {
       FloatingContent(
         floatingContent = {
@@ -95,7 +95,7 @@ class FloatingContentTest {
     var bottomStartY = 0f
 
     setContent {
-      PortalHost {
+      TooltipHost {
         FloatingContent(
           side = side,
           alignment = AnchorAlignment.Start,
@@ -132,7 +132,7 @@ class FloatingContentTest {
   fun floatingContentClampsToWindowBounds() = runComposeUiTest {
     // FloatingContent clamps to window bounds like a Popup
     setContent {
-      PortalHost {
+      TooltipHost {
         FloatingContent(
           side = AnchorSide.Top,
           alignment = AnchorAlignment.Start,
@@ -167,7 +167,7 @@ class FloatingContentTest {
     // When floating content is larger than the window,
     // it should be clamped to start at 0 to maximize visible area
     setContent {
-      PortalHost {
+      TooltipHost {
         FloatingContent(
           side = AnchorSide.Bottom,
           alignment = AnchorAlignment.Start,
