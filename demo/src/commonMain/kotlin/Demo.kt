@@ -99,9 +99,15 @@ private val availablePrimitives = listOf(
     { BottomSheetScrollableContentDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
-  DemoItem("Bottom Sheet (Modal)", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
+  DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
   DemoItem(
-    "Bottom Sheet (Modal, Scrollable Content)",
+    "Modal Bottom Sheet Inset",
+    "modal-bottom-sheet-inset",
+    { ModalBottomSheetInsetDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
+  DemoItem(
+    "Modal Bottom Sheet Scrollable Content",
     "modal-bottom-sheet-scrollable-content",
     { ModalBottomSheetScrollableContentDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),

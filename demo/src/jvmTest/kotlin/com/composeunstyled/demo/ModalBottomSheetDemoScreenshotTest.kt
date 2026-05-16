@@ -28,4 +28,9 @@ class ModalBottomSheetDemoScreenshotTest {
   fun modalBottomSheetDemoMatchesScreenshot() {
     assertDemoScreenshotMatches(ModalBottomSheetDemoScreenshot)
   }
+
+  @Test
+  fun modalBottomSheetInsetDemoMatchesScreenshot() {
+    assertDemoScreenshotMatches(ModalBottomSheetInsetDemoScreenshot)
+  }
 }

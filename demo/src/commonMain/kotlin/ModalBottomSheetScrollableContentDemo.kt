@@ -38,6 +38,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +54,8 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.rememberModalBottomSheetState
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ModalBottomSheetScrollableContentDemo() {
@@ -63,6 +66,15 @@ fun ModalBottomSheetScrollableContentDemo() {
     initialDetent = Peek,
     detents = listOf(Hidden, Peek, FullyExpanded),
   )
+  LaunchedEffect(sheetState.isIdle, sheetState.currentDetent) {
+    if (
+      sheetState.isIdle &&
+      sheetState.currentDetent == Hidden
+    ) {
+      delay(1.seconds)
+      sheetState.targetDetent = Peek
+    }
+  }
   val items = List(24) { index -> "Item ${index + 1}" }
 
   UnstyledModalBottomSheet(
