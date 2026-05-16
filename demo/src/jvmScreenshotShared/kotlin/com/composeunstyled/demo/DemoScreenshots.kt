@@ -42,6 +42,7 @@ import kotlin.test.fail
 data class DemoScreenshot(
   val name: String,
   val startDestination: String,
+  val captureDelayMillis: Long = 0,
 )
 
 val BottomSheetDemoScreenshot = DemoScreenshot(
@@ -59,10 +60,17 @@ val IconDemoScreenshot = DemoScreenshot(
   startDestination = "icon",
 )
 
+val ModalDemoScreenshot = DemoScreenshot(
+  name = "modal-demo",
+  startDestination = "modal",
+  captureDelayMillis = 2_000,
+)
+
 val DemoScreenshots = listOf(
   BottomSheetDemoScreenshot,
   ModalBottomSheetDemoScreenshot,
   IconDemoScreenshot,
+  ModalDemoScreenshot,
 )
 
 @OptIn(ExperimentalTestApi::class)
@@ -73,9 +81,10 @@ fun assertDemoScreenshotMatches(screenshot: DemoScreenshot) = runComposeUiTest {
   reportDir.mkdirs()
   ImageIO.write(actual, "png", File(reportDir, "${screenshot.name}.actual.png"))
 
-  val expected = javaClass.classLoader
-    .getResourceAsStream("screenshots/${screenshot.name}.png")
-    ?.use(ImageIO::read)
+  val expected = screenshotResourcePaths(screenshot)
+    .firstNotNullOfOrNull { path ->
+      javaClass.classLoader.getResourceAsStream(path)?.use(ImageIO::read)
+    }
     ?: fail("Missing expected screenshot. Run `./gradlew :demo:takeScreenshots`.")
 
   assertEquals(expected.width, actual.width, "Screenshot width changed.")
@@ -114,8 +123,21 @@ private fun ComposeUiTest.captureDemoScreenshot(screenshot: DemoScreenshot): Buf
   }
 
   waitForIdle()
+  if (screenshot.captureDelayMillis > 0) {
+    Thread.sleep(screenshot.captureDelayMillis)
+    waitForIdle()
+  }
 
   return onNodeWithTag(ScreenshotTargetTag).captureToImage().toAwtImage()
+}
+
+private fun screenshotResourcePaths(screenshot: DemoScreenshot): List<String> {
+  val platformPath = if (System.getProperty("os.name").orEmpty().startsWith("Linux")) {
+    "screenshots/linux/${screenshot.name}.png"
+  } else {
+    null
+  }
+  return listOfNotNull(platformPath, "screenshots/${screenshot.name}.png")
 }
 
 private fun diff(expected: BufferedImage, actual: BufferedImage): ScreenshotDiff {
