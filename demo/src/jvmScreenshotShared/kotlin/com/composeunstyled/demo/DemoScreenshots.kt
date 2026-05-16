@@ -42,6 +42,7 @@ import kotlin.test.fail
 data class DemoScreenshot(
   val name: String,
   val startDestination: String,
+  val captureDelayMillis: Long = 0,
 )
 
 val BottomSheetDemoScreenshot = DemoScreenshot(
@@ -59,10 +60,131 @@ val IconDemoScreenshot = DemoScreenshot(
   startDestination = "icon",
 )
 
+val ButtonDemoScreenshot = DemoScreenshot(
+  name = "button-demo",
+  startDestination = "button",
+)
+
+val BottomSheetScrollableContentDemoScreenshot = DemoScreenshot(
+  name = "bottom-sheet-scrollable-content-demo",
+  startDestination = "bottom-sheet-scrollable-content",
+)
+
+val ModalBottomSheetScrollableContentDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-scrollable-content-demo",
+  startDestination = "modal-bottom-sheet-scrollable-content",
+)
+
+val CheckboxDemoScreenshot = DemoScreenshot(
+  name = "checkbox-demo",
+  startDestination = "checkbox",
+)
+
+val CheckboxCustomCheckedIndicatorDemoScreenshot = DemoScreenshot(
+  name = "checkbox-custom-checked-indicator-demo",
+  startDestination = "checkbox-custom-checked-indicator",
+)
+
+val CheckboxExtendedIndicatorBoundsDemoScreenshot = DemoScreenshot(
+  name = "checkbox-extended-indicator-bounds-demo",
+  startDestination = "checkbox-extended-indicator-bounds",
+)
+
+val TriStateCheckboxDemoScreenshot = DemoScreenshot(
+  name = "tristatecheckbox-demo",
+  startDestination = "tristatecheckbox",
+)
+
+val DialogDemoScreenshot = DemoScreenshot(
+  name = "dialog-demo",
+  startDestination = "dialog",
+)
+
+val DisclosureDemoScreenshot = DemoScreenshot(
+  name = "disclosure-demo",
+  startDestination = "disclosure",
+)
+
+val DropdownMenuDemoScreenshot = DemoScreenshot(
+  name = "dropdown-menu-demo",
+  startDestination = "dropdown-menu",
+)
+
+val ModalDemoScreenshot = DemoScreenshot(
+  name = "modal-demo",
+  startDestination = "modal",
+  captureDelayMillis = 2_000,
+)
+
+val ProgressIndicatorDemoScreenshot = DemoScreenshot(
+  name = "progressindicator-demo",
+  startDestination = "progressindicator",
+)
+
+val RadioGroupDemoScreenshot = DemoScreenshot(
+  name = "radiogroup-demo",
+  startDestination = "radiogroup",
+)
+
+val ScrollbarsDemoScreenshot = DemoScreenshot(
+  name = "scrollbars-demo",
+  startDestination = "scrollbars",
+)
+
+val SeparatorsDemoScreenshot = DemoScreenshot(
+  name = "separators-demo",
+  startDestination = "separators",
+)
+
+val SliderDemoScreenshot = DemoScreenshot(
+  name = "slider-demo",
+  startDestination = "slider",
+)
+
+val TabGroupDemoScreenshot = DemoScreenshot(
+  name = "tabgroup-demo",
+  startDestination = "tabgroup",
+)
+
+val TextFieldDemoScreenshot = DemoScreenshot(
+  name = "textfield-demo",
+  startDestination = "textfield",
+)
+
+val TooltipDemoScreenshot = DemoScreenshot(
+  name = "tooltip-demo",
+  startDestination = "tooltip",
+)
+
+val ToggleSwitchDemoScreenshot = DemoScreenshot(
+  name = "toggleswitch-demo",
+  startDestination = "toggleswitch",
+)
+
 val DemoScreenshots = listOf(
   BottomSheetDemoScreenshot,
   ModalBottomSheetDemoScreenshot,
   IconDemoScreenshot,
+  ButtonDemoScreenshot,
+  BottomSheetScrollableContentDemoScreenshot,
+  ModalBottomSheetScrollableContentDemoScreenshot,
+  CheckboxDemoScreenshot,
+  CheckboxCustomCheckedIndicatorDemoScreenshot,
+  CheckboxExtendedIndicatorBoundsDemoScreenshot,
+  TriStateCheckboxDemoScreenshot,
+  DialogDemoScreenshot,
+  DisclosureDemoScreenshot,
+  DropdownMenuDemoScreenshot,
+  ModalDemoScreenshot,
+  ProgressIndicatorDemoScreenshot,
+  RadioGroupDemoScreenshot,
+  ScrollbarsDemoScreenshot,
+  SeparatorsDemoScreenshot,
+  SliderDemoScreenshot,
+  TabGroupDemoScreenshot,
+  TextFieldDemoScreenshot,
+  TooltipDemoScreenshot,
+  ToggleSwitchDemoScreenshot,
 )
 
 @OptIn(ExperimentalTestApi::class)
@@ -114,6 +236,10 @@ private fun ComposeUiTest.captureDemoScreenshot(screenshot: DemoScreenshot): Buf
   }
 
   waitForIdle()
+  if (screenshot.captureDelayMillis > 0) {
+    Thread.sleep(screenshot.captureDelayMillis)
+    waitForIdle()
+  }
 
   return onNodeWithTag(ScreenshotTargetTag).captureToImage().toAwtImage()
 }

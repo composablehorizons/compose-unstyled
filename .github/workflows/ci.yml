@@ -164,6 +164,13 @@ jobs:
           printf '  %s\n' "${tasks[@]}"
           ./gradlew --console=plain "${tasks[@]}"
 
+      - name: Upload screenshot reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-reports
+          path: demo/build/reports/screenshot-tests/*.png
+
   android-tests:
     name: ${{ matrix.module }}-android-tests
     needs: [ discover-android-modules, fast-checks ]
