@@ -59,15 +59,6 @@ fun ModalBottomSheetDemo() {
     initialDetent = Peek,
     detents = listOf(Hidden, Peek, FullyExpanded),
   )
-  LaunchedEffect(modalSheetState.isIdle, modalSheetState.currentDetent) {
-    if (
-      modalSheetState.isIdle &&
-      modalSheetState.currentDetent == Hidden
-    ) {
-      delay(1.seconds)
-      modalSheetState.targetDetent = Peek
-    }
-  }
 
   LaunchedEffect(
     modalSheetState.isIdle,
