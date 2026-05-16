@@ -63,7 +63,7 @@ val IconDemoScreenshot = DemoScreenshot(
 val ModalDemoScreenshot = DemoScreenshot(
   name = "modal-demo",
   startDestination = "modal",
-  captureDelayMillis = 2_000,
+  captureDelayMillis = 5_000,
 )
 
 val DemoScreenshots = listOf(
