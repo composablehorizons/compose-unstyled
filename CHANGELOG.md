@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-05-16
+
 ### Added
 
 - Added recomposition test coverage for Bottom Sheet, Modal Bottom Sheet, and Toggle Switch.
@@ -17,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Dropdown menus now render in our own `Modal()` instead of a platform popup.
+- Dropdown Menu and Tooltip now expose shared anchor placement APIs from
+  `composeunstyled-anchored-api` without exposing the internal anchored layout implementation
+  transitively.
 - `UnstyledIcon` now defaults `contentDescription` to `null` for decorative icons.
 
 ### Fixed
