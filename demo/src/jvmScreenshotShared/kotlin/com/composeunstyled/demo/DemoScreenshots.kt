@@ -54,9 +54,15 @@ val ModalBottomSheetDemoScreenshot = DemoScreenshot(
   startDestination = "modal-bottom-sheet",
 )
 
+val IconDemoScreenshot = DemoScreenshot(
+  name = "icon-demo",
+  startDestination = "icon",
+)
+
 val DemoScreenshots = listOf(
   BottomSheetDemoScreenshot,
   ModalBottomSheetDemoScreenshot,
+  IconDemoScreenshot,
 )
 
 @OptIn(ExperimentalTestApi::class)
