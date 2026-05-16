@@ -27,17 +27,27 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
+import kotlinx.coroutines.flow.first
 
 @Stable
 class ModalState(initiallyVisible: Boolean = false) {
   val transitionState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
+  internal var attachedToWindow by mutableStateOf(false)
+
+  suspend fun awaitAttachedToWindow() {
+    snapshotFlow { attachedToWindow }.first { it }
+    withFrameNanos { }
+  }
 }
 
 private val ModalStateSaver = run {

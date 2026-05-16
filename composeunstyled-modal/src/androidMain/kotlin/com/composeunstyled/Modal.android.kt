@@ -65,7 +65,7 @@ actual fun Modal(
 ) {
   if (
     state.transitionState.targetState.not() &&
-    (state.mountedFragments == 0 || state.transitionState.isIdle)
+    state.mountedFragments == 0
   ) {
     return
   }
@@ -98,7 +98,15 @@ actual fun Modal(
               LocalModalWindow provides localWindow,
               LocalLayoutDirection provides layoutDirection,
             ) {
-              ModalScopeInstance.content()
+              DisposableEffect(state) {
+                state.attachedToWindow = true
+                onDispose {
+                  state.attachedToWindow = false
+                }
+              }
+              if (state.attachedToWindow) {
+                ModalScopeInstance.content()
+              }
             }
           }
         }
