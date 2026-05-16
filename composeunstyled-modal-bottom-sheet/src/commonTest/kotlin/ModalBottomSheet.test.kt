@@ -35,6 +35,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -62,8 +63,10 @@ import assertk.assertions.isGreaterThan
 import assertk.assertions.isLessThan
 import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.seconds
 
 class ModalBottomSheetTest {
   private val DensityTolerance = 0.1.dp
@@ -609,6 +612,57 @@ class ModalBottomSheetTest {
     assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
     onNode(isDialog()).assertDoesNotExist()
     onNodeWithTag("scrim").assertDoesNotExist()
+  }
+
+  @Test
+  fun sheet_can_be_shown_again_when_caller_observes_that_it_settled_at_hidden() = runComposeUiTest {
+    val peek = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    lateinit var state: ModalBottomSheetState
+
+    setContent {
+      state = rememberModalBottomSheetState(
+        initialDetent = peek,
+        detents = listOf(SheetDetent.Hidden, peek, SheetDetent.FullyExpanded),
+      )
+      LaunchedEffect(
+        state.isIdle,
+        state.currentDetent,
+      ) {
+        if (
+          state.isIdle &&
+          state.currentDetent == SheetDetent.Hidden
+        ) {
+          delay(1.seconds)
+          state.targetDetent = peek
+        }
+      }
+
+      UnstyledModalBottomSheet(state, overlay = {
+        Scrim(Modifier.testTag("scrim"))
+      }) {
+        Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+      }
+    }
+
+    onNode(isDialog()).assertExists()
+    assertThat(state.currentDetent).isEqualTo(peek)
+
+    onNodeWithTag("sheet").performTouchInput {
+      swipeDown()
+    }
+    waitForIdle()
+
+    onNode(isDialog()).assertDoesNotExist()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.Hidden)
+
+    mainClock.advanceTimeBy(1.seconds.inWholeMilliseconds)
+    waitForIdle()
+
+    onNode(isDialog()).assertExists()
+    onNodeWithTag("sheet").assertIsDisplayed()
+    assertThat(state.currentDetent).isEqualTo(peek)
   }
 
   @Test
