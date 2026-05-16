@@ -29,9 +29,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -452,6 +454,39 @@ class BottomSheetCommonTest {
       with(density) {
         50.dp.toPx()
       },
+      with(density) { DensityTolerance.toPx() },
+    )
+  }
+
+  @Test
+  fun fixed_height_content_does_not_use_container_height_for_content_dependent_detents() = runComposeUiTest {
+    val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(width = 400.dp, height = 800.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = peekDetent,
+          detents = listOf(SheetDetent.Hidden, peekDetent, SheetDetent.FullyExpanded),
+        )
+        UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
+          Sheet {
+            Box(Modifier.height(600.dp).fillMaxWidth())
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(state.contentHeightPx).isCloseTo(
+      with(density) { 600.dp.toPx() },
+      with(density) { DensityTolerance.toPx() },
+    )
+    assertThat(state.offset).isCloseTo(
+      with(density) { 480.dp.toPx() },
       with(density) { DensityTolerance.toPx() },
     )
   }
@@ -1648,6 +1683,52 @@ class BottomSheetCommonTest {
 
     onNodeWithTag("item_9").assertIsDisplayed()
     assertThat(state.offset).isEqualTo(initialOffset)
+  }
+
+  @Test
+  fun fullyexpanded_lazy_content_accounts_for_sheet_top_padding() = runComposeUiTest {
+    val topPadding = 48.dp
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(
+        Modifier
+          .testTag("root")
+          .requiredSize(width = 400.dp, height = 600.dp),
+      ) {
+        state = rememberBottomSheetState(initialDetent = SheetDetent.FullyExpanded)
+        UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
+          Sheet(
+            modifier = Modifier
+              .testTag("sheet")
+              .padding(top = topPadding),
+          ) {
+            LazyColumn(
+              modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            ) {
+              items(80) { index ->
+                BasicText(
+                  text = "index = $index",
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    val containerHeight = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot.height
+    assertThat(state.offset).isCloseTo(
+      containerHeight,
+      with(density) { DensityTolerance.toPx() },
+    )
   }
 
   @Test
