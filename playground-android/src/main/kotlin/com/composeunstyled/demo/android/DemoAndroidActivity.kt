@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
 import com.composeunstyled.Text
+import com.composeunstyled.TooltipHost
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledTooltip
@@ -54,7 +55,9 @@ class DemoAndroidActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       AppTheme {
-        TooltipCrashRepro()
+        TooltipHost(Modifier.fillMaxSize()) {
+          TooltipCrashRepro()
+        }
       }
     }
   }

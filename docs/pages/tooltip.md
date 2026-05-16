@@ -21,7 +21,7 @@ implementation("com.composables:composeunstyled-tooltip")
 ## Anatomy
 
 ```kotlin
-PortalHost {
+TooltipHost {
   UnstyledTooltip(
     panel = {
       TooltipPanel {
@@ -34,11 +34,11 @@ PortalHost {
 
 ## Concepts
 
-- `PortalHost` provides the destination where tooltip panels are rendered.
+- `TooltipHost` provides the destination where tooltip panels are rendered.
 - `UnstyledTooltip` marks the interactive area the user can hover, focus, or long-press to show the
   tooltip.
-  - The `anchor` slot renders the content on which the tooltip will be anchored to. 
-  - The `panel` slot renders the floating content that is shown for the anchor.
+- The `anchor` slot renders the content on which the tooltip will be anchored to.
+- The `panel` slot renders the floating content that is shown for the anchor.
 - `TooltipPanel` renders the floating tooltip content.
 
 ## Usage Considerations

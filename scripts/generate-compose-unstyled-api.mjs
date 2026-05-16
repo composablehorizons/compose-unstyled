@@ -139,6 +139,7 @@ const apiReferences = {
   ],
   tooltip: [
     source('composeunstyled-tooltip/src/commonMain/kotlin/com/composeunstyled/Tooltip.kt', [
+      fn('TooltipHost'),
       fn('UnstyledTooltip'),
       cls('TooltipPlacement'),
       fn('TooltipPanel', 'TooltipScope.TooltipPanel'),

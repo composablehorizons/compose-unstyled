@@ -483,6 +483,8 @@
     "SwitchThumb.content": "Thumb content."
   },
   "tooltip": {
+    "TooltipHost.modifier": "Modifier to be applied to the tooltip host.",
+    "TooltipHost.content": "Content that can render tooltip panels into this host.",
     "Tooltip.enabled": "Whether the tooltip is enabled. When disabled, the tooltip will not show.",
     "enabled": "Whether the tooltip is enabled. When disabled, the tooltip will not show.",
     "Tooltip.panel": "A composable function that defines the tooltip content panel.",

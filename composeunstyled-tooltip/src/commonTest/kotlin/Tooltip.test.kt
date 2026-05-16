@@ -44,7 +44,7 @@ class TooltipCommonTest {
 
   fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {
-      PortalHost {
+      TooltipHost {
         Box(Modifier.padding(100.dp)) {
           content()
         }
