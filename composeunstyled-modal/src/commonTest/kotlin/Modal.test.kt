@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -38,6 +39,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class ModalTest {
 
@@ -73,5 +75,30 @@ class ModalTest {
     }
 
     onNodeWithTag("layout_direction").assertTextEquals("rtl")
+  }
+
+  @Test
+  fun awaitAttachedToWindow_resumes_when_modal_host_attaches() = runComposeUiTest {
+    lateinit var state: ModalState
+    var attachedToWindow by mutableStateOf(false)
+
+    setContent {
+      state = rememberModalState(initiallyVisible = false)
+      Modal(state = state) {
+        LaunchedEffect(state.transitionState.targetState) {
+          if (state.transitionState.targetState) {
+            state.awaitAttachedToWindow()
+            attachedToWindow = true
+          }
+        }
+        Box(Modifier.testTag("modal_content").modalFragment())
+      }
+    }
+
+    state.transitionState.targetState = true
+    waitUntil { attachedToWindow }
+
+    onNodeWithTag("modal_content").assertExists()
+    assertTrue(state.attachedToWindow)
   }
 }

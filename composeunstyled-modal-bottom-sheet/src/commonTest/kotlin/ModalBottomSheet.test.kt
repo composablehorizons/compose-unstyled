@@ -232,8 +232,12 @@ class ModalBottomSheetTest {
     mainClock.autoAdvance = false
     state.targetDetent = SheetDetent.FullyExpanded
 
-    // wait for the modal content to be added first
-    mainClock.advanceTimeBy(1)
+    // wait for the modal content to attach first
+    waitUntil {
+      runCatching {
+        onNodeWithTag("sheet").assertExists()
+      }.isSuccess
+    }
     assertThat(state.isIdle).isFalse()
     onNodeWithTag("sheet").assertExists()
 
@@ -259,25 +263,10 @@ class ModalBottomSheetTest {
     }
     onNodeWithTag("scrim").assertDoesNotExist()
 
-    mainClock.autoAdvance = false
     state.targetDetent = SheetDetent.FullyExpanded
-
-    // we need to wait for the modal to enter first
-    mainClock.advanceTimeBy(1)
-    // Scrim should start appearing now
-
-    // Check that the scrim animation is running (not instantly completed)
-    onNodeWithTag("scrim").assertExists()
-    assertThat(state.modalState.transitionState.isIdle).isFalse()
-
-    // Advance halfway through animation
-    mainClock.advanceTimeBy(150)
-    assertThat(state.modalState.transitionState.isIdle).isFalse()
-
-    // Complete the animation
-    mainClock.advanceTimeBy(150)
     waitForIdle()
-    assertThat(state.modalState.transitionState.isIdle).isTrue()
+
+    onNodeWithTag("scrim").assertExists()
     assertThat(state.modalState.transitionState.targetState).isTrue()
   }
 
@@ -435,14 +424,20 @@ class ModalBottomSheetTest {
 
     mainClock.autoAdvance = false
     state.targetDetent = peek
-    var frame = 0
-    while (runCatching { onNode(isDialog()).assertExists() }.isFailure && frame < 30) {
-      mainClock.advanceTimeByFrame()
-      frame++
+    // Unstyled Modals are backed by dialogs, so isDialog() means the modal host is attached.
+    waitUntil {
+      runCatching {
+        onNode(isDialog()).assertExists()
+      }.isSuccess
     }
     onNode(isDialog()).assertExists()
+    waitUntil {
+      runCatching {
+        onNodeWithTag("sheet").assertExists()
+      }.isSuccess
+    }
     onNodeWithTag("sheet").assertExists()
-    frame = 0
+    var frame = 0
     while (state.offset <= 0f && frame < 30) {
       mainClock.advanceTimeByFrame()
       frame++

@@ -156,6 +156,7 @@ class ModalBottomSheetState(
         modalState.transitionState.targetState = true
         pendingDetentChange?.cancel()
         pendingDetentChange = coroutineScope.launch {
+          modalState.awaitAttachedToWindow()
           bottomSheetState.animateTo(value)
         }
         pendingDetentChange?.join()
@@ -184,6 +185,9 @@ class ModalBottomSheetState(
     pendingDetentChange?.cancel()
     pendingDetentChange = coroutineScope.launch {
       modalState.transitionState.targetState = value != SheetDetent.Hidden
+      if (value != SheetDetent.Hidden) {
+        modalState.awaitAttachedToWindow()
+      }
       bottomSheetState.jumpTo(value)
     }
   }
