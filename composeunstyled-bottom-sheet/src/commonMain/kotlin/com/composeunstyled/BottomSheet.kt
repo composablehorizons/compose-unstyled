@@ -655,18 +655,22 @@ fun BottomSheetScope.Sheet(
       state.hasContentDependentDetents() -> state.containerHeightPx.roundToInt()
       state.layoutHeightPx.isNaN() -> constraints.maxHeight
       else -> state.layoutHeightPx.roundToInt()
-    }.coerceIn(constraints.minHeight, constraints.maxHeight)
+    }
+    val constrainedFallbackContentHeight = fallbackContentHeight.coerceIn(
+      constraints.minHeight,
+      constraints.maxHeight,
+    )
     val intrinsicContentHeight = measurables.maxOfOrNull { measurable ->
       try {
         measurable.maxIntrinsicHeight(constraints.maxWidth)
       } catch (_: IllegalStateException) {
-        fallbackContentHeight
+        constrainedFallbackContentHeight
       }
-    } ?: 0
+    }
     val estimatedContentHeight = if (intrinsicContentHeight == 0) {
-      fallbackContentHeight
+      constrainedFallbackContentHeight
     } else {
-      intrinsicContentHeight
+      intrinsicContentHeight ?: constrainedFallbackContentHeight
     }
 
     val resolvedLayoutHeight = state?.layoutHeightPxFor(estimatedContentHeight.toFloat())
@@ -682,7 +686,7 @@ fun BottomSheetScope.Sheet(
     }.coerceIn(constraints.minHeight, constraints.maxHeight)
     val contentMaxHeight = when {
       waitingForHiddenAnchors -> layoutMaxHeight
-      state?.hasContentDependentDetents() == true -> fallbackContentHeight
+      state?.hasContentDependentDetents() == true -> constrainedFallbackContentHeight
       else -> layoutMaxHeight
     }
     val contentConstraints = constraints.copy(maxHeight = contentMaxHeight)
@@ -701,10 +705,12 @@ fun BottomSheetScope.Sheet(
       layoutMaxHeight,
     ).coerceIn(constraints.minHeight, constraints.maxHeight)
 
-    val measuredContentHeight = max(
-      estimatedContentHeight,
-      contentHeight,
-    )
+    val measuredContentHeight = when {
+      waitingForHiddenAnchors -> estimatedContentHeight
+      contentHeight == constrainedFallbackContentHeight &&
+        constrainedFallbackContentHeight < fallbackContentHeight -> fallbackContentHeight
+      else -> max(estimatedContentHeight, contentHeight)
+    }
     state?.updateContentHeight(max(measuredContentHeight, height).toFloat())
 
     layout(width, height) {
