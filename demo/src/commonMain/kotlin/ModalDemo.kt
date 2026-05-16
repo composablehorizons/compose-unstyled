@@ -58,6 +58,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -86,6 +87,8 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberModalState
 import kotlinx.coroutines.launch
+
+internal val LocalModalDemoScreenshotMode = staticCompositionLocalOf { false }
 
 @Composable
 fun ModalDemo() {
@@ -123,6 +126,7 @@ fun ModalDemo() {
       "Misty pine forest",
     ),
   )
+  val screenshotMode = LocalModalDemoScreenshotMode.current
   val modalState = rememberModalState(initiallyVisible = false)
   val modalFocusRequester = remember { FocusRequester() }
   val pagerState = rememberPagerState(pageCount = { galleryItems.size })
@@ -160,7 +164,7 @@ fun ModalDemo() {
       BasicText(
         "Select a photo to preview",
         style = TextStyle(
-          color = Color(0xFF18181B),
+          color = if (screenshotMode) Color.Transparent else Color(0xFF18181B),
           fontSize = 14.sp,
           fontWeight = FontWeight.Medium,
         ),
@@ -183,12 +187,16 @@ fun ModalDemo() {
               .background(Color(0xFFF8FAFC))
               .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
           ) {
-            Image(
-              painter = rememberUriPainter(item.url),
-              contentDescription = item.description,
-              modifier = Modifier.fillMaxSize(),
-              contentScale = ContentScale.Crop,
-            )
+            if (screenshotMode) {
+              ModalDemoImagePlaceholder(index, Modifier.fillMaxSize())
+            } else {
+              Image(
+                painter = rememberUriPainter(item.url),
+                contentDescription = item.description,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+              )
+            }
           }
         }
       }
@@ -267,15 +275,24 @@ fun ModalDemo() {
                   .fillMaxWidth()
                   .padding(vertical = 20.dp),
               ) { page ->
-                Image(
-                  painter = rememberUriPainter(galleryItems[page].url),
-                  contentDescription = galleryItems[page].description,
-                  modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF27272A)),
-                  contentScale = ContentScale.Crop,
-                )
+                if (screenshotMode) {
+                  ModalDemoImagePlaceholder(
+                    index = page,
+                    modifier = Modifier
+                      .fillMaxSize()
+                      .clip(RoundedCornerShape(8.dp)),
+                  )
+                } else {
+                  Image(
+                    painter = rememberUriPainter(galleryItems[page].url),
+                    contentDescription = galleryItems[page].description,
+                    modifier = Modifier
+                      .fillMaxSize()
+                      .clip(RoundedCornerShape(8.dp))
+                      .background(Color(0xFF27272A)),
+                    contentScale = ContentScale.Crop,
+                  )
+                }
               }
 
               UnstyledButton(
@@ -331,4 +348,17 @@ fun ModalDemo() {
       }
     }
   }
+}
+
+@Composable
+private fun ModalDemoImagePlaceholder(index: Int, modifier: Modifier = Modifier) {
+  val colors = listOf(
+    Color(0xFFBFD7EA),
+    Color(0xFFC7D8A7),
+    Color(0xFFF2C6A0),
+    Color(0xFFE8D8B8),
+    Color(0xFFAED9D3),
+    Color(0xFFC8B6E2),
+  )
+  Box(modifier.background(colors[index % colors.size]))
 }

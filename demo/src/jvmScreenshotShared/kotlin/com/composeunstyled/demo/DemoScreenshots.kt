@@ -23,6 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.platform.testTag
@@ -118,7 +119,13 @@ private fun ComposeUiTest.captureDemoScreenshot(screenshot: DemoScreenshot): Buf
         .requiredSize(width = ScreenshotWidth.dp, height = ScreenshotHeight.dp)
         .testTag(ScreenshotTargetTag),
     ) {
-      Demo(startDestination = screenshot.startDestination)
+      if (screenshot.startDestination == "modal") {
+        CompositionLocalProvider(LocalModalDemoScreenshotMode provides true) {
+          Demo(startDestination = screenshot.startDestination)
+        }
+      } else {
+        Demo(startDestination = screenshot.startDestination)
+      }
     }
   }
 
