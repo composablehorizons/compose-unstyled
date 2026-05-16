@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +47,8 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.rememberModalBottomSheetState
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ModalBottomSheetDemo() {
@@ -56,6 +59,19 @@ fun ModalBottomSheetDemo() {
     initialDetent = Peek,
     detents = listOf(Hidden, Peek, FullyExpanded),
   )
+
+  LaunchedEffect(
+    modalSheetState.isIdle,
+    modalSheetState.currentDetent,
+  ) {
+    if (
+      modalSheetState.isIdle &&
+      modalSheetState.currentDetent == Hidden
+    ) {
+      delay(1.seconds)
+      modalSheetState.targetDetent = Peek
+    }
+  }
 
   UnstyledModalBottomSheet(
     state = modalSheetState,
