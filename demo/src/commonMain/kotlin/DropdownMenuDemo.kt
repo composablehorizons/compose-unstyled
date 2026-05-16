@@ -110,8 +110,9 @@ fun DropdownMenuDemo() {
           transformOrigin = TransformOrigin(0f, 0f),
         ) + fadeIn(tween(durationMillis = 30)),
         exit = scaleOut(
-          animationSpec = tween(durationMillis = 1, delayMillis = 75),
-          targetScale = 1f,
+          animationSpec = tween(durationMillis = 75),
+          targetScale = 0.8f,
+          transformOrigin = TransformOrigin(0f, 0f),
         ) +
           fadeOut(tween(durationMillis = 75)),
       ) {
