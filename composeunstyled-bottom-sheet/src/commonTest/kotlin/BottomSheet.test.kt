@@ -1270,14 +1270,12 @@ class BottomSheetCommonTest {
     val detent400 = SheetDetent("400") { _, _ -> 400.dp }
 
     lateinit var state: BottomSheetState
-    lateinit var scope: CoroutineScope
 
     setContent {
-      scope = rememberCoroutineScope()
       state = rememberBottomSheetState(
         initialDetent = detent100,
         detents = listOf(detent100, detent200, detent300, detent400),
-        animationSpec = tween(2000),
+        animationSpec = tween(1),
       )
 
       UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
@@ -1287,10 +1285,16 @@ class BottomSheetCommonTest {
       }
     }
 
+    waitUntil { state.isIdle }
+
     // Start moving up toward detent200
-    scope.launch {
-      state.animateTo(detent200)
-    }
+    state.anchoredDraggableState.dispatchRawDelta(
+      delta = (
+        state.anchoredDraggableState.anchors.positionOf(detent200) -
+          state.anchoredDraggableState.anchors.positionOf(detent100)
+        ) * 0.75f,
+    )
+
     // Verify we're actually moving toward detent200
     assertThat(state.targetDetent).isEqualTo(detent200)
     assertThat(state.isIdle).isFalse()
@@ -1300,7 +1304,8 @@ class BottomSheetCommonTest {
 
     // Should move to detent300 (closest upward)
     assertThat(state.targetDetent).isEqualTo(detent300)
-    awaitIdle()
+    mainClock.advanceTimeBy(50)
+    waitUntil { state.isIdle }
     assertThat(state.currentDetent).isEqualTo(detent300)
   }
 
@@ -1312,14 +1317,12 @@ class BottomSheetCommonTest {
     val detent400 = SheetDetent("400") { _, _ -> 400.dp }
 
     lateinit var state: BottomSheetState
-    lateinit var scope: CoroutineScope
 
     setContent {
-      scope = rememberCoroutineScope()
       state = rememberBottomSheetState(
         initialDetent = detent400,
         detents = listOf(detent100, detent200, detent300, detent400),
-        animationSpec = tween(2000),
+        animationSpec = tween(1),
       )
 
       UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
@@ -1330,13 +1333,14 @@ class BottomSheetCommonTest {
     }
 
     waitUntil { state.isIdle }
-    mainClock.autoAdvance = false
 
     // Start moving down toward detent300
-    scope.launch {
-      state.animateTo(detent300)
-    }
-    mainClock.advanceTimeBy(100)
+    state.anchoredDraggableState.dispatchRawDelta(
+      delta = (
+        state.anchoredDraggableState.anchors.positionOf(detent300) -
+          state.anchoredDraggableState.anchors.positionOf(detent400)
+        ) * 0.75f,
+    )
 
     // Verify we're actually moving toward detent300
     assertThat(state.targetDetent).isEqualTo(detent300)
@@ -1345,11 +1349,10 @@ class BottomSheetCommonTest {
     // Remove detent300 while animating toward it
     state.detents = listOf(detent100, detent200, detent400)
 
-    mainClock.autoAdvance = true
-    mainClock.advanceTimeBy(2500)
-    waitForIdle()
-
     // Should move to detent200 (closest downward)
+    assertThat(state.targetDetent).isEqualTo(detent200)
+    mainClock.advanceTimeBy(50)
+    waitUntil { state.isIdle }
     assertThat(state.currentDetent).isEqualTo(detent200)
   }
 
@@ -1385,14 +1388,12 @@ class BottomSheetCommonTest {
     val detent500 = SheetDetent("500") { _, _ -> 500.dp }
 
     lateinit var state: BottomSheetState
-    lateinit var scope: CoroutineScope
 
     setContent {
-      scope = rememberCoroutineScope()
       state = rememberBottomSheetState(
         initialDetent = detent400,
         detents = listOf(detent100, detent200, detent300, detent400, detent500),
-        animationSpec = tween(2000),
+        animationSpec = tween(1),
       )
 
       UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
@@ -1403,13 +1404,14 @@ class BottomSheetCommonTest {
     }
 
     waitUntil { state.isIdle }
-    mainClock.autoAdvance = false
 
     // Start moving down toward detent300
-    scope.launch {
-      state.animateTo(detent300)
-    }
-    mainClock.advanceTimeBy(100)
+    state.anchoredDraggableState.dispatchRawDelta(
+      delta = (
+        state.anchoredDraggableState.anchors.positionOf(detent300) -
+          state.anchoredDraggableState.anchors.positionOf(detent400)
+        ) * 0.75f,
+    )
 
     // Verify we're actually moving toward detent300
     assertThat(state.targetDetent).isEqualTo(detent300)
@@ -1419,11 +1421,10 @@ class BottomSheetCommonTest {
     // No valid detent in downward direction - should fall back to first detent
     state.detents = listOf(detent400, detent500)
 
-    mainClock.autoAdvance = true
-    mainClock.advanceTimeBy(2500)
-    waitForIdle()
-
     // Should move to first detent (detent400)
+    assertThat(state.targetDetent).isEqualTo(detent400)
+    mainClock.advanceTimeBy(50)
+    waitUntil { state.isIdle }
     assertThat(state.currentDetent).isEqualTo(detent400)
   }
 
