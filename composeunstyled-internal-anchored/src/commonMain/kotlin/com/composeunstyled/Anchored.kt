@@ -29,19 +29,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
-enum class AnchorSide {
-  Top,
-  Bottom,
-  Start,
-  End,
-}
-
-enum class AnchorAlignment {
-  Start,
-  Center,
-  End,
-}
-
 data class FloatingPlacement(
   val position: IntOffset,
   val positionAdjustment: IntOffset,

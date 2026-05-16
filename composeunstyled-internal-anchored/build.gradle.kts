@@ -70,7 +70,7 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledDropdownMenu"
+      baseName = "ComposeUnstyledInternalAnchored"
       isStatic = true
     }
   }
@@ -78,36 +78,15 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(libs.compose.foundation)
         api(projects.composeunstyledAnchoredApi)
-        implementation(projects.composeunstyledInternalAnchored)
-        implementation(projects.composeunstyledBuildModifier)
-        implementation(projects.composeunstyledModal)
+        implementation(libs.compose.foundation)
+        implementation(projects.composeunstyledWindowContainerSize)
       }
     }
 
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
-
-        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-        implementation(libs.compose.ui.test)
-      }
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
-    }
-
-    val jvmTest by getting
-
-    jvmTest.dependencies {
-      implementation(libs.compose.ui.test.junit4)
-      implementation(compose.desktop.currentOs) {
-        exclude(group = "org.jetbrains.compose.material", module = "material")
-        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
 
@@ -130,7 +109,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.dropdownmenu"
+  namespace = "com.composeunstyled.internal.anchored"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -149,13 +128,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-dropdown-menu",
+    artifactId = "composeunstyled-internal-anchored",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Dropdown Menu")
-    description.set("Dropdown menu primitive for Compose Unstyled - foundational API for building anchored menu surfaces in Compose Multiplatform.")
+    name.set("Compose Unstyled Internal Anchored")
+    description.set("Internal anchored positioning implementation for Compose Unstyled.")
     url.set(projectUrl)
 
     licenses {

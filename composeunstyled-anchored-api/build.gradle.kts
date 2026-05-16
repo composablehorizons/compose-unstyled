@@ -20,15 +20,14 @@
  * SOFTWARE.
  */
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-  alias(libs.plugins.compose)
-  alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.android.library)
   alias(libs.plugins.maven.publish)
@@ -46,10 +45,6 @@ java {
 }
 
 kotlin {
-  compilerOptions {
-    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
-    freeCompilerArgs.add("-Xcontext-parameters")
-  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
@@ -70,23 +65,14 @@ kotlin {
 
   listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyledAnchored"
+      baseName = "ComposeUnstyledAnchoredApi"
       isStatic = true
     }
   }
 
   sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(libs.compose.foundation)
-        implementation(projects.composeunstyledWindowContainerSize)
-      }
-    }
-
-    val commonTest by getting {
-      dependencies {
-        implementation(kotlin("test"))
-      }
+    commonTest.dependencies {
+      implementation(kotlin("test"))
     }
 
     applyDefaultHierarchyTemplate {
@@ -108,7 +94,7 @@ kotlin {
 }
 
 android {
-  namespace = "com.composeunstyled.anchored"
+  namespace = "com.composeunstyled.anchoredapi"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -127,13 +113,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled-anchored",
+    artifactId = "composeunstyled-anchored-api",
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled Anchored")
-    description.set("Anchored positioning primitives for Compose Unstyled - foundational API for placing content relative to an anchor in Compose Multiplatform.")
+    name.set("Compose Unstyled Anchored API")
+    description.set("Shared anchored placement API for Compose Unstyled.")
     url.set(projectUrl)
 
     licenses {
