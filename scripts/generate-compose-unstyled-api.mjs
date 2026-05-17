@@ -161,6 +161,13 @@ const apiReferences = {
       fn('resolveThemeTextAppearance'),
     ]),
   ],
+  'platform-themes': [
+    source('composeunstyled-platformtheme/src/commonMain/kotlin/com/composeunstyled/platformtheme/PlatformTheme.kt', [
+      fn('buildPlatformTheme'),
+      fn('platformIndication'),
+      fn('interactiveSize', 'Modifier.interactiveSize'),
+    ]),
+  ],
   buildModifier: [
     source('composeunstyled-build-modifier/src/commonMain/kotlin/com/composeunstyled/BuildModifier.kt', [fn('buildModifier')]),
   ],

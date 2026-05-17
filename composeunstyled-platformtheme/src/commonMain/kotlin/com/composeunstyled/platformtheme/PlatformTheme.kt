@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.platformtheme
 
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Indication
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -39,12 +41,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.theme.ColoredIndication
 import com.composeunstyled.theme.ThemeBuilder
 import com.composeunstyled.theme.ThemeComposable
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
-import com.composeunstyled.theme.rememberColoredIndication
 
 val indications = ThemeProperty<Indication>("platform_indications")
 val bright = ThemeToken<Indication>("bright")
@@ -88,34 +90,8 @@ fun buildPlatformTheme(
 ): ThemeComposable {
   return buildTheme {
     properties[indications] = mapOf(
-      bright to platformValue(
-        android = { rememberPlatformIndication(Color.White) },
-        iOS = { rememberIosIndication(Color.White) },
-        jvm = {
-          rememberColoredIndication(
-            color = Color.White,
-            pressedAlpha = 0.25f,
-            hoveredAlpha = 0f,
-            draggedAlpha = 0f,
-            focusedAlpha = 0f,
-          )
-        },
-        web = { rememberWebIndication(Color.White) },
-      ),
-      dimmed to platformValue(
-        android = { rememberPlatformIndication(Color.Black) },
-        iOS = { rememberIosIndication(Color.Black) },
-        jvm = {
-          rememberColoredIndication(
-            color = Color.Black,
-            pressedAlpha = 0.1f,
-            hoveredAlpha = 0f,
-            draggedAlpha = 0f,
-            focusedAlpha = 0f,
-          )
-        },
-        web = { rememberWebIndication(Color.Black) },
-      ),
+      bright to platformIndication(Color.White),
+      dimmed to platformIndication(Color.Black),
     )
     defaultIndication = properties[indications][bright]
 
@@ -226,9 +202,21 @@ fun buildPlatformTheme(
 }
 
 @Composable
+fun platformIndication(
+  color: Color,
+): Indication {
+  return platformValue(
+    android = { rememberPlatformIndication(color) },
+    iOS = { rememberIosIndication(color) },
+    jvm = { rememberJvmIndication(color) },
+    web = { rememberWebIndication(color) },
+  )
+}
+
+@Composable
 private fun rememberIosIndication(tint: Color): IndicationNodeFactory {
-  return rememberColoredIndication(
-    color = tint,
+  return rememberPlatformColoredIndication(
+    tint = tint,
     pressedAlpha = 0.25f,
     hoveredAlpha = 0f,
     draggedAlpha = 0f,
@@ -239,15 +227,58 @@ private fun rememberIosIndication(tint: Color): IndicationNodeFactory {
 }
 
 @Composable
-private fun rememberWebIndication(tint: Color): IndicationNodeFactory = rememberColoredIndication(
-  color = tint,
-  pressedAlpha = 0.08f,
-  hoveredAlpha = 0.06f,
-  draggedAlpha = 0f,
-  focusedAlpha = 0f,
-  showAnimationSpec = tween(100),
-  hideAnimationSpec = tween(100),
-)
+private fun rememberJvmIndication(tint: Color): IndicationNodeFactory {
+  return rememberPlatformColoredIndication(
+    tint = tint,
+    pressedAlpha = 0.1f,
+    hoveredAlpha = 0f,
+    draggedAlpha = 0f,
+    focusedAlpha = 0f,
+  )
+}
+
+@Composable
+private fun rememberWebIndication(tint: Color): IndicationNodeFactory {
+  return rememberPlatformColoredIndication(
+    tint = tint,
+    pressedAlpha = 0.08f,
+    hoveredAlpha = 0.06f,
+    draggedAlpha = 0f,
+    focusedAlpha = 0f,
+    showAnimationSpec = tween(100),
+    hideAnimationSpec = tween(100),
+  )
+}
+
+@Composable
+private fun rememberPlatformColoredIndication(
+  tint: Color,
+  draggedAlpha: Float,
+  focusedAlpha: Float,
+  hoveredAlpha: Float,
+  pressedAlpha: Float,
+  showAnimationSpec: AnimationSpec<Float> = snap(),
+  hideAnimationSpec: AnimationSpec<Float> = snap(),
+): IndicationNodeFactory {
+  return remember(
+    tint,
+    draggedAlpha,
+    focusedAlpha,
+    hoveredAlpha,
+    pressedAlpha,
+    showAnimationSpec,
+    hideAnimationSpec,
+  ) {
+    ColoredIndication(
+      hoveredColor = tint.copy(alpha = hoveredAlpha),
+      pressedColor = tint.copy(alpha = pressedAlpha),
+      focusedColor = tint.copy(alpha = focusedAlpha),
+      draggedColor = tint.copy(alpha = draggedAlpha),
+      animationSpecEnter = showAnimationSpec,
+      animationSpecExit = hideAnimationSpec,
+    )
+  }
+}
 
 private fun typeScale(scale: Int): TextUnit {
   return platformValue(
