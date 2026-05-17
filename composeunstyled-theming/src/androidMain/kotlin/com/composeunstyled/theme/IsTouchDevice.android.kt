@@ -21,4 +21,20 @@
  */
 package com.composeunstyled.theme
 
-internal actual val isTouchDevice: Boolean = true
+import android.content.pm.PackageManager
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+
+@Composable
+internal actual fun isTouchDevice(): Boolean {
+  val context = LocalContext.current
+  return remember(context) {
+    context.packageManager.hasTouchscreen()
+  }
+}
+
+internal fun PackageManager.hasTouchscreen(): Boolean {
+  return hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN) ||
+    hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH)
+}

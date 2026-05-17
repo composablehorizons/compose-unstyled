@@ -21,7 +21,38 @@
  */
 package com.composeunstyled.theme
 
-import androidx.compose.runtime.Composable
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-@Composable
-internal expect fun isTouchDevice(): Boolean
+class ThemeWebTest {
+  @Test
+  fun browserTouchCapabilitiesAreEnabledWhenNavigatorReportsTouchPoints() {
+    assertTrue(
+      browserHasTouchCapabilities(
+        maxTouchPoints = 1,
+        anyPointerCoarse = false,
+      ),
+    )
+  }
+
+  @Test
+  fun browserTouchCapabilitiesAreEnabledWhenAnyPointerIsCoarse() {
+    assertTrue(
+      browserHasTouchCapabilities(
+        maxTouchPoints = 0,
+        anyPointerCoarse = true,
+      ),
+    )
+  }
+
+  @Test
+  fun browserTouchCapabilitiesAreDisabledWithoutTouchPointsOrCoarsePointer() {
+    assertFalse(
+      browserHasTouchCapabilities(
+        maxTouchPoints = null,
+        anyPointerCoarse = false,
+      ),
+    )
+  }
+}

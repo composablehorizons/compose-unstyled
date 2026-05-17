@@ -21,4 +21,36 @@
  */
 package com.composeunstyled.theme
 
-internal actual val isTouchDevice: Boolean = false
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import java.awt.HeadlessException
+import java.awt.Toolkit
+
+@Composable
+internal actual fun isTouchDevice(): Boolean {
+  return remember { currentDeviceHasTouchCapabilities() }
+}
+
+internal fun currentDeviceHasTouchCapabilities(): Boolean {
+  val toolkit = try {
+    Toolkit.getDefaultToolkit()
+  } catch (_: HeadlessException) {
+    return false
+  }
+
+  return listOf(
+    "awt.touch.support",
+    "sun.awt.touch.support",
+  ).any { propertyName ->
+    toolkit.getDesktopProperty(propertyName).isTouchSupportEnabled()
+  }
+}
+
+internal fun Any?.isTouchSupportEnabled(): Boolean {
+  return when (this) {
+    is Boolean -> this
+    is Number -> toInt() > 0
+    is String -> equals("true", ignoreCase = true) || toIntOrNull()?.let { it > 0 } == true
+    else -> false
+  }
+}

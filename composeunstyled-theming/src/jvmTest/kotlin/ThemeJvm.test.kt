@@ -31,7 +31,11 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.theme.ComponentInteractiveSize
 import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.currentDeviceHasTouchCapabilities
+import com.composeunstyled.theme.isTouchSupportEnabled
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ThemeJvmTest {
   @Test
@@ -54,7 +58,27 @@ class ThemeJvmTest {
     }
 
     onNodeWithTag("interactive-box")
-      .assertWidthIsEqualTo(32.dp)
-      .assertHeightIsEqualTo(32.dp)
+      .assertWidthIsEqualTo(expectedInteractiveSize())
+      .assertHeightIsEqualTo(expectedInteractiveSize())
   }
+
+  @Test
+  fun awtTouchSupportDesktopPropertyIsEnabledForBooleansAndPositiveNumbers() {
+    assertTrue(true.isTouchSupportEnabled())
+    assertTrue(1.isTouchSupportEnabled())
+    assertTrue("true".isTouchSupportEnabled())
+    assertTrue("1".isTouchSupportEnabled())
+  }
+
+  @Test
+  fun awtTouchSupportDesktopPropertyIsDisabledForMissingFalseAndZeroValues() {
+    assertFalse(null.isTouchSupportEnabled())
+    assertFalse(false.isTouchSupportEnabled())
+    assertFalse(0.isTouchSupportEnabled())
+    assertFalse("false".isTouchSupportEnabled())
+    assertFalse("0".isTouchSupportEnabled())
+  }
+
+  private fun expectedInteractiveSize() =
+    if (currentDeviceHasTouchCapabilities()) 48.dp else 32.dp
 }
