@@ -22,17 +22,35 @@
 package com.composeunstyled.theme
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import kotlinx.browser.window
+import org.w3c.dom.events.Event
 
 @Composable
 internal actual fun supportsTouch(): Boolean {
-  return remember {
-    browserHasTouchCapabilities(
-      maxTouchPoints = window.navigator.maxTouchPoints,
-      anyPointerCoarse = window.matchMedia("(any-pointer: coarse)").matches,
-    )
+  val mediaQueryList = remember { window.matchMedia("(any-pointer: coarse)") }
+  var anyPointerCoarse by remember { mutableStateOf(mediaQueryList.matches) }
+
+  DisposableEffect(mediaQueryList) {
+    val listener: (Event) -> Unit = {
+      anyPointerCoarse = mediaQueryList.matches
+    }
+
+    mediaQueryList.addEventListener("change", listener)
+
+    onDispose {
+      mediaQueryList.removeEventListener("change", listener)
+    }
   }
+
+  return browserHasTouchCapabilities(
+    maxTouchPoints = window.navigator.maxTouchPoints,
+    anyPointerCoarse = anyPointerCoarse,
+  )
 }
 
 internal fun browserHasTouchCapabilities(
