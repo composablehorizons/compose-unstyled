@@ -107,9 +107,8 @@ BasicText(
 
 ### Adding an overlay behind a modal bottom sheet
 
-Use the `overlay` parameter to render content behind the modal sheet. Use the optional
-[Scrim](/compose-unstyled/scrim) module for a ready-made scrim. For custom modal-layer content that
-needs to coordinate enter and exit animations, see [Modal](/compose-unstyled/modal).
+Use the `overlay` parameter to render content behind the modal sheet. `Scrim` provides a
+ready-made overlay for modal bottom sheets.
 
 ```kotlin
 UnstyledModalBottomSheet(

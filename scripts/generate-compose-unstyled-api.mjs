@@ -23,6 +23,7 @@ const apiReferences = {
       fn('rememberModalBottomSheetState'),
       cls('ModalBottomSheetState'),
       fn('UnstyledModalBottomSheet'),
+      fn('Scrim', 'ModalBottomSheetOverlayScope.Scrim'),
       fn('Sheet', 'ModalBottomSheetScope.Sheet'),
       fn('DragIndication', 'ModalBottomSheetScope.DragIndication'),
     ]),
@@ -44,9 +45,9 @@ const apiReferences = {
   dialog: [
     source('composeunstyled-dialog/src/commonMain/kotlin/com/composeunstyled/Dialog.kt', [
       fn('UnstyledDialog'),
+      fn('Scrim', 'DialogOverlayScope.Scrim'),
       fn('DialogPanel', 'DialogScope.DialogPanel'),
     ]),
-    source('composeunstyled-scrim/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [fn('Scrim', 'ModalScope.Scrim')]),
   ],
   modal: [
     source('composeunstyled-modal/src/commonMain/kotlin/com/composeunstyled/Modal.kt', [
