@@ -202,7 +202,12 @@
     "focusRing.shape": "The shape of the composable (defaults to `RectangleShape`)",
     "shape": "The shape of the composable (defaults to `RectangleShape`)",
     "focusRing.offset": "Distance between composable and ring (defaults to `0.dp`)",
-    "offset": "Distance between composable and ring (defaults to `0.dp`)"
+    "offset": "Distance between composable and ring (defaults to `0.dp`)",
+    "focusRing.visibility": "Controls whether the ring appears for any focus or only focus-visible focus (defaults to `FocusRingVisibility.FocusVisible`)",
+    "visibility": "Controls whether the ring appears for any focus or only focus-visible focus (defaults to `FocusRingVisibility.FocusVisible`)",
+    "FocusVisibilityProvider.modifier": "Modifier to be applied to the provider container.",
+    "FocusVisibilityProvider.content": "The content that should share focus-visible input tracking.",
+    "collectIsFocusVisibleAsState": "Collects whether this interaction source is focused and the current focus visibility mode should show a focus indicator."
   },
   "icon": {
     "Icon.painter": "a `Painter`  to draw inside this icon.",

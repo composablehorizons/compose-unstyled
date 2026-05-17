@@ -124,7 +124,12 @@ private val availablePrimitives = listOf(
 )
 
 private val availableModifiers = listOf(
-  DemoItem("Focus Ring", "focus-ring", { FocusRingDemo() }),
+  DemoItem(
+    "Focus Ring (FocusVisible)",
+    "focus-ring-focus-visible",
+    { FocusRingFocusVisibleDemo() },
+  ),
+  DemoItem("Focus Ring (Focused)", "focus-ring-focused", { FocusRingFocusedDemo() }),
   DemoItem("Outline", "outline", { OutlineDemo() }),
 ).map {
   it.copy(demo = {

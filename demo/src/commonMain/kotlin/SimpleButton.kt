@@ -35,6 +35,7 @@ import com.composeunstyled.UnstyledButton
 @Composable
 internal fun SimpleButton(
   modifier: Modifier = Modifier,
+  text: String = "Button",
   shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp),
   interactionSource: androidx.compose.foundation.interaction.MutableInteractionSource? = null,
 ) {
@@ -45,6 +46,6 @@ internal fun SimpleButton(
       .border(1.dp, Color.Black.copy(alpha = 0.2f), shape),
     interactionSource = interactionSource,
   ) {
-    BasicText("Button", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+    BasicText(text, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
   }
 }

@@ -85,7 +85,31 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
+        implementation(projects.composeunstyledBuildModifier)
         implementation(projects.composeunstyledOutline)
+      }
+    }
+
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+      implementation(libs.assertk)
+
+      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+      implementation(libs.compose.ui.test)
+    }
+
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+    }
+
+    val jvmTest by getting
+
+    jvmTest.dependencies {
+      implementation(libs.compose.ui.test.junit4)
+      implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material", module = "material")
       }
     }
   }

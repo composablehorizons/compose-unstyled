@@ -1,9 +1,9 @@
 ---
 title: focusRing
-description: A modifier that draws an outline around a composable's bounds when the component is focused, similar to browser focus indicators.
+description: A modifier that draws an outline around a composable's bounds when focus should be visibly indicated, similar to browser focus indicators.
 ---
 
-The `focusRing` is based on the [outline](outline.md) modifier and does not affect layout or size - it draws purely outside the composable's bounds and only appears when focused.
+The `focusRing` is based on the [outline](outline.md) modifier and does not affect layout or size - it draws purely outside the composable's bounds. By default it follows focus-visible behavior: keyboard focus shows the ring, while pointer-origin focus does not.
 
 <ApiReference id="focusRing" />
 
@@ -24,16 +24,38 @@ The `shape` parameter should match the shape of the composable you are styling f
 ```kotlin
 val interactionSource = remember { MutableInteractionSource() }
 
-SimpleButton(
-    modifier = Modifier.focusRing(
-        interactionSource = interactionSource,
-        width = 2.dp,
-        color = Color(0xFF3B82F6),
-        shape = RoundedCornerShape(8.dp),
-        offset = 2.dp
-    ),
-    interactionSource = interactionSource
-)
+FocusVisibilityProvider {
+    SimpleButton(
+        modifier = Modifier.focusRing(
+            interactionSource = interactionSource,
+            width = 2.dp,
+            color = Color(0xFF3B82F6),
+            shape = RoundedCornerShape(8.dp),
+            offset = 2.dp
+        ),
+        interactionSource = interactionSource
+    )
+}
+```
+
+### Focus Visibility
+
+Wrap your app or screen content with `FocusVisibilityProvider` so Compose Unstyled can track whether the latest input came from the keyboard or a pointer. Programmatic focus and unknown input modes are treated conservatively and show the ring.
+
+Use `visibility = FocusRingVisibility.Focused` when you need the old behavior where any focused component shows the ring.
+
+```kotlin
+FocusVisibilityProvider {
+    SimpleButton(
+        modifier = Modifier.focusRing(
+            interactionSource = interactionSource,
+            width = 2.dp,
+            color = Color(0xFF3B82F6),
+            visibility = FocusRingVisibility.Focused
+        ),
+        interactionSource = interactionSource
+    )
+}
 ```
 
 ### Customizing Width

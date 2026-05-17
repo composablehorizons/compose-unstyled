@@ -164,7 +164,10 @@ const apiReferences = {
     source('composeunstyled-build-modifier/src/commonMain/kotlin/com/composeunstyled/BuildModifier.kt', [fn('buildModifier')]),
   ],
   focusRing: [
-    source('composeunstyled-focus-ring/src/commonMain/kotlin/com/composeunstyled/FocusRing.kt', [fn('focusRing', 'Modifier.focusRing')]),
+    source('composeunstyled-focus-ring/src/commonMain/kotlin/com/composeunstyled/FocusRing.kt', [
+      fn('FocusVisibilityProvider'),
+      fn('focusRing', 'Modifier.focusRing'),
+    ]),
   ],
   outline: [
     source('composeunstyled-outline/src/commonMain/kotlin/com/composeunstyled/Outline.kt', [fn('outline', 'Modifier.outline')]),
