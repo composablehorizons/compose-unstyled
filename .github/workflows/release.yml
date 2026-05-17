@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 env:
   RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
@@ -217,3 +218,79 @@ jobs:
           name: ${{ env.RELEASE_REF }}
           body: ${{ env.CHANGELOG_CONTENT }}
           draft: true
+
+  report-failure:
+    needs: [ spotless-check, desktop-tests, discover-android-modules, android-tests, publish, github-release ]
+    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open GitHub issue
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const releaseRef = '${{ env.RELEASE_REF }}';
+            const title = `Release failed for ${releaseRef}`;
+            const labels = ['release-failure'];
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const results = {
+              'spotless-check': '${{ needs.spotless-check.result }}',
+              'desktop-tests': '${{ needs.desktop-tests.result }}',
+              'discover-android-modules': '${{ needs.discover-android-modules.result }}',
+              'android-tests': '${{ needs.android-tests.result }}',
+              'publish': '${{ needs.publish.result }}',
+              'github-release': '${{ needs.github-release.result }}',
+            };
+
+            const body = [
+              `Release failed for \`${releaseRef}\`.`,
+              '',
+              `Workflow run: ${runUrl}`,
+              '',
+              'Job results:',
+              ...Object.entries(results).map(([job, result]) => `- \`${job}\`: ${result}`),
+              '',
+              'Please inspect the failed job logs and rerun the release once the issue is fixed.',
+            ].join('\n');
+
+            const { data: existingIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: labels.join(','),
+              per_page: 10,
+            });
+            const existingIssue = existingIssues.find(issue => issue.title === title);
+
+            if (existingIssue) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existingIssue.number,
+                body,
+              });
+              return;
+            }
+
+            try {
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: labels[0],
+                color: 'd73a4a',
+                description: 'Release workflow validation or publishing is failing.',
+              });
+            } catch (error) {
+              if (error.status !== 422) {
+                throw error;
+              }
+            }
+
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels,
+            });
