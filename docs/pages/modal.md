@@ -15,7 +15,7 @@ implementation("com.composables:composeunstyled-modal")
 
 ```kotlin
 Modal(state = state) {
-  Modifier.modalFragment()
+  Scrim()
 }
 ```
 
@@ -23,6 +23,7 @@ Modal(state = state) {
 
 - `ModalState` controls whether the modal is visible.
 - `Modal` renders content in a modal layer.
+- `Scrim` renders a modal overlay that follows the modal transition state.
 - `modalFragment()` marks content that should keep the modal mounted during transitions.
 
 ## Accessibility
@@ -39,9 +40,20 @@ Use the `rememberModalState()` function to create the modal state:
 val state = rememberModalState(initiallyVisible = true)
 
 Modal(state = state) {
+  Scrim()
   Box(Modifier.modalFragment()) {
     BasicText("Modal content")
   }
+}
+```
+
+### Adding a scrim
+
+Use `Scrim` inside `Modal` content to render a ready-made overlay:
+
+```kotlin
+Modal(state = state) {
+  Scrim(scrimColor = Color.Black.copy(alpha = 0.4f))
 }
 ```
 

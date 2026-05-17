@@ -37,8 +37,6 @@ sections:
         slug: progressindicator
       - title: Radio Group
         slug: radiogroup
-      - title: Scrim
-        slug: scrim
       - title: Scroll Area
         slug: scrollarea
       - title: Separators

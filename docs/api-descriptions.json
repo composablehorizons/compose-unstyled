@@ -127,6 +127,12 @@
     "draggedColor": "Color overlay to display when the component is being dragged"
   },
   "defaultMinimumComponentInteractiveSize": {},
+  "modal": {
+    "Scrim.modifier": "`Modifier` for the Scrim",
+    "Scrim.scrimColor": "Controls the color of the Scrim. The default color is Black with an alpha of 60%.",
+    "Scrim.enter": "The `EnterTransition` when the Scrim enters the composition",
+    "Scrim.exit": "The `ExitTransition` when the Scrim exits the composition"
+  },
   "dialog": {
     "Dialog.state": "A `DialogState` object which controls the visibility of the dialog.",
     "state": "A `DialogState` object which controls the visibility of the dialog.",

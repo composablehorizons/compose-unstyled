@@ -98,7 +98,6 @@ kotlin {
 
         api(projects.composeunstyledBuildModifier)
         api(projects.composeunstyledModal)
-        api(projects.composeunstyledScrim)
         api(projects.composeunstyledDialog)
         api(projects.composeunstyledBottomSheet)
         api(projects.composeunstyledModalBottomSheet)
