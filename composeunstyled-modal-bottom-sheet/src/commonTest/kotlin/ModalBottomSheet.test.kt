@@ -235,12 +235,7 @@ class ModalBottomSheetTest {
     mainClock.autoAdvance = false
     state.targetDetent = SheetDetent.FullyExpanded
 
-    // wait for the modal content to attach first
-    waitUntil {
-      runCatching {
-        onNodeWithTag("sheet").assertExists()
-      }.isSuccess
-    }
+    advanceUntilSheetExists()
     assertThat(state.isIdle).isFalse()
     onNodeWithTag("sheet").assertExists()
 
@@ -427,18 +422,9 @@ class ModalBottomSheetTest {
 
     mainClock.autoAdvance = false
     state.targetDetent = peek
-    // Unstyled Modals are backed by dialogs, so isDialog() means the modal host is attached.
-    waitUntil {
-      runCatching {
-        onNode(isDialog()).assertExists()
-      }.isSuccess
-    }
+    advanceUntilModalExists()
     onNode(isDialog()).assertExists()
-    waitUntil {
-      runCatching {
-        onNodeWithTag("sheet").assertExists()
-      }.isSuccess
-    }
+    advanceUntilSheetExists()
     onNodeWithTag("sheet").assertExists()
     var frame = 0
     while (state.offset <= 0f && frame < 30) {
@@ -752,6 +738,7 @@ class ModalBottomSheetTest {
 
     // Start opening animation programmatically
     state.targetDetent = SheetDetent.FullyExpanded
+    advanceUntilSheetExists()
     mainClock.advanceTimeBy(500)
 
     // Catch the sheet mid-animation and swipe it down to dismiss (gesture-driven)
@@ -1356,4 +1343,24 @@ private fun androidx.compose.ui.test.ComposeUiTest.advanceUntilModalSheetGone() 
 
     mainClock.advanceTimeByFrame()
   }
+}
+
+private fun androidx.compose.ui.test.ComposeUiTest.advanceUntilModalExists() {
+  repeat(120) {
+    val modalExists = runCatching { onNode(isDialog()).assertExists() }.isSuccess
+    if (modalExists) return
+
+    mainClock.advanceTimeByFrame()
+  }
+  onNode(isDialog()).assertExists()
+}
+
+private fun androidx.compose.ui.test.ComposeUiTest.advanceUntilSheetExists() {
+  repeat(120) {
+    val sheetExists = runCatching { onNodeWithTag("sheet").assertExists() }.isSuccess
+    if (sheetExists) return
+
+    mainClock.advanceTimeByFrame()
+  }
+  onNodeWithTag("sheet").assertExists()
 }
