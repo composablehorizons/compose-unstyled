@@ -21,38 +21,39 @@
  */
 package com.composeunstyled.theme
 
+import assertk.assertThat
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class ThemeWebTest {
   @Test
   fun browserTouchCapabilitiesAreEnabledWhenNavigatorReportsTouchPoints() {
-    assertTrue(
+    assertThat(
       browserHasTouchCapabilities(
         maxTouchPoints = 1,
         anyPointerCoarse = false,
       ),
-    )
+    ).isTrue()
   }
 
   @Test
   fun browserTouchCapabilitiesAreEnabledWhenAnyPointerIsCoarse() {
-    assertTrue(
+    assertThat(
       browserHasTouchCapabilities(
         maxTouchPoints = 0,
         anyPointerCoarse = true,
       ),
-    )
+    ).isTrue()
   }
 
   @Test
   fun browserTouchCapabilitiesAreDisabledWithoutTouchPointsOrCoarsePointer() {
-    assertFalse(
+    assertThat(
       browserHasTouchCapabilities(
         maxTouchPoints = null,
         anyPointerCoarse = false,
       ),
-    )
+    ).isFalse()
   }
 }
