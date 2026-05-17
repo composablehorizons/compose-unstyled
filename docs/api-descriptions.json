@@ -145,7 +145,7 @@
     "scrimColor": "Controls the color of the Scrim. The default color is Black with an alpha of 60%.",
     "Scrim.enter": "The `EnterTransition` when the Scrim enters the composition",
     "enter": "The `EnterTransition` when the Scrim enters the composition",
-    "Scrim.exit": "The `ExitTransition` when the Scrim enters the composition",
+    "Scrim.exit": "The `ExitTransition` when the Scrim exits the composition",
     "exit": "The `ExitTransition` when the Scrim enters the composition"
   },
   "disclosure": {
@@ -245,6 +245,10 @@
     "onDismiss": "Called when the sheet is being dismissed either by tapping outside or by pressing `Esc` or `Back`.",
     "UnstyledModalBottomSheet.content": "The contents of the Modal Bottom Sheet.",
     "content": "The contents of the sheet.",
+    "Scrim.modifier": "`Modifier` for the Scrim",
+    "Scrim.scrimColor": "Controls the color of the Scrim. The default color is Black with an alpha of 60%.",
+    "Scrim.enter": "The `EnterTransition` when the Scrim enters the composition",
+    "Scrim.exit": "The `ExitTransition` when the Scrim exits the composition",
     "Sheet.modifier": "The `Modifier` for the component",
     "modifier": "The `Modifier` for the component",
     "Sheet.enabled": "Enables or disables dragging.",

@@ -24,6 +24,7 @@ package com.composeunstyled
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -54,12 +56,33 @@ interface DialogScope
 
 private object DialogScopeInstance : DialogScope
 
+interface DialogOverlayScope
+
+private object DialogOverlayScopeInstance : DialogOverlayScope
+
+@Composable
+fun DialogOverlayScope.Scrim(
+  modifier: Modifier = Modifier,
+  scrimColor: Color = Color.Black.copy(alpha = 0.6f),
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
+) {
+  val state = LocalModalState.current
+  AnimatedVisibility(
+    visibleState = state.transitionState,
+    enter = enter,
+    exit = exit,
+  ) {
+    Box(modifier.modalFragment().fillMaxSize().background(scrimColor))
+  }
+}
+
 @Composable
 fun UnstyledDialog(
   visible: Boolean,
   onDismissRequest: () -> Unit,
   properties: DialogProperties = DialogProperties(),
-  overlay: (@Composable ModalScope.() -> Unit)? = null,
+  overlay: (@Composable DialogOverlayScope.() -> Unit)? = null,
   content: @Composable DialogScope.() -> Unit,
 ) {
   val modalState = rememberModalState(initiallyVisible = visible)
@@ -106,7 +129,7 @@ fun UnstyledDialog(
         }
       },
     ) {
-      overlay?.invoke(this@Modal)
+      overlay?.invoke(DialogOverlayScopeInstance)
       DialogScopeInstance.content()
     }
   }

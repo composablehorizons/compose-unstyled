@@ -23,12 +23,16 @@
 
 package com.composeunstyled
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -44,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -56,6 +61,27 @@ private val DoNothing: () -> Unit = {}
 class ModalBottomSheetScope internal constructor(
   internal val bottomSheetScope: BottomSheetScope,
 )
+
+interface ModalBottomSheetOverlayScope
+
+private object ModalBottomSheetOverlayScopeInstance : ModalBottomSheetOverlayScope
+
+@Composable
+fun ModalBottomSheetOverlayScope.Scrim(
+  modifier: Modifier = Modifier,
+  scrimColor: Color = Color.Black.copy(alpha = 0.6f),
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
+) {
+  val state = LocalModalState.current
+  AnimatedVisibility(
+    visibleState = state.transitionState,
+    enter = enter,
+    exit = exit,
+  ) {
+    Box(modifier.modalFragment().fillMaxSize().background(scrimColor))
+  }
+}
 
 data class ModalBottomSheetProperties(
   val dismissOnBackPress: Boolean = true,
@@ -208,7 +234,7 @@ fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
   properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
-  overlay: (@Composable ModalScope.() -> Unit)? = null,
+  overlay: (@Composable ModalBottomSheetOverlayScope.() -> Unit)? = null,
   content: @Composable ModalBottomSheetScope.() -> Unit,
 ) {
   val currentDismissCallback by rememberUpdatedState(onDismiss)
@@ -287,7 +313,7 @@ fun UnstyledModalBottomSheet(
         }
       },
     ) {
-      overlay?.invoke(this@Modal)
+      overlay?.invoke(ModalBottomSheetOverlayScopeInstance)
       UnstyledBottomSheet(
         state = state.bottomSheetState,
         modifier = Modifier.fillMaxSize(),

@@ -65,9 +65,8 @@ UnstyledDialog(
 
 ### Adding an overlay behind a dialog
 
-Use the `overlay` parameter to render content behind the dialog panel. Use the optional
-[Scrim](/compose-unstyled/scrim) module for a ready-made scrim. For custom modal-layer content that
-needs to coordinate enter and exit animations, see [Modal](/compose-unstyled/modal).
+Use the `overlay` parameter to render content behind the dialog panel. `Scrim` provides a
+ready-made overlay for dialogs.
 
 ```kotlin
 UnstyledDialog(
