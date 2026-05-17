@@ -24,4 +24,4 @@ package com.composeunstyled.theme
 import androidx.compose.runtime.Composable
 
 @Composable
-internal actual fun isTouchDevice(): Boolean = true
+internal expect fun supportsTouch(): Boolean

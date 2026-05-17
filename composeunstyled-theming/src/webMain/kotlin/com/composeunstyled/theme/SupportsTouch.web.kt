@@ -26,7 +26,7 @@ import androidx.compose.runtime.remember
 import kotlinx.browser.window
 
 @Composable
-internal actual fun isTouchDevice(): Boolean {
+internal actual fun supportsTouch(): Boolean {
   return remember {
     browserHasTouchCapabilities(
       maxTouchPoints = window.navigator.maxTouchPoints,

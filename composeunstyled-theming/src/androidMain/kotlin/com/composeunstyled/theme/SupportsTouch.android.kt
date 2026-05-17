@@ -27,7 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-internal actual fun isTouchDevice(): Boolean {
+internal actual fun supportsTouch(): Boolean {
   val context = LocalContext.current
   return remember(context) {
     context.packageManager.hasTouchscreen()

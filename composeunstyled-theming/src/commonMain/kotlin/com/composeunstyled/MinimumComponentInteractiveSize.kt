@@ -29,7 +29,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.composeunstyled.theme.ComponentInteractiveSize
-import com.composeunstyled.theme.isTouchDevice
+import com.composeunstyled.theme.supportsTouch
 
 internal val LocalMinimumComponentInteractiveSize =
   compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified) }
@@ -39,7 +39,7 @@ fun Modifier.minimumInteractiveComponentSize(): Modifier {
   val size = LocalMinimumComponentInteractiveSize.current
 
   return this then buildModifier {
-    if (isTouchDevice()) {
+    if (supportsTouch()) {
       add(
         Modifier.sizeIn(
           minWidth = size.touchInteractionSize,
