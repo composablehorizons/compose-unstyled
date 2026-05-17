@@ -23,14 +23,74 @@ package com.composeunstyled
 
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
+enum class FocusRingVisibility {
+  Focused,
+  FocusVisible,
+}
+
+internal enum class FocusVisibilityMode {
+  Keyboard,
+  Pointer,
+}
+
+@Stable
+internal interface FocusVisibilityManager {
+  val focusVisibilityMode: FocusVisibilityMode
+
+  fun notifyKeyboardInput()
+
+  fun notifyPointerInput()
+}
+
+internal val LocalFocusVisibilityManager = staticCompositionLocalOf<FocusVisibilityManager> {
+  DefaultFocusVisibilityManager(FocusVisibilityMode.Keyboard)
+}
+
+@Composable
+fun FocusVisibilityProvider(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  val inputModeManager = LocalInputModeManager.current
+  val manager = remember {
+    DefaultFocusVisibilityManager(inputModeManager.inputMode.toFocusVisibilityMode())
+  }
+
+  CompositionLocalProvider(LocalFocusVisibilityManager provides manager) {
+    Box(
+      modifier = modifier
+        .focusVisibilityInputObserver(manager),
+    ) {
+      content()
+    }
+  }
+}
 
 @Composable
 fun Modifier.focusRing(
@@ -39,12 +99,69 @@ fun Modifier.focusRing(
   color: Color,
   shape: Shape = RectangleShape,
   offset: Dp = 0.dp,
+  visibility: FocusRingVisibility = FocusRingVisibility.FocusVisible,
 ): Modifier {
-  val focused by interactionSource.collectIsFocusedAsState()
+  val showFocusRing by when (visibility) {
+    FocusRingVisibility.Focused -> interactionSource.collectIsFocusedAsState()
+    FocusRingVisibility.FocusVisible -> interactionSource.collectIsFocusVisibleAsState()
+  }
 
-  return if (focused) {
-    this then Modifier.outline(width = width, color = color, shape = shape, offset = offset)
-  } else {
-    this
+  return this then buildModifier {
+    if (showFocusRing) {
+      add(Modifier.outline(width = width, color = color, shape = shape, offset = offset))
+    }
+  }
+}
+
+@Composable
+fun InteractionSource.collectIsFocusVisibleAsState(): State<Boolean> {
+  val focused by collectIsFocusedAsState()
+  val manager = LocalFocusVisibilityManager.current
+
+  return rememberUpdatedState(
+    focused && manager.focusVisibilityMode == FocusVisibilityMode.Keyboard,
+  )
+}
+
+private class DefaultFocusVisibilityManager(
+  initialFocusVisibilityMode: FocusVisibilityMode,
+) : FocusVisibilityManager {
+  override var focusVisibilityMode by mutableStateOf(initialFocusVisibilityMode)
+    private set
+
+  override fun notifyKeyboardInput() {
+    focusVisibilityMode = FocusVisibilityMode.Keyboard
+  }
+
+  override fun notifyPointerInput() {
+    focusVisibilityMode = FocusVisibilityMode.Pointer
+  }
+}
+
+private fun Modifier.focusVisibilityInputObserver(
+  manager: FocusVisibilityManager,
+): Modifier {
+  return onPreviewKeyEvent { event ->
+    if (event.type == KeyEventType.KeyDown) {
+      manager.notifyKeyboardInput()
+    }
+    false
+  }.pointerInput(manager) {
+    awaitPointerEventScope {
+      while (true) {
+        val event = awaitPointerEvent(PointerEventPass.Initial)
+        if (event.type == PointerEventType.Press) {
+          manager.notifyPointerInput()
+        }
+      }
+    }
+  }
+}
+
+private fun InputMode.toFocusVisibilityMode(): FocusVisibilityMode {
+  return when (this) {
+    InputMode.Keyboard -> FocusVisibilityMode.Keyboard
+    InputMode.Touch -> FocusVisibilityMode.Pointer
+    else -> FocusVisibilityMode.Keyboard
   }
 }
