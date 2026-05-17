@@ -55,6 +55,24 @@ jobs:
       - name: Desktop Tests
         run: ./gradlew --console=plain jvmTest :demo:jvmTest
 
+  screenshot-tests:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ env.RELEASE_REF }}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Screenshot Tests
+        run: ./gradlew --console=plain :demo:jvmScreenshotTest
+
   discover-android-modules:
     runs-on: ubuntu-latest
     outputs:
@@ -158,7 +176,7 @@ jobs:
 
   publish:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: [ spotless-check, desktop-tests, android-tests ]
+    needs: [ spotless-check, desktop-tests, screenshot-tests, android-tests ]
     runs-on: ubuntu-latest
     environment: maven-central
     steps:
@@ -220,8 +238,8 @@ jobs:
           draft: true
 
   report-failure:
-    needs: [ spotless-check, desktop-tests, discover-android-modules, android-tests, publish, github-release ]
-    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
+    needs: [ spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, publish, github-release ]
+    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
     runs-on: ubuntu-latest
     steps:
       - name: Open GitHub issue
@@ -237,6 +255,7 @@ jobs:
             const results = {
               'spotless-check': '${{ needs.spotless-check.result }}',
               'desktop-tests': '${{ needs.desktop-tests.result }}',
+              'screenshot-tests': '${{ needs.screenshot-tests.result }}',
               'discover-android-modules': '${{ needs.discover-android-modules.result }}',
               'android-tests': '${{ needs.android-tests.result }}',
               'publish': '${{ needs.publish.result }}',

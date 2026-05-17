@@ -35,6 +35,24 @@ jobs:
       - name: JVM Tests and Assemble
         run: ./gradlew --console=plain spotlessCheck jvmTest :demo:jvmTest assemble
 
+  screenshot-tests:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Screenshot Tests
+        run: ./gradlew --console=plain :demo:jvmScreenshotTest
+
   discover-android-modules:
     runs-on: ubuntu-latest
     outputs:
@@ -131,8 +149,8 @@ jobs:
           script: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
 
   report-failure:
-    needs: [ jvm-and-assemble, discover-android-modules, android-tests ]
-    if: ${{ always() && (needs.jvm-and-assemble.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure') }}
+    needs: [ jvm-and-assemble, screenshot-tests, discover-android-modules, android-tests ]
+    if: ${{ always() && (needs.jvm-and-assemble.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure') }}
     runs-on: ubuntu-latest
     steps:
       - name: Open GitHub issue
@@ -146,6 +164,7 @@ jobs:
             const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const results = {
               'jvm-and-assemble': '${{ needs.jvm-and-assemble.result }}',
+              'screenshot-tests': '${{ needs.screenshot-tests.result }}',
               'discover-android-modules': '${{ needs.discover-android-modules.result }}',
               'android-tests': '${{ needs.android-tests.result }}',
             };
