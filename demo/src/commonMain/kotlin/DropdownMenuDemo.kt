@@ -40,7 +40,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,8 +66,6 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun DropdownMenuDemo() {
@@ -86,12 +83,7 @@ fun DropdownMenuDemo() {
     DropdownOption("Paste", Lucide.Clipboard),
     DropdownOption("Delete", Lucide.Trash2, dangerous = true),
   )
-  var expanded by remember { mutableStateOf(false) }
-
-  LaunchedEffect(Unit) {
-    delay(500.milliseconds)
-    expanded = true
-  }
+  var expanded by remember { mutableStateOf(true) }
 
   UnstyledDropdownMenu(
     expanded = expanded,

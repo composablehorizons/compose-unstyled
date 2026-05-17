@@ -153,17 +153,9 @@ kotlin {
 
     val jvmScreenshot by getting {
       kotlin.srcDir(jvmScreenshotSharedDir)
+      resources.srcDir("src/jvmTest/resources")
       dependencies {
-        implementation(kotlin("test"))
-        implementation(libs.assertk)
-        implementation(libs.compose.ui.test.junit4)
-      }
-    }
-
-    jvmTest {
-      kotlin.srcDir(jvmScreenshotSharedDir)
-      dependencies {
-        implementation(kotlin("test"))
+        implementation(kotlin("test-junit"))
         implementation(libs.assertk)
         implementation(libs.compose.ui.test.junit4)
       }
@@ -212,6 +204,18 @@ tasks.register<JavaExec>("takeScreenshots") {
   description = "Updates desktop screenshot test baselines."
   dependsOn(jvmScreenshotCompilation.compileTaskProvider)
   mainClass.set("com.composeunstyled.demo.DemoScreenshotBaselinesKt")
+  classpath = files(
+    jvmScreenshotCompilation.output.allOutputs,
+    jvmScreenshotCompilation.runtimeDependencyFiles,
+  )
+  workingDir = projectDir
+}
+
+tasks.register<Test>("jvmScreenshotTest") {
+  group = "verification"
+  description = "Runs desktop screenshot tests against checked-in baselines."
+  dependsOn(jvmScreenshotCompilation.compileTaskProvider)
+  testClassesDirs = jvmScreenshotCompilation.output.classesDirs
   classpath = files(
     jvmScreenshotCompilation.output.allOutputs,
     jvmScreenshotCompilation.runtimeDependencyFiles,

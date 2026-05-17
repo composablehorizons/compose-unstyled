@@ -60,16 +60,100 @@ val ModalBottomSheetInsetDemoScreenshot = DemoScreenshot(
   startDestination = "modal-bottom-sheet-inset",
 )
 
+val ButtonDemoScreenshot = DemoScreenshot(
+  name = "button-demo",
+  startDestination = "button",
+)
+
+val CheckboxDemoScreenshot = DemoScreenshot(
+  name = "checkbox-demo",
+  startDestination = "checkbox",
+)
+
+val TriStateCheckboxDemoScreenshot = DemoScreenshot(
+  name = "tristatecheckbox-demo",
+  startDestination = "tristatecheckbox",
+)
+
+val DialogDemoScreenshot = DemoScreenshot(
+  name = "dialog-demo",
+  startDestination = "dialog",
+)
+
+val DisclosureDemoScreenshot = DemoScreenshot(
+  name = "disclosure-demo",
+  startDestination = "disclosure",
+)
+
+val DropdownMenuDemoScreenshot = DemoScreenshot(
+  name = "dropdown-menu-demo",
+  startDestination = "dropdown-menu",
+)
+
 val IconDemoScreenshot = DemoScreenshot(
   name = "icon-demo",
   startDestination = "icon",
+)
+
+val ProgressIndicatorDemoScreenshot = DemoScreenshot(
+  name = "progressindicator-demo",
+  startDestination = "progressindicator",
+)
+
+val RadioGroupDemoScreenshot = DemoScreenshot(
+  name = "radiogroup-demo",
+  startDestination = "radiogroup",
+)
+
+val ScrollbarsDemoScreenshot = DemoScreenshot(
+  name = "scrollbars-demo",
+  startDestination = "scrollbars",
+)
+
+val SeparatorsDemoScreenshot = DemoScreenshot(
+  name = "separators-demo",
+  startDestination = "separators",
+)
+
+val SliderDemoScreenshot = DemoScreenshot(
+  name = "slider-demo",
+  startDestination = "slider",
+)
+
+val TabGroupDemoScreenshot = DemoScreenshot(
+  name = "tabgroup-demo",
+  startDestination = "tabgroup",
+)
+
+val TextFieldDemoScreenshot = DemoScreenshot(
+  name = "textfield-demo",
+  startDestination = "textfield",
+)
+
+val ToggleSwitchDemoScreenshot = DemoScreenshot(
+  name = "toggleswitch-demo",
+  startDestination = "toggleswitch",
 )
 
 val DemoScreenshots = listOf(
   BottomSheetDemoScreenshot,
   ModalBottomSheetDemoScreenshot,
   ModalBottomSheetInsetDemoScreenshot,
+  ButtonDemoScreenshot,
+  CheckboxDemoScreenshot,
+  TriStateCheckboxDemoScreenshot,
+  DialogDemoScreenshot,
+  DisclosureDemoScreenshot,
+  DropdownMenuDemoScreenshot,
   IconDemoScreenshot,
+  ProgressIndicatorDemoScreenshot,
+  RadioGroupDemoScreenshot,
+  ScrollbarsDemoScreenshot,
+  SeparatorsDemoScreenshot,
+  SliderDemoScreenshot,
+  TabGroupDemoScreenshot,
+  TextFieldDemoScreenshot,
+  ToggleSwitchDemoScreenshot,
 )
 
 @OptIn(ExperimentalTestApi::class)
