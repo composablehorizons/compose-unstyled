@@ -277,6 +277,16 @@
     "outline.offset": "Distance between composable and outline (defaults to `0.dp`)",
     "offset": "Distance between composable and outline (defaults to `0.dp`)"
   },
+  "platform-themes": {
+    "buildPlatformTheme.webFontOptions": "Options for loading platform fonts on web targets.",
+    "webFontOptions": "Options for loading platform fonts on web targets.",
+    "buildPlatformTheme.themeAction": "Theme builder block for overriding or adding theme values.",
+    "themeAction": "Theme builder block for overriding or adding theme values.",
+    "platformIndication.color": "Color to apply to the platform indication where the platform supports it.",
+    "color": "Color to apply to the platform indication where the platform supports it.",
+    "Modifier.interactiveSize.size": "Minimum interactive size to apply to the modifier.",
+    "size": "Minimum interactive size to apply to the modifier."
+  },
   "progressindicator": {
     "UnstyledProgress.progress": "(Optional) A float value between 0 and 1 representing the progress. Skipping this value treats the progress as indeterminate for accessibility purposes.",
     "progress": "(Optional) A float value between 0 and 1 representing the progress. Skipping this value treats the progress as indeterminate for accessibility purposes.",

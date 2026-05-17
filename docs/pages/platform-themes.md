@@ -214,6 +214,21 @@ Platform Themes apply an `indication` to their children according to each platfo
 
 We provide two Theme tokens: `bright` and `dimmed`. The default indication is `bright`.
 
+Use `platformIndication` when a component should ask for platform-native interaction feedback directly:
+
+```kotlin
+import androidx.compose.ui.graphics.Color
+import com.composeunstyled.platformtheme.platformIndication
+```
+
+```kotlin
+val brightIndication = platformIndication(Color.White.copy(alpha = 0.18f))
+val dimmedIndication = platformIndication(Color.Black.copy(alpha = 0.08f))
+```
+
+Compose Unstyled applies the provided color to the platform indication where the platform supports
+it.
+
 <div class="grid grid-cols-2 gap-8 my-8 unstyled-platform-indications-grid">
   <div class="flex flex-col items-center gap-2 unstyled-platform-indication-item">
     <h4 class="text-center font-semibold unstyled-platform-indication-title">Android</h4>
@@ -290,3 +305,5 @@ AppTheme {
 ```
 
 <UnstyledDemo id="platform-theme" />
+
+<ApiReference id="platform-themes" />
