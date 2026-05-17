@@ -29,13 +29,14 @@ import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.composeunstyled.theme.ComponentInteractiveSize
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.currentDeviceHasTouchCapabilities
 import com.composeunstyled.theme.isTouchSupportEnabled
 import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class ThemeJvmTest {
   @Test
@@ -64,19 +65,19 @@ class ThemeJvmTest {
 
   @Test
   fun awtTouchSupportDesktopPropertyIsEnabledForBooleansAndPositiveNumbers() {
-    assertTrue(true.isTouchSupportEnabled())
-    assertTrue(1.isTouchSupportEnabled())
-    assertTrue("true".isTouchSupportEnabled())
-    assertTrue("1".isTouchSupportEnabled())
+    assertThat(true.isTouchSupportEnabled()).isTrue()
+    assertThat(1.isTouchSupportEnabled()).isTrue()
+    assertThat("true".isTouchSupportEnabled()).isTrue()
+    assertThat("1".isTouchSupportEnabled()).isTrue()
   }
 
   @Test
   fun awtTouchSupportDesktopPropertyIsDisabledForMissingFalseAndZeroValues() {
-    assertFalse(null.isTouchSupportEnabled())
-    assertFalse(false.isTouchSupportEnabled())
-    assertFalse(0.isTouchSupportEnabled())
-    assertFalse("false".isTouchSupportEnabled())
-    assertFalse("0".isTouchSupportEnabled())
+    assertThat(null.isTouchSupportEnabled()).isFalse()
+    assertThat(false.isTouchSupportEnabled()).isFalse()
+    assertThat(0.isTouchSupportEnabled()).isFalse()
+    assertThat("false".isTouchSupportEnabled()).isFalse()
+    assertThat("0".isTouchSupportEnabled()).isFalse()
   }
 
   private fun expectedInteractiveSize() =
