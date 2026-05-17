@@ -156,6 +156,7 @@ kotlin {
       kotlin.srcDir(jvmScreenshotSharedDir)
       dependencies {
         implementation(kotlin("test"))
+        implementation(libs.assertk)
         implementation(libs.compose.ui.test.junit4)
       }
     }
@@ -164,6 +165,7 @@ kotlin {
       kotlin.srcDir(jvmScreenshotSharedDir)
       dependencies {
         implementation(kotlin("test"))
+        implementation(libs.assertk)
         implementation(libs.compose.ui.test.junit4)
       }
     }

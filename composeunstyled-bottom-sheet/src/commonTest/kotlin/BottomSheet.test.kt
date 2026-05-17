@@ -68,17 +68,18 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.compose.ui.unit.dp
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isGreaterThan
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 class BottomSheetCommonTest {
   private val DensityTolerance = 0.5.dp
@@ -159,7 +160,7 @@ class BottomSheetCommonTest {
 
   @Test
   fun throws_exception_when_creating_state_without_detents() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         setContent {
           BottomSheetState(
@@ -175,12 +176,12 @@ class BottomSheetCommonTest {
           )
         }
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test
   fun throws_exception_when_initial_detent_not_in_detents_list() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         val customDetent = SheetDetent("custom") { _, _ -> 0.dp }
         setContent {
@@ -197,12 +198,12 @@ class BottomSheetCommonTest {
           )
         }
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test
   fun throws_exception_when_creating_state_with_duplicate_detents() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         setContent {
           BottomSheetState(
@@ -218,12 +219,12 @@ class BottomSheetCommonTest {
           )
         }
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test
   fun throws_exception_when_creating_state_with_rememberbottomsheetstate_without_detents() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         setContent {
           rememberBottomSheetState(
@@ -232,12 +233,12 @@ class BottomSheetCommonTest {
           )
         }
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test
   fun throws_exception_when_creating_state_with_rememberbottomsheetstate_with_initial_detent_not_in_list() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         setContent {
           rememberBottomSheetState(
@@ -246,7 +247,7 @@ class BottomSheetCommonTest {
           )
         }
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test
@@ -1393,7 +1394,7 @@ class BottomSheetCommonTest {
 
   @Test
   fun throws_exception_when_setting_detents_to_empty_list() {
-    assertFailsWith<IllegalStateException> {
+    assertFailure {
       runComposeUiTest {
         lateinit var state: BottomSheetState
 
@@ -1411,7 +1412,7 @@ class BottomSheetCommonTest {
 
         state.detents = emptyList()
       }
-    }
+    }.isInstanceOf<IllegalStateException>()
   }
 
   @Test

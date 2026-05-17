@@ -28,8 +28,9 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class DropdownMenuPositionProviderTest {
   private val anchorBounds = IntRect(left = 100, top = 50, right = 180, bottom = 90)
@@ -48,7 +49,7 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 112, y = 98), position)
+    assertThat(position).isEqualTo(IntOffset(x = 112, y = 98))
   }
 
   @Test
@@ -63,7 +64,7 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 108, y = 98), position)
+    assertThat(position).isEqualTo(IntOffset(x = 108, y = 98))
   }
 
   @Test
@@ -79,7 +80,7 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 112, y = 2), position)
+    assertThat(position).isEqualTo(IntOffset(x = 112, y = 2))
   }
 
   @Test
@@ -107,8 +108,8 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 32, y = 62), startPosition)
-    assertEquals(IntOffset(x = 188, y = 62), endPosition)
+    assertThat(startPosition).isEqualTo(IntOffset(x = 32, y = 62))
+    assertThat(endPosition).isEqualTo(IntOffset(x = 188, y = 62))
   }
 
   @Test
@@ -122,7 +123,7 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 110, y = 90), position)
+    assertThat(position).isEqualTo(IntOffset(x = 110, y = 90))
   }
 
   @Test
@@ -138,7 +139,7 @@ class DropdownMenuPositionProviderTest {
       popupContentSize = popupContentSize,
     )
 
-    assertEquals(IntOffset(x = 0, y = 0), position)
+    assertThat(position).isEqualTo(IntOffset(x = 0, y = 0))
   }
 
   private fun positionProvider(

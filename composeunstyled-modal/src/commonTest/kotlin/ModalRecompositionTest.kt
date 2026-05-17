@@ -28,9 +28,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.composeunstyled.test.runComposeRecompositionTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ModalRecompositionTest {
 
@@ -52,6 +53,6 @@ class ModalRecompositionTest {
     parentState++
     waitForIdle()
 
-    assertEquals(1, recompositionCount("modal-content"))
+    assertThat(recompositionCount("modal-content")).isEqualTo(1)
   }
 }

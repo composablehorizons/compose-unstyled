@@ -31,9 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isGreaterThanOrEqualTo
+import assertk.assertions.isNotEqualTo
 import kotlin.test.Test
-import kotlin.test.assertNotEquals
-import kotlin.test.assertTrue
 
 class FloatingContentTest {
 
@@ -121,11 +122,7 @@ class FloatingContentTest {
     bottomStartY = onNodeWithText("Floating").fetchSemanticsNode().positionInRoot.y
 
     // The Y positions should be different when placement changes
-    assertNotEquals(
-      topStartY,
-      bottomStartY,
-      "Floating content position should change when placement changes",
-    )
+    assertThat(bottomStartY).isNotEqualTo(topStartY)
   }
 
   @Test
@@ -156,10 +153,7 @@ class FloatingContentTest {
 
     // With TopStart placement at the top of the window,
     // floating content should be clamped to not go negative
-    assertTrue(
-      floatingY >= 0f,
-      "Floating content should be clamped to window bounds (floatingY=$floatingY should be >= 0)",
-    )
+    assertThat(floatingY).isGreaterThanOrEqualTo(0f)
   }
 
   @Test
@@ -194,13 +188,7 @@ class FloatingContentTest {
 
     // When content is larger than window, it should be clamped to 0
     // to maximize the visible portion at the top-left
-    assertTrue(
-      floatingX >= 0f,
-      "Large floating content should be clamped to x >= 0 (got x=$floatingX)",
-    )
-    assertTrue(
-      floatingY >= 0f,
-      "Large floating content should be clamped to y >= 0 (got y=$floatingY)",
-    )
+    assertThat(floatingX).isGreaterThanOrEqualTo(0f)
+    assertThat(floatingY).isGreaterThanOrEqualTo(0f)
   }
 }

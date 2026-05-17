@@ -40,8 +40,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class CheckboxTest {
   @Test
@@ -62,7 +63,7 @@ class CheckboxTest {
 
     onNodeWithTag("checkbox").performClick()
 
-    assertEquals(true, nextValue)
+    assertThat(nextValue).isEqualTo(true)
   }
 
   @Test
@@ -84,7 +85,7 @@ class CheckboxTest {
 
     onNodeWithTag("checkbox").performClick()
 
-    assertEquals(0, calls)
+    assertThat(calls).isEqualTo(0)
   }
 
   @Test

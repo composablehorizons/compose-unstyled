@@ -36,8 +36,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ProgressIndicatorTest {
 
@@ -100,7 +101,7 @@ class ProgressIndicatorTest {
 
     waitForIdle()
 
-    assertEquals(IntSize(width = 24, height = 8), indicatorSize)
+    assertThat(indicatorSize).isEqualTo(IntSize(width = 24, height = 8))
   }
 
   private fun hasProgressBarRangeInfo(rangeInfo: ProgressBarRangeInfo): SemanticsMatcher {

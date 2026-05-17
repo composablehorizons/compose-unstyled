@@ -47,8 +47,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ToggleSwitchTest {
   @Test
@@ -67,7 +68,7 @@ class ToggleSwitchTest {
 
     onNodeWithTag("switch").performClick()
 
-    assertEquals(true, nextValue)
+    assertThat(nextValue).isEqualTo(true)
   }
 
   @Test
@@ -87,7 +88,7 @@ class ToggleSwitchTest {
 
     onNodeWithTag("switch").performClick()
 
-    assertEquals(0, calls)
+    assertThat(calls).isEqualTo(0)
   }
 
   @Test
@@ -204,7 +205,7 @@ class ToggleSwitchTest {
 
     mainClock.advanceTimeByFrame()
 
-    assertEquals(listOf(34), thumbPositions.distinct())
+    assertThat(thumbPositions.distinct()).isEqualTo(listOf(34))
     onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
   }
 

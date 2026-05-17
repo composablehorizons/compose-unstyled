@@ -28,8 +28,9 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class AnchoredPositionTest {
   private val anchorBounds = IntRect(left = 100, top = 50, right = 180, bottom = 90)
@@ -43,7 +44,7 @@ class AnchoredPositionTest {
       alignmentOffset = 12.dp,
     )
 
-    assertEquals(IntOffset(x = 112, y = 98), position)
+    assertThat(position).isEqualTo(IntOffset(x = 112, y = 98))
   }
 
   @Test
@@ -54,7 +55,7 @@ class AnchoredPositionTest {
       layoutDirection = LayoutDirection.Rtl,
     )
 
-    assertEquals(IntOffset(x = 108, y = 98), position)
+    assertThat(position).isEqualTo(IntOffset(x = 108, y = 98))
   }
 
   @Test
@@ -65,7 +66,7 @@ class AnchoredPositionTest {
       alignmentOffset = 12.dp,
     )
 
-    assertEquals(IntOffset(x = 112, y = 2), position)
+    assertThat(position).isEqualTo(IntOffset(x = 112, y = 2))
   }
 
   @Test
@@ -83,8 +84,8 @@ class AnchoredPositionTest {
       alignmentOffset = 12.dp,
     )
 
-    assertEquals(IntOffset(x = 32, y = 62), startPosition)
-    assertEquals(IntOffset(x = 188, y = 62), endPosition)
+    assertThat(startPosition).isEqualTo(IntOffset(x = 32, y = 62))
+    assertThat(endPosition).isEqualTo(IntOffset(x = 188, y = 62))
   }
 
   @Test
@@ -93,7 +94,7 @@ class AnchoredPositionTest {
       alignment = AnchorAlignment.Center,
     )
 
-    assertEquals(IntOffset(x = 110, y = 90), position)
+    assertThat(position).isEqualTo(IntOffset(x = 110, y = 90))
   }
 
   @Test
@@ -105,7 +106,7 @@ class AnchoredPositionTest {
       windowSize = IntSize(width = 120, height = 80),
     )
 
-    assertEquals(IntOffset(x = 0, y = 0), position)
+    assertThat(position).isEqualTo(IntOffset(x = 0, y = 0))
   }
 
   @Test
@@ -122,8 +123,8 @@ class AnchoredPositionTest {
       alignmentOffset = (-200).dp,
     )
 
-    assertEquals(IntOffset(x = 0, y = 0), position.position)
-    assertEquals(IntOffset(x = 100, y = 190), position.positionAdjustment)
+    assertThat(position.position).isEqualTo(IntOffset(x = 0, y = 0))
+    assertThat(position.positionAdjustment).isEqualTo(IntOffset(x = 100, y = 190))
   }
 
   @Test
@@ -133,7 +134,7 @@ class AnchoredPositionTest {
       contentSize = IntSize(width = 160, height = 120),
     )
 
-    assertEquals(IntOffset(x = 0, y = 0), position)
+    assertThat(position).isEqualTo(IntOffset(x = 0, y = 0))
   }
 
   private fun calculatePosition(

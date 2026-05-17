@@ -38,8 +38,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isTrue
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class ModalTest {
 
@@ -99,6 +100,6 @@ class ModalTest {
     waitUntil { attachedToWindow }
 
     onNodeWithTag("modal_content").assertExists()
-    assertTrue(state.attachedToWindow)
+    assertThat(state.attachedToWindow).isTrue()
   }
 }

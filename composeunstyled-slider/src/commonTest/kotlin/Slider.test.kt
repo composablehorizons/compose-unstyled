@@ -44,10 +44,10 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
+import assertk.assertions.containsExactly
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 
 class SliderTest {
 
@@ -82,10 +82,9 @@ class SliderTest {
 
     assertThat(capturedTrackState.value).isEqualTo(0.6f)
     assertThat(capturedTrackState.fraction).isCloseTo(0.6f, 0.001f)
-    assertContentEquals(
-      floatArrayOf(0f, 0.2f, 0.4f, 0.6f, 0.8f, 1f),
-      capturedTrackState.tickFractions,
-    )
+    assertThat(
+      capturedTrackState.tickFractions.asList(),
+    ).containsExactly(0f, 0.2f, 0.4f, 0.6f, 0.8f, 1f)
     assertThat(capturedThumbState.value).isEqualTo(capturedTrackState.value)
   }
 
