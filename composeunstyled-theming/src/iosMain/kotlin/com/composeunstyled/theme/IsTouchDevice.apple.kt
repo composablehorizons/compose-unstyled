@@ -21,4 +21,7 @@
  */
 package com.composeunstyled.theme
 
-internal actual val isTouchDevice: Boolean = true
+import androidx.compose.runtime.Composable
+
+@Composable
+internal actual fun isTouchDevice(): Boolean = true

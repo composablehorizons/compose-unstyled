@@ -21,4 +21,23 @@
  */
 package com.composeunstyled.theme
 
-internal actual val isTouchDevice: Boolean = false
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import kotlinx.browser.window
+
+@Composable
+internal actual fun isTouchDevice(): Boolean {
+  return remember {
+    browserHasTouchCapabilities(
+      maxTouchPoints = window.navigator.maxTouchPoints,
+      anyPointerCoarse = window.matchMedia("(any-pointer: coarse)").matches,
+    )
+  }
+}
+
+internal fun browserHasTouchCapabilities(
+  maxTouchPoints: Int?,
+  anyPointerCoarse: Boolean,
+): Boolean {
+  return (maxTouchPoints ?: 0) > 0 || anyPointerCoarse
+}

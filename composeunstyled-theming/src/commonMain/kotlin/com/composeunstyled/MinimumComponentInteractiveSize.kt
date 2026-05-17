@@ -39,7 +39,7 @@ fun Modifier.minimumInteractiveComponentSize(): Modifier {
   val size = LocalMinimumComponentInteractiveSize.current
 
   return this then buildModifier {
-    if (isTouchDevice) {
+    if (isTouchDevice()) {
       add(
         Modifier.sizeIn(
           minWidth = size.touchInteractionSize,
