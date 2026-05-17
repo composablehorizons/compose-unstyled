@@ -55,9 +55,7 @@ const apiReferences = {
       fn('rememberModalState'),
       fn('Modal'),
     ]),
-  ],
-  scrim: [
-    source('composeunstyled-scrim/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [
+    source('composeunstyled-modal/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [
       fn('Scrim', 'ModalScope.Scrim'),
     ]),
   ],

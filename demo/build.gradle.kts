@@ -126,7 +126,6 @@ kotlin {
       implementation(project(":composeunstyled-progress"))
       implementation(project(":composeunstyled-radio-group"))
       implementation(project(":composeunstyled-scrollbars"))
-      implementation(project(":composeunstyled-scrim"))
       implementation(project(":composeunstyled-separators"))
       implementation(project(":composeunstyled-slider"))
       implementation(project(":composeunstyled-stack"))
