@@ -37,8 +37,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class TooltipCommonTest {
 
@@ -135,8 +136,8 @@ class TooltipCommonTest {
     waitForIdle()
 
     onNodeWithText("Tooltip content").assertIsDisplayed()
-    assertEquals(AnchorSide.Bottom, placement?.side)
-    assertEquals(AnchorAlignment.End, placement?.alignment)
+    assertThat(placement?.side).isEqualTo(AnchorSide.Bottom)
+    assertThat(placement?.alignment).isEqualTo(AnchorAlignment.End)
   }
 
   @Test

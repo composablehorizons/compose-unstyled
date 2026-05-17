@@ -37,8 +37,9 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isFalse
 import kotlin.test.Test
-import kotlin.test.assertFalse
 
 class BottomSheetTest {
 
@@ -86,6 +87,6 @@ class BottomSheetTest {
       )
     }
 
-    assertFalse(sheetState.isIdle)
+    assertThat(sheetState.isIdle).isFalse()
   }
 }

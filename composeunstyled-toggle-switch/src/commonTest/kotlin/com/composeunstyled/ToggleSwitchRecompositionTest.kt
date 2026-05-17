@@ -34,9 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.composeunstyled.test.runComposeRecompositionTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ToggleSwitchRecompositionTest {
   @Test
@@ -67,7 +68,7 @@ class ToggleSwitchRecompositionTest {
     checked = true
     waitForIdle()
 
-    assertEquals(1, recompositionCount("thumb-content"))
+    assertThat(recompositionCount("thumb-content")).isEqualTo(1)
   }
 
   @Test
@@ -108,6 +109,6 @@ class ToggleSwitchRecompositionTest {
     switchWidth = 68
     waitForIdle()
 
-    assertEquals(0, recompositionCount("thumb-content"))
+    assertThat(recompositionCount("thumb-content")).isEqualTo(0)
   }
 }

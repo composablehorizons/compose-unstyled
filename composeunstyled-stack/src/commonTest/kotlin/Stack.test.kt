@@ -34,8 +34,10 @@ import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isGreaterThanOrEqualTo
+import assertk.assertions.isTrue
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class StackTest {
 
@@ -60,10 +62,7 @@ class StackTest {
     val item2Bounds = onNodeWithTag("item2").getBoundsInRoot()
 
     // Items should be placed horizontally (item2's left edge should be at or after item1's right edge)
-    assertTrue(
-      item2Bounds.left >= item1Bounds.right,
-      "Items should be placed horizontally, but item2 (left=${item2Bounds.left}) is not to the right of item1 (right=${item1Bounds.right})",
-    )
+    assertThat(item2Bounds.left).isGreaterThanOrEqualTo(item1Bounds.right)
   }
 
   @Test
@@ -87,10 +86,7 @@ class StackTest {
     val item2Bounds = onNodeWithTag("item2").getBoundsInRoot()
 
     // Items should be placed vertically (item2's top edge should be at or below item1's bottom edge)
-    assertTrue(
-      item2Bounds.top >= item1Bounds.bottom,
-      "Items should be placed vertically, but item2 (top=${item2Bounds.top}) is not below item1 (bottom=${item1Bounds.bottom})",
-    )
+    assertThat(item2Bounds.top).isGreaterThanOrEqualTo(item1Bounds.bottom)
   }
 
   @Test
@@ -115,7 +111,7 @@ class StackTest {
     // Initial horizontal placement
     val horizontalItem1Bounds = onNodeWithTag("item1").getBoundsInRoot()
     val horizontalItem2Bounds = onNodeWithTag("item2").getBoundsInRoot()
-    assertTrue(horizontalItem2Bounds.left >= horizontalItem1Bounds.right)
+    assertThat(horizontalItem2Bounds.left >= horizontalItem1Bounds.right).isTrue()
 
     // Change to vertical
     orientation = StackOrientation.Vertical
@@ -123,6 +119,6 @@ class StackTest {
     // Verify vertical placement
     val verticalItem1Bounds = onNodeWithTag("item1").getBoundsInRoot()
     val verticalItem2Bounds = onNodeWithTag("item2").getBoundsInRoot()
-    assertTrue(verticalItem2Bounds.top >= verticalItem1Bounds.bottom)
+    assertThat(verticalItem2Bounds.top >= verticalItem1Bounds.bottom).isTrue()
   }
 }

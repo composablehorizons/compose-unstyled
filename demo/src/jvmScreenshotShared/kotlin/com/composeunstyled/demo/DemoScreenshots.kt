@@ -32,12 +32,13 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isTrue
+import assertk.fail
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import kotlin.test.fail
 
 data class DemoScreenshot(
   val name: String,
@@ -84,19 +85,14 @@ fun assertDemoScreenshotMatches(screenshot: DemoScreenshot) = runComposeUiTest {
     ?.use(ImageIO::read)
     ?: fail("Missing expected screenshot. Run `./gradlew :demo:takeScreenshots`.")
 
-  assertEquals(expected.width, actual.width, "Screenshot width changed.")
-  assertEquals(expected.height, actual.height, "Screenshot height changed.")
+  assertThat(actual.width).isEqualTo(expected.width)
+  assertThat(actual.height).isEqualTo(expected.height)
 
   val diff = diff(expected, actual)
   if (diff.changedPixels > 0) {
     ImageIO.write(diff.image, "png", File(reportDir, "${screenshot.name}.diff.png"))
   }
-  assertTrue(
-    actual = diff.changedPixels == 0,
-    message = "Screenshot changed by ${diff.changedPixels} pixels. " +
-      "See ${reportDir.path}/${screenshot.name}.actual.png and " +
-      "${reportDir.path}/${screenshot.name}.diff.png.",
-  )
+  assertThat(diff.changedPixels == 0).isTrue()
 }
 
 @OptIn(ExperimentalTestApi::class)

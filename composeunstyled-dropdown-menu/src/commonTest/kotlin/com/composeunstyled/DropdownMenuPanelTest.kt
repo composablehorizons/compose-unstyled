@@ -51,10 +51,11 @@ import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class DropdownMenuPanelTest {
   @Test
@@ -100,7 +101,7 @@ class DropdownMenuPanelTest {
     }
     waitUntil { panelPositions.isNotEmpty() }
 
-    assertEquals(expectedPanelX, panelPositions.first())
+    assertThat(panelPositions.first()).isEqualTo(expectedPanelX)
   }
 
   @Test
@@ -143,8 +144,8 @@ class DropdownMenuPanelTest {
 
     onNodeWithTag("item").performClick()
 
-    assertTrue(clicked)
-    assertFalse(expanded)
+    assertThat(clicked).isTrue()
+    assertThat(expanded).isFalse()
   }
 
   @Test
@@ -175,8 +176,8 @@ class DropdownMenuPanelTest {
 
     onNodeWithTag("item").performClick()
 
-    assertTrue(clicked)
-    assertTrue(expanded)
+    assertThat(clicked).isTrue()
+    assertThat(expanded).isTrue()
   }
 
   @Test
@@ -206,8 +207,8 @@ class DropdownMenuPanelTest {
 
     onNodeWithTag("item").performClick()
 
-    assertTrue(clicked)
-    assertFalse(expanded)
+    assertThat(clicked).isTrue()
+    assertThat(expanded).isFalse()
   }
 
   @Test
@@ -242,7 +243,7 @@ class DropdownMenuPanelTest {
       pressKey(Key.Enter)
     }
 
-    assertTrue(expanded)
+    assertThat(expanded).isTrue()
     onNodeWithTag("first").assertExists()
   }
 
@@ -278,7 +279,7 @@ class DropdownMenuPanelTest {
       pressKey(Key.DirectionUp)
     }
 
-    assertTrue(expanded)
+    assertThat(expanded).isTrue()
     onNodeWithTag("last").assertExists()
   }
 

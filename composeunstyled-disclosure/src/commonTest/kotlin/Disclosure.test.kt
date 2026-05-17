@@ -43,8 +43,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class DisclosureTest {
   @Test
@@ -64,7 +65,7 @@ class DisclosureTest {
 
     onNodeWithTag("button").performClick()
 
-    assertEquals(true, nextValue)
+    assertThat(nextValue).isEqualTo(true)
   }
 
   @Test

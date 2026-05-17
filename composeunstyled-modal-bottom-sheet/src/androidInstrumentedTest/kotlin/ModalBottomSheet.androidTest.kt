@@ -32,8 +32,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import androidx.test.espresso.Espresso
-import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertTrue
+import assertk.assertThat
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import kotlin.test.Test
 
 class ModalBottomSheet {
@@ -65,7 +66,7 @@ class ModalBottomSheet {
     onNodeWithTag("sheet").assertExists()
     Espresso.pressBack()
     onNodeWithTag("sheet").assertDoesNotExist()
-    assertTrue(dismissCalled)
+    assertThat(dismissCalled).isTrue()
   }
 
   @Test
@@ -90,6 +91,6 @@ class ModalBottomSheet {
     onNodeWithTag("sheet").assertExists()
     Espresso.pressBack()
     onNodeWithTag("sheet").assertExists()
-    assertFalse(dismissCalled)
+    assertThat(dismissCalled).isFalse()
   }
 }

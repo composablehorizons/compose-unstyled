@@ -35,8 +35,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalTestApi::class)
 class TriStateCheckboxTest {
@@ -58,7 +59,7 @@ class TriStateCheckboxTest {
 
     onNodeWithTag("checkbox").performClick()
 
-    assertEquals(1, clicks)
+    assertThat(clicks).isEqualTo(1)
   }
 
   @Test
@@ -79,7 +80,7 @@ class TriStateCheckboxTest {
 
     onNodeWithTag("checkbox").performClick()
 
-    assertEquals(0, clicks)
+    assertThat(clicks).isEqualTo(0)
   }
 
   @Test
