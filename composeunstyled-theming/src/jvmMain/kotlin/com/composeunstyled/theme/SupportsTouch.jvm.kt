@@ -27,7 +27,7 @@ import java.awt.HeadlessException
 import java.awt.Toolkit
 
 @Composable
-internal actual fun isTouchDevice(): Boolean {
+internal actual fun supportsTouch(): Boolean {
   return remember { currentDeviceHasTouchCapabilities() }
 }
 
