@@ -31,8 +31,6 @@ sections:
         slug: dropdown-menu
       - title: Icon
         slug: icon
-      - title: Modal
-        slug: modal
       - title: Progress Indicator
         slug: progressindicator
       - title: Radio Group
@@ -79,9 +77,11 @@ sections:
         slug: outline
   - title: Utilities
     pages:
-      - title: Window Container Size
-        slug: window-container-size
-      - title: Escape Handler
-        slug: escape-handler
       - title: buildModifier
         slug: buildModifier
+      - title: Escape Handler
+        slug: escape-handler
+      - title: Modal
+        slug: modal
+      - title: Window Container Size
+        slug: window-container-size
