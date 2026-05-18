@@ -31,7 +31,6 @@ import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -342,7 +341,7 @@ fun ModalBottomSheetScope.Sheet(
 @Composable
 fun ModalBottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
 ) {
   bottomSheetScope.DragIndication(

@@ -27,7 +27,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -78,7 +77,7 @@ fun DisclosureScope.DisclosureButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   contentPadding: PaddingValues = NoPadding,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
   contentAlignment: Alignment = Alignment.Center,
   content: @Composable () -> Unit,

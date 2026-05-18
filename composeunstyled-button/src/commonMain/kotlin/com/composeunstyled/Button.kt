@@ -24,7 +24,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -47,7 +46,7 @@ fun UnstyledButton(
   contentPadding: PaddingValues = NoPadding,
   modifier: Modifier = Modifier,
   role: Role = Role.Button,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
   contentAlignment: Alignment = Alignment.Center,
   content: @Composable () -> Unit,
