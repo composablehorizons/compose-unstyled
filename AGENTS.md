@@ -24,6 +24,10 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - When asked to run the demo app, use `./gradlew :<module>:hotRunJvm` instead.
 - When running any desktop JVM app, start it in a background terminal/process so the main terminal remains available.
 
+## Documentation
+
+- Keep the `Primitives` and `Utilities` entries in `docs/docs.yml` in alphabetical order.
+
 ## Working with Compose Foundation
 
 - Do not use experimental Compose Foundation APIs. They can be removed or changed in future Compose versions and cause consumers to crash.
