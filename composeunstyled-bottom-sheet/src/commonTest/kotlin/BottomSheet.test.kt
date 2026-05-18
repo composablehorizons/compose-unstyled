@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
@@ -44,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.IntrinsicMeasurable
@@ -797,6 +799,58 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun fixed_height_sheet_inside_fill_parent_layout_uses_its_content_height() = runComposeUiTest {
+    val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    var containerSize by mutableStateOf(1_000.dp)
+
+    setContent {
+      Box(
+        Modifier
+          .requiredSize(containerSize)
+          .testTag("root"),
+      ) {
+        val state = rememberBottomSheetState(
+          initialDetent = peekDetent,
+          detents = listOf(peekDetent, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            Sheet(
+              modifier = Modifier
+                .widthIn(max = 640.dp)
+                .fillMaxWidth()
+                .testTag("panel"),
+            ) {
+              Box(
+                Modifier
+                  .fillMaxWidth()
+                  .height(600.dp),
+              )
+            }
+          }
+        }
+      }
+    }
+
+    waitUntilExactlyOneExists(hasTestTag("panel"))
+
+    containerSize = 1_200.dp
+    waitForIdle()
+
+    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+    val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
+
+    assertThat(panelBounds.height).isEqualTo(with(density) { 600.dp.toPx() })
+    assertThat(panelBounds.bottom).isEqualTo(rootBounds.bottom)
+  }
+
+  @Test
   fun sheet_measurement_counter_baseline() = runComposeUiTest {
     class Counters {
       var measureCalls = 0
@@ -807,10 +861,6 @@ class BottomSheetCommonTest {
         measureCalls = 0
         maxIntrinsicHeightCalls = 0
         detentHeightCalls = 0
-      }
-
-      fun snapshot(): String {
-        return "measure=$measureCalls intrinsic=$maxIntrinsicHeightCalls detent=$detentHeightCalls"
       }
     }
 
@@ -868,13 +918,17 @@ class BottomSheetCommonTest {
 
     waitForIdle()
 
-    assertThat(counters.snapshot()).isEqualTo("measure=2 intrinsic=0 detent=7")
+    assertThat(counters.measureCalls).isEqualTo(2)
+    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(0)
+    assertThat(counters.detentHeightCalls).isEqualTo(7)
 
     counters.reset()
     contentHeight = 250.dp
     waitForIdle()
 
-    assertThat(counters.snapshot()).isEqualTo("measure=1 intrinsic=0 detent=0")
+    assertThat(counters.measureCalls).isEqualTo(1)
+    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(0)
+    assertThat(counters.detentHeightCalls).isEqualTo(0)
   }
 
   @Test

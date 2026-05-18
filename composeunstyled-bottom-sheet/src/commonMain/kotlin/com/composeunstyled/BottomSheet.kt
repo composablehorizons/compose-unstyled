@@ -277,7 +277,7 @@ class BottomSheetState internal constructor(
   internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
   private var contentDependentDetents by mutableStateOf(false)
-  internal var measuredSheetHeightPx: Float by mutableStateOf(Float.NaN)
+  private var measuredSheetHeightPx: Float by mutableStateOf(Float.NaN)
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var isDragging: Boolean by mutableStateOf(false)
 
@@ -434,11 +434,15 @@ class BottomSheetState internal constructor(
     invalidateDetents()
   }
 
-  internal fun updateContentHeight(measuredHeightPx: Float) {
-    val resolvedMeasuredHeightPx = maxOf(
-      measuredHeightPx,
-      measuredSheetHeightPx.takeUnless { it.isNaN() } ?: 0f,
-    )
+  internal fun updateContentHeight(measuredHeightPx: Float, includeMeasuredSheetHeight: Boolean) {
+    val shouldIncludeMeasuredSheetHeight = includeMeasuredSheetHeight ||
+      measuredSheetHeightPx < containerHeightPx
+    val measuredSheetHeight = if (shouldIncludeMeasuredSheetHeight) {
+      measuredSheetHeightPx.takeUnless { it.isNaN() } ?: 0f
+    } else {
+      0f
+    }
+    val resolvedMeasuredHeightPx = maxOf(measuredHeightPx, measuredSheetHeight)
     if (contentHeightPx.isSameValueAs(resolvedMeasuredHeightPx)) return
 
     contentHeightPx = resolvedMeasuredHeightPx
@@ -777,7 +781,10 @@ fun BottomSheetScope.Sheet(
           previousHeight > contentHeight
       }
       ?: contentHeight.toFloat()
-    state?.updateContentHeight(max(measuredContentHeight, height.toFloat()))
+    state?.updateContentHeight(
+      measuredHeightPx = max(measuredContentHeight, height.toFloat()),
+      includeMeasuredSheetHeight = contentHeight == contentMaxHeight,
+    )
 
     layout(width, height) {
       placeables.forEach { placeable ->
