@@ -26,7 +26,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.composeunstyled.test.RecompositionTestScope
 import com.composeunstyled.test.runComposeRecompositionTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -199,5 +202,86 @@ class BottomSheetRecompositionTest {
     waitForIdle()
 
     assertThat(recompositionCount("sheet-content")).isEqualTo(1)
+  }
+
+  @Test
+  fun growing_expanded_content_recomposes_content_once() = runComposeRecompositionTest {
+    assertDynamicHeightResizeRecomposesContentOnce(
+      initialRows = 2,
+      finalRows = 5,
+      detent = SheetDetent.FullyExpanded,
+    )
+  }
+
+  @Test
+  fun shrinking_expanded_content_recomposes_content_once() = runComposeRecompositionTest {
+    assertDynamicHeightResizeRecomposesContentOnce(
+      initialRows = 5,
+      finalRows = 2,
+      detent = SheetDetent.FullyExpanded,
+    )
+  }
+
+  @Test
+  fun growing_content_sized_detent_content_recomposes_content_once() = runComposeRecompositionTest {
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
+    }
+
+    assertDynamicHeightResizeRecomposesContentOnce(
+      initialRows = 2,
+      finalRows = 5,
+      detent = contentDetent,
+    )
+  }
+
+  @Test
+  fun shrinking_content_detent_content_recomposes_content_once() = runComposeRecompositionTest {
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
+    }
+
+    assertDynamicHeightResizeRecomposesContentOnce(
+      initialRows = 5,
+      finalRows = 2,
+      detent = contentDetent,
+    )
+  }
+}
+
+private fun RecompositionTestScope.assertDynamicHeightResizeRecomposesContentOnce(
+  initialRows: Int,
+  finalRows: Int,
+  detent: SheetDetent,
+) {
+  var rowCount by mutableIntStateOf(initialRows)
+
+  setContent {
+    val state = rememberBottomSheetState(
+      initialDetent = detent,
+      detents = listOf(detent),
+    )
+
+    UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
+      Sheet {
+        RecompositionCount("sheet-content")
+        DynamicHeightContent(rowCount)
+      }
+    }
+  }
+
+  waitForIdle()
+  resetRecompositionCounts()
+
+  rowCount = finalRows
+  waitForIdle()
+
+  assertThat(recompositionCount("sheet-content")).isEqualTo(1)
+}
+
+@Composable
+private fun DynamicHeightContent(rowCount: Int) {
+  repeat(rowCount) {
+    Box(Modifier.fillMaxWidth().height(60.dp))
   }
 }
