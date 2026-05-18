@@ -51,39 +51,33 @@ internal fun ModalBottomSheetExpandedReproScaffold(
     detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
   )
 
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(Color.Black.copy(0.3f)),
+  UnstyledBottomSheet(
+    state = sheetState,
+    modifier = Modifier.fillMaxSize(),
   ) {
-    UnstyledBottomSheet(
-      state = sheetState,
-      modifier = Modifier.fillMaxSize(),
+    Box(
+      modifier = Modifier.fillMaxWidth(),
+      contentAlignment = Alignment.TopCenter,
     ) {
-      Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.TopCenter,
+      Sheet(
+        modifier = Modifier
+          .widthIn(max = 640.dp)
+          .fillMaxWidth()
+          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .background(Color(0xFFF8FAFC))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
       ) {
-        Sheet(
-          modifier = Modifier
-            .widthIn(max = 640.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-            .background(Color(0xFFF8FAFC))
-            .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
-        ) {
-          Box(Modifier.fillMaxWidth()) {
-            content()
+        Box(Modifier.fillMaxWidth()) {
+          content()
+          Box(
+            Modifier.fillMaxWidth().padding(top = 22.dp),
+            contentAlignment = Alignment.Center,
+          ) {
             Box(
-              Modifier.fillMaxWidth().padding(top = 22.dp),
-              contentAlignment = Alignment.Center,
-            ) {
-              Box(
-                modifier = Modifier
-                  .background(Color(0xFFCACACA), RoundedCornerShape(100))
-                  .size(32.dp, 4.dp),
-              )
-            }
+              modifier = Modifier
+                .background(Color(0xFFCACACA), RoundedCornerShape(100))
+                .size(32.dp, 4.dp),
+            )
           }
         }
       }
