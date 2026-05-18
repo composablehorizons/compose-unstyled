@@ -24,10 +24,8 @@ package com.composeunstyled.visualregressions
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
@@ -44,16 +42,6 @@ import com.composeunstyled.demo.Demo
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-
-private val RegressionBackgroundColor = Color(0xFF050505)
-
-data class VisualRegressionScreenshot(
-  val name: String,
-  val width: Int = ScreenshotWidth,
-  val height: Int = ScreenshotHeight,
-  val backgroundColor: Color = Color.White,
-  val content: @Composable () -> Unit,
-)
 
 val ModalBottomSheetExpandedFixedHeightScreenshot = VisualRegressionScreenshot(
   name = "modal-bottom-sheet-expanded-fixed-height",
@@ -95,68 +83,6 @@ val CheckboxExtendedIndicatorBoundsScreenshot = VisualRegressionScreenshot(
   content = { CheckboxExtendedIndicatorBoundsRegression() },
 )
 
-val BottomSheetExpandedFixedHeightScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-expanded-fixed-height",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetExpandedFixedHeightRegression() },
-)
-
-val BottomSheetPeekFixedHeightScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-peek-fixed-height",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetPeekFixedHeightRegression() },
-)
-
-val BottomSheetExpandedWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-expanded-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetExpandedWrapContentRegression() },
-)
-
-val BottomSheetPeekWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-peek-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetPeekWrapContentRegression() },
-)
-
-val BottomSheetExpandedLazyColumnWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-expanded-lazy-column-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetExpandedLazyColumnWrapContentRegression() },
-)
-
-val BottomSheetPeekLazyColumnWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-peek-lazy-column-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetPeekLazyColumnWrapContentRegression() },
-)
-
-val BottomSheetExpandedVerticalScrollWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-expanded-vertical-scroll-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetExpandedVerticalScrollWrapContentRegression() },
-)
-
-val BottomSheetPeekVerticalScrollWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-peek-vertical-scroll-wrap-content",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetPeekVerticalScrollWrapContentRegression() },
-)
-
-val BottomSheetExpandedScrollableContentFinalRowScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-expanded-scrollable-content-final-row",
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetExpandedScrollableContentFinalRowRegression() },
-)
-
-val BottomSheetFixedWidthLandscapeScreenshot = VisualRegressionScreenshot(
-  name = "bottom-sheet-fixed-width-landscape",
-  width = 1024,
-  height = 480,
-  backgroundColor = RegressionBackgroundColor,
-  content = { BottomSheetFixedWidthLandscapeRegression() },
-)
-
 val DedicatedRegressionScreenshots = listOf(
   ModalBottomSheetExpandedFixedHeightScreenshot,
   ModalBottomSheetExpandedFixedHeightWithTopPaddingScreenshot,
@@ -166,17 +92,7 @@ val DedicatedRegressionScreenshots = listOf(
   ModalBottomSheetScrollableContentScreenshot,
   CheckboxCustomCheckedIndicatorScreenshot,
   CheckboxExtendedIndicatorBoundsScreenshot,
-  BottomSheetExpandedFixedHeightScreenshot,
-  BottomSheetPeekFixedHeightScreenshot,
-  BottomSheetExpandedWrapContentScreenshot,
-  BottomSheetPeekWrapContentScreenshot,
-  BottomSheetExpandedLazyColumnWrapContentScreenshot,
-  BottomSheetPeekLazyColumnWrapContentScreenshot,
-  BottomSheetExpandedVerticalScrollWrapContentScreenshot,
-  BottomSheetPeekVerticalScrollWrapContentScreenshot,
-  BottomSheetExpandedScrollableContentFinalRowScreenshot,
-  BottomSheetFixedWidthLandscapeScreenshot,
-)
+) + BottomSheetRegressionScreenshots
 
 val DemoRegressionScreenshots = listOf(
   demoScreenshot(name = "bottom-sheet-demo", startDestination = "bottom-sheet"),
@@ -288,6 +204,4 @@ private data class ScreenshotDiff(
 )
 
 private const val ScreenshotTargetTag = "screenshot-target"
-private const val ScreenshotWidth = 1024
-private const val ScreenshotHeight = 600
 private const val DiffColor = 0xFFFF00FF.toInt()

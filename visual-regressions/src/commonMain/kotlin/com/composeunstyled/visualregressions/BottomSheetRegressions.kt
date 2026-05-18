@@ -50,6 +50,63 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.rememberBottomSheetState
 
+private val RegressionBackgroundColor = Color(0xFF050505)
+
+val BottomSheetRegressionScreenshots = listOf(
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-fixed-height",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetExpandedFixedHeightRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-peek-fixed-height",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetPeekFixedHeightRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetExpandedWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-peek-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetPeekWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-lazy-column-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetExpandedLazyColumnWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-peek-lazy-column-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetPeekLazyColumnWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-vertical-scroll-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetExpandedVerticalScrollWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-peek-vertical-scroll-wrap-content",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetPeekVerticalScrollWrapContentRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-scrollable-content-final-row",
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetExpandedScrollableContentFinalRowRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-fixed-width-landscape",
+    width = 1024,
+    height = 480,
+    backgroundColor = RegressionBackgroundColor,
+    content = { BottomSheetFixedWidthLandscapeRegression() },
+  ),
+)
+
 @Composable
 fun BottomSheetExpandedFixedHeightRegression() {
   BottomSheetRegressionScaffold(initialDetent = FullyExpanded) {
