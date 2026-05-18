@@ -372,6 +372,13 @@ class BottomSheetState internal constructor(
     )
   }
 
+  internal fun estimatedContentHeightPx(fallbackHeightPx: Float): Float {
+    return when {
+      contentHeightPx.isNaN().not() -> contentHeightPx
+      else -> fallbackHeightPx
+    }
+  }
+
   internal fun hasContentDependentDetents(): Boolean {
     return contentDependentDetents
   }
@@ -716,20 +723,18 @@ fun BottomSheetScope.Sheet(
       constraints.minHeight,
       constraints.maxHeight,
     )
-    var hasUnsupportedIntrinsicHeight = false
-    val intrinsicContentHeight = measurables.maxOfOrNull { measurable ->
-      try {
-        measurable.maxIntrinsicHeight(constraints.maxWidth)
-      } catch (_: IllegalStateException) {
-        hasUnsupportedIntrinsicHeight = true
-        constrainedFallbackContentHeight
-      }
-    }
-    val estimatedContentHeight = if (intrinsicContentHeight == 0) {
-      constrainedFallbackContentHeight
-    } else {
-      intrinsicContentHeight ?: constrainedFallbackContentHeight
-    }
+    val contentMeasurementHeight = when {
+      state != null && state.containerHeightPx.isNaN().not() -> state.containerHeightPx.roundToInt()
+      else -> constraints.maxHeight
+    }.coerceIn(
+      constraints.minHeight,
+      constraints.maxHeight,
+    )
+    val estimatedContentHeight = state
+      ?.estimatedContentHeightPx(constrainedFallbackContentHeight.toFloat())
+      ?.roundToInt()
+      ?.coerceIn(constraints.minHeight, constraints.maxHeight)
+      ?: constrainedFallbackContentHeight
 
     val resolvedLayoutHeight = state?.layoutHeightPxFor(estimatedContentHeight.toFloat())
       ?: estimatedContentHeight.toFloat()
@@ -743,8 +748,10 @@ fun BottomSheetScope.Sheet(
       else -> resolvedLayoutHeight.roundToInt()
     }.coerceIn(constraints.minHeight, constraints.maxHeight)
     val contentMaxHeight = when {
-      waitingForHiddenAnchors -> layoutMaxHeight
-      state?.hasContentDependentDetents() == true -> constrainedFallbackContentHeight
+      state == null -> contentMeasurementHeight
+      state.contentHeightPx.isNaN() -> contentMeasurementHeight
+      state.hasContentDependentDetents() -> contentMeasurementHeight
+      waitingForHiddenAnchors -> contentMeasurementHeight
       else -> layoutMaxHeight
     }
     val contentConstraints = constraints.copy(maxHeight = contentMaxHeight)
@@ -763,14 +770,14 @@ fun BottomSheetScope.Sheet(
       layoutMaxHeight,
     ).coerceIn(constraints.minHeight, constraints.maxHeight)
 
-    val measuredContentHeight = when {
-      waitingForHiddenAnchors -> estimatedContentHeight
-      contentHeight == constrainedFallbackContentHeight &&
-        constrainedFallbackContentHeight < fallbackContentHeight -> fallbackContentHeight
-      hasUnsupportedIntrinsicHeight -> contentHeight
-      else -> max(estimatedContentHeight, contentHeight)
-    }
-    state?.updateContentHeight(max(measuredContentHeight, height).toFloat())
+    val measuredContentHeight = state?.contentHeightPx
+      ?.takeIf { previousHeight ->
+        contentHeight == contentMaxHeight &&
+          contentMaxHeight < contentMeasurementHeight &&
+          previousHeight > contentHeight
+      }
+      ?: contentHeight.toFloat()
+    state?.updateContentHeight(max(measuredContentHeight, height.toFloat()))
 
     layout(width, height) {
       placeables.forEach { placeable ->
