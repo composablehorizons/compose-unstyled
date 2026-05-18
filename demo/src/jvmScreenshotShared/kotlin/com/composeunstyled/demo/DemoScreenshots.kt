@@ -95,6 +95,11 @@ val ModalBottomSheetExpandedFixedHeightDemoScreenshot = DemoScreenshot(
   startDestination = "modal-bottom-sheet-expanded-fixed-height",
 )
 
+val ModalBottomSheetExpandedFixedHeightWithTopPaddingDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-fixed-height-top-padding-demo",
+  startDestination = "modal-bottom-sheet-expanded-fixed-height-top-padding",
+)
+
 val ModalBottomSheetExpandedLazyColumnWrapContentDemoScreenshot = DemoScreenshot(
   name = "modal-bottom-sheet-expanded-lazy-column-wrap-content-demo",
   startDestination = "modal-bottom-sheet-expanded-lazy-column-wrap-content",
@@ -161,6 +166,7 @@ val DemoScreenshots = listOf(
   DisclosureDemoScreenshot,
   DropdownMenuDemoScreenshot,
   ModalBottomSheetExpandedFixedHeightDemoScreenshot,
+  ModalBottomSheetExpandedFixedHeightWithTopPaddingDemoScreenshot,
   ModalBottomSheetExpandedLazyColumnWrapContentDemoScreenshot,
   ModalBottomSheetExpandedLazyColumnFixedHeightDemoScreenshot,
   IconDemoScreenshot,

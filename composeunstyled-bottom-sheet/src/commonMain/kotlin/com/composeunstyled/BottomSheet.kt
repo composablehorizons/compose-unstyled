@@ -278,6 +278,7 @@ class BottomSheetState internal constructor(
   internal var closestDetentToTopPx: Float by mutableStateOf(Float.NaN)
   internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
+  internal var measuredSheetHeightPx: Float by mutableStateOf(Float.NaN)
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var isDragging: Boolean by mutableStateOf(false)
 
@@ -415,9 +416,20 @@ class BottomSheetState internal constructor(
     }
   }
 
+  internal fun updateMeasuredSheetHeight(measuredHeightPx: Float) {
+    if (measuredSheetHeightPx != measuredHeightPx) {
+      measuredSheetHeightPx = measuredHeightPx
+      invalidateDetents()
+    }
+  }
+
   internal fun updateContentHeight(measuredHeightPx: Float) {
-    if (contentHeightPx != measuredHeightPx) {
-      contentHeightPx = measuredHeightPx
+    val resolvedMeasuredHeightPx = maxOf(
+      measuredHeightPx,
+      measuredSheetHeightPx.takeUnless { it.isNaN() } ?: 0f,
+    )
+    if (contentHeightPx != resolvedMeasuredHeightPx) {
+      contentHeightPx = resolvedMeasuredHeightPx
       invalidateDetents()
     }
   }
@@ -605,32 +617,40 @@ fun UnstyledBottomSheet(
   ) {
     CompositionLocalProvider(LocalBottomSheetContext provides context) {
       Box(
-        modifier = buildModifier {
-          add(Modifier.sheetOffset(state = state, offsetForIme = offsetForIme))
-          if (context.enabled && state.detents.size > 1) {
-            add(
-              Modifier
-                .anchoredDraggable(
-                  state = state.anchoredDraggableState,
-                  orientation = Orientation.Vertical,
-                  enabled = context.enabled,
-                  interactionSource = dragInteractionSource,
-                )
-                .nestedScroll(
-                  remember(state.anchoredDraggableState, Orientation.Vertical) {
-                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                      orientation = Orientation.Vertical,
-                      sheetState = state.anchoredDraggableState,
-                      onFling = {
-                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
-                      },
-                    )
-                  },
-                ),
-            )
+        modifier = Modifier
+          .onSizeChanged { measuredSize ->
+            if (measuredSize.height > 0) {
+              state.updateMeasuredSheetHeight(measuredSize.height.toFloat())
+            }
           }
-          add(Modifier.pointerInput(Unit) { detectTapGestures { } })
-        },
+          .sheetOffset(state = state, offsetForIme = offsetForIme)
+          .then(
+            buildModifier {
+              if (context.enabled && state.detents.size > 1) {
+                add(
+                  Modifier
+                    .anchoredDraggable(
+                      state = state.anchoredDraggableState,
+                      orientation = Orientation.Vertical,
+                      enabled = context.enabled,
+                      interactionSource = dragInteractionSource,
+                    )
+                    .nestedScroll(
+                      remember(state.anchoredDraggableState, Orientation.Vertical) {
+                        ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                          orientation = Orientation.Vertical,
+                          sheetState = state.anchoredDraggableState,
+                          onFling = {
+                            coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                          },
+                        )
+                      },
+                    ),
+                )
+              }
+            },
+          )
+          .pointerInput(Unit) { detectTapGestures { } },
       ) {
         BottomSheetScopeInstance.content()
       }
