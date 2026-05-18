@@ -90,6 +90,21 @@ val DropdownMenuDemoScreenshot = DemoScreenshot(
   startDestination = "dropdown-menu",
 )
 
+val ModalBottomSheetExpandedFixedHeightReproDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-fixed-height-repro-demo",
+  startDestination = "modal-bottom-sheet-expanded-fixed-height-repro",
+)
+
+val ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-lazy-column-wrap-content-repro-demo",
+  startDestination = "modal-bottom-sheet-expanded-lazy-column-wrap-content-repro",
+)
+
+val ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-lazy-column-fixed-height-repro-demo",
+  startDestination = "modal-bottom-sheet-expanded-lazy-column-fixed-height-repro",
+)
+
 val IconDemoScreenshot = DemoScreenshot(
   name = "icon-demo",
   startDestination = "icon",
@@ -145,6 +160,9 @@ val DemoScreenshots = listOf(
   DialogDemoScreenshot,
   DisclosureDemoScreenshot,
   DropdownMenuDemoScreenshot,
+  ModalBottomSheetExpandedFixedHeightReproDemoScreenshot,
+  ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot,
+  ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot,
   IconDemoScreenshot,
   ProgressIndicatorDemoScreenshot,
   RadioGroupDemoScreenshot,
