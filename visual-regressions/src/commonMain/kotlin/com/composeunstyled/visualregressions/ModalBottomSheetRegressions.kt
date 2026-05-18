@@ -39,6 +39,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -100,6 +105,18 @@ val ModalBottomSheetRegressionScreenshots = listOf(
     name = "modal-bottom-sheet-fixed-width-landscape",
     height = 480,
     content = { ModalBottomSheetFixedWidthLandscape() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-content-grows",
+    content = { ModalBottomSheetExpandedContentGrows() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-content-shrinks",
+    content = { ModalBottomSheetExpandedContentShrinks() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-top-padding-content-grows",
+    content = { ModalBottomSheetExpandedTopPaddingContentGrows() },
   ),
 )
 
@@ -204,8 +221,44 @@ fun ModalBottomSheetFixedWidthLandscape() {
 }
 
 @Composable
+fun ModalBottomSheetExpandedContentGrows() {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(ContentDetent),
+  ) {
+    ModalBottomSheetDynamicContent(initialRows = 2, finalRows = 5)
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedContentShrinks() {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(ContentDetent),
+  ) {
+    ModalBottomSheetDynamicContent(initialRows = 5, finalRows = 2)
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedTopPaddingContentGrows() {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(ContentDetent),
+    sheetModifier = Modifier.padding(top = 64.dp),
+  ) {
+    ModalBottomSheetDynamicContent(
+      initialRows = 2,
+      finalRows = 8,
+      finalRowText = "This row must not be clipped",
+    )
+  }
+}
+
+@Composable
 private fun ModalBottomSheetScaffold(
   initialDetent: SheetDetent,
+  detents: List<SheetDetent> = listOf(Hidden, PeekDetent, ExpandedDetent),
   screenshotWidth: Dp = 1024.dp,
   screenshotHeight: Dp = 600.dp,
   sheetModifier: Modifier = Modifier,
@@ -215,7 +268,7 @@ private fun ModalBottomSheetScaffold(
   val modalState = rememberModalState(initiallyVisible = true)
   val sheetState = rememberBottomSheetState(
     initialDetent = initialDetent,
-    detents = listOf(Hidden, PeekDetent, ExpandedDetent),
+    detents = detents,
   )
 
   Modal(state = modalState) {
@@ -313,6 +366,36 @@ private fun ModalBottomSheetVerticalScrollWrapContent() {
 }
 
 @Composable
+private fun ModalBottomSheetDynamicContent(
+  initialRows: Int,
+  finalRows: Int,
+  finalRowText: String? = null,
+) {
+  var rows by remember { mutableIntStateOf(initialRows) }
+
+  LaunchedEffect(Unit) {
+    rows = finalRows
+  }
+
+  Column(
+    modifier = Modifier.fillMaxWidth(),
+  ) {
+    repeat(rows) { index ->
+      if (finalRowText != null && index == rows - 1) {
+        ModalBottomSheetRow {
+          BasicText(
+            text = finalRowText,
+            style = TextStyle(fontWeight = FontWeight.Medium),
+          )
+        }
+      } else {
+        ModalBottomSheetRow()
+      }
+    }
+  }
+}
+
+@Composable
 private fun ModalBottomSheetRow(
   content: @Composable BoxScope.() -> Unit = {},
 ) {
@@ -329,3 +412,4 @@ private fun ModalBottomSheetRow(
 
 private val PeekDetent = SheetDetent("peek") { _, _ -> 180.dp }
 private val ExpandedDetent = SheetDetent("expanded") { _, _ -> 300.dp }
+private val ContentDetent = SheetDetent("content") { _, sheetHeight -> sheetHeight }
