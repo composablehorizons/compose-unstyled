@@ -2133,6 +2133,57 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun fully_expanded_sheet_with_short_lazycolumn_content_anchors_to_container_bottom() =
+    runComposeUiTest {
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(
+          Modifier
+            .requiredSize(400.dp)
+            .testTag("root"),
+        ) {
+          state = rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+          )
+
+          UnstyledBottomSheet(
+            state = state,
+            modifier = Modifier.fillMaxSize(),
+          ) {
+            Sheet(Modifier.testTag("panel")) {
+              LazyColumn(Modifier.fillMaxWidth()) {
+                items(3) {
+                  Box(
+                    Modifier
+                      .fillMaxWidth()
+                      .height(48.dp),
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+
+      waitUntilExactlyOneExists(hasTestTag("panel"))
+      waitForIdle()
+
+      val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+      val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
+
+      assertThat(panelBounds.bottom).isCloseTo(
+        rootBounds.bottom,
+        with(density) { DensityTolerance.toPx() },
+      )
+      assertThat(state.offset).isCloseTo(
+        panelBounds.height,
+        with(density) { DensityTolerance.toPx() },
+      )
+    }
+
+  @Test
   fun detent_change_is_blocked_when_confirmdetentchange_returns_false_for_targetdetent() = runComposeUiTest {
     val detent100 = SheetDetent("100") { _, _ -> 100.dp }
     val detent200 = SheetDetent("200") { _, _ -> 200.dp }

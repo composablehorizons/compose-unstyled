@@ -660,10 +660,12 @@ fun BottomSheetScope.Sheet(
       constraints.minHeight,
       constraints.maxHeight,
     )
+    var hasUnsupportedIntrinsicHeight = false
     val intrinsicContentHeight = measurables.maxOfOrNull { measurable ->
       try {
         measurable.maxIntrinsicHeight(constraints.maxWidth)
       } catch (_: IllegalStateException) {
+        hasUnsupportedIntrinsicHeight = true
         constrainedFallbackContentHeight
       }
     }
@@ -709,6 +711,7 @@ fun BottomSheetScope.Sheet(
       waitingForHiddenAnchors -> estimatedContentHeight
       contentHeight == constrainedFallbackContentHeight &&
         constrainedFallbackContentHeight < fallbackContentHeight -> fallbackContentHeight
+      hasUnsupportedIntrinsicHeight -> contentHeight
       else -> max(estimatedContentHeight, contentHeight)
     }
     state?.updateContentHeight(max(measuredContentHeight, height).toFloat())
