@@ -22,13 +22,11 @@
 package com.composeunstyled.visualregressions
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 data class VisualRegressionScreenshot(
   val name: String,
   val width: Int = 1024,
   val height: Int = 600,
-  val backgroundColor: Color = Color.White,
   val content: @Composable () -> Unit,
 ) {
   override fun toString() = name

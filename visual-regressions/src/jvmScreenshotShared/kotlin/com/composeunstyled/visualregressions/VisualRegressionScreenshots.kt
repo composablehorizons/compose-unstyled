@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
@@ -165,7 +166,7 @@ private fun ComposeUiTest.captureVisualRegressionScreenshot(
     Box(
       modifier = Modifier
         .requiredSize(width = screenshot.width.dp, height = screenshot.height.dp)
-        .background(screenshot.backgroundColor)
+        .background(Color.White)
         .testTag(ScreenshotTargetTag),
       contentAlignment = Alignment.Center,
     ) {
