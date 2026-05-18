@@ -808,6 +808,10 @@ class BottomSheetCommonTest {
         maxIntrinsicHeightCalls = 0
         detentHeightCalls = 0
       }
+
+      fun snapshot(): String {
+        return "measure=$measureCalls intrinsic=$maxIntrinsicHeightCalls detent=$detentHeightCalls"
+      }
     }
 
     val counters = Counters()
@@ -864,17 +868,67 @@ class BottomSheetCommonTest {
 
     waitForIdle()
 
-    assertThat(counters.measureCalls).isEqualTo(2)
-    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(2)
-    assertThat(counters.detentHeightCalls).isEqualTo(9)
+    assertThat(counters.snapshot()).isEqualTo("measure=2 intrinsic=0 detent=7")
 
     counters.reset()
     contentHeight = 250.dp
     waitForIdle()
 
-    assertThat(counters.measureCalls).isEqualTo(2)
-    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(2)
-    assertThat(counters.detentHeightCalls).isEqualTo(13)
+    assertThat(counters.snapshot()).isEqualTo("measure=1 intrinsic=0 detent=0")
+  }
+
+  @Test
+  fun sheet_does_not_query_content_intrinsic_height() = runComposeUiTest {
+    val contentDetent = SheetDetent("content") { _, sheetHeight ->
+      sheetHeight
+    }
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        val state = rememberBottomSheetState(
+          initialDetent = contentDetent,
+          detents = listOf(contentDetent),
+        )
+
+        UnstyledBottomSheet(
+          state,
+          Modifier.testTag("sheet"),
+        ) {
+          Sheet {
+            Layout(
+              modifier = Modifier.testTag("sheet_contents"),
+              content = {},
+              measurePolicy = object : MeasurePolicy {
+                override fun MeasureScope.measure(
+                  measurables: List<Measurable>,
+                  constraints: Constraints,
+                ): MeasureResult {
+                  return layout(
+                    width = 1.coerceIn(constraints.minWidth, constraints.maxWidth),
+                    height = 200.dp.roundToPx().coerceIn(
+                      constraints.minHeight,
+                      constraints.maxHeight,
+                    ),
+                  ) {
+                  }
+                }
+
+                override fun IntrinsicMeasureScope.maxIntrinsicHeight(
+                  measurables: List<IntrinsicMeasurable>,
+                  width: Int,
+                ): Int {
+                  error("BottomSheet should not query max intrinsic height.")
+                }
+              },
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("sheet").assertHeightIsEqualTo(200.dp)
   }
 
   @Test
