@@ -19,10 +19,11 @@ PortalHost {
 }
 ```
 
-## General Usage
+## Concepts
 
 - `PortalHost` provides the destination where portal content is rendered.
 - `Portal` sends content to the nearest `PortalHost`, or renders nothing when no host is available.
+- Portal content is rendered after the host content, inside the same window.
 
 ## Code Examples
 

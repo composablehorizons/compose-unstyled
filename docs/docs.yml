@@ -83,5 +83,7 @@ sections:
         slug: escape-handler
       - title: Modal
         slug: modal
+      - title: Portal
+        slug: portal
       - title: Window Container Size
         slug: window-container-size
