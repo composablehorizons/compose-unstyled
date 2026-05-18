@@ -21,31 +21,28 @@
  */
 package com.composeunstyled.demo
 
-import kotlin.test.Test
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
-class ModalBottomSheetDemoScreenshotTest {
-  @Test
-  fun modalBottomSheetDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetDemoScreenshot)
-  }
-
-  @Test
-  fun modalBottomSheetInsetDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetInsetDemoScreenshot)
-  }
-
-  @Test
-  fun modalBottomSheetExpandedFixedHeightReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedFixedHeightReproDemoScreenshot)
-  }
-
-  @Test
-  fun modalBottomSheetExpandedLazyColumnWrapContentReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot)
-  }
-
-  @Test
-  fun modalBottomSheetExpandedLazyColumnFixedHeightReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot)
+@Composable
+fun ModalBottomSheetExpandedFixedHeightReproDemo() {
+  ModalBottomSheetExpandedReproScaffold {
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(260.dp)
+        .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
+      verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+      repeat(3) {
+        ModalBottomSheetExpandedReproRow()
+      }
+    }
   }
 }
