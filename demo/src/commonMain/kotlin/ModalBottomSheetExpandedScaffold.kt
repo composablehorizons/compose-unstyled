@@ -43,7 +43,7 @@ import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.rememberBottomSheetState
 
 @Composable
-internal fun ModalBottomSheetExpandedReproScaffold(
+internal fun ModalBottomSheetExpandedScaffold(
   content: @Composable () -> Unit,
 ) {
   val sheetState = rememberBottomSheetState(
@@ -86,7 +86,7 @@ internal fun ModalBottomSheetExpandedReproScaffold(
 }
 
 @Composable
-internal fun ModalBottomSheetExpandedReproRow() {
+internal fun ModalBottomSheetExpandedRow() {
   Box(
     modifier = Modifier
       .fillMaxWidth()

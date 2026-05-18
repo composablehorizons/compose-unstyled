@@ -35,17 +35,17 @@ class ModalBottomSheetDemoScreenshotTest {
   }
 
   @Test
-  fun modalBottomSheetExpandedFixedHeightReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedFixedHeightReproDemoScreenshot)
+  fun modalBottomSheetExpandedFixedHeightDemoMatchesScreenshot() {
+    assertDemoScreenshotMatches(ModalBottomSheetExpandedFixedHeightDemoScreenshot)
   }
 
   @Test
-  fun modalBottomSheetExpandedLazyColumnWrapContentReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot)
+  fun modalBottomSheetExpandedLazyColumnWrapContentDemoMatchesScreenshot() {
+    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnWrapContentDemoScreenshot)
   }
 
   @Test
-  fun modalBottomSheetExpandedLazyColumnFixedHeightReproDemoMatchesScreenshot() {
-    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot)
+  fun modalBottomSheetExpandedLazyColumnFixedHeightDemoMatchesScreenshot() {
+    assertDemoScreenshotMatches(ModalBottomSheetExpandedLazyColumnFixedHeightDemoScreenshot)
   }
 }

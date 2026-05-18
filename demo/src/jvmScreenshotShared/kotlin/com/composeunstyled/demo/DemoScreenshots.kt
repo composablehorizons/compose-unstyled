@@ -90,19 +90,19 @@ val DropdownMenuDemoScreenshot = DemoScreenshot(
   startDestination = "dropdown-menu",
 )
 
-val ModalBottomSheetExpandedFixedHeightReproDemoScreenshot = DemoScreenshot(
-  name = "modal-bottom-sheet-expanded-fixed-height-repro-demo",
-  startDestination = "modal-bottom-sheet-expanded-fixed-height-repro",
+val ModalBottomSheetExpandedFixedHeightDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-fixed-height-demo",
+  startDestination = "modal-bottom-sheet-expanded-fixed-height",
 )
 
-val ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot = DemoScreenshot(
-  name = "modal-bottom-sheet-expanded-lazy-column-wrap-content-repro-demo",
-  startDestination = "modal-bottom-sheet-expanded-lazy-column-wrap-content-repro",
+val ModalBottomSheetExpandedLazyColumnWrapContentDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-lazy-column-wrap-content-demo",
+  startDestination = "modal-bottom-sheet-expanded-lazy-column-wrap-content",
 )
 
-val ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot = DemoScreenshot(
-  name = "modal-bottom-sheet-expanded-lazy-column-fixed-height-repro-demo",
-  startDestination = "modal-bottom-sheet-expanded-lazy-column-fixed-height-repro",
+val ModalBottomSheetExpandedLazyColumnFixedHeightDemoScreenshot = DemoScreenshot(
+  name = "modal-bottom-sheet-expanded-lazy-column-fixed-height-demo",
+  startDestination = "modal-bottom-sheet-expanded-lazy-column-fixed-height",
 )
 
 val IconDemoScreenshot = DemoScreenshot(
@@ -160,9 +160,9 @@ val DemoScreenshots = listOf(
   DialogDemoScreenshot,
   DisclosureDemoScreenshot,
   DropdownMenuDemoScreenshot,
-  ModalBottomSheetExpandedFixedHeightReproDemoScreenshot,
-  ModalBottomSheetExpandedLazyColumnWrapContentReproDemoScreenshot,
-  ModalBottomSheetExpandedLazyColumnFixedHeightReproDemoScreenshot,
+  ModalBottomSheetExpandedFixedHeightDemoScreenshot,
+  ModalBottomSheetExpandedLazyColumnWrapContentDemoScreenshot,
+  ModalBottomSheetExpandedLazyColumnFixedHeightDemoScreenshot,
   IconDemoScreenshot,
   ProgressIndicatorDemoScreenshot,
   RadioGroupDemoScreenshot,
