@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.platform.testTag
@@ -33,6 +34,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
@@ -44,36 +46,6 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-val ModalBottomSheetExpandedFixedHeightScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-expanded-fixed-height",
-  content = { ModalBottomSheetExpandedFixedHeightRegression() },
-)
-
-val ModalBottomSheetExpandedFixedHeightWithTopPaddingScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-expanded-fixed-height-top-padding",
-  content = { ModalBottomSheetExpandedFixedHeightWithTopPaddingRegression() },
-)
-
-val ModalBottomSheetExpandedLazyColumnWrapContentScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-expanded-lazy-column-wrap-content",
-  content = { ModalBottomSheetExpandedLazyColumnWrapContentRegression() },
-)
-
-val ModalBottomSheetExpandedLazyColumnFixedHeightScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-expanded-lazy-column-fixed-height",
-  content = { ModalBottomSheetExpandedLazyColumnFixedHeightRegression() },
-)
-
-val ModalBottomSheetInsetScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-inset",
-  content = { ModalBottomSheetInsetRegression() },
-)
-
-val ModalBottomSheetScrollableContentScreenshot = VisualRegressionScreenshot(
-  name = "modal-bottom-sheet-scrollable-content",
-  content = { ModalBottomSheetScrollableContentRegression() },
-)
-
 val CheckboxCustomCheckedIndicatorScreenshot = VisualRegressionScreenshot(
   name = "checkbox-custom-checked-indicator",
   content = { CheckboxCustomCheckedIndicatorRegression() },
@@ -84,13 +56,7 @@ val CheckboxExtendedIndicatorBoundsScreenshot = VisualRegressionScreenshot(
   content = { CheckboxExtendedIndicatorBoundsRegression() },
 )
 
-val DedicatedRegressionScreenshots = listOf(
-  ModalBottomSheetExpandedFixedHeightScreenshot,
-  ModalBottomSheetExpandedFixedHeightWithTopPaddingScreenshot,
-  ModalBottomSheetExpandedLazyColumnWrapContentScreenshot,
-  ModalBottomSheetExpandedLazyColumnFixedHeightScreenshot,
-  ModalBottomSheetInsetScreenshot,
-  ModalBottomSheetScrollableContentScreenshot,
+val DedicatedRegressionScreenshots = ModalBottomSheetRegressionScreenshots + listOf(
   CheckboxCustomCheckedIndicatorScreenshot,
   CheckboxExtendedIndicatorBoundsScreenshot,
 ) + BottomSheetRegressionScreenshots
@@ -174,6 +140,10 @@ private fun ComposeUiTest.captureVisualRegressionScreenshot(
     }
   }
 
+  waitForIdle()
+  onNodeWithTag(ScreenshotTargetTag).performMouseInput {
+    moveTo(Offset.Zero)
+  }
   waitForIdle()
 
   return onNodeWithTag(ScreenshotTargetTag).captureToImage().toAwtImage()

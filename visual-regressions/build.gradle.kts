@@ -51,6 +51,7 @@ kotlin {
       implementation(projects.composeunstyledBottomSheet)
       implementation(projects.composeunstyledCheckbox)
       implementation(projects.composeunstyledIcon)
+      implementation(projects.composeunstyledModal)
       implementation(projects.composeunstyledModalBottomSheet)
     }
 

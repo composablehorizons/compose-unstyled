@@ -23,20 +23,21 @@ package com.composeunstyled.visualregressions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,123 +45,201 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Modal
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
+import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.rememberBottomSheetState
+import com.composeunstyled.rememberModalState
+
+val ModalBottomSheetRegressionScreenshots = listOf(
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-fixed-height",
+    content = { ModalBottomSheetExpandedFixedHeight() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-peek-fixed-height",
+    content = { ModalBottomSheetPeekFixedHeight() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-wrap-content",
+    content = { ModalBottomSheetExpandedWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-peek-wrap-content",
+    content = { ModalBottomSheetPeekWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-lazy-column-wrap-content",
+    content = { ModalBottomSheetExpandedLazyColumnWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-peek-lazy-column-wrap-content",
+    content = { ModalBottomSheetPeekLazyColumnWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-vertical-scroll-wrap-content",
+    content = { ModalBottomSheetExpandedVerticalScrollWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-peek-vertical-scroll-wrap-content",
+    content = { ModalBottomSheetPeekVerticalScrollWrapContent() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-scrollable-content-final-row",
+    content = { ModalBottomSheetExpandedScrollableContentFinalRow() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-expanded-fixed-height-top-padding",
+    content = { ModalBottomSheetExpandedFixedHeightWithTopPadding() },
+  ),
+  VisualRegressionScreenshot(
+    name = "modal-bottom-sheet-fixed-width-landscape",
+    height = 480,
+    content = { ModalBottomSheetFixedWidthLandscape() },
+  ),
+)
 
 @Composable
-fun ModalBottomSheetExpandedFixedHeightRegression() {
-  ModalBottomSheetExpandedScaffold {
-    Column(
+fun ModalBottomSheetExpandedFixedHeight() {
+  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+    ModalBottomSheetFixedHeightContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetPeekFixedHeight() {
+  ModalBottomSheetScaffold(initialDetent = PeekDetent) {
+    ModalBottomSheetFixedHeightContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+    ModalBottomSheetWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetPeekWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = PeekDetent) {
+    ModalBottomSheetWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedLazyColumnWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+    ModalBottomSheetLazyColumnWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetPeekLazyColumnWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = PeekDetent) {
+    ModalBottomSheetLazyColumnWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedVerticalScrollWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+    ModalBottomSheetVerticalScrollWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetPeekVerticalScrollWrapContent() {
+  ModalBottomSheetScaffold(initialDetent = PeekDetent) {
+    ModalBottomSheetVerticalScrollWrapContent()
+  }
+}
+
+@Composable
+fun ModalBottomSheetExpandedScrollableContentFinalRow() {
+  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+    LazyColumn(
       modifier = Modifier
         .fillMaxWidth()
-        .height(260.dp)
-        .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
+        .height(180.dp),
     ) {
-      repeat(3) {
-        ModalBottomSheetExpandedRow()
+      items(2) {
+        ModalBottomSheetRow()
+      }
+      item {
+        ModalBottomSheetRow {
+          BasicText(
+            text = "This row must not be clipped",
+            style = TextStyle(fontWeight = FontWeight.Medium),
+          )
+        }
       }
     }
   }
 }
 
 @Composable
-fun ModalBottomSheetExpandedFixedHeightWithTopPaddingRegression() {
-  ModalBottomSheetExpandedScaffold(
+fun ModalBottomSheetExpandedFixedHeightWithTopPadding() {
+  ModalBottomSheetScaffold(
+    initialDetent = ExpandedDetent,
     sheetModifier = Modifier.padding(top = 64.dp),
   ) {
-    Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(236.dp)
-        .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-      repeat(2) {
-        ModalBottomSheetExpandedRow()
-      }
-      ModalBottomSheetExpandedRow {
-        BasicText(
-          text = "This row must not be clipped",
-          style = TextStyle(fontWeight = FontWeight.Medium),
-        )
-      }
-    }
+    ModalBottomSheetFinalRowContent()
   }
 }
 
 @Composable
-fun ModalBottomSheetExpandedLazyColumnWrapContentRegression() {
-  ModalBottomSheetExpandedScaffold {
-    LazyColumn(
-      modifier = Modifier.fillMaxWidth(),
-      contentPadding = PaddingValues(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-      items(3) {
-        ModalBottomSheetExpandedRow()
-      }
-    }
+fun ModalBottomSheetFixedWidthLandscape() {
+  ModalBottomSheetScaffold(
+    initialDetent = ExpandedDetent,
+    screenshotHeight = 480.dp,
+    sheetSizeModifier = Modifier.width(520.dp),
+  ) {
+    ModalBottomSheetFixedHeightContent()
   }
 }
 
 @Composable
-fun ModalBottomSheetExpandedLazyColumnFixedHeightRegression() {
-  ModalBottomSheetExpandedScaffold {
-    LazyColumn(
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(260.dp),
-      contentPadding = PaddingValues(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-      items(3) {
-        ModalBottomSheetExpandedRow()
-      }
-    }
-  }
-}
-
-@Composable
-private fun ModalBottomSheetExpandedScaffold(
+private fun ModalBottomSheetScaffold(
+  initialDetent: SheetDetent,
+  screenshotWidth: Dp = 1024.dp,
+  screenshotHeight: Dp = 600.dp,
   sheetModifier: Modifier = Modifier,
+  sheetSizeModifier: Modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(),
   content: @Composable () -> Unit,
 ) {
+  val modalState = rememberModalState(initiallyVisible = true)
   val sheetState = rememberBottomSheetState(
-    initialDetent = SheetDetent.FullyExpanded,
-    detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+    initialDetent = initialDetent,
+    detents = listOf(Hidden, PeekDetent, ExpandedDetent),
   )
 
-  UnstyledBottomSheet(
-    state = sheetState,
-    modifier = Modifier.fillMaxSize(),
-  ) {
+  Modal(state = modalState) {
     Box(
-      modifier = Modifier.fillMaxWidth(),
-      contentAlignment = Alignment.TopCenter,
+      modifier = Modifier
+        .requiredSize(width = screenshotWidth, height = screenshotHeight)
+        .background(Color.Transparent),
     ) {
-      Sheet(
-        modifier = sheetModifier
-          .widthIn(max = 640.dp)
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
+      UnstyledBottomSheet(
+        state = sheetState,
+        modifier = Modifier.fillMaxSize(),
       ) {
-        Box(Modifier.fillMaxWidth()) {
-          content()
-          Box(
-            Modifier.fillMaxWidth().padding(top = 22.dp),
-            contentAlignment = Alignment.Center,
+        Box(
+          modifier = Modifier.fillMaxWidth(),
+          contentAlignment = Alignment.TopCenter,
+        ) {
+          Sheet(
+            modifier = sheetModifier
+              .then(sheetSizeModifier)
+              .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+              .background(Color.White)
+              .border(1.dp, Color(0xFFFFD60A), RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)),
           ) {
-            Box(
-              modifier = Modifier
-                .background(Color(0xFFCACACA), RoundedCornerShape(100))
-                .size(32.dp, 4.dp),
-            )
+            content()
           }
         }
       }
@@ -169,17 +248,84 @@ private fun ModalBottomSheetExpandedScaffold(
 }
 
 @Composable
-private fun ModalBottomSheetExpandedRow(
+private fun ModalBottomSheetFixedHeightContent() {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(300.dp)
+      .background(Color(0xFFF3F4F6))
+      .border(1.dp, Color(0xFF111827)),
+  )
+}
+
+@Composable
+private fun ModalBottomSheetFinalRowContent() {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(180.dp),
+  ) {
+    repeat(2) {
+      ModalBottomSheetRow()
+    }
+    ModalBottomSheetRow {
+      BasicText(
+        text = "This row must not be clipped",
+        style = TextStyle(fontWeight = FontWeight.Medium),
+      )
+    }
+  }
+}
+
+@Composable
+private fun ModalBottomSheetWrapContent() {
+  Column(
+    modifier = Modifier.fillMaxWidth(),
+  ) {
+    repeat(3) {
+      ModalBottomSheetRow()
+    }
+  }
+}
+
+@Composable
+private fun ModalBottomSheetLazyColumnWrapContent() {
+  LazyColumn(
+    modifier = Modifier.fillMaxWidth(),
+  ) {
+    items(3) {
+      ModalBottomSheetRow()
+    }
+  }
+}
+
+@Composable
+private fun ModalBottomSheetVerticalScrollWrapContent() {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .verticalScroll(rememberScrollState()),
+  ) {
+    repeat(3) {
+      ModalBottomSheetRow()
+    }
+  }
+}
+
+@Composable
+private fun ModalBottomSheetRow(
   content: @Composable BoxScope.() -> Unit = {},
 ) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(48.dp)
-      .clip(RoundedCornerShape(8.dp))
-      .background(Color.White)
-      .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(8.dp)),
+      .height(60.dp)
+      .background(Color(0xFFF3F4F6))
+      .border(1.dp, Color(0xFF111827)),
     contentAlignment = Alignment.Center,
     content = content,
   )
 }
+
+private val PeekDetent = SheetDetent("peek") { _, _ -> 180.dp }
+private val ExpandedDetent = SheetDetent("expanded") { _, _ -> 300.dp }
