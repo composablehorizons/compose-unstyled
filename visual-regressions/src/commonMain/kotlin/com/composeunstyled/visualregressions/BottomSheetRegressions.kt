@@ -37,6 +37,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -91,6 +96,26 @@ val BottomSheetRegressionScreenshots = listOf(
     name = "bottom-sheet-fixed-width-landscape",
     height = 480,
     content = { BottomSheetFixedWidthLandscapeRegression() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-content-grows",
+    content = { BottomSheetExpandedContentGrows() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-expanded-content-shrinks",
+    content = { BottomSheetExpandedContentShrinks() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-peek-content-grows",
+    content = { BottomSheetPeekContentGrows() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-content-detent-grows",
+    content = { BottomSheetContentDetentGrows() },
+  ),
+  VisualRegressionScreenshot(
+    name = "bottom-sheet-content-detent-shrinks",
+    content = { BottomSheetContentDetentShrinks() },
   ),
 )
 
@@ -184,14 +209,56 @@ fun BottomSheetFixedWidthLandscapeRegression() {
 }
 
 @Composable
+fun BottomSheetExpandedContentGrows() {
+  BottomSheetRegressionScaffold(initialDetent = FullyExpanded) {
+    BottomSheetDynamicContent(initialRows = 2, finalRows = 5)
+  }
+}
+
+@Composable
+fun BottomSheetExpandedContentShrinks() {
+  BottomSheetRegressionScaffold(initialDetent = FullyExpanded) {
+    BottomSheetDynamicContent(initialRows = 5, finalRows = 2)
+  }
+}
+
+@Composable
+fun BottomSheetPeekContentGrows() {
+  BottomSheetRegressionScaffold(initialDetent = PeekDetent) {
+    BottomSheetDynamicContent(initialRows = 2, finalRows = 5)
+  }
+}
+
+@Composable
+fun BottomSheetContentDetentGrows() {
+  BottomSheetRegressionScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(ContentDetent),
+  ) {
+    BottomSheetDynamicContent(initialRows = 2, finalRows = 5)
+  }
+}
+
+@Composable
+fun BottomSheetContentDetentShrinks() {
+  BottomSheetRegressionScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(ContentDetent),
+  ) {
+    BottomSheetDynamicContent(initialRows = 5, finalRows = 2)
+  }
+}
+
+@Composable
 private fun BottomSheetRegressionScaffold(
   initialDetent: SheetDetent,
+  detents: List<SheetDetent> = listOf(PeekDetent, FullyExpanded),
   sheetSizeModifier: Modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(),
   content: @Composable () -> Unit,
 ) {
   val sheetState = rememberBottomSheetState(
     initialDetent = initialDetent,
-    detents = listOf(PeekDetent, FullyExpanded),
+    detents = detents,
   )
 
   UnstyledBottomSheet(
@@ -263,6 +330,26 @@ private fun BottomSheetVerticalScrollWrapContent() {
 }
 
 @Composable
+private fun BottomSheetDynamicContent(
+  initialRows: Int,
+  finalRows: Int,
+) {
+  var rows by remember { mutableIntStateOf(initialRows) }
+
+  LaunchedEffect(Unit) {
+    rows = finalRows
+  }
+
+  Column(
+    modifier = Modifier.fillMaxWidth(),
+  ) {
+    repeat(rows) {
+      BottomSheetRow()
+    }
+  }
+}
+
+@Composable
 private fun BottomSheetRow(
   content: @Composable BoxScope.() -> Unit = {},
 ) {
@@ -278,3 +365,5 @@ private fun BottomSheetRow(
 }
 
 private val PeekDetent = SheetDetent("peek") { _, _ -> 180.dp }
+
+private val ContentDetent = SheetDetent("content") { _, sheetHeight -> sheetHeight }
