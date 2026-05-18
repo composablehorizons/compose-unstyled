@@ -345,12 +345,10 @@ class BottomSheetState internal constructor(
       Float.NaN
     } else {
       val currentHeight = anchoredHeightFor(currentDetent)
-      val targetHeight = anchoredHeightFor(targetDetent)
       val offsetHeight = currentOffsetHeight()
 
       maxOrFallback(
         currentHeight,
-        targetHeight,
         offsetHeight,
         fallback = maxDetentHeightPx,
       )
@@ -361,12 +359,10 @@ class BottomSheetState internal constructor(
     if (containerHeightPx.isNaN() || measuredContentHeightPx.isNaN()) return Float.NaN
 
     val currentHeight = detentHeightPx(currentDetent, measuredContentHeightPx)
-    val targetHeight = detentHeightPx(targetDetent, measuredContentHeightPx)
     val offsetHeight = currentOffsetHeight().coerceAtMost(measuredContentHeightPx.coerceAtLeast(0f))
 
     return maxOrFallback(
       currentHeight,
-      targetHeight,
       offsetHeight,
       fallback = Float.NaN,
     )
@@ -572,13 +568,11 @@ class BottomSheetState internal constructor(
 private fun maxOrFallback(
   first: Float,
   second: Float,
-  third: Float,
   fallback: Float,
 ): Float {
   var result = Float.NaN
   if (first.isNaN().not()) result = first
   if (second.isNaN().not() && (result.isNaN() || second > result)) result = second
-  if (third.isNaN().not() && (result.isNaN() || third > result)) result = third
   return if (result.isNaN()) fallback else result
 }
 
@@ -821,7 +815,7 @@ private fun Modifier.sheetOffset(state: BottomSheetState, offsetForIme: Boolean)
           }
 
           else -> {
-            val calculatedOffset = state.anchoredDraggableState.requireOffset() - imeHeight
+            val calculatedOffset = state.anchoredDraggableState.visualOffset() - imeHeight
             // do not let the sheet's top go out of screen bounds
             val y = calculatedOffset.coerceAtLeast(0f).toInt()
             IntOffset(x = 0, y = y)
@@ -833,6 +827,14 @@ private fun Modifier.sheetOffset(state: BottomSheetState, offsetForIme: Boolean)
       add(Modifier.consumeWindowInsets(ime))
     }
   }
+}
+
+private fun AnchoredDraggableState<SheetDetent>.visualOffset(): Float {
+  val offset = requireOffset()
+  val minPosition = anchors.minPosition()
+  val maxPosition = anchors.maxPosition()
+  if (minPosition.isNaN() || maxPosition.isNaN()) return offset
+  return offset.coerceIn(minPosition, maxPosition)
 }
 
 private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
