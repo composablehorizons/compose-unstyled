@@ -24,6 +24,7 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,6 +45,7 @@ import com.composeunstyled.rememberBottomSheetState
 
 @Composable
 internal fun ModalBottomSheetExpandedScaffold(
+  sheetModifier: Modifier = Modifier,
   content: @Composable () -> Unit,
 ) {
   val sheetState = rememberBottomSheetState(
@@ -60,7 +62,7 @@ internal fun ModalBottomSheetExpandedScaffold(
       contentAlignment = Alignment.TopCenter,
     ) {
       Sheet(
-        modifier = Modifier
+        modifier = sheetModifier
           .widthIn(max = 640.dp)
           .fillMaxWidth()
           .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
@@ -86,7 +88,9 @@ internal fun ModalBottomSheetExpandedScaffold(
 }
 
 @Composable
-internal fun ModalBottomSheetExpandedRow() {
+internal fun ModalBottomSheetExpandedRow(
+  content: @Composable BoxScope.() -> Unit = {},
+) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -94,5 +98,7 @@ internal fun ModalBottomSheetExpandedRow() {
       .clip(RoundedCornerShape(8.dp))
       .background(Color.White)
       .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(8.dp)),
+    contentAlignment = Alignment.Center,
+    content = content,
   )
 }

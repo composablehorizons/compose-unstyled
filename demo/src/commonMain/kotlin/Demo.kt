@@ -119,6 +119,12 @@ private val availablePrimitives = listOf(
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
   DemoItem(
+    "Modal Bottom Sheet (Expanded Fixed Height with top padding)",
+    "modal-bottom-sheet-expanded-fixed-height-top-padding",
+    { ModalBottomSheetExpandedFixedHeightWithTopPaddingDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
+  DemoItem(
     "Modal Bottom Sheet (Expanded LazyColumn Wrap Content)",
     "modal-bottom-sheet-expanded-lazy-column-wrap-content",
     { ModalBottomSheetExpandedLazyColumnWrapContentDemo() },

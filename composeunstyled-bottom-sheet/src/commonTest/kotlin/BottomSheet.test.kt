@@ -2184,6 +2184,66 @@ class BottomSheetCommonTest {
     }
 
   @Test
+  fun fully_expanded_sheet_with_short_top_padded_content_does_not_clip_bottom_content() =
+    runComposeUiTest {
+      setContent {
+        Box(
+          Modifier
+            .requiredSize(400.dp)
+            .testTag("root"),
+        ) {
+          val state = rememberBottomSheetState(
+            initialDetent = SheetDetent.FullyExpanded,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+          )
+
+          UnstyledBottomSheet(
+            state = state,
+            modifier = Modifier.fillMaxSize(),
+          ) {
+            Sheet(
+              Modifier
+                .padding(top = 64.dp)
+                .testTag("panel"),
+            ) {
+              Column(
+                Modifier
+                  .fillMaxWidth()
+                  .height(260.dp)
+                  .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
+              ) {
+                repeat(3) { index ->
+                  Box(
+                    Modifier
+                      .fillMaxWidth()
+                      .height(48.dp)
+                      .testTag("item_$index"),
+                  )
+                  if (index < 2) {
+                    Spacer(Modifier.height(10.dp))
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      waitUntilExactlyOneExists(hasTestTag("panel"))
+      waitForIdle()
+
+      val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+      val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
+      val lastItemBounds = onNodeWithTag("item_2").fetchSemanticsNode().boundsInRoot
+
+      assertThat(panelBounds.bottom).isCloseTo(
+        rootBounds.bottom,
+        with(density) { DensityTolerance.toPx() },
+      )
+      assertThat(lastItemBounds.bottom <= rootBounds.bottom).isTrue()
+    }
+
+  @Test
   fun detent_change_is_blocked_when_confirmdetentchange_returns_false_for_targetdetent() = runComposeUiTest {
     val detent100 = SheetDetent("100") { _, _ -> 100.dp }
     val detent200 = SheetDetent("200") { _, _ -> 200.dp }
