@@ -21,25 +21,15 @@
  */
 package com.composeunstyled.visualregressions
 
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import kotlin.test.Test
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
-@RunWith(Parameterized::class)
-class BottomSheetVisualRegressionTest(
-  private val screenshot: VisualRegressionScreenshot,
+data class VisualRegressionScreenshot(
+  val name: String,
+  val width: Int = 1024,
+  val height: Int = 600,
+  val backgroundColor: Color = Color.White,
+  val content: @Composable () -> Unit,
 ) {
-
-  @Test
-  fun matchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(screenshot)
-  }
-
-  companion object {
-    @JvmStatic
-    @Parameterized.Parameters(name = "{0}")
-    fun screenshots() = BottomSheetRegressionScreenshots.map { screenshot ->
-      arrayOf(screenshot)
-    }
-  }
+  override fun toString() = name
 }
