@@ -71,7 +71,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Screenshot Tests
-        run: ./gradlew --console=plain :demo:jvmScreenshotTest
+        run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
 
   discover-android-modules:
     runs-on: ubuntu-latest

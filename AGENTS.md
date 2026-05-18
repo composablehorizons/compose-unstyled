@@ -8,7 +8,7 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 - Put touch-specific tests in the Android test source set. Put mouse-specific tests in the JVM test source set.
 - Use AssertK for test assertions instead of `kotlin.test` assertion helpers.
 - When creating a library module with an Android target, add the Android instrumented test dependencies required for Compose UI tests: `libs.androidx.compose.test`, `libs.androidx.compose.test.manifest`, and `libs.androidx.espresso`.
-- Screenshot tests must only compare screenshots and write failure artifacts under `build/`; they must not update checked-in baselines while running tests. When screenshot baselines need to be updated, use the dedicated screenshot task, such as `./gradlew :demo:takeScreenshots`.
+- Screenshot tests must only compare screenshots and write failure artifacts under `build/`; they must not update checked-in baselines while running tests. When screenshot baselines need to be updated, use the dedicated screenshot task, such as `./gradlew :visual-regressions:takeScreenshots`.
 
 ## Recomposition testing
 
