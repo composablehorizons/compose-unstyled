@@ -21,11 +21,10 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,54 +37,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Scrim
 import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
-import com.composeunstyled.UnstyledModalBottomSheet
-import com.composeunstyled.rememberModalBottomSheetState
+import com.composeunstyled.UnstyledBottomSheet
+import com.composeunstyled.rememberBottomSheetState
 
 @Composable
 internal fun ModalBottomSheetExpandedReproScaffold(
   content: @Composable () -> Unit,
 ) {
-  val sheetState = rememberModalBottomSheetState(
+  val sheetState = rememberBottomSheetState(
     initialDetent = SheetDetent.FullyExpanded,
     detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
   )
 
-  UnstyledModalBottomSheet(
-    state = sheetState,
-    overlay = {
-      Scrim(
-        scrimColor = Color.Black.copy(0.3f),
-        enter = fadeIn(),
-        exit = fadeOut(),
-      )
-    },
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Color.Black.copy(0.3f)),
   ) {
-    Box(
-      modifier = Modifier.fillMaxWidth(),
-      contentAlignment = Alignment.TopCenter,
+    UnstyledBottomSheet(
+      state = sheetState,
+      modifier = Modifier.fillMaxSize(),
     ) {
-      Sheet(
-        modifier = Modifier
-          .widthIn(max = 640.dp)
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
+      Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.TopCenter,
       ) {
-        Box(Modifier.fillMaxWidth()) {
-          content()
-          Box(
-            Modifier.fillMaxWidth().padding(top = 22.dp),
-            contentAlignment = Alignment.Center,
-          ) {
+        Sheet(
+          modifier = Modifier
+            .widthIn(max = 640.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+            .background(Color(0xFFF8FAFC))
+            .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
+        ) {
+          Box(Modifier.fillMaxWidth()) {
+            content()
             Box(
-              modifier = Modifier
-                .background(Color(0xFFCACACA), RoundedCornerShape(100))
-                .size(32.dp, 4.dp),
-            )
+              Modifier.fillMaxWidth().padding(top = 22.dp),
+              contentAlignment = Alignment.Center,
+            ) {
+              Box(
+                modifier = Modifier
+                  .background(Color(0xFFCACACA), RoundedCornerShape(100))
+                  .size(32.dp, 4.dp),
+              )
+            }
           }
         }
       }
