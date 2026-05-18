@@ -49,14 +49,35 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-enum class FocusRingVisibility {
-  Focused,
-  FocusVisible,
+@kotlin.jvm.JvmInline
+value class FocusRingVisibility private constructor(private val value: Int) {
+  companion object {
+    @Stable
+    val Focused = FocusRingVisibility(0)
+
+    @Stable
+    val FocusVisible = FocusRingVisibility(1)
+  }
+
+  internal val isFocusVisibleOnly: Boolean
+    get() = this == FocusVisible
+
+  override fun toString(): String {
+    return when (this) {
+      Focused -> "Focused"
+      FocusVisible -> "FocusVisible"
+      else -> "Invalid"
+    }
+  }
 }
 
-internal enum class FocusVisibilityMode {
-  Keyboard,
-  Pointer,
+@kotlin.jvm.JvmInline
+internal value class FocusVisibilityMode private constructor(private val value: Int) {
+  companion object {
+    val Keyboard = FocusVisibilityMode(0)
+
+    val Pointer = FocusVisibilityMode(1)
+  }
 }
 
 @Stable
@@ -100,9 +121,10 @@ fun Modifier.focusRing(
   offset: Dp = 0.dp,
   visibility: FocusRingVisibility = FocusRingVisibility.FocusVisible,
 ): Modifier {
-  val showFocusRing by when (visibility) {
-    FocusRingVisibility.Focused -> interactionSource.collectIsFocusedAsState()
-    FocusRingVisibility.FocusVisible -> interactionSource.collectIsFocusVisibleAsState()
+  val showFocusRing by if (visibility.isFocusVisibleOnly) {
+    interactionSource.collectIsFocusVisibleAsState()
+  } else {
+    interactionSource.collectIsFocusedAsState()
   }
 
   return this then buildModifier {
