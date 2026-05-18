@@ -24,7 +24,6 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
@@ -256,7 +255,7 @@ fun <T> TabListScope<T>.Tab(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   activateOnFocus: Boolean = true,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
   content: @Composable TabScope.() -> Unit,
 ) {

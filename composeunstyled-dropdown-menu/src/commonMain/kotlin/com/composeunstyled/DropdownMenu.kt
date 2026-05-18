@@ -28,7 +28,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -243,7 +242,7 @@ fun DropdownMenuPanelScope.MenuItem(
   enabled: Boolean = true,
   closeOnClick: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   content: @Composable () -> Unit,
 ) {
   val state = LocalDropdownMenuState.current

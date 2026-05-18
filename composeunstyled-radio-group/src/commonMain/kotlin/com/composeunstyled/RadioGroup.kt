@@ -28,7 +28,6 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -127,7 +126,7 @@ fun <T> RadioGroupScope.RadioButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   content: @Composable RadioButtonScope.() -> Unit,
 ) {
   val state = LocalInnerRadioGroupState.current

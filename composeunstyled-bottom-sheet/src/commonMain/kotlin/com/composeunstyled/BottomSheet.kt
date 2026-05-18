@@ -28,7 +28,6 @@ import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -844,7 +843,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 @Composable
 fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
 ) {
   val context = LocalBottomSheetContext.current

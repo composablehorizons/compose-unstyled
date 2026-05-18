@@ -27,7 +27,6 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
@@ -65,7 +64,7 @@ fun UnstyledSwitch(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   content: @Composable SwitchScope.() -> Unit,
 ) {
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }

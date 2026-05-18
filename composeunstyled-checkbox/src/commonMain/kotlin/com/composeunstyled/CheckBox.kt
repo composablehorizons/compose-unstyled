@@ -26,7 +26,6 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -45,7 +44,7 @@ fun UnstyledCheckbox(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
-  indication: Indication? = LocalIndication.current,
+  indication: Indication? = null,
   accessibilityLabel: String? = null,
   content: @Composable CheckboxScope.() -> Unit,
 ) {
