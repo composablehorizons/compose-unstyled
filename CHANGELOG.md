@@ -12,6 +12,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added focus-visible support to `focusRing`, including `FocusVisibilityProvider`,
   `collectIsFocusVisibleAsState`, and `FocusRingVisibility.Focused` for opting into the previous
   focus-only behavior. (#349)
+- Added a dedicated `visual-regressions` module for desktop screenshot regression coverage.
+
+### Changed
+
+- Theme's `minimumInteractiveComponentSize()` now applies touch-sized minimum bounds on devices that
+  support touch input instead of forcing it depending on the platform target.
+- Improved Bottom Sheet layout performance by reducing repeated measurement calculations.
+- `UnstyledDialog` and `UnstyledModalBottomSheet` overlay lambdas now use dedicated overlay scopes,
+  with `Scrim` available directly from those scopes.
+
+### Removed
+
+- Removed the separate `composeunstyled-scrim` artifact. Use `Scrim` from `composeunstyled-modal`,
+  `composeunstyled-dialog`, or `composeunstyled-modal-bottom-sheet` instead.
+
+### Fixed
+
+- Fixed fully expanded bottom sheets with short lazy content anchoring incorrectly instead of staying
+  aligned to the bottom of the container. (#356)
+- Fixed fully expanded bottom sheets clipping content when the sheet modifier adds height, such as
+  top padding. (#356)
+- Fixed a visual glitch where bottom sheets could briefly jump past their expanded position when
+  flung by touch.
 
 ## [2.1.0] - 2026-05-16
 
