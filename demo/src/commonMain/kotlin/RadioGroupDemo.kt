@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -80,6 +81,7 @@ fun RadioGroupDemo() {
             modifier = Modifier
               .fillMaxWidth()
               .clip(itemShape),
+            indication = LocalIndication.current,
           ) {
             Row(
               modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
@@ -95,7 +97,9 @@ fun RadioGroupDemo() {
                   .border(1.dp, Color(0xFFCACACA), CircleShape),
                 contentAlignment = Alignment.Center,
               ) {
-                SelectedIndicator {
+                SelectedIndicator(
+                  indication = LocalIndication.current,
+                ) {
                   Box(
                     Modifier
                       .size(8.dp)

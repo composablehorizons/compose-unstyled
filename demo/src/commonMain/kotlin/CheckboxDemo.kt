@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
@@ -53,12 +54,14 @@ fun CheckboxDemo() {
     onCheckedChange = { checked = it },
     modifier = Modifier.clip(checkboxShape),
     accessibilityLabel = "Enable notifications",
+    indication = LocalIndication.current,
   ) {
     CheckedIndicator(
       modifier = Modifier
         .size(24.dp)
         .background(Color(0xFFF8FAFC), checkboxShape)
         .border(1.dp, Color(0xFFCACACA), checkboxShape),
+      indication = LocalIndication.current,
     ) {
       UnstyledIcon(Check)
     }

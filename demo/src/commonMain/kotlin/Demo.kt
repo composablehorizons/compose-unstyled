@@ -23,6 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.composables.compose.ripple.rememberRippleIndication
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.CrossAxisAlignment
@@ -69,8 +72,10 @@ import com.composeunstyled.currentWindowContainerSize
 
 @Composable
 fun Demo(startDestination: String = "home") {
-  Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
-    DemoSelection(startDestination)
+  CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
+    Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
+      DemoSelection(startDestination)
+    }
   }
 }
 
@@ -299,6 +304,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       onClick = onUpClick,
       modifier = Modifier
         .clip(CircleShape),
+      indication = LocalIndication.current,
     ) {
       Box(Modifier.padding(12.dp)) {
         UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
@@ -320,6 +326,7 @@ private fun DemoListButton(
     modifier = modifier
       .sizeIn(minWidth = 40.dp, minHeight = 48.dp)
       .clip(RoundedCornerShape(8.dp)),
+    indication = LocalIndication.current,
   ) {
     Box(
       modifier = Modifier

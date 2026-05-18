@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,7 @@ internal fun SimpleButton(
       .clip(shape)
       .border(1.dp, Color.Black.copy(alpha = 0.2f), shape),
     interactionSource = interactionSource,
+    indication = LocalIndication.current,
   ) {
     BasicText(text, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
   }

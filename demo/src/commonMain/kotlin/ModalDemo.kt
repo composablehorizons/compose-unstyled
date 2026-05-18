@@ -29,6 +29,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
@@ -182,6 +183,7 @@ fun ModalDemo() {
               .clip(RoundedCornerShape(8.dp))
               .background(Color(0xFFF8FAFC))
               .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+            indication = LocalIndication.current,
           ) {
             Image(
               painter = rememberUriPainter(item.url),
@@ -293,6 +295,7 @@ fun ModalDemo() {
                   .background(Color(0xFFF8FAFC))
                   .border(1.dp, Color(0xFFCACACA), CircleShape)
                   .alpha(previousButtonAlpha),
+                indication = LocalIndication.current,
               ) {
                 Box(Modifier.padding(12.dp)) {
                   UnstyledIcon(
@@ -317,6 +320,7 @@ fun ModalDemo() {
                   .background(Color(0xFFF8FAFC))
                   .border(1.dp, Color(0xFFCACACA), CircleShape)
                   .alpha(nextButtonAlpha),
+                indication = LocalIndication.current,
               ) {
                 Box(Modifier.padding(12.dp)) {
                   UnstyledIcon(
