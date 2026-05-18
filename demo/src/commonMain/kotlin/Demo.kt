@@ -93,58 +93,10 @@ private val availablePrimitives = listOf(
     { BottomSheetDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
-  DemoItem(
-    "Bottom Sheet (Scrollable Content)",
-    "bottom-sheet-scrollable-content",
-    { BottomSheetScrollableContentDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
   DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
-  DemoItem(
-    "Modal Bottom Sheet (Sheet with top padding)",
-    "modal-bottom-sheet-inset",
-    { ModalBottomSheetInsetDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Modal Bottom Sheet (Scrollable Content)",
-    "modal-bottom-sheet-scrollable-content",
-    { ModalBottomSheetScrollableContentDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Modal Bottom Sheet (Expanded Fixed Height)",
-    "modal-bottom-sheet-expanded-fixed-height",
-    { ModalBottomSheetExpandedFixedHeightDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Modal Bottom Sheet (Expanded Fixed Height with top padding)",
-    "modal-bottom-sheet-expanded-fixed-height-top-padding",
-    { ModalBottomSheetExpandedFixedHeightWithTopPaddingDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Modal Bottom Sheet (Expanded LazyColumn Wrap Content)",
-    "modal-bottom-sheet-expanded-lazy-column-wrap-content",
-    { ModalBottomSheetExpandedLazyColumnWrapContentDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Modal Bottom Sheet (Expanded LazyColumn Fixed Height)",
-    "modal-bottom-sheet-expanded-lazy-column-fixed-height",
-    { ModalBottomSheetExpandedLazyColumnFixedHeightDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
   DemoItem("Button", "button", { ButtonDemo() }),
   DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
-  DemoItem("Checkbox (Custom CheckedIndicator)", "checkbox-custom-checked-indicator", {
-    CheckboxCustomCheckedIndicatorDemo()
-  }),
-  DemoItem("Checkbox (extended Indicator bounds)", "checkbox-extended-indicator-bounds", {
-    CheckboxExtendedIndicatorBoundsDemo()
-  }),
-  DemoItem("Checkbox (TriState)", "tristatecheckbox", { TriStateCheckboxDemo() }),
+  DemoItem("Tristate Checkbox", "tristatecheckbox", { TriStateCheckboxDemo() }),
   DemoItem("Dialog", "dialog", { DialogDemo() }),
   DemoItem(
     "Disclosure",
