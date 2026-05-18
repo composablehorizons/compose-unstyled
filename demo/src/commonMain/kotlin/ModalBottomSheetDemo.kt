@@ -23,6 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -105,6 +106,7 @@ fun ModalBottomSheetDemo() {
               .padding(top = 22.dp)
               .background(Color(0xFFCACACA), RoundedCornerShape(100))
               .size(32.dp, 4.dp),
+            indication = LocalIndication.current,
           )
         }
       }

@@ -24,6 +24,7 @@ package com.composeunstyled.demo
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -672,6 +673,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           UnstyledButton(
             onClick = { },
             modifier = Modifier.clip(Theme[shapes][buttonShape]),
+            indication = LocalIndication.current,
           ) {
             Box(Modifier.padding(12.dp)) {
               UnstyledIcon(
@@ -687,6 +689,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
             modifier = Modifier
               .clip(Theme[shapes][buttonShape])
               .background(Theme[colors][primary]),
+            indication = LocalIndication.current,
           ) {
             Box(Modifier.padding(16.dp)) {
               UnstyledIcon(
@@ -700,6 +703,7 @@ fun MusicPlayerCard(modifier: Modifier = Modifier) {
           UnstyledButton(
             onClick = { },
             modifier = Modifier.clip(Theme[shapes][buttonShape]),
+            indication = LocalIndication.current,
           ) {
             Box(Modifier.padding(12.dp)) {
               UnstyledIcon(
@@ -753,5 +757,6 @@ private fun SimpleThemeCard(
       .background(themeColor)
       .outline(outlineThickness, outlineColor, CircleShape, offset),
     interactionSource = interactionSource,
+    indication = LocalIndication.current,
   ) { }
 }

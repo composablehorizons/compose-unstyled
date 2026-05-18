@@ -28,6 +28,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -74,6 +75,7 @@ fun DisclosureDemo() {
     ) {
       DisclosureButton(
         modifier = Modifier.fillMaxWidth(),
+        indication = LocalIndication.current,
       ) {
         Row(
           modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),

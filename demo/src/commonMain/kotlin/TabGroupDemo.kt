@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -132,6 +133,7 @@ fun TabGroupDemo() {
               Tab(
                 key = key,
                 modifier = Modifier.weight(1f).fillMaxHeight(),
+                indication = LocalIndication.current,
               ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                   BasicText(
@@ -180,6 +182,7 @@ fun TabGroupDemo() {
                 UnstyledButton(
                   onClick = { /* TODO */ },
                   modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                  indication = LocalIndication.current,
                 ) {
                   Column(Modifier.padding(12.dp)) {
                     BasicText(item.title, style = TextStyle(fontWeight = FontWeight.Medium))

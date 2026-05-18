@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +45,7 @@ fun ButtonDemo() {
       .background(Color(0xFFF8FAFC))
       .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(10.dp)),
     contentPadding = PaddingValues(horizontal = 10.dp),
+    indication = LocalIndication.current,
   ) {
     BasicText("Button")
   }

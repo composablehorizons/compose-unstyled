@@ -27,6 +27,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -121,6 +122,7 @@ fun DropdownMenuDemo() {
                 .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
+              indication = LocalIndication.current,
             ) {
               Row(
                 modifier = Modifier
@@ -161,6 +163,7 @@ fun DropdownMenuDemo() {
           .clip(RoundedCornerShape(6.dp))
           .background(Color(0xFFF8FAFC))
           .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp)),
+        indication = LocalIndication.current,
       ) {
         Row(
           modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),

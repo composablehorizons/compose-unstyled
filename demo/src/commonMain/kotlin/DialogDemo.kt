@@ -26,6 +26,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -121,6 +122,7 @@ fun DialogDemo() {
               .padding(12.dp)
               .align(Alignment.End)
               .clip(RoundedCornerShape(6.dp)),
+            indication = LocalIndication.current,
           ) {
             BasicText(
               "Update",

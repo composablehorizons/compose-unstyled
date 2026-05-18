@@ -102,6 +102,7 @@ kotlin {
     commonMain.dependencies {
       implementation(libs.compose.components.resources)
       implementation(libs.compose.foundation)
+      implementation(libs.composables.ripple)
       implementation(project(":composeunstyled-theming"))
       implementation(project(":composeunstyled-bottom-sheet"))
       implementation(project(":composeunstyled-build-modifier"))
