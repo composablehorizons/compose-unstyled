@@ -21,39 +21,25 @@
  */
 package com.composeunstyled.visualregressions
 
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 import kotlin.test.Test
 
-class ModalBottomSheetVisualRegressionTest {
+@RunWith(Parameterized::class)
+class ModalBottomSheetVisualRegressionTest(
+  private val screenshot: VisualRegressionScreenshot,
+) {
 
   @Test
-  fun expandedFixedHeightMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(ModalBottomSheetExpandedFixedHeightScreenshot)
+  fun matchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(screenshot)
   }
 
-  @Test
-  fun expandedFixedHeightWithTopPaddingMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(
-      ModalBottomSheetExpandedFixedHeightWithTopPaddingScreenshot,
-    )
-  }
-
-  @Test
-  fun expandedLazyColumnWrapContentMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(ModalBottomSheetExpandedLazyColumnWrapContentScreenshot)
-  }
-
-  @Test
-  fun expandedLazyColumnFixedHeightMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(ModalBottomSheetExpandedLazyColumnFixedHeightScreenshot)
-  }
-
-  @Test
-  fun insetMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(ModalBottomSheetInsetScreenshot)
-  }
-
-  @Test
-  fun scrollableContentMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(ModalBottomSheetScrollableContentScreenshot)
+  companion object {
+    @JvmStatic
+    @Parameterized.Parameters(name = "{0}")
+    fun screenshots() = ModalBottomSheetRegressionScreenshots.map { screenshot ->
+      arrayOf(screenshot)
+    }
   }
 }
