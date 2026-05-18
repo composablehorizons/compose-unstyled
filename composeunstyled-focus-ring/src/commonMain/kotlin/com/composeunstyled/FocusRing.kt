@@ -38,14 +38,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -77,9 +77,8 @@ fun FocusVisibilityProvider(
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
 ) {
-  val inputModeManager = LocalInputModeManager.current
   val manager = remember {
-    DefaultFocusVisibilityManager(inputModeManager.inputMode.toFocusVisibilityMode())
+    DefaultFocusVisibilityManager(FocusVisibilityMode.Keyboard)
   }
 
   CompositionLocalProvider(LocalFocusVisibilityManager provides manager) {
@@ -142,7 +141,7 @@ private fun Modifier.focusVisibilityInputObserver(
   manager: FocusVisibilityManager,
 ): Modifier {
   return onPreviewKeyEvent { event ->
-    if (event.type == KeyEventType.KeyDown) {
+    if (event.type == KeyEventType.KeyDown && isNavigationKey(event.key)) {
       manager.notifyKeyboardInput()
     }
     false
@@ -158,10 +157,19 @@ private fun Modifier.focusVisibilityInputObserver(
   }
 }
 
-private fun InputMode.toFocusVisibilityMode(): FocusVisibilityMode {
-  return when (this) {
-    InputMode.Keyboard -> FocusVisibilityMode.Keyboard
-    InputMode.Touch -> FocusVisibilityMode.Pointer
-    else -> FocusVisibilityMode.Keyboard
+private fun isNavigationKey(key: Key): Boolean {
+  return when (key) {
+    Key.Tab,
+    Key.DirectionUp,
+    Key.DirectionDown,
+    Key.DirectionLeft,
+    Key.DirectionRight,
+    Key.Home,
+    Key.MoveEnd,
+    Key.PageUp,
+    Key.PageDown,
+    -> true
+
+    else -> false
   }
 }
