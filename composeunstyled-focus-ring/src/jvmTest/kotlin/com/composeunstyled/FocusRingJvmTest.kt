@@ -21,15 +21,21 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performMouseInput
+import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
@@ -72,6 +78,61 @@ class FocusRingJvmTest {
 
     runOnIdle {
       assertThat(focusVisible).isFalse()
+    }
+  }
+
+  @Test
+  fun focusVisibleProviderIgnoresNonNavigationKeysAfterMousePress() = runComposeUiTest {
+    val interactionSource = MutableInteractionSource()
+    val focusRequester = FocusRequester()
+    var focusVisible = false
+
+    setContent {
+      FocusVisibilityProvider(
+        modifier = Modifier
+          .size(100.dp)
+          .testTag("provider"),
+      ) {
+        val isFocusVisible by interactionSource.collectIsFocusVisibleAsState()
+        focusVisible = isFocusVisible
+
+        Box(
+          Modifier
+            .size(100.dp)
+            .focusRequester(focusRequester)
+            .focusable(interactionSource = interactionSource)
+            .testTag("target"),
+        )
+      }
+    }
+
+    runOnIdle {
+      focusRequester.requestFocus()
+    }
+
+    onNodeWithTag("provider").performMouseInput {
+      press()
+      release()
+    }
+
+    runOnIdle {
+      assertThat(focusVisible).isFalse()
+    }
+
+    onNodeWithTag("target").performKeyInput {
+      pressKey(Key.A)
+    }
+
+    runOnIdle {
+      assertThat(focusVisible).isFalse()
+    }
+
+    onNodeWithTag("target").performKeyInput {
+      pressKey(Key.Tab)
+    }
+
+    runOnIdle {
+      assertThat(focusVisible).isTrue()
     }
   }
 }
