@@ -125,20 +125,12 @@ fun UnstyledDropdownMenu(
     AnchoredFloatingContent(
       anchor = anchor,
       layer = { content ->
-        Modal(
-          state = modalState,
-          onKeyEvent = { event ->
-            if (
-              event.type == KeyEventType.KeyDown &&
-              (event.key == Key.Back || event.key == Key.Escape)
-            ) {
+        Modal(state = modalState) {
+          if (expanded) {
+            EscapeHandler {
               onExpandedChange(false)
-              true
-            } else {
-              false
             }
-          },
-        ) {
+          }
           content()
         }
       },
@@ -204,13 +196,6 @@ fun DropdownMenuScope.DropdownMenuPanel(
         Key.MoveEnd -> {
           if (event.isKeyDown) {
             scope.itemFocusRequesters.lastOrNull()?.requestFocus()
-          }
-          true
-        }
-
-        Key.Escape -> {
-          if (event.isKeyDown) {
-            state.onExpandedChange(false)
           }
           true
         }
