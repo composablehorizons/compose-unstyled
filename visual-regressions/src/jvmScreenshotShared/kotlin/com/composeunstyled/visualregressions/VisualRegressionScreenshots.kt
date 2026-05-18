@@ -45,10 +45,13 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
+private val RegressionBackgroundColor = Color(0xFF050505)
+
 data class VisualRegressionScreenshot(
   val name: String,
   val width: Int = ScreenshotWidth,
   val height: Int = ScreenshotHeight,
+  val backgroundColor: Color = Color.White,
   val content: @Composable () -> Unit,
 )
 
@@ -94,46 +97,55 @@ val CheckboxExtendedIndicatorBoundsScreenshot = VisualRegressionScreenshot(
 
 val BottomSheetExpandedFixedHeightScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-expanded-fixed-height",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetExpandedFixedHeightRegression() },
 )
 
 val BottomSheetPeekFixedHeightScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-peek-fixed-height",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetPeekFixedHeightRegression() },
 )
 
 val BottomSheetExpandedWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-expanded-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetExpandedWrapContentRegression() },
 )
 
 val BottomSheetPeekWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-peek-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetPeekWrapContentRegression() },
 )
 
 val BottomSheetExpandedLazyColumnWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-expanded-lazy-column-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetExpandedLazyColumnWrapContentRegression() },
 )
 
 val BottomSheetPeekLazyColumnWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-peek-lazy-column-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetPeekLazyColumnWrapContentRegression() },
 )
 
 val BottomSheetExpandedVerticalScrollWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-expanded-vertical-scroll-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetExpandedVerticalScrollWrapContentRegression() },
 )
 
 val BottomSheetPeekVerticalScrollWrapContentScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-peek-vertical-scroll-wrap-content",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetPeekVerticalScrollWrapContentRegression() },
 )
 
 val BottomSheetExpandedScrollableContentFinalRowScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-expanded-scrollable-content-final-row",
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetExpandedScrollableContentFinalRowRegression() },
 )
 
@@ -141,6 +153,7 @@ val BottomSheetFixedWidthLandscapeScreenshot = VisualRegressionScreenshot(
   name = "bottom-sheet-fixed-width-landscape",
   width = 1024,
   height = 480,
+  backgroundColor = RegressionBackgroundColor,
   content = { BottomSheetFixedWidthLandscapeRegression() },
 )
 
@@ -236,7 +249,7 @@ private fun ComposeUiTest.captureVisualRegressionScreenshot(
     Box(
       modifier = Modifier
         .requiredSize(width = screenshot.width.dp, height = screenshot.height.dp)
-        .background(Color.White)
+        .background(screenshot.backgroundColor)
         .testTag(ScreenshotTargetTag),
       contentAlignment = Alignment.Center,
     ) {

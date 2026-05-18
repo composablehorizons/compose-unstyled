@@ -23,16 +23,12 @@ package com.composeunstyled.visualregressions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -116,9 +112,7 @@ fun BottomSheetExpandedScrollableContentFinalRowRegression() {
     LazyColumn(
       modifier = Modifier
         .fillMaxWidth()
-        .height(260.dp),
-      contentPadding = PaddingValues(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
+        .height(180.dp),
     ) {
       items(2) {
         BottomSheetRow()
@@ -166,14 +160,11 @@ private fun BottomSheetRegressionScaffold(
     ) {
       Sheet(
         modifier = sheetSizeModifier
-          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
+          .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+          .background(Color.White)
+          .border(1.dp, Color(0xFFFFD60A), RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)),
       ) {
-        Box(Modifier.fillMaxWidth()) {
-          content()
-          BottomSheetDragHandle()
-        }
+        content()
       }
     }
   }
@@ -184,11 +175,9 @@ private fun BottomSheetFixedHeightContent() {
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .height(320.dp)
-      .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp),
+      .height(300.dp),
   ) {
-    repeat(4) {
+    repeat(5) {
       BottomSheetRow()
     }
   }
@@ -197,10 +186,7 @@ private fun BottomSheetFixedHeightContent() {
 @Composable
 private fun BottomSheetWrapContent() {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp),
+    modifier = Modifier.fillMaxWidth(),
   ) {
     repeat(3) {
       BottomSheetRow()
@@ -212,8 +198,6 @@ private fun BottomSheetWrapContent() {
 private fun BottomSheetLazyColumnWrapContent() {
   LazyColumn(
     modifier = Modifier.fillMaxWidth(),
-    contentPadding = PaddingValues(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp),
   ) {
     items(3) {
       BottomSheetRow()
@@ -226,27 +210,11 @@ private fun BottomSheetVerticalScrollWrapContent() {
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .verticalScroll(rememberScrollState())
-      .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp),
+      .verticalScroll(rememberScrollState()),
   ) {
     repeat(3) {
       BottomSheetRow()
     }
-  }
-}
-
-@Composable
-private fun BottomSheetDragHandle() {
-  Box(
-    Modifier.fillMaxWidth().padding(top = 22.dp),
-    contentAlignment = Alignment.Center,
-  ) {
-    Box(
-      modifier = Modifier
-        .background(Color(0xFFCACACA), RoundedCornerShape(100))
-        .size(32.dp, 4.dp),
-    )
   }
 }
 
@@ -257,13 +225,12 @@ private fun BottomSheetRow(
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(48.dp)
-      .clip(RoundedCornerShape(8.dp))
-      .background(Color.White)
-      .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(8.dp)),
+      .height(60.dp)
+      .background(Color(0xFFF3F4F6))
+      .border(1.dp, Color(0xFF111827)),
     contentAlignment = Alignment.Center,
     content = content,
   )
 }
 
-private val PeekDetent = SheetDetent("peek") { _, _ -> 220.dp }
+private val PeekDetent = SheetDetent("peek") { _, _ -> 180.dp }
