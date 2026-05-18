@@ -26,7 +26,52 @@ import kotlin.test.Test
 class BottomSheetVisualRegressionTest {
 
   @Test
-  fun scrollableContentMatchesScreenshot() {
-    assertVisualRegressionScreenshotMatches(BottomSheetScrollableContentScreenshot)
+  fun expandedFixedHeightMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetExpandedFixedHeightScreenshot)
+  }
+
+  @Test
+  fun peekFixedHeightMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetPeekFixedHeightScreenshot)
+  }
+
+  @Test
+  fun expandedWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetExpandedWrapContentScreenshot)
+  }
+
+  @Test
+  fun peekWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetPeekWrapContentScreenshot)
+  }
+
+  @Test
+  fun expandedLazyColumnWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetExpandedLazyColumnWrapContentScreenshot)
+  }
+
+  @Test
+  fun peekLazyColumnWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetPeekLazyColumnWrapContentScreenshot)
+  }
+
+  @Test
+  fun expandedVerticalScrollWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetExpandedVerticalScrollWrapContentScreenshot)
+  }
+
+  @Test
+  fun peekVerticalScrollWrapContentMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetPeekVerticalScrollWrapContentScreenshot)
+  }
+
+  @Test
+  fun expandedScrollableContentFinalRowMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetExpandedScrollableContentFinalRowScreenshot)
+  }
+
+  @Test
+  fun fixedWidthLandscapeMatchesScreenshot() {
+    assertVisualRegressionScreenshotMatches(BottomSheetFixedWidthLandscapeScreenshot)
   }
 }
