@@ -82,6 +82,7 @@ kotlin {
         api(projects.composeunstyledAnchoredApi)
         implementation(projects.composeunstyledInternalAnchored)
         implementation(projects.composeunstyledBuildModifier)
+        implementation(projects.composeunstyledEscapeHandler)
         implementation(projects.composeunstyledModal)
       }
     }
