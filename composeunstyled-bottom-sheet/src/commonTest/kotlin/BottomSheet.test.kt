@@ -704,6 +704,58 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun sheet_content_keeps_its_height_while_animating_from_hidden_to_content_height_detent() =
+    runComposeUiTest {
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(Modifier.requiredSize(400.dp)) {
+          state = rememberBottomSheetState(
+            initialDetent = SheetDetent.Hidden,
+            detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+            animationSpec = tween(durationMillis = 300),
+          )
+
+          UnstyledBottomSheet(
+            state,
+            Modifier.fillMaxSize().testTag("sheet"),
+          ) {
+            Box(
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+              contentAlignment = Alignment.TopCenter,
+            ) {
+              Sheet(
+                Modifier
+                  .widthIn(max = 320.dp)
+                  .fillMaxWidth()
+                  .testTag("panel"),
+              ) {
+                Box(
+                  Modifier
+                    .testTag("sheet_contents")
+                    .fillMaxWidth()
+                    .height(80.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+
+      waitForIdle()
+      mainClock.autoAdvance = false
+
+      state.targetDetent = SheetDetent.FullyExpanded
+      mainClock.advanceTimeBy(150)
+
+      onNodeWithTag("panel").assertHeightIsEqualTo(80.dp)
+
+      mainClock.autoAdvance = true
+    }
+
+  @Test
   fun sheet_stops_at_detent_fixed_height_when_target_detent_set_to_detent_with_fixed_height_from_hidden() = runComposeUiTest {
     val customDetent = SheetDetent("fixed") { _, _ -> 40.dp }
 
@@ -1302,6 +1354,76 @@ class BottomSheetCommonTest {
     onNodeWithTag("panel").assertHeightIsEqualTo(400.dp)
 
     onNodeWithTag("sheet").performTouchInput {
+      up()
+    }
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun sheet_content_keeps_its_height_when_drag_reverses_after_moving_toward_hidden() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+        )
+
+        UnstyledBottomSheet(
+          state,
+          Modifier.fillMaxSize().testTag("sheet"),
+        ) {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(16.dp),
+            contentAlignment = Alignment.TopCenter,
+          ) {
+            Sheet(
+              Modifier
+                .widthIn(max = 320.dp)
+                .fillMaxWidth()
+                .testTag("panel"),
+            ) {
+              Box(
+                Modifier
+                  .testTag("sheet_contents")
+                  .fillMaxWidth()
+                  .height(80.dp),
+              )
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("panel").assertHeightIsEqualTo(80.dp)
+    val restingTop = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot.top
+    val restingOffset = state.offset
+
+    mainClock.autoAdvance = false
+    val dragDistance = with(density) { 220.dp.toPx() }
+    val tolerance = with(density) { DensityTolerance.toPx() }
+
+    onNodeWithTag("panel").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y + dragDistance))
+      moveTo(center.copy(y = center.y - dragDistance))
+    }
+    mainClock.advanceTimeByFrame()
+
+    onNodeWithTag("panel").assertHeightIsEqualTo(80.dp)
+    val reversedDragTop = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot.top
+    assertThat(reversedDragTop >= restingTop - tolerance).isTrue()
+    assertThat(state.offset <= restingOffset + tolerance).isTrue()
+    assertThat(state.contentHeightPx).isCloseTo(
+      restingOffset,
+      tolerance,
+    )
+
+    onNodeWithTag("panel").performTouchInput {
       up()
     }
     mainClock.autoAdvance = true

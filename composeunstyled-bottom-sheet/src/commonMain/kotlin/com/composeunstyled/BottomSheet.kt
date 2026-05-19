@@ -404,7 +404,11 @@ class BottomSheetState internal constructor(
       anchoredDraggableState.offset.isNaN().not()
 
     return if (isMovingToDifferentDetent) {
-      currentDetent.dependsOnSheetHeight() && targetDetent.dependsOnSheetHeight()
+      (
+        currentDetent.dependsOnSheetHeight() &&
+          (targetDetent.dependsOnSheetHeight() || targetDetent == SheetDetent.Hidden)
+        ) ||
+        (targetDetent.dependsOnSheetHeight() && currentDetent == SheetDetent.Hidden)
     } else {
       currentDetent.dependsOnSheetHeight()
     }
