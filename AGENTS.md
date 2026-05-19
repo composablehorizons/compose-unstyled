@@ -2,6 +2,8 @@
 
 Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` and `spotlessCheck`, and fix all reported issues before pushing.
 
+Before opening or updating a pull request body, read `.github/pull_request_template.md` and follow its structure.
+
 ## Testing
 
 - Add tests for shared Kotlin/Compose behavior in `commonTest` so they run on both JVM and Android targets. Use platform-specific test source sets only when the behavior is platform-specific.
