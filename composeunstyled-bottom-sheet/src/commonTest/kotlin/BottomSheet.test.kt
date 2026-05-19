@@ -348,6 +348,11 @@ class BottomSheetCommonTest {
     mainClock.advanceTimeBy(50)
 
     assertThat(state.isIdle).isFalse()
+
+    onNodeWithTag("sheet_contents").performTouchInput {
+      up()
+    }
+    mainClock.autoAdvance = true
   }
 
   @Test
@@ -500,6 +505,139 @@ class BottomSheetCommonTest {
       with(density) { 480.dp.toPx() },
       with(density) { DensityTolerance.toPx() },
     )
+  }
+
+  @Test
+  fun percentage_detent_uses_container_height_when_content_is_shorter_than_detent() = runComposeUiTest {
+    mainClock.autoAdvance = true
+
+    val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(
+        Modifier
+          .testTag("root")
+          .requiredSize(400.dp),
+      ) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.Hidden,
+          detents = listOf(SheetDetent.Hidden, peekDetent, SheetDetent.FullyExpanded),
+          animationSpec = tween(durationMillis = 300),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(80.dp)) }
+        }
+      }
+    }
+
+    waitForIdle()
+    mainClock.autoAdvance = false
+
+    state.targetDetent = peekDetent
+    mainClock.advanceTimeBy(1_000)
+
+    val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+    val expectedHeight = rootBounds.height * 0.6f
+
+    assertThat(state.isIdle).isTrue()
+    assertThat(state.currentDetent).isEqualTo(peekDetent)
+    assertThat(state.offset).isCloseTo(
+      expectedHeight,
+      with(density) { DensityTolerance.toPx() },
+    )
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun percentage_detent_without_hidden_uses_container_height_when_content_is_shorter_than_detent() =
+    runComposeUiTest {
+      val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+        containerHeight * 0.6f
+      }
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(
+          Modifier
+            .testTag("root")
+            .requiredSize(400.dp),
+        ) {
+          state = rememberBottomSheetState(
+            initialDetent = peekDetent,
+            detents = listOf(peekDetent, SheetDetent.FullyExpanded),
+          )
+          UnstyledBottomSheet(
+            state = state,
+            modifier = Modifier.fillMaxSize(),
+          ) {
+            Sheet { Box(Modifier.testTag("sheet").size(80.dp)) }
+          }
+        }
+      }
+
+      waitForIdle()
+
+      val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+      val expectedHeight = rootBounds.height * 0.6f
+
+      assertThat(state.currentDetent).isEqualTo(peekDetent)
+      assertThat(state.offset).isCloseTo(
+        expectedHeight,
+        with(density) { DensityTolerance.toPx() },
+      )
+    }
+
+  @Test
+  fun short_content_percentage_detent_can_expand_to_full_and_rest() = runComposeUiTest {
+    mainClock.autoAdvance = true
+
+    val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(
+        Modifier
+          .testTag("root")
+          .requiredSize(400.dp),
+      ) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.Hidden,
+          detents = listOf(SheetDetent.Hidden, peekDetent, SheetDetent.FullyExpanded),
+          animationSpec = tween(durationMillis = 300),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(80.dp)) }
+        }
+      }
+    }
+
+    waitForIdle()
+    mainClock.autoAdvance = false
+
+    state.targetDetent = peekDetent
+    mainClock.advanceTimeBy(1_000)
+
+    assertThat(state.isIdle).isTrue()
+    assertThat(state.currentDetent).isEqualTo(peekDetent)
+
+    state.targetDetent = SheetDetent.FullyExpanded
+    mainClock.advanceTimeBy(1_000)
+
+    assertThat(state.isIdle).isTrue()
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+    assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+    mainClock.autoAdvance = true
   }
 
   @Test
@@ -799,7 +937,7 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun fixed_height_sheet_inside_fill_parent_layout_uses_its_content_height() = runComposeUiTest {
+  fun fixed_height_sheet_inside_fill_parent_layout_uses_container_based_detent_height() = runComposeUiTest {
     val peekDetent = SheetDetent("peek") { containerHeight, _ ->
       containerHeight * 0.6f
     }
@@ -846,7 +984,7 @@ class BottomSheetCommonTest {
     val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
     val panelBounds = onNodeWithTag("panel").fetchSemanticsNode().boundsInRoot
 
-    assertThat(panelBounds.height).isEqualTo(with(density) { 600.dp.toPx() })
+    assertThat(panelBounds.height).isEqualTo(with(density) { 720.dp.toPx() })
     assertThat(panelBounds.bottom).isEqualTo(rootBounds.bottom)
   }
 
@@ -920,7 +1058,7 @@ class BottomSheetCommonTest {
 
     assertThat(counters.measureCalls).isEqualTo(2)
     assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(0)
-    assertThat(counters.detentHeightCalls).isEqualTo(7)
+    assertThat(counters.detentHeightCalls).isEqualTo(11)
 
     counters.reset()
     contentHeight = 250.dp
@@ -1419,6 +1557,11 @@ class BottomSheetCommonTest {
 
     // Target detent should remain the same after invalidation
     assertThat(state.targetDetent).isEqualTo(originalDetent)
+
+    onNodeWithTag("sheet").performTouchInput {
+      up()
+    }
+    mainClock.autoAdvance = true
   }
 
   @Test

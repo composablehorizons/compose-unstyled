@@ -61,5 +61,6 @@ Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` a
 
 ## Git commit etiquette
 
-- Commit messages should describe how the codebase changed, not just the bug that was fixed.
+- Commit messages should describe the behavior that changed, not the implementation details that changed.
+- Fix commits must start with `Fix` and be written in normal English, for example `Fix short bottom sheets entering percentage detents too slowly`.
 - When the reason for the change is not obvious from the title, include a commit body that explains why the change was required.

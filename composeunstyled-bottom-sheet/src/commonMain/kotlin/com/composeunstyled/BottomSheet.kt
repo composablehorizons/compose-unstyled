@@ -89,7 +89,6 @@ import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 private fun Saver(
@@ -277,6 +276,9 @@ class BottomSheetState internal constructor(
   internal var contentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var containerHeightPx: Float by mutableStateOf(Float.NaN)
   private var contentDependentDetents by mutableStateOf(false)
+  private var sheetHeightDependentDetents: Set<SheetDetent> by mutableStateOf(emptySet())
+  private var sheetHeightDependencyContainerHeightPx = Float.NaN
+  private var sheetHeightDependencyDetents: List<SheetDetent> = emptyList()
   private var measuredSheetHeightPx: Float by mutableStateOf(Float.NaN)
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var isDragging: Boolean by mutableStateOf(false)
@@ -345,10 +347,19 @@ class BottomSheetState internal constructor(
       Float.NaN
     } else {
       val currentHeight = anchoredHeightFor(currentDetent)
+      val targetHeight = if (
+        targetDetent != currentDetent &&
+        anchoredDraggableState.offset.isNaN().not()
+      ) {
+        anchoredHeightFor(targetDetent)
+      } else {
+        Float.NaN
+      }
       val offsetHeight = currentOffsetHeight()
 
       maxOrFallback(
         currentHeight,
+        targetHeight,
         offsetHeight,
         fallback = maxDetentHeightPx,
       )
@@ -359,10 +370,19 @@ class BottomSheetState internal constructor(
     if (containerHeightPx.isNaN() || measuredContentHeightPx.isNaN()) return Float.NaN
 
     val currentHeight = detentHeightPx(currentDetent, measuredContentHeightPx)
-    val offsetHeight = currentOffsetHeight().coerceAtMost(measuredContentHeightPx.coerceAtLeast(0f))
+    val targetHeight = if (
+      targetDetent != currentDetent &&
+      anchoredDraggableState.offset.isNaN().not()
+    ) {
+      detentHeightPx(targetDetent, measuredContentHeightPx)
+    } else {
+      Float.NaN
+    }
+    val offsetHeight = currentOffsetHeight()
 
     return maxOrFallback(
       currentHeight,
+      targetHeight,
       offsetHeight,
       fallback = Float.NaN,
     )
@@ -377,6 +397,17 @@ class BottomSheetState internal constructor(
 
   internal fun hasContentDependentDetents(): Boolean {
     return contentDependentDetents
+  }
+
+  internal fun shouldUseContentHeightForLayout(): Boolean {
+    val isMovingToDifferentDetent = targetDetent != currentDetent &&
+      anchoredDraggableState.offset.isNaN().not()
+
+    return if (isMovingToDifferentDetent) {
+      currentDetent.dependsOnSheetHeight() && targetDetent.dependsOnSheetHeight()
+    } else {
+      currentDetent.dependsOnSheetHeight()
+    }
   }
 
   private fun anchoredHeightFor(detent: SheetDetent): Float {
@@ -397,11 +428,31 @@ class BottomSheetState internal constructor(
     }
   }
 
-  private fun detentHeightPx(detent: SheetDetent, sheetHeightPx: Float): Float {
+  private fun detentHeightPx(
+    detent: SheetDetent,
+    sheetHeightPx: Float,
+    dependsOnSheetHeight: Boolean = detent.dependsOnSheetHeight(),
+  ): Float {
     if (containerHeightPx.isNaN()) return Float.NaN
 
     val rawHeight = rawDetentHeightPx(detent, sheetHeightPx)
-    return rawHeight.coerceAtMost(sheetHeightPx.coerceAtLeast(0f))
+    if (dependsOnSheetHeight) {
+      return rawHeight.coerceAtMost(sheetHeightPx.coerceAtLeast(0f))
+    }
+    if (detent != SheetDetent.FullyExpanded) return rawHeight
+
+    val maxDetentHeight = innerDetents
+      .asSequence()
+      .filter { it != SheetDetent.FullyExpanded }
+      .map { rawDetentHeightPx(it, sheetHeightPx) }
+      .filter { it.isNaN().not() }
+      .maxOrNull()
+
+    return if (maxDetentHeight != null && maxDetentHeight > rawHeight) {
+      containerHeightPx
+    } else {
+      rawHeight
+    }
   }
 
   private fun rawDetentHeightPx(detent: SheetDetent, sheetHeightPx: Float): Float {
@@ -413,6 +464,45 @@ class BottomSheetState internal constructor(
       detent.calculateDetentHeight(containerHeight, sheetHeight)
         .coerceIn(0.dp, containerHeight)
         .toPx()
+    }
+  }
+
+  private fun SheetDetent.dependsOnSheetHeight(): Boolean {
+    return sheetHeightDependentDetents.contains(this)
+  }
+
+  private fun SheetDetent.calculateDependsOnSheetHeight(): Boolean {
+    if (containerHeightPx.isNaN()) return false
+
+    val heightAtEmptySheet = rawDetentHeightPx(this, sheetHeightPx = 0f)
+    val heightAtFullSheet = rawDetentHeightPx(this, sheetHeightPx = containerHeightPx)
+    return heightAtEmptySheet != heightAtFullSheet
+  }
+
+  private fun updateSheetHeightDependentDetents() {
+    if (containerHeightPx.isNaN()) {
+      sheetHeightDependencyContainerHeightPx = Float.NaN
+      sheetHeightDependencyDetents = emptyList()
+      if (sheetHeightDependentDetents.isNotEmpty()) {
+        sheetHeightDependentDetents = emptySet()
+      }
+      return
+    }
+
+    if (
+      sheetHeightDependencyContainerHeightPx.isSameValueAs(containerHeightPx) &&
+      sheetHeightDependencyDetents == innerDetents
+    ) {
+      return
+    }
+
+    val nextSheetHeightDependentDetents = innerDetents
+      .filterTo(mutableSetOf()) { detent -> detent.calculateDependsOnSheetHeight() }
+
+    sheetHeightDependencyContainerHeightPx = containerHeightPx
+    sheetHeightDependencyDetents = innerDetents
+    if (sheetHeightDependentDetents != nextSheetHeightDependentDetents) {
+      sheetHeightDependentDetents = nextSheetHeightDependentDetents
     }
   }
 
@@ -482,8 +572,8 @@ class BottomSheetState internal constructor(
   fun invalidateDetents() {
     val density = density()
     val containerHeight = with(density) { containerHeightPx.toDp() }
-    val sheetHeight = with(density) { contentHeightPx.toDp() }
     val hasMeasuredContainer = containerHeightPx.isNaN().not()
+    updateSheetHeightDependentDetents()
     var nextClosestDetentToTopPx = Float.NaN
     var nextMaxDetentHeightPx = Float.NaN
     var nextContentDependentDetents = false
@@ -513,14 +603,16 @@ class BottomSheetState internal constructor(
     val anchors = DraggableAnchors {
       with(density) {
         innerDetents.forEach { detent ->
-          val maxDetentHeight = minOf(containerHeight, sheetHeight)
-          val contentHeight =
-            detent.calculateDetentHeight(containerHeight, sheetHeight)
-              .coerceIn(0.dp, maxDetentHeight)
+          val dependsOnSheetHeight = detent.dependsOnSheetHeight()
+          val detentHeightPx = detentHeightPx(
+            detent = detent,
+            sheetHeightPx = contentHeightPx,
+            dependsOnSheetHeight = dependsOnSheetHeight,
+          )
+          val detentHeight = detentHeightPx.toDp()
 
-          val offsetDp = containerHeight - contentHeight
+          val offsetDp = containerHeight - detentHeight
           val offset = offsetDp.toPx()
-          val detentHeightPx = contentHeight.toPx()
           if (nextClosestDetentToTopPx.isNaN() || nextClosestDetentToTopPx > offset) {
             nextClosestDetentToTopPx = offset
           }
@@ -528,9 +620,7 @@ class BottomSheetState internal constructor(
             nextMaxDetentHeightPx = detentHeightPx
           }
           if (hasMeasuredContainer && nextContentDependentDetents.not()) {
-            val heightAtEmptySheet = rawDetentHeightPx(detent, sheetHeightPx = 0f)
-            val heightAtFullSheet = rawDetentHeightPx(detent, sheetHeightPx = containerHeightPx)
-            nextContentDependentDetents = heightAtEmptySheet != heightAtFullSheet
+            nextContentDependentDetents = dependsOnSheetHeight
           }
           detent at offset
         }
@@ -568,11 +658,13 @@ class BottomSheetState internal constructor(
 private fun maxOrFallback(
   first: Float,
   second: Float,
+  third: Float,
   fallback: Float,
 ): Float {
   var result = Float.NaN
   if (first.isNaN().not()) result = first
   if (second.isNaN().not() && (result.isNaN() || second > result)) result = second
+  if (third.isNaN().not() && (result.isNaN() || third > result)) result = third
   return if (result.isNaN()) fallback else result
 }
 
@@ -763,10 +855,12 @@ fun BottomSheetScope.Sheet(
       placeables.maxOfOrNull { it.width } ?: 0,
     )
     val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
-    val height = min(
-      contentHeight,
-      layoutMaxHeight,
-    ).coerceIn(constraints.minHeight, constraints.maxHeight)
+    val height = when {
+      state == null -> contentHeight
+      state.shouldUseContentHeightForLayout() -> minOf(contentHeight, layoutMaxHeight)
+      constraints.hasBoundedHeight.not() && resolvedLayoutHeight.isNaN() -> contentHeight
+      else -> layoutMaxHeight
+    }.coerceIn(constraints.minHeight, constraints.maxHeight)
 
     val measuredContentHeight = state?.contentHeightPx
       ?.takeIf { previousHeight ->

@@ -136,7 +136,10 @@ fun ModalBottomSheetPeekFixedHeight() {
 
 @Composable
 fun ModalBottomSheetExpandedWrapContent() {
-  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(Hidden, PeekDetent, ContentDetent),
+  ) {
     ModalBottomSheetWrapContent()
   }
 }
@@ -150,7 +153,10 @@ fun ModalBottomSheetPeekWrapContent() {
 
 @Composable
 fun ModalBottomSheetExpandedLazyColumnWrapContent() {
-  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(Hidden, PeekDetent, ContentDetent),
+  ) {
     ModalBottomSheetLazyColumnWrapContent()
   }
 }
@@ -164,7 +170,10 @@ fun ModalBottomSheetPeekLazyColumnWrapContent() {
 
 @Composable
 fun ModalBottomSheetExpandedVerticalScrollWrapContent() {
-  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(Hidden, PeekDetent, ContentDetent),
+  ) {
     ModalBottomSheetVerticalScrollWrapContent()
   }
 }
@@ -178,7 +187,10 @@ fun ModalBottomSheetPeekVerticalScrollWrapContent() {
 
 @Composable
 fun ModalBottomSheetExpandedScrollableContentFinalRow() {
-  ModalBottomSheetScaffold(initialDetent = ExpandedDetent) {
+  ModalBottomSheetScaffold(
+    initialDetent = ContentDetent,
+    detents = listOf(Hidden, PeekDetent, ContentDetent),
+  ) {
     LazyColumn(
       modifier = Modifier
         .fillMaxWidth()
@@ -202,7 +214,8 @@ fun ModalBottomSheetExpandedScrollableContentFinalRow() {
 @Composable
 fun ModalBottomSheetExpandedFixedHeightWithTopPadding() {
   ModalBottomSheetScaffold(
-    initialDetent = ExpandedDetent,
+    initialDetent = FinalRowDetent,
+    detents = listOf(Hidden, FinalRowDetent),
     sheetModifier = Modifier.padding(top = 64.dp),
   ) {
     ModalBottomSheetFinalRowContent()
@@ -411,5 +424,6 @@ private fun ModalBottomSheetRow(
 }
 
 private val PeekDetent = SheetDetent("peek") { _, _ -> 180.dp }
+private val FinalRowDetent = SheetDetent("final-row") { _, _ -> 244.dp }
 private val ExpandedDetent = SheetDetent("expanded") { _, _ -> 300.dp }
 private val ContentDetent = SheetDetent("content") { _, sheetHeight -> sheetHeight }
