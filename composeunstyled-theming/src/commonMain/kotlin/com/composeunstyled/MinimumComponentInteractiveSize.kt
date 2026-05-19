@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
+@file:Suppress("DEPRECATION", "ktlint:standard:max-line-length")
 
 package com.composeunstyled
 
@@ -34,6 +34,9 @@ import com.composeunstyled.theme.supportsTouch
 internal val LocalMinimumComponentInteractiveSize =
   compositionLocalOf { ComponentInteractiveSize(Dp.Unspecified) }
 
+@Deprecated(
+  message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+)
 @Composable
 fun Modifier.minimumInteractiveComponentSize(): Modifier {
   val size = LocalMinimumComponentInteractiveSize.current
