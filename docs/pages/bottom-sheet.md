@@ -156,8 +156,6 @@ LaunchedEffect(peekHeight.value) {
 
 Use a scrollable layout inside the `Sheet` component to make content scroll within the current detent height:
 
-<UnstyledDemo id="bottom-sheet-scrollable-content" />
-
 ### Working with the soft keyboard
 
 Use the `offsetForIme` parameter to automatically move the sheet above the soft keyboard:

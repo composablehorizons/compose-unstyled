@@ -166,8 +166,6 @@ LaunchedEffect(peekHeight) {
 
 Use a scrollable layout inside the `Sheet` component to make content scroll within the current detent height:
 
-<UnstyledDemo id="modal-bottom-sheet-scrollable-content" />
-
 ### Moving a modal bottom sheet above the soft keyboard
 
 Use the `offsetForIme` parameter on `ModalBottomSheetProperties` to automatically move the sheet above the soft keyboard:
