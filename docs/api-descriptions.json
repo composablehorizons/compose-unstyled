@@ -433,6 +433,8 @@
     "editable": "Whether the text field is editable.",
     "TextField.cursorBrush": "The brush to use for the cursor.",
     "cursorBrush": "The brush to use for the cursor.",
+    "TextField.selectionColors": "Colors to use for text selection handles and background. Defaults to unspecified colors.",
+    "selectionColors": "Colors to use for text selection handles and background. Defaults to unspecified colors.",
     "TextField.textStyle": "Style to apply to the text.",
     "textStyle": "Style to apply to the text.",
     "TextField.textAlign": "Alignment of the text.",

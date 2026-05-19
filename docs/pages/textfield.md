@@ -10,7 +10,7 @@ description: A text field component with placeholders, transformations, and text
 - State-based text input
 - Placeholder slot
 - Input and output transformations
-- Text style parameters
+- Text and selection style parameters
 
 ## Installation
 
@@ -88,6 +88,23 @@ UnstyledTextField(
   state = state,
   fontWeight = FontWeight.Medium,
   textColor = Color.Black,
+) {
+  TextInput()
+}
+```
+
+### Styling selected text
+
+By default, selection colors are unspecified. Use the `selectionColors` parameter to set the
+selection handle and background colors:
+
+```kotlin
+UnstyledTextField(
+  state = state,
+  selectionColors = TextSelectionColors(
+    handleColor = Color.Black,
+    backgroundColor = Color.Black.copy(alpha = 0.4f),
+  ),
 ) {
   TextInput()
 }
