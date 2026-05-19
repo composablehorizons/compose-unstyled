@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Themes now default text selection colors to `Color.Unspecified` instead of inheriting parent
   selection styling.
+- Deprecated `minimumInteractiveComponentSize`, `ComponentInteractiveSize`, and
+  `defaultComponentInteractiveSize`. These APIs will be removed in 3.0. It is now up to you to
+  implement this behavior if it is a requirement for your design system.
 
 ## [2.2.0] - 2026-05-18
 

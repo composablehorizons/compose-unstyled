@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
+@file:Suppress("DEPRECATION", "ktlint:standard:max-line-length")
 
 package com.composeunstyled.theme
 
@@ -138,11 +138,17 @@ private val UnspecifiedTextSelectionColors = TextSelectionColors(
 @DslMarker
 annotation class ThemeBuilderMarker
 
+@Deprecated(
+  message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+)
 data class ComponentInteractiveSize(
   val nonTouchInteractionSize: Dp = Dp.Unspecified,
   val touchInteractionSize: Dp = Dp.Unspecified,
 )
 
+@Deprecated(
+  message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+)
 fun ComponentInteractiveSize(size: Dp): ComponentInteractiveSize {
   return ComponentInteractiveSize(size, size)
 }
@@ -156,6 +162,9 @@ class ThemeBuilder internal constructor() {
   var defaultContentColor: Color by mutableStateOf(Color.Unspecified)
   var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
 
+  @Deprecated(
+    message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+  )
   var defaultComponentInteractiveSize: ComponentInteractiveSize by mutableStateOf(
     ComponentInteractiveSize(Dp.Unspecified, Dp.Unspecified),
   )
