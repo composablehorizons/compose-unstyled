@@ -5,7 +5,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   screenshot-tests:
@@ -25,73 +24,3 @@ jobs:
 
       - name: Screenshot Tests
         run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
-
-  report-failure:
-    needs: screenshot-tests
-    if: ${{ always() && needs.screenshot-tests.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Open GitHub issue
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const title = 'Visual regressions are failing';
-            const labels = ['visual-regression-failure'];
-            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-            const results = {
-              'screenshot-tests': '${{ needs.screenshot-tests.result }}',
-            };
-
-            const body = [
-              'Visual regression checks failed.',
-              '',
-              `Workflow run: ${runUrl}`,
-              '',
-              'Job results:',
-              ...Object.entries(results).map(([job, result]) => `- \`${job}\`: ${result}`),
-              '',
-              'Please inspect the failed job logs and update or fix the visual regression baselines.',
-            ].join('\n');
-
-            const { data: existingIssues } = await github.rest.issues.listForRepo({
-              owner,
-              repo,
-              state: 'open',
-              labels: labels.join(','),
-              per_page: 10,
-            });
-            const existingIssue = existingIssues.find(issue => issue.title === title);
-
-            if (existingIssue) {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: existingIssue.number,
-                body,
-              });
-              return;
-            }
-
-            try {
-              await github.rest.issues.createLabel({
-                owner,
-                repo,
-                name: labels[0],
-                color: 'd73a4a',
-                description: 'Visual regression checks are failing.',
-              });
-            } catch (error) {
-              if (error.status !== 422) {
-                throw error;
-              }
-            }
-
-            await github.rest.issues.create({
-              owner,
-              repo,
-              title,
-              body,
-              labels,
-            });
