@@ -71,8 +71,6 @@ Use padding on the `CheckedIndicator` component to place the visible checkbox in
 interaction area. This is useful when the ripple or touch target should be larger than the visible
 checkbox:
 
-<UnstyledDemo id="checkbox-extended-indicator-bounds" />
-
 ### Animating the checked indicator
 
 Use the `enter` and `exit` parameters on `CheckedIndicator` to animate the checked content.
@@ -94,8 +92,6 @@ UnstyledCheckbox(
 ### Creating a custom checked indicator animation
 
 Use the `checked` state value to draw your own indicator instead of `CheckedIndicator`. This is useful when your design system needs a custom checkmark animation:
-
-<UnstyledDemo id="checkbox-custom-checked-indicator" />
 
 ### Labeling an icon-only checkbox
 
