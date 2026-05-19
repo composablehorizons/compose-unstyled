@@ -87,6 +87,11 @@ kotlin {
         implementation(libs.compose.foundation)
       }
     }
+
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+      implementation(libs.assertk)
+    }
   }
 }
 
