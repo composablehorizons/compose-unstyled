@@ -94,7 +94,7 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
     val allProperties = builder.properties.entries
 
     val defaultIndication = builder.defaultIndication ?: NoIndication
-    val textSelectionColors = builder.defaultTextSelectionColors ?: LocalTextSelectionColors.current
+    val textSelectionColors = builder.defaultTextSelectionColors ?: UnspecifiedTextSelectionColors
 
     val minInteractiveSize = builder.defaultComponentInteractiveSize
 
@@ -129,6 +129,11 @@ internal val LocalTheme =
       "No theme was set. In order to use the Theme object you need to wrap your content with a theme @Composable returned by the buildTheme {} function.",
     )
   }
+
+private val UnspecifiedTextSelectionColors = TextSelectionColors(
+  handleColor = Color.Unspecified,
+  backgroundColor = Color.Unspecified,
+)
 
 @DslMarker
 annotation class ThemeBuilderMarker

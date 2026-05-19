@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a `selectionColors` parameter to `UnstyledTextField` for styling text selection handles and
   background. (#374)
 
+### Changed
+
+- Themes now default text selection colors to `Color.Unspecified` instead of inheriting parent
+  selection styling.
+
 ## [2.2.0] - 2026-05-18
 
 ### Added
