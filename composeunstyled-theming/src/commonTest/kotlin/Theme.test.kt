@@ -21,16 +21,23 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.composeunstyled.theme.NoIndication
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -106,6 +113,46 @@ class ThemeCommonTest {
     onNodeWithText("Hello").assertExists()
     waitForIdle()
     assertThat(themedContentRecompositions).isEqualTo(1)
+  }
+
+  @Test
+  fun themeDefaultsToNoIndicationWhenParentProvidesIndication() = runComposeUiTest {
+    val parentIndication = object : Indication {}
+    var currentIndication: Indication = parentIndication
+    val testTheme = buildTheme()
+
+    setContent {
+      CompositionLocalProvider(LocalIndication provides parentIndication) {
+        testTheme {
+          currentIndication = LocalIndication.current
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(currentIndication).isEqualTo(NoIndication)
+  }
+
+  @Test
+  fun themeDefaultsToUnspecifiedTextSelectionColorsWhenParentProvidesColors() = runComposeUiTest {
+    val parentSelectionColors = TextSelectionColors(
+      handleColor = Color.Red,
+      backgroundColor = Color.Blue,
+    )
+    var currentSelectionColors = parentSelectionColors
+    val testTheme = buildTheme()
+
+    setContent {
+      CompositionLocalProvider(LocalTextSelectionColors provides parentSelectionColors) {
+        testTheme {
+          currentSelectionColors = LocalTextSelectionColors.current
+        }
+      }
+    }
+
+    waitForIdle()
+    assertThat(currentSelectionColors.handleColor).isEqualTo(Color.Unspecified)
+    assertThat(currentSelectionColors.backgroundColor).isEqualTo(Color.Unspecified)
   }
 
   val strings = ThemeProperty<String>("strings")
