@@ -1,5 +1,5 @@
 [versions]
-unstyled = "2.2.0"
+unstyled = "2.3.0"
 
 kotlin = "2.3.20"
 compose = "1.11.0-alpha01"
