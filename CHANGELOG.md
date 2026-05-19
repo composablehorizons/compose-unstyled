@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-05-19
+
 ### Added
 
 - Added a `selectionColors` parameter to `UnstyledTextField` for styling text selection handles and
@@ -14,11 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Themes now default text selection colors to `Color.Unspecified` instead of inheriting parent
-  selection styling.
+- `buildTheme {}` now creates a theme without styling by default. It removes Compose Foundation's
+  default styling, such as indication and text selection colors.
 - Deprecated `minimumInteractiveComponentSize`, `ComponentInteractiveSize`, and
-  `defaultComponentInteractiveSize`. These APIs will be removed in 3.0. It is now up to you to
-  implement this behavior if it is a requirement for your design system.
+  `defaultComponentInteractiveSize`. This is now your responsibility to implement if your design
+  system requires such functionality.
+
+### Fixed
+
+- Fixed short bottom sheets animating into percentage detents too slowly.
+- Fixed content-height bottom sheets changing height while transitioning to or from the hidden
+  detent.
+- Fixed offset outlines preserving the wrong rounded corner geometry when drawn outside a component.
 
 ## [2.2.0] - 2026-05-18
 
