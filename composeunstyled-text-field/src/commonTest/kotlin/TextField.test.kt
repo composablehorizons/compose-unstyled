@@ -33,11 +33,15 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
@@ -177,6 +181,60 @@ class TextFieldTest {
     }
 
     onNodeWithText("secret", useUnmergedTree = true).assertTextEquals("secret")
+  }
+
+  @Test
+  fun providesSelectionColorsToTextInputContent() = runComposeUiTest {
+    val selectionColors = TextSelectionColors(
+      handleColor = Color.Red,
+      backgroundColor = Color.Blue,
+    )
+    var providedSelectionColors: TextSelectionColors? = null
+
+    setContent {
+      UnstyledTextField(
+        state = rememberTextFieldState(),
+        selectionColors = selectionColors,
+      ) {
+        providedSelectionColors = LocalTextSelectionColors.current
+        TextInput()
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(providedSelectionColors).isEqualTo(selectionColors)
+  }
+
+  @Test
+  fun usesUnspecifiedSelectionColorsByDefault() = runComposeUiTest {
+    val parentSelectionColors = TextSelectionColors(
+      handleColor = Color.Red,
+      backgroundColor = Color.Blue,
+    )
+    var providedSelectionColors: TextSelectionColors? = null
+
+    setContent {
+      CompositionLocalProvider(
+        LocalTextSelectionColors provides parentSelectionColors,
+      ) {
+        UnstyledTextField(
+          state = rememberTextFieldState(),
+        ) {
+          providedSelectionColors = LocalTextSelectionColors.current
+          TextInput()
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(providedSelectionColors).isEqualTo(
+      TextSelectionColors(
+        handleColor = Color.Unspecified,
+        backgroundColor = Color.Unspecified,
+      ),
+    )
   }
 
   @Test

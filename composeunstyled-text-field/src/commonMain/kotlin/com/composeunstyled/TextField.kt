@@ -32,7 +32,10 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -99,6 +102,10 @@ fun UnstyledTextField(
   accessibilityLabel: String? = null,
   readOnly: Boolean = false,
   cursorBrush: Brush = SolidColor(Color.Unspecified),
+  selectionColors: TextSelectionColors = TextSelectionColors(
+    handleColor = Color.Unspecified,
+    backgroundColor = Color.Unspecified,
+  ),
   textStyle: TextStyle = TextStyle.Default,
   textAlign: TextAlign = TextAlign.Unspecified,
   lineHeight: TextUnit = TextUnit.Unspecified,
@@ -135,32 +142,34 @@ fun UnstyledTextField(
   )
   scope.textAlignment = newTextStyle.textAlign
 
-  key(lineLimits) {
-    BasicTextField(
-      scrollState = scrollState,
-      state = state,
-      interactionSource = interactionSource,
-      textStyle = newTextStyle,
-      enabled = enabled,
-      readOnly = readOnly,
-      outputTransformation = outputTransformation,
-      inputTransformation = inputTransformation,
-      modifier = modifier then buildModifier {
-        add(Modifier.semantics(mergeDescendants = true) {})
-        if (accessibilityLabel != null) {
-          add(Modifier.semantics { contentDescription = accessibilityLabel })
-        }
-      },
-      cursorBrush = cursorBrush,
-      lineLimits = lineLimits,
-      onTextLayout = onTextLayout,
-      keyboardOptions = keyboardOptions,
-      onKeyboardAction = onKeyboardAction,
-      decorator = { innerTextField ->
-        scope.innerTextField = innerTextField
-        scope.content()
-      },
-    )
+  CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
+    key(lineLimits) {
+      BasicTextField(
+        scrollState = scrollState,
+        state = state,
+        interactionSource = interactionSource,
+        textStyle = newTextStyle,
+        enabled = enabled,
+        readOnly = readOnly,
+        outputTransformation = outputTransformation,
+        inputTransformation = inputTransformation,
+        modifier = modifier then buildModifier {
+          add(Modifier.semantics(mergeDescendants = true) {})
+          if (accessibilityLabel != null) {
+            add(Modifier.semantics { contentDescription = accessibilityLabel })
+          }
+        },
+        cursorBrush = cursorBrush,
+        lineLimits = lineLimits,
+        onTextLayout = onTextLayout,
+        keyboardOptions = keyboardOptions,
+        onKeyboardAction = onKeyboardAction,
+        decorator = { innerTextField ->
+          scope.innerTextField = innerTextField
+          scope.content()
+        },
+      )
+    }
   }
 }
 
