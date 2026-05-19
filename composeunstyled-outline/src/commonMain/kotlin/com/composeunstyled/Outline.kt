@@ -49,81 +49,97 @@ fun Modifier.outline(
       }
 
       is Outline.Rectangle -> {
-        val inset = -offset.toPx()
+        val geometry = calculateOutlineRectGeometry(
+          rect = Rect(0f, 0f, size.width, size.height),
+          strokeWidth = strokeWidth,
+          offset = offset.toPx(),
+        )
 
         val path = Path().apply {
-          addRect(
-            Rect(
-              left = inset - strokeWidth,
-              top = inset - strokeWidth,
-              right = size.width - inset + strokeWidth,
-              bottom = size.height - inset + strokeWidth,
-            ),
-          )
+          addRect(geometry.outer)
           fillType = PathFillType.EvenOdd
-          addRect(
-            Rect(
-              left = inset,
-              top = inset,
-              right = size.width - inset,
-              bottom = size.height - inset,
-            ),
-          )
+          addRect(geometry.inner)
         }
 
         drawPath(path, color)
       }
 
       is Outline.Rounded -> {
-        val inset = -offset.toPx()
-        val roundRect = outline.roundRect
-
-        val topLeftRadius = roundRect.topLeftCornerRadius.x
-        val topRightRadius = roundRect.topRightCornerRadius.x
-        val bottomRightRadius = roundRect.bottomRightCornerRadius.x
-        val bottomLeftRadius = roundRect.bottomLeftCornerRadius.y
-
-        val topLeftOutlineRadius = topLeftRadius + strokeWidth
-        val topRightOutlineRadius = topRightRadius + strokeWidth
-        val bottomRightOutlineRadius = bottomRightRadius + strokeWidth
-        val bottomLeftOutlineRadius = bottomLeftRadius + strokeWidth
+        val geometry = calculateOutlineRoundRectGeometry(
+          roundRect = outline.roundRect,
+          strokeWidth = strokeWidth,
+          offset = offset.toPx(),
+        )
 
         val path = Path().apply {
-          addRoundRect(
-            RoundRect(
-              left = inset - strokeWidth,
-              top = inset - strokeWidth,
-              right = size.width - inset + strokeWidth,
-              bottom = size.height - inset + strokeWidth,
-              topLeftCornerRadius = CornerRadius(topLeftOutlineRadius, topLeftOutlineRadius),
-              topRightCornerRadius = CornerRadius(topRightOutlineRadius, topRightOutlineRadius),
-              bottomRightCornerRadius = CornerRadius(
-                bottomRightOutlineRadius,
-                bottomRightOutlineRadius,
-              ),
-              bottomLeftCornerRadius = CornerRadius(
-                bottomLeftOutlineRadius,
-                bottomLeftOutlineRadius,
-              ),
-            ),
-          )
+          addRoundRect(geometry.outer)
           fillType = PathFillType.EvenOdd
-          addRoundRect(
-            RoundRect(
-              left = inset,
-              top = inset,
-              right = size.width - inset,
-              bottom = size.height - inset,
-              topLeftCornerRadius = CornerRadius(topLeftRadius, topLeftRadius),
-              topRightCornerRadius = CornerRadius(topRightRadius, topRightRadius),
-              bottomRightCornerRadius = CornerRadius(bottomRightRadius, bottomRightRadius),
-              bottomLeftCornerRadius = CornerRadius(bottomLeftRadius, bottomLeftRadius),
-            ),
-          )
+          addRoundRect(geometry.inner)
         }
 
         drawPath(path, color)
       }
     }
   }
+}
+
+internal data class OutlineRectGeometry(
+  val inner: Rect,
+  val outer: Rect,
+)
+
+internal data class OutlineRoundRectGeometry(
+  val inner: RoundRect,
+  val outer: RoundRect,
+)
+
+internal fun calculateOutlineRectGeometry(
+  rect: Rect,
+  strokeWidth: Float,
+  offset: Float,
+): OutlineRectGeometry {
+  return OutlineRectGeometry(
+    inner = rect.inflate(offset),
+    outer = rect.inflate(offset + strokeWidth),
+  )
+}
+
+internal fun calculateOutlineRoundRectGeometry(
+  roundRect: RoundRect,
+  strokeWidth: Float,
+  offset: Float,
+): OutlineRoundRectGeometry {
+  return OutlineRoundRectGeometry(
+    inner = roundRect.inflate(offset),
+    outer = roundRect.inflate(offset + strokeWidth),
+  )
+}
+
+private fun Rect.inflate(amount: Float): Rect {
+  return Rect(
+    left = left - amount,
+    top = top - amount,
+    right = right + amount,
+    bottom = bottom + amount,
+  )
+}
+
+private fun RoundRect.inflate(amount: Float): RoundRect {
+  return RoundRect(
+    left = left - amount,
+    top = top - amount,
+    right = right + amount,
+    bottom = bottom + amount,
+    topLeftCornerRadius = topLeftCornerRadius.inflate(amount),
+    topRightCornerRadius = topRightCornerRadius.inflate(amount),
+    bottomRightCornerRadius = bottomRightCornerRadius.inflate(amount),
+    bottomLeftCornerRadius = bottomLeftCornerRadius.inflate(amount),
+  )
+}
+
+private fun CornerRadius.inflate(amount: Float): CornerRadius {
+  return CornerRadius(
+    x = (x + amount).coerceAtLeast(0f),
+    y = (y + amount).coerceAtLeast(0f),
+  )
 }
