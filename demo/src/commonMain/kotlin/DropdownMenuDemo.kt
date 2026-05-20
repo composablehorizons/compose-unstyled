@@ -31,7 +31,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -109,47 +108,44 @@ fun DropdownMenuDemo() {
         ) +
           fadeOut(tween(durationMillis = 75)),
       ) {
-        Column {
-          options.forEachIndexed { index, option ->
-            if (index == 1 || index == options.lastIndex) {
-              UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
-            }
-            MenuItem(
-              onClick = {},
-              enabled = option.enabled,
+        options.forEachIndexed { index, option ->
+          if (index == 1 || index == options.lastIndex) {
+            UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
+          }
+          MenuItem(
+            onClick = {},
+            enabled = option.enabled,
+            modifier = Modifier
+              .padding(4.dp)
+              .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+              .clip(RoundedCornerShape(8.dp))
+              .fillMaxWidth(),
+          ) {
+            Row(
               modifier = Modifier
-                .padding(4.dp)
-                .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .fillMaxWidth(),
-              indication = LocalIndication.current,
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+              horizontalArrangement = Arrangement.Start,
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 8.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-              ) {
-                val contentColor = (
-                  if (option.dangerous) {
-                    Color(0xFFDC2626)
-                  } else {
-                    LocalContentColor.current
-                  }
-                  ).copy(alpha = if (option.enabled) 1f else 0.5f)
+              val contentColor = (
+                if (option.dangerous) {
+                  Color(0xFFDC2626)
+                } else {
+                  LocalContentColor.current
+                }
+                ).copy(alpha = if (option.enabled) 1f else 0.5f)
 
-                UnstyledIcon(
-                  imageVector = option.icon,
-                  contentDescription = null,
-                  tint = contentColor,
-                )
-                Spacer(Modifier.width(12.dp))
-                BasicText(
-                  text = option.text,
-                  style = TextStyle(color = contentColor),
-                )
-              }
+              UnstyledIcon(
+                imageVector = option.icon,
+                contentDescription = null,
+                tint = contentColor,
+              )
+              Spacer(Modifier.width(12.dp))
+              BasicText(
+                text = option.text,
+                style = TextStyle(color = contentColor),
+              )
             }
           }
         }

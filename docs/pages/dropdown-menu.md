@@ -40,8 +40,8 @@ UnstyledDropdownMenu(
 - `UnstyledDropdownMenu` marks the anchor area and renders the floating menu when expanded.
   - The `anchor` slot renders the content the menu is positioned against.
   - The `panel` slot renders the floating menu content.
-- `DropdownMenuPanel` renders the menu surface.
-- `MenuItem` renders an item inside `DropdownMenuPanel`.
+- `DropdownMenuPanel` renders the menu surface and arranges direct children vertically.
+- `MenuItem` renders a focusable item inside `DropdownMenuPanel`. Use direct `MenuItem` children for managed keyboard navigation. Custom nested layouts can be rendered inside the panel, but nested items are not part of the panel-managed menu order.
 
 ## Accessibility
 
