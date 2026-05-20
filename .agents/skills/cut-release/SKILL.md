@@ -1,6 +1,6 @@
 ---
 name: cut-release
-description: Prepare and cut a Compose Unstyled release from this repository by finalizing CHANGELOG.md, bumping gradle/libs.versions.toml, committing the release, tagging it, pushing the tag, and confirming the GitHub Release workflow/draft release. Use when asked to prepare, cut, ship, publish, or tag a release for Compose Unstyled.
+description: Prepare and cut a Compose Unstyled release from this repository by finalizing CHANGELOG.md, bumping gradle/libs.versions.toml, opening a release PR, tagging the merged commit, pushing the tag, and confirming the GitHub Release workflow/draft release. Use when asked to prepare, cut, ship, publish, or tag a release for Compose Unstyled.
 ---
 
 # Cut Release
@@ -31,7 +31,7 @@ Use this skill only in `/Users/alexstyl/projects/composeunstyled.com`.
    ```
 4. Decide the next SemVer version from the user request and changelog contents. Ask if ambiguous.
 
-## Prepare Release Commit
+## Prepare Release PR
 
 1. Move `CHANGELOG.md` Unreleased entries into a dated heading:
    ```markdown
@@ -45,33 +45,42 @@ Use this skill only in `/Users/alexstyl/projects/composeunstyled.com`.
 3. Validate the changelog section exactly matches the release workflow parser:
    - The heading must be `## [x.y.z] - YYYY-MM-DD`.
    - The tag must be `x.y.z`.
-4. Run required release checks before committing:
+4. Do not run tests during this final release PR/tag flow unless the user explicitly asks. The release PR and tag workflows provide the verification.
+5. Commit on a release branch:
    ```bash
-   ./gradlew jvmTest spotlessCheck
-   ```
-   If Kotlin or UI behavior changed as part of release prep, also run the touched behavior tests required by `AGENTS.md`.
-5. Commit:
-   ```bash
+   git switch -c release/x.y.z
    git add CHANGELOG.md gradle/libs.versions.toml
    git commit -m "Release x.y.z"
    ```
+6. Push the branch and open a PR into `main`:
+   ```bash
+   git push -u origin release/x.y.z
+   gh pr create --base main --head release/x.y.z --title "Release x.y.z"
+   ```
+   Before opening the PR body, read `.github/pull_request_template.md` and follow its structure.
+7. If the user asks to launch the PR, open the PR URL in the browser.
 
 ## Tag And Push
 
-1. Create the tag on the release commit:
+1. After the release PR is merged, sync `main`:
+   ```bash
+   git switch main
+   git pull --ff-only origin main
+   git fetch --tags origin
+   ```
+2. Create the tag on the merge commit:
    ```bash
    git tag x.y.z
    ```
-2. Push the branch first, then the tag:
+3. Push the tag:
    ```bash
-   git push origin main
    git push origin x.y.z
    ```
-3. If the workflow must be rerun manually, use the `Release` workflow with input `tag = x.y.z`.
+4. If the workflow must be rerun manually, use the `Release` workflow with input `tag = x.y.z`.
 
 ## Do Not
 
 - Do not invent release dates for future releases; use the current local date when cutting.
 - Do not use `v`-prefixed tags unless the repository changes its tag convention.
 - Do not push a release tag before `CHANGELOG.md` has a matching version heading.
-- Do not skip `jvmTest` and `spotlessCheck` for a release commit.
+- Do not push directly to `main`; use a release PR.
