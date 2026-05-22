@@ -279,6 +279,7 @@ class BottomSheetState internal constructor(
   private var sheetHeightDependentDetents: Set<SheetDetent> by mutableStateOf(emptySet())
   private var sheetHeightDependencyContainerHeightPx = Float.NaN
   private var sheetHeightDependencyDetents: List<SheetDetent> = emptyList()
+  private var measuredContentHeightPx = Float.NaN
   private var measuredSheetHeightPx: Float by mutableStateOf(Float.NaN)
   internal var maxDetentHeightPx: Float by mutableStateOf(Float.NaN)
   internal var isDragging: Boolean by mutableStateOf(false)
@@ -525,8 +526,11 @@ class BottomSheetState internal constructor(
   }
 
   internal fun updateContentHeight(measuredHeightPx: Float, includeMeasuredSheetHeight: Boolean) {
+    val measuredContentHeightShrank = measuredContentHeightPx.isNaN().not() &&
+      measuredHeightPx < measuredContentHeightPx
+    measuredContentHeightPx = measuredHeightPx
     val shouldIncludeMeasuredSheetHeight = includeMeasuredSheetHeight ||
-      measuredSheetHeightPx < containerHeightPx
+      (measuredContentHeightShrank.not() && measuredSheetHeightPx < containerHeightPx)
     val measuredSheetHeight = if (shouldIncludeMeasuredSheetHeight) {
       measuredSheetHeightPx.takeUnless { it.isNaN() } ?: 0f
     } else {
