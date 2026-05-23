@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-05-23
+
+### Added
+
+- Added a `composeunstyled` module with all primitives and theming APIs, so you can build design
+  systems with a single dependency.
+
+### Changed
+
+- Rewrote `DropdownMenu` keyboard navigation so direct `MenuItem` children inside
+  `DropdownMenuPanel` are focused in placement order. You can still use custom layouts inside the
+  panel, but nested menu items are not part of the guaranteed focus order.
+
+### Fixed
+
+- Bottom Sheets now animate content size changes smoothly without dropping frames.
+- Dropdown menus no longer wait for their enter animation to finish before applying indication to
+  the focused item.
+- Pointer-opened dropdown menus now reliably support arrow, Home, End, Tab, and Shift+Tab keyboard
+  navigation.
+- Bottom sheets now stay attached to the bottom of the container on lower-powered devices while
+  content shrinks during a detent animation.
+
 ## [2.3.0] - 2026-05-19
 
 ### Added
