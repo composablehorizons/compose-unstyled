@@ -400,7 +400,19 @@ class BottomSheetState internal constructor(
     return contentDependentDetents
   }
 
-  internal fun shouldUseContentHeightForLayout(): Boolean {
+  internal fun shouldUseContentHeightForLayout(measuredContentHeightPx: Float): Boolean {
+    val contentHeightIsChanging = this.measuredContentHeightPx.isNaN().not() &&
+      this.measuredContentHeightPx.isSameValueAs(measuredContentHeightPx).not()
+    val offsetHeight = currentOffsetHeight()
+    if (
+      contentHeightIsChanging &&
+      offsetHeight.isNaN().not() &&
+      (isDragging || isIdle.not()) &&
+      offsetHeight > measuredContentHeightPx
+    ) {
+      return false
+    }
+
     val isMovingToDifferentDetent = targetDetent != currentDetent &&
       anchoredDraggableState.offset.isNaN().not()
 
@@ -430,6 +442,14 @@ class BottomSheetState internal constructor(
       Float.NaN
     } else {
       (containerHeightPx - offset).coerceAtLeast(0f)
+    }
+  }
+
+  internal fun bottomAlignedOffsetPx(): Float {
+    return if (containerHeightPx.isNaN() || measuredSheetHeightPx.isNaN()) {
+      Float.NaN
+    } else {
+      (containerHeightPx - measuredSheetHeightPx).coerceAtLeast(0f)
     }
   }
 
@@ -522,7 +542,6 @@ class BottomSheetState internal constructor(
     if (measuredSheetHeightPx.isSameValueAs(measuredHeightPx)) return
 
     measuredSheetHeightPx = measuredHeightPx
-    invalidateDetents()
   }
 
   internal fun updateContentHeight(measuredHeightPx: Float, includeMeasuredSheetHeight: Boolean) {
@@ -865,7 +884,9 @@ fun BottomSheetScope.Sheet(
     val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
     val height = when {
       state == null -> contentHeight
-      state.shouldUseContentHeightForLayout() -> minOf(contentHeight, layoutMaxHeight)
+      state.shouldUseContentHeightForLayout(
+        contentHeight.toFloat(),
+      ) -> minOf(contentHeight, layoutMaxHeight)
       constraints.hasBoundedHeight.not() && resolvedLayoutHeight.isNaN() -> contentHeight
       else -> layoutMaxHeight
     }.coerceIn(constraints.minHeight, constraints.maxHeight)
@@ -917,7 +938,13 @@ private fun Modifier.sheetOffset(state: BottomSheetState, offsetForIme: Boolean)
           }
 
           else -> {
-            val calculatedOffset = state.anchoredDraggableState.visualOffset() - imeHeight
+            val visualOffset = state.anchoredDraggableState.visualOffset()
+            val calculatedOffset = maxOrFallback(
+              visualOffset,
+              state.bottomAlignedOffsetPx(),
+              Float.NaN,
+              fallback = visualOffset,
+            ) - imeHeight
             // do not let the sheet's top go out of screen bounds
             val y = calculatedOffset.coerceAtLeast(0f).toInt()
             IntOffset(x = 0, y = y)
