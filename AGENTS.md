@@ -1,6 +1,6 @@
 ## PR instructions
 
-Before pushing changes that touch Kotlin (`.kt`) files, you must run `jvmTest` and `spotlessCheck`, and fix all reported issues before pushing.
+Before opening or updating a pull request with changes that touch Kotlin (`.kt`) files, you must run `jvmTest` and `spotlessCheck`, and fix all reported issues before pushing. Do not run Spotless during local iteration unless the user explicitly asks for it.
 
 Before opening or updating a pull request body, read `.github/pull_request_template.md` and follow its structure.
 
