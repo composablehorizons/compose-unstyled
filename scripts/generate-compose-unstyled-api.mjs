@@ -18,6 +18,12 @@ const apiReferences = {
       fn('DragIndication', 'BottomSheetScope.DragIndication'),
     ]),
   ],
+  breakpoints: [
+    source('composeunstyled-breakpoints/src/commonMain/kotlin/com/composeunstyled/Breakpoints.kt', [
+      cls('Breakpoint'),
+      fn('ProvideBreakpoints'),
+    ]),
+  ],
   'modal-bottom-sheet': [
     source('composeunstyled-modal-bottom-sheet/src/commonMain/kotlin/com/composeunstyled/ModalBottomSheet.kt', [
       fn('rememberModalBottomSheetState'),

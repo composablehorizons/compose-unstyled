@@ -25,7 +25,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
   alias(libs.plugins.compose)
@@ -39,11 +38,11 @@ val publishGroupId = "com.composables"
 val publishVersion = rootProject.extra["publishVersion"] as String
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
-val pomArtifactId = "composeunstyled-stack"
-val pomName = "Compose Unstyled Stack"
-val pomDescription = "Stack layout component primitive for Jetpack Compose."
-val frameworkBaseName = "ComposeUnstyledStack"
-val androidNamespace = "com.composeunstyled.stack"
+val pomArtifactId = "composeunstyled-breakpoints"
+val pomName = "Compose Unstyled Breakpoints"
+val pomDescription = "Screen breakpoint utility for Compose Unstyled."
+val frameworkBaseName = "ComposeUnstyledBreakpoints"
+val androidNamespace = "com.composeunstyled.breakpoints"
 
 java {
   toolchain {
@@ -52,16 +51,11 @@ java {
 }
 
 kotlin {
-  compilerOptions {
-    optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
-    freeCompilerArgs.add("-Xcontext-parameters")
-  }
   androidTarget {
     publishLibraryVariants("release", "debug")
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
-    instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
   }
 
   jvm()
@@ -82,33 +76,24 @@ kotlin {
   }
 
   sourceSets {
-    val commonMain by getting {
-      dependencies {
-        api(libs.androidx.annotation)
-        implementation(libs.compose.foundation)
-      }
-    }
-
-    androidInstrumentedTest.dependencies {
-      implementation(libs.androidx.compose.test)
-      implementation(libs.androidx.compose.test.manifest)
-      implementation(libs.androidx.espresso)
+    commonMain.dependencies {
+      implementation(libs.compose.foundation)
+      implementation(projects.composeunstyledWindowContainerSize)
     }
 
     commonTest.dependencies {
       implementation(kotlin("test"))
       implementation(libs.assertk)
-
-      @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-      implementation(libs.compose.ui.test)
     }
 
-    val jvmTest by getting
-
-    jvmTest.dependencies {
-      implementation(libs.compose.ui.test.junit4)
-      implementation(compose.desktop.currentOs) {
-        exclude(group = "org.jetbrains.compose.material", module = "material")
+    applyDefaultHierarchyTemplate {
+      common {
+        group("nonAndroid") {
+          withJvm()
+          withIos()
+          withWasmJs()
+          withJs()
+        }
       }
     }
   }
@@ -119,7 +104,6 @@ android {
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 }
 

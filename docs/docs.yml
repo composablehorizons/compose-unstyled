@@ -77,6 +77,8 @@ sections:
         slug: outline
   - title: Utilities
     pages:
+      - title: Breakpoints
+        slug: breakpoints
       - title: buildModifier
         slug: buildModifier
       - title: Escape Handler

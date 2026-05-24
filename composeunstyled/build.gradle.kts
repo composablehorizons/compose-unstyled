@@ -34,7 +34,7 @@ plugins {
 }
 
 val publishGroupId = "com.composables"
-val publishVersion = libs.versions.unstyled.get()
+val publishVersion = rootProject.extra["publishVersion"] as String
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
 
@@ -74,6 +74,7 @@ kotlin {
     commonMain.dependencies {
       api(projects.composeunstyledTheming)
       api(projects.composeunstyledAnchoredApi)
+      api(projects.composeunstyledBreakpoints)
       api(projects.composeunstyledBottomSheet)
       api(projects.composeunstyledButton)
       api(projects.composeunstyledCheckbox)
