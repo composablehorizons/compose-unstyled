@@ -11,6 +11,12 @@ val composeUnstyledDocsSource = layout.projectDirectory.dir("docs")
 val generatedComposeUnstyledDocsPages = layout.buildDirectory.dir("generated/compose-unstyled-docs/pages")
 val generatedComposeUnstyledDemoSources = layout.buildDirectory.dir("generated/compose-unstyled-docs/demo-sources")
 val composeUnstyledDocsAssets = composeUnstyledDocsSource.dir("assets")
+val composeUnstyledPublishVersion = providers
+  .gradleProperty("publishVersion")
+  .orElse(libs.versions.unstyled)
+  .get()
+
+extra["publishVersion"] = composeUnstyledPublishVersion
 
 val composeUnstyledDemoSources = mapOf(
   "bottom-sheet" to "BottomSheetDemo.kt",
