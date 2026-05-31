@@ -39,7 +39,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isTrue
+import assertk.assertions.isLessThanOrEqualTo
 import assertk.fail
 import com.composeunstyled.demo.Demo
 import java.awt.image.BufferedImage
@@ -110,10 +110,10 @@ fun assertVisualRegressionScreenshotMatches(
   assertThat(actual.height).isEqualTo(expected.height)
 
   val diff = diff(expected, actual)
-  if (diff.changedPixels > 0) {
+  if (diff.changedPixels > AllowedChangedPixels) {
     ImageIO.write(diff.image, "png", File(reportDir, "${screenshot.name}.diff.png"))
   }
-  assertThat(diff.changedPixels == 0).isTrue()
+  assertThat(diff.changedPixels).isLessThanOrEqualTo(AllowedChangedPixels)
 }
 
 @OptIn(ExperimentalTestApi::class)
@@ -176,3 +176,6 @@ private data class ScreenshotDiff(
 
 private const val ScreenshotTargetTag = "screenshot-target"
 private const val DiffColor = 0xFFFF00FF.toInt()
+
+// Allows tiny renderer drift between local and CI machines without hiding real layout changes.
+private const val AllowedChangedPixels = 20
