@@ -115,6 +115,7 @@ fun DropdownMenuDemo() {
           MenuItem(
             onClick = {},
             enabled = option.enabled,
+            indication = LocalIndication.current,
             modifier = Modifier
               .padding(4.dp)
               .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
