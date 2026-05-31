@@ -150,6 +150,7 @@ private val themingDemos = listOf(
 )
 
 private val utilityDemos = listOf(
+  DemoItem("Breakpoints", "breakpoints", { BreakpointsDemo() }),
   DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
 )
 

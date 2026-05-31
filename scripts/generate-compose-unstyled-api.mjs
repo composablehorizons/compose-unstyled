@@ -18,6 +18,23 @@ const apiReferences = {
       fn('DragIndication', 'BottomSheetScope.DragIndication'),
     ]),
   ],
+  breakpoints: [
+    source('composeunstyled-breakpoints/src/commonMain/kotlin/com/composeunstyled/Breakpoints.kt', [
+      cls('WidthBreakpoint'),
+      cls('HeightBreakpoint'),
+      cls('WindowWidthBreakpoints'),
+      fn('WindowWidthBreakpoints'),
+      cls('WindowHeightBreakpoints'),
+      fn('WindowHeightBreakpoints'),
+      cls('ResolvedWidthBreakpoint'),
+      cls('ResolvedHeightBreakpoint'),
+      fn('ProvideWindowBreakpoints'),
+      fn('ProvideWindowWidthBreakpoints'),
+      fn('ProvideWindowHeightBreakpoints'),
+      fn('currentWindowWidthBreakpoint'),
+      fn('currentWindowHeightBreakpoint'),
+    ]),
+  ],
   'modal-bottom-sheet': [
     source('composeunstyled-modal-bottom-sheet/src/commonMain/kotlin/com/composeunstyled/ModalBottomSheet.kt', [
       fn('rememberModalBottomSheetState'),
@@ -271,7 +288,12 @@ function functionRows(kotlin, name) {
   const signatures = findCallableBlocks(kotlin, 'fun', name);
   const rows = [];
   for (const signature of signatures) {
-    rows.push(...parameterRows(signature.parameters));
+    const parameters = parameterRows(signature.parameters);
+    if (parameters.length > 0) {
+      rows.push(...parameters);
+    } else {
+      rows.push({ name: 'returns', type: signature.returnType || 'Unit' });
+    }
   }
   return uniqueRows(rows);
 }
@@ -349,13 +371,15 @@ function findCallableBlocks(kotlin, keyword, name) {
     const parametersEnd = findMatching(kotlin, parametersStart, '(', ')');
     if (parametersEnd < 0) continue;
     const parameters = kotlin.slice(parametersStart + 1, parametersEnd);
+    const returnTypeMatch = /^\s*:\s*([^{=\n]+)/.exec(kotlin.slice(parametersEnd + 1));
+    const returnType = returnTypeMatch ? cleanupType(returnTypeMatch[1]) : '';
     const bodyStart = kotlin.indexOf('{', parametersEnd);
     let body = '';
     if (bodyStart >= 0) {
       const bodyEnd = findMatching(kotlin, bodyStart, '{', '}');
       if (bodyEnd > bodyStart) body = kotlin.slice(bodyStart + 1, bodyEnd);
     }
-    blocks.push({ parameters, body });
+    blocks.push({ parameters, returnType, body });
   }
   return blocks;
 }

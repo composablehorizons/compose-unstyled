@@ -41,8 +41,6 @@ sections:
         slug: separators
       - title: Slider
         slug: slider
-      - title: Stack
-        slug: stack
       - title: Tab Group
         slug: tabgroup
       - title: Text Field
@@ -75,6 +73,12 @@ sections:
         slug: focusRing
       - title: outline
         slug: outline
+  - title: Responsive Design
+    pages:
+      - title: Window Breakpoints
+        slug: window-breakpoints
+      - title: Stack
+        slug: stack
   - title: Utilities
     pages:
       - title: buildModifier
