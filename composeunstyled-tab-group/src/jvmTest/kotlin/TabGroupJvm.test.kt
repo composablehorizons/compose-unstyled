@@ -895,7 +895,7 @@ class TabGroupTest {
 
     // Press Home key
     onRoot().performKeyInput {
-      keyPress(Key.Home)
+      keyPress(Key.MoveHome)
     }
 
     // Should move focus to the first tab

@@ -186,7 +186,7 @@ class SliderTest {
     assertThat(value).isEqualTo(1f)
 
     onNodeWithTag("slider").performKeyInput {
-      keyPress(Key.Home)
+      keyPress(Key.MoveHome)
     }
 
     assertThat(value).isEqualTo(0f)

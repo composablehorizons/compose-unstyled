@@ -300,7 +300,7 @@ fun DropdownMenuScope.DropdownMenuPanel(
             true
           }
 
-          Key.Home -> {
+          Key.MoveHome -> {
             if (event.isKeyDown) {
               scope.itemFocusTargets.firstOrNull()?.focusRequester?.requestFocus()
             }
