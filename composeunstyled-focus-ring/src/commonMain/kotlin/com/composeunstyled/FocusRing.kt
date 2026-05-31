@@ -186,7 +186,7 @@ private fun isNavigationKey(key: Key): Boolean {
     Key.DirectionDown,
     Key.DirectionLeft,
     Key.DirectionRight,
-    Key.Home,
+    Key.MoveHome,
     Key.MoveEnd,
     Key.PageUp,
     Key.PageDown,

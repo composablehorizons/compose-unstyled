@@ -462,7 +462,7 @@ private fun Modifier.sliderKeyboardInteractions(
         true
       }
 
-      Key.Home -> {
+      Key.MoveHome -> {
         if (event.isKeyDown) {
           setValue(valueRange.start)
         } else {

@@ -215,7 +215,7 @@ fun <T> TabGroupScope<T>.TabList(
             true
           }
 
-          event.key == Key.Home -> {
+          event.key == Key.MoveHome -> {
             if (event.isKeyDown && tabKeys.isNotEmpty()) {
               val tab = tabKeys.first()
               val focusRequester = registry.tabFocusRequesters.getValue(tab)

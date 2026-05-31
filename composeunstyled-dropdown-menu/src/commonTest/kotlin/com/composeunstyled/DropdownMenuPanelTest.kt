@@ -677,7 +677,7 @@ class DropdownMenuPanelTest {
     onNodeWithTag("middle").assertIsFocused()
 
     onNodeWithTag("middle").performKeyInput {
-      pressKey(Key.Home)
+      pressKey(Key.MoveHome)
     }
 
     onNodeWithTag("first").assertIsFocused()
@@ -758,7 +758,7 @@ class DropdownMenuPanelTest {
     onNodeWithTag("last").assertIsFocused()
 
     onNodeWithTag("last").performKeyInput {
-      pressKey(Key.Home)
+      pressKey(Key.MoveHome)
     }
 
     onNodeWithTag("first").assertIsFocused()
@@ -797,7 +797,7 @@ class DropdownMenuPanelTest {
     waitForIdle()
 
     onNodeWithTag("middle").performKeyInput {
-      pressKey(Key.Home)
+      pressKey(Key.MoveHome)
     }
 
     onNodeWithTag("first").assertIsFocused()
@@ -810,7 +810,7 @@ class DropdownMenuPanelTest {
     waitForIdle()
 
     onNodeWithTag("middle").performKeyInput {
-      pressKey(Key.Home)
+      pressKey(Key.MoveHome)
     }
 
     onNodeWithTag("last").assertIsFocused()
