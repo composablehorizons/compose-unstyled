@@ -47,6 +47,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.IntrinsicMeasurable
 import androidx.compose.ui.layout.IntrinsicMeasureScope
@@ -73,6 +74,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
@@ -2905,6 +2907,52 @@ class BottomSheetCommonTest {
 
     // Should return to original detent
     assertThat(state.currentDetent).isEqualTo(detent100)
+    assertThat(state.offset).isEqualTo(initialOffset)
+  }
+
+  @Test
+  fun drag_on_left_side_of_centered_sheet_does_not_move_sheet() = runComposeUiTest {
+    val collapsed = SheetDetent("collapsed") { _, _ -> 100.dp }
+    val expanded = SheetDetent("expanded") { _, _ -> 240.dp }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(300.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = expanded,
+          detents = listOf(collapsed, expanded),
+        )
+
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize().testTag("bottom_sheet"),
+        ) {
+          Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.TopCenter,
+          ) {
+            Sheet(Modifier.size(width = 100.dp, height = 240.dp).testTag("panel")) {
+              Box(Modifier.fillMaxSize())
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    val initialOffset = state.offset
+
+    onNodeWithTag("bottom_sheet").performTouchInput {
+      swipe(
+        start = Offset(x = 8f, y = height - 120f),
+        end = Offset(x = 8f, y = height - 20f),
+        durationMillis = 200,
+      )
+    }
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(expanded)
     assertThat(state.offset).isEqualTo(initialOffset)
   }
 

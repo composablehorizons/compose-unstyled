@@ -139,7 +139,7 @@ class BottomSheetRecompositionTest {
   }
 
   @Test
-  fun updating_detents_recomposes_content_sized_content_once() = runComposeRecompositionTest {
+  fun updating_detents_does_not_recompose_content_sized_content() = runComposeRecompositionTest {
     val contentDetent = SheetDetent("content") { _, sheetHeight ->
       sheetHeight
     }
@@ -168,7 +168,7 @@ class BottomSheetRecompositionTest {
     state.detents = listOf(halfDetent, contentDetent)
     waitForIdle()
 
-    assertThat(recompositionCount("sheet-content")).isEqualTo(1)
+    assertThat(recompositionCount("sheet-content")).isEqualTo(0)
   }
 
   @Test
