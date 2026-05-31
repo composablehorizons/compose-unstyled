@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-06-01
+
+### Added
+
+- Introduce Breakpoints API for building responsive layouts. (#403)
+
+### Changed
+
+- Compose Unstyled now uses Compose Multiplatform `1.11.0`.
+- Deprecated `currentWindowContainerSize()` in favor of `LocalWindowInfo.current.containerDpSize`. (#402)
+
 ## [2.4.1] - 2026-05-31
 
 ### Fixed
