@@ -28,6 +28,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
+  alias(libs.plugins.compose)
+  alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.android.library)
   alias(libs.plugins.maven.publish)
@@ -37,6 +39,11 @@ val publishGroupId = "com.composables"
 val publishVersion = rootProject.extra["publishVersion"] as String
 val githubUrl = "github.com/composablehorizons/compose-unstyled"
 val projectUrl = "https://composeunstyled.com"
+val pomArtifactId = "composeunstyled-breakpoints"
+val pomName = "Compose Unstyled Breakpoints"
+val pomDescription = "Window breakpoint utility for Compose Unstyled."
+val frameworkBaseName = "ComposeUnstyledBreakpoints"
+val androidNamespace = "com.composeunstyled.breakpoints"
 
 java {
   toolchain {
@@ -65,40 +72,35 @@ kotlin {
 
   listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
     iosTarget.binaries.framework {
-      baseName = "ComposeUnstyled"
+      baseName = frameworkBaseName
       isStatic = true
     }
   }
 
   sourceSets {
     commonMain.dependencies {
-      api(projects.composeunstyledTheming)
-      api(projects.composeunstyledAnchoredApi)
-      api(projects.composeunstyledBreakpoints)
-      api(projects.composeunstyledBottomSheet)
-      api(projects.composeunstyledButton)
-      api(projects.composeunstyledCheckbox)
-      api(projects.composeunstyledDialog)
-      api(projects.composeunstyledDisclosure)
-      api(projects.composeunstyledDropdownMenu)
-      api(projects.composeunstyledFocusRing)
-      api(projects.composeunstyledIcon)
-      api(projects.composeunstyledModalBottomSheet)
-      api(projects.composeunstyledOutline)
-      api(projects.composeunstyledProgress)
-      api(projects.composeunstyledRadioGroup)
-      api(projects.composeunstyledScrollbars)
-      api(projects.composeunstyledSeparators)
-      api(projects.composeunstyledSlider)
-      api(projects.composeunstyledTabGroup)
-      api(projects.composeunstyledTextField)
-      api(projects.composeunstyledToggleSwitch)
-      api(projects.composeunstyledTooltip)
-      api(projects.composeunstyledTriStateCheckbox)
+      implementation(libs.compose.foundation)
     }
 
     commonTest.dependencies {
       implementation(kotlin("test"))
+      implementation(libs.assertk)
+      implementation(libs.compose.ui.test)
+    }
+
+    androidInstrumentedTest.dependencies {
+      implementation(libs.androidx.compose.test)
+      implementation(libs.androidx.compose.test.manifest)
+      implementation(libs.androidx.espresso)
+    }
+
+    val jvmTest by getting
+
+    jvmTest.dependencies {
+      implementation(libs.compose.ui.test.junit4)
+      implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material", module = "material")
+      }
     }
 
     applyDefaultHierarchyTemplate {
@@ -109,18 +111,13 @@ kotlin {
           withWasmJs()
           withJs()
         }
-
-        group("web") {
-          withWasmJs()
-          withJs()
-        }
       }
     }
   }
 }
 
 android {
-  namespace = "com.composeunstyled"
+  namespace = androidNamespace
   compileSdk = libs.versions.android.compileSDK.get().toInt()
   defaultConfig {
     minSdk = libs.versions.android.minSDK.get().toInt()
@@ -139,13 +136,13 @@ mavenPublishing {
 
   coordinates(
     groupId = publishGroupId,
-    artifactId = "composeunstyled",
+    artifactId = pomArtifactId,
     version = publishVersion
   )
 
   pom {
-    name.set("Compose Unstyled")
-    description.set("Umbrella dependency for Compose Unstyled modules.")
+    name.set(pomName)
+    description.set(pomDescription)
     url.set(projectUrl)
 
     licenses {
