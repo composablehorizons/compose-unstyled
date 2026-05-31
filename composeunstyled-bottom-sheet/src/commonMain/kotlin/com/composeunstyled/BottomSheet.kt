@@ -736,6 +736,8 @@ private fun DraggableAnchors<SheetDetent>.closestDetent(
 private class BottomSheetContext(
   internal val state: BottomSheetState? = null,
   enabled: Boolean = true,
+  internal val coroutineScope: CoroutineScope? = null,
+  internal val dragInteractionSource: MutableInteractionSource? = null,
 ) {
   internal var enabled by mutableStateOf(enabled)
 }
@@ -755,11 +757,18 @@ fun UnstyledBottomSheet(
   offsetForIme: Boolean = false,
   content: @Composable BottomSheetScope.() -> Unit,
 ) {
-  val context = remember(state) { BottomSheetContext(state = state, enabled = enabled) }
-  SideEffect { context.enabled = enabled }
-
   val coroutineScope = rememberCoroutineScope()
   val dragInteractionSource = remember { MutableInteractionSource() }
+  val context = remember(state, coroutineScope, dragInteractionSource) {
+    BottomSheetContext(
+      state = state,
+      enabled = enabled,
+      coroutineScope = coroutineScope,
+      dragInteractionSource = dragInteractionSource,
+    )
+  }
+  SideEffect { context.enabled = enabled }
+
   LaunchedEffect(dragInteractionSource) {
     dragInteractionSource.interactions.collect { interaction ->
       when (interaction) {
@@ -783,34 +792,7 @@ fun UnstyledBottomSheet(
               state.updateMeasuredSheetHeight(measuredSize.height.toFloat())
             }
           }
-          .sheetOffset(state = state, offsetForIme = offsetForIme)
-          .then(
-            buildModifier {
-              if (context.enabled && state.detents.size > 1) {
-                add(
-                  Modifier
-                    .anchoredDraggable(
-                      state = state.anchoredDraggableState,
-                      orientation = Orientation.Vertical,
-                      enabled = context.enabled,
-                      interactionSource = dragInteractionSource,
-                    )
-                    .nestedScroll(
-                      remember(state.anchoredDraggableState, Orientation.Vertical) {
-                        ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                          orientation = Orientation.Vertical,
-                          sheetState = state.anchoredDraggableState,
-                          onFling = {
-                            coroutineScope.launch { state.anchoredDraggableState.settle(it) }
-                          },
-                        )
-                      },
-                    ),
-                )
-              }
-            },
-          )
-          .pointerInput(Unit) { detectTapGestures { } },
+          .sheetOffset(state = state, offsetForIme = offsetForIme),
       ) {
         BottomSheetScopeInstance.content()
       }
@@ -825,9 +807,40 @@ fun BottomSheetScope.Sheet(
 ) {
   val context = LocalBottomSheetContext.current
   val state = context.state
+  val coroutineScope = context.coroutineScope
+  val dragInteractionSource = context.dragInteractionSource
 
   Layout(
-    modifier = modifier.clipToBounds(),
+    modifier = Modifier
+      .then(
+        buildModifier {
+          add(Modifier.pointerInput(Unit) { detectTapGestures { } })
+          if (state != null && coroutineScope != null && context.enabled && state.detents.size > 1) {
+            add(
+              Modifier
+                .anchoredDraggable(
+                  state = state.anchoredDraggableState,
+                  orientation = Orientation.Vertical,
+                  enabled = context.enabled,
+                  interactionSource = dragInteractionSource,
+                )
+                .nestedScroll(
+                  remember(state.anchoredDraggableState, Orientation.Vertical) {
+                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                      orientation = Orientation.Vertical,
+                      sheetState = state.anchoredDraggableState,
+                      onFling = {
+                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                      },
+                    )
+                  },
+                ),
+            )
+          }
+        },
+      )
+      .then(modifier)
+      .clipToBounds(),
     content = content,
   ) { measurables, constraints ->
     val fallbackContentHeight = when {
