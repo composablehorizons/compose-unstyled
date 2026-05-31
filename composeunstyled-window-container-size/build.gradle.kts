@@ -75,10 +75,6 @@ kotlin {
       implementation(libs.compose.foundation)
     }
 
-    androidMain.dependencies {
-      implementation(libs.androidx.window)
-    }
-
     applyDefaultHierarchyTemplate {
       common {
         group("nonAndroid") {
