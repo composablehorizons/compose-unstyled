@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2026-05-31
+
+### Fixed
+
+- Fixed a bug where bottom sheets could be dragged from outside their visible bounds. (#396)
+
 ## [2.4.0] - 2026-05-23
 
 ### Added
