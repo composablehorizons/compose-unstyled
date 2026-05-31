@@ -24,7 +24,17 @@
 package com.composeunstyled
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.DpSize
 
 @Composable
-expect fun currentWindowContainerSize(): DpSize
+@Deprecated(
+  message = "This will go away in 3.0. Use LocalWindowInfo.current.containerDpSize instead.",
+  replaceWith = ReplaceWith(
+    expression = "LocalWindowInfo.current.containerDpSize",
+    imports = ["androidx.compose.ui.platform.LocalWindowInfo"],
+  ),
+)
+fun currentWindowContainerSize(): DpSize {
+  return LocalWindowInfo.current.containerDpSize
+}
