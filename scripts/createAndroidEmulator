@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/androidEmulatorProfile
+source "$SCRIPT_DIR/androidEmulatorProfile"
+
+for tool in "$SDKMANAGER" "$AVDMANAGER" "$EMULATOR"; do
+  if [ ! -x "$tool" ]; then
+    echo "Required Android SDK tool not found or not executable: $tool" >&2
+    exit 1
+  fi
+done
+
+set_config_value() {
+  key="$1"
+  value="$2"
+
+  if grep -q "^${key}=" "$CONFIG"; then
+    sed -i.bak "s/^${key}=.*/${key}=${value}/" "$CONFIG"
+  else
+    printf "%s=%s\n" "$key" "$value" >> "$CONFIG"
+  fi
+}
+
+if "$EMULATOR" -list-avds | grep -Fxq "$AVD_NAME"; then
+  if avd_matches_expected_profile; then
+    echo "Android emulator $AVD_NAME already matches the expected local test profile."
+    exit 0
+  fi
+
+  echo "Android emulator $AVD_NAME already exists but does not match the expected local test profile." >&2
+  echo "Delete or update it manually, then rerun this script." >&2
+  exit 1
+fi
+
+"$SDKMANAGER" "platform-tools" "emulator" "platforms;android-${API_LEVEL}" "$SYSTEM_IMAGE"
+printf "no\n" | "$AVDMANAGER" create avd \
+  --force \
+  --name "$AVD_NAME" \
+  --package "$SYSTEM_IMAGE"
+
+if [ -f "$CONFIG" ]; then
+  set_config_value "hw.cpu.ncore" "2"
+  set_config_value "disk.dataPartition.size" "$DISK_SIZE"
+fi
+
+if ! avd_matches_expected_profile; then
+  echo "Android emulator $AVD_NAME was created but does not match the expected local test profile." >&2
+  exit 1
+fi
+
+echo "Android emulator $AVD_NAME created."
