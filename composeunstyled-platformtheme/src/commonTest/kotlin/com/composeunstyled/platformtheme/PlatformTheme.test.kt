@@ -21,9 +21,18 @@
  */
 package com.composeunstyled.platformtheme
 
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertTextEquals
@@ -31,6 +40,9 @@ import androidx.compose.ui.test.assertWidthIsAtLeast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -86,5 +98,32 @@ class PlatformThemeTest {
     onNodeWithTag("interactive-box")
       .assertWidthIsAtLeast(customSize)
       .assertHeightIsAtLeast(customSize)
+  }
+
+  @Test
+  fun platformIndicationUpdatesWhenColorChanges() = runComposeUiTest {
+    var color by mutableStateOf(Color.Black)
+    val indications = mutableListOf<Indication>()
+
+    setContent {
+      val indication = platformIndication(color)
+      val interactionSource = remember { MutableInteractionSource() }
+      SideEffect {
+        indications += indication
+      }
+      Box(
+        modifier = Modifier
+          .indication(interactionSource, indication)
+          .testTag("indication-host"),
+      )
+    }
+
+    onNodeWithTag("indication-host").assertExists()
+
+    color = Color.White
+    waitForIdle()
+
+    assertThat(indications.size).isEqualTo(2)
+    assertThat(indications[0] === indications[1]).isFalse()
   }
 }
