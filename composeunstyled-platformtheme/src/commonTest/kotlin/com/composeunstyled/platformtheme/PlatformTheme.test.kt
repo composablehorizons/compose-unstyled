@@ -22,11 +22,14 @@
 package com.composeunstyled.platformtheme
 
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -104,10 +107,18 @@ class PlatformThemeTest {
 
     setContent {
       val indication = platformIndication(color)
+      val interactionSource = remember { MutableInteractionSource() }
       SideEffect {
         indications += indication
       }
+      Box(
+        modifier = Modifier
+          .indication(interactionSource, indication)
+          .testTag("indication-host"),
+      )
     }
+
+    onNodeWithTag("indication-host").assertExists()
 
     color = Color.White
     waitForIdle()
