@@ -366,6 +366,44 @@ class ModalBottomSheetTest {
   }
 
   @Test
+  fun outside_tap_starts_modal_fragment_exit_while_sheet_dismiss_animation_is_running() = runComposeUiTest {
+    lateinit var state: ModalBottomSheetState
+    setContent {
+      state = rememberModalBottomSheetState(
+        initialDetent = SheetDetent.FullyExpanded,
+        detents = listOf(SheetDetent.Hidden, SheetDetent.FullyExpanded),
+        animationSpec = tween(durationMillis = 1000),
+      )
+      UnstyledModalBottomSheet(
+        state = state,
+        properties = ModalBottomSheetProperties(dismissOnClickOutside = true),
+        overlay = {
+          Scrim(
+            modifier = Modifier.testTag("scrim"),
+            exit = androidx.compose.animation.fadeOut(tween(durationMillis = 1000)),
+          )
+        },
+      ) {
+        Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+      }
+    }
+    waitForIdle()
+    onNode(isDialog()).assertExists()
+    onNodeWithTag("sheet").assertExists()
+    onNodeWithTag("scrim").assertExists()
+
+    mainClock.autoAdvance = false
+    onNode(isDialog()).performTouchInput { click(Offset(1f, 1f)) }
+    mainClock.advanceTimeByFrame()
+
+    assertThat(state.bottomSheetState.isIdle).isFalse()
+    assertThat(state.modalState.transitionState.targetState).isFalse()
+    onNode(isDialog()).assertExists()
+    onNodeWithTag("sheet").assertExists()
+    onNodeWithTag("scrim").assertExists()
+  }
+
+  @Test
   fun outside_tap_dismiss_uses_the_provided_dismiss_animation_spec() = runComposeUiTest {
     lateinit var state: ModalBottomSheetState
     setContent {

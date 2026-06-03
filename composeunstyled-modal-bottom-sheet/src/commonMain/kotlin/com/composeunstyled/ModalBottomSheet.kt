@@ -256,6 +256,7 @@ fun UnstyledModalBottomSheet(
 
   fun requestDismiss() {
     dispatchDismiss()
+    state.modalState.transitionState.targetState = false
     state.pendingDetentChange?.cancel()
     state.launchPendingDetentChange {
       state.bottomSheetState.animateTo(SheetDetent.Hidden, state.dismissAnimationSpec)
@@ -315,7 +316,9 @@ fun UnstyledModalBottomSheet(
       overlay?.invoke(ModalBottomSheetOverlayScopeInstance)
       UnstyledBottomSheet(
         state = state.bottomSheetState,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .fillMaxSize()
+          .keepModalMountedWhileSheetExits(state),
         offsetForIme = properties.offsetForIme,
       ) {
         val modalBottomSheetScope = remember(this) {
@@ -336,6 +339,22 @@ fun ModalBottomSheetScope.Sheet(
     modifier = modifier,
     content = content,
   )
+}
+
+@Composable
+private fun Modifier.keepModalMountedWhileSheetExits(state: ModalBottomSheetState): Modifier {
+  val remainMounted =
+    state.modalState.transitionState.targetState.not() &&
+      (
+        state.bottomSheetState.currentDetent != SheetDetent.Hidden ||
+          state.bottomSheetState.targetDetent != SheetDetent.Hidden
+        )
+
+  return this then buildModifier {
+    if (remainMounted) {
+      add(Modifier.modalFragment())
+    }
+  }
 }
 
 @Composable
