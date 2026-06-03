@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+if [ -n "${ANDROID_HOME:-}" ]; then
+  SDK_ROOT="$ANDROID_HOME"
+elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
+  SDK_ROOT="$ANDROID_SDK_ROOT"
+else
+  SDK_ROOT="$HOME/Library/Android/sdk"
+fi
+
+ADB="$SDK_ROOT/platform-tools/adb"
+
+echo "Running JVM, formatting, and screenshot checks..."
+./gradlew --console=plain spotlessCheck jvmTest :demo:jvmTest :visual-regressions:jvmScreenshotTest
+
+echo "Creating Android emulator if needed..."
+bash scripts/createAndroidEmulator
+
+echo "Launching Android emulator..."
+bash scripts/launchAndroidEmulator
+
+echo "Verifying Android emulator boot state..."
+"$ADB" devices
+boot_completed="$("$ADB" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)"
+if [ "$boot_completed" != "1" ]; then
+  echo "Android emulator is not booted. sys.boot_completed=$boot_completed" >&2
+  exit 1
+fi
+
+echo "Discovering Android connected test tasks..."
+android_test_modules=()
+while IFS= read -r module; do
+  android_test_modules+=("$module")
+done < <(
+  ./gradlew --console=plain tasks --all |
+    awk -F: '/^composeunstyled-[^:]+:connectedDebugAndroidTest / { print $1 }' |
+    sort -u
+)
+
+if [ "${#android_test_modules[@]}" -eq 0 ]; then
+  echo "No composeunstyled-* connectedDebugAndroidTest tasks found." >&2
+  exit 1
+fi
+
+android_test_tasks=()
+for module in "${android_test_modules[@]}"; do
+  android_test_tasks+=(":${module}:connectedDebugAndroidTest")
+done
+
+echo "Running Android connected tests:"
+printf '  %s\n' "${android_test_tasks[@]}"
+for task in "${android_test_tasks[@]}"; do
+  ./gradlew --console=plain --no-parallel "$task"
+done

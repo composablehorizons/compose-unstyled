@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+AVD_NAME="Unstyled_Tests"
+API_LEVEL="23"
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  ARCH="arm64-v8a"
+else
+  ARCH="x86_64"
+fi
+DISK_SIZE="2048M"
+SYSTEM_IMAGE="system-images;android-${API_LEVEL};default;${ARCH}"
+AVD_DIR="$HOME/.android/avd/${AVD_NAME}.avd"
+CONFIG="$AVD_DIR/config.ini"
+
+if [ -n "${ANDROID_HOME:-}" ]; then
+  SDK_ROOT="$ANDROID_HOME"
+elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
+  SDK_ROOT="$ANDROID_SDK_ROOT"
+else
+  SDK_ROOT="$HOME/Library/Android/sdk"
+fi
+
+export ANDROID_HOME="$SDK_ROOT"
+export ANDROID_SDK_ROOT="$SDK_ROOT"
+
+SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+AVDMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/avdmanager"
+EMULATOR="$SDK_ROOT/emulator/emulator"
+ADB="$SDK_ROOT/platform-tools/adb"
+
+config_value() {
+  awk -F= -v key="$1" '$1 == key { value = $2 } END { print value }' "$CONFIG"
+}
+
+avd_matches_expected_profile() {
+  [ -f "$CONFIG" ] || return 1
+
+  [ "$(config_value "abi.type")" = "$ARCH" ] &&
+    [ "$(config_value "hw.cpu.arch")" = "${ARCH%%-*}" ] &&
+    [ "$(config_value "image.sysdir.1")" = "system-images/android-23/default/${ARCH}/" ] &&
+    [ "$(config_value "hw.lcd.width")" = "320" ] &&
+    [ "$(config_value "hw.lcd.height")" = "640" ] &&
+    [ "$(config_value "hw.lcd.density")" = "160" ] &&
+    [ "$(config_value "hw.cpu.ncore")" = "2" ] &&
+    [ "$(config_value "disk.dataPartition.size")" = "2048M" ]
+}

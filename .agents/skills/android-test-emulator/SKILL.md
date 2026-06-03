@@ -10,7 +10,10 @@ Use this skill before running Android connected tests such as `connectedAndroidT
 The required AVD name is `Unstyled_Tests`. If it does not exist, create it with:
 
 - API level: `23`
-- System image: `system-images;android-23;default;x86_64`
+- System image: `system-images;android-23;default;x86_64`, except Apple Silicon Macs use `system-images;android-23;default;arm64-v8a`
+- Display: `320x640`
+- Density: `160 dpi`
+- CPU cores: `2`
 - Disk size: `2048M`
 
 ## Workflow
@@ -23,13 +26,19 @@ The required AVD name is `Unstyled_Tests`. If it does not exist, create it with:
 
 2. If a device is already connected and booted, use it.
 
-3. Otherwise launch/create the project emulator:
+3. Create the project emulator if it does not exist:
 
    ```bash
-   bash .agents/skills/android-test-emulator/scripts/launch_unstyled_tests_emulator.sh
+   bash scripts/createAndroidEmulator
    ```
 
-4. Wait until boot is complete before running Android tests. The script waits for:
+4. Launch the project emulator:
+
+   ```bash
+   bash scripts/launchAndroidEmulator
+   ```
+
+5. Wait until boot is complete before running Android tests. The script waits for:
 
    ```bash
    adb shell getprop sys.boot_completed

@@ -45,7 +45,22 @@ Use this skill only in `/Users/alexstyl/projects/composeunstyled.com`.
 3. Validate the changelog section exactly matches the release workflow parser:
    - The heading must be `## [x.y.z] - YYYY-MM-DD`.
    - The tag must be `x.y.z`.
-4. Do not run tests during this final release PR/tag flow unless the user explicitly asks. The release PR and tag workflows provide the verification.
+4. Before opening the release PR, run the local checks that correspond to the release changes:
+   - Always run:
+     ```bash
+     ./gradlew --console=plain jvmTest
+     ./gradlew --console=plain spotlessCheck
+     ```
+   - If the release includes Kotlin, Compose, Gradle, test infrastructure, platform, or dependency changes, also run the relevant Android connected tests locally. Launch the project test emulator first:
+     ```bash
+     bash scripts/createAndroidEmulator
+     bash scripts/launchAndroidEmulator
+     adb devices
+     adb shell getprop sys.boot_completed
+     ./gradlew --console=plain :composeunstyled-<module>:connectedDebugAndroidTest
+     ```
+   - For broad or uncertain release contents, run connected tests for every affected `composeunstyled-*` module. Do not rely on the tag workflow as the first Android signal.
+   - Fix all failures before pushing the release branch.
 5. Commit on a release branch:
    ```bash
    git switch -c release/x.y.z
@@ -68,15 +83,31 @@ Use this skill only in `/Users/alexstyl/projects/composeunstyled.com`.
    git pull --ff-only origin main
    git fetch --tags origin
    ```
-2. Create the tag on the merge commit:
+2. Re-run local pre-tag verification on the exact merge commit before creating the tag:
+   - Always run:
+     ```bash
+     ./gradlew --console=plain jvmTest
+     ./gradlew --console=plain spotlessCheck
+     ```
+   - Launch the Android test emulator and run all Android connected tests that are relevant to the release contents:
+     ```bash
+     bash scripts/createAndroidEmulator
+     bash scripts/launchAndroidEmulator
+     adb devices
+     adb shell getprop sys.boot_completed
+     ./gradlew --console=plain :composeunstyled-<module>:connectedDebugAndroidTest
+     ```
+   - If the relevant module set is unclear, inspect the changed modules since the previous tag and err on the side of running more connected tests locally.
+   - Do not tag until these checks pass.
+3. Create the tag on the merge commit:
    ```bash
    git tag x.y.z
    ```
-3. Push the tag:
+4. Push the tag:
    ```bash
    git push origin x.y.z
    ```
-4. If the workflow must be rerun manually, use the `Release` workflow with input `tag = x.y.z`.
+5. If the workflow must be rerun manually, use the `Release` workflow with input `tag = x.y.z`.
 
 ## Do Not
 

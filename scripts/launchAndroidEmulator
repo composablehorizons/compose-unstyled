@@ -1,29 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-AVD_NAME="Unstyled_Tests"
-API_LEVEL="23"
-ARCH="x86_64"
-DISK_SIZE="2048M"
-SYSTEM_IMAGE="system-images;android-${API_LEVEL};default;${ARCH}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/androidEmulatorProfile
+source "$SCRIPT_DIR/androidEmulatorProfile"
 
-if [ -n "${ANDROID_HOME:-}" ]; then
-  SDK_ROOT="$ANDROID_HOME"
-elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
-  SDK_ROOT="$ANDROID_SDK_ROOT"
-else
-  SDK_ROOT="$HOME/Library/Android/sdk"
-fi
-
-export ANDROID_HOME="$SDK_ROOT"
-export ANDROID_SDK_ROOT="$SDK_ROOT"
-
-SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
-AVDMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/avdmanager"
-EMULATOR="$SDK_ROOT/emulator/emulator"
-ADB="$SDK_ROOT/platform-tools/adb"
-
-for tool in "$SDKMANAGER" "$AVDMANAGER" "$EMULATOR" "$ADB"; do
+for tool in "$EMULATOR" "$ADB"; do
   if [ ! -x "$tool" ]; then
     echo "Required Android SDK tool not found or not executable: $tool" >&2
     exit 1
@@ -31,21 +13,15 @@ for tool in "$SDKMANAGER" "$AVDMANAGER" "$EMULATOR" "$ADB"; do
 done
 
 if ! "$EMULATOR" -list-avds | grep -Fxq "$AVD_NAME"; then
-  "$SDKMANAGER" "platform-tools" "emulator" "platforms;android-${API_LEVEL}" "$SYSTEM_IMAGE"
-  printf "no\n" | "$AVDMANAGER" create avd \
-    --force \
-    --name "$AVD_NAME" \
-    --package "$SYSTEM_IMAGE" \
-    --device "pixel"
+  echo "Android emulator $AVD_NAME does not exist." >&2
+  echo "Run scripts/createAndroidEmulator first." >&2
+  exit 1
+fi
 
-  CONFIG="$HOME/.android/avd/${AVD_NAME}.avd/config.ini"
-  if [ -f "$CONFIG" ]; then
-    if grep -q '^disk.dataPartition.size=' "$CONFIG"; then
-      sed -i.bak "s/^disk.dataPartition.size=.*/disk.dataPartition.size=${DISK_SIZE}/" "$CONFIG"
-    else
-      printf "\ndisk.dataPartition.size=%s\n" "$DISK_SIZE" >> "$CONFIG"
-    fi
-  fi
+if ! avd_matches_expected_profile; then
+  echo "Android emulator $AVD_NAME does not match the expected local test profile." >&2
+  echo "Delete or update it manually, then run scripts/createAndroidEmulator." >&2
+  exit 1
 fi
 
 if "$ADB" devices | awk 'NR > 1 && $2 == "device" { found = 1 } END { exit found ? 0 : 1 }'; then
@@ -57,7 +33,7 @@ if "$ADB" devices | awk 'NR > 1 && $2 == "device" { found = 1 } END { exit found
   fi
 fi
 
-"$EMULATOR" \
+nohup "$EMULATOR" \
   -avd "$AVD_NAME" \
   -no-snapshot-save \
   -no-window \
