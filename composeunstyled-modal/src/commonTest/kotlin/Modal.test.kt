@@ -79,7 +79,76 @@ class ModalTest {
   }
 
   @Test
-  fun awaitAttachedToWindow_resumes_when_modal_host_attaches() = runComposeUiTest {
+  fun modal_host_renders_content_inside_portal_host() = runComposeUiTest {
+    setContent {
+      ModalHost(Modifier.testTag("modal_host")) {
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          Box(Modifier.testTag("modal_content").modalFragment())
+        }
+      }
+    }
+
+    onNodeWithTag("modal_host").assertExists()
+    onNodeWithTag("modal_content").assertExists()
+  }
+
+  @Test
+  fun modal_host_modal_resumes_after_attaching() = runComposeUiTest {
+    lateinit var state: ModalState
+    var attachedToWindow by mutableStateOf(false)
+
+    setContent {
+      state = rememberModalState(initiallyVisible = true)
+      ModalHost {
+        Modal(state = state) {
+          LaunchedEffect(state.transitionState.targetState) {
+            if (state.transitionState.targetState) {
+              state.awaitAttachedToWindow()
+              attachedToWindow = true
+            }
+          }
+          Box(Modifier.testTag("modal_content").modalFragment())
+        }
+      }
+    }
+
+    waitUntil { attachedToWindow }
+
+    onNodeWithTag("modal_content").assertExists()
+    assertThat(state.attachedToWindow).isTrue()
+  }
+
+  @Test
+  fun modal_uses_window_when_outside_modal_host() = runComposeUiTest {
+    lateinit var state: ModalState
+    var attachedToWindow by mutableStateOf(false)
+
+    setContent {
+      state = rememberModalState(initiallyVisible = true)
+      ModalHost {
+        Box(Modifier.testTag("modal_host"))
+      }
+
+      Modal(state = state) {
+        LaunchedEffect(state.transitionState.targetState) {
+          if (state.transitionState.targetState) {
+            state.awaitAttachedToWindow()
+            attachedToWindow = true
+          }
+        }
+        Box(Modifier.testTag("window_modal_content").modalFragment())
+      }
+    }
+
+    waitUntil { attachedToWindow }
+
+    onNodeWithTag("modal_host").assertExists()
+    onNodeWithTag("window_modal_content").assertExists()
+    assertThat(state.attachedToWindow).isTrue()
+  }
+
+  @Test
+  fun awaitAttachedToWindow_resumes_when_modal_attaches() = runComposeUiTest {
     lateinit var state: ModalState
     var attachedToWindow by mutableStateOf(false)
 

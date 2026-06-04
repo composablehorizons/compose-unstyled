@@ -117,6 +117,7 @@ private val availablePrimitives = listOf(
   ),
   DemoItem("Icon", "icon", { IconDemo() }),
   DemoItem("Modal", "modal", { ModalDemo() }),
+  DemoItem("Modal Render Host", "modal-render-host", { ModalRenderHostDemo() }),
   DemoItem("Progress Indicator", "progressindicator", { ProgressIndicatorDemo() }),
   DemoItem("Radio Group", "radiogroup", { RadioGroupDemo() }),
   DemoItem("Scrollbars", "scrollbars", { ScrollbarsDemo() }),

@@ -22,7 +22,10 @@
 package com.composeunstyled
 
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -36,6 +39,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.semantics.dialog
+import androidx.compose.ui.semantics.semantics
 import kotlinx.coroutines.flow.first
 
 @Stable
@@ -68,16 +74,93 @@ val LocalModalState = staticCompositionLocalOf<ModalState> {
   ModalState()
 }
 
+internal val LocalIsInModalHost = staticCompositionLocalOf { false }
+
+@Composable
+fun ModalHost(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  CompositionLocalProvider(LocalIsInModalHost provides true) {
+    PortalHost(modifier = modifier, content = content)
+  }
+}
+
 interface ModalScope
 
 internal object ModalScopeInstance : ModalScope
 
 @Composable
-expect fun Modal(
+fun Modal(
   state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean = { false },
   content: @Composable ModalScope.() -> Unit,
+) {
+  if (
+    state.transitionState.targetState.not() &&
+    state.mountedFragments == 0
+  ) {
+    return
+  }
+
+  if (LocalIsInModalHost.current) {
+    PortalModal(
+      state = state,
+      onKeyEvent = onKeyEvent,
+      content = content,
+    )
+  } else {
+    PlatformModal(
+      state = state,
+      onKeyEvent = onKeyEvent,
+      content = content,
+    )
+  }
+}
+
+@Composable
+internal expect fun PlatformModal(
+  state: ModalState,
+  onKeyEvent: (KeyEvent) -> Boolean,
+  content: @Composable ModalScope.() -> Unit,
 )
+
+@Composable
+internal fun PortalModal(
+  state: ModalState,
+  onKeyEvent: (KeyEvent) -> Boolean,
+  content: @Composable ModalScope.() -> Unit,
+) {
+  Portal {
+    ModalContent(state = state, onKeyEvent = onKeyEvent, content = content)
+  }
+}
+
+@Composable
+internal fun ModalContent(
+  state: ModalState,
+  onKeyEvent: (KeyEvent) -> Boolean,
+  content: @Composable ModalScope.() -> Unit,
+) {
+  Box(
+    Modifier
+      .fillMaxSize()
+      .onKeyEvent(onKeyEvent)
+      .semantics { dialog() },
+  ) {
+    CompositionLocalProvider(LocalModalState provides state) {
+      DisposableEffect(state) {
+        state.attachedToWindow = true
+        onDispose {
+          state.attachedToWindow = false
+        }
+      }
+      if (state.attachedToWindow) {
+        ModalScopeInstance.content()
+      }
+    }
+  }
+}
 
 @Composable
 fun Modifier.modalFragment(): Modifier {

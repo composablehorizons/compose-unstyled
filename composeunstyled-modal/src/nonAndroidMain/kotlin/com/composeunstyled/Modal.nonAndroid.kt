@@ -36,18 +36,11 @@ import androidx.compose.ui.window.DialogProperties
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-actual fun Modal(
+internal actual fun PlatformModal(
   state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable ModalScope.() -> Unit,
 ) {
-  if (
-    state.transitionState.targetState.not() &&
-    state.mountedFragments == 0
-  ) {
-    return
-  }
-
   Dialog(
     onDismissRequest = {},
     properties = DialogProperties(
