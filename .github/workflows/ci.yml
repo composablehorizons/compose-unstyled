@@ -33,7 +33,7 @@ jobs:
             changed_files="$(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")"
             android_changed_modules="$(
               printf '%s\n' "$changed_files" |
-                awk -F/ '$2 == "src" && ($3 == "androidMain" || $3 == "androidInstrumentedTest") { print ":" $1 }' |
+                awk -F/ '$2 == "src" && ($3 == "commonMain" || $3 == "commonTest" || $3 == "androidMain" || $3 == "androidInstrumentedTest") { print ":" $1 }' |
                 sort -u
             )"
 
