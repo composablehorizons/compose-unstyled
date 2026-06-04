@@ -57,6 +57,14 @@ import kotlinx.coroutines.launch
 
 private val DoNothing: () -> Unit = {}
 
+@Composable
+fun ModalBottomSheetHost(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  ModalHost(modifier = modifier, content = content)
+}
+
 class ModalBottomSheetScope internal constructor(
   internal val bottomSheetScope: BottomSheetScope,
 )

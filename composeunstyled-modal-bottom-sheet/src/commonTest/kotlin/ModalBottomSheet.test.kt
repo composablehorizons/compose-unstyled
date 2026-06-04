@@ -183,6 +183,23 @@ class ModalBottomSheetTest {
   }
 
   @Test
+  fun modal_bottom_sheet_host_renders_sheet_inside_host() = runComposeUiTest {
+    setContent {
+      ModalBottomSheetHost(Modifier.testTag("sheet_host")) {
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+          overlay = { Scrim() },
+        ) {
+          Sheet { Box(Modifier.testTag("sheet").size(40.dp)) }
+        }
+      }
+    }
+
+    onNodeWithTag("sheet_host").assertExists()
+    onNodeWithTag("sheet").assertExists()
+  }
+
+  @Test
   fun dialog_exists_when_going_from_hidden_to_visible() = runComposeUiTest {
     lateinit var state: ModalBottomSheetState
     setContent {
