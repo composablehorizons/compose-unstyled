@@ -61,6 +61,14 @@ interface DialogOverlayScope
 private object DialogOverlayScopeInstance : DialogOverlayScope
 
 @Composable
+fun DialogHost(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  ModalHost(modifier = modifier, content = content)
+}
+
+@Composable
 fun DialogOverlayScope.Scrim(
   modifier: Modifier = Modifier,
   scrimColor: Color = Color.Black.copy(alpha = 0.6f),

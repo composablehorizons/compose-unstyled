@@ -58,18 +58,11 @@ import com.composeunstyled.modal.R
 import java.util.UUID
 
 @Composable
-actual fun Modal(
+internal actual fun PlatformModal(
   state: ModalState,
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable ModalScope.() -> Unit,
 ) {
-  if (
-    state.transitionState.targetState.not() &&
-    state.mountedFragments == 0
-  ) {
-    return
-  }
-
   val parentView = LocalView.current
   val context = LocalContext.current
   val layoutDirection = LocalLayoutDirection.current

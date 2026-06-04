@@ -115,6 +115,24 @@ class DialogTest {
   }
 
   @Test
+  fun dialogHostRendersDialogInsideHost() = runComposeUiTest {
+    setContent {
+      DialogHost(Modifier.testTag("dialog_host")) {
+        UnstyledDialog(
+          visible = true,
+          onDismissRequest = {},
+        ) {
+          DialogPanel(Modifier.testTag("dialog_content")) {
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("dialog_host").assertExists()
+    onNodeWithTag("dialog_content").assertExists()
+  }
+
+  @Test
   fun dialogPanelSetsPaneTitleSemanticsWhenPresent() = runComposeUiTest {
     setContent {
       UnstyledDialog(
