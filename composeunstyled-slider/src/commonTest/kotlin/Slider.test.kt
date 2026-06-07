@@ -21,6 +21,7 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
@@ -40,6 +42,7 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performSemanticsAction
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
@@ -47,6 +50,8 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isLessThan
 import kotlin.test.Test
 
 class SliderTest {
@@ -222,6 +227,96 @@ class SliderTest {
     assertThat(finishedCalls).isEqualTo(2)
   }
 
+  @Test
+  fun verticalSliderPlacesLowestValueBelowHighestValue() = runComposeUiTest {
+    var value by mutableFloatStateOf(0f)
+
+    setContent {
+      TestSlider(
+        value = value,
+        orientation = Orientation.Vertical,
+        thumb = {
+          Box(Modifier.size(20.dp).testTag("thumb"))
+        },
+      )
+    }
+
+    val bottomValueThumbTop = onNodeWithTag("thumb", useUnmergedTree = true)
+      .fetchSemanticsNode()
+      .boundsInRoot
+      .top
+
+    value = 1f
+    waitForIdle()
+
+    val topValueThumbTop = onNodeWithTag("thumb", useUnmergedTree = true)
+      .fetchSemanticsNode()
+      .boundsInRoot
+      .top
+
+    assertThat(bottomValueThumbTop).isGreaterThan(topValueThumbTop)
+  }
+
+  @Test
+  fun verticalArrowKeysAdjustValueByPhysicalDirectionWhenReverseDirectionIsTrue() =
+    runComposeUiTest {
+      var value by mutableFloatStateOf(0.5f)
+
+      setContent {
+        TestSlider(
+          value = value,
+          onValueChange = { value = it },
+          steps = 9,
+          orientation = Orientation.Vertical,
+          reverseDirection = true,
+        )
+      }
+
+      onNodeWithTag("slider").requestFocus()
+      onNodeWithTag("slider").performKeyInput {
+        keyPress(Key.DirectionUp)
+      }
+
+      assertThat(value).isCloseTo(0.6f, 0.001f)
+
+      onNodeWithTag("slider").performKeyInput {
+        keyPress(Key.DirectionDown)
+      }
+
+      assertThat(value).isCloseTo(0.5f, 0.001f)
+    }
+
+  @Test
+  fun verticalDragAdjustsValueByPhysicalDirectionWhenReverseDirectionIsTrue() =
+    runComposeUiTest {
+      var value by mutableFloatStateOf(0.5f)
+
+      setContent {
+        TestSlider(
+          value = value,
+          onValueChange = { value = it },
+          orientation = Orientation.Vertical,
+          reverseDirection = true,
+        )
+      }
+
+      onNodeWithTag("slider").performTouchInput {
+        down(center)
+        moveBy(Offset(x = 0f, y = -20f))
+        up()
+      }
+
+      assertThat(value).isGreaterThan(0.5f)
+
+      onNodeWithTag("slider").performTouchInput {
+        down(center)
+        moveBy(Offset(x = 0f, y = 20f))
+        up()
+      }
+
+      assertThat(value).isLessThan(0.5f)
+    }
+
   private fun KeyInjectionScope.keyPress(key: Key) {
     keyDown(key)
     keyUp(key)
@@ -236,6 +331,8 @@ class SliderTest {
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     steps: Int = 0,
     onValueChangeFinished: (() -> Unit)? = null,
+    orientation: Orientation = Orientation.Horizontal,
+    reverseDirection: Boolean = false,
     track: @Composable (SliderState) -> Unit = {
       Box(Modifier.fillMaxWidth().height(4.dp))
     },
@@ -251,6 +348,8 @@ class SliderTest {
       valueRange = valueRange,
       steps = steps,
       onValueChangeFinished = onValueChangeFinished,
+      orientation = orientation,
+      reverseDirection = reverseDirection,
       track = track,
       thumb = thumb,
     )
