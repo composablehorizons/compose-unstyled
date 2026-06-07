@@ -36,8 +36,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -51,11 +55,20 @@ interface SwitchScope {
   val interactionSource: MutableInteractionSource
 }
 
+@Stable
+interface SwitchTrackScope : SwitchScope
+
 private class SwitchScopeImpl(
   override val checked: Boolean,
   override val enabled: Boolean,
   override val interactionSource: MutableInteractionSource,
 ) : SwitchScope
+
+private class SwitchTrackScopeImpl(
+  override val checked: Boolean,
+  override val enabled: Boolean,
+  override val interactionSource: MutableInteractionSource,
+) : SwitchTrackScope
 
 @Composable
 fun UnstyledSwitch(
@@ -95,27 +108,44 @@ fun UnstyledSwitch(
       )
       scope.content()
     },
-  ) {
-      measurables,
-      constraints,
-    ->
-    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-    val placeables = measurables.map { it.measure(looseConstraints) }
-    val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
-    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
-    val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
-    val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
+    measurePolicy = { measurables, constraints ->
+      measureSwitchTrack(measurables, constraints)
+    },
+  )
+}
 
-    layout(width, height) {
-      placeables.forEach { placeable ->
-        val thumbData = placeable.parentData as? SwitchThumbParentData
-        val x = thumbData?.let {
-          ((width - placeable.width) * it.offsetFraction).roundToInt()
-        } ?: 0
-        placeable.placeRelative(x = max(0, x), y = 0)
-      }
-    }
-  }
+@Composable
+fun SwitchScope.Track(
+  modifier: Modifier = Modifier,
+  content: @Composable SwitchTrackScope.() -> Unit,
+) {
+  Layout(
+    modifier = modifier,
+    content = {
+      val scope = SwitchTrackScopeImpl(
+        checked = checked,
+        enabled = enabled,
+        interactionSource = interactionSource,
+      )
+      scope.content()
+    },
+    measurePolicy = { measurables, constraints ->
+      measureSwitchTrack(measurables, constraints)
+    },
+  )
+}
+
+@Composable
+fun SwitchTrackScope.Thumb(
+  modifier: Modifier = Modifier,
+  animationSpec: FiniteAnimationSpec<Dp> = snap(),
+  content: @Composable () -> Unit = {},
+) {
+  SwitchThumb(
+    modifier = modifier,
+    animationSpec = animationSpec,
+    content = content,
+  )
 }
 
 @Composable
@@ -140,6 +170,28 @@ fun SwitchScope.SwitchThumb(
 private data class SwitchThumbParentData(
   val offsetFraction: Float,
 )
+
+private fun MeasureScope.measureSwitchTrack(
+  measurables: List<Measurable>,
+  constraints: Constraints,
+): MeasureResult {
+  val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+  val placeables = measurables.map { it.measure(looseConstraints) }
+  val contentWidth = placeables.maxOfOrNull { it.width } ?: 0
+  val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
+  val width = contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
+  val height = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
+
+  return layout(width, height) {
+    placeables.forEach { placeable ->
+      val thumbData = placeable.parentData as? SwitchThumbParentData
+      val x = thumbData?.let {
+        ((width - placeable.width) * it.offsetFraction).roundToInt()
+      } ?: 0
+      placeable.placeRelative(x = max(0, x), y = 0)
+    }
+  }
+}
 
 private data class SwitchThumbParentDataModifier(
   val offsetFraction: Float,

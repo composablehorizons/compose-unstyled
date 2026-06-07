@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -239,5 +240,66 @@ class ToggleSwitchTest {
     waitForIdle()
 
     onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(30.dp)
+  }
+
+  @Test
+  fun trackConstrainsThumbMovementInsideLabeledSwitch() = runComposeUiTest {
+    var checked by mutableStateOf(false)
+
+    setContent {
+      UnstyledSwitch(
+        checked = checked,
+        onCheckedChange = { checked = it },
+        modifier = Modifier.testTag("switch"),
+      ) {
+        Row {
+          Track(
+            modifier = Modifier
+              .width(58.dp)
+              .height(32.dp),
+          ) {
+            Thumb(
+              modifier = Modifier.size(24.dp),
+            ) {
+              Box(Modifier.size(1.dp).testTag("thumb-content"))
+            }
+          }
+
+          BasicText("Notifications")
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(0.dp)
+
+    onNodeWithTag("switch").performClick()
+    waitForIdle()
+
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
+  }
+
+  @Test
+  fun existingSwitchThumbCanBeUsedInsideTrack() = runComposeUiTest {
+    setContent {
+      UnstyledSwitch(
+        checked = true,
+        onCheckedChange = {},
+      ) {
+        Track(
+          modifier = Modifier
+            .width(58.dp)
+            .height(32.dp),
+        ) {
+          SwitchThumb(
+            modifier = Modifier.size(24.dp),
+          ) {
+            Box(Modifier.size(1.dp).testTag("thumb-content"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("thumb-content", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(34.dp)
   }
 }
