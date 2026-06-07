@@ -23,6 +23,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -109,6 +110,95 @@ class ToggleSwitchRecompositionTest {
     switchWidth = 68
     waitForIdle()
 
+    assertThat(recompositionCount("thumb-content")).isEqualTo(0)
+  }
+
+  @Test
+  fun togglingCheckedRecomposesTrackAndThumbContentOnce() = runComposeRecompositionTest {
+    var checked by mutableStateOf(false)
+
+    setContent {
+      UnstyledSwitch(
+        checked = checked,
+        onCheckedChange = { checked = it },
+      ) {
+        Track(
+          modifier = Modifier
+            .width(58.dp)
+            .height(32.dp),
+        ) {
+          RecompositionCount("track-content")
+          Thumb(
+            animationSpec = tween(durationMillis = 1_000),
+            modifier = Modifier.size(24.dp),
+          ) {
+            RecompositionCount("thumb-content")
+            Box(Modifier.size(1.dp))
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    resetRecompositionCounts("track-content", "thumb-content")
+
+    checked = true
+    waitForIdle()
+
+    assertThat(recompositionCount("track-content")).isEqualTo(1)
+    assertThat(recompositionCount("thumb-content")).isEqualTo(1)
+  }
+
+  @Test
+  fun resizingLabeledSwitchDoesNotRecomposeTrackOrThumbContent() = runComposeRecompositionTest {
+    var switchWidth by mutableIntStateOf(120)
+
+    setContent {
+      Layout(
+        content = {
+          UnstyledSwitch(
+            checked = true,
+            onCheckedChange = {},
+            modifier = Modifier.height(32.dp),
+          ) {
+            Row {
+              Track(
+                modifier = Modifier
+                  .width(58.dp)
+                  .height(32.dp),
+              ) {
+                RecompositionCount("track-content")
+                Thumb(
+                  animationSpec = tween(durationMillis = 1_000),
+                  modifier = Modifier.size(24.dp),
+                ) {
+                  RecompositionCount("thumb-content")
+                  Box(Modifier.size(1.dp))
+                }
+              }
+
+              Box(Modifier.size(1.dp))
+            }
+          }
+        },
+      ) { measurables, _ ->
+        val width = switchWidth
+        val height = 32.dp.roundToPx()
+        val placeable = measurables.single().measure(Constraints.fixed(width, height))
+
+        layout(width, height) {
+          placeable.place(0, 0)
+        }
+      }
+    }
+
+    waitForIdle()
+    resetRecompositionCounts("track-content", "thumb-content")
+
+    switchWidth = 140
+    waitForIdle()
+
+    assertThat(recompositionCount("track-content")).isEqualTo(0)
     assertThat(recompositionCount("thumb-content")).isEqualTo(0)
   }
 }
