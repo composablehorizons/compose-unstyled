@@ -28,11 +28,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -45,54 +45,54 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.SwitchThumb
+import com.composeunstyled.Thumb
+import com.composeunstyled.Track
 import com.composeunstyled.UnstyledSwitch
 
 @Composable
 fun ToggleSwitchDemo() {
   var toggled by remember { mutableStateOf(true) }
+  val backgroundColor by animateColorAsState(
+    if (toggled) Color.Black else Color(0xFFE0E0E0),
+  )
 
-  Row(
-    Modifier
+  UnstyledSwitch(
+    checked = toggled,
+    onCheckedChange = { toggled = it },
+    modifier = Modifier
       .width(300.dp)
-      .clip(RoundedCornerShape(10.dp))
-      .selectable(
-        selected = toggled,
-        onClick = { toggled = toggled.not() },
-        interactionSource = null,
-        role = Role.Switch,
-      ).padding(8.dp),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically,
+      .clip(RoundedCornerShape(10.dp)),
+    indication = LocalIndication.current,
   ) {
-    BasicText("Airplane Mode", style = TextStyle(fontSize = 18.sp))
-    val animatedColor by animateColorAsState(
-      if (toggled) Color.Black else Color(0xFFE0E0E0),
-    )
-    UnstyledSwitch(
-      checked = toggled,
-      onCheckedChange = null,
+    Row(
       modifier = Modifier
-        .width(58.dp)
-        .height(32.dp)
-        .clip(RoundedCornerShape(100))
-        .background(animatedColor, RoundedCornerShape(100))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
-      indication = LocalIndication.current,
+        .fillMaxWidth()
+        .padding(8.dp),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-      SwitchThumb(
-        animationSpec = tween(),
+      BasicText("Airplane Mode", style = TextStyle(fontSize = 18.sp))
+      Track(
         modifier = Modifier
-          .padding(4.dp)
-          .clip(CircleShape)
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), CircleShape)
-          .size(24.dp),
-      )
+          .width(58.dp)
+          .height(32.dp)
+          .clip(RoundedCornerShape(100))
+          .background(backgroundColor, RoundedCornerShape(100))
+          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
+      ) {
+        Thumb(
+          animationSpec = tween(),
+          modifier = Modifier
+            .padding(4.dp)
+            .clip(CircleShape)
+            .background(Color(0xFFF8FAFC))
+            .border(1.dp, Color(0xFFCACACA), CircleShape)
+            .size(24.dp),
+        )
+      }
     }
   }
 }
