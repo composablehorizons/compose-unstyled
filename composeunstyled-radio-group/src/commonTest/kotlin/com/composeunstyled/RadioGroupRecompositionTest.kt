@@ -35,7 +35,7 @@ import kotlin.test.Test
 
 class RadioGroupRecompositionTest {
   @Test
-  fun selectingUnstyledRadioButtonRecomposesRadioContentTwice() = runComposeRecompositionTest {
+  fun selectingUnstyledRadioButtonRecomposesRadioContentOnce() = runComposeRecompositionTest {
     var selectedValue by mutableStateOf("light")
 
     setContent {
@@ -65,7 +65,7 @@ class RadioGroupRecompositionTest {
     selectedValue = "dark"
     waitForIdle()
 
-    assertThat(recompositionCount("light-content")).isEqualTo(2)
-    assertThat(recompositionCount("dark-content")).isEqualTo(2)
+    assertThat(recompositionCount("light-content")).isEqualTo(1)
+    assertThat(recompositionCount("dark-content")).isEqualTo(1)
   }
 }

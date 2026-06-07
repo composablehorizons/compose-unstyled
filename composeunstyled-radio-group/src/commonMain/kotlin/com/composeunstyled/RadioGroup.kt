@@ -35,11 +35,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -64,16 +60,14 @@ fun <T> UnstyledRadioGroup(
   content: @Composable RadioGroupScope.() -> Unit,
 ) {
   val focusManager = LocalFocusManager.current
-  val state = remember { InnerRadioGroupState() }
-  val scope = remember { RadioGroupScope() }
-
-  SideEffect {
-    state.value = value
-    state.onValueChange = { nextValue ->
+  val state = InnerRadioGroupState(
+    value = value,
+    onValueChange = { nextValue ->
       @Suppress("UNCHECKED_CAST")
       onValueChange(nextValue as T)
-    }
-  }
+    },
+  )
+  val scope = remember { RadioGroupScope() }
 
   Box(
     modifier
@@ -111,10 +105,10 @@ fun <T> UnstyledRadioGroup(
 
 class RadioGroupScope internal constructor()
 
-private class InnerRadioGroupState {
-  var value by mutableStateOf<Any?>(null)
-  var onValueChange by mutableStateOf<(Any?) -> Unit>({})
-}
+private class InnerRadioGroupState(
+  val value: Any?,
+  val onValueChange: (Any?) -> Unit,
+)
 
 @Composable
 fun <T> RadioGroupScope.RadioButton(
