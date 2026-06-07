@@ -99,6 +99,7 @@ kotlin {
     commonTest.dependencies {
       implementation(kotlin("test"))
       implementation(libs.assertk)
+      implementation(projects.composeunstyledTest)
 
       @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
       implementation(libs.compose.ui.test)

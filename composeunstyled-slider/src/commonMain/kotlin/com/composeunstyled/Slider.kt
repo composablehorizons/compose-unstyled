@@ -220,17 +220,30 @@ fun UnstyledSlider(
 
   val offset = (sliderMainAxisSize - thumbMainAxisSize) * displayFraction
 
-  val state = SliderState(
-    value = coerced,
-    valueRange = valueRange,
-    steps = steps,
-    enabled = enabled,
-    orientation = orientation,
-    isRtl = isRtl,
-    isDragging = dragging || isDragged,
-    isPressed = isPressed,
-    isFocused = isFocused,
-  )
+  val isDragging = dragging || isDragged
+  val state = remember(
+    coerced,
+    valueRange,
+    steps,
+    enabled,
+    orientation,
+    isRtl,
+    isDragging,
+    isPressed,
+    isFocused,
+  ) {
+    SliderState(
+      value = coerced,
+      valueRange = valueRange,
+      steps = steps,
+      enabled = enabled,
+      orientation = orientation,
+      isRtl = isRtl,
+      isDragging = isDragging,
+      isPressed = isPressed,
+      isFocused = isFocused,
+    )
+  }
 
   fun scaleToUserValue(offset: Float) =
     scale(minPx, maxPx, offset, valueRange.start, valueRange.endInclusive)
