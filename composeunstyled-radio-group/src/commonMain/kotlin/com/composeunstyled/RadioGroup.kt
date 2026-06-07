@@ -44,7 +44,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -54,10 +53,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 
-private val KeyEvent.isKeyDown: Boolean
-  get() = type == KeyEventType.KeyDown
-
-private val LocalInnerRadioGroupState = staticCompositionLocalOf { InnerRadioGroupState() }
+private val LocalRadioGroupState = staticCompositionLocalOf<InnerRadioGroupState?> { null }
 
 @Composable
 fun <T> UnstyledRadioGroup(
@@ -90,14 +86,14 @@ fun <T> UnstyledRadioGroup(
       .onKeyEvent { event ->
         when (event.key) {
           Key.DirectionDown, Key.DirectionRight -> {
-            if (event.isKeyDown) {
+            if (event.type == KeyEventType.KeyDown) {
               focusManager.moveFocus(FocusDirection.Next)
             }
             true
           }
 
           Key.DirectionUp, Key.DirectionLeft -> {
-            if (event.isKeyDown) {
+            if (event.type == KeyEventType.KeyDown) {
               focusManager.moveFocus(FocusDirection.Previous)
             }
             true
@@ -107,7 +103,7 @@ fun <T> UnstyledRadioGroup(
         }
       },
   ) {
-    CompositionLocalProvider(LocalInnerRadioGroupState provides state) {
+    CompositionLocalProvider(LocalRadioGroupState provides state) {
       scope.content()
     }
   }
@@ -128,13 +124,30 @@ fun <T> RadioGroupScope.RadioButton(
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = null,
   content: @Composable RadioButtonScope.() -> Unit,
+) = UnstyledRadioButton(
+  value = value,
+  modifier = modifier,
+  enabled = enabled,
+  interactionSource = interactionSource,
+  indication = indication,
+  content = content,
+)
+
+@Composable
+fun <T> UnstyledRadioButton(
+  value: T,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = null,
+  content: @Composable RadioButtonScope.() -> Unit,
 ) {
-  val state = LocalInnerRadioGroupState.current
-  val selected = state.value == value
+  val state = LocalRadioGroupState.current
+  val selected = state?.value == value
+  val radioEnabled = enabled && state != null
   val radioInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
   val scope = RadioButtonScope(
     selected = selected,
-    enabled = enabled,
     interactionSource = radioInteractionSource,
   )
 
@@ -144,11 +157,11 @@ fun <T> RadioGroupScope.RadioButton(
         value = selected,
         onValueChange = { selected ->
           if (selected) {
-            state.onValueChange(value)
+            state?.onValueChange(value)
           }
         },
         role = Role.RadioButton,
-        enabled = enabled,
+        enabled = radioEnabled,
         indication = indication,
         interactionSource = radioInteractionSource,
       )
@@ -160,7 +173,6 @@ fun <T> RadioGroupScope.RadioButton(
 
 class RadioButtonScope internal constructor(
   internal val selected: Boolean,
-  internal val enabled: Boolean,
   internal val interactionSource: MutableInteractionSource,
 )
 

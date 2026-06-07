@@ -46,8 +46,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.RadioButton
 import com.composeunstyled.SelectedIndicator
+import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 
 @Composable
@@ -76,7 +76,7 @@ fun RadioGroupDemo() {
         values.forEach { value ->
           val selected = selectedValue == value
           val itemShape = RoundedCornerShape(14.dp)
-          RadioButton(
+          UnstyledRadioButton(
             value = value,
             modifier = Modifier
               .fillMaxWidth()

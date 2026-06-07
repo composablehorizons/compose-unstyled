@@ -90,6 +90,28 @@ class RadioGroupTest {
   }
 
   @Test
+  fun unstyledRadioButtonSelectsValue() = runComposeUiTest {
+    var selectedValue: String? = null
+    setContent {
+      UnstyledRadioGroup(
+        value = selectedValue,
+        onValueChange = { selectedValue = it },
+      ) {
+        UnstyledRadioButton(
+          value = "option",
+          modifier = Modifier.testTag("radio"),
+        ) {
+          Box(Modifier.size(20.dp))
+        }
+      }
+    }
+
+    onNodeWithTag("radio").performClick()
+
+    assertThat(selectedValue).isEqualTo("option")
+  }
+
+  @Test
   fun clickDoesNotSelectRadioButtonWhenDisabled() = runComposeUiTest {
     var selectedValue: String? = null
     setContent {
@@ -213,5 +235,23 @@ class RadioGroupTest {
     }
 
     onNodeWithTag("selected_indicator", useUnmergedTree = true).assertIsDisplayed()
+  }
+
+  @Test
+  fun unstyledRadioButtonOutsideGroupRendersUnselectedContent() = runComposeUiTest {
+    setContent {
+      UnstyledRadioButton(
+        value = "option",
+        modifier = Modifier.testTag("radio"),
+      ) {
+        Box(Modifier.size(20.dp).testTag("content"))
+        SelectedIndicator {
+          Box(Modifier.size(8.dp).testTag("selected_indicator"))
+        }
+      }
+    }
+
+    onNodeWithTag("content", useUnmergedTree = true).assertIsDisplayed()
+    onAllNodesWithTag("selected_indicator", useUnmergedTree = true).assertCountEquals(0)
   }
 }
