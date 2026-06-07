@@ -59,7 +59,7 @@ val CheckboxExtendedIndicatorBoundsScreenshot = VisualRegressionScreenshot(
 val DedicatedRegressionScreenshots = ModalBottomSheetRegressionScreenshots + listOf(
   CheckboxCustomCheckedIndicatorScreenshot,
   CheckboxExtendedIndicatorBoundsScreenshot,
-) + BottomSheetRegressionScreenshots
+) + BottomSheetRegressionScreenshots + SliderRegressionScreenshots
 
 val DemoRegressionScreenshots = listOf(
   demoScreenshot(name = "bottom-sheet-demo", startDestination = "bottom-sheet"),

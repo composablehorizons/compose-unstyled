@@ -185,9 +185,21 @@ fun UnstyledSlider(
   )
 
   val fraction = calcFraction(valueRange.start, valueRange.endInclusive, coerced)
-  val effectiveReverseDirection =
+  val horizontalReverseDirection =
     reverseDirection != (orientation == Orientation.Horizontal && isRtl)
-  val displayFraction = if (effectiveReverseDirection) 1f - fraction else fraction
+  val displayReverseDirection = when (orientation) {
+    Orientation.Horizontal -> horizontalReverseDirection
+    Orientation.Vertical -> true
+  }
+  val dragReverseDirection = when (orientation) {
+    Orientation.Horizontal -> horizontalReverseDirection
+    Orientation.Vertical -> true
+  }
+  val keyboardReverseDirection = when (orientation) {
+    Orientation.Horizontal -> horizontalReverseDirection
+    Orientation.Vertical -> false
+  }
+  val displayFraction = if (displayReverseDirection) 1f - fraction else fraction
 
   val focusRequester = remember { FocusRequester() }
 
@@ -208,17 +220,30 @@ fun UnstyledSlider(
 
   val offset = (sliderMainAxisSize - thumbMainAxisSize) * displayFraction
 
-  val state = SliderState(
-    value = coerced,
-    valueRange = valueRange,
-    steps = steps,
-    enabled = enabled,
-    orientation = orientation,
-    isRtl = isRtl,
-    isDragging = dragging || isDragged,
-    isPressed = isPressed,
-    isFocused = isFocused,
-  )
+  val isDragging = dragging || isDragged
+  val state = remember(
+    coerced,
+    valueRange,
+    steps,
+    enabled,
+    orientation,
+    isRtl,
+    isDragging,
+    isPressed,
+    isFocused,
+  ) {
+    SliderState(
+      value = coerced,
+      valueRange = valueRange,
+      steps = steps,
+      enabled = enabled,
+      orientation = orientation,
+      isRtl = isRtl,
+      isDragging = isDragging,
+      isPressed = isPressed,
+      isFocused = isFocused,
+    )
+  }
 
   fun scaleToUserValue(offset: Float) =
     scale(minPx, maxPx, offset, valueRange.start, valueRange.endInclusive)
@@ -241,8 +266,7 @@ fun UnstyledSlider(
   }
 
   val draggableState = rememberDraggableState { dragAmount ->
-    val resolvedDragAmount = if (effectiveReverseDirection) -dragAmount else dragAmount
-    rawOffset = (rawOffset + resolvedDragAmount + pressOffset)
+    rawOffset = (rawOffset + dragAmount + pressOffset)
     pressOffset = 0f
     updateValueFromOffset(rawOffset)
   }
@@ -265,14 +289,14 @@ fun UnstyledSlider(
     draggableState,
     resolvedInteractionSource,
     sliderMainAxisSize,
-    effectiveReverseDirection,
+    displayReverseDirection,
     orientation,
   ) {
     if (enabled) {
       detectTapGestures(
         onPress = { pos ->
           val position = if (orientation == Orientation.Horizontal) pos.x else pos.y
-          val to = if (effectiveReverseDirection) sliderMainAxisSize - position else position
+          val to = if (displayReverseDirection) sliderMainAxisSize - position else position
           pressOffset = to - rawOffset
 
           // dispatch a drag so that offset calculations kick in
@@ -329,7 +353,7 @@ fun UnstyledSlider(
         value = coerced,
         valueRange = valueRange,
         steps = steps,
-        reverseDirection = effectiveReverseDirection,
+        reverseDirection = keyboardReverseDirection,
         onValueChange = onValueChange,
         onValueChangeFinished = onValueChangeFinished,
       )
@@ -337,7 +361,7 @@ fun UnstyledSlider(
         state = draggableState,
         orientation = orientation,
         enabled = enabled,
-        reverseDirection = effectiveReverseDirection,
+        reverseDirection = dragReverseDirection,
         onDragStarted = {
           dragging = true
           focusRequester.requestFocus()
@@ -356,7 +380,10 @@ fun UnstyledSlider(
         onValueChange = onValueChange,
         onValueChangeFinished = onValueChangeFinished,
       ),
-    contentAlignment = Alignment.CenterStart,
+    contentAlignment = when (orientation) {
+      Orientation.Horizontal -> Alignment.CenterStart
+      Orientation.Vertical -> Alignment.TopCenter
+    },
   ) {
     track(state)
 
