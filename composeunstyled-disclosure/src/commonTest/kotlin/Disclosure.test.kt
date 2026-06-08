@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
@@ -57,7 +58,7 @@ class DisclosureTest {
         expanded = false,
         onExpandedChange = { nextValue = it },
       ) {
-        DisclosureButton(Modifier.testTag("button")) {
+        UnstyledDisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
       }
@@ -77,10 +78,10 @@ class DisclosureTest {
         expanded = expanded,
         onExpandedChange = { expanded = it },
       ) {
-        DisclosureButton(Modifier.testTag("button")) {
+        UnstyledDisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
-        DisclosedContent(Modifier.testTag("content")) {
+        UnstyledDisclosedContent(Modifier.testTag("content")) {
           BasicText("Panel")
         }
       }
@@ -94,13 +95,41 @@ class DisclosureTest {
   }
 
   @Test
+  fun unscopedButtonOutsideDisclosureIsDisabled() = runComposeUiTest {
+    setContent {
+      UnstyledDisclosureButton(Modifier.testTag("button")) {
+        BasicText("Heading")
+      }
+    }
+
+    onNodeWithTag("button")
+      .assertHasClickAction()
+      .assertIsNotEnabled()
+      .assert(hasNoExpandAction())
+      .assert(hasNoCollapseAction())
+
+    onNodeWithTag("button").performClick()
+  }
+
+  @Test
+  fun unscopedContentOutsideDisclosureDoesNotRender() = runComposeUiTest {
+    setContent {
+      UnstyledDisclosedContent(Modifier.testTag("content")) {
+        BasicText("Panel")
+      }
+    }
+
+    onNodeWithTag("content").assertDoesNotExist()
+  }
+
+  @Test
   fun disclosureButtonExposesButtonRoleAndExpandActionWhenCollapsed() = runComposeUiTest {
     setContent {
       UnstyledDisclosure(
         expanded = false,
         onExpandedChange = {},
       ) {
-        DisclosureButton(Modifier.testTag("button")) {
+        UnstyledDisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
       }
@@ -120,7 +149,7 @@ class DisclosureTest {
         expanded = true,
         onExpandedChange = {},
       ) {
-        DisclosureButton(Modifier.testTag("button")) {
+        UnstyledDisclosureButton(Modifier.testTag("button")) {
           BasicText("Heading")
         }
       }
@@ -140,7 +169,7 @@ class DisclosureTest {
         expanded = false,
         onExpandedChange = {},
       ) {
-        DisclosureButton(
+        UnstyledDisclosureButton(
           modifier = Modifier.size(100.dp).testTag("button"),
           contentPadding = PaddingValues(10.dp),
           contentAlignment = Alignment.BottomEnd,

@@ -85,6 +85,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.compose.foundation)
+        implementation(projects.composeunstyledBuildModifier)
         implementation(projects.composeunstyledButton)
       }
     }

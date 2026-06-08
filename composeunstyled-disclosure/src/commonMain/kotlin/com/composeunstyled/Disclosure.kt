@@ -31,8 +31,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.collapse
@@ -42,21 +44,15 @@ import androidx.compose.ui.unit.dp
 
 private val NoPadding = PaddingValues(0.dp)
 
-@Stable
-class DisclosureScope internal constructor(
-  val expanded: Boolean,
-  internal val onExpandedChange: (Boolean) -> Unit,
-)
+private val LocalDisclosureContext = staticCompositionLocalOf<DisclosureContext?> { null }
 
-@Composable
-private fun rememberDisclosureScope(
-  expanded: Boolean,
-  onExpandedChange: (Boolean) -> Unit,
-): DisclosureScope {
-  return remember(expanded, onExpandedChange) {
-    DisclosureScope(expanded, onExpandedChange)
-  }
-}
+@Stable
+class DisclosureScope internal constructor()
+
+private class DisclosureContext(
+  val expanded: Boolean,
+  val onExpandedChange: (Boolean) -> Unit,
+)
 
 @Composable
 fun UnstyledDisclosure(
@@ -65,10 +61,15 @@ fun UnstyledDisclosure(
   modifier: Modifier = Modifier,
   content: @Composable DisclosureScope.() -> Unit,
 ) {
-  val scope = rememberDisclosureScope(expanded, onExpandedChange)
+  val scope = remember { DisclosureScope() }
+  val context = remember(expanded, onExpandedChange) {
+    DisclosureContext(expanded, onExpandedChange)
+  }
 
   Box(modifier) {
-    scope.content()
+    CompositionLocalProvider(LocalDisclosureContext provides context) {
+      scope.content()
+    }
   }
 }
 
@@ -81,29 +82,77 @@ fun DisclosureScope.DisclosureButton(
   interactionSource: MutableInteractionSource? = null,
   contentAlignment: Alignment = Alignment.Center,
   content: @Composable () -> Unit,
+) = UnstyledDisclosureButton(
+  modifier = modifier,
+  enabled = enabled,
+  contentPadding = contentPadding,
+  indication = indication,
+  interactionSource = interactionSource,
+  contentAlignment = contentAlignment,
+  content = content,
+)
+
+@Composable
+fun UnstyledDisclosureButton(
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  contentPadding: PaddingValues = NoPadding,
+  indication: Indication? = null,
+  interactionSource: MutableInteractionSource? = null,
+  contentAlignment: Alignment = Alignment.Center,
+  content: @Composable () -> Unit,
 ) {
+  val context = LocalDisclosureContext.current
+
   UnstyledButton(
-    modifier = modifier.semantics {
-      if (expanded) {
-        collapse {
-          onExpandedChange(false)
-          true
-        }
-      } else {
-        expand {
-          onExpandedChange(true)
-          true
-        }
+    modifier = modifier then buildModifier {
+      if (context != null) {
+        add(
+          Modifier.semantics {
+            if (context.expanded) {
+              collapse {
+                context.onExpandedChange(false)
+                true
+              }
+            } else {
+              expand {
+                context.onExpandedChange(true)
+                true
+              }
+            }
+          },
+        )
       }
     },
-    onClick = { onExpandedChange(expanded.not()) },
+    onClick = { context?.onExpandedChange(context.expanded.not()) },
     interactionSource = interactionSource,
     indication = indication,
-    enabled = enabled,
+    enabled = enabled && context != null,
     contentPadding = contentPadding,
     contentAlignment = contentAlignment,
   ) {
     content()
+  }
+}
+
+@Composable
+fun UnstyledDisclosedContent(
+  modifier: Modifier = Modifier,
+  enter: EnterTransition = EnterTransition.None,
+  exit: ExitTransition = ExitTransition.None,
+  content: @Composable () -> Unit,
+) {
+  val context = LocalDisclosureContext.current
+
+  if (context != null) {
+    AnimatedVisibility(
+      modifier = modifier,
+      visible = context.expanded,
+      enter = enter,
+      exit = exit,
+    ) {
+      content()
+    }
   }
 }
 
@@ -113,13 +162,9 @@ fun DisclosureScope.DisclosedContent(
   enter: EnterTransition = EnterTransition.None,
   exit: ExitTransition = ExitTransition.None,
   content: @Composable () -> Unit,
-) {
-  AnimatedVisibility(
-    modifier = modifier,
-    visible = expanded,
-    enter = enter,
-    exit = exit,
-  ) {
-    content()
-  }
-}
+) = UnstyledDisclosedContent(
+  modifier = modifier,
+  enter = enter,
+  exit = exit,
+  content = content,
+)
