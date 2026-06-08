@@ -79,6 +79,8 @@ const apiReferences = {
   disclosure: [
     source('composeunstyled-disclosure/src/commonMain/kotlin/com/composeunstyled/Disclosure.kt', [
       fn('UnstyledDisclosure'),
+      fn('UnstyledDisclosureButton'),
+      fn('UnstyledDisclosedContent'),
       fn('DisclosureButton', 'DisclosureScope.DisclosureButton'),
       fn('DisclosedContent', 'DisclosureScope.DisclosedContent'),
     ]),
