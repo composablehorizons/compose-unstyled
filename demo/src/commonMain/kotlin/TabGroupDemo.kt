@@ -50,17 +50,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Tab
-import com.composeunstyled.TabList
-import com.composeunstyled.TabPanel
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
+import com.composeunstyled.UnstyledTabList
+import com.composeunstyled.UnstyledTabPanel
 
 @Composable
 fun TabGroupDemo() {
   class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)
 
-  val categories = mapOf<String, List<Article>>(
+  val categories = mapOf(
     "Trending" to listOf(
       Article(
         title = "I hosted my startup's backend on a Tamagotchi – AMA",
@@ -120,7 +120,7 @@ fun TabGroupDemo() {
       modifier = Modifier.widthIn(max = 450.dp),
     ) {
       Column {
-        TabList(
+        UnstyledTabList(
           modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
@@ -130,7 +130,7 @@ fun TabGroupDemo() {
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
-              Tab(
+              UnstyledTab(
                 key = key,
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 indication = LocalIndication.current,
@@ -167,7 +167,7 @@ fun TabGroupDemo() {
 
         Spacer(modifier = Modifier.height(16.dp))
         categories.forEach { (key, items) ->
-          TabPanel(
+          UnstyledTabPanel(
             key = key,
             modifier = Modifier
               .fillMaxWidth()

@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -59,6 +61,9 @@ import androidx.compose.ui.semantics.Role
 
 typealias TabKey = String
 
+private val LocalTabGroupRegistry = staticCompositionLocalOf<TabsRegistry<Any?>?> { null }
+private val LocalTabListRegistry = staticCompositionLocalOf<TabsRegistry<Any?>?> { null }
+
 private val KeyEvent.isKeyDown: Boolean
   get() = type == KeyEventType.KeyDown
 
@@ -75,18 +80,23 @@ internal class TabsRegistry<T> {
   var panelsFocusRequesters: Map<T, FocusRequester> by mutableStateOf(emptyMap())
 }
 
-class TabGroupScope<T> internal constructor(
-  internal val registry: TabsRegistry<T>,
-)
+class TabGroupScope<T> internal constructor()
 
-class TabListScope<T> internal constructor(
-  internal val registry: TabsRegistry<T>,
-)
+class TabListScope<T> internal constructor()
 
 class TabScope internal constructor(
   val selected: Boolean,
   val enabled: Boolean,
 )
+
+@Suppress("UNCHECKED_CAST")
+private fun <T> TabsRegistry<T>.asAnyRegistry(): TabsRegistry<Any?> = this as TabsRegistry<Any?>
+
+@Composable
+private fun currentTabGroupRegistry(): TabsRegistry<Any?>? = LocalTabGroupRegistry.current
+
+@Composable
+private fun currentTabListRegistry(): TabsRegistry<Any?>? = LocalTabListRegistry.current
 
 @Composable
 fun <T> UnstyledTabGroup(
@@ -128,10 +138,12 @@ fun <T> UnstyledTabGroup(
       }
       .focusGroup(),
   ) {
-    val tabGroupScope = remember(registry) {
-      TabGroupScope(registry)
+    val tabGroupScope = remember {
+      TabGroupScope<T>()
     }
-    tabGroupScope.content()
+    CompositionLocalProvider(LocalTabGroupRegistry provides registry.asAnyRegistry()) {
+      tabGroupScope.content()
+    }
   }
 }
 
@@ -140,8 +152,29 @@ fun <T> TabGroupScope<T>.TabList(
   modifier: Modifier = Modifier,
   orientation: Orientation = Orientation.Horizontal,
   content: @Composable TabListScope<T>.() -> Unit,
+) = UnstyledTabList(
+  modifier = modifier,
+  orientation = orientation,
 ) {
-  val registry = registry
+  val tabListScope = remember {
+    TabListScope<T>()
+  }
+  tabListScope.content()
+}
+
+@Composable
+fun UnstyledTabList(
+  modifier: Modifier = Modifier,
+  orientation: Orientation = Orientation.Horizontal,
+  content: @Composable () -> Unit,
+) {
+  val registry = currentTabGroupRegistry()
+  if (registry == null) {
+    Box(modifier) {
+      content()
+    }
+    return
+  }
   val tabKeys = registry.tabKeys
 
   Box(
@@ -242,10 +275,9 @@ fun <T> TabGroupScope<T>.TabList(
         }
       },
   ) {
-    val tabListScope = remember(registry) {
-      TabListScope(registry)
+    CompositionLocalProvider(LocalTabListRegistry provides registry) {
+      content()
     }
-    tabListScope.content()
   }
 }
 
@@ -258,11 +290,55 @@ fun <T> TabListScope<T>.Tab(
   indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
   content: @Composable TabScope.() -> Unit,
+) = UnstyledTab(
+  key = key,
+  modifier = modifier,
+  enabled = enabled,
+  activateOnFocus = activateOnFocus,
+  indication = indication,
+  interactionSource = interactionSource,
+  content = content,
+)
+
+@Composable
+fun <T> UnstyledTab(
+  key: T,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  activateOnFocus: Boolean = true,
+  indication: Indication? = null,
+  interactionSource: MutableInteractionSource? = null,
+  content: @Composable TabScope.() -> Unit,
 ) {
-  val registry = registry
+  val registry = currentTabListRegistry()
+  if (registry == null) {
+    val tabScope = remember {
+      TabScope(
+        selected = false,
+        enabled = false,
+      )
+    }
+    Box(modifier) {
+      tabScope.content()
+    }
+    return
+  }
   val focusManager = LocalFocusManager.current
   val focusRequester = registry.tabFocusRequesters[key] ?: FocusRequester.Default
   val activatedTab = registry.activatedTab
+  val isRegisteredTab = key in registry.tabKeys
+  if (isRegisteredTab.not()) {
+    val tabScope = remember {
+      TabScope(
+        selected = false,
+        enabled = false,
+      )
+    }
+    Box(modifier) {
+      tabScope.content()
+    }
+    return
+  }
   val selected = activatedTab == key
   val tabScope = remember(selected, enabled) {
     TabScope(
@@ -336,8 +412,19 @@ fun <T> TabGroupScope<T>.TabPanel(
   key: T,
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
+) = UnstyledTabPanel(
+  key = key,
+  modifier = modifier,
+  content = content,
+)
+
+@Composable
+fun <T> UnstyledTabPanel(
+  key: T,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) {
-  val registry = registry
+  val registry = currentTabGroupRegistry() ?: return
 
   if (registry.activatedTab == key) {
     val focusRequester = registry.panelsFocusRequesters[key] ?: FocusRequester.Default
