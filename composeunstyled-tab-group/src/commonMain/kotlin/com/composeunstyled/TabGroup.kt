@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -289,6 +290,7 @@ fun <T> TabListScope<T>.Tab(
   activateOnFocus: Boolean = true,
   indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
+  contentAlignment: Alignment = Alignment.TopStart,
   content: @Composable TabScope.() -> Unit,
 ) = UnstyledTab(
   key = key,
@@ -297,6 +299,7 @@ fun <T> TabListScope<T>.Tab(
   activateOnFocus = activateOnFocus,
   indication = indication,
   interactionSource = interactionSource,
+  contentAlignment = contentAlignment,
   content = content,
 )
 
@@ -308,6 +311,7 @@ fun <T> UnstyledTab(
   activateOnFocus: Boolean = true,
   indication: Indication? = null,
   interactionSource: MutableInteractionSource? = null,
+  contentAlignment: Alignment = Alignment.TopStart,
   content: @Composable TabScope.() -> Unit,
 ) {
   val registry = currentTabListRegistry()
@@ -318,7 +322,7 @@ fun <T> UnstyledTab(
         enabled = false,
       )
     }
-    Box(modifier) {
+    Box(modifier, contentAlignment = contentAlignment) {
       tabScope.content()
     }
     return
@@ -334,7 +338,7 @@ fun <T> UnstyledTab(
         enabled = false,
       )
     }
-    Box(modifier) {
+    Box(modifier, contentAlignment = contentAlignment) {
       tabScope.content()
     }
     return
@@ -402,6 +406,7 @@ fun <T> UnstyledTab(
         enabled = enabled,
         role = Role.Tab,
       ),
+    contentAlignment = contentAlignment,
   ) {
     tabScope.content()
   }
