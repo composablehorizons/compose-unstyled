@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-06-11
+
+### Added
+
+- Each modal API (sheets, dialogs) now comes with its own `Host` composable. When you wrap your
+  content with the respective host, the modal is rendered within the same composition tree, instead
+  of its own Window. (#410)
+- Added new `Track` composable in the `ToggleSwitch`, in order to separate the clickable area from
+  the rendered area of the switch. This is useful when building full row toggles such as in setting
+  screens.(#415)
+- Added unscoped versions of radio button, disclosure, and tab group to make it more straightforward
+  to build your own components without fighting scoping. (#417, #421, #424)
+- Added `contentAlignment` parameter to `TabGroup`'s `Tab` to make it simpler to position children
+  inside of tabs. (#426)
+- `Stack` is now part of the default `composeunstyled` module. (#425)
+
+### Fixed
+
+- Fixed modal bottom sheet overlays being dismissed before the sheet finishes exiting. (#409)
+- Fixed vertical sliders handling pointer and keyboard input in the wrong direction. (#413)
+- Fixed `UnstyledSlider` thumbs briefly rendering at the start of the track before moving to their
+  initial value position. (#430)
+
 ## [2.5.0] - 2026-06-01
 
 ### Added
@@ -16,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Compose Unstyled now uses Compose Multiplatform `1.11.0`.
-- Deprecated `currentWindowContainerSize()` in favor of `LocalWindowInfo.current.containerDpSize`. (#402)
+- Deprecated `currentWindowContainerSize()` in favor of `LocalWindowInfo.current.containerDpSize`. (
+  #402)
 
 ## [2.4.1] - 2026-05-31
 
@@ -93,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed fully expanded bottom sheets with short lazy content anchoring incorrectly instead of staying
+- Fixed fully expanded bottom sheets with short lazy content anchoring incorrectly instead of
+  staying
   aligned to the bottom of the container. (#356)
 - Fixed fully expanded bottom sheets clipping content when the sheet modifier adds height, such as
   top padding. (#356)
@@ -151,7 +176,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `Scrim` as a scoped modal primitive.
 - Added `Sheet` as the measured bottom sheet panel and `UnstyledBottomSheet` as the bottom sheet
   container.
-- Added public `BottomSheetState` and `ModalBottomSheetState` constructors so design systems can wrap
+- Added public `BottomSheetState` and `ModalBottomSheetState` constructors so design systems can
+  wrap
   primitive state in their own state objects.
 - Compose Unstyled now uses Kotlin `2.3.20` and Compose Multiplatform `1.11.0-alpha01`.
 
@@ -193,7 +219,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   through the newer `BasicTextField` transformation, line limit, keyboard, layout, and scroll
   parameters.
 - `UnstyledSlider` now exposes `track` and `thumb` slots with `SliderState`, supports horizontal and
-  vertical orientations, reverse direction, stepped values, keyboard control, and custom thumb sizing.
+  vertical orientations, reverse direction, stepped values, keyboard control, and custom thumb
+  sizing.
 - Checkbox, tri-state checkbox, and radio group indicators are now scoped child APIs
   (`CheckedIndicator`, `StateIndicator`, and `SelectedIndicator`) that receive the primitive
   interaction source.
@@ -208,6 +235,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Design systems are now responsible for arranging primitive slots and indicators.
 
 ### Fixed
+
 - Tooltips now hide on Escape only while visible and keep keyboard focus and hover visibility
   handling separate.
 - Scrollbars now support dynamic sizing.
