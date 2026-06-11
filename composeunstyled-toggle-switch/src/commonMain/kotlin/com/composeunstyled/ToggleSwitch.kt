@@ -41,6 +41,8 @@ import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -78,6 +80,7 @@ fun UnstyledSwitch(
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource? = null,
   indication: Indication? = null,
+  accessibilityLabel: String? = null,
   content: @Composable SwitchScope.() -> Unit,
 ) {
   val resolvedInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
@@ -96,6 +99,13 @@ fun UnstyledSwitch(
                 role = Role.Switch,
                 onValueChange = onCheckedChange,
               ),
+            )
+          }
+          if (accessibilityLabel != null) {
+            add(
+              Modifier.semantics {
+                this.contentDescription = accessibilityLabel
+              },
             )
           }
         },

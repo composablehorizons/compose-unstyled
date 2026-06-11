@@ -43,6 +43,7 @@ import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -111,6 +112,21 @@ class ToggleSwitchTest {
     onNodeWithTag("switch").performClick()
 
     onNodeWithTag("switch").assertIsOn()
+  }
+
+  @Test
+  fun exposesAccessibilityLabel() = runComposeUiTest {
+    setContent {
+      UnstyledSwitch(
+        checked = false,
+        onCheckedChange = {},
+        accessibilityLabel = "Notifications",
+      ) {
+        Box(Modifier.size(24.dp))
+      }
+    }
+
+    onNodeWithContentDescription("Notifications").assertIsDisplayed()
   }
 
   @Test
