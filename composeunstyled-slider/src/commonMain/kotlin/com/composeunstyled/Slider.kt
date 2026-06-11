@@ -39,7 +39,6 @@ import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -50,7 +49,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -65,12 +63,12 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.setProgress
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastAll
@@ -218,8 +216,6 @@ fun UnstyledSlider(
   val maxPx: Float = max(sliderMainAxisSize - (thumbMainAxisSize / 2), 0f)
   val minPx: Float = min(thumbMainAxisSize / 2, maxPx)
 
-  val offset = (sliderMainAxisSize - thumbMainAxisSize) * displayFraction
-
   val isDragging = dragging || isDragged
   val state = remember(
     coerced,
@@ -343,7 +339,7 @@ fun UnstyledSlider(
       }
     }
 
-  Box(
+  Layout(
     modifier = modifier
       .then(dragOnTap)
       .focusRequester(focusRequester)
@@ -380,25 +376,42 @@ fun UnstyledSlider(
         onValueChange = onValueChange,
         onValueChangeFinished = onValueChangeFinished,
       ),
-    contentAlignment = when (orientation) {
-      Orientation.Horizontal -> Alignment.CenterStart
-      Orientation.Vertical -> Alignment.TopCenter
+    content = {
+      Box { track(state) }
+      Box(Modifier.onSizeChanged { thumbSize = it }) { thumb(state) }
     },
-  ) {
-    track(state)
+  ) { measurables, constraints ->
+    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+    val trackPlaceable = measurables[0].measure(looseConstraints)
+    val thumbPlaceable = measurables[1].measure(looseConstraints)
+    val width = max(trackPlaceable.width, thumbPlaceable.width).coerceIn(
+      constraints.minWidth,
+      constraints.maxWidth,
+    )
+    val height = max(trackPlaceable.height, thumbPlaceable.height).coerceIn(
+      constraints.minHeight,
+      constraints.maxHeight,
+    )
+    val offset = if (orientation == Orientation.Horizontal) {
+      (width - thumbPlaceable.width) * displayFraction
+    } else {
+      (height - thumbPlaceable.height) * displayFraction
+    }
 
-    Box(
-      Modifier
-        .onSizeChanged { thumbSize = it }
-        .offset {
-          if (orientation == Orientation.Horizontal) {
-            IntOffset(x = offset.roundToInt(), y = 0)
-          } else {
-            IntOffset(x = 0, y = offset.roundToInt())
-          }
-        },
-    ) {
-      thumb(state)
+    layout(width, height) {
+      if (orientation == Orientation.Horizontal) {
+        trackPlaceable.placeRelative(x = 0, y = (height - trackPlaceable.height) / 2)
+        thumbPlaceable.placeRelative(
+          x = offset.roundToInt(),
+          y = (height - thumbPlaceable.height) / 2,
+        )
+      } else {
+        trackPlaceable.placeRelative(x = (width - trackPlaceable.width) / 2, y = 0)
+        thumbPlaceable.placeRelative(
+          x = (width - thumbPlaceable.width) / 2,
+          y = offset.roundToInt(),
+        )
+      }
     }
   }
 }

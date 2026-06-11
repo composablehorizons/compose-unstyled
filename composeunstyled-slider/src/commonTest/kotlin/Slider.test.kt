@@ -30,15 +30,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.KeyInjectionScope
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performSemanticsAction
@@ -255,6 +259,31 @@ class SliderTest {
       .top
 
     assertThat(bottomValueThumbTop).isGreaterThan(topValueThumbTop)
+  }
+
+  @Test
+  fun thumbStartsAtInitialValuePosition() = runComposeUiTest {
+    mainClock.autoAdvance = false
+    val thumbPositions = mutableStateListOf<Int>()
+
+    setContent {
+      TestSlider(
+        value = 0.45f,
+        thumb = {
+          Box(
+            Modifier
+              .onGloballyPositioned { thumbPositions += it.positionInRoot().x.toInt() }
+              .size(20.dp)
+              .testTag("thumb"),
+          )
+        },
+      )
+    }
+
+    mainClock.advanceTimeByFrame()
+
+    assertThat(thumbPositions.distinct()).containsExactly(81)
+    onNodeWithTag("thumb", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(81.dp)
   }
 
   @Test
