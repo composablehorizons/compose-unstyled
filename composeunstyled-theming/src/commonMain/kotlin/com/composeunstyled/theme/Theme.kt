@@ -79,8 +79,9 @@ data class ThemeValues<T> internal constructor(
   }
 }
 
-typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
+internal typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
 typealias ThemeComposable = ComposableWithContent
+internal typealias ThemeExtension = @Composable (@Composable () -> Unit) -> Unit
 
 data class ThemeProperty<T>(val name: String)
 data class ThemeToken<T>(val name: String)
@@ -113,7 +114,22 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
       LocalTextSelectionColors provides textSelectionColors,
       LocalMinimumComponentInteractiveSize provides finalInteractiveSize,
     ) {
-      content()
+      val currentExtendedTheme = builder.extendedTheme
+
+      if (currentExtendedTheme == null) {
+        content()
+      } else {
+        var wasContentCalled = false
+
+        currentExtendedTheme {
+          check(wasContentCalled.not()) {
+            "You may call the content lambda of extend {} exactly once."
+          }
+
+          wasContentCalled = true
+          content()
+        }
+      }
     }
   }
 }
@@ -170,6 +186,17 @@ class ThemeBuilder internal constructor() {
   )
 
   val properties = MutableThemeProperties()
+
+  internal var extendedTheme: ThemeExtension? = null
+    private set
+
+  fun extend(extension: @Composable (@Composable () -> Unit) -> Unit) {
+    check(this.extendedTheme == null) {
+      "Themes can only be extended exactly once. Make sure you use the `extend {}` block within your buildTheme {} only once."
+    }
+
+    this.extendedTheme = extension
+  }
 }
 
 class MutableThemeProperties internal constructor() {
