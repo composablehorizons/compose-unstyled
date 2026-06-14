@@ -79,7 +79,7 @@ data class ThemeValues<T> internal constructor(
   }
 }
 
-typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
+internal typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
 typealias ThemeComposable = ComposableWithContent
 
 data class ThemeProperty<T>(val name: String)
