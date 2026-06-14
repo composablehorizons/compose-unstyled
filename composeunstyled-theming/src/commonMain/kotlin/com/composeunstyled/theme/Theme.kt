@@ -28,10 +28,14 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositeKeyHashCode
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.currentCompositeKeyHashCode
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -81,6 +85,7 @@ data class ThemeValues<T> internal constructor(
 
 internal typealias ComposableWithContent = @Composable (@Composable () -> Unit) -> Unit
 typealias ThemeComposable = ComposableWithContent
+internal typealias ThemeExtension = @Composable (@Composable () -> Unit) -> Unit
 
 data class ThemeProperty<T>(val name: String)
 data class ThemeToken<T>(val name: String)
@@ -113,7 +118,19 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
       LocalTextSelectionColors provides textSelectionColors,
       LocalMinimumComponentInteractiveSize provides finalInteractiveSize,
     ) {
-      content()
+      val currentExtendedTheme = builder.extendedTheme
+
+      if (currentExtendedTheme == null) {
+        content()
+      } else {
+        val tracker = remember { CompositionCallTracker() }
+
+        currentExtendedTheme {
+          tracker.once {
+            content()
+          }
+        }
+      }
     }
   }
 }
@@ -123,10 +140,36 @@ internal class ResolvedTheme(
   internal val properties: Map<ThemeProperty<*>, ThemeValues<*>>,
 )
 
+private class CompositionCallTracker {
+  private var activeContentKey: CompositeKeyHashCode? = null
+
+  @Composable
+  fun once(content: @Composable () -> Unit) {
+    val currentKey = currentCompositeKeyHashCode
+
+    DisposableEffect(currentKey) {
+      check(activeContentKey == null || activeContentKey == currentKey) {
+        "You may call the content lambda of extend {} exactly once."
+      }
+
+      activeContentKey = currentKey
+
+      onDispose {
+        if (activeContentKey == currentKey) {
+          activeContentKey = null
+        }
+      }
+    }
+
+    content()
+  }
+}
+
 internal val LocalTheme =
   staticCompositionLocalOf<ResolvedTheme> {
     error(
-      "No theme was set. In order to use the Theme object you need to wrap your content with a theme @Composable returned by the buildTheme {} function.",
+      "No theme was set. In order to use the Theme object you need to wrap " +
+        "your content with a theme @Composable returned by the buildTheme {} function.",
     )
   }
 
@@ -139,7 +182,8 @@ private val UnspecifiedTextSelectionColors = TextSelectionColors(
 annotation class ThemeBuilderMarker
 
 @Deprecated(
-  message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+  message = "This will be removed in 3.0. It is now up to you to implement " +
+    "this behavior if it is a requirement for your design system.",
 )
 data class ComponentInteractiveSize(
   val nonTouchInteractionSize: Dp = Dp.Unspecified,
@@ -147,7 +191,8 @@ data class ComponentInteractiveSize(
 )
 
 @Deprecated(
-  message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+  message = "This will be removed in 3.0. It is now up to you to implement " +
+    "this behavior if it is a requirement for your design system.",
 )
 fun ComponentInteractiveSize(size: Dp): ComponentInteractiveSize {
   return ComponentInteractiveSize(size, size)
@@ -163,13 +208,32 @@ class ThemeBuilder internal constructor() {
   var defaultTextSelectionColors: TextSelectionColors? by mutableStateOf(null)
 
   @Deprecated(
-    message = "This will be removed in 3.0. It is now up to you to implement this behavior if it is a requirement for your design system.",
+    message = "This will be removed in 3.0. It is now up to you to implement this " +
+      "behavior if it is a requirement for your design system.",
   )
   var defaultComponentInteractiveSize: ComponentInteractiveSize by mutableStateOf(
     ComponentInteractiveSize(Dp.Unspecified, Dp.Unspecified),
   )
 
   val properties = MutableThemeProperties()
+
+  internal var extendedTheme: ThemeExtension? = null
+    private set
+
+  private var extensionKey: CompositeKeyHashCode? = null
+
+  @Composable
+  fun extend(extension: @Composable (@Composable () -> Unit) -> Unit) {
+    val currentKey = currentCompositeKeyHashCode
+
+    check(extensionKey == null || extensionKey == currentKey) {
+      "Themes can only be extended exactly once. " +
+        "Make sure you use the `extend {}` block within your buildTheme {} only once."
+    }
+
+    extensionKey = currentKey
+    this.extendedTheme = extension
+  }
 }
 
 class MutableThemeProperties internal constructor() {

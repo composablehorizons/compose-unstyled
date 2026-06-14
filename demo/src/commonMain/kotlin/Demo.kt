@@ -147,6 +147,7 @@ private val availableModifiers = listOf(
 
 private val themingDemos = listOf(
   DemoItem("Platform Theme", "platform-theme", { PlatformThemeDemo() }),
+  DemoItem("Theme Extend", "theme-extend", { ThemeExtendDemo() }),
   DemoItem("Theming", "theme", { ThemingDemo() }),
 )
 
