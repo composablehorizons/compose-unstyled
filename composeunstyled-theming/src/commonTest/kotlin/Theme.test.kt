@@ -28,6 +28,7 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
@@ -35,7 +36,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
+import assertk.assertFailure
 import assertk.assertThat
+import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import com.composeunstyled.theme.NoIndication
 import com.composeunstyled.theme.Theme
@@ -155,6 +158,125 @@ class ThemeCommonTest {
     assertThat(currentSelectionColors.backgroundColor).isEqualTo(Color.Unspecified)
   }
 
+  @Test
+  fun extendWrapsThemeContent() = runComposeUiTest {
+    val testTheme = buildTheme {
+      extend { content ->
+        CompositionLocalProvider(LocalExtendedLabel provides "Extended") {
+          content()
+        }
+      }
+    }
+
+    setContent {
+      testTheme {
+        BasicText(LocalExtendedLabel.current)
+      }
+    }
+
+    onNodeWithText("Extended").assertExists()
+    onNodeWithText("Default").assertDoesNotExist()
+  }
+
+  @Test
+  fun extendCanOnlyBeCalledOnce() {
+    assertFailure {
+      runComposeUiTest {
+        val testTheme = buildTheme {
+          extend { content ->
+            content()
+          }
+          extend { content ->
+            content()
+          }
+        }
+
+        setContent {
+          testTheme {
+            BasicText("Theme")
+          }
+        }
+      }
+    }.hasMessage(
+      "Themes can only be extended exactly once. " +
+        "Make sure you use the `extend {}` block within your buildTheme {} only once.",
+    )
+  }
+
+  @Test
+  fun extendedContentCanOnlyBeEmittedOnce() {
+    assertFailure {
+      runComposeUiTest {
+        val testTheme = buildTheme {
+          extend { content ->
+            content()
+            content()
+          }
+        }
+
+        setContent {
+          testTheme {
+            BasicText("Theme")
+          }
+        }
+      }
+    }.hasMessage("You may call the content lambda of extend {} exactly once.")
+  }
+
+  @Test
+  fun extendedContentCanRecompose() = runComposeUiTest {
+    var label by mutableStateOf("First")
+    val testTheme = buildTheme {
+      extend { content ->
+        CompositionLocalProvider(LocalExtendedLabel provides label) {
+          content()
+        }
+      }
+    }
+
+    setContent {
+      testTheme {
+        BasicText(LocalExtendedLabel.current)
+      }
+    }
+
+    onNodeWithText("First").assertExists()
+
+    label = "Second"
+
+    onNodeWithText("Second").assertExists()
+    onNodeWithText("First").assertDoesNotExist()
+  }
+
+  @Test
+  fun themeBuilderActionCanRecomposeWithExtend() = runComposeUiTest {
+    var label by mutableStateOf("First")
+    val testTheme = buildTheme {
+      val currentLabel = label
+
+      extend { content ->
+        CompositionLocalProvider(LocalExtendedLabel provides currentLabel) {
+          content()
+        }
+      }
+    }
+
+    setContent {
+      testTheme {
+        BasicText(LocalExtendedLabel.current)
+      }
+    }
+
+    onNodeWithText("First").assertExists()
+
+    label = "Second"
+
+    onNodeWithText("Second").assertExists()
+    onNodeWithText("First").assertDoesNotExist()
+  }
+
   val strings = ThemeProperty<String>("strings")
   val text = ThemeToken<String>("label")
+
+  val LocalExtendedLabel = compositionLocalOf { "Default" }
 }
