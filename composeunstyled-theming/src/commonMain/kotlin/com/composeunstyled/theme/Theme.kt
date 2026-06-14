@@ -184,9 +184,3 @@ class MutableThemeProperties internal constructor() {
       ?: error("No theme was set. In order to use the theme @Composable function.")
   }
 }
-
-data class OverriddenValue<T>(val token: ThemeToken<T>, val value: T)
-
-infix fun <T> ThemeToken<T>.provides(value: T): OverriddenValue<T> {
-  return OverriddenValue(this, value)
-}
