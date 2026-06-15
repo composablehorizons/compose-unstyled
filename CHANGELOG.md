@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-06-15
+
+### Added
+
+- Introduce new Theme `extend` API. This allows you to extend a given theme via the `buildTheme {}` function and have a hook, in which you can provide your own composition locals. Check the respective Demo to get started.
+- Added `accessibilityLabel` to `UnstyledSwitch` so switches can expose an explicit content
+  description.
+
+### Changed
+
+- Compose Unstyled now uses Kotlin `2.4.0` and Compose Multiplatform `1.11.1`.
+
+### Fixed
+
+- Fixed dialog pointer input handling when scaling animations are used. (#125)
+
+### Removed
+
+- Removed the unused `ComposableWithContent`, `OverriddenValue`, and `ThemeToken.provides()`
+  theming helper APIs.
+
 ## [2.6.0] - 2026-06-11
 
 ### Added
