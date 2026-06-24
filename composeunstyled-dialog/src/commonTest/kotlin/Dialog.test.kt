@@ -22,6 +22,8 @@
 package com.composeunstyled
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -208,6 +210,40 @@ class DialogTest {
 
     onNodeWithTag("dialog_content").assertDoesNotExist()
     onNode(isDialog()).assertDoesNotExist()
+  }
+
+  @Test
+  fun scrimWithoutTransitionsDoesNotSkipPanelExitTransition() = runComposeUiTest {
+    var visible by mutableStateOf(true)
+
+    setContent {
+      UnstyledDialog(
+        visible = visible,
+        onDismissRequest = { visible = false },
+        overlay = {
+          Scrim()
+        },
+      ) {
+        DialogPanel(
+          modifier = Modifier.testTag("dialog_content"),
+          exit = fadeOut(animationSpec = tween(durationMillis = 1_000)),
+        ) {
+        }
+      }
+    }
+
+    waitForIdle()
+    onNodeWithTag("dialog_content").assertExists()
+
+    mainClock.autoAdvance = false
+    visible = false
+    mainClock.advanceTimeBy(100)
+
+    onNodeWithTag("dialog_content").assertExists()
+
+    mainClock.advanceTimeBy(1_000)
+    onNodeWithTag("dialog_content").assertDoesNotExist()
+    mainClock.autoAdvance = true
   }
 
   @Test
