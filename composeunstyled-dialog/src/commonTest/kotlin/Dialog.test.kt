@@ -214,7 +214,6 @@ class DialogTest {
 
   @Test
   fun scrimWithoutTransitionsDoesNotSkipPanelExitTransition() = runComposeUiTest {
-    mainClock.autoAdvance = false
     var visible by mutableStateOf(true)
 
     setContent {
@@ -233,8 +232,10 @@ class DialogTest {
       }
     }
 
+    waitForIdle()
     onNodeWithTag("dialog_content").assertExists()
 
+    mainClock.autoAdvance = false
     visible = false
     mainClock.advanceTimeBy(100)
 
