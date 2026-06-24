@@ -40,7 +40,7 @@ fun ModalScope.Scrim(
 ) {
   val state = LocalModalState.current
   AnimatedVisibility(
-    visibleState = state.transitionState,
+    visible = state.transitionState.targetState,
     enter = enter,
     exit = exit,
   ) {

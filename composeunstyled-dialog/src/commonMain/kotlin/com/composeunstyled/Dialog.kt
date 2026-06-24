@@ -77,7 +77,7 @@ fun DialogOverlayScope.Scrim(
 ) {
   val state = LocalModalState.current
   AnimatedVisibility(
-    visibleState = state.transitionState,
+    visible = state.transitionState.targetState,
     enter = enter,
     exit = exit,
   ) {
@@ -155,7 +155,7 @@ fun DialogScope.DialogPanel(
   val panelFocusRequester = remember { FocusRequester() }
 
   AnimatedVisibility(
-    visibleState = modalState.transitionState,
+    visible = modalState.transitionState.targetState,
     enter = enter,
     exit = exit,
   ) {
