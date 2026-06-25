@@ -4,6 +4,7 @@ unstyled = "2.7.0"
 kotlin = "2.4.0"
 compose = "1.11.1"
 compose-material3 = "1.11.0-alpha01"
+composeUriPainter = "1.1.0"
 
 vanniktech = "0.35.0"
 spotless = "6.21.0"
@@ -41,6 +42,7 @@ androidx-compose-test = { module = "androidx.compose.ui:ui-test-junit4-android",
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "junitAndroid" }
 androidx-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "testRunner" }
+compose-uri-painter = { module = "com.composables:compose-uri-painter", version.ref = "composeUriPainter" }
 
 [plugins]
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
