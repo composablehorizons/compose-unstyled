@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-06-25
+
+### Added
+
+- Added `UnstyledAvatar` as a new primitive for rendering avatars with painter-backed content and
+  fallback underlay content. Avatar is now included in the `composeunstyled` module by default.
+- Added `UnstyledDropdownMenuItem` as an unscoped dropdown menu item API for building menu content
+  without relying on `DropdownMenuPanelScope.MenuItem`. This make it easier to build menu items without having to wrap the scope.
+
+### Deprecated
+
+- Deprecated `DropdownMenuPanelScope.MenuItem`. Use `UnstyledDropdownMenuItem` instead. It will be
+  removed in 3.0.
+
 ## [2.7.0] - 2026-06-15
 
 ### Added
