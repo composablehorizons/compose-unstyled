@@ -26,7 +26,7 @@ UnstyledDropdownMenu(
   onExpandedChange = onExpandedChange,
   panel = {
     DropdownMenuPanel {
-      MenuItem(onClick = onClick) {
+      UnstyledDropdownMenuItem(onClick = onClick) {
       }
     }
   },
@@ -41,14 +41,14 @@ UnstyledDropdownMenu(
   - The `anchor` slot renders the content the menu is positioned against.
   - The `panel` slot renders the floating menu content.
 - `DropdownMenuPanel` renders the menu surface and arranges direct children vertically.
-- `MenuItem` renders a focusable item inside `DropdownMenuPanel`. Use direct `MenuItem` children for managed keyboard navigation. Custom nested layouts can be rendered inside the panel, but nested items are not part of the panel-managed menu order.
+- `UnstyledDropdownMenuItem` renders a focusable item inside `DropdownMenuPanel`. Use direct `UnstyledDropdownMenuItem` children for managed keyboard navigation. Custom nested layouts can be rendered inside the panel, but nested items are not part of the panel-managed menu order.
 
 ## Accessibility
 
 Dropdown menu handles keyboard interactions out of the box. Pressing Arrow Down opens the menu and
 focuses the first item. Pressing Arrow Down and Arrow Up moves focus to the next and previous item.
 Home moves focus to the first item. End moves focus to the last item. Escape closes the menu. Use
-`MenuItem` for focusable menu actions.
+`UnstyledDropdownMenuItem` for focusable menu actions.
 
 ## Code Examples
 
@@ -64,7 +64,7 @@ UnstyledDropdownMenu(
   onExpandedChange = { expanded = it },
   panel = {
     DropdownMenuPanel {
-      MenuItem(onClick = { expanded = false }) {
+      UnstyledDropdownMenuItem(onClick = { expanded = false }) {
         BasicText("Close")
       }
     }
@@ -91,7 +91,7 @@ UnstyledDropdownMenu(
   sideOffset = 8.dp,
   panel = {
     DropdownMenuPanel {
-      MenuItem(onClick = { select() }) {
+      UnstyledDropdownMenuItem(onClick = { select() }) {
         BasicText("Item")
       }
     }
@@ -104,7 +104,7 @@ UnstyledDropdownMenu(
 
 ### Closing the menu after clicking an item
 
-`MenuItem` closes the menu after click by default by calling the dropdown's `onExpandedChange`
+`UnstyledDropdownMenuItem` closes the menu after click by default by calling the dropdown's `onExpandedChange`
 callback with `false`:
 
 ```kotlin
@@ -113,7 +113,7 @@ UnstyledDropdownMenu(
   onExpandedChange = { expanded = it },
   panel = {
     DropdownMenuPanel {
-      MenuItem(onClick = { select() }) {
+      UnstyledDropdownMenuItem(onClick = { select() }) {
         BasicText("Item")
       }
     }
@@ -134,7 +134,7 @@ UnstyledDropdownMenu(
   onExpandedChange = { expanded = it },
   panel = {
     DropdownMenuPanel {
-      MenuItem(
+      UnstyledDropdownMenuItem(
         closeOnClick = false,
         onClick = { enabled = enabled.not() },
       ) {
@@ -161,7 +161,7 @@ UnstyledDropdownMenu(
       enter = fadeIn(),
       exit = fadeOut(),
     ) {
-      MenuItem(onClick = { select() }) {
+      UnstyledDropdownMenuItem(onClick = { select() }) {
         BasicText("Item")
       }
     }

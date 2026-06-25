@@ -137,7 +137,7 @@ class DropdownMenuPanelTest {
           ),
         ) {
           DropdownMenuPanel {
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = { clicked = true },
               modifier = Modifier.testTag("item"),
             ) {
@@ -168,7 +168,7 @@ class DropdownMenuPanelTest {
           ),
         ) {
           DropdownMenuPanel {
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = { clicked = true },
               closeOnClick = false,
               modifier = Modifier.testTag("item"),
@@ -197,7 +197,7 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel {
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = { clicked = true },
               modifier = Modifier.testTag("item"),
             ) {
@@ -227,13 +227,13 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel {
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = {},
               modifier = Modifier.testTag("first"),
             ) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -263,10 +263,10 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = {},
               modifier = Modifier.testTag("last"),
             ) {
@@ -304,7 +304,7 @@ class DropdownMenuPanelTest {
           DropdownMenuPanel(
             enter = fadeIn(animationSpec = tween(durationMillis = 1_000)),
           ) {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
           }
@@ -338,10 +338,15 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel(modifier = Modifier.testTag("panel")) {
-            MenuItem(onClick = { firstItemClicked = true }, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(
+              onClick = {
+                firstItemClicked = true
+              },
+              modifier = Modifier.testTag("first"),
+            ) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -384,10 +389,10 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel(modifier = Modifier.testTag("panel")) {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -426,10 +431,10 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel(modifier = Modifier.testTag("panel")) {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -469,10 +474,15 @@ class DropdownMenuPanelTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel(modifier = Modifier.testTag("panel")) {
-            MenuItem(onClick = { firstItemClicked = true }, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(
+              onClick = {
+                firstItemClicked = true
+              },
+              modifier = Modifier.testTag("first"),
+            ) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -518,10 +528,10 @@ class DropdownMenuPanelTest {
           onExpandedChange = { expanded = it },
           panel = {
             DropdownMenuPanel {
-              MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+              UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
                 BasicText("First")
               }
-              MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+              UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
                 BasicText("Last")
               }
             }
@@ -561,10 +571,10 @@ class DropdownMenuPanelTest {
           onExpandedChange = { expanded = it },
           panel = {
             DropdownMenuPanel {
-              MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+              UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
                 BasicText("First")
               }
-              MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+              UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
                 BasicText("Last")
               }
             }
@@ -613,7 +623,7 @@ class DropdownMenuPanelTest {
           ),
         ) {
           DropdownMenuPanel {
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = {},
               modifier = Modifier
                 .testTag("first")
@@ -626,7 +636,7 @@ class DropdownMenuPanelTest {
               text = "Separator",
               modifier = Modifier.size(itemHeight),
             )
-            MenuItem(
+            UnstyledDropdownMenuItem(
               onClick = {},
               modifier = Modifier
                 .testTag("second")
@@ -657,13 +667,13 @@ class DropdownMenuPanelTest {
           ),
         ) {
           DropdownMenuPanel {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
               BasicText("Middle")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -695,13 +705,13 @@ class DropdownMenuPanelTest {
           ),
         ) {
           DropdownMenuPanel {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("middle")) {
               BasicText("Middle")
             }
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
           }
@@ -734,11 +744,11 @@ class DropdownMenuPanelTest {
         ) {
           DropdownMenuPanel {
             BasicText("Before")
-            MenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("first")) {
               BasicText("First")
             }
             BasicText("Separator")
-            MenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("last")) {
               BasicText("Last")
             }
             BasicText("After")
@@ -836,8 +846,8 @@ private fun UseKeyboardInputMode() {
 }
 
 @Composable
-private fun DropdownMenuPanelScope.ReorderableMenuItem(tag: String, text: String) {
-  MenuItem(onClick = {}, modifier = Modifier.testTag(tag)) {
+private fun ReorderableMenuItem(tag: String, text: String) {
+  UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag(tag)) {
     BasicText(text)
   }
 }

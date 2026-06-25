@@ -45,7 +45,7 @@ class DropdownMenuAndroidTest {
         onExpandedChange = { expanded = it },
         panel = {
           DropdownMenuPanel {
-            MenuItem(onClick = {}, modifier = Modifier.testTag("item")) {
+            UnstyledDropdownMenuItem(onClick = {}, modifier = Modifier.testTag("item")) {
               BasicText("Item")
             }
           }

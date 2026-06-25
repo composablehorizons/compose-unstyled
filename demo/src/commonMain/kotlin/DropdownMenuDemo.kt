@@ -61,9 +61,9 @@ import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.LocalContentColor
-import com.composeunstyled.MenuItem
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
+import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 
@@ -112,7 +112,7 @@ fun DropdownMenuDemo() {
           if (index == 1 || index == options.lastIndex) {
             UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
           }
-          MenuItem(
+          UnstyledDropdownMenuItem(
             onClick = {},
             enabled = option.enabled,
             indication = LocalIndication.current,
