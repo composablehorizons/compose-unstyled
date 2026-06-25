@@ -336,6 +336,12 @@ fun DropdownMenuScope.DropdownMenuPanel(
 }
 
 @Composable
+@Deprecated(
+  message = "This will go away in 3.0. Use UnstyledDropdownMenuItem instead.",
+  replaceWith = ReplaceWith(
+    expression = "UnstyledDropdownMenuItem(onClick, modifier, enabled, closeOnClick, interactionSource, indication, content)",
+  ),
+)
 fun DropdownMenuPanelScope.MenuItem(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
