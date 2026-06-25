@@ -13,6 +13,8 @@ sections:
         slug: community
   - title: Primitives
     pages:
+      - title: Avatar
+        slug: avatar
       - title: Bottom Sheet
         slug: bottom-sheet
       - title: Bottom Sheet (Modal)

@@ -1,4 +1,16 @@
 {
+  "avatar": {
+    "UnstyledAvatar.painter": "The `Painter` to draw inside the avatar. Pass `null` to show only the fallback content.",
+    "painter": "The `Painter` to draw inside the avatar. Pass `null` to show only the fallback content.",
+    "UnstyledAvatar.modifier": "The `Modifier` applied to the avatar container.",
+    "modifier": "The `Modifier` applied to the avatar container.",
+    "UnstyledAvatar.contentDescription": "Accessibility text describing what the avatar represents.",
+    "contentDescription": "Accessibility text describing what the avatar represents.",
+    "UnstyledAvatar.underlay": "Composable content placed behind the image, such as initials or a placeholder.",
+    "underlay": "Composable content placed behind the image, such as initials or a placeholder.",
+    "UnstyledAvatar.contentScale": "Controls how the image is scaled inside the avatar bounds.",
+    "contentScale": "Controls how the image is scaled inside the avatar bounds."
+  },
   "android-xml-themes": {
     "`resolveThemeColor`.context": "The Android Context to resolve attributes from",
     "context": "The Android Context to resolve attributes from",

@@ -9,6 +9,7 @@ const outputPagesDir = process.argv[2]
   : path.join(root, 'build/generated/compose-unstyled-docs/pages');
 
 const apiReferences = {
+  avatar: [source('composeunstyled-avatar/src/commonMain/kotlin/com/composeunstyled/Avatar.kt', [fn('UnstyledAvatar')])],
   'bottom-sheet': [
     source('composeunstyled-bottom-sheet/src/commonMain/kotlin/com/composeunstyled/BottomSheet.kt', [
       fn('rememberBottomSheetState'),
