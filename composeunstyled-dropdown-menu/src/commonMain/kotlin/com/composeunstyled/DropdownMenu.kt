@@ -92,6 +92,8 @@ internal val LocalDropdownMenuState = staticCompositionLocalOf<DropdownMenuState
     transitionState = MutableTransitionState(false),
   )
 }
+internal val LocalDropdownMenuPanelScope =
+  staticCompositionLocalOf<DropdownMenuPanelScope?> { null }
 
 internal class DropdownMenuItemFocusTarget(
   val focusRequester: FocusRequester,
@@ -318,15 +320,17 @@ fun DropdownMenuScope.DropdownMenuPanel(
         }
       },
   ) {
-    DropdownMenuPanelLayout(
-      scope = scope,
-      modifier = modifier
-        .modalFragment()
-        .onPlaced { placed = true }
-        .focusRequester(menuFocusRequester)
-        .focusable(),
-    ) {
-      scope.content()
+    CompositionLocalProvider(LocalDropdownMenuPanelScope provides scope) {
+      DropdownMenuPanelLayout(
+        scope = scope,
+        modifier = modifier
+          .modalFragment()
+          .onPlaced { placed = true }
+          .focusRequester(menuFocusRequester)
+          .focusable(),
+      ) {
+        scope.content()
+      }
     }
   }
 }
@@ -341,17 +345,39 @@ fun DropdownMenuPanelScope.MenuItem(
   indication: Indication? = null,
   content: @Composable () -> Unit,
 ) {
+  UnstyledDropdownMenuItem(
+    onClick = onClick,
+    modifier = modifier,
+    enabled = enabled,
+    closeOnClick = closeOnClick,
+    interactionSource = interactionSource,
+    indication = indication,
+    content = content,
+  )
+}
+
+@Composable
+fun UnstyledDropdownMenuItem(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  closeOnClick: Boolean = true,
+  interactionSource: MutableInteractionSource? = null,
+  indication: Indication? = null,
+  content: @Composable () -> Unit,
+) {
   val state = LocalDropdownMenuState.current
+  val scope = LocalDropdownMenuPanelScope.current
   val modalState = LocalModalState.current
   val focusRequester = remember { FocusRequester() }
   val focusTarget = remember(focusRequester) {
     DropdownMenuItemFocusTarget(focusRequester = focusRequester)
   }
   var placed by remember { mutableStateOf(false) }
-  val isFirstItem = firstItemFocusTarget == focusTarget
+  val isFirstItem = scope?.firstItemFocusTarget == focusTarget
   val shouldRequestInitialFocus = when (state.initialFocusDirection) {
     FocusDirection.Next -> isFirstItem
-    FocusDirection.Previous -> itemFocusTargets.lastOrNull() == focusTarget
+    FocusDirection.Previous -> scope?.itemFocusTargets?.lastOrNull() == focusTarget
     else -> false
   }
 
@@ -370,7 +396,9 @@ fun DropdownMenuPanelScope.MenuItem(
 
   Box(
     modifier = modifier then buildModifier {
-      add(DropdownMenuItemParentDataModifier(focusTarget))
+      if (scope != null) {
+        add(DropdownMenuItemParentDataModifier(focusTarget))
+      }
       add(Modifier.onPlaced { placed = true })
       add(Modifier.focusRequester(focusRequester))
       add(Modifier.onFocusChanged { focusTarget.focused = it.hasFocus })

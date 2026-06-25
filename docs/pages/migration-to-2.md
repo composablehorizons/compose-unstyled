@@ -207,8 +207,8 @@ UnstyledDisclosure(
 
 ### Dropdown Menu
 
-Menu anchor and panel content are now slots on `UnstyledDropdownMenu`. Use scoped `DropdownMenuPanel`
-and `MenuItem`.
+Menu anchor and panel content are now slots on `UnstyledDropdownMenu`. Use `DropdownMenuPanel`
+and `UnstyledDropdownMenuItem`.
 
 Dropdown Menu also has new anchor placement parameters: `side`, `alignment`, `sideOffset`, and
 `alignmentOffset`. Use them instead of the old `DropdownPanelAnchor` values:
@@ -225,7 +225,7 @@ UnstyledDropdownMenu(
   alignmentOffset = 0.dp,
   panel = {
     DropdownMenuPanel {
-      MenuItem(onClick = { expanded = false }) {
+      UnstyledDropdownMenuItem(onClick = { expanded = false }) {
         Text("Item")
       }
     }
