@@ -104,6 +104,7 @@ kotlin {
       implementation(libs.compose.foundation)
       implementation(libs.composables.ripple)
       implementation(project(":composeunstyled-theming"))
+      implementation(project(":composeunstyled-avatar"))
       implementation(project(":composeunstyled-breakpoints"))
       implementation(project(":composeunstyled-bottom-sheet"))
       implementation(project(":composeunstyled-build-modifier"))
@@ -134,7 +135,7 @@ kotlin {
       implementation(project(":composeunstyled-window-container-size"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
       implementation(libs.composables.icons.lucide)
-      implementation("com.composables:compose-uri-painter:1.0.4")
+      implementation(libs.compose.uri.painter)
     }
 
     jvmMain.dependencies {

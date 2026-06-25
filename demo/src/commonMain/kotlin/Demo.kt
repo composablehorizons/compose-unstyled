@@ -92,6 +92,7 @@ private data class PreviewOptions(
 )
 
 private val availablePrimitives = listOf(
+  DemoItem("Avatar", "avatar", { AvatarDemo() }),
   DemoItem(
     "Bottom Sheet",
     "bottom-sheet",

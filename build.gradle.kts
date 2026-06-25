@@ -19,6 +19,7 @@ val composeUnstyledPublishVersion = providers
 extra["publishVersion"] = composeUnstyledPublishVersion
 
 val composeUnstyledDemoSources = mapOf(
+  "avatar" to "AvatarDemo.kt",
   "bottom-sheet" to "BottomSheetDemo.kt",
   "breakpoints" to "BreakpointsDemo.kt",
   "modal-bottom-sheet" to "ModalBottomSheetDemo.kt",
