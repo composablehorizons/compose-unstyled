@@ -74,6 +74,7 @@ kotlin {
     commonMain.dependencies {
       api(projects.composeunstyledTheming)
       api(projects.composeunstyledAnchoredApi)
+      api(projects.composeunstyledAvatar)
       api(projects.composeunstyledBreakpoints)
       api(projects.composeunstyledBottomSheet)
       api(projects.composeunstyledButton)
