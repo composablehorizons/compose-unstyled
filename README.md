@@ -8,6 +8,11 @@ flexible theming system – so you can build any design system on every platform
 
 For full documentation, checkout: https://composables.com/compose-unstyled/docs
 
+## Project status
+
+Compose Unstyled is actively developed, and the README is used to keep project contributors
+oriented as the library evolves.
+
 ## Community
 
 For help and discussions: [Join the community Discord](http://composables.com/discord)
