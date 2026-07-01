@@ -21,17 +21,27 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
 class PortalTest {
@@ -58,6 +68,47 @@ class PortalTest {
     }
 
     onNodeWithText("Portal content").assertDoesNotExist()
+  }
+
+  @OptIn(ExperimentalTestApi::class)
+  @Test
+  fun newestPortalContentIsRenderedAboveOlderPortalContentAfterRepeatedMounts() = runComposeUiTest {
+    var showTopPortal by mutableStateOf(false)
+    var bottomClicks = 0
+    var topClicks = 0
+
+    setContent {
+      PortalHost(Modifier.size(100.dp)) {
+        Portal {
+          Box(
+            Modifier
+              .fillMaxSize()
+              .clickable { bottomClicks += 1 },
+          )
+        }
+
+        if (showTopPortal) {
+          Portal {
+            Box(
+              Modifier
+                .fillMaxSize()
+                .clickable { topClicks += 1 },
+            )
+          }
+        }
+      }
+    }
+
+    repeat(50) {
+      showTopPortal = true
+      waitForIdle()
+      onRoot().performTouchInput { click(center) }
+      showTopPortal = false
+      waitForIdle()
+    }
+
+    assertThat(topClicks).isEqualTo(50)
+    assertThat(bottomClicks).isEqualTo(0)
   }
 
   @Test

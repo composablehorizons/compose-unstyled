@@ -27,7 +27,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -35,8 +35,26 @@ import androidx.compose.ui.Modifier
 private val LocalPortalState = staticCompositionLocalOf<PortalState?> { null }
 
 private class PortalState {
-  val entries = mutableStateMapOf<Any, @Composable () -> Unit>()
+  val entries = mutableStateListOf<PortalEntry>()
+
+  fun addOrUpdate(id: Any, content: @Composable () -> Unit) {
+    val index = entries.indexOfFirst { it.id == id }
+    if (index == -1) {
+      entries.add(PortalEntry(id = id, content = content))
+    } else {
+      entries[index] = entries[index].copy(content = content)
+    }
+  }
+
+  fun remove(id: Any) {
+    entries.removeAll { it.id == id }
+  }
 }
+
+private data class PortalEntry(
+  val id: Any,
+  val content: @Composable () -> Unit,
+)
 
 @Composable
 fun PortalHost(
@@ -48,10 +66,10 @@ fun PortalHost(
   CompositionLocalProvider(LocalPortalState provides state) {
     Box(modifier) {
       content()
-      state.entries.forEach { (id, content) ->
-        key(id) {
+      state.entries.forEach { entry ->
+        key(entry.id) {
           Box(Modifier.matchParentSize()) {
-            content()
+            entry.content()
           }
         }
       }
@@ -71,12 +89,12 @@ fun Portal(
   }
 
   SideEffect {
-    state.entries[id] = content
+    state.addOrUpdate(id = id, content = content)
   }
 
   DisposableEffect(state, id) {
     onDispose {
-      state.entries.remove(id)
+      state.remove(id)
     }
   }
 }
