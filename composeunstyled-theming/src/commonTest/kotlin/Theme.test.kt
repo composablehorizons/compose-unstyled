@@ -40,11 +40,14 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
+import com.composeunstyled.theme.ColorScheme
+import com.composeunstyled.theme.LocalColorScheme
 import com.composeunstyled.theme.NoIndication
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.currentSystemColorScheme
 import kotlin.test.Test
 
 class ThemeCommonTest {
@@ -156,6 +159,53 @@ class ThemeCommonTest {
     waitForIdle()
     assertThat(currentSelectionColors.handleColor).isEqualTo(Color.Unspecified)
     assertThat(currentSelectionColors.backgroundColor).isEqualTo(Color.Unspecified)
+  }
+
+  @Test
+  fun themeProvidesSystemColorSchemeByDefault() = runComposeUiTest {
+    var expectedColorScheme = ColorScheme.Light
+    var currentColorScheme = ColorScheme.Dark
+    val testTheme = buildTheme()
+
+    setContent {
+      expectedColorScheme = currentSystemColorScheme()
+
+      testTheme {
+        currentColorScheme = LocalColorScheme.current
+      }
+    }
+
+    waitForIdle()
+    assertThat(currentColorScheme).isEqualTo(expectedColorScheme)
+  }
+
+  @Test
+  fun extendedThemeCanOverrideColorScheme() = runComposeUiTest {
+    var expectedColorScheme = ColorScheme.Light
+    var currentColorScheme = ColorScheme.Light
+    val testTheme = buildTheme {
+      val colorScheme = if (currentSystemColorScheme() == ColorScheme.Dark) {
+        ColorScheme.Light
+      } else {
+        ColorScheme.Dark
+      }
+      expectedColorScheme = colorScheme
+
+      extend { content ->
+        CompositionLocalProvider(LocalColorScheme provides colorScheme) {
+          content()
+        }
+      }
+    }
+
+    setContent {
+      testTheme {
+        currentColorScheme = LocalColorScheme.current
+      }
+    }
+
+    waitForIdle()
+    assertThat(currentColorScheme).isEqualTo(expectedColorScheme)
   }
 
   @Test
