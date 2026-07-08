@@ -23,9 +23,11 @@ package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
@@ -34,8 +36,13 @@ import androidx.compose.ui.Modifier
 
 private val LocalPortalState = staticCompositionLocalOf<PortalState?> { null }
 
+private class PortalEntry(
+  val compositionLocalContext: CompositionLocalContext,
+  val content: @Composable () -> Unit,
+)
+
 private class PortalState {
-  val entries = mutableStateMapOf<Any, @Composable () -> Unit>()
+  val entries = mutableStateMapOf<Any, PortalEntry>()
 }
 
 @Composable
@@ -48,10 +55,12 @@ fun PortalHost(
   CompositionLocalProvider(LocalPortalState provides state) {
     Box(modifier) {
       content()
-      state.entries.forEach { (id, content) ->
+      state.entries.forEach { (id, entry) ->
         key(id) {
           Box(Modifier.matchParentSize()) {
-            content()
+            CompositionLocalProvider(entry.compositionLocalContext) {
+              entry.content()
+            }
           }
         }
       }
@@ -65,13 +74,17 @@ fun Portal(
 ) {
   val state = LocalPortalState.current
   val id = remember { Any() }
+  val compositionLocalContext = currentCompositionLocalContext
 
   if (state == null) {
     return
   }
 
   SideEffect {
-    state.entries[id] = content
+    state.entries[id] = PortalEntry(
+      compositionLocalContext = compositionLocalContext,
+      content = content,
+    )
   }
 
   DisposableEffect(state, id) {

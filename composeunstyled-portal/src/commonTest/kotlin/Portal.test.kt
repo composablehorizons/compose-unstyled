@@ -24,6 +24,8 @@ package com.composeunstyled
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsEqualTo
@@ -50,6 +52,21 @@ class PortalTest {
   }
 
   @Test
+  fun portalContentKeepsCallerCompositionLocals() = runComposeUiTest {
+    setContent {
+      PortalHost {
+        CompositionLocalProvider(LocalPortalTestValue provides "caller") {
+          Portal {
+            BasicText(LocalPortalTestValue.current)
+          }
+        }
+      }
+    }
+
+    onNodeWithText("caller").assertExists()
+  }
+
+  @Test
   fun rendersNothingWithoutPortalHost() = runComposeUiTest {
     setContent {
       Portal {
@@ -73,3 +90,5 @@ class PortalTest {
       .assertHeightIsEqualTo(24.dp)
   }
 }
+
+private val LocalPortalTestValue = staticCompositionLocalOf { "host" }
