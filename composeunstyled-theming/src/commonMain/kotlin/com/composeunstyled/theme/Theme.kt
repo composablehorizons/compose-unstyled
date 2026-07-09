@@ -112,7 +112,6 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 
     CompositionLocalProvider(
       LocalTheme provides theme,
-      LocalColorScheme provides currentSystemColorScheme(),
       LocalIndication provides defaultIndication,
       LocalTextStyle provides builder.defaultTextStyle,
       LocalContentColor provides builder.defaultContentColor,
