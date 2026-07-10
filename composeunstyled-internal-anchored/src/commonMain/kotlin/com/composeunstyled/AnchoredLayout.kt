@@ -139,12 +139,18 @@ fun AnchoredContent(
   onPlaced: (FloatingPlacement) -> Unit,
   content: @Composable () -> Unit,
 ) {
-  var containerPositionInWindow by remember { mutableStateOf<IntOffset?>(null) }
+  var containerBoundsInWindow by remember { mutableStateOf<IntRect?>(null) }
 
   Layout(
     content = content,
     modifier = modifier.onGloballyPositioned {
-      containerPositionInWindow = it.positionInWindow().round()
+      val position = it.positionInWindow().round()
+      containerBoundsInWindow = IntRect(
+        left = position.x,
+        top = position.y,
+        right = position.x + it.size.width,
+        bottom = position.y + it.size.height,
+      )
     },
   ) { measurables, constraints ->
     val contentPlaceable = measurables.firstOrNull()?.measure(Constraints())
@@ -153,16 +159,23 @@ fun AnchoredContent(
       return@Layout layout(0, 0) {}
     }
 
-    val containerPosition = containerPositionInWindow
+    val currentContainerBounds = containerBoundsInWindow
 
-    if (containerPosition == null) {
+    if (currentContainerBounds == null) {
       return@Layout layout(constraints.maxWidth, constraints.maxHeight) {}
     }
+    val placementWindowSize = IntSize(currentContainerBounds.width, currentContainerBounds.height)
+    val placementAnchorBounds = anchorBounds.translate(
+      IntOffset(
+        x = -currentContainerBounds.left,
+        y = -currentContainerBounds.top,
+      ),
+    )
 
     val placement = calculateFloatingPlacement(
       density = density,
-      anchorBounds = anchorBounds,
-      windowSize = windowSize,
+      anchorBounds = placementAnchorBounds,
+      windowSize = placementWindowSize,
       layoutDirection = layoutDirection,
       contentSize = IntSize(contentPlaceable.width, contentPlaceable.height),
       side = side,
@@ -175,8 +188,8 @@ fun AnchoredContent(
     layout(constraints.maxWidth, constraints.maxHeight) {
       onPlaced(placement)
       contentPlaceable.place(
-        x = contentPosition.x - containerPosition.x,
-        y = contentPosition.y - containerPosition.y,
+        x = contentPosition.x,
+        y = contentPosition.y,
       )
     }
   }
