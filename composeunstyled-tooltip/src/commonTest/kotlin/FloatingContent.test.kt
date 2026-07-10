@@ -22,18 +22,33 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.platform.WindowInfo
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThanOrEqualTo
 import assertk.assertions.isNotEqualTo
+import kotlin.math.roundToInt
 import kotlin.test.Test
 
 class FloatingContentTest {
@@ -190,5 +205,76 @@ class FloatingContentTest {
     // to maximize the visible portion at the top-left
     assertThat(floatingX).isGreaterThanOrEqualTo(0f)
     assertThat(floatingY).isGreaterThanOrEqualTo(0f)
+  }
+
+  @Test
+  fun positionsFloatingContentInsideOffsetHostWhenWindowInfoIsOverridden() = runComposeUiTest {
+    setContent {
+      Box(Modifier.requiredSize(700.dp)) {
+        FakeWindowInfoSurface(
+          width = 300.dp,
+          height = 300.dp,
+          modifier = Modifier
+            .offset(x = 200.dp, y = 100.dp)
+            .testTag("fake_host"),
+        ) {
+          TooltipHost(Modifier.requiredSize(300.dp, 300.dp)) {
+            FloatingContent(
+              modifier = Modifier.offset(x = 260.dp, y = 160.dp),
+              side = AnchorSide.Top,
+              alignment = AnchorAlignment.Center,
+              sideOffset = 8.dp,
+              floatingContent = {
+                Box(Modifier.size(width = 80.dp, height = 20.dp)) {
+                  BasicText("Floating")
+                }
+              },
+              anchor = {
+                Box(Modifier.size(40.dp)) {
+                  BasicText("Anchor")
+                }
+              },
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    val hostX = onNodeWithTag("fake_host").fetchSemanticsNode().positionInWindow.x
+    val floatingX = onNodeWithText("Floating").fetchSemanticsNode().positionInWindow.x
+
+    assertThat((floatingX - hostX).roundToInt()).isEqualTo(220)
+  }
+
+  @Composable
+  private fun FakeWindowInfoSurface(
+    width: Dp,
+    height: Dp,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+  ) {
+    val density = LocalDensity.current
+    val parentWindowInfo = LocalWindowInfo.current
+    val containerSize = with(density) {
+      IntSize(width.roundToPx(), height.roundToPx())
+    }
+    val fakeWindowInfo = remember(parentWindowInfo, containerSize, width, height) {
+      object : WindowInfo {
+        override val containerSize: IntSize = containerSize
+        override val containerDpSize: DpSize = DpSize(width, height)
+        override val isWindowFocused: Boolean
+          get() = parentWindowInfo.isWindowFocused
+        override val keyboardModifiers: androidx.compose.ui.input.pointer.PointerKeyboardModifiers
+          get() = parentWindowInfo.keyboardModifiers
+      }
+    }
+
+    Box(modifier.requiredSize(width, height)) {
+      CompositionLocalProvider(LocalWindowInfo provides fakeWindowInfo) {
+        content()
+      }
+    }
   }
 }
