@@ -309,6 +309,59 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun sheet_respects_positional_threshold_when_drag_releases_before_midpoint() = runComposeUiTest {
+    val peekDetent = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.5f
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = peekDetent,
+          detents = listOf(peekDetent, SheetDetent.FullyExpanded),
+          velocityThreshold = { 10_000.dp },
+          positionalThreshold = { 8.dp },
+        )
+
+        UnstyledBottomSheet(
+          state,
+          Modifier.fillMaxSize(),
+        ) {
+          Sheet {
+            Column(
+              Modifier
+                .testTag("sheet_contents")
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            ) {
+              repeat(50) { index ->
+                BasicText(
+                  text = "Item $index",
+                  modifier = Modifier.padding(vertical = 12.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("sheet_contents").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y - with(density) { 40.dp.toPx() }))
+      up()
+    }
+
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
+  }
+
+  @Test
   fun isidle_is_false_when_dragging_sheet() = runComposeUiTest {
     val halfDetent = SheetDetent("half") { _, _ ->
       100.dp

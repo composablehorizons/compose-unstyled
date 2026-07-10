@@ -25,13 +25,16 @@ package com.composeunstyled
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -204,9 +207,9 @@ class BottomSheetState internal constructor(
   initialDetent: SheetDetent,
   detents: List<SheetDetent>,
   private val coroutineScope: CoroutineScope,
-  animationSpec: AnimationSpec<Float>,
-  velocityThreshold: () -> Float,
-  positionalThreshold: (totalDistance: Float) -> Float,
+  private val animationSpec: AnimationSpec<Float>,
+  private val velocityThreshold: () -> Float,
+  private val positionalThreshold: (totalDistance: Float) -> Float,
   decayAnimationSpec: DecayAnimationSpec<Float>,
   val confirmDetentChange: (SheetDetent) -> Boolean,
   private val density: () -> Density,
@@ -331,6 +334,33 @@ class BottomSheetState internal constructor(
 
   fun progress(from: SheetDetent, to: SheetDetent): Float {
     return anchoredDraggableState.progress(from, to)
+  }
+
+  internal fun flingBehavior(): FlingBehavior {
+    return BottomSheetFlingBehavior(
+      state = this,
+      animationSpec = animationSpec,
+    )
+  }
+
+  internal fun targetDetentAfterFling(velocity: Float): SheetDetent {
+    val currentOffset = anchoredDraggableState.requireOffset()
+    val targetDetent = anchoredDraggableState.anchors.computeTarget(
+      currentOffset = currentOffset,
+      currentDetent = currentDetent,
+      velocity = velocity,
+      positionalThreshold = positionalThreshold,
+      velocityThreshold = velocityThreshold,
+    )
+    return if (confirmDetentChange(targetDetent)) {
+      targetDetent
+    } else {
+      currentDetent
+    }
+  }
+
+  internal suspend fun settle(velocity: Float) {
+    animateTo(targetDetentAfterFling(velocity))
   }
 
   val offset: Float by derivedStateOf {
@@ -809,6 +839,7 @@ fun BottomSheetScope.Sheet(
   val state = context.state
   val coroutineScope = context.coroutineScope
   val dragInteractionSource = context.dragInteractionSource
+  val flingBehavior = remember(state) { state?.flingBehavior() }
 
   Layout(
     modifier = Modifier
@@ -823,6 +854,7 @@ fun BottomSheetScope.Sheet(
                   orientation = Orientation.Vertical,
                   enabled = context.enabled,
                   interactionSource = dragInteractionSource,
+                  flingBehavior = flingBehavior,
                 )
                 .nestedScroll(
                   remember(state.anchoredDraggableState, Orientation.Vertical) {
@@ -830,7 +862,7 @@ fun BottomSheetScope.Sheet(
                       orientation = Orientation.Vertical,
                       sheetState = state.anchoredDraggableState,
                       onFling = {
-                        coroutineScope.launch { state.anchoredDraggableState.settle(it) }
+                        coroutineScope.launch { state.settle(it) }
                       },
                     )
                   },
@@ -1033,6 +1065,79 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
 
   @JvmName("offsetToFloat")
   private fun Offset.toFloat(): Float = if (orientation == Orientation.Horizontal) x else y
+}
+
+private class BottomSheetFlingBehavior(
+  private val state: BottomSheetState,
+  private val animationSpec: AnimationSpec<Float>,
+) : FlingBehavior {
+  override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+    val draggableState = state.anchoredDraggableState
+    val currentOffset = draggableState.requireOffset()
+    val confirmedTargetDetent = state.targetDetentAfterFling(initialVelocity)
+    val targetOffset = draggableState.anchors.positionOf(confirmedTargetDetent)
+    if (targetOffset.isNaN()) return initialVelocity
+
+    var previousOffset = currentOffset
+    var leftoverVelocity = initialVelocity
+    animate(
+      initialValue = currentOffset,
+      targetValue = targetOffset,
+      initialVelocity = initialVelocity,
+      animationSpec = animationSpec,
+    ) { offset, velocity ->
+      val delta = offset - previousOffset
+      val consumed = scrollBy(delta)
+      previousOffset += consumed
+      leftoverVelocity = velocity
+    }
+
+    return if (abs(previousOffset - targetOffset) < 0.5f) 0f else leftoverVelocity
+  }
+}
+
+private fun DraggableAnchors<SheetDetent>.computeTarget(
+  currentOffset: Float,
+  currentDetent: SheetDetent,
+  velocity: Float,
+  positionalThreshold: (totalDistance: Float) -> Float,
+  velocityThreshold: () -> Float,
+): SheetDetent {
+  val isMoving = abs(velocity) > 0f
+  val currentPosition = positionOf(currentDetent)
+  if (currentPosition.isNaN()) {
+    return closestAnchor(currentOffset) ?: firstAnchor()
+  }
+  val isMovingDown = if (isMoving) {
+    velocity > 0f
+  } else {
+    currentOffset > currentPosition
+  }
+  if (isMoving.not() && abs(currentOffset - currentPosition) < 0.5f) return currentDetent
+  if (abs(velocity) >= abs(velocityThreshold())) {
+    return closestAnchor(currentOffset, searchUpwards = isMovingDown) ?: firstAnchor()
+  }
+
+  val upperDetent = closestAnchor(currentOffset, searchUpwards = false) ?: firstAnchor()
+  val upperPosition = positionOf(upperDetent)
+  val lowerDetent = closestAnchor(currentOffset, searchUpwards = true) ?: firstAnchor()
+  val lowerPosition = positionOf(lowerDetent)
+  val distance = abs(upperPosition - lowerPosition)
+  val threshold = abs(positionalThreshold(distance))
+  val originPosition = if (isMovingDown) upperPosition else lowerPosition
+  val distanceFromOrigin = abs(originPosition - currentOffset)
+
+  return if (distanceFromOrigin >= threshold) {
+    if (isMovingDown) lowerDetent else upperDetent
+  } else {
+    if (isMovingDown) upperDetent else lowerDetent
+  }
+}
+
+private fun DraggableAnchors<SheetDetent>.firstAnchor(): SheetDetent {
+  return checkNotNull(anchorAt(0)) {
+    "Bottom sheet anchors should contain at least one detent."
+  }
 }
 
 @Composable
