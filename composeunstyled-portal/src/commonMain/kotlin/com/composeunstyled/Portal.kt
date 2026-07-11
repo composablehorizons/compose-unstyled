@@ -29,20 +29,47 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
 private val LocalPortalState = staticCompositionLocalOf<PortalState?> { null }
 
-private class PortalEntry(
+private data class PortalEntry(
+  val id: Any,
   val compositionLocalContext: CompositionLocalContext,
   val content: @Composable () -> Unit,
 )
 
 private class PortalState {
-  val entries = mutableStateMapOf<Any, PortalEntry>()
+  val entries = mutableStateListOf<PortalEntry>()
+
+  fun addOrUpdate(
+    id: Any,
+    compositionLocalContext: CompositionLocalContext,
+    content: @Composable () -> Unit,
+  ) {
+    val index = entries.indexOfFirst { it.id == id }
+    if (index == -1) {
+      entries.add(
+        PortalEntry(
+          id = id,
+          compositionLocalContext = compositionLocalContext,
+          content = content,
+        ),
+      )
+    } else {
+      entries[index] = entries[index].copy(
+        compositionLocalContext = compositionLocalContext,
+        content = content,
+      )
+    }
+  }
+
+  fun remove(id: Any) {
+    entries.removeAll { it.id == id }
+  }
 }
 
 @Composable
@@ -55,8 +82,8 @@ fun PortalHost(
   CompositionLocalProvider(LocalPortalState provides state) {
     Box(modifier) {
       content()
-      state.entries.forEach { (id, entry) ->
-        key(id) {
+      state.entries.forEach { entry ->
+        key(entry.id) {
           Box(Modifier.matchParentSize()) {
             CompositionLocalProvider(entry.compositionLocalContext) {
               entry.content()
@@ -81,7 +108,8 @@ fun Portal(
   }
 
   SideEffect {
-    state.entries[id] = PortalEntry(
+    state.addOrUpdate(
+      id = id,
       compositionLocalContext = compositionLocalContext,
       content = content,
     )
@@ -89,7 +117,7 @@ fun Portal(
 
   DisposableEffect(state, id) {
     onDispose {
-      state.entries.remove(id)
+      state.remove(id)
     }
   }
 }
