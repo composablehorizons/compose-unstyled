@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -37,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -49,6 +51,7 @@ import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.containsExactly
@@ -284,6 +287,22 @@ class SliderTest {
 
     assertThat(thumbPositions.distinct()).containsExactly(81)
     onNodeWithTag("thumb", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(81.dp)
+  }
+
+  @Test
+  fun horizontalSliderPlacesLowestValueAtEndInRtl() = runComposeUiTest {
+    setContent {
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        TestSlider(
+          value = 0f,
+          thumb = {
+            Box(Modifier.size(20.dp).testTag("thumb"))
+          },
+        )
+      }
+    }
+
+    onNodeWithTag("thumb", useUnmergedTree = true).assertLeftPositionInRootIsEqualTo(180.dp)
   }
 
   @Test
