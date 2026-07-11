@@ -56,6 +56,13 @@ if (generatedVersionHeading.test(changelogBody)) {
   );
 }
 
+changelogBody = changelogBody
+  .replace(/^### (Major|Minor|Patch) Changes\n\n/gm, '')
+  .replace(
+    /^- (?:\[[^\]]+\]\([^)]+\)\s+)?(?:\[`[0-9a-f]+`\]\([^)]+\)\s+)?Thanks \[[^\]]+\]\([^)]+\)! - /gm,
+    '- ',
+  );
+
 fs.writeFileSync(changelogPath, `${changelogHeader}\n\n${changelogBody}`);
 
 function escapeRegExp(value) {

@@ -27,15 +27,76 @@ jobs:
       - name: Install release tooling
         run: npm ci
 
-      - name: Create version PR
+      - name: Check for changesets
         id: changesets
-        uses: changesets/action@v1
-        with:
-          version: npm run changeset:version
-          title: Release Compose Unstyled
-          commit: Release Compose Unstyled
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          changeset_count="$(
+            find .changeset -maxdepth 1 -type f -name '*.md' |
+              wc -l |
+              tr -d ' '
+          )"
+
+          if [ "$changeset_count" -gt 0 ]; then
+            echo "hasChangesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "hasChangesets=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create version PR
+        if: steps.changesets.outputs.hasChangesets == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version_branch="changeset-release/main"
+
+          npm run changeset:version
+
+          body_file="$RUNNER_TEMP/version-pr-body.md"
+          cat > "$body_file" <<'EOF'
+          This release PR was opened by the Version Packages workflow.
+
+          It consumes pending changesets, updates `CHANGELOG.md`, bumps `package.json`, and syncs `gradle/libs.versions.toml`.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$version_branch"
+          git add .changeset CHANGELOG.md gradle/libs.versions.toml package.json package-lock.json
+
+          if git diff --cached --quiet; then
+            echo "No version PR changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Release Compose Unstyled"
+          git push --force-with-lease origin "$version_branch"
+
+          existing_pr="$(
+            gh pr list \
+              --base main \
+              --head "$version_branch" \
+              --state open \
+              --json number \
+              --jq '.[0].number // empty'
+          )"
+
+          if [ -n "$existing_pr" ]; then
+            gh pr edit "$existing_pr" \
+              --title "Release Compose Unstyled" \
+              --body-file "$body_file"
+          else
+            gh pr create \
+              --base main \
+              --head "$version_branch" \
+              --title "Release Compose Unstyled" \
+              --body-file "$body_file"
+          fi
 
       - name: Create release tag and start release
         if: steps.changesets.outputs.hasChangesets == 'false'
