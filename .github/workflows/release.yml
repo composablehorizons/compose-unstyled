@@ -222,7 +222,7 @@ jobs:
 
           actual_cert_sha256="$(
             printf '%s\n' "$signing_report" |
-              awk -F': ' '/Signer #1 certificate SHA-256 digest/ { print $2 }'
+              awk '/^(Signer #1|V2 Signer):? certificate SHA-256 digest:/ { sub(/^.*certificate SHA-256 digest: /, ""); print; exit }'
           )"
 
           if [ "$actual_cert_sha256" != "$expected_cert_sha256" ]; then
