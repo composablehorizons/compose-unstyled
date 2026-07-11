@@ -67,7 +67,7 @@ fun BottomSheetDemo() {
           .widthIn(max = 640.dp)
           .fillMaxWidth(),
       ) {
-        Box(Modifier.fillMaxWidth().height(600.dp)) {
+        Box(Modifier.fillMaxWidth().height(1000.dp)) {
           DragIndication(
             modifier = Modifier
               .align(Alignment.TopCenter)
