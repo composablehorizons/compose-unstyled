@@ -48,6 +48,7 @@ jobs:
       - name: Create version PR
         if: steps.changesets.outputs.hasChangesets == 'true'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
