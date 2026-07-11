@@ -1,5 +1,22 @@
 # Contributing
 
+## Changesets
+
+Compose Unstyled uses [Changesets](https://github.com/changesets/changesets) to collect release
+notes from pull requests.
+
+Add a changeset when your PR changes published Compose Unstyled behavior, APIs, dependencies, or
+developer-facing release output:
+
+```bash
+npm run changeset
+```
+
+PRs that only change tests, demos, documentation, internal tooling, or local agent instructions do
+not need a changeset.
+
+See [RELEASING.md](RELEASING.md) for the full release flow.
+
 ## Working with Android
 
 The recommended way to build and develop on Unstyled is using the JVM target. However, for your PRs

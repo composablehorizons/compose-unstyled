@@ -5,6 +5,7 @@ xcuserdata
 !src/**/build/
 local.properties
 kotlin-js-store/
+node_modules/
 .DS_Store
 captures
 .externalNativeBuild
