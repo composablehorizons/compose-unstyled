@@ -1,0 +1,26 @@
+demos:
+  root: demo/src/commonMain/kotlin
+  files:
+    avatar: AvatarDemo.kt
+    bottom-sheet: BottomSheetDemo.kt
+    breakpoints: BreakpointsDemo.kt
+    button: ButtonDemo.kt
+    checkbox: CheckboxDemo.kt
+    dialog: DialogDemo.kt
+    disclosure: DisclosureDemo.kt
+    dropdown-menu: DropdownMenuDemo.kt
+    icon: IconDemo.kt
+    modal: ModalDemo.kt
+    modal-bottom-sheet: ModalBottomSheetDemo.kt
+    platform-theme: PlatformThemeDemo.kt
+    progressindicator: ProgressIndicatorDemo.kt
+    radiogroup: RadioGroupDemo.kt
+    scrollbars: ScrollbarsDemo.kt
+    separators: SeparatorsDemo.kt
+    slider: SliderDemo.kt
+    tabgroup: TabGroupDemo.kt
+    textfield: TextFieldDemo.kt
+    toggleswitch: ToggleSwitchDemo.kt
+    tooltip: TooltipDemo.kt
+    tristatecheckbox: TriStateCheckboxDemo.kt
+    window-container-size: WindowContainerSizeDemo.kt
