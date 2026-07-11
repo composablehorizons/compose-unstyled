@@ -48,7 +48,6 @@ jobs:
       - name: Create version PR
         if: steps.changesets.outputs.hasChangesets == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
@@ -62,13 +61,13 @@ jobs:
           cat > "$body_file" <<'EOF'
           This release PR was opened by the Version Packages workflow.
 
-          It consumes pending changesets, updates `CHANGELOG.md`, bumps `package.json`, and syncs `gradle/libs.versions.toml`.
+          It consumes pending changesets, bumps `package.json`, and syncs `gradle/libs.versions.toml`.
           EOF
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$version_branch"
-          git add .changeset CHANGELOG.md gradle/libs.versions.toml package.json package-lock.json
+          git add .changeset gradle/libs.versions.toml package.json package-lock.json
 
           if git diff --cached --quiet; then
             echo "No version PR changes to commit."

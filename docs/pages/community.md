@@ -21,4 +21,4 @@ The best way to stay up to date with new releases and announcements [is via X](h
 
 ### GitHub
 
-We keep track of a CHANGELOG.md which is included in every [GitHub Release](https://github.com/composablehorizons/compose-unstyled/releases).
+Published versions are listed on [GitHub Releases](https://github.com/composablehorizons/compose-unstyled/releases).
