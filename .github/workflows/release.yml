@@ -174,9 +174,76 @@ jobs:
           disable-animations: true
           script: ./gradlew --console=plain :composeunstyled-${{ matrix.module }}:connectedDebugAndroidTest
 
+  demo-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ env.RELEASE_REF }}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Build installable demo APK
+        shell: bash
+        run: ./gradlew --console=plain :demo:assembleDebug
+
+      - name: Verify demo APK signing
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          android_sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          if [ -z "$android_sdk_root" ]; then
+            echo "ANDROID_HOME or ANDROID_SDK_ROOT must be set to verify APK signing."
+            exit 1
+          fi
+
+          apk_path="demo/build/outputs/apk/debug/demo-debug.apk"
+          apksigner="$(
+            find "$android_sdk_root/build-tools" -type f -name apksigner |
+              sort -V |
+              tail -n 1
+          )"
+
+          if [ -z "$apksigner" ]; then
+            echo "No apksigner executable found under $android_sdk_root/build-tools."
+            exit 1
+          fi
+
+          expected_cert_sha256="7d19a99ad9ae519b90681aaff27bc9692c2f060a179fd539c67ba507c3ab9bd3"
+          signing_report="$("$apksigner" verify --print-certs "$apk_path")"
+          echo "$signing_report"
+
+          actual_cert_sha256="$(
+            printf '%s\n' "$signing_report" |
+              awk -F': ' '/Signer #1 certificate SHA-256 digest/ { print $2 }'
+          )"
+
+          if [ "$actual_cert_sha256" != "$expected_cert_sha256" ]; then
+            echo "Expected demo APK certificate $expected_cert_sha256, got $actual_cert_sha256."
+            exit 1
+          fi
+
+          safe_release_ref="$(printf '%s' "$RELEASE_REF" | tr '/ ' '--')"
+          release_apk_path="demo/build/outputs/apk/debug/compose-unstyled-demo-${safe_release_ref}.apk"
+          cp "$apk_path" "$release_apk_path"
+
+      - name: Upload demo APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: compose-unstyled-demo-apk
+          path: demo/build/outputs/apk/debug/compose-unstyled-demo-*.apk
+          if-no-files-found: error
+
   publish:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: [ spotless-check, desktop-tests, screenshot-tests, android-tests ]
+    needs: [ spotless-check, desktop-tests, screenshot-tests, android-tests, demo-apk ]
     runs-on: ubuntu-latest
     environment: maven-central
     steps:
@@ -211,6 +278,12 @@ jobs:
         with:
           ref: ${{ env.RELEASE_REF }}
 
+      - name: Download demo APK
+        uses: actions/download-artifact@v4
+        with:
+          name: compose-unstyled-demo-apk
+          path: release-artifacts
+
       - name: Generate release notes
         shell: bash
         run: |
@@ -236,10 +309,12 @@ jobs:
           name: ${{ env.RELEASE_REF }}
           body: ${{ env.CHANGELOG_CONTENT }}
           draft: true
+          files: release-artifacts/*.apk
+          fail_on_unmatched_files: true
 
   report-failure:
-    needs: [ spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, publish, github-release ]
-    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
+    needs: [ spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, demo-apk, publish, github-release ]
+    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.demo-apk.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
     runs-on: ubuntu-latest
     steps:
       - name: Open GitHub issue
@@ -258,6 +333,7 @@ jobs:
               'screenshot-tests': '${{ needs.screenshot-tests.result }}',
               'discover-android-modules': '${{ needs.discover-android-modules.result }}',
               'android-tests': '${{ needs.android-tests.result }}',
+              'demo-apk': '${{ needs.demo-apk.result }}',
               'publish': '${{ needs.publish.result }}',
               'github-release': '${{ needs.github-release.result }}',
             };
