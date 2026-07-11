@@ -72,6 +72,7 @@ kotlin {
         implementation(libs.assertk)
         implementation(libs.compose.ui.test.junit4)
         implementation(projects.composeunstyledSlider)
+        implementation(projects.composeunstyledScrollbars)
       }
     }
   }
