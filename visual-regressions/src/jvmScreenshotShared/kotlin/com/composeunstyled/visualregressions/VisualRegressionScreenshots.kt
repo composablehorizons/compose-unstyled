@@ -66,7 +66,8 @@ val DedicatedRegressionScreenshots =
     CheckboxExtendedIndicatorBoundsScreenshot,
   ) + BottomSheetRegressionScreenshots +
     SliderRegressionScreenshots +
-    ScrollbarRegressionScreenshots
+    ScrollbarRegressionScreenshots +
+    DropdownMenuRegressionScreenshots
 
 val DemoRegressionScreenshots = listOf(
   demoScreenshot(name = "bottom-sheet-demo", startDestination = "bottom-sheet"),
