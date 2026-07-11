@@ -98,6 +98,27 @@ class AnchoredPositionTest {
   }
 
   @Test
+  fun usesOppositeHorizontalSideWhenPreferredSideDoesNotFit() {
+    val position = calculatePosition(
+      anchorBounds = IntRect(left = 8, top = 50, right = 88, bottom = 90),
+      side = AnchorSide.Start,
+      alignment = AnchorAlignment.Center,
+    )
+
+    assertThat(position).isEqualTo(IntOffset(x = 88, y = 50))
+  }
+
+  @Test
+  fun usesOppositeVerticalSideWhenPreferredSideDoesNotFit() {
+    val position = calculatePosition(
+      anchorBounds = IntRect(left = 100, top = 8, right = 180, bottom = 48),
+      side = AnchorSide.Top,
+    )
+
+    assertThat(position).isEqualTo(IntOffset(x = 100, y = 48))
+  }
+
+  @Test
   fun clampsOffsetPositionInsideWindow() {
     val position = calculatePosition(
       side = AnchorSide.Top,
@@ -128,6 +149,21 @@ class AnchoredPositionTest {
   }
 
   @Test
+  fun reportsSelectedFallbackSide() {
+    val placement = calculateFloatingPlacement(
+      density = Density(1f),
+      anchorBounds = IntRect(left = 8, top = 50, right = 88, bottom = 90),
+      windowSize = windowSize,
+      layoutDirection = LayoutDirection.Ltr,
+      contentSize = contentSize,
+      side = AnchorSide.Start,
+      alignment = AnchorAlignment.Center,
+    )
+
+    assertThat(placement.side).isEqualTo(AnchorSide.End)
+  }
+
+  @Test
   fun clampsOversizedContentToWindowOrigin() {
     val position = calculatePosition(
       windowSize = IntSize(width = 80, height = 40),
@@ -138,6 +174,7 @@ class AnchoredPositionTest {
   }
 
   private fun calculatePosition(
+    anchorBounds: IntRect = this.anchorBounds,
     side: AnchorSide = AnchorSide.Bottom,
     alignment: AnchorAlignment = AnchorAlignment.Start,
     sideOffset: Dp = 0.dp,

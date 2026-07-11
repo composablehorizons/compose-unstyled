@@ -28,10 +28,12 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 
 data class FloatingPlacement(
   val position: IntOffset,
   val positionAdjustment: IntOffset,
+  val side: AnchorSide,
 )
 
 fun calculateFloatingPlacement(
@@ -45,6 +47,58 @@ fun calculateFloatingPlacement(
   sideOffset: Dp = 0.dp,
   alignmentOffset: Dp = 0.dp,
 ): FloatingPlacement {
+  val sideOffsetPx = with(density) { sideOffset.roundToPx() }
+  val alignmentOffsetPx = with(density) { alignmentOffset.roundToPx() }
+  val preferredPlacement = calculatePlacement(
+    anchorBounds = anchorBounds,
+    windowSize = windowSize,
+    layoutDirection = layoutDirection,
+    contentSize = contentSize,
+    side = side,
+    alignment = alignment,
+    sideOffsetPx = sideOffsetPx,
+    alignmentOffsetPx = alignmentOffsetPx,
+  )
+  val oppositePlacement = calculatePlacement(
+    anchorBounds = anchorBounds,
+    windowSize = windowSize,
+    layoutDirection = layoutDirection,
+    contentSize = contentSize,
+    side = side.opposite(),
+    alignment = alignment,
+    sideOffsetPx = sideOffsetPx,
+    alignmentOffsetPx = alignmentOffsetPx,
+  )
+  val selectedPlacement = if (oppositePlacement.overflow < preferredPlacement.overflow) {
+    oppositePlacement
+  } else {
+    preferredPlacement
+  }
+
+  return FloatingPlacement(
+    position = selectedPlacement.position,
+    positionAdjustment = selectedPlacement.position - selectedPlacement.idealPosition,
+    side = selectedPlacement.side,
+  )
+}
+
+private data class PlacementCandidate(
+  val side: AnchorSide,
+  val idealPosition: IntOffset,
+  val position: IntOffset,
+  val overflow: Int,
+)
+
+private fun calculatePlacement(
+  anchorBounds: IntRect,
+  windowSize: IntSize,
+  layoutDirection: LayoutDirection,
+  contentSize: IntSize,
+  side: AnchorSide,
+  alignment: AnchorAlignment,
+  sideOffsetPx: Int,
+  alignmentOffsetPx: Int,
+): PlacementCandidate {
   val x = when (side) {
     AnchorSide.Top, AnchorSide.Bottom -> when (alignment) {
       AnchorAlignment.Start -> if (layoutDirection == LayoutDirection.Ltr) {
@@ -85,8 +139,6 @@ fun calculateFloatingPlacement(
   }
 
   val isLtr = layoutDirection == LayoutDirection.Ltr
-  val sideOffsetPx = with(density) { sideOffset.roundToPx() }
-  val alignmentOffsetPx = with(density) { alignmentOffset.roundToPx() }
 
   val offsetX = when (side) {
     AnchorSide.Top, AnchorSide.Bottom -> alignmentOffsetPx * if (isLtr) 1 else -1
@@ -104,12 +156,15 @@ fun calculateFloatingPlacement(
     y = y + offsetY,
   )
   val position = IntOffset(
-    x = (x + offsetX).coerceInWindowAxis(windowSize.width, contentSize.width),
-    y = (y + offsetY).coerceInWindowAxis(windowSize.height, contentSize.height),
+    x = idealPosition.x.coerceInWindowAxis(windowSize.width, contentSize.width),
+    y = idealPosition.y.coerceInWindowAxis(windowSize.height, contentSize.height),
   )
-  return FloatingPlacement(
+  val positionAdjustment = position - idealPosition
+  return PlacementCandidate(
+    side = side,
+    idealPosition = idealPosition,
     position = position,
-    positionAdjustment = position - idealPosition,
+    overflow = abs(positionAdjustment.x) + abs(positionAdjustment.y),
   )
 }
 
@@ -120,4 +175,11 @@ private fun Int.coerceInWindowAxis(windowSize: Int, contentSize: Int): Int {
   } else {
     coerceIn(0, max)
   }
+}
+
+private fun AnchorSide.opposite(): AnchorSide = when (this) {
+  AnchorSide.Top -> AnchorSide.Bottom
+  AnchorSide.Bottom -> AnchorSide.Top
+  AnchorSide.Start -> AnchorSide.End
+  AnchorSide.End -> AnchorSide.Start
 }

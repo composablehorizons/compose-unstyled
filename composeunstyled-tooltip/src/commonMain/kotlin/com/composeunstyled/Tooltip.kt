@@ -240,7 +240,10 @@ fun UnstyledTooltip(
     sideOffset = sideOffset,
     alignmentOffset = alignmentOffset,
     onPlaced = {
-      state.placement = state.placement.copy(positionAdjustment = it.positionAdjustment)
+      state.placement = state.placement.copy(
+        side = it.side,
+        positionAdjustment = it.positionAdjustment,
+      )
     },
     floatingContent = {
       CompositionLocalProvider(LocalTooltipState provides state) {
