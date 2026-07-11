@@ -1,5 +1,31 @@
 # Contributing
 
+Thanks for helping improve Compose Unstyled. We welcome focused contributions that keep the
+library's unstyled promise intact: components should expose behavior, state, semantics, and slots
+without taking visual or design-system decisions for users.
+
+## Before opening a PR
+
+For small bug fixes, focused tests, and documentation fixes, feel free to open a PR directly.
+
+For new primitives, public APIs, or behavior changes, open an issue before starting implementation
+so we can agree on the scope and API first. Include:
+
+- the user problem the change solves
+- the proposed public API shape
+- the relevant accessibility pattern or semantics
+- the expected tests
+- the non-goals, especially any visuals or design-system choices that should stay out of scope
+
+Good contribution candidates are marked with `help wanted`.
+
+Compose Unstyled contributions should:
+
+- avoid visual and design-system opinions
+- expose behavior through state and slots
+- follow relevant accessibility patterns
+- include focused tests for shared behavior when behavior changes
+
 ## Working with Android
 
 The recommended way to build and develop on Unstyled is using the JVM target. However, for your PRs

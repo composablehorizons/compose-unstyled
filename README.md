@@ -16,7 +16,11 @@ Got an idea you want to share? [Open a Github Issue](https://github.com/composab
 
 ## Contributing
 
-We are currently accepting contributions in the form of bug reports and feature requests, in the
-form of Github issues.
+We welcome focused contributions. The best way to start is with a bug report, feature request, or
+proposal in [Github issues](https://github.com/composablehorizons/compose-unstyled/issues).
 
-Other ways of contributing is telling your friends about Compose Unstyled, by sharing the repo, writing blog posts, doing video content on Youtube.
+For new primitives, public APIs, or behavior changes, please open an issue before starting
+implementation so we can agree on the scope and API first.
+
+Other ways of contributing include telling your friends about Compose Unstyled, sharing the repo,
+writing blog posts, or creating video content on Youtube.
