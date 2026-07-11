@@ -284,30 +284,12 @@ jobs:
           name: compose-unstyled-demo-apk
           path: release-artifacts
 
-      - name: Generate release notes
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          version="${RELEASE_REF#v}"
-          changelog_content="$(
-            sed -n "/## \\[$version\\]/,/## \\[/p" CHANGELOG.md |
-              sed '$ d' |
-              tail -n +2
-          )"
-
-          {
-            echo "CHANGELOG_CONTENT<<EOF"
-            echo "$changelog_content"
-            echo "EOF"
-          } >> "$GITHUB_ENV"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_REF }}
           name: ${{ env.RELEASE_REF }}
-          body: ${{ env.CHANGELOG_CONTENT }}
+          generate_release_notes: true
           draft: true
           files: release-artifacts/*.apk
           fail_on_unmatched_files: true
