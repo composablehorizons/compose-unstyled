@@ -9,6 +9,19 @@
 - [ ] Tests added/updated
 - [ ] Manual testing performed
 
+## Manual QA
+
+<!-- Describe how a reviewer can verify the change manually -->
+
+- Platform/device:
+- Setup:
+- Steps:
+  1.
+  2.
+  3.
+- Expected result:
+- Known limitations:
+
 ## Related Issues
 
 <!-- Link any related issues here using #issue_number -->
