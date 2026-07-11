@@ -2,10 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This project uses [Changesets](https://github.com/changesets/changesets) to collect release notes
+from pull requests.
 
 ## [Unreleased]
+
+## [2.8.1] - 2026-07-11
+
+### Patch Changes
+
+- [#457](https://github.com/composablehorizons/compose-unstyled/pull/457) [`df43083`](https://github.com/composablehorizons/compose-unstyled/commit/df430839a37dd355d67f8616471a1120c5f55ff7) Thanks [@alexstyl](https://github.com/alexstyl)! - Fixed bottom sheets settling to the wrong detent when a drag release passed the configured positional threshold without enough velocity to count as a fling.
+
+- [#457](https://github.com/composablehorizons/compose-unstyled/pull/457) [`df43083`](https://github.com/composablehorizons/compose-unstyled/commit/df430839a37dd355d67f8616471a1120c5f55ff7) Thanks [@alexstyl](https://github.com/alexstyl)! - Fixed portalled content losing the caller's composition locals when rendered by `PortalHost`.
 
 ## [2.8.0] - 2026-06-25
 
