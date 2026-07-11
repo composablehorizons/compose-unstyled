@@ -25,6 +25,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,12 @@ val SliderRegressionScreenshots = listOf(
     height = 320,
     content = { VerticalSliderValuesRegression() },
   ),
+  VisualRegressionScreenshot(
+    name = "slider-horizontal-rtl",
+    width = 420,
+    height = 260,
+    content = { HorizontalSliderRtlRegression() },
+  ),
 )
 
 @Composable
@@ -59,6 +66,64 @@ fun VerticalSliderValuesRegression() {
     VerticalSlider(value = 0.5f)
     VerticalSlider(value = 1f)
     VerticalSlider(value = 0.75f, reverseDirection = true)
+  }
+}
+
+@Composable
+fun HorizontalSliderRtlRegression() {
+  RtlLayout {
+    Column(verticalArrangement = Arrangement.spacedBy(28.dp)) {
+      HorizontalSlider(value = 0.25f)
+      HorizontalSlider(value = 0.5f)
+      HorizontalSlider(value = 0.75f)
+    }
+  }
+}
+
+@Composable
+private fun HorizontalSlider(value: Float) {
+  UnstyledSlider(
+    value = value,
+    onValueChange = {},
+    modifier = Modifier.width(280.dp).height(36.dp),
+    track = { state ->
+      HorizontalSliderTrack(state)
+    },
+    thumb = {
+      Box(
+        modifier = Modifier.size(36.dp),
+        contentAlignment = Alignment.Center,
+      ) {
+        Box(
+          Modifier
+            .size(18.dp)
+            .clip(CircleShape)
+            .background(Color.Black),
+        )
+      }
+    },
+  )
+}
+
+@Composable
+private fun HorizontalSliderTrack(state: SliderState) {
+  Box(Modifier.width(280.dp).height(36.dp), contentAlignment = Alignment.Center) {
+    Box(
+      Modifier
+        .fillMaxWidth()
+        .height(8.dp)
+        .padding(horizontal = 16.dp)
+        .clip(RoundedCornerShape(100.dp))
+        .background(Color(0xFFCACACA)),
+      contentAlignment = Alignment.CenterStart,
+    ) {
+      Box(
+        Modifier
+          .fillMaxHeight()
+          .fillMaxWidth(state.fraction)
+          .background(Color.Black),
+      )
+    }
   }
 }
 

@@ -401,7 +401,7 @@ fun UnstyledSlider(
     layout(width, height) {
       if (orientation == Orientation.Horizontal) {
         trackPlaceable.placeRelative(x = 0, y = (height - trackPlaceable.height) / 2)
-        thumbPlaceable.placeRelative(
+        thumbPlaceable.place(
           x = offset.roundToInt(),
           y = (height - thumbPlaceable.height) / 2,
         )

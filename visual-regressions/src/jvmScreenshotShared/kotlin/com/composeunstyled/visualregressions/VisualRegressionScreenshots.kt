@@ -24,11 +24,14 @@ package com.composeunstyled.visualregressions
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAwtImage
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -36,6 +39,7 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -90,6 +94,13 @@ private fun demoScreenshot(
   name = name,
   content = { Demo(startDestination = startDestination) },
 )
+
+@Composable
+internal fun RtlLayout(content: @Composable () -> Unit) {
+  CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+    content()
+  }
+}
 
 @OptIn(ExperimentalTestApi::class)
 fun assertVisualRegressionScreenshotMatches(
