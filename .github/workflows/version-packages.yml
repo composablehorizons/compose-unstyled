@@ -1,0 +1,61 @@
+name: Version Packages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install release tooling
+        run: npm ci
+
+      - name: Create version PR
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run changeset:version
+          title: Release Compose Unstyled
+          commit: Release Compose Unstyled
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release tag and start release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(node -p 'require("./package.json").version')"
+          tag="$version"
+
+          if git rev-parse --verify --quiet "refs/tags/$tag" >/dev/null; then
+            echo "Tag $tag already exists. Skipping release dispatch."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$tag"
+          git push origin "$tag"
+
+          gh workflow run release.yml --ref "$tag" -f tag="$tag"

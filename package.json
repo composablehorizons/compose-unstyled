@@ -1,0 +1,13 @@
+{
+  "name": "compose-unstyled",
+  "version": "2.8.0",
+  "private": true,
+  "scripts": {
+    "changeset": "changeset",
+    "changeset:version": "changeset version && node scripts/sync-release-version.mjs"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/cli": "^2.29.7"
+  }
+}
