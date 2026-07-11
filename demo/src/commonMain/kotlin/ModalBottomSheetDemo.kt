@@ -98,7 +98,7 @@ fun ModalBottomSheetDemo() {
           .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
       ) {
         Box(
-          modifier = Modifier.fillMaxWidth().height(600.dp),
+          modifier = Modifier.fillMaxWidth().height(1000.dp),
           contentAlignment = Alignment.TopCenter,
         ) {
           DragIndication(
