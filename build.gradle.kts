@@ -8,6 +8,7 @@ plugins {
 }
 
 val composeUnstyledDocsSource = layout.projectDirectory.dir("docs")
+val composeUnstyledDocsSourcesFile = composeUnstyledDocsSource.file("sources.yml")
 val generatedComposeUnstyledDocsPages = layout.buildDirectory.dir("generated/compose-unstyled-docs/pages")
 val generatedComposeUnstyledDemoSources = layout.buildDirectory.dir("generated/compose-unstyled-docs/demo-sources")
 val composeUnstyledDocsAssets = composeUnstyledDocsSource.dir("assets")
@@ -18,31 +19,88 @@ val composeUnstyledPublishVersion = providers
 
 extra["publishVersion"] = composeUnstyledPublishVersion
 
-val composeUnstyledDemoSources = mapOf(
-  "avatar" to "AvatarDemo.kt",
-  "bottom-sheet" to "BottomSheetDemo.kt",
-  "breakpoints" to "BreakpointsDemo.kt",
-  "modal-bottom-sheet" to "ModalBottomSheetDemo.kt",
-  "button" to "ButtonDemo.kt",
-  "checkbox" to "CheckboxDemo.kt",
-  "tristatecheckbox" to "TriStateCheckboxDemo.kt",
-  "dialog" to "DialogDemo.kt",
-  "disclosure" to "DisclosureDemo.kt",
-  "dropdown-menu" to "DropdownMenuDemo.kt",
-  "icon" to "IconDemo.kt",
-  "modal" to "ModalDemo.kt",
-  "progressindicator" to "ProgressIndicatorDemo.kt",
-  "radiogroup" to "RadioGroupDemo.kt",
-  "scrollbars" to "ScrollbarsDemo.kt",
-  "separators" to "SeparatorsDemo.kt",
-  "slider" to "SliderDemo.kt",
-  "tabgroup" to "TabGroupDemo.kt",
-  "textfield" to "TextFieldDemo.kt",
-  "tooltip" to "TooltipDemo.kt",
-  "toggleswitch" to "ToggleSwitchDemo.kt",
-  "platform-theme" to "PlatformThemeDemo.kt",
-  "window-container-size" to "WindowContainerSizeDemo.kt",
+data class DocsSourceSection(
+  val root: String,
+  val files: Map<String, String>,
 )
+
+data class DocsSources(
+  val demos: DocsSourceSection,
+)
+
+fun readDocsSources(file: File): DocsSources {
+  val roots = linkedMapOf<String, String>()
+  val files = linkedMapOf("demos" to linkedMapOf<String, String>())
+  var currentSection: String? = null
+  var inFiles = false
+
+  file.readLines().forEachIndexed { index, rawLine ->
+    val lineWithoutComment = rawLine.replace(Regex("""\s+#.*$"""), "")
+    if (lineWithoutComment.isBlank()) return@forEachIndexed
+
+    val indent = lineWithoutComment.indexOfFirst { it.isWhitespace().not() }.let {
+      if (it == -1) 0 else it
+    }
+    val line = lineWithoutComment.trim()
+
+    if (indent == 0) {
+      check(line.endsWith(":")) {
+        "Invalid docs sources entry at ${file.relativeTo(rootDir)}:${index + 1}: $rawLine"
+      }
+      val section = line.removeSuffix(":")
+      check(section in files.keys) {
+        "Unsupported docs sources section '$section' at ${file.relativeTo(rootDir)}:${index + 1}"
+      }
+      currentSection = section
+      inFiles = false
+      return@forEachIndexed
+    }
+
+    check(currentSection != null) {
+      "Invalid docs sources entry at ${file.relativeTo(rootDir)}:${index + 1}: $rawLine"
+    }
+
+    if (indent == 2) {
+      if (line == "files:") {
+        inFiles = true
+        return@forEachIndexed
+      }
+
+      val separator = line.indexOf(": ")
+      check(separator > 0 && line.take(separator) == "root") {
+        "Invalid docs sources section entry at ${file.relativeTo(rootDir)}:${index + 1}: $rawLine"
+      }
+      roots[currentSection!!] = line.drop(separator + 2)
+      inFiles = false
+      return@forEachIndexed
+    }
+
+    check(indent == 4 && inFiles) {
+      "Invalid docs sources mapping at ${file.relativeTo(rootDir)}:${index + 1}: $rawLine"
+    }
+
+    val separator = line.indexOf(": ")
+    check(separator > 0) {
+      "Invalid docs sources mapping at ${file.relativeTo(rootDir)}:${index + 1}: $rawLine"
+    }
+    files.getValue(currentSection!!)[line.take(separator)] = line.drop(separator + 2)
+  }
+
+  check(roots["demos"]?.isNotBlank() == true) {
+    "Missing root for docs sources section 'demos' in ${file.relativeTo(rootDir)}"
+  }
+  check(files.getValue("demos").isNotEmpty()) {
+    "Missing files for docs sources section 'demos' in ${file.relativeTo(rootDir)}"
+  }
+
+  return DocsSources(
+    demos = DocsSourceSection(root = roots.getValue("demos"), files = files.getValue("demos")),
+  )
+}
+
+val composeUnstyledDocsSources = readDocsSources(composeUnstyledDocsSourcesFile.asFile)
+val composeUnstyledDemoSourceRoot = layout.projectDirectory.dir(composeUnstyledDocsSources.demos.root)
+val composeUnstyledDemoSources = composeUnstyledDocsSources.demos.files
 
 val generateComposeUnstyledApiReference by tasks.registering(Exec::class) {
   group = "documentation"
@@ -65,9 +123,8 @@ val generateComposeUnstyledDemoSources by tasks.registering {
   group = "documentation"
   description = "Prepares Compose Unstyled demo sources for display in documentation."
 
-  val demoSourceDirectory = project(":demo").layout.projectDirectory.dir("src/commonMain/kotlin")
-
-  inputs.files(composeUnstyledDemoSources.values.map { demoSourceDirectory.file(it) })
+  inputs.file(composeUnstyledDocsSourcesFile)
+  inputs.files(composeUnstyledDemoSources.values.distinct().map { composeUnstyledDemoSourceRoot.file(it) })
   outputs.dir(generatedComposeUnstyledDemoSources)
 
   doLast {
@@ -76,7 +133,7 @@ val generateComposeUnstyledDemoSources by tasks.registering {
     outputDirectory.mkdirs()
 
     composeUnstyledDemoSources.values.distinct().forEach { fileName ->
-      val sourceFile = demoSourceDirectory.file(fileName).asFile
+      val sourceFile = composeUnstyledDemoSourceRoot.file(fileName).asFile
       check(sourceFile.isFile) {
         "Missing demo source: ${sourceFile.relativeTo(rootDir)}"
       }
@@ -86,7 +143,9 @@ val generateComposeUnstyledDemoSources by tasks.registering {
         .replace(Regex("""(?m)^\s*package\s+[A-Za-z0-9_.]+\s*\R+"""), "")
         .trim('\n')
 
-      outputDirectory.resolve(fileName).writeText(displaySource + "\n")
+      val outputFile = outputDirectory.resolve(fileName)
+      outputFile.parentFile?.mkdirs()
+      outputFile.writeText(displaySource + "\n")
     }
   }
 }
@@ -101,6 +160,8 @@ tasks.register<Sync>("bundleComposeUnstyledDocs") {
 
   val bundleDirectory = layout.buildDirectory.dir("docs-bundle/compose-unstyled")
   val demoDistribution = project(":demo").layout.buildDirectory.dir("dist/wasmJs/productionExecutable")
+
+  inputs.file(composeUnstyledDocsSourcesFile)
 
   into(bundleDirectory)
   from(composeUnstyledDocsSource.file("docs.yml"))
@@ -158,6 +219,7 @@ tasks.register<Sync>("bundleComposeUnstyledDocs") {
           "$id": {
             "app": "composeunstyled-v2-demos",
             "source": "demo-sources/$fileName",
+            "title": "examples/$fileName",
             "language": "kotlin"
           }""".trimIndent()
     }
