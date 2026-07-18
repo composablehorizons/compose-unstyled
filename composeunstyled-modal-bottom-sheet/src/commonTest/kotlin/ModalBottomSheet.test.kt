@@ -656,6 +656,41 @@ class ModalBottomSheetTest {
   }
 
   @Test
+  fun setting_enabled_to_false_blocks_sheet_dragging() = runComposeUiTest {
+    val peek = SheetDetent("peek") { containerHeight, _ ->
+      containerHeight * 0.6f
+    }
+    lateinit var state: ModalBottomSheetState
+
+    setContent {
+      state = rememberModalBottomSheetState(
+        initialDetent = peek,
+        detents = listOf(SheetDetent.Hidden, peek, SheetDetent.FullyExpanded),
+      )
+      UnstyledModalBottomSheet(
+        state = state,
+        enabled = false,
+        overlay = {
+          Scrim(Modifier.testTag("scrim"))
+        },
+      ) {
+        Sheet { Box(Modifier.testTag("sheet").size(400.dp)) }
+      }
+    }
+    onNodeWithTag("sheet").assertIsDisplayed()
+
+    val initialOffset = state.offset
+
+    onNodeWithTag("sheet").performTouchInput {
+      swipeDown()
+    }
+    waitForIdle()
+
+    assertThat(state.currentDetent).isEqualTo(peek)
+    assertThat(state.offset).isEqualTo(initialOffset)
+  }
+
+  @Test
   fun sheet_can_be_shown_again_when_caller_observes_that_it_settled_at_hidden() = runComposeUiTest {
     val peek = SheetDetent("peek") { containerHeight, _ ->
       containerHeight * 0.6f
