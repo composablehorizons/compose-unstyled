@@ -28,6 +28,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Indication
@@ -202,26 +203,45 @@ class ModalBottomSheetState(
   }
 
   fun jumpTo(value: SheetDetent) {
+    if (modalDetent == value && bottomSheetState.currentDetent == value && bottomSheetState.targetDetent == value) {
+      return
+    }
+
     val isBottomSheetVisible =
       bottomSheetState.currentDetent != SheetDetent.Hidden || bottomSheetState.targetDetent != SheetDetent.Hidden
 
     modalDetent = value
+    pendingTargetDetent = value
+    pendingDetentChange?.cancel()
 
     if (isBottomSheetVisible) {
-      bottomSheetState.jumpTo(value)
       if (value == SheetDetent.Hidden) {
         modalState.transitionState.targetState = false
+      }
+      pendingDetentChange = coroutineScope.launch {
+        try {
+          bottomSheetState.animateTo(value, snap())
+        } finally {
+          if (pendingTargetDetent == value) {
+            pendingTargetDetent = null
+          }
+        }
       }
       return
     }
 
-    pendingDetentChange?.cancel()
+    modalState.transitionState.targetState = value != SheetDetent.Hidden
     pendingDetentChange = coroutineScope.launch {
-      modalState.transitionState.targetState = value != SheetDetent.Hidden
-      if (value != SheetDetent.Hidden) {
-        modalState.awaitAttachedToWindow()
+      try {
+        if (value != SheetDetent.Hidden) {
+          modalState.awaitAttachedToWindow()
+        }
+        bottomSheetState.animateTo(value, snap())
+      } finally {
+        if (pendingTargetDetent == value) {
+          pendingTargetDetent = null
+        }
       }
-      bottomSheetState.jumpTo(value)
     }
   }
 
