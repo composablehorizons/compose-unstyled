@@ -203,6 +203,9 @@ class ModalBottomSheetState(
   }
 
   fun jumpTo(value: SheetDetent) {
+    check(bottomSheetState.detents.contains(value)) {
+      "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
+    }
     if (modalDetent == value && bottomSheetState.currentDetent == value && bottomSheetState.targetDetent == value) {
       return
     }
