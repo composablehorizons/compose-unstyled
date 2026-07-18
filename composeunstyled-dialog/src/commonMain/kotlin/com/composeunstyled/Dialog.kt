@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -76,8 +77,10 @@ fun DialogOverlayScope.Scrim(
   exit: ExitTransition = ExitTransition.None,
 ) {
   val state = LocalModalState.current
+  val visible = rememberModalFragmentVisibility(state)
+
   AnimatedVisibility(
-    visible = state.transitionState.targetState,
+    visible = visible,
     enter = enter,
     exit = exit,
   ) {
@@ -152,10 +155,11 @@ fun DialogScope.DialogPanel(
   content: @Composable () -> Unit,
 ) {
   val modalState = LocalModalState.current
+  val visible = rememberModalFragmentVisibility(modalState)
   val panelFocusRequester = remember { FocusRequester() }
 
   AnimatedVisibility(
-    visible = modalState.transitionState.targetState,
+    visible = visible,
     enter = enter,
     exit = exit,
   ) {
@@ -180,5 +184,18 @@ fun DialogScope.DialogPanel(
     ) {
       content()
     }
+  }
+}
+
+@Composable
+private fun rememberModalFragmentVisibility(modalState: ModalState): Boolean {
+  val hasComposed = remember { mutableStateOf(false) }
+  SideEffect {
+    hasComposed.value = true
+  }
+  return if (hasComposed.value) {
+    modalState.transitionState.targetState
+  } else {
+    modalState.transitionState.currentState
   }
 }
