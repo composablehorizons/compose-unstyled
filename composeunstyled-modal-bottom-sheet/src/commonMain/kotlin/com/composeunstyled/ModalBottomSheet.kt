@@ -239,6 +239,7 @@ class ModalBottomSheetState(
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
+  enabled: Boolean = true,
   properties: ModalBottomSheetProperties = ModalBottomSheetProperties(),
   onDismiss: () -> Unit = DoNothing,
   overlay: (@Composable ModalBottomSheetOverlayScope.() -> Unit)? = null,
@@ -327,6 +328,7 @@ fun UnstyledModalBottomSheet(
         modifier = Modifier
           .fillMaxSize()
           .keepModalMountedWhileSheetExits(state),
+        enabled = enabled,
         offsetForIme = properties.offsetForIme,
       ) {
         val modalBottomSheetScope = remember(this) {
