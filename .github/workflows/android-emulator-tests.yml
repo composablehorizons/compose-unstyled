@@ -1,0 +1,126 @@
+name: Android Emulator Tests
+
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        description: Git ref to check out before running tests. Uses the workflow ref when omitted.
+        required: false
+        type: string
+        default: ''
+      module:
+        description: Module label used for the job name.
+        required: true
+        type: string
+      test-command:
+        description: Gradle command to run inside the Android emulator.
+        required: true
+        type: string
+      api-level:
+        description: Android API level for the emulator.
+        required: false
+        type: string
+        default: '23'
+      arch:
+        description: Android system image architecture.
+        required: false
+        type: string
+        default: x86_64
+      disk-size:
+        description: Emulator disk size.
+        required: false
+        type: string
+        default: 2048M
+
+jobs:
+  android-test:
+    name: ${{ inputs.module }}-android-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Enable Hardware Acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: actions/checkout@v5
+        if: inputs.checkout-ref == ''
+
+      - uses: actions/checkout@v5
+        if: inputs.checkout-ref != ''
+        with:
+          ref: ${{ inputs.checkout-ref }}
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          token: ${{ github.token }}
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Restore AVD
+        uses: actions/cache@v5
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ inputs.api-level }}-${{ inputs.arch }}-${{ inputs.disk-size }}
+
+      - name: Create AVD
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 8
+        continue-on-error: true
+        id: create-avd-first-attempt
+        with:
+          api-level: ${{ inputs.api-level }}
+          arch: ${{ inputs.arch }}
+          disk-size: ${{ inputs.disk-size }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Create AVD retry 1
+        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.create-avd-first-attempt.outcome == 'failure'
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 8
+        continue-on-error: true
+        id: create-avd-second-attempt
+        with:
+          api-level: ${{ inputs.api-level }}
+          arch: ${{ inputs.arch }}
+          disk-size: ${{ inputs.disk-size }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Create AVD retry 2
+        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.create-avd-second-attempt.outcome == 'failure'
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 8
+        id: create-avd-third-attempt
+        with:
+          api-level: ${{ inputs.api-level }}
+          arch: ${{ inputs.arch }}
+          disk-size: ${{ inputs.disk-size }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Android Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ inputs.api-level }}
+          arch: ${{ inputs.arch }}
+          disk-size: ${{ inputs.disk-size }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ${{ inputs.test-command }}

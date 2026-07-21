@@ -170,61 +170,10 @@ jobs:
     name: ${{ matrix.module }}-android-tests
     needs: [ discover-android-modules, fast-checks ]
     if: needs.discover-android-modules.outputs.android_modules != '[]'
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      API_LEVEL: 23
-      ARCH: x86_64
-      DISK_SIZE: 2048M
     strategy:
       matrix:
         module: ${{ fromJson(needs.discover-android-modules.outputs.android_modules) }}
-    steps:
-      - name: Enable Hardware Acceleration
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: 17
-          token: ${{ github.token }}
-
-      - uses: actions/checkout@v5
-
-      - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v5
-
-      - name: Restore AVD
-        uses: actions/cache@v5
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ env.API_LEVEL }}-${{ env.ARCH }}-${{ env.DISK_SIZE }}
-
-      - name: Create AVD
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ env.API_LEVEL }}
-          arch: ${{ env.ARCH }}
-          disk-size: ${{ env.DISK_SIZE }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ env.API_LEVEL }}
-          arch: ${{ env.ARCH }}
-          disk-size: ${{ env.DISK_SIZE }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
+    uses: ./.github/workflows/android-emulator-tests.yml
+    with:
+      module: ${{ matrix.module }}
+      test-command: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
