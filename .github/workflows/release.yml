@@ -296,7 +296,20 @@ jobs:
 
   report-failure:
     needs: [ spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, demo-apk, publish, github-release ]
-    if: ${{ always() && (needs.spotless-check.result == 'failure' || needs.desktop-tests.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure' || needs.demo-apk.result == 'failure' || needs.publish.result == 'failure' || needs.github-release.result == 'failure') }}
+    if: >-
+      ${{
+        always() &&
+        (
+          contains(fromJson('["failure","cancelled"]'), needs.spotless-check.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.desktop-tests.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.screenshot-tests.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.discover-android-modules.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.android-tests.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.demo-apk.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.publish.result) ||
+          contains(fromJson('["failure","cancelled"]'), needs.github-release.result)
+        )
+      }}
     runs-on: ubuntu-latest
     steps:
       - name: Open GitHub issue
@@ -319,6 +332,37 @@ jobs:
               'publish': '${{ needs.publish.result }}',
               'github-release': '${{ needs.github-release.result }}',
             };
+            const failedJobs = Object.entries(results).filter(([, result]) => result === 'failure');
+
+            const { data: workflowRun } = await github.rest.actions.getWorkflowRun({
+              owner,
+              repo,
+              run_id: context.runId,
+            });
+            if (workflowRun.canceling_actor) {
+              core.info(`Release run was cancelled by ${workflowRun.canceling_actor.login}; skipping failure issue.`);
+              return;
+            }
+
+            const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+              owner,
+              repo,
+              run_id: context.runId,
+              per_page: 100,
+            });
+            const timeoutThresholdMs = 59 * 60 * 1000;
+            const timedOutJobs = jobs.filter(job => {
+              if (job.conclusion !== 'cancelled' || !job.started_at || !job.completed_at) return false;
+
+              const startedAt = new Date(job.started_at).getTime();
+              const completedAt = new Date(job.completed_at).getTime();
+              return completedAt - startedAt >= timeoutThresholdMs;
+            });
+
+            if (failedJobs.length === 0 && timedOutJobs.length === 0) {
+              core.info('No failed jobs or timeout-cancelled jobs found; skipping failure issue.');
+              return;
+            }
 
             const body = [
               `Release failed for \`${releaseRef}\`.`,
@@ -327,6 +371,11 @@ jobs:
               '',
               'Job results:',
               ...Object.entries(results).map(([job, result]) => `- \`${job}\`: ${result}`),
+              ...(timedOutJobs.length > 0 ? [
+                '',
+                'Timed out jobs:',
+                ...timedOutJobs.map(job => `- \`${job.name}\``),
+              ] : []),
               '',
               'Please inspect the failed job logs and rerun the release once the issue is fixed.',
             ].join('\n');
