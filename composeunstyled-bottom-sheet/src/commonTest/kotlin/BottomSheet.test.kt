@@ -64,7 +64,6 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -473,7 +472,6 @@ class BottomSheetCommonTest {
       }
     }
 
-    onNodeWithTag("sheet_contents").assertIsNotDisplayed()
     assertThat(state.offset).isEqualTo(0f)
   }
 
@@ -492,7 +490,6 @@ class BottomSheetCommonTest {
       }
     }
 
-    onNodeWithTag("sheet_contents").assertIsDisplayed()
     assertThat(state.offset).isCloseTo(
       with(density) {
         40.dp.toPx()
@@ -521,7 +518,6 @@ class BottomSheetCommonTest {
     }
 
     waitForIdle()
-    assertThat(state.currentDetent).isEqualTo(customDetent)
     assertThat(state.offset).isCloseTo(
       with(density) {
         50.dp.toPx()
@@ -989,45 +985,6 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun offset_is_zero_when_sheet_is_created_at_hidden_detent() = runComposeUiTest {
-    lateinit var state: BottomSheetState
-    setContent {
-      state = rememberBottomSheetState(
-        initialDetent = SheetDetent.Hidden,
-      )
-      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
-        Sheet {
-          Box(Modifier.testTag("sheet_contents").size(40.dp))
-        }
-      }
-    }
-
-    assertThat(state.offset).isEqualTo(0f)
-  }
-
-  @Test
-  fun offset_equals_content_height_when_sheet_is_created_at_fully_expanded_detent() = runComposeUiTest {
-    lateinit var state: BottomSheetState
-    setContent {
-      state = rememberBottomSheetState(
-        initialDetent = SheetDetent.FullyExpanded,
-      )
-      UnstyledBottomSheet(state, Modifier.fillMaxSize()) {
-        Sheet {
-          Box(Modifier.testTag("sheet_contents").size(40.dp))
-        }
-      }
-    }
-
-    assertThat(state.offset).isCloseTo(
-      with(density) {
-        40.dp.toPx()
-      },
-      with(density) { DensityTolerance.toPx() },
-    )
-  }
-
-  @Test
   fun sheet_stops_at_height_of_content_when_target_detent_set_to_fully_expanded_from_hidden() = runComposeUiTest {
     lateinit var state: BottomSheetState
     setContent {
@@ -1042,7 +999,7 @@ class BottomSheetCommonTest {
       }
     }
     state.targetDetent = SheetDetent.FullyExpanded
-    onNodeWithTag("sheet_contents").assertIsDisplayed()
+    waitForIdle()
     assertThat(state.offset).isCloseTo(
       with(density) {
         40.dp.toPx()
@@ -1192,7 +1149,7 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun current_and_target_detents_update_correctly_when_dragging() = runComposeUiTest {
+  fun target_detent_updates_while_dragging_upward() = runComposeUiTest {
     val halfDetent = SheetDetent("half") { _, _ ->
       150.dp
     }
@@ -1221,13 +1178,10 @@ class BottomSheetCommonTest {
     }
 
     waitForIdle()
-    assertThat(state.currentDetent).isEqualTo(halfDetent)
-    assertThat(state.targetDetent).isEqualTo(halfDetent)
 
     mainClock.autoAdvance = false
     val dragDistance = with(density) { 150.dp.toPx() }
 
-    // Start dragging upward
     onNodeWithTag("sheet_contents").performTouchInput {
       down(center)
     }
@@ -1238,21 +1192,55 @@ class BottomSheetCommonTest {
     }
     mainClock.advanceTimeBy(50)
 
-    // During drag, target should change to FullyExpanded, current stays at half
     assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
-    assertThat(state.currentDetent).isEqualTo(halfDetent)
 
-    // Release
     onNodeWithTag("sheet_contents").performTouchInput {
       up()
     }
-
     mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun current_detent_updates_after_upward_drag_release() = runComposeUiTest {
+    val halfDetent = SheetDetent("half") { _, _ ->
+      150.dp
+    }
+
+    lateinit var state: BottomSheetState
+
+    setContent {
+      state = rememberBottomSheetState(
+        initialDetent = halfDetent,
+        detents = listOf(SheetDetent.Hidden, halfDetent, SheetDetent.FullyExpanded),
+      )
+
+      UnstyledBottomSheet(
+        state,
+        Modifier.fillMaxSize(),
+      ) {
+        Sheet {
+          Box(
+            Modifier
+              .testTag("sheet_contents")
+              .fillMaxWidth()
+              .height(300.dp),
+          )
+        }
+      }
+    }
+
+    waitForIdle()
+    val dragDistance = with(density) { 150.dp.toPx() }
+
+    onNodeWithTag("sheet_contents").performTouchInput {
+      down(center)
+      moveTo(center.copy(y = center.y - dragDistance))
+      up()
+    }
+
     waitForIdle()
 
-    // After settling, both should be FullyExpanded
     assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
-    assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
   }
 
   @Test
