@@ -386,7 +386,7 @@ class BottomSheetState internal constructor(
       } else {
         Float.NaN
       }
-      val offsetHeight = currentOffsetHeight()
+      val offsetHeight = currentOffsetHeight().coerceAtMostUnlessNaN(maxDetentHeightPx)
 
       maxOrFallback(
         currentHeight,
@@ -409,7 +409,7 @@ class BottomSheetState internal constructor(
     } else {
       Float.NaN
     }
-    val offsetHeight = currentOffsetHeight()
+    val offsetHeight = currentOffsetHeight().coerceAtMostUnlessNaN(maxDetentHeightPx)
 
     return maxOrFallback(
       currentHeight,
@@ -729,6 +729,14 @@ private fun Float.isSameValueAs(other: Float): Boolean {
   return this == other || (isNaN() && other.isNaN())
 }
 
+private fun Float.coerceAtMostUnlessNaN(maximumValue: Float): Float {
+  return if (isNaN() || maximumValue.isNaN()) {
+    this
+  } else {
+    coerceAtMost(maximumValue)
+  }
+}
+
 private fun DraggableAnchors<SheetDetent>.closestDetent(
   offset: Float,
   searchUpwards: Boolean,
@@ -871,9 +879,12 @@ fun BottomSheetScope.Sheet(
           }
         },
       )
-      .then(modifier)
       .clipToBounds(),
-    content = content,
+    content = {
+      Box(modifier) {
+        content()
+      }
+    },
   ) { measurables, constraints ->
     val fallbackContentHeight = when {
       state == null -> constraints.maxHeight
@@ -916,7 +927,19 @@ fun BottomSheetScope.Sheet(
       waitingForHiddenAnchors -> contentMeasurementHeight
       else -> layoutMaxHeight
     }
-    val contentConstraints = constraints.copy(maxHeight = contentMaxHeight)
+    val shouldUseContentHeightForLayout = state?.shouldUseContentHeightForLayout(
+      contentMaxHeight.toFloat(),
+    ) ?: false
+    val contentMinHeight = when {
+      state == null -> constraints.minHeight
+      shouldUseContentHeightForLayout -> constraints.minHeight
+      constraints.hasBoundedHeight.not() && resolvedLayoutHeight.isNaN() -> constraints.minHeight
+      else -> layoutMaxHeight
+    }
+    val contentConstraints = constraints.copy(
+      minHeight = contentMinHeight,
+      maxHeight = contentMaxHeight,
+    )
 
     val placeables = measurables.map { measurable ->
       measurable.measure(contentConstraints)
@@ -929,9 +952,9 @@ fun BottomSheetScope.Sheet(
     val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
     val height = when {
       state == null -> contentHeight
-      state.shouldUseContentHeightForLayout(
-        contentHeight.toFloat(),
-      ) -> minOf(contentHeight, layoutMaxHeight)
+      state.shouldUseContentHeightForLayout(contentHeight.toFloat()) -> {
+        minOf(contentHeight, layoutMaxHeight)
+      }
       constraints.hasBoundedHeight.not() && resolvedLayoutHeight.isNaN() -> contentHeight
       else -> layoutMaxHeight
     }.coerceIn(constraints.minHeight, constraints.maxHeight)

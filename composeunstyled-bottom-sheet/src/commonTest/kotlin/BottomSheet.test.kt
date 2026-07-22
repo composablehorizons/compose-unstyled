@@ -70,6 +70,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
@@ -692,6 +693,189 @@ class BottomSheetCommonTest {
     assertThat(state.isIdle).isTrue()
     assertThat(state.currentDetent).isEqualTo(SheetDetent.FullyExpanded)
     assertThat(state.targetDetent).isEqualTo(SheetDetent.FullyExpanded)
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun content_sized_fully_expanded_sheet_does_not_grow_past_content_height_while_overdragging() =
+    runComposeUiTest {
+      val miniDetent = SheetDetent("mini") { _, _ ->
+        80.dp
+      }
+      lateinit var state: BottomSheetState
+
+      setContent {
+        Box(
+          Modifier
+            .testTag("root")
+            .requiredSize(400.dp),
+        ) {
+          state = rememberBottomSheetState(
+            initialDetent = miniDetent,
+            detents = listOf(miniDetent, SheetDetent.FullyExpanded),
+          )
+          UnstyledBottomSheet(
+            state = state,
+            modifier = Modifier.fillMaxSize(),
+          ) {
+            Sheet(
+              Modifier
+                .testTag("sheet")
+                .fillMaxWidth()
+                .padding(10.dp),
+            ) {
+              Column {
+                repeat(3) {
+                  Box(
+                    Modifier
+                      .fillMaxWidth()
+                      .height(40.dp),
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
+
+      waitForIdle()
+      mainClock.autoAdvance = false
+
+      onNodeWithTag("sheet").performTouchInput {
+        down(center)
+      }
+      mainClock.advanceTimeBy(50)
+
+      onNodeWithTag("sheet").performTouchInput {
+        moveTo(center.copy(y = center.y - with(density) { 320.dp.toPx() }))
+      }
+      mainClock.advanceTimeBy(50)
+
+      val rootBounds = onNodeWithTag("root").fetchSemanticsNode().boundsInRoot
+      val sheetBounds = onNodeWithTag("sheet").fetchSemanticsNode().boundsInRoot
+
+      assertThat(state.offset).isCloseTo(
+        with(density) { 140.dp.toPx() },
+        with(density) { DensityTolerance.toPx() },
+      )
+      onNodeWithTag("sheet").assertHeightIsEqualTo(140.dp)
+      assertThat(sheetBounds.bottom).isCloseTo(
+        rootBounds.bottom,
+        with(density) { DensityTolerance.toPx() },
+      )
+
+      onNodeWithTag("sheet").performTouchInput { up() }
+      mainClock.autoAdvance = true
+    }
+
+  @Test
+  fun content_sized_sheet_follows_initial_upward_drag_from_smaller_detent() = runComposeUiTest {
+    val miniDetent = SheetDetent("mini") { _, _ ->
+      80.dp
+    }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = miniDetent,
+          detents = listOf(miniDetent, SheetDetent.FullyExpanded),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Sheet(Modifier.testTag("sheet")) {
+            Column {
+              repeat(3) {
+                Box(
+                  Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    mainClock.autoAdvance = false
+
+    val initialTop = onNodeWithTag("sheet").fetchSemanticsNode().boundsInRoot.top
+    val dragDistance = with(density) { 20.dp.toPx() }
+
+    onNodeWithTag("sheet").performMouseInput {
+      moveTo(center)
+      press()
+    }
+    mainClock.advanceTimeBy(50)
+
+    onNodeWithTag("sheet").performMouseInput { moveTo(center.copy(y = center.y - dragDistance)) }
+    mainClock.advanceTimeBy(50)
+
+    val draggedTop = onNodeWithTag("sheet").fetchSemanticsNode().boundsInRoot.top
+    assertThat(draggedTop).isCloseTo(
+      initialTop - dragDistance,
+      with(density) { DensityTolerance.toPx() },
+    )
+
+    onNodeWithTag("sheet").performMouseInput { release() }
+    mainClock.autoAdvance = true
+  }
+
+  @Test
+  fun container_based_detent_can_grow_past_short_content_while_overdragging() = runComposeUiTest {
+    val miniDetent = SheetDetent("mini") { _, _ ->
+      80.dp
+    }
+    val expandedDetent = SheetDetent("expanded") { containerHeight, _ ->
+      containerHeight * 0.75f
+    }
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(400.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = miniDetent,
+          detents = listOf(miniDetent, expandedDetent),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Sheet(Modifier.testTag("sheet")) {
+            Box(
+              Modifier
+                .fillMaxWidth()
+                .height(120.dp),
+            )
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    mainClock.autoAdvance = false
+
+    onNodeWithTag("sheet").performTouchInput {
+      down(center)
+    }
+    mainClock.advanceTimeBy(50)
+
+    onNodeWithTag("sheet").performTouchInput {
+      moveTo(center.copy(y = center.y - with(density) { 320.dp.toPx() }))
+    }
+    mainClock.advanceTimeBy(50)
+
+    assertThat(state.offset).isCloseTo(
+      with(density) { 300.dp.toPx() },
+      with(density) { DensityTolerance.toPx() },
+    )
+    onNodeWithTag("sheet").assertHeightIsEqualTo(300.dp)
+
+    onNodeWithTag("sheet").performTouchInput { up() }
     mainClock.autoAdvance = true
   }
 
