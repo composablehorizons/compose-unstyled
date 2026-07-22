@@ -78,6 +78,7 @@ import androidx.compose.ui.semantics.collapse
 import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.expand
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -774,10 +775,14 @@ private fun DraggableAnchors<SheetDetent>.closestDetent(
 private class BottomSheetContext(
   internal val state: BottomSheetState? = null,
   enabled: Boolean = true,
+  measureContentBeyondContainerBounds: Boolean = false,
   internal val coroutineScope: CoroutineScope? = null,
   internal val dragInteractionSource: MutableInteractionSource? = null,
 ) {
   internal var enabled by mutableStateOf(enabled)
+  internal var measureContentBeyondContainerBounds by mutableStateOf(
+    measureContentBeyondContainerBounds,
+  )
 }
 
 private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext> =
@@ -793,6 +798,7 @@ fun UnstyledBottomSheet(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   offsetForIme: Boolean = false,
+  measureContentBeyondContainerBounds: Boolean = false,
   content: @Composable BottomSheetScope.() -> Unit,
 ) {
   val coroutineScope = rememberCoroutineScope()
@@ -801,11 +807,15 @@ fun UnstyledBottomSheet(
     BottomSheetContext(
       state = state,
       enabled = enabled,
+      measureContentBeyondContainerBounds = measureContentBeyondContainerBounds,
       coroutineScope = coroutineScope,
       dragInteractionSource = dragInteractionSource,
     )
   }
-  SideEffect { context.enabled = enabled }
+  SideEffect {
+    context.enabled = enabled
+    context.measureContentBeyondContainerBounds = measureContentBeyondContainerBounds
+  }
 
   LaunchedEffect(dragInteractionSource) {
     dragInteractionSource.interactions.collect { interaction ->
@@ -940,9 +950,17 @@ fun BottomSheetScope.Sheet(
       minHeight = contentMinHeight,
       maxHeight = contentMaxHeight,
     )
+    val preferredContentConstraints = if (
+      context.measureContentBeyondContainerBounds &&
+      state?.hasContentDependentDetents() == true
+    ) {
+      contentConstraints.copy(maxHeight = Constraints.Infinity)
+    } else {
+      contentConstraints
+    }
 
     val placeables = measurables.map { measurable ->
-      measurable.measure(contentConstraints)
+      measurable.measure(preferredContentConstraints)
     }
 
     val width = max(

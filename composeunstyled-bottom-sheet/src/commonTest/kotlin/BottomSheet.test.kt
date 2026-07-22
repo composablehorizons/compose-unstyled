@@ -876,6 +876,75 @@ class BottomSheetCommonTest {
   }
 
   @Test
+  fun content_sized_sheet_uses_container_bounds_for_content_measurement_by_default() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(220.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.FullyExpanded),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+        ) {
+          Sheet {
+            Column {
+              repeat(6) {
+                Box(
+                  Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(state.contentHeightPx).isEqualTo(with(density) { 220.dp.toPx() })
+  }
+
+  @Test
+  fun content_sized_sheet_can_measure_content_beyond_container_bounds_when_enabled() = runComposeUiTest {
+    lateinit var state: BottomSheetState
+
+    setContent {
+      Box(Modifier.requiredSize(220.dp)) {
+        state = rememberBottomSheetState(
+          initialDetent = SheetDetent.FullyExpanded,
+          detents = listOf(SheetDetent.FullyExpanded),
+        )
+        UnstyledBottomSheet(
+          state = state,
+          modifier = Modifier.fillMaxSize(),
+          measureContentBeyondContainerBounds = true,
+        ) {
+          Sheet {
+            Column {
+              repeat(6) {
+                Box(
+                  Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    assertThat(state.contentHeightPx).isEqualTo(with(density) { 288.dp.toPx() })
+  }
+
+  @Test
   fun fully_expanded_sheet_with_taller_percentage_detent_matches_changing_content_height() = runComposeUiTest {
     val peekDetent = SheetDetent("peek") { containerHeight, _ ->
       containerHeight * 0.6f
