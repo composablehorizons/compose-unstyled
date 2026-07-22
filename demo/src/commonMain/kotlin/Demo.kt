@@ -99,6 +99,12 @@ private val availablePrimitives = listOf(
     { BottomSheetDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
+  DemoItem(
+    "Bottom Sheet Mini Player",
+    "bottom-sheet-mini-player",
+    { BottomSheetMiniPlayerDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
   DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
   DemoItem("Button", "button", { ButtonDemo() }),
   DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
