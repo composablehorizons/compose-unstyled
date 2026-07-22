@@ -136,6 +136,7 @@ kotlin {
       implementation(project(":composeunstyled-checkbox"))
       implementation(project(":composeunstyled-dialog"))
       implementation(project(":composeunstyled-disclosure"))
+      implementation(project(":composeunstyled-drawer"))
       implementation(project(":composeunstyled-dropdown-menu"))
       implementation(project(":composeunstyled-focus-ring"))
       implementation(project(":composeunstyled-icon"))
