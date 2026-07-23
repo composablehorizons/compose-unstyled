@@ -92,6 +92,20 @@ class DrawerSnapPoint(
   }
 }
 
+@JvmInline
+value class DrawerPosition internal constructor(private val value: String) {
+  companion object {
+    val Top = DrawerPosition("top")
+    val Bottom = DrawerPosition("bottom")
+    val Start = DrawerPosition("start")
+    val End = DrawerPosition("end")
+  }
+
+  override fun toString(): String {
+    return value
+  }
+}
+
 @Composable
 fun rememberDrawerState(
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
@@ -365,11 +379,12 @@ private val LocalDrawerContext: ProvidableCompositionLocal<DrawerContext> =
 fun UnstyledDrawer(
   state: DrawerState,
   modifier: Modifier = Modifier,
+  position: DrawerPosition = DrawerPosition.Bottom,
   enabled: Boolean = true,
   content: @Composable DrawerScope.() -> Unit,
 ) {
   Box(modifier) {
-    val drawerScope = remember(state, enabled) {
+    val drawerScope = remember(state, position, enabled) {
       DrawerScope(
         drawerState = state,
         enabled = enabled,

@@ -84,7 +84,6 @@ fun DrawerDemo() {
     Viewport(
       modifier = Modifier
         .fillMaxSize()
-        .background(Color.LightGray.copy(0.1f))
         .padding(20.dp),
     ) {
       Panel(
