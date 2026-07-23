@@ -106,9 +106,15 @@ private val availablePrimitives = listOf(
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
   DemoItem(
-    "Drawer Position",
-    "drawer-position",
-    { DrawerPositionDemo() },
+    "Drawer Side",
+    "drawer-side",
+    { DrawerSideDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
+  DemoItem(
+    "Drawer Snap Points",
+    "drawer-snap-points",
+    { DrawerSnapPointsDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
   DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),

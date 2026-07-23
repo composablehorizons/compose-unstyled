@@ -44,7 +44,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Content
-import com.composeunstyled.DrawerPosition
+import com.composeunstyled.DrawerSide
 import com.composeunstyled.DrawerSnapPoint.Companion.Closed
 import com.composeunstyled.DrawerSnapPoint.Companion.Open
 import com.composeunstyled.Panel
@@ -54,7 +54,7 @@ import com.composeunstyled.Viewport
 import com.composeunstyled.rememberDrawerState
 
 @Composable
-fun DrawerPositionDemo() {
+fun DrawerSideDemo() {
   val drawerState = rememberDrawerState(
     initialSnapPoint = Closed,
     snapPoints = listOf(Closed, Open),
@@ -77,7 +77,7 @@ fun DrawerPositionDemo() {
 
   UnstyledDrawer(
     state = drawerState,
-    position = DrawerPosition.End,
+    side = DrawerSide.End,
     modifier = Modifier.fillMaxSize(),
   ) {
     Viewport(

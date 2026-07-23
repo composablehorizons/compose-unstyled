@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Content
+import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoint.Companion.Closed
 import com.composeunstyled.DrawerSnapPoint.Companion.Open
 import com.composeunstyled.Panel
@@ -52,14 +53,18 @@ import com.composeunstyled.Viewport
 import com.composeunstyled.rememberDrawerState
 
 @Composable
-fun DrawerDemo() {
+fun DrawerSnapPointsDemo() {
+  val peek = DrawerSnapPoint("peek") { containerSize, _ ->
+    containerSize * 0.6f
+  }
   val drawerState = rememberDrawerState(
     initialSnapPoint = Closed,
+    snapPoints = listOf(Closed, peek, Open),
   )
 
   UnstyledButton(
     onClick = {
-      drawerState.targetSnapPoint = Open
+      drawerState.targetSnapPoint = peek
     },
     modifier = Modifier
       .clip(RoundedCornerShape(10.dp))

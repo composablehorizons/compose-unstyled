@@ -31,6 +31,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
@@ -176,7 +179,7 @@ class DrawerTest {
   fun endOpenSnapPointUsesPanelSize() = runComposeUiTest {
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.End,
+        side = DrawerSide.End,
         initialSnapPoint = DrawerSnapPoint.Open,
         contentWidth = 60,
       )
@@ -199,7 +202,7 @@ class DrawerTest {
   fun topOpenSnapPointUsesPanelSize() = runComposeUiTest {
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.Top,
+        side = DrawerSide.Top,
         initialSnapPoint = DrawerSnapPoint.Open,
         contentHeight = 60,
       )
@@ -221,7 +224,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         EdgeDrawerLayout(
-          position = DrawerPosition.Start,
+          side = DrawerSide.Start,
           initialSnapPoint = DrawerSnapPoint.Open,
           contentWidth = 60,
         )
@@ -241,7 +244,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         EdgeDrawerLayout(
-          position = DrawerPosition.Start,
+          side = DrawerSide.Start,
           initialSnapPoint = DrawerSnapPoint.Open,
           contentWidth = 60,
         )
@@ -261,7 +264,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         EdgeDrawerLayout(
-          position = DrawerPosition.End,
+          side = DrawerSide.End,
           initialSnapPoint = DrawerSnapPoint.Open,
           contentWidth = 60,
         )
@@ -281,7 +284,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         EdgeDrawerLayout(
-          position = DrawerPosition.End,
+          side = DrawerSide.End,
           initialSnapPoint = DrawerSnapPoint.Open,
           contentWidth = 60,
         )
@@ -372,7 +375,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         EdgeDrawerLayout(
-          position = DrawerPosition.End,
+          side = DrawerSide.End,
           initialSnapPoint = DrawerSnapPoint.Open,
           onState = { state = it },
         )
@@ -414,7 +417,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         EdgeDrawerLayout(
-          position = DrawerPosition.End,
+          side = DrawerSide.End,
           initialSnapPoint = DrawerSnapPoint.Open,
           onState = { state = it },
         )
@@ -437,7 +440,7 @@ class DrawerTest {
 
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.Top,
+        side = DrawerSide.Top,
         initialSnapPoint = DrawerSnapPoint.Open,
         onState = { state = it },
       )
@@ -515,7 +518,7 @@ class DrawerTest {
   fun topCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.Top,
+        side = DrawerSide.Top,
         initialSnapPoint = Peek,
         snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
         contentHeight = 40,
@@ -535,7 +538,7 @@ class DrawerTest {
   fun startCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.Start,
+        side = DrawerSide.Start,
         initialSnapPoint = Peek,
         snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
         contentWidth = 40,
@@ -556,7 +559,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         EdgeDrawerLayout(
-          position = DrawerPosition.Start,
+          side = DrawerSide.Start,
           initialSnapPoint = Peek,
           snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
           contentWidth = 40,
@@ -580,7 +583,7 @@ class DrawerTest {
   fun endCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
     setContent {
       EdgeDrawerLayout(
-        position = DrawerPosition.End,
+        side = DrawerSide.End,
         initialSnapPoint = Peek,
         snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
         contentWidth = 40,
@@ -604,7 +607,7 @@ class DrawerTest {
     setContent {
       CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         EdgeDrawerLayout(
-          position = DrawerPosition.End,
+          side = DrawerSide.End,
           initialSnapPoint = Peek,
           snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
           contentWidth = 40,
@@ -619,6 +622,191 @@ class DrawerTest {
     assertThat(panelBounds.left.roundToInt()).isEqualTo(0)
     assertThat(panelBounds.right.roundToInt()).isEqualTo(40)
     assertThat(panelBounds.width.roundToInt()).isEqualTo(40)
+  }
+
+  @Test
+  fun settingTargetSnapPointMovesToCustomSnapPoint() = runComposeUiTest {
+    lateinit var state: DrawerState
+
+    setContent {
+      DrawerLayout(
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek, DrawerSnapPoint.Open),
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+
+    state.targetSnapPoint = Peek
+
+    waitUntil {
+      state.isIdle && state.currentSnapPoint == Peek
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(60)
+  }
+
+  @Test
+  fun jumpToMovesToCustomSnapPoint() = runComposeUiTest {
+    lateinit var state: DrawerState
+
+    setContent {
+      DrawerLayout(
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek, DrawerSnapPoint.Open),
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+
+    state.jumpTo(Peek)
+
+    waitUntil {
+      state.isIdle && state.currentSnapPoint == Peek
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(60)
+  }
+
+  @Test
+  fun customSnapPointUpdatesWhenContentSizeChanges() = runComposeUiTest {
+    var contentHeight by mutableStateOf(40)
+
+    setContent {
+      DrawerLayout(
+        initialSnapPoint = DrawerSnapPoint.Open,
+        contentHeight = contentHeight,
+      )
+    }
+
+    waitForIdle()
+
+    assertThat(onNodeWithTag("panel").boundsInRoot().height.roundToInt()).isEqualTo(40)
+
+    contentHeight = 80
+
+    waitUntil {
+      onNodeWithTag("panel").boundsInRoot().height.roundToInt() == 80
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(20)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(80)
+  }
+
+  @Test
+  fun invalidateSnapPointsUpdatesCustomSnapPointWithExternalState() = runComposeUiTest {
+    lateinit var state: DrawerState
+    var peekHeight = 40.dp
+    val externalPeek = DrawerSnapPoint("external-peek") { _, _ ->
+      peekHeight
+    }
+
+    setContent {
+      DrawerLayout(
+        initialSnapPoint = externalPeek,
+        snapPoints = listOf(DrawerSnapPoint.Closed, externalPeek),
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+
+    assertThat(onNodeWithTag("panel").boundsInRoot().height.roundToInt()).isEqualTo(40)
+
+    runOnIdle {
+      peekHeight = 70.dp
+      state.invalidateSnapPoints()
+    }
+
+    waitUntil {
+      onNodeWithTag("panel").boundsInRoot().height.roundToInt() == 70
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(30)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(70)
+  }
+
+  @Test
+  fun customSnapPointCanBeTargetedAfterSnapPointsListChanges() = runComposeUiTest {
+    lateinit var state: DrawerState
+    var includePeek by mutableStateOf(false)
+
+    setContent {
+      val snapPoints = if (includePeek) {
+        listOf(DrawerSnapPoint.Closed, Peek, DrawerSnapPoint.Open)
+      } else {
+        listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open)
+      }
+      DrawerLayout(
+        snapPoints = snapPoints,
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+
+    runOnIdle {
+      includePeek = true
+    }
+
+    waitUntil {
+      state.snapPoints.contains(Peek)
+    }
+
+    state.targetSnapPoint = Peek
+
+    waitUntil {
+      state.isIdle && state.currentSnapPoint == Peek
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(60)
+  }
+
+  @Test
+  fun drawerMovesToClosedWhenCurrentSnapPointIsRemoved() = runComposeUiTest {
+    lateinit var state: DrawerState
+    var snapPoints by mutableStateOf(listOf(DrawerSnapPoint.Closed, Peek, DrawerSnapPoint.Open))
+
+    setContent {
+      DrawerLayout(
+        initialSnapPoint = Peek,
+        snapPoints = snapPoints,
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+
+    snapPoints = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open)
+
+    waitUntil {
+      state.isIdle && state.currentSnapPoint == DrawerSnapPoint.Closed
+    }
+
+    assertThat(onNodeWithTag("panel").boundsInRoot().height.roundToInt()).isEqualTo(0)
   }
 
   private fun SemanticsNodeInteraction.boundsInRoot(): Rect {
@@ -640,11 +828,13 @@ private fun DrawerLayout(
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
   snapPoints: List<DrawerSnapPoint> = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open),
   contentHeight: Int = 100,
+  onState: (DrawerState) -> Unit = {},
 ) {
   val state = rememberDrawerState(
     initialSnapPoint = initialSnapPoint,
     snapPoints = snapPoints,
   )
+  onState(state)
 
   DrawerLayoutContent(
     state = state,
@@ -660,7 +850,7 @@ private fun StartDrawerLayout(
   onState: (DrawerState) -> Unit = {},
 ) {
   EdgeDrawerLayout(
-    position = DrawerPosition.Start,
+    side = DrawerSide.Start,
     initialSnapPoint = initialSnapPoint,
     snapPoints = snapPoints,
     contentWidth = contentWidth,
@@ -680,7 +870,7 @@ private fun ConstrainedStartDrawerLayout(
 
   UnstyledDrawer(
     state = state,
-    position = DrawerPosition.Start,
+    side = DrawerSide.Start,
     modifier = Modifier.width(500.dp).height(100.dp),
   ) {
     Viewport(
@@ -716,7 +906,7 @@ private fun ConstrainedEndDrawerLayout() {
 
   UnstyledDrawer(
     state = state,
-    position = DrawerPosition.End,
+    side = DrawerSide.End,
     modifier = Modifier.width(500.dp).height(100.dp),
   ) {
     Viewport(
@@ -746,21 +936,21 @@ private fun ConstrainedEndDrawerLayout() {
 
 @Composable
 private fun EdgeDrawerLayout(
-  position: DrawerPosition,
+  side: DrawerSide,
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
   snapPoints: List<DrawerSnapPoint> = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open),
   contentWidth: Int = 100,
   contentHeight: Int = 100,
   onState: (DrawerState) -> Unit = {},
 ) {
-  val isHorizontal = position == DrawerPosition.Start || position == DrawerPosition.End
+  val isHorizontal = side == DrawerSide.Start || side == DrawerSide.End
   val viewportWidth = if (isHorizontal) {
     200.dp
   } else {
     100.dp
   }
   val viewportHeight = 100.dp
-  val panelModifier = if (position == DrawerPosition.Top || position == DrawerPosition.Bottom) {
+  val panelModifier = if (side == DrawerSide.Top || side == DrawerSide.Bottom) {
     Modifier.width(100.dp)
   } else {
     Modifier.height(viewportHeight)
@@ -773,7 +963,7 @@ private fun EdgeDrawerLayout(
 
   UnstyledDrawer(
     state = state,
-    position = position,
+    side = side,
     modifier = Modifier.width(viewportWidth).height(viewportHeight),
   ) {
     Viewport(
