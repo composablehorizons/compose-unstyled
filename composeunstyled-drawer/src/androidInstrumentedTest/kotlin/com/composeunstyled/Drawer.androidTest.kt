@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
@@ -46,7 +45,24 @@ class DrawerAndroidTest {
         initialSnapPoint = DrawerSnapPoint.Open,
         animationSpec = tween(durationMillis = 1),
       )
-      AndroidDismissDrawer(state)
+      UnstyledDrawer(
+        state = state,
+        modifier = Modifier.size(100.dp),
+      ) {
+        Viewport(
+          modifier = Modifier.size(100.dp),
+        ) {
+          Panel(
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            Content(
+              modifier = Modifier.fillMaxWidth().height(100.dp),
+            ) {
+              Box(Modifier.size(100.dp))
+            }
+          }
+        }
+      }
     }
 
     Espresso.pressBack()
@@ -56,26 +72,45 @@ class DrawerAndroidTest {
     }
     assertThat(state.currentSnapPoint).isEqualTo(DrawerSnapPoint.Closed)
   }
-}
 
-@Composable
-private fun AndroidDismissDrawer(state: DrawerState) {
-  UnstyledDrawer(
-    state = state,
-    modifier = Modifier.size(100.dp),
-  ) {
-    Viewport(
-      modifier = Modifier.size(100.dp),
-    ) {
-      Panel(
-        modifier = Modifier.fillMaxWidth(),
+  @Test
+  fun pressingBackDoesNotCloseDisabledDrawer() = runComposeUiTest {
+    lateinit var state: DrawerState
+    var fallbackBackHandlerCalled = false
+
+    setContent {
+      EscapeHandler {
+        fallbackBackHandlerCalled = true
+      }
+      state = rememberDrawerState(
+        initialSnapPoint = DrawerSnapPoint.Open,
+        animationSpec = tween(durationMillis = 1),
+      )
+      UnstyledDrawer(
+        state = state,
+        enabled = false,
+        modifier = Modifier.size(100.dp),
       ) {
-        Content(
-          modifier = Modifier.fillMaxWidth().height(100.dp),
+        Viewport(
+          modifier = Modifier.size(100.dp),
         ) {
-          Box(Modifier.size(100.dp))
+          Panel(
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            Content(
+              modifier = Modifier.fillMaxWidth().height(100.dp),
+            ) {
+              Box(Modifier.size(100.dp))
+            }
+          }
         }
       }
     }
+
+    Espresso.pressBack()
+    waitForIdle()
+
+    assertThat(fallbackBackHandlerCalled).isEqualTo(true)
+    assertThat(state.currentSnapPoint).isEqualTo(DrawerSnapPoint.Open)
   }
 }
