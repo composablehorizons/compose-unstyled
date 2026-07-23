@@ -157,6 +157,7 @@ class DrawerTest {
       StartDrawerLayout(
         initialSnapPoint = Peek,
         snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
+        contentWidth = 160,
       )
     }
 
@@ -488,6 +489,89 @@ class DrawerTest {
     assertThat(contentBottomBounds.bottom.roundToInt())
       .isEqualTo(viewportBounds.bottom.roundToInt())
     assertThat(contentBottomBounds.top.roundToInt()).isEqualTo(90)
+  }
+
+  @Test
+  fun bottomCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
+    setContent {
+      DrawerLayout(
+        initialSnapPoint = Peek,
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
+        contentHeight = 40,
+      )
+    }
+
+    waitForIdle()
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(60)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(40)
+  }
+
+  @Test
+  fun topCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
+    setContent {
+      EdgeDrawerLayout(
+        position = DrawerPosition.Top,
+        initialSnapPoint = Peek,
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
+        contentHeight = 40,
+      )
+    }
+
+    waitForIdle()
+
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(0)
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(40)
+  }
+
+  @Test
+  fun startCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
+    setContent {
+      EdgeDrawerLayout(
+        position = DrawerPosition.Start,
+        initialSnapPoint = Peek,
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
+        contentWidth = 40,
+      )
+    }
+
+    waitForIdle()
+
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(0)
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.width.roundToInt()).isEqualTo(40)
+  }
+
+  @Test
+  fun endCustomSnapPointIsCappedToPanelSize() = runComposeUiTest {
+    setContent {
+      EdgeDrawerLayout(
+        position = DrawerPosition.End,
+        initialSnapPoint = Peek,
+        snapPoints = listOf(DrawerSnapPoint.Closed, Peek),
+        contentWidth = 40,
+      )
+    }
+
+    waitForIdle()
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(
+      viewportBounds.right.roundToInt() - 40,
+    )
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(viewportBounds.right.roundToInt())
+    assertThat(panelBounds.width.roundToInt()).isEqualTo(40)
   }
 
   private fun SemanticsNodeInteraction.boundsInRoot(): Rect {

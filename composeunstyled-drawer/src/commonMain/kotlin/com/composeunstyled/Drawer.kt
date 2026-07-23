@@ -344,7 +344,7 @@ class DrawerState internal constructor(
           val panelSize = panelSizePx.toDp()
           val snapPointSize = snapPoint.calculateVisibleSize(containerSize, panelSize)
             .takeIf { it.isSpecified }
-            ?.coerceIn(0.dp, containerSize)
+            ?.coerceIn(0.dp, minOf(containerSize, panelSize))
             ?: 0.dp
           val offset = if (isAnchoredToMinEdge) {
             snapPointSize.toPx()
