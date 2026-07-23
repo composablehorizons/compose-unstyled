@@ -414,6 +414,19 @@ fun UnstyledDrawer(
   enabled: Boolean = true,
   content: @Composable DrawerScope.() -> Unit,
 ) {
+  if (
+    enabled &&
+    state.snapPoints.contains(DrawerSnapPoint.Closed) &&
+    (
+      state.currentSnapPoint != DrawerSnapPoint.Closed ||
+        state.targetSnapPoint != DrawerSnapPoint.Closed
+      )
+  ) {
+    EscapeHandler {
+      state.targetSnapPoint = DrawerSnapPoint.Closed
+    }
+  }
+
   Box(modifier) {
     val drawerScope = remember(state, position, enabled) {
       DrawerScope(
