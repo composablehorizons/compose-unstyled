@@ -81,7 +81,7 @@ fun DrawerPositionDemo() {
 
   UnstyledDrawer(
     state = drawerState,
-    position = DrawerPosition.Start,
+    position = DrawerPosition.End,
     modifier = Modifier.fillMaxSize(),
   ) {
     Viewport(

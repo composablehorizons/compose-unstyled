@@ -22,8 +22,10 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -164,8 +166,8 @@ class DrawerTest {
     val panelBounds = onNodeWithTag("panel").boundsInRoot()
 
     assertThat(panelBounds.left.roundToInt()).isEqualTo(viewportBounds.left.roundToInt())
-    assertThat(panelBounds.right.roundToInt()).isEqualTo(60)
-    assertThat(panelBounds.width.roundToInt()).isEqualTo(60)
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(120)
+    assertThat(panelBounds.width.roundToInt()).isEqualTo(120)
     assertThat(panelBounds.height.roundToInt()).isEqualTo(viewportBounds.height.roundToInt())
   }
 
@@ -184,7 +186,9 @@ class DrawerTest {
     val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
     val panelBounds = onNodeWithTag("panel").boundsInRoot()
 
-    assertThat(panelBounds.left.roundToInt()).isEqualTo(40)
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(
+      viewportBounds.right.roundToInt() - 60,
+    )
     assertThat(panelBounds.right.roundToInt()).isEqualTo(viewportBounds.right.roundToInt())
     assertThat(panelBounds.width.roundToInt()).isEqualTo(60)
     assertThat(panelBounds.height.roundToInt()).isEqualTo(viewportBounds.height.roundToInt())
@@ -247,8 +251,8 @@ class DrawerTest {
 
     val panelBounds = onNodeWithTag("panel").boundsInRoot()
 
-    assertThat(panelBounds.left.roundToInt()).isEqualTo(40)
-    assertThat(panelBounds.right.roundToInt()).isEqualTo(100)
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(140)
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(200)
   }
 
   @Test
@@ -267,8 +271,8 @@ class DrawerTest {
 
     val panelBounds = onNodeWithTag("panel").boundsInRoot()
 
-    assertThat(panelBounds.left.roundToInt()).isEqualTo(40)
-    assertThat(panelBounds.right.roundToInt()).isEqualTo(100)
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(140)
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(200)
   }
 
   @Test
@@ -382,6 +386,24 @@ class DrawerTest {
     waitForIdle()
 
     assertThat(state.currentSnapPoint).isEqualTo(DrawerSnapPoint.Closed)
+  }
+
+  @Test
+  fun endDrawerIsPlacedAtRightEdgeWithConstrainedPanelAndOversizedContent() = runComposeUiTest {
+    setContent {
+      ConstrainedEndDrawerLayout()
+    }
+
+    waitForIdle()
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.left.roundToInt()).isEqualTo(
+      viewportBounds.right.roundToInt() - 100,
+    )
+    assertThat(panelBounds.right.roundToInt()).isEqualTo(viewportBounds.right.roundToInt())
+    assertThat(panelBounds.width.roundToInt()).isEqualTo(100)
   }
 
   @Test
@@ -556,6 +578,42 @@ private fun ConstrainedStartDrawerLayout(
 }
 
 @Composable
+private fun ConstrainedEndDrawerLayout() {
+  val state = rememberDrawerState(
+    initialSnapPoint = DrawerSnapPoint.Open,
+  )
+
+  UnstyledDrawer(
+    state = state,
+    position = DrawerPosition.End,
+    modifier = Modifier.width(500.dp).height(100.dp),
+  ) {
+    Viewport(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+        .testTag("viewport"),
+    ) {
+      Panel(
+        modifier = Modifier
+          .height(100.dp)
+          .widthIn(max = 100.dp)
+          .testTag("panel"),
+      ) {
+        Content(
+          modifier = Modifier
+            .testTag("content")
+            .width(300.dp)
+            .height(100.dp),
+        ) {
+          Box(Modifier.width(300.dp).height(100.dp))
+        }
+      }
+    }
+  }
+}
+
+@Composable
 private fun EdgeDrawerLayout(
   position: DrawerPosition,
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
@@ -564,10 +622,17 @@ private fun EdgeDrawerLayout(
   contentHeight: Int = 100,
   onState: (DrawerState) -> Unit = {},
 ) {
+  val isHorizontal = position == DrawerPosition.Start || position == DrawerPosition.End
+  val viewportWidth = if (isHorizontal) {
+    200.dp
+  } else {
+    100.dp
+  }
+  val viewportHeight = 100.dp
   val panelModifier = if (position == DrawerPosition.Top || position == DrawerPosition.Bottom) {
     Modifier.width(100.dp)
   } else {
-    Modifier.height(100.dp)
+    Modifier.height(viewportHeight)
   }
   val state = rememberDrawerState(
     initialSnapPoint = initialSnapPoint,
@@ -578,11 +643,12 @@ private fun EdgeDrawerLayout(
   UnstyledDrawer(
     state = state,
     position = position,
-    modifier = Modifier.size(100.dp),
+    modifier = Modifier.width(viewportWidth).height(viewportHeight),
   ) {
     Viewport(
       modifier = Modifier
-        .size(100.dp)
+        .width(viewportWidth)
+        .height(viewportHeight)
         .testTag("viewport"),
     ) {
       Panel(
