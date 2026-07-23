@@ -48,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
@@ -59,6 +60,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -157,6 +159,7 @@ class DrawerState internal constructor(
   private var pendingTargetSnapPoint: DrawerSnapPoint? by mutableStateOf(null)
   internal var containerSizePx by mutableStateOf(Float.NaN)
   internal var panelSizePx by mutableStateOf(Float.NaN)
+  internal var isAnchoredToMinEdge by mutableStateOf(false)
   internal var isDragging by mutableStateOf(false)
 
   internal val anchoredDraggableState = AnchoredDraggableState(
@@ -220,11 +223,7 @@ class DrawerState internal constructor(
   }
 
   val offset: Float by derivedStateOf {
-    if (anchoredDraggableState.offset.isNaN() || containerSizePx.isNaN()) {
-      0f
-    } else {
-      (containerSizePx - anchoredDraggableState.offset).coerceAtLeast(0f)
-    }
+    visiblePanelSizePx()
   }
 
   fun progress(from: DrawerSnapPoint, to: DrawerSnapPoint): Float {
@@ -281,10 +280,19 @@ class DrawerState internal constructor(
     updateAnchors()
   }
 
-  internal fun updateContainerSize(measuredSizePx: Float) {
-    if (containerSizePx == measuredSizePx) return
+  internal fun updateContainerSize(
+    measuredSizePx: Float,
+    isAnchoredToMinEdge: Boolean,
+  ) {
+    if (
+      containerSizePx == measuredSizePx &&
+      this.isAnchoredToMinEdge == isAnchoredToMinEdge
+    ) {
+      return
+    }
 
     containerSizePx = measuredSizePx
+    this.isAnchoredToMinEdge = isAnchoredToMinEdge
     updateAnchors()
   }
 
@@ -295,18 +303,35 @@ class DrawerState internal constructor(
     updateAnchors()
   }
 
-  internal fun visiblePanelHeightPx(): Float {
+  internal fun visiblePanelSizePx(): Float {
     if (containerSizePx.isNaN()) return 0f
     if (anchoredDraggableState.offset.isNaN()) return 0f
 
-    return (containerSizePx - anchoredDraggableState.offset)
-      .coerceIn(0f, containerSizePx)
+    val visiblePanelSizePx = if (isAnchoredToMinEdge) {
+      anchoredDraggableState.offset
+    } else {
+      containerSizePx - anchoredDraggableState.offset
+    }
+    return visiblePanelSizePx.coerceIn(0f, containerSizePx)
   }
 
-  internal fun panelTopPx(viewportHeightPx: Float): Float {
-    if (anchoredDraggableState.offset.isNaN()) return viewportHeightPx
+  internal fun panelMainAxisOffsetPx(
+    position: DrawerPosition,
+    viewportMainAxisSizePx: Float,
+  ): Float {
+    if (anchoredDraggableState.offset.isNaN()) {
+      return if (position.isLeadingEdge) {
+        0f
+      } else {
+        viewportMainAxisSizePx
+      }
+    }
 
-    return anchoredDraggableState.offset.coerceIn(0f, viewportHeightPx)
+    return if (position.isLeadingEdge) {
+      0f
+    } else {
+      (viewportMainAxisSizePx - visiblePanelSizePx()).coerceIn(0f, viewportMainAxisSizePx)
+    }
   }
 
   private fun updateAnchors() {
@@ -321,7 +346,11 @@ class DrawerState internal constructor(
             .takeIf { it.isSpecified }
             ?.coerceIn(0.dp, containerSize)
             ?: 0.dp
-          val offset = (containerSize - snapPointSize).toPx()
+          val offset = if (isAnchoredToMinEdge) {
+            snapPointSize.toPx()
+          } else {
+            (containerSize - snapPointSize).toPx()
+          }
           snapPoint at offset
         }
       }
@@ -357,6 +386,7 @@ class DrawerState internal constructor(
 
 class DrawerScope internal constructor(
   internal val drawerState: DrawerState,
+  internal val position: DrawerPosition,
   internal val enabled: Boolean,
 )
 
@@ -366,6 +396,7 @@ class DrawerPanelScope internal constructor()
 
 private class DrawerContext(
   internal val state: DrawerState? = null,
+  internal val position: DrawerPosition = DrawerPosition.Bottom,
   enabled: Boolean = true,
   internal val interactionSource: MutableInteractionSource? = null,
 ) {
@@ -387,6 +418,7 @@ fun UnstyledDrawer(
     val drawerScope = remember(state, position, enabled) {
       DrawerScope(
         drawerState = state,
+        position = position,
         enabled = enabled,
       )
     }
@@ -400,9 +432,10 @@ fun DrawerScope.Viewport(
   content: @Composable DrawerViewportScope.() -> Unit,
 ) {
   val interactionSource = remember { MutableInteractionSource() }
-  val context = remember(drawerState, interactionSource) {
+  val context = remember(drawerState, position, interactionSource) {
     DrawerContext(
       state = drawerState,
+      position = position,
       enabled = enabled,
       interactionSource = interactionSource,
     )
@@ -446,12 +479,26 @@ fun DrawerScope.Viewport(
       constraints.minHeight,
       placeables.maxOfOrNull { placeable -> placeable.height } ?: 0,
     ).coerceIn(constraints.minHeight, constraints.maxHeight)
-    drawerState.updateContainerSize(height.toFloat())
+    val position = context.position
+    val containerMainAxisSizePx = if (position.isHorizontal) {
+      width.toFloat()
+    } else {
+      height.toFloat()
+    }
+    drawerState.updateContainerSize(
+      measuredSizePx = containerMainAxisSizePx,
+      isAnchoredToMinEdge = position.isLeadingEdge,
+    )
 
     layout(width, height) {
-      val panelTop = drawerState.panelTopPx(height.toFloat()).roundToInt()
+      val panelMainAxisOffset =
+        drawerState.panelMainAxisOffsetPx(position, containerMainAxisSizePx).roundToInt()
       placeables.forEach { placeable ->
-        placeable.placeRelative(0, panelTop)
+        if (position.isHorizontal) {
+          placeable.placeRelative(panelMainAxisOffset, 0)
+        } else {
+          placeable.placeRelative(0, panelMainAxisOffset)
+        }
       }
     }
   }
@@ -464,6 +511,7 @@ fun DrawerViewportScope.Panel(
 ) {
   val context = LocalDrawerContext.current
   val state = context.state
+  val position = context.position
   Layout(
     modifier = modifier
       .then(
@@ -472,40 +520,90 @@ fun DrawerViewportScope.Panel(
             add(
               Modifier.anchoredDraggable(
                 state = state.anchoredDraggableState,
-                orientation = Orientation.Vertical,
+                orientation = if (position.isHorizontal) {
+                  Orientation.Horizontal
+                } else {
+                  Orientation.Vertical
+                },
                 enabled = context.enabled,
                 interactionSource = context.interactionSource,
               ),
             )
           }
         },
-      ),
+      )
+      .clipToBounds(),
     content = {
       DrawerPanelScope().content()
     },
   ) { measurables, constraints ->
-    val contentConstraints = constraints.copy(
-      minHeight = 0,
-      maxHeight = Constraints.Infinity,
-    )
+    val contentConstraints = if (position.isHorizontal) {
+      constraints.copy(
+        minWidth = 0,
+        maxWidth = Constraints.Infinity,
+      )
+    } else {
+      constraints.copy(
+        minHeight = 0,
+        maxHeight = Constraints.Infinity,
+      )
+    }
     val placeables = measurables.map { measurable ->
       measurable.measure(contentConstraints)
     }
-    val contentHeight = placeables.maxOfOrNull { it.height } ?: 0
-    state?.updatePanelSize(contentHeight.toFloat())
+    val contentMainAxisSize = placeables.maxOfOrNull { placeable ->
+      if (position.isHorizontal) {
+        placeable.width
+      } else {
+        placeable.height
+      }
+    } ?: 0
+    val panelMainAxisSize = if (position.isHorizontal) {
+      contentMainAxisSize.coerceIn(constraints.minWidth, constraints.maxWidth)
+    } else {
+      contentMainAxisSize.coerceIn(constraints.minHeight, constraints.maxHeight)
+    }
+    state?.updatePanelSize(panelMainAxisSize.toFloat())
 
-    val visibleHeight = state?.visiblePanelHeightPx()
+    val visibleMainAxisSize = state?.visiblePanelSizePx()
       ?.roundToInt()
-      ?.coerceIn(constraints.minHeight, constraints.maxHeight)
-      ?: contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
-    val width = maxOf(
-      constraints.minWidth,
-      placeables.maxOfOrNull { it.width } ?: 0,
-    ).coerceIn(constraints.minWidth, constraints.maxWidth)
+      ?: panelMainAxisSize
+    val width = if (position.isHorizontal) {
+      visibleMainAxisSize.coerceIn(constraints.minWidth, constraints.maxWidth)
+    } else {
+      maxOf(
+        constraints.minWidth,
+        placeables.maxOfOrNull { it.width } ?: 0,
+      ).coerceIn(constraints.minWidth, constraints.maxWidth)
+    }
+    val height = if (position.isHorizontal) {
+      maxOf(
+        constraints.minHeight,
+        placeables.maxOfOrNull { it.height } ?: 0,
+      ).coerceIn(constraints.minHeight, constraints.maxHeight)
+    } else {
+      visibleMainAxisSize.coerceIn(constraints.minHeight, constraints.maxHeight)
+    }
 
-    layout(width, visibleHeight) {
+    layout(width, height) {
       placeables.forEach { placeable ->
-        placeable.placeRelative(0, visibleHeight - placeable.height)
+        val x = if (position.isHorizontal) {
+          if (position.isLeadingEdge) {
+            0
+          } else {
+            width - placeable.width
+          }
+        } else {
+          0
+        }
+        val y = if (position.isHorizontal) {
+          0
+        } else if (position.isLeadingEdge) {
+          0
+        } else {
+          height - placeable.height
+        }
+        placeable.placeRelative(x, y)
       }
     }
   }
@@ -520,3 +618,13 @@ fun DrawerPanelScope.Content(
     content()
   }
 }
+
+private val DrawerPosition.isHorizontal: Boolean
+  get() {
+    return this == DrawerPosition.Start || this == DrawerPosition.End
+  }
+
+private val DrawerPosition.isLeadingEdge: Boolean
+  get() {
+    return this == DrawerPosition.Top || this == DrawerPosition.Start
+  }
