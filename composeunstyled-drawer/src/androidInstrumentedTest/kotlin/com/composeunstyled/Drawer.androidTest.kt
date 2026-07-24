@@ -21,7 +21,6 @@
  */
 package com.composeunstyled
 
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +42,6 @@ class DrawerAndroidTest {
     setContent {
       state = rememberDrawerState(
         initialSnapPoint = DrawerSnapPoint.Open,
-        animationSpec = tween(durationMillis = 1),
       )
       UnstyledDrawer(
         state = state,
@@ -84,7 +82,6 @@ class DrawerAndroidTest {
       }
       state = rememberDrawerState(
         initialSnapPoint = DrawerSnapPoint.Open,
-        animationSpec = tween(durationMillis = 1),
       )
       UnstyledDrawer(
         state = state,

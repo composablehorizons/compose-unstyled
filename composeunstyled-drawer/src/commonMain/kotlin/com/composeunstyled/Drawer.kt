@@ -21,10 +21,6 @@
  */
 package com.composeunstyled
 
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -116,10 +112,6 @@ value class DrawerSide internal constructor(private val value: String) {
 fun rememberDrawerState(
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
   snapPoints: List<DrawerSnapPoint> = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open),
-  animationSpec: AnimationSpec<Float> = tween(),
-  velocityThreshold: () -> Dp = { 125.dp },
-  positionalThreshold: (totalDistance: Dp) -> Dp = { 56.dp },
-  decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
 ): DrawerState {
   val density = LocalDensity.current
   val scope = rememberCoroutineScope()
@@ -129,10 +121,6 @@ fun rememberDrawerState(
       snapPoints = snapPoints,
       coroutineScope = scope,
       density = density,
-      animationSpec = animationSpec,
-      velocityThreshold = velocityThreshold,
-      positionalThreshold = positionalThreshold,
-      decayAnimationSpec = decayAnimationSpec,
     )
   }
   SideEffect {
@@ -146,10 +134,6 @@ class DrawerState internal constructor(
   snapPoints: List<DrawerSnapPoint>,
   private val coroutineScope: CoroutineScope,
   private val density: Density,
-  animationSpec: AnimationSpec<Float>,
-  velocityThreshold: () -> Dp,
-  positionalThreshold: (totalDistance: Dp) -> Dp,
-  decayAnimationSpec: DecayAnimationSpec<Float>,
 ) {
   init {
     checkValidSnapPoints(snapPoints)
@@ -166,21 +150,7 @@ class DrawerState internal constructor(
   internal var isAnchoredToMinEdge by mutableStateOf(false)
   internal var isDragging by mutableStateOf(false)
 
-  internal val anchoredDraggableState = AnchoredDraggableState(
-    initialValue = initialSnapPoint,
-    positionalThreshold = { totalDistance ->
-      with(density) {
-        positionalThreshold(totalDistance.toDp()).toPx()
-      }
-    },
-    velocityThreshold = {
-      with(density) {
-        velocityThreshold().toPx()
-      }
-    },
-    snapAnimationSpec = animationSpec,
-    decayAnimationSpec = decayAnimationSpec,
-  )
+  internal val anchoredDraggableState = AnchoredDraggableState(initialValue = initialSnapPoint)
 
   private var innerSnapPoints: List<DrawerSnapPoint> by mutableStateOf(snapPoints)
 
