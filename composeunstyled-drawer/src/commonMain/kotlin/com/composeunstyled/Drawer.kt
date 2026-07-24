@@ -48,7 +48,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
@@ -533,8 +532,7 @@ fun DrawerViewportScope.Panel(
             )
           }
         },
-      )
-      .clipToBounds(),
+      ),
     content = {
       Box(modifier) {
         DrawerPanelScope().content()

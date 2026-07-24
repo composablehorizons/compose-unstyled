@@ -97,7 +97,7 @@ class DrawerTest {
   }
 
   @Test
-  fun openSnapPointIsCappedToTheViewportSize() = runComposeUiTest {
+  fun openSnapPointCapsVisibleSizeToTheViewport() = runComposeUiTest {
     setContent {
       DrawerLayout(
         initialSnapPoint = DrawerSnapPoint.Open,
@@ -110,9 +110,9 @@ class DrawerTest {
     val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
     val panelBounds = onNodeWithTag("panel").boundsInRoot()
 
-    assertThat(panelBounds.top.roundToInt()).isEqualTo(viewportBounds.top.roundToInt())
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(-60)
     assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
-    assertThat(panelBounds.height.roundToInt()).isEqualTo(100)
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(160)
   }
 
   @Test
@@ -151,7 +151,7 @@ class DrawerTest {
   }
 
   @Test
-  fun startClosedContentIsClippedToPanelBounds() = runComposeUiTest {
+  fun startClosedContentIsNotDisplayed() = runComposeUiTest {
     setContent {
       StartDrawerLayout()
     }
