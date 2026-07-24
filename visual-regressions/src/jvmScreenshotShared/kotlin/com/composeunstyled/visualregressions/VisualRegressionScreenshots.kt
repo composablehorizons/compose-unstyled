@@ -133,7 +133,11 @@ fun assertVisualRegressionScreenshotMatches(
 
 @OptIn(ExperimentalTestApi::class)
 fun updateVisualRegressionScreenshot(screenshot: VisualRegressionScreenshot) = runComposeUiTest {
-  val actual = captureVisualRegressionScreenshot(screenshot)
+  val actual = captureVisualRegressionImage(
+    width = screenshot.width,
+    height = screenshot.height,
+    content = screenshot.content,
+  )
   val expectedFile = File("src/jvmTest/resources/screenshots/${screenshot.name}.png")
   expectedFile.parentFile.mkdirs()
   ImageIO.write(actual, "png", expectedFile)
@@ -143,16 +147,38 @@ fun updateVisualRegressionScreenshot(screenshot: VisualRegressionScreenshot) = r
 private fun ComposeUiTest.captureVisualRegressionScreenshot(
   screenshot: VisualRegressionScreenshot,
 ): BufferedImage {
+  return captureVisualRegressionImage(
+    width = screenshot.width,
+    height = screenshot.height,
+    content = screenshot.content,
+  )
+}
+
+@OptIn(ExperimentalTestApi::class)
+internal fun ComposeUiTest.captureVisualRegressionImage(
+  width: Int,
+  height: Int,
+  backgroundColor: Color = Color.White,
+  content: @Composable () -> Unit,
+  settleAfterInteract: Boolean = true,
+  interact: ComposeUiTest.() -> Unit = {},
+): BufferedImage {
   setContent {
     Box(
       modifier = Modifier
-        .requiredSize(width = screenshot.width.dp, height = screenshot.height.dp)
-        .background(Color.White)
+        .requiredSize(width = width.dp, height = height.dp)
+        .background(backgroundColor)
         .testTag(ScreenshotTargetTag),
       contentAlignment = Alignment.Center,
     ) {
-      screenshot.content()
+      content()
     }
+  }
+
+  waitForIdle()
+  interact()
+  if (settleAfterInteract.not()) {
+    return onNodeWithTag(ScreenshotTargetTag).captureToImage().toAwtImage()
   }
 
   waitForIdle()

@@ -21,6 +21,7 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +37,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.SemanticsNodeInteraction
@@ -46,9 +49,11 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipe
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isLessThan
 import kotlin.math.roundToInt
 import kotlin.test.Test
 
@@ -809,6 +814,27 @@ class DrawerTest {
     assertThat(onNodeWithTag("panel").boundsInRoot().height.roundToInt()).isEqualTo(0)
   }
 
+  @Test
+  fun panelDispatchesExcessDragToOverscrollEffect() = runComposeUiTest {
+    val overscrollEffect = RecordingOverscrollEffect()
+
+    setContent {
+      DrawerLayout(
+        initialSnapPoint = DrawerSnapPoint.Open,
+        overscrollEffect = overscrollEffect,
+      )
+    }
+
+    waitForIdle()
+
+    onNodeWithTag("panel").performTouchInput {
+      swipe(start = center, end = topCenter)
+    }
+    waitForIdle()
+
+    assertThat(overscrollEffect.totalOverscrollY).isLessThan(0f)
+  }
+
   private fun SemanticsNodeInteraction.boundsInRoot(): Rect {
     return fetchSemanticsNode().boundsInRoot
   }
@@ -828,6 +854,7 @@ private fun DrawerLayout(
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
   snapPoints: List<DrawerSnapPoint> = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open),
   contentHeight: Int = 100,
+  overscrollEffect: OverscrollEffect? = null,
   onState: (DrawerState) -> Unit = {},
 ) {
   val state = rememberDrawerState(
@@ -839,6 +866,7 @@ private fun DrawerLayout(
   DrawerLayoutContent(
     state = state,
     contentHeight = contentHeight,
+    overscrollEffect = overscrollEffect,
   )
 }
 
@@ -993,6 +1021,7 @@ private fun EdgeDrawerLayout(
 private fun DrawerLayoutContent(
   state: DrawerState,
   contentHeight: Int = 100,
+  overscrollEffect: OverscrollEffect? = null,
 ) {
   UnstyledDrawer(
     state = state,
@@ -1007,6 +1036,7 @@ private fun DrawerLayoutContent(
         modifier = Modifier
           .fillMaxWidth()
           .testTag("panel"),
+        overscrollEffect = overscrollEffect,
       ) {
         Content(
           modifier = Modifier
@@ -1029,4 +1059,29 @@ private fun DrawerLayoutContent(
       }
     }
   }
+}
+
+private class RecordingOverscrollEffect : OverscrollEffect {
+  var totalOverscrollY: Float = 0f
+    private set
+
+  override fun applyToScroll(
+    delta: Offset,
+    source: NestedScrollSource,
+    performScroll: (Offset) -> Offset,
+  ): Offset {
+    val consumed = performScroll(delta)
+    totalOverscrollY += delta.y - consumed.y
+    return consumed
+  }
+
+  override suspend fun applyToFling(
+    velocity: Velocity,
+    performFling: suspend (Velocity) -> Velocity,
+  ) {
+    performFling(velocity)
+  }
+
+  override val isInProgress: Boolean
+    get() = totalOverscrollY != 0f
 }

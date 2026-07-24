@@ -25,6 +25,7 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -33,6 +34,9 @@ import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.withoutEventHandling
+import androidx.compose.foundation.withoutVisualEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -470,7 +474,6 @@ fun DrawerScope.Viewport(
       }
     }
   }
-
   Layout(
     modifier = modifier,
     content = {
@@ -523,26 +526,40 @@ fun DrawerScope.Viewport(
 @Composable
 fun DrawerViewportScope.Panel(
   modifier: Modifier = Modifier,
+  overscrollEffect: OverscrollEffect? = null,
   content: @Composable DrawerPanelScope.() -> Unit,
 ) {
   val context = LocalDrawerContext.current
   val state = context.state
   val side = context.side
+  val orientation = if (side.isHorizontal) {
+    Orientation.Horizontal
+  } else {
+    Orientation.Vertical
+  }
+  val panelOverscrollEffect = remember(overscrollEffect) {
+    overscrollEffect?.withoutVisualEffect()
+  }
+  val panelOverscrollVisualEffect = remember(overscrollEffect) {
+    overscrollEffect?.withoutEventHandling()
+  }
   Layout(
-    modifier = modifier
+    modifier = buildModifier {
+      if (panelOverscrollVisualEffect != null) {
+        add(Modifier.overscroll(panelOverscrollVisualEffect))
+      }
+    }
+      .then(modifier)
       .then(
         buildModifier {
           if (state != null && context.enabled && state.snapPoints.size > 1) {
             add(
               Modifier.anchoredDraggable(
                 state = state.anchoredDraggableState,
-                orientation = if (side.isHorizontal) {
-                  Orientation.Horizontal
-                } else {
-                  Orientation.Vertical
-                },
+                orientation = orientation,
                 enabled = context.enabled,
                 interactionSource = context.interactionSource,
+                overscrollEffect = panelOverscrollEffect,
               ),
             )
           }
