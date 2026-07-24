@@ -457,6 +457,152 @@ class DrawerTest {
   }
 
   @Test
+  fun bottomDrawerPanelCanFillViewportHeight() = runComposeUiTest {
+    setContent {
+      val state = rememberDrawerState(
+        initialSnapPoint = DrawerSnapPoint.Open,
+      )
+      UnstyledDrawer(
+        state = state,
+        side = DrawerSide.Bottom,
+        modifier = Modifier.size(100.dp),
+      ) {
+        Viewport(
+          modifier = Modifier
+            .size(100.dp)
+            .testTag("viewport"),
+        ) {
+          Panel(
+            modifier = Modifier
+              .fillMaxSize()
+              .testTag("panel"),
+          ) {
+            Box(Modifier.size(20.dp))
+          }
+        }
+      }
+    }
+
+    waitUntil {
+      onNodeWithTag("panel").boundsInRoot().height.roundToInt() == 100
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(viewportBounds.top.roundToInt())
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.width.roundToInt()).isEqualTo(viewportBounds.width.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(viewportBounds.height.roundToInt())
+  }
+
+  @Test
+  fun bottomDrawerStaysFullyOpenWhenPanelBecomesViewportHeight() = runComposeUiTest {
+    val ninetyPercent = DrawerSnapPoint("90%") { containerSize, _ ->
+      containerSize * 0.9f
+    }
+    var fillPanel by mutableStateOf(false)
+
+    setContent {
+      val state = rememberDrawerState(
+        initialSnapPoint = DrawerSnapPoint.Open,
+        snapPoints = {
+          listOf(DrawerSnapPoint.Open, ninetyPercent, DrawerSnapPoint.Closed)
+        },
+      )
+      UnstyledDrawer(
+        state = state,
+        side = DrawerSide.Bottom,
+        modifier = Modifier.size(100.dp),
+      ) {
+        Viewport(
+          modifier = Modifier
+            .size(100.dp)
+            .testTag("viewport"),
+        ) {
+          Panel(
+            modifier = if (fillPanel) {
+              Modifier
+                .fillMaxSize()
+                .testTag("panel")
+            } else {
+              Modifier
+                .width(100.dp)
+                .height(40.dp)
+                .testTag("panel")
+            },
+          ) {
+            Box(Modifier.size(20.dp))
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    fillPanel = true
+
+    waitUntil {
+      onNodeWithTag("panel").boundsInRoot().height.roundToInt() == 100
+    }
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(viewportBounds.top.roundToInt())
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(viewportBounds.height.roundToInt())
+  }
+
+  @Test
+  fun bottomDrawerPartiallyShowsViewportAtNinetyPercentSnapPoint() = runComposeUiTest {
+    val ninetyPercent = DrawerSnapPoint("90%") { containerSize, _ ->
+      containerSize * 0.9f
+    }
+
+    setContent {
+      val state = rememberDrawerState(
+        initialSnapPoint = ninetyPercent,
+        snapPoints = {
+          listOf(DrawerSnapPoint.Open, ninetyPercent, DrawerSnapPoint.Closed)
+        },
+      )
+      UnstyledDrawer(
+        state = state,
+        side = DrawerSide.Bottom,
+        modifier = Modifier.size(100.dp),
+      ) {
+        Viewport(
+          modifier = Modifier
+            .size(100.dp)
+            .testTag("viewport"),
+        ) {
+          Panel(
+            modifier = Modifier
+              .fillMaxSize()
+              .testTag("panel"),
+          ) {
+            Box(Modifier.size(20.dp))
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+
+    val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+    val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+    assertThat(panelBounds.top.roundToInt()).isEqualTo(
+      viewportBounds.top.roundToInt() + 10,
+    )
+    assertThat(panelBounds.bottom.roundToInt()).isEqualTo(
+      viewportBounds.bottom.roundToInt() + 10,
+    )
+    assertThat(panelBounds.height.roundToInt()).isEqualTo(viewportBounds.height.roundToInt())
+  }
+
+  @Test
   fun endDrawerClosesTowardLeftInRtl() = runComposeUiTest {
     lateinit var state: DrawerState
 
