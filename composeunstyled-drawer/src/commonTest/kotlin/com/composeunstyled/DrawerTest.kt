@@ -973,7 +973,7 @@ class DrawerTest {
   }
 
   @Test
-  fun drawerMovesToClosedWhenCurrentSnapPointIsRemoved() = runComposeUiTest {
+  fun drawerAnimatesToClosestSnapPointWhenCurrentSnapPointIsRemoved() = runComposeUiTest {
     lateinit var state: DrawerState
     var snapPoints by mutableStateOf(listOf(DrawerSnapPoint.Closed, Peek, DrawerSnapPoint.Open))
 
@@ -986,17 +986,32 @@ class DrawerTest {
     }
 
     waitForIdle()
+    mainClock.autoAdvance = false
 
-    snapPoints = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open)
+    try {
+      runOnIdle {
+        snapPoints = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open)
+      }
+      mainClock.advanceTimeByFrame()
 
-    waitUntil {
-      state.isIdle && state.currentSnapPoint == DrawerSnapPoint.Closed
+      waitForIdle()
+
+      assertThat(state.targetSnapPoint).isEqualTo(DrawerSnapPoint.Open)
+      assertThat(onNodeWithTag("panel").boundsInRoot().top.roundToInt()).isEqualTo(40)
+
+      mainClock.advanceTimeBy(1_000)
+      waitForIdle()
+
+      val viewportBounds = onNodeWithTag("viewport").boundsInRoot()
+      val panelBounds = onNodeWithTag("panel").boundsInRoot()
+
+      assertThat(state.currentSnapPoint).isEqualTo(DrawerSnapPoint.Open)
+      assertThat(panelBounds.top.roundToInt()).isEqualTo(viewportBounds.top.roundToInt())
+      assertThat(panelBounds.bottom.roundToInt()).isEqualTo(viewportBounds.bottom.roundToInt())
+      assertThat(panelBounds.height.roundToInt()).isEqualTo(100)
+    } finally {
+      mainClock.autoAdvance = true
     }
-
-    val panelBounds = onNodeWithTag("panel").boundsInRoot()
-
-    assertThat(panelBounds.top.roundToInt()).isEqualTo(100)
-    assertThat(panelBounds.height.roundToInt()).isEqualTo(100)
   }
 
   @Test

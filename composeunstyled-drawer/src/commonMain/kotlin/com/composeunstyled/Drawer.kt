@@ -164,8 +164,39 @@ class DrawerState internal constructor(
 
   internal fun updateSnapPoints(value: List<DrawerSnapPoint>) {
     checkValidSnapPoints(value)
+    val currentOffset = anchoredDraggableState.offset
+    val requestedTarget = if (currentOffset.isNaN()) {
+      anchoredDraggableState.settledValue
+    } else {
+      targetSnapPoint
+    }
+
     innerSnapPoints = value
-    updateAnchors()
+    val closestTarget = if (currentOffset.isNaN().not() && value.contains(requestedTarget).not()) {
+      createAnchors().closestAnchor(currentOffset) ?: value.first()
+    } else {
+      null
+    }
+
+    if (closestTarget == null) {
+      updateAnchors()
+      return
+    }
+
+    pendingTargetSnapPoint = closestTarget
+    pendingSnapPointChange?.cancel()
+    pendingSnapPointChange = coroutineScope.launch {
+      try {
+        anchoredDraggableState.anchoredDrag {
+          updateAnchors(newTarget = closestTarget)
+        }
+        anchoredDraggableState.animateTo(closestTarget)
+      } finally {
+        if (pendingTargetSnapPoint == closestTarget) {
+          pendingTargetSnapPoint = null
+        }
+      }
+    }
   }
 
   val currentSnapPoint: DrawerSnapPoint
@@ -308,10 +339,24 @@ class DrawerState internal constructor(
     }
   }
 
-  private fun updateAnchors() {
+  private fun updateAnchors(newTarget: DrawerSnapPoint? = null) {
     if (containerSizePx.isNaN() || panelSizePx.isNaN()) return
 
-    val anchors = DraggableAnchors {
+    val anchors = createAnchors()
+    val requestedTarget = if (anchoredDraggableState.offset.isNaN()) {
+      anchoredDraggableState.settledValue
+    } else {
+      targetSnapPoint
+    }
+    val resolvedTarget = newTarget
+      ?: requestedTarget.takeIf { innerSnapPoints.contains(it) }
+      ?: DrawerSnapPoint.Closed.takeIf { innerSnapPoints.contains(it) }
+      ?: innerSnapPoints.first()
+    anchoredDraggableState.updateAnchors(anchors, newTarget = resolvedTarget)
+  }
+
+  private fun createAnchors(): DraggableAnchors<DrawerSnapPoint> {
+    return DraggableAnchors {
       with(density) {
         innerSnapPoints.forEach { snapPoint ->
           val containerSize = containerSizePx.toDp()
@@ -329,15 +374,6 @@ class DrawerState internal constructor(
         }
       }
     }
-    val requestedTarget = if (anchoredDraggableState.offset.isNaN()) {
-      anchoredDraggableState.settledValue
-    } else {
-      targetSnapPoint
-    }
-    val newTarget = requestedTarget.takeIf { innerSnapPoints.contains(it) }
-      ?: DrawerSnapPoint.Closed.takeIf { innerSnapPoints.contains(it) }
-      ?: innerSnapPoints.first()
-    anchoredDraggableState.updateAnchors(anchors, newTarget = newTarget)
   }
 
   private suspend fun awaitAnchors() {
