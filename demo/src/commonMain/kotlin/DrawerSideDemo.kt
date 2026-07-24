@@ -24,44 +24,51 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.composables.icons.lucide.Heart
+import com.composables.icons.lucide.Inbox
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.SendHorizontal
+import com.composables.icons.lucide.Trash2
 import com.composeunstyled.Content
 import com.composeunstyled.DrawerSide
-import com.composeunstyled.DrawerSnapPoint.Companion.Closed
-import com.composeunstyled.DrawerSnapPoint.Companion.Open
+import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Viewport
 import com.composeunstyled.rememberDrawerState
 
 @Composable
 fun DrawerSideDemo() {
   val drawerState = rememberDrawerState(
-    initialSnapPoint = Closed,
-    snapPoints = listOf(Closed, Open),
+    initialSnapPoint = DrawerSnapPoint.Open,
   )
 
   UnstyledButton(
     onClick = {
-      drawerState.targetSnapPoint = Open
+      drawerState.targetSnapPoint = DrawerSnapPoint.Open
     },
     modifier = Modifier
       .clip(RoundedCornerShape(10.dp))
@@ -76,33 +83,86 @@ fun DrawerSideDemo() {
 
   UnstyledDrawer(
     state = drawerState,
-    side = DrawerSide.End,
     modifier = Modifier.fillMaxSize(),
+    side = DrawerSide.End
   ) {
-    Viewport(
-      modifier = Modifier.fillMaxSize(),
-    ) {
+    Viewport(Modifier.fillMaxSize()) {
       Panel(
         modifier = Modifier
-          .dropShadow(
-            shape = RectangleShape,
-            shadow = Shadow(
-              radius = 0.dp,
-              color = Color.Black,
-              spread = 0.dp,
-              offset = DpOffset(8.dp, 8.dp),
-              alpha = 0.33f,
-            ),
-          )
           .background(Color.White)
           .border(1.dp, Color.Black)
+          .width(360.dp)
           .fillMaxHeight()
-          .widthIn(max = 360.dp),
+          .padding(12.dp),
       ) {
-        Content(
-          modifier = Modifier.fillMaxHeight(),
-        ) {
-          Box(Modifier.width(1000.dp).fillMaxHeight())
+        Content(Modifier.fillMaxWidth()) {
+          Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            BasicText(
+              "Mail",
+              style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium),
+              modifier = Modifier.padding(10.dp)
+            )
+            UnstyledButton(
+              onClick = {},
+              indication = LocalIndication.current,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+              modifier = Modifier.fillMaxWidth(),
+              contentAlignment = Alignment.CenterStart,
+            ) {
+              Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                UnstyledIcon(Lucide.Inbox)
+                BasicText("Inbox")
+              }
+            }
+            UnstyledButton(
+              onClick = {},
+              indication = LocalIndication.current,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+              modifier = Modifier.fillMaxWidth(),
+              contentAlignment = Alignment.CenterStart,
+            ) {
+              Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                UnstyledIcon(Lucide.SendHorizontal)
+                BasicText("Outbox")
+              }
+            }
+            UnstyledButton(
+              onClick = {},
+              indication = LocalIndication.current,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+              modifier = Modifier.fillMaxWidth(),
+              contentAlignment = Alignment.CenterStart,
+            ) {
+              Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                UnstyledIcon(Lucide.Heart)
+                BasicText("Favorites")
+              }
+            }
+            UnstyledButton(
+              onClick = {},
+              indication = LocalIndication.current,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+              modifier = Modifier.fillMaxWidth(),
+              contentAlignment = Alignment.CenterStart,
+            ) {
+              Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                UnstyledIcon(Lucide.Trash2)
+                BasicText("Trash")
+              }
+            }
+          }
         }
       }
     }

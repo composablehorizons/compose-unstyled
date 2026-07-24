@@ -24,26 +24,31 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.composeunstyled.Content
-import com.composeunstyled.DrawerSnapPoint.Companion.Closed
-import com.composeunstyled.DrawerSnapPoint.Companion.Open
+import com.composeunstyled.DrawerSide
+import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
@@ -53,12 +58,12 @@ import com.composeunstyled.rememberDrawerState
 @Composable
 fun DrawerOverscrollEffectDemo() {
   val drawerState = rememberDrawerState(
-    initialSnapPoint = Closed,
+    initialSnapPoint = DrawerSnapPoint.Open,
   )
 
   UnstyledButton(
     onClick = {
-      drawerState.targetSnapPoint = Open
+      drawerState.targetSnapPoint = DrawerSnapPoint.Open
     },
     modifier = Modifier
       .clip(RoundedCornerShape(10.dp))
@@ -74,10 +79,9 @@ fun DrawerOverscrollEffectDemo() {
   UnstyledDrawer(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
+    side = DrawerSide.Bottom
   ) {
-    Viewport(
-      modifier = Modifier.fillMaxSize(),
-    ) {
+    Viewport(Modifier.fillMaxSize()) {
       Panel(
         modifier = Modifier
           .dropShadow(
@@ -95,12 +99,18 @@ fun DrawerOverscrollEffectDemo() {
           .fillMaxWidth(),
         overscrollEffect = rememberElasticOverscrollEffect(),
       ) {
-        Content(modifier = Modifier.fillMaxWidth()) {
-          Box(
+        Content(Modifier.fillMaxWidth()) {
+          Column(
             modifier = Modifier
               .fillMaxWidth()
-              .height(360.dp),
-          )
+              .height(360.dp)
+              .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+          ) {
+            BasicText("Try dragging me upwards", style = TextStyle(fontSize = 22.sp))
+            BasicText("I bet you can't")
+          }
         }
       }
     }

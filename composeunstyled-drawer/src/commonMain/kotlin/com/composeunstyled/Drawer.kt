@@ -111,20 +111,23 @@ value class DrawerSide internal constructor(private val value: String) {
 @Composable
 fun rememberDrawerState(
   initialSnapPoint: DrawerSnapPoint = DrawerSnapPoint.Closed,
-  snapPoints: List<DrawerSnapPoint> = listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open),
+  snapPoints: () -> List<DrawerSnapPoint> = {
+    listOf(DrawerSnapPoint.Closed, DrawerSnapPoint.Open)
+  },
 ): DrawerState {
   val density = LocalDensity.current
   val scope = rememberCoroutineScope()
+  val currentSnapPoints = snapPoints()
   val state = remember(scope, density) {
     DrawerState(
       initialSnapPoint = initialSnapPoint,
-      snapPoints = snapPoints,
+      snapPoints = currentSnapPoints,
       coroutineScope = scope,
       density = density,
     )
   }
   SideEffect {
-    state.snapPoints = snapPoints
+    state.updateSnapPoints(currentSnapPoints)
   }
   return state
 }
@@ -154,15 +157,16 @@ class DrawerState internal constructor(
 
   private var innerSnapPoints: List<DrawerSnapPoint> by mutableStateOf(snapPoints)
 
-  var snapPoints: List<DrawerSnapPoint>
+  val snapPoints: List<DrawerSnapPoint>
     get() {
       return innerSnapPoints
     }
-    set(value) {
-      checkValidSnapPoints(value)
-      innerSnapPoints = value
-      updateAnchors()
-    }
+
+  internal fun updateSnapPoints(value: List<DrawerSnapPoint>) {
+    checkValidSnapPoints(value)
+    innerSnapPoints = value
+    updateAnchors()
+  }
 
   val currentSnapPoint: DrawerSnapPoint
     get() {
@@ -250,10 +254,6 @@ class DrawerState internal constructor(
     }
   }
 
-  fun invalidateSnapPoints() {
-    updateAnchors()
-  }
-
   internal fun updateContainerSize(
     measuredSizePx: Float,
     isAnchoredToMinEdge: Boolean,
@@ -302,7 +302,7 @@ class DrawerState internal constructor(
     }
 
     return if (side.isLeadingEdge) {
-      0f
+      visiblePanelSizePx() - panelSizePx
     } else {
       (viewportMainAxisSizePx - visiblePanelSizePx()).coerceIn(0f, viewportMainAxisSizePx)
     }
@@ -387,7 +387,7 @@ private val LocalDrawerContext: ProvidableCompositionLocal<DrawerContext> =
 fun UnstyledDrawer(
   state: DrawerState,
   modifier: Modifier = Modifier,
-  side: DrawerSide = DrawerSide.Bottom,
+  side: DrawerSide = DrawerSide.Start,
   enabled: Boolean = true,
   content: @Composable DrawerScope.() -> Unit,
 ) {
@@ -519,7 +519,6 @@ fun DrawerViewportScope.Panel(
         add(Modifier.overscroll(panelOverscrollVisualEffect))
       }
     }
-      .then(modifier)
       .then(
         buildModifier {
           if (state != null && context.enabled && state.snapPoints.size > 1) {
@@ -537,7 +536,9 @@ fun DrawerViewportScope.Panel(
       )
       .clipToBounds(),
     content = {
-      DrawerPanelScope().content()
+      Box(modifier) {
+        DrawerPanelScope().content()
+      }
     },
   ) { measurables, constraints ->
     val contentConstraints = if (side.isHorizontal) {
@@ -568,11 +569,8 @@ fun DrawerViewportScope.Panel(
     }
     state?.updatePanelSize(panelMainAxisSize.toFloat())
 
-    val visibleMainAxisSize = state?.visiblePanelSizePx()
-      ?.roundToInt()
-      ?: panelMainAxisSize
     val width = if (side.isHorizontal) {
-      visibleMainAxisSize.coerceIn(constraints.minWidth, constraints.maxWidth)
+      panelMainAxisSize.coerceIn(constraints.minWidth, constraints.maxWidth)
     } else {
       maxOf(
         constraints.minWidth,
@@ -585,7 +583,7 @@ fun DrawerViewportScope.Panel(
         placeables.maxOfOrNull { it.height } ?: 0,
       ).coerceIn(constraints.minHeight, constraints.maxHeight)
     } else {
-      visibleMainAxisSize.coerceIn(constraints.minHeight, constraints.maxHeight)
+      panelMainAxisSize.coerceIn(constraints.minHeight, constraints.maxHeight)
     }
 
     layout(width, height) {

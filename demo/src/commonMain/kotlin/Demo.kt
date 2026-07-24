@@ -106,6 +106,12 @@ private val availablePrimitives = listOf(
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
   DemoItem(
+    "Drawer Dynamic Snap Points",
+    "drawer-dynamic-snap-points",
+    { DrawerDynamicSnapPointsDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
+  DemoItem(
     "Drawer Overscroll Effect",
     "drawer-overscroll-effect",
     { DrawerOverscrollEffectDemo() },

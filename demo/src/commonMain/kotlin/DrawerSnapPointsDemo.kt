@@ -58,7 +58,7 @@ fun DrawerSnapPointsDemo() {
   }
   val drawerState = rememberDrawerState(
     initialSnapPoint = Closed,
-    snapPoints = listOf(Closed, peek, Open),
+    snapPoints = { listOf(Closed, peek, Open) },
   )
 
   UnstyledButton(
