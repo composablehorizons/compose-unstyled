@@ -75,9 +75,7 @@ fun DrawerDemo() {
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
   ) {
-    Viewport(
-      modifier = Modifier.fillMaxSize(),
-    ) {
+    Viewport(Modifier.fillMaxSize()) {
       Panel(
         modifier = Modifier
           .dropShadow(
