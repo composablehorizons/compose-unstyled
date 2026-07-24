@@ -24,6 +24,7 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -99,10 +101,27 @@ fun DrawerDynamicSnapPointsDemo() {
           .padding(12.dp),
       ) {
         Content {
-          Column {
+          Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+          ) {
             BasicText("This drawer has ${snapPoints.size} snap points")
-            UnstyledButton(onClick = { }) {
-              BasicText("Add one")
+            UnstyledButton(
+              onClick = { },
+              contentPadding = PaddingValues(16.dp),
+              indication = LocalIndication.current,
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              BasicText("+1")
+            }
+
+            UnstyledButton(
+              onClick = { },
+              contentPadding = PaddingValues(16.dp),
+              indication = LocalIndication.current,
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              BasicText("-1")
             }
           }
         }
