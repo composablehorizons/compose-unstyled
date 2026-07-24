@@ -40,6 +40,8 @@ import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -66,11 +68,14 @@ class ElasticOverscrollEffect : OverscrollEffect {
     velocity: Velocity,
     performFling: suspend (Velocity) -> Velocity,
   ) {
-    try {
+    val releaseOffset = offsetPx
+    if (releaseOffset == 0f) {
       performFling(velocity)
-    } finally {
-      val releaseOffset = offsetPx
-      if (releaseOffset != 0f) {
+      return
+    }
+
+    coroutineScope {
+      val rebound = launch {
         animate(
           initialValue = releaseOffset,
           targetValue = 0f,
@@ -82,6 +87,12 @@ class ElasticOverscrollEffect : OverscrollEffect {
         ) { value, _ ->
           offsetPx = value
         }
+      }
+
+      try {
+        performFling(velocity)
+      } finally {
+        rebound.join()
       }
     }
   }
