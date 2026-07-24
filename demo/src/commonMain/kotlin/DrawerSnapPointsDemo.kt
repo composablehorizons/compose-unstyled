@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Content
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoint.Companion.Closed
 import com.composeunstyled.DrawerSnapPoint.Companion.Open
@@ -99,11 +98,7 @@ fun DrawerSnapPointsDemo() {
           .border(1.dp, Color.Black)
           .fillMaxWidth(),
       ) {
-        Content(
-          modifier = Modifier.fillMaxWidth(),
-        ) {
-          Box(Modifier.fillMaxWidth().height(1000.dp))
-        }
+        Box(Modifier.fillMaxWidth().height(1000.dp))
       }
     }
   }

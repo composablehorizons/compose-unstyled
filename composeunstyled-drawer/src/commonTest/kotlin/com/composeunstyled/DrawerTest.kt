@@ -952,14 +952,12 @@ private fun ConstrainedStartDrawerLayout(
           .widthIn(max = 100.dp)
           .testTag("panel"),
       ) {
-        Content(
-          modifier = Modifier
+        Box(
+          Modifier
             .testTag("content")
             .width(300.dp)
             .height(100.dp),
-        ) {
-          Box(Modifier.width(300.dp).height(100.dp))
-        }
+        )
       }
     }
   }
@@ -988,14 +986,12 @@ private fun ConstrainedEndDrawerLayout() {
           .widthIn(max = 100.dp)
           .testTag("panel"),
       ) {
-        Content(
-          modifier = Modifier
+        Box(
+          Modifier
             .testTag("content")
             .width(300.dp)
             .height(100.dp),
-        ) {
-          Box(Modifier.width(300.dp).height(100.dp))
-        }
+        )
       }
     }
   }
@@ -1025,14 +1021,12 @@ private fun FixedWidthStartDrawerLayout(
           .height(100.dp)
           .testTag("panel"),
       ) {
-        Content(
-          modifier = Modifier
+        Box(
+          Modifier
             .fillMaxWidth()
             .height(100.dp)
             .testTag("content"),
-        ) {
-          Box(Modifier.width(20.dp).height(100.dp))
-        }
+        )
       }
     }
   }
@@ -1060,14 +1054,12 @@ private fun FixedHeightBottomDrawerLayout() {
           .height(100.dp)
           .testTag("panel"),
       ) {
-        Content(
-          modifier = Modifier
+        Box(
+          Modifier
             .width(100.dp)
             .fillMaxHeight()
             .testTag("content"),
-        ) {
-          Box(Modifier.width(100.dp).height(20.dp))
-        }
+        )
       }
     }
   }
@@ -1115,14 +1107,12 @@ private fun EdgeDrawerLayout(
         modifier = panelModifier
           .testTag("panel"),
       ) {
-        Content(
-          modifier = Modifier
+        Box(
+          Modifier
             .testTag("content")
             .width(contentWidth.dp)
             .height(contentHeight.dp),
-        ) {
-          Box(Modifier.width(contentWidth.dp).height(contentHeight.dp))
-        }
+        )
       }
     }
   }
@@ -1150,7 +1140,7 @@ private fun DrawerLayoutContent(
           .testTag("panel"),
         overscrollEffect = overscrollEffect,
       ) {
-        Content(
+        Box(
           modifier = Modifier
             .fillMaxWidth()
             .height(contentHeight.dp),

@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Content
 import com.composeunstyled.DrawerSide
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
@@ -59,8 +58,8 @@ fun DrawerDynamicSnapPointsDemo() {
     mutableStateOf(
       listOf(
         DrawerSnapPoint.Closed,
-        DrawerSnapPoint.Open
-      )
+        DrawerSnapPoint.Open,
+      ),
     )
   }
 
@@ -68,7 +67,7 @@ fun DrawerDynamicSnapPointsDemo() {
     initialSnapPoint = DrawerSnapPoint.Open,
     snapPoints = {
       snapPoints
-    }
+    },
   )
 
   UnstyledButton(
@@ -89,7 +88,7 @@ fun DrawerDynamicSnapPointsDemo() {
   UnstyledDrawer(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
-    side = DrawerSide.Bottom
+    side = DrawerSide.Bottom,
   ) {
     Viewport(Modifier.fillMaxSize()) {
       Panel(
@@ -100,29 +99,27 @@ fun DrawerDynamicSnapPointsDemo() {
           .height(500.dp)
           .padding(12.dp),
       ) {
-        Content {
-          Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          BasicText("This drawer has ${snapPoints.size} snap points")
+          UnstyledButton(
+            onClick = { },
+            contentPadding = PaddingValues(16.dp),
+            indication = LocalIndication.current,
+            modifier = Modifier.fillMaxWidth(),
           ) {
-            BasicText("This drawer has ${snapPoints.size} snap points")
-            UnstyledButton(
-              onClick = { },
-              contentPadding = PaddingValues(16.dp),
-              indication = LocalIndication.current,
-              modifier = Modifier.fillMaxWidth()
-            ) {
-              BasicText("+1")
-            }
+            BasicText("+1")
+          }
 
-            UnstyledButton(
-              onClick = { },
-              contentPadding = PaddingValues(16.dp),
-              indication = LocalIndication.current,
-              modifier = Modifier.fillMaxWidth()
-            ) {
-              BasicText("-1")
-            }
+          UnstyledButton(
+            onClick = { },
+            contentPadding = PaddingValues(16.dp),
+            indication = LocalIndication.current,
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            BasicText("-1")
           }
         }
       }

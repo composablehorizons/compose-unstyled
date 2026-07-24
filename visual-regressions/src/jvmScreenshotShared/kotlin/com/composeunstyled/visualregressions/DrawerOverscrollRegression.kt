@@ -49,7 +49,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Content
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
 import com.composeunstyled.UnstyledDrawer
@@ -99,13 +98,11 @@ internal fun DrawerOverscrollRegression(
           .testTag(DrawerPanelTag),
         overscrollEffect = overscrollEffect,
       ) {
-        Content(
+        Box(
           modifier = Modifier
             .fillMaxWidth()
             .height(220.dp),
-        ) {
-          Box(modifier = Modifier.fillMaxSize())
-        }
+        )
       }
     }
   }

@@ -53,11 +53,7 @@ class DrawerAndroidTest {
           Panel(
             modifier = Modifier.fillMaxWidth(),
           ) {
-            Content(
-              modifier = Modifier.fillMaxWidth().height(100.dp),
-            ) {
-              Box(Modifier.size(100.dp))
-            }
+            Box(Modifier.fillMaxWidth().height(100.dp))
           }
         }
       }
@@ -94,11 +90,7 @@ class DrawerAndroidTest {
           Panel(
             modifier = Modifier.fillMaxWidth(),
           ) {
-            Content(
-              modifier = Modifier.fillMaxWidth().height(100.dp),
-            ) {
-              Box(Modifier.size(100.dp))
-            }
+            Box(Modifier.fillMaxWidth().height(100.dp))
           }
         }
       }

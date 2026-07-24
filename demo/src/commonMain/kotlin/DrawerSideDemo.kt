@@ -50,7 +50,6 @@ import com.composables.icons.lucide.Inbox
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.SendHorizontal
 import com.composables.icons.lucide.Trash2
-import com.composeunstyled.Content
 import com.composeunstyled.DrawerSide
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
@@ -84,7 +83,7 @@ fun DrawerSideDemo() {
   UnstyledDrawer(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
-    side = DrawerSide.End
+    side = DrawerSide.End,
   ) {
     Viewport(Modifier.fillMaxSize()) {
       Panel(
@@ -95,72 +94,73 @@ fun DrawerSideDemo() {
           .fillMaxHeight()
           .padding(12.dp),
       ) {
-        Content(Modifier.fillMaxWidth()) {
-          Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            BasicText(
-              "Mail",
-              style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium),
-              modifier = Modifier.padding(10.dp)
-            )
-            UnstyledButton(
-              onClick = {},
-              indication = LocalIndication.current,
-              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-              modifier = Modifier.fillMaxWidth(),
-              contentAlignment = Alignment.CenterStart,
+        Column(
+          modifier = Modifier.fillMaxWidth(),
+          verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+          BasicText(
+            "Mail",
+            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium),
+            modifier = Modifier.padding(10.dp),
+          )
+          UnstyledButton(
+            onClick = {},
+            indication = LocalIndication.current,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+          ) {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(12.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                UnstyledIcon(Lucide.Inbox)
-                BasicText("Inbox")
-              }
+              UnstyledIcon(Lucide.Inbox)
+              BasicText("Inbox")
             }
-            UnstyledButton(
-              onClick = {},
-              indication = LocalIndication.current,
-              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-              modifier = Modifier.fillMaxWidth(),
-              contentAlignment = Alignment.CenterStart,
+          }
+          UnstyledButton(
+            onClick = {},
+            indication = LocalIndication.current,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+          ) {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(12.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                UnstyledIcon(Lucide.SendHorizontal)
-                BasicText("Outbox")
-              }
+              UnstyledIcon(Lucide.SendHorizontal)
+              BasicText("Outbox")
             }
-            UnstyledButton(
-              onClick = {},
-              indication = LocalIndication.current,
-              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-              modifier = Modifier.fillMaxWidth(),
-              contentAlignment = Alignment.CenterStart,
+          }
+          UnstyledButton(
+            onClick = {},
+            indication = LocalIndication.current,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+          ) {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(12.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                UnstyledIcon(Lucide.Heart)
-                BasicText("Favorites")
-              }
+              UnstyledIcon(Lucide.Heart)
+              BasicText("Favorites")
             }
-            UnstyledButton(
-              onClick = {},
-              indication = LocalIndication.current,
-              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-              modifier = Modifier.fillMaxWidth(),
-              contentAlignment = Alignment.CenterStart,
+          }
+          UnstyledButton(
+            onClick = {},
+            indication = LocalIndication.current,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart,
+          ) {
+            Row(
+              horizontalArrangement = Arrangement.spacedBy(12.dp),
+              verticalAlignment = Alignment.CenterVertically,
             ) {
-              Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                UnstyledIcon(Lucide.Trash2)
-                BasicText("Trash")
-              }
+              UnstyledIcon(Lucide.Trash2)
+              BasicText("Trash")
             }
           }
         }

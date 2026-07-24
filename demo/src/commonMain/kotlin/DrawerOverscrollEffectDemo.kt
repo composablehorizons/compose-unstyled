@@ -46,7 +46,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composeunstyled.Content
 import com.composeunstyled.DrawerSide
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.Panel
@@ -79,7 +78,7 @@ fun DrawerOverscrollEffectDemo() {
   UnstyledDrawer(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
-    side = DrawerSide.Bottom
+    side = DrawerSide.Bottom,
   ) {
     Viewport(Modifier.fillMaxSize()) {
       Panel(
@@ -99,18 +98,16 @@ fun DrawerOverscrollEffectDemo() {
           .fillMaxWidth(),
         overscrollEffect = rememberElasticOverscrollEffect(),
       ) {
-        Content(Modifier.fillMaxWidth()) {
-          Column(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(360.dp)
-              .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-          ) {
-            BasicText("Try dragging me upwards", style = TextStyle(fontSize = 22.sp))
-            BasicText("I bet you can't")
-          }
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(360.dp)
+            .padding(24.dp),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+          BasicText("Try dragging me upwards", style = TextStyle(fontSize = 22.sp))
+          BasicText("I bet you can't")
         }
       }
     }

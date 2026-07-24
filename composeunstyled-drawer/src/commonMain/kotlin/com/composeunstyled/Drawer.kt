@@ -608,16 +608,6 @@ fun DrawerViewportScope.Panel(
   }
 }
 
-@Composable
-fun DrawerPanelScope.Content(
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  Box(modifier) {
-    content()
-  }
-}
-
 private val DrawerSide.isHorizontal: Boolean
   get() {
     return this == DrawerSide.Start || this == DrawerSide.End
