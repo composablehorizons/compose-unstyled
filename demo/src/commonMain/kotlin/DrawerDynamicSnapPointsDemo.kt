@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,6 +90,7 @@ fun DrawerDynamicSnapPointsDemo() {
       ),
     )
   }
+  var openAfterRestoringSnapPoints by remember { mutableStateOf(false) }
   val snapPointOptions = listOf(
     DrawerSnapPoint.Open,
     ninetyPercent,
@@ -109,10 +111,24 @@ fun DrawerDynamicSnapPointsDemo() {
       snapPoints
     },
   )
+  LaunchedEffect(openAfterRestoringSnapPoints, drawerState.snapPoints) {
+    if (
+      openAfterRestoringSnapPoints &&
+      drawerState.snapPoints.contains(DrawerSnapPoint.Open)
+    ) {
+      openAfterRestoringSnapPoints = false
+      drawerState.targetSnapPoint = DrawerSnapPoint.Open
+    }
+  }
 
   UnstyledButton(
     onClick = {
-      drawerState.targetSnapPoint = nextVisibleSnapPoint
+      if (drawerState.isIdle && drawerState.currentSnapPoint == DrawerSnapPoint.Closed) {
+        checkedSnapPoints = snapPointOptions.associateWith { true }
+        openAfterRestoringSnapPoints = true
+      } else {
+        drawerState.targetSnapPoint = nextVisibleSnapPoint
+      }
     },
     modifier = Modifier
       .clip(RoundedCornerShape(10.dp))
@@ -127,7 +143,7 @@ fun DrawerDynamicSnapPointsDemo() {
 
   UnstyledDrawer(
     state = drawerState,
-    modifier = Modifier.fillMaxSize().background(Color.Yellow.copy(0.22f)),
+    modifier = Modifier.fillMaxSize(),
     side = DrawerSide.Bottom,
   ) {
     Viewport(Modifier.fillMaxSize()) {
