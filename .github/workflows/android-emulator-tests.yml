@@ -16,21 +16,6 @@ on:
         description: Gradle command to run inside the Android emulator.
         required: true
         type: string
-      api-level:
-        description: Android API level for the emulator.
-        required: false
-        type: string
-        default: '23'
-      arch:
-        description: Android system image architecture.
-        required: false
-        type: string
-        default: x86_64
-      disk-size:
-        description: Emulator disk size.
-        required: false
-        type: string
-        default: 2048M
 
 jobs:
   android-test:
@@ -61,6 +46,37 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Read emulator profile
+        id: emulator-profile
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          profile="android-emulator.properties"
+
+          property() {
+            awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; found = 1 } END { exit found ? 0 : 1 }' "$profile"
+          }
+
+          hardware_profile="$(property "hardwareProfile")"
+          if [ "$hardware_profile" = "none" ]; then
+            hardware_profile=""
+          fi
+
+          {
+            echo "avd-name=$(property "avdName")"
+            echo "api-level=$(property "apiLevel")"
+            echo "target=$(property "target")"
+            echo "arch=$(property "arch.default")"
+            echo "disk-size=$(property "diskSize")"
+            echo "display-width=$(property "displayWidth")"
+            echo "display-height=$(property "displayHeight")"
+            echo "display-density=$(property "displayDensity")"
+            echo "cores=$(property "cpuCores")"
+            echo "hardware-profile=$hardware_profile"
+            echo "launch-flags=$(property "launchFlags")"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Restore AVD
         uses: actions/cache@v5
         id: avd-cache
@@ -68,7 +84,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ inputs.api-level }}-${{ inputs.arch }}-${{ inputs.disk-size }}
+          key: avd-${{ steps.emulator-profile.outputs.avd-name }}-${{ steps.emulator-profile.outputs.api-level }}-${{ steps.emulator-profile.outputs.target }}-${{ steps.emulator-profile.outputs.arch }}-${{ steps.emulator-profile.outputs.disk-size }}-${{ steps.emulator-profile.outputs.display-width }}x${{ steps.emulator-profile.outputs.display-height }}-${{ steps.emulator-profile.outputs.display-density }}-${{ steps.emulator-profile.outputs.cores }}-${{ steps.emulator-profile.outputs.hardware-profile }}
 
       - name: Create AVD
         if: steps.avd-cache.outputs.cache-hit != 'true'
@@ -77,12 +93,20 @@ jobs:
         continue-on-error: true
         id: create-avd-first-attempt
         with:
-          api-level: ${{ inputs.api-level }}
-          arch: ${{ inputs.arch }}
-          disk-size: ${{ inputs.disk-size }}
+          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
+          api-level: ${{ steps.emulator-profile.outputs.api-level }}
+          target: ${{ steps.emulator-profile.outputs.target }}
+          arch: ${{ steps.emulator-profile.outputs.arch }}
+          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
+          cores: ${{ steps.emulator-profile.outputs.cores }}
+          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
           disable-animations: false
+          pre-emulator-launch-script: |
+            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
           script: echo "Generated AVD snapshot for caching."
 
       - name: Create AVD retry 1
@@ -92,12 +116,20 @@ jobs:
         continue-on-error: true
         id: create-avd-second-attempt
         with:
-          api-level: ${{ inputs.api-level }}
-          arch: ${{ inputs.arch }}
-          disk-size: ${{ inputs.disk-size }}
+          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
+          api-level: ${{ steps.emulator-profile.outputs.api-level }}
+          target: ${{ steps.emulator-profile.outputs.target }}
+          arch: ${{ steps.emulator-profile.outputs.arch }}
+          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
+          cores: ${{ steps.emulator-profile.outputs.cores }}
+          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
           disable-animations: false
+          pre-emulator-launch-script: |
+            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
           script: echo "Generated AVD snapshot for caching."
 
       - name: Create AVD retry 2
@@ -106,21 +138,37 @@ jobs:
         timeout-minutes: 8
         id: create-avd-third-attempt
         with:
-          api-level: ${{ inputs.api-level }}
-          arch: ${{ inputs.arch }}
-          disk-size: ${{ inputs.disk-size }}
+          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
+          api-level: ${{ steps.emulator-profile.outputs.api-level }}
+          target: ${{ steps.emulator-profile.outputs.target }}
+          arch: ${{ steps.emulator-profile.outputs.arch }}
+          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
+          cores: ${{ steps.emulator-profile.outputs.cores }}
+          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
           disable-animations: false
+          pre-emulator-launch-script: |
+            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
           script: echo "Generated AVD snapshot for caching."
 
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ inputs.api-level }}
-          arch: ${{ inputs.arch }}
-          disk-size: ${{ inputs.disk-size }}
+          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
+          api-level: ${{ steps.emulator-profile.outputs.api-level }}
+          target: ${{ steps.emulator-profile.outputs.target }}
+          arch: ${{ steps.emulator-profile.outputs.arch }}
+          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
+          cores: ${{ steps.emulator-profile.outputs.cores }}
+          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-snapshot-save ${{ steps.emulator-profile.outputs.launch-flags }}
           disable-animations: true
+          pre-emulator-launch-script: |
+            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
+            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
           script: ${{ inputs.test-command }}
