@@ -2,8 +2,67 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=scripts/androidEmulatorProfile
-source "$SCRIPT_DIR/androidEmulatorProfile"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROFILE="$ROOT_DIR/android-emulator.properties"
+
+property() {
+  awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print }' "$PROFILE"
+}
+
+if [ ! -f "$PROFILE" ]; then
+  echo "Android emulator profile not found: $PROFILE" >&2
+  exit 1
+fi
+
+AVD_NAME="$(property "avdName")"
+API_LEVEL="$(property "apiLevel")"
+TARGET="$(property "target")"
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  ARCH="$(property "arch.appleSilicon")"
+else
+  ARCH="$(property "arch.default")"
+fi
+DISK_SIZE="$(property "diskSize")"
+DISPLAY_WIDTH="$(property "displayWidth")"
+DISPLAY_HEIGHT="$(property "displayHeight")"
+DISPLAY_DENSITY="$(property "displayDensity")"
+CPU_CORES="$(property "cpuCores")"
+HARDWARE_PROFILE="$(property "hardwareProfile")"
+SYSTEM_IMAGE="system-images;android-${API_LEVEL};${TARGET};${ARCH}"
+AVD_DIR="$HOME/.android/avd/${AVD_NAME}.avd"
+CONFIG="$AVD_DIR/config.ini"
+
+if [ -n "${ANDROID_HOME:-}" ]; then
+  SDK_ROOT="$ANDROID_HOME"
+elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
+  SDK_ROOT="$ANDROID_SDK_ROOT"
+else
+  SDK_ROOT="$HOME/Library/Android/sdk"
+fi
+
+export ANDROID_HOME="$SDK_ROOT"
+export ANDROID_SDK_ROOT="$SDK_ROOT"
+
+SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+AVDMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/avdmanager"
+EMULATOR="$SDK_ROOT/emulator/emulator"
+
+config_value() {
+  awk -F= -v key="$1" '$1 == key { value = $2 } END { print value }' "$CONFIG"
+}
+
+avd_matches_expected_profile() {
+  [ -f "$CONFIG" ] || return 1
+
+  [ "$(config_value "abi.type")" = "$ARCH" ] &&
+    [ "$(config_value "hw.cpu.arch")" = "${ARCH%%-*}" ] &&
+    [ "$(config_value "image.sysdir.1")" = "system-images/android-${API_LEVEL}/${TARGET}/${ARCH}/" ] &&
+    [ "$(config_value "hw.lcd.width")" = "$DISPLAY_WIDTH" ] &&
+    [ "$(config_value "hw.lcd.height")" = "$DISPLAY_HEIGHT" ] &&
+    [ "$(config_value "hw.lcd.density")" = "$DISPLAY_DENSITY" ] &&
+    [ "$(config_value "hw.cpu.ncore")" = "$CPU_CORES" ] &&
+    [ "$(config_value "disk.dataPartition.size")" = "$DISK_SIZE" ]
+}
 
 for tool in "$SDKMANAGER" "$AVDMANAGER" "$EMULATOR"; do
   if [ ! -x "$tool" ]; then
@@ -35,13 +94,24 @@ if "$EMULATOR" -list-avds | grep -Fxq "$AVD_NAME"; then
 fi
 
 "$SDKMANAGER" "platform-tools" "emulator" "platforms;android-${API_LEVEL}" "$SYSTEM_IMAGE"
-printf "no\n" | "$AVDMANAGER" create avd \
-  --force \
-  --name "$AVD_NAME" \
-  --package "$SYSTEM_IMAGE"
+if [ "$HARDWARE_PROFILE" = "none" ]; then
+  printf "no\n" | "$AVDMANAGER" create avd \
+    --force \
+    --name "$AVD_NAME" \
+    --package "$SYSTEM_IMAGE"
+else
+  printf "no\n" | "$AVDMANAGER" create avd \
+    --force \
+    --name "$AVD_NAME" \
+    --package "$SYSTEM_IMAGE" \
+    --device "$HARDWARE_PROFILE"
+fi
 
 if [ -f "$CONFIG" ]; then
-  set_config_value "hw.cpu.ncore" "2"
+  set_config_value "hw.lcd.width" "$DISPLAY_WIDTH"
+  set_config_value "hw.lcd.height" "$DISPLAY_HEIGHT"
+  set_config_value "hw.lcd.density" "$DISPLAY_DENSITY"
+  set_config_value "hw.cpu.ncore" "$CPU_CORES"
   set_config_value "disk.dataPartition.size" "$DISK_SIZE"
 fi
 

@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "compose-hot-reload": {
+      "command": "./gradlew",
+      "args": [
+        "--console=plain",
+        ":demo:hotMcpServerJvm"
+      ]
+    },
+    "composables-devtools": {
+      "command": "./gradlew",
+      "args": [
+        "--quiet",
+        "--console=plain",
+        ":demo:runDevToolsMcpServer"
+      ]
+    }
+  }
+}
