@@ -19,3 +19,15 @@ if (updatedVersionCatalog === versionCatalog) {
 }
 
 fs.writeFileSync(versionCatalogPath, updatedVersionCatalog);
+
+const packageLockPath = 'package-lock.json';
+const packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'));
+
+if (typeof packageLock.packages?.[''] !== 'object') {
+  throw new Error(`Could not find the root package in ${packageLockPath}`);
+}
+
+packageLock.version = version;
+packageLock.packages[''].version = version;
+
+fs.writeFileSync(packageLockPath, `${JSON.stringify(packageLock, null, 2)}\n`);

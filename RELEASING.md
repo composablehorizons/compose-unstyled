@@ -24,8 +24,8 @@ That PR runs:
 npm run changeset:version
 ```
 
-This consumes the pending `.changeset/*.md` files, bumps `package.json`, and syncs
-`gradle/libs.versions.toml`.
+This consumes the pending `.changeset/*.md` files, writes their descriptions to `CHANGELOG.md`,
+bumps `package.json`, and synchronizes `package-lock.json` and `gradle/libs.versions.toml`.
 
 ## Publishing
 
@@ -33,5 +33,6 @@ After the version PR is merged, the `Version Packages` workflow sees that no pen
 remain. It creates the current version tag, pushes it, and dispatches `.github/workflows/release.yml`
 with that tag.
 
-The `Release` workflow runs the release checks, publishes artifacts to Maven Central, and creates a
-draft GitHub Release with GitHub-generated release notes.
+The `Release` workflow verifies that the tag and release metadata agree, runs the release checks,
+publishes artifacts to Maven Central, and creates a draft GitHub Release from the matching
+`CHANGELOG.md` section.

@@ -19,7 +19,55 @@ env:
   RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
 jobs:
+  validate-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ env.RELEASE_REF }}
+          fetch-depth: 0
+
+      - name: Validate release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$RELEASE_REF" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release ref must be a plain semantic version, got: $RELEASE_REF"
+            exit 1
+          fi
+
+          if ! git show-ref --verify --quiet "refs/tags/$RELEASE_REF"; then
+            echo "Release ref is not a tag: $RELEASE_REF"
+            exit 1
+          fi
+
+          package_version="$(jq -r '.version' package.json)"
+          lock_version="$(jq -r '.version' package-lock.json)"
+          lock_root_version="$(jq -r '.packages[""].version' package-lock.json)"
+          gradle_version="$(awk -F'"' '/^unstyled = / { print $2; exit }' gradle/libs.versions.toml)"
+
+          declare -A versions=(
+            [package.json]="$package_version"
+            [package-lock.json]="$lock_version"
+            [package-lock-root]="$lock_root_version"
+            [gradle-version-catalog]="$gradle_version"
+          )
+
+          for source in "${!versions[@]}"; do
+            if [ "${versions[$source]}" != "$RELEASE_REF" ]; then
+              echo "$source has version ${versions[$source]}, expected $RELEASE_REF."
+              exit 1
+            fi
+          done
+
+          if ! grep -Fqx "## $RELEASE_REF" CHANGELOG.md; then
+            echo "CHANGELOG.md has no release section for $RELEASE_REF."
+            exit 1
+          fi
+
   spotless-check:
+    needs: validate-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -38,6 +86,7 @@ jobs:
         run: ./gradlew --console=plain spotlessCheck
 
   desktop-tests:
+    needs: validate-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -56,6 +105,7 @@ jobs:
         run: ./gradlew --console=plain jvmTest :demo:jvmTest
 
   screenshot-tests:
+    needs: validate-release
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
@@ -74,6 +124,7 @@ jobs:
         run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
 
   discover-android-modules:
+    needs: validate-release
     runs-on: ubuntu-latest
     outputs:
       modules: ${{ steps.discover.outputs.modules }}
@@ -124,6 +175,7 @@ jobs:
       test-command: ./gradlew --console=plain :composeunstyled-${{ matrix.module }}:connectedDebugAndroidTest
 
   demo-apk:
+    needs: validate-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -265,11 +317,12 @@ jobs:
           fail_on_unmatched_files: true
 
   report-failure:
-    needs: [ spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, demo-apk, publish, github-release ]
+    needs: [ validate-release, spotless-check, desktop-tests, screenshot-tests, discover-android-modules, android-tests, demo-apk, publish, github-release ]
     if: >-
       ${{
         always() &&
         (
+          contains(fromJson('["failure","cancelled"]'), needs.validate-release.result) ||
           contains(fromJson('["failure","cancelled"]'), needs.spotless-check.result) ||
           contains(fromJson('["failure","cancelled"]'), needs.desktop-tests.result) ||
           contains(fromJson('["failure","cancelled"]'), needs.screenshot-tests.result) ||
@@ -293,6 +346,7 @@ jobs:
             const labels = ['release-failure'];
             const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const results = {
+              'validate-release': '${{ needs.validate-release.result }}',
               'spotless-check': '${{ needs.spotless-check.result }}',
               'desktop-tests': '${{ needs.desktop-tests.result }}',
               'screenshot-tests': '${{ needs.screenshot-tests.result }}',
