@@ -2,7 +2,7 @@
 unstyled = "2.9.0"
 
 kotlin = "2.4.0"
-compose = "1.11.1"
+compose = "1.12.0"
 compose-material3 = "1.11.0-alpha01"
 composeUriPainter = "1.1.0"
 

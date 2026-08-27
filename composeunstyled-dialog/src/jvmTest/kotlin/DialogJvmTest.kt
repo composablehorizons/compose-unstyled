@@ -34,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
@@ -73,8 +73,10 @@ class DialogJvmTest {
     waitForIdle()
     mainClock.autoAdvance = false
     try {
-      visible = true
-      mainClock.advanceTimeByFrame()
+      runOnIdle { visible = true }
+      mainClock.advanceTimeUntil {
+        onAllNodes(hasTestTag("dialog_content")).fetchSemanticsNodes().isNotEmpty()
+      }
       waitUntilExactlyOneExists(hasTestTag("dialog_content"))
 
       val enteringTop = onNodeWithTag("dialog_content").fetchSemanticsNode().boundsInRoot.top
