@@ -15,9 +15,9 @@ ripple = "1.1.0"
 window = "1.4.0"
 
 # Android
-android-compileSDK = "36"
+android-compileSDK = "37"
 android-minSDK = "23"
-agp = "8.13.2"
+agp = "9.1.1"
 
 # testing
 assertk = "0.28.1"
