@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,15 +54,7 @@ internal actual fun PlatformModal(
     content = {
       CompositionLocalProvider(LocalModalState provides state) {
         Box(Modifier.fillMaxSize().onKeyEvent(onKeyEvent)) {
-          DisposableEffect(state) {
-            state.attachedToWindow = true
-            onDispose {
-              state.attachedToWindow = false
-            }
-          }
-          if (state.attachedToWindow) {
-            ModalScopeInstance.content()
-          }
+          ModalScopeContent(state = state, content = content)
         }
       }
     },
