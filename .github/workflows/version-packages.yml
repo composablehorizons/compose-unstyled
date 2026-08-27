@@ -11,6 +11,10 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: version-packages
+  cancel-in-progress: true
+
 jobs:
   version:
     runs-on: ubuntu-latest
