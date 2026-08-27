@@ -233,12 +233,33 @@ jobs:
           name: compose-unstyled-demo-apk
           path: release-artifacts
 
+      - name: Extract release notes
+        id: release-notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_notes_path="$RUNNER_TEMP/release-notes.md"
+          awk -v heading="## $RELEASE_REF" '
+            $0 == heading { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+            END { if (!found) exit 1 }
+          ' CHANGELOG.md > "$release_notes_path"
+
+          if grep -q '[^[:space:]]' "$release_notes_path"; then
+            echo "path=$release_notes_path" >> "$GITHUB_OUTPUT"
+          else
+            echo "CHANGELOG.md notes for $RELEASE_REF are empty."
+            exit 1
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_REF }}
           name: ${{ env.RELEASE_REF }}
-          generate_release_notes: true
+          body_path: ${{ steps.release-notes.outputs.path }}
           draft: true
           files: release-artifacts/*.apk
           fail_on_unmatched_files: true
