@@ -91,15 +91,7 @@ internal actual fun PlatformModal(
               LocalModalWindow provides localWindow,
               LocalLayoutDirection provides layoutDirection,
             ) {
-              DisposableEffect(state) {
-                state.attachedToWindow = true
-                onDispose {
-                  state.attachedToWindow = false
-                }
-              }
-              if (state.attachedToWindow) {
-                ModalScopeInstance.content()
-              }
+              ModalScopeContent(state = state, content = content)
             }
           }
         }

@@ -40,6 +40,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
 import kotlinx.coroutines.flow.first
@@ -149,16 +150,24 @@ internal fun ModalContent(
       .semantics { dialog() },
   ) {
     CompositionLocalProvider(LocalModalState provides state) {
-      DisposableEffect(state) {
-        state.attachedToWindow = true
-        onDispose {
-          state.attachedToWindow = false
-        }
-      }
-      if (state.attachedToWindow) {
-        ModalScopeInstance.content()
-      }
+      ModalScopeContent(state = state, content = content)
     }
+  }
+}
+
+@Composable
+internal fun ModalScopeContent(
+  state: ModalState,
+  content: @Composable ModalScope.() -> Unit,
+) {
+  DisposableEffect(state) {
+    state.attachedToWindow = true
+    onDispose {
+      state.attachedToWindow = false
+    }
+  }
+  if (state.attachedToWindow || LocalInspectionMode.current) {
+    ModalScopeInstance.content()
   }
 }
 

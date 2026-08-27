@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
@@ -89,6 +90,29 @@ class ModalTest {
     }
 
     onNodeWithTag("modal_host").assertExists()
+    onNodeWithTag("modal_content").assertExists()
+  }
+
+  @Test
+  fun inspection_mode_renders_content_without_window_attachment() = runComposeUiTest {
+    lateinit var state: ModalState
+
+    setContent {
+      state = rememberModalState(initiallyVisible = true)
+      CompositionLocalProvider(LocalInspectionMode provides true) {
+        ModalHost {
+          Modal(state = state) {
+            Box(Modifier.testTag("modal_content"))
+          }
+        }
+      }
+    }
+
+    waitForIdle()
+    runOnIdle {
+      state.attachedToWindow = false
+    }
+
     onNodeWithTag("modal_content").assertExists()
   }
 
