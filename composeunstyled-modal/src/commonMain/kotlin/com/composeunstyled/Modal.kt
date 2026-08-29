@@ -49,12 +49,33 @@ import kotlinx.coroutines.flow.first
 class ModalState(initiallyVisible: Boolean = false) {
   val transitionState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
+  val hasMountedFragments: Boolean
+    get() = mountedFragments > 0
   internal var attachedToWindow by mutableStateOf(false)
+  val isAttachedToWindow: Boolean
+    get() = attachedToWindow
+  internal var predictiveBackHandler: ModalPredictiveBackHandler? by mutableStateOf(null)
+
+  fun setPredictiveBackHandler(handler: ModalPredictiveBackHandler?) {
+    predictiveBackHandler = handler
+  }
 
   suspend fun awaitAttachedToWindow() {
     snapshotFlow { attachedToWindow }.first { it }
     withFrameNanos { }
   }
+}
+
+/** Internal bridge so primitives hosted by Modal can participate in Android predictive Back. */
+interface ModalPredictiveBackHandler {
+  /** Returns false when the modal should delegate Back to the next handler. */
+  fun onBackStarted(): Boolean
+
+  fun onBackProgressed(progress: Float)
+
+  fun onBackCancelled()
+
+  fun onBackInvoked()
 }
 
 private val ModalStateSaver = run {
