@@ -43,6 +43,8 @@ jobs:
                 <(printf '%s\n' "$test_modules" | sort -u) \
                 <(printf '%s\n' "$android_changed_modules" | sort -u)
             )"
+          else
+            android_modules="$test_modules"
           fi
 
           if [ -z "$android_modules" ]; then
