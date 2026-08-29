@@ -1,5 +1,11 @@
 # compose-unstyled
 
+## 2.9.2
+
+### Patch Changes
+
+- c6acc54: Fix the tab group demo screenshot baseline used by visual regression tests.
+
 ## 2.9.1
 
 ### Patch Changes

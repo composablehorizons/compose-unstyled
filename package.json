@@ -1,6 +1,6 @@
 {
   "name": "compose-unstyled",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "private": true,
   "scripts": {
     "changeset": "changeset",
