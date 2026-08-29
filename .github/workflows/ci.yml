@@ -23,8 +23,8 @@ jobs:
           set -euo pipefail
 
           test_modules="$(
-            find . \( -path './*/src/commonTest' -o -path './*/src/jvmTest' -o -path './*/src/desktopTest' -o -path './*/src/androidInstrumentedTest' \) -type d |
-              awk -F/ '{ print ":" $2 }' |
+            ./gradlew --console=plain tasks --all |
+              awk -F: '/^composeunstyled-[^:]+:connectedDebugAndroidTest / { print ":" $1 }' |
               sort -u
           )"
 
