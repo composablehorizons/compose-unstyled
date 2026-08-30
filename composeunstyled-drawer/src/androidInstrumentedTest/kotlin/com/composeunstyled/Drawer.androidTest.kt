@@ -560,10 +560,10 @@ class DrawerAndroidTest {
     }
     waitForIdle()
 
-    onNodeWithTag("panel").performTouchInput {
+    onNodeWithTag("viewport").performTouchInput {
       swipe(
         start = Offset(centerX, 40f),
-        end = Offset(centerX, 99f),
+        end = Offset(centerX, bottomRight.y - 1f),
         durationMillis = 500,
       )
     }
@@ -609,11 +609,11 @@ class DrawerAndroidTest {
     }
     waitForIdle()
 
-    onNodeWithTag("panel").performTouchInput {
+    onNodeWithTag("viewport").performTouchInput {
       swipeWithVelocity(
         start = Offset(centerX, 40f),
-        end = Offset(centerX, 64f),
-        endVelocity = 300f,
+        end = Offset(centerX, 140f),
+        endVelocity = 1_000f,
       )
     }
     waitUntil { state.currentValue == AndroidDrawerValue.Closed && state.isIdle }
@@ -634,7 +634,7 @@ class DrawerAndroidTest {
     }
     waitForIdle()
 
-    onNodeWithTag("panel").performTouchInput {
+    onNodeWithTag("viewport").performTouchInput {
       swipe(
         start = Offset(centerX, 40f),
         end = Offset(centerX, 99f),
