@@ -47,6 +47,7 @@ import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
 import com.composeunstyled.Overlay
 import com.composeunstyled.Panel
+import com.composeunstyled.SwipeArea
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
@@ -128,6 +129,11 @@ fun DrawerDemo() {
           }
         }
       }
+      SwipeArea(
+        modifier = Modifier
+          .width(24.dp)
+          .fillMaxHeight(),
+      )
     }
   }
 }
