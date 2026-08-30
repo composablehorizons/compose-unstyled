@@ -68,6 +68,9 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledTextField
+import com.composeunstyled.SwipeArea
+import com.composeunstyled.SystemUi
+import com.composeunstyled.SystemUiAppearance
 import com.composeunstyled.Viewport
 
 private enum class DrawerFormDemoValue {
@@ -123,27 +126,32 @@ fun DrawerFormDemo() {
           exit = fadeOut(),
         )
       },
+      systemUi = SystemUi(
+        statusBar = SystemUiAppearance.Light,
+        navigationBar = SystemUiAppearance.Dark,
+      ),
     ) {
-      Viewport(
-        modifier = Modifier.fillMaxSize(),
-        panelAlignment = DrawerPanelAlignment.Center,
-        windowInsets = WindowInsets.ime,
-      ) {
-        Panel(
-          modifier = Modifier
-            .widthIn(max = 640.dp)
-            .fillMaxWidth()
-            .background(Color.White)
-            .border(1.dp, Color.Black),
+      Box(Modifier.fillMaxSize()) {
+        Viewport(
+          modifier = Modifier.fillMaxSize(),
+          panelAlignment = DrawerPanelAlignment.Center,
+          windowInsets = WindowInsets.ime,
         ) {
-          Box {
-            Column(
-              modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(start = 24.dp, top = 60.dp, end = 24.dp, bottom = 24.dp),
-              verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
+          Panel(
+            modifier = Modifier
+              .widthIn(max = 640.dp)
+              .fillMaxWidth()
+              .background(Color.White)
+              .border(1.dp, Color.Black),
+          ) {
+            Box {
+              Column(
+                modifier = Modifier
+                  .verticalScroll(rememberScrollState())
+                  .windowInsetsPadding(WindowInsets.navigationBars)
+                  .padding(start = 24.dp, top = 60.dp, end = 24.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+              ) {
               BasicText(
                 "Contact form",
                 style = TextStyle(
@@ -235,22 +243,29 @@ fun DrawerFormDemo() {
                   BasicText("Submit", style = TextStyle(color = Color.White))
                 }
               }
-            }
+              }
 
-            Box(
-              modifier = Modifier
-                .align(Alignment.TopCenter)
-                .zIndex(1f)
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-              contentAlignment = Alignment.TopCenter,
-            ) {
-              DragHandle {
-                Box(Modifier.width(48.dp).height(4.dp).background(Color.Black))
+              Box(
+                modifier = Modifier
+                  .align(Alignment.TopCenter)
+                  .zIndex(1f)
+                  .fillMaxWidth()
+                  .padding(top = 24.dp),
+                contentAlignment = Alignment.TopCenter,
+              ) {
+                DragHandle {
+                  Box(Modifier.width(48.dp).height(4.dp).background(Color.Black))
+                }
               }
             }
           }
         }
+        SwipeArea(
+          modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .height(24.dp),
+        )
       }
     }
   }
