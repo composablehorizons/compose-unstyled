@@ -19,26 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composeunstyled.visualregressions
+package com.composeunstyled
 
-fun main(args: Array<String>) {
-  val requestedNames = args.toSet()
-  val screenshotNames = VisualRegressionScreenshots.map { screenshot -> screenshot.name } +
-    DrawerMovingOverscrollScreenshotName +
-    DrawerDrawingOverscrollScreenshotName
-  val unknownNames = requestedNames - screenshotNames.toSet()
-  check(unknownNames.isEmpty()) {
-    "Unknown visual regression screenshot names: ${unknownNames.joinToString()}"
-  }
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
-  VisualRegressionScreenshots
-    .filter { screenshot -> requestedNames.isEmpty() || screenshot.name in requestedNames }
-    .forEach(::updateVisualRegressionScreenshot)
+@Composable
+internal expect fun ApplyAndroidSystemUi(
+  systemUi: SystemUi,
+  enabled: Boolean,
+)
 
-  if (requestedNames.isEmpty() || DrawerMovingOverscrollScreenshotName in requestedNames) {
-    updateDrawerOverscrollRegressionScreenshot()
-  }
-  if (requestedNames.isEmpty() || DrawerDrawingOverscrollScreenshotName in requestedNames) {
-    updateDrawerDrawingOverscrollRegressionScreenshot()
-  }
-}
+internal expect fun Modifier.excludeDrawerEdgeFromSystemGesture(): Modifier

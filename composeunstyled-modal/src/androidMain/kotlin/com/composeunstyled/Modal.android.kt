@@ -29,7 +29,9 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.view.Window
 import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import androidx.activity.ComponentDialog
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -56,6 +58,7 @@ import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.composeunstyled.modal.R
 import java.util.UUID
+import android.view.KeyEvent as AndroidKeyEvent
 
 @Composable
 internal actual fun PlatformModal(
@@ -68,6 +71,7 @@ internal actual fun PlatformModal(
   val layoutDirection = LocalLayoutDirection.current
   val composition = rememberCompositionContext()
   val id = rememberSaveable { UUID.randomUUID() }
+  val hostBackDispatcher = (context.findActivity() as? ComponentActivity)?.onBackPressedDispatcher
 
   DisposableEffect(parentView) {
     val contentView: ComposeView
@@ -89,6 +93,7 @@ internal actual fun PlatformModal(
             CompositionLocalProvider(
               LocalModalState provides state,
               LocalModalWindow provides localWindow,
+              LocalModalWindowOrNull provides localWindow,
               LocalLayoutDirection provides layoutDirection,
             ) {
               ModalScopeContent(state = state, content = content)
@@ -127,9 +132,41 @@ internal actual fun PlatformModal(
       syncSystemUiAppearance(from = hostWindow, to = window)
     }
 
+    val backCallback = object : OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() {
+        val handled = onKeyEvent(
+          KeyEvent(
+            AndroidKeyEvent(
+              AndroidKeyEvent.ACTION_DOWN,
+              AndroidKeyEvent.KEYCODE_BACK,
+            ),
+          ),
+        )
+        if (handled.not()) {
+          isEnabled = false
+          hostBackDispatcher?.onBackPressed()
+          isEnabled = true
+        }
+      }
+    }
+    dialog.onBackPressedDispatcher.addCallback(backCallback)
     dialog.show()
 
+    val unregisterPredictiveBack = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      PredictiveBack.register(
+        dispatcher = dialog.onBackInvokedDispatcher,
+        state = state,
+        fallback = backCallback::handleOnBackPressed,
+      )
+    } else {
+      null
+    }
+
     onDispose {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        unregisterPredictiveBack?.invoke()
+      }
+      backCallback.remove()
       contentView.disposeComposition()
       dialog.dismiss()
     }
@@ -142,6 +179,8 @@ val LocalModalWindow = staticCompositionLocalOf<Window> {
   )
 }
 
+val LocalModalWindowOrNull = staticCompositionLocalOf<Window?> { null }
+
 private tailrec fun Context.findActivity(): Activity? = when (this) {
   is Activity -> this
   is ContextWrapper -> baseContext.findActivity()
@@ -153,4 +192,50 @@ private fun syncSystemUiAppearance(from: Window, to: Window) {
   val modalController = WindowCompat.getInsetsController(to, to.decorView)
   modalController.isAppearanceLightStatusBars = hostController.isAppearanceLightStatusBars
   modalController.isAppearanceLightNavigationBars = hostController.isAppearanceLightNavigationBars
+}
+
+@androidx.annotation.RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+private object PredictiveBack {
+  fun register(
+    dispatcher: android.window.OnBackInvokedDispatcher,
+    state: ModalState,
+    fallback: () -> Unit,
+  ): () -> Unit {
+    val callback = object : android.window.OnBackAnimationCallback {
+      private var isHandlingDrawerBack = false
+
+      override fun onBackStarted(backEvent: android.window.BackEvent) {
+        isHandlingDrawerBack = state.predictiveBackHandler?.onBackStarted() == true
+      }
+
+      override fun onBackProgressed(backEvent: android.window.BackEvent) {
+        if (isHandlingDrawerBack) {
+          state.predictiveBackHandler?.onBackProgressed(backEvent.progress)
+        }
+      }
+
+      override fun onBackCancelled() {
+        if (isHandlingDrawerBack) {
+          state.predictiveBackHandler?.onBackCancelled()
+        }
+        isHandlingDrawerBack = false
+      }
+
+      override fun onBackInvoked() {
+        if (isHandlingDrawerBack) {
+          state.predictiveBackHandler?.onBackInvoked()
+        } else {
+          fallback()
+        }
+        isHandlingDrawerBack = false
+      }
+    }
+    dispatcher.registerOnBackInvokedCallback(
+      android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY,
+      callback,
+    )
+    return {
+      dispatcher.unregisterOnBackInvokedCallback(callback)
+    }
+  }
 }
