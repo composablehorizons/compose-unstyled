@@ -95,16 +95,14 @@ import androidx.compose.ui.test.runComposeUiTest as runComposeUiTestV1
 class DrawerTest {
 
   @Test
-  fun systemUiStoresRequestedIconAppearance() {
-    val systemUi = SystemUi()
-
-    systemUi.setAppearance(
-      statusBar = SystemBarIconAppearance.Light,
-      navigationBar = SystemBarIconAppearance.Dark,
+  fun systemUiAppearanceStoresRequestedIconAppearance() {
+    val systemUi = SystemUi(
+      statusBar = SystemUiAppearance.Light,
+      navigationBar = SystemUiAppearance.Dark,
     )
 
-    assertThat(systemUi.statusBarIconAppearance).isEqualTo(SystemBarIconAppearance.Light)
-    assertThat(systemUi.navigationBarIconAppearance).isEqualTo(SystemBarIconAppearance.Dark)
+    assertThat(systemUi.statusBar).isEqualTo(SystemUiAppearance.Light)
+    assertThat(systemUi.navigationBar).isEqualTo(SystemUiAppearance.Dark)
   }
 
   @Test
@@ -941,16 +939,17 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        swipeArea = true,
         onState = { state = it },
       )
     }
 
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       swipe(
         start = Offset(1f, centerY),
-        end = Offset(width - 1f, centerY),
+        end = Offset(80f, centerY),
         durationMillis = 500,
       )
     }
@@ -968,13 +967,14 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        swipeArea = true,
         onState = { state = it },
       )
     }
 
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       down(Offset(1f, centerY))
       moveTo(Offset(50f, centerY), delayMillis = 16)
     }
@@ -982,7 +982,7 @@ class DrawerTest {
 
     assertThat(state.offset).isGreaterThan(40f)
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       cancel()
     }
   }
@@ -994,12 +994,13 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        swipeArea = true,
         onState = { state = it },
       )
     }
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       down(Offset(1f, centerY))
       moveTo(Offset(50f, centerY), delayMillis = 16)
     }
@@ -1010,9 +1011,59 @@ class DrawerTest {
       .config
     assertThat(panelSemantics.contains(SemanticsProperties.HideFromAccessibility)).isEqualTo(false)
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       cancel()
     }
+  }
+
+  @Test
+  fun drawerDoesNotOpenFromTheEdgeWithoutSwipeArea() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+
+    setContent {
+      StartDrawerLayout(
+        initialValue = DrawerValue.Closed,
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+    onNodeWithTag(ViewportTag).performTouchInput {
+      swipe(
+        start = Offset(1f, centerY),
+        end = Offset(width - 1f, centerY),
+        durationMillis = 500,
+      )
+    }
+    waitForIdle()
+
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Closed)
+  }
+
+  @Test
+  fun swipeAreaDoesNotOpenDrawerWhenGesturesAreDisabled() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+
+    setContent {
+      StartDrawerLayout(
+        initialValue = DrawerValue.Closed,
+        gesturesEnabled = false,
+        swipeArea = true,
+        onState = { state = it },
+      )
+    }
+
+    waitForIdle()
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
+      swipe(
+        start = Offset(1f, centerY),
+        end = Offset(80f, centerY),
+        durationMillis = 500,
+      )
+    }
+    waitForIdle()
+
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Closed)
   }
 
   @Test
@@ -1022,12 +1073,13 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        swipeArea = true,
         onState = { state = it },
       )
     }
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       down(Offset(1f, centerY))
       moveTo(Offset(29f, centerY), delayMillis = 10)
       moveTo(Offset(30f, centerY), delayMillis = 1)
@@ -1096,16 +1148,17 @@ class DrawerTest {
         StartDrawerLayout(
           initialValue = DrawerValue.Closed,
           placement = DrawerPlacement.End,
+          swipeArea = true,
           onState = { state = it },
         )
       }
     }
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       swipe(
         start = Offset(1f, centerY),
-        end = Offset(width - 1f, centerY),
+        end = Offset(80f, centerY),
         durationMillis = 500,
       )
     }
@@ -1121,6 +1174,7 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        swipeArea = true,
         confirmValueChange = { change ->
           change.targetValue != DrawerValue.Open
         },
@@ -1130,10 +1184,10 @@ class DrawerTest {
 
     waitForIdle()
 
-    onNodeWithTag(ViewportTag).performTouchInput {
+    onNodeWithTag(SwipeAreaTag).performTouchInput {
       swipe(
         start = Offset(1f, centerY),
-        end = Offset(width - 1f, centerY),
+        end = Offset(80f, centerY),
         durationMillis = 500,
       )
     }
@@ -1405,7 +1459,7 @@ class DrawerTest {
           )
         }
         UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
-          Viewport(Modifier.requiredSize(100.dp)) {}
+          Viewport<DrawerValue>(Modifier.requiredSize(100.dp)) {}
         }
       }
       waitForIdle()
@@ -2835,6 +2889,8 @@ private fun StartDrawerLayout(
   initialValue: DrawerValue,
   placement: DrawerPlacement = DrawerPlacement.Start,
   presentation: DrawerPresentation = DrawerPresentation.Inline,
+  gesturesEnabled: Boolean = true,
+  swipeArea: Boolean = false,
   overlay: (@Composable DrawerOverlayScope<DrawerValue>.() -> Unit)? = null,
   overscrollEffect: OverscrollEffect? = null,
   confirmValueChange: (DrawerValueChange<DrawerValue>) -> Boolean = { true },
@@ -2856,6 +2912,7 @@ private fun StartDrawerLayout(
     state = state,
     placement = placement,
     presentation = presentation,
+    gesturesEnabled = gesturesEnabled,
     overlay = overlay,
   ) {
     Viewport(
@@ -2873,6 +2930,13 @@ private fun StartDrawerLayout(
       ) {
         Box(Modifier.requiredSize(1.dp))
       }
+    }
+    if (swipeArea) {
+      SwipeArea(
+        modifier = Modifier
+          .requiredSize(width = 24.dp, height = 100.dp)
+          .testTag(SwipeAreaTag),
+      )
     }
   }
 }
@@ -2927,6 +2991,7 @@ private enum class DrawerValue {
 
 private const val ViewportTag = "viewport"
 private const val PanelTag = "panel"
+private const val SwipeAreaTag = "swipe-area"
 private const val OverlayTag = "overlay"
 private const val DragHandleTag = "drag-handle"
 private const val BackgroundTag = "background"

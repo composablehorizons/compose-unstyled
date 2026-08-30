@@ -44,12 +44,12 @@ internal actual fun ApplyAndroidSystemUi(
   ApplyStatusBarIconAppearance(
     window = window,
     view = view,
-    appearance = systemUi.statusBarIconAppearance,
+    appearance = systemUi.statusBar,
   )
   ApplyNavigationBarIconAppearance(
     window = window,
     view = view,
-    appearance = systemUi.navigationBarIconAppearance,
+    appearance = systemUi.navigationBar,
   )
 }
 
@@ -67,14 +67,14 @@ internal actual fun Modifier.excludeDrawerEdgeFromSystemGesture(): Modifier {
 private fun ApplyStatusBarIconAppearance(
   window: android.view.Window,
   view: android.view.View,
-  appearance: SystemBarIconAppearance,
+  appearance: SystemUiAppearance,
 ) {
-  if (appearance == SystemBarIconAppearance.Unspecified) return
+  if (appearance == SystemUiAppearance.Unspecified) return
 
   DisposableEffect(window, appearance) {
     val controller = WindowCompat.getInsetsController(window, view)
     val previousAppearance = controller.isAppearanceLightStatusBars
-    controller.isAppearanceLightStatusBars = appearance == SystemBarIconAppearance.Dark
+    controller.isAppearanceLightStatusBars = appearance == SystemUiAppearance.Dark
     onDispose {
       controller.isAppearanceLightStatusBars = previousAppearance
     }
@@ -85,14 +85,14 @@ private fun ApplyStatusBarIconAppearance(
 private fun ApplyNavigationBarIconAppearance(
   window: android.view.Window,
   view: android.view.View,
-  appearance: SystemBarIconAppearance,
+  appearance: SystemUiAppearance,
 ) {
-  if (appearance == SystemBarIconAppearance.Unspecified) return
+  if (appearance == SystemUiAppearance.Unspecified) return
 
   DisposableEffect(window, appearance) {
     val controller = WindowCompat.getInsetsController(window, view)
     val previousAppearance = controller.isAppearanceLightNavigationBars
-    controller.isAppearanceLightNavigationBars = appearance == SystemBarIconAppearance.Dark
+    controller.isAppearanceLightNavigationBars = appearance == SystemUiAppearance.Dark
     onDispose {
       controller.isAppearanceLightNavigationBars = previousAppearance
     }

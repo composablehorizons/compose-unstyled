@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -77,7 +78,6 @@ import assertk.assertions.isNotEqualTo
 import kotlin.test.Test
 
 class DrawerAndroidTest {
-
   @Test
   @SdkSuppress(minSdkVersion = Build.VERSION_CODES.Q)
   fun closedStartDrawerExcludesItsEdgeHandleFromSystemBack() = runComposeUiTest {
@@ -103,6 +103,7 @@ class DrawerAndroidTest {
         state = state,
         placement = DrawerPlacement.Start,
       ) {
+        SwipeArea(Modifier.requiredSize(width = 24.dp, height = 100.dp))
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.width(60.dp).fillMaxHeight()) {
             Box(Modifier.requiredSize(1.dp))
@@ -271,8 +272,10 @@ class DrawerAndroidTest {
     lateinit var hostWindow: Window
     lateinit var modalWindow: Window
     var hasModalWindow = false
-    val statusBarAppearance = mutableStateOf(SystemBarIconAppearance.Unspecified)
-    val navigationBarAppearance = mutableStateOf(SystemBarIconAppearance.Unspecified)
+    val requestedStatusBarAppearance = SystemUiAppearance.Dark
+    val requestedNavigationBarAppearance = SystemUiAppearance.Light
+    val statusBarAppearance = mutableStateOf(requestedStatusBarAppearance)
+    val navigationBarAppearance = mutableStateOf(requestedNavigationBarAppearance)
 
     setContent {
       val context = LocalContext.current
@@ -294,6 +297,10 @@ class DrawerAndroidTest {
         state = drawerState,
         placement = DrawerPlacement.Bottom,
         presentation = DrawerPresentation.Modal,
+        systemUi = SystemUi(
+          statusBar = statusBarAppearance.value,
+          navigationBar = navigationBarAppearance.value,
+        ),
       ) {
         if (
           drawerState.currentValue != AndroidDrawerValue.Closed ||
@@ -304,12 +311,6 @@ class DrawerAndroidTest {
             modalWindow = activeModalWindow
             hasModalWindow = true
           }
-        }
-        LaunchedEffect(statusBarAppearance.value, navigationBarAppearance.value) {
-          androidSystemUi.setAppearance(
-            statusBar = statusBarAppearance.value,
-            navigationBar = navigationBarAppearance.value,
-          )
         }
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth()) {
@@ -324,33 +325,16 @@ class DrawerAndroidTest {
     val hostController = WindowCompat.getInsetsController(hostWindow, hostWindow.decorView)
     val initialStatusBarAppearance = hostController.isAppearanceLightStatusBars
     val initialNavigationBarAppearance = hostController.isAppearanceLightNavigationBars
-    val supportsNavigationBarIconAppearance = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-    statusBarAppearance.value = if (initialStatusBarAppearance) {
-      SystemBarIconAppearance.Light
-    } else {
-      SystemBarIconAppearance.Dark
-    }
-    navigationBarAppearance.value = if (supportsNavigationBarIconAppearance) {
-      if (initialNavigationBarAppearance) {
-        SystemBarIconAppearance.Light
-      } else {
-        SystemBarIconAppearance.Dark
-      }
-    } else {
-      SystemBarIconAppearance.Unspecified
-    }
 
     state.jumpTo(AndroidDrawerValue.Open)
     waitUntil {
+      val modalController = WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
       state.currentValue == AndroidDrawerValue.Open &&
         hasModalWindow &&
-        WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
-          .isAppearanceLightStatusBars != initialStatusBarAppearance &&
-        (
-          supportsNavigationBarIconAppearance.not() ||
-            WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
-              .isAppearanceLightNavigationBars != initialNavigationBarAppearance
-          )
+        modalController.isAppearanceLightStatusBars ==
+        (requestedStatusBarAppearance == SystemUiAppearance.Dark) &&
+        modalController.isAppearanceLightNavigationBars ==
+        (requestedNavigationBarAppearance == SystemUiAppearance.Dark)
     }
 
     assertThat(hostController.isAppearanceLightStatusBars).isEqualTo(initialStatusBarAppearance)
@@ -362,11 +346,8 @@ class DrawerAndroidTest {
       state.currentValue == AndroidDrawerValue.Closed &&
         WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
           .isAppearanceLightStatusBars == initialStatusBarAppearance &&
-        (
-          supportsNavigationBarIconAppearance.not() ||
-            WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
-              .isAppearanceLightNavigationBars == initialNavigationBarAppearance
-          )
+        WindowCompat.getInsetsController(modalWindow, modalWindow.decorView)
+          .isAppearanceLightNavigationBars == initialNavigationBarAppearance
     }
   }
 
@@ -699,12 +680,12 @@ class DrawerAndroidTest {
       }
       waitForIdle()
 
-      onNodeWithTag("directional-viewport").performTouchInput {
+      onNodeWithTag("swipe-area").performTouchInput {
         val (start, end) = when (placement) {
-          DrawerPlacement.Start -> Offset(0f, centerY) to Offset(centerX, centerY)
-          DrawerPlacement.End -> Offset(bottomRight.x, centerY) to Offset(centerX, centerY)
-          DrawerPlacement.Top -> Offset(centerX, 0f) to Offset(centerX, centerY)
-          DrawerPlacement.Bottom -> Offset(centerX, bottomRight.y) to Offset(centerX, centerY)
+          DrawerPlacement.Start -> Offset(0f, centerY) to Offset(100f, centerY)
+          DrawerPlacement.End -> Offset(bottomRight.x, centerY) to Offset(-100f, centerY)
+          DrawerPlacement.Top -> Offset(centerX, 0f) to Offset(centerX, 100f)
+          DrawerPlacement.Bottom -> Offset(centerX, bottomRight.y) to Offset(centerX, -100f)
           else -> error("Unsupported drawer placement: $placement")
         }
         swipe(start = start, end = end, durationMillis = 500)
@@ -846,21 +827,43 @@ private fun DirectionalDrawerLayout(
     placement = placement,
     dismissOnClickOutside = dismissOnClickOutside,
   ) {
-    Viewport(
-      Modifier
-        .requiredSize(200.dp)
-        .testTag("directional-viewport"),
-    ) {
-      val panelModifier = if (
-        placement == DrawerPlacement.Start || placement == DrawerPlacement.End
+    Box(Modifier.requiredSize(200.dp)) {
+      val swipeAreaModifier = when (placement) {
+        DrawerPlacement.Start ->
+          Modifier
+            .align(Alignment.CenterStart)
+            .requiredSize(width = 24.dp, height = 200.dp)
+        DrawerPlacement.End ->
+          Modifier
+            .align(Alignment.CenterEnd)
+            .requiredSize(width = 24.dp, height = 200.dp)
+        DrawerPlacement.Top ->
+          Modifier
+            .align(Alignment.TopCenter)
+            .requiredSize(width = 200.dp, height = 24.dp)
+        DrawerPlacement.Bottom ->
+          Modifier
+            .align(Alignment.BottomCenter)
+            .requiredSize(width = 200.dp, height = 24.dp)
+        else -> error("Unsupported drawer placement: $placement")
+      }
+      Viewport(
+        Modifier
+          .requiredSize(200.dp)
+          .testTag("directional-viewport"),
       ) {
-        Modifier.width(100.dp).fillMaxHeight()
-      } else {
-        Modifier.fillMaxWidth().height(100.dp)
+        val panelModifier = if (
+          placement == DrawerPlacement.Start || placement == DrawerPlacement.End
+        ) {
+          Modifier.width(100.dp).fillMaxHeight()
+        } else {
+          Modifier.fillMaxWidth().height(100.dp)
+        }
+        Panel(panelModifier.testTag("directional-panel")) {
+          Box(Modifier.requiredSize(1.dp))
+        }
       }
-      Panel(panelModifier.testTag("directional-panel")) {
-        Box(Modifier.requiredSize(1.dp))
-      }
+      SwipeArea(swipeAreaModifier.testTag("swipe-area"))
     }
   }
 }

@@ -334,7 +334,7 @@ class DrawerJvmTest {
   }
 
   @Test
-  fun closedEdgeSwipeDoesNotOpenTheDrawerWithAMouse() = runComposeUiTest {
+  fun closedEdgeSwipeOpensTheDrawerWithAMouse() = runComposeUiTest {
     lateinit var state: UnstyledDrawerState<DrawerJvmValue>
 
     setContent {
@@ -360,19 +360,24 @@ class DrawerJvmTest {
             Box(Modifier.requiredSize(1.dp))
           }
         }
+        SwipeArea(
+          Modifier
+            .requiredSize(width = 24.dp, height = 100.dp)
+            .testTag("swipe-area"),
+        )
       }
     }
     waitForIdle()
 
-    onNodeWithTag("viewport").performMouseInput {
+    onNodeWithTag("swipe-area").performMouseInput {
       updatePointerTo(Offset(1f, centerY))
       press()
-      moveTo(Offset(width - 1f, centerY))
+      moveTo(Offset(80f, centerY))
       release()
     }
-    waitForIdle()
+    waitUntil { state.currentValue == DrawerJvmValue.Open && state.isIdle }
 
-    assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Closed)
+    assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Open)
   }
 
   @Test

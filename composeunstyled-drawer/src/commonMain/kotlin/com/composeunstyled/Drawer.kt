@@ -48,9 +48,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
@@ -75,7 +72,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -86,14 +82,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.collapse
@@ -251,28 +245,17 @@ class DrawerValueChange<T : Any>(
   }
 }
 
-@Stable
-class SystemUi internal constructor() {
-  internal var statusBarIconAppearance by mutableStateOf(SystemBarIconAppearance.Unspecified)
-    private set
-  internal var navigationBarIconAppearance by mutableStateOf(SystemBarIconAppearance.Unspecified)
-    private set
-
-  fun setAppearance(
-    statusBar: SystemBarIconAppearance = SystemBarIconAppearance.Unspecified,
-    navigationBar: SystemBarIconAppearance = SystemBarIconAppearance.Unspecified,
-  ) {
-    statusBarIconAppearance = statusBar
-    navigationBarIconAppearance = navigationBar
-  }
-}
+data class SystemUi(
+  val statusBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
+  val navigationBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
+)
 
 @JvmInline
-value class SystemBarIconAppearance internal constructor(private val value: Int) {
+value class SystemUiAppearance internal constructor(private val value: Int) {
   companion object {
-    val Unspecified = SystemBarIconAppearance(0)
-    val Light = SystemBarIconAppearance(1)
-    val Dark = SystemBarIconAppearance(2)
+    val Unspecified = SystemUiAppearance(0)
+    val Light = SystemUiAppearance(1)
+    val Dark = SystemUiAppearance(2)
   }
 }
 
@@ -958,17 +941,15 @@ internal class PendingTarget<T : Any>(
   val animationSpec: AnimationSpec<Float>,
 )
 
-class DrawerScope<T : Any> internal constructor(
-  internal val drawerState: UnstyledDrawerState<T>,
+class DrawerScope internal constructor(
+  internal val drawerState: UnstyledDrawerState<*>,
   internal val placement: DrawerPlacement,
   internal val presentation: DrawerPresentation,
   internal val gesturesEnabled: Boolean,
   internal val dismissOnClickOutside: Boolean,
-  internal val overlay: (@Composable DrawerOverlayScope<T>.() -> Unit)?,
-  val androidSystemUi: SystemUi,
+  internal val overlay: (@Composable DrawerOverlayScope<*>.() -> Unit)?,
 ) {
   private var declaredViewportCount = 0
-  internal val edgeGestureContext = DrawerEdgeGestureContext()
 
   internal fun declareViewport() {
     declaredViewportCount += 1
@@ -983,11 +964,6 @@ class DrawerScope<T : Any> internal constructor(
       "UnstyledDrawer must contain exactly one Viewport; found $declaredViewportCount."
     }
   }
-}
-
-internal class DrawerEdgeGestureContext {
-  var sourceHostBounds: Rect? by mutableStateOf(null)
-  var sourceViewportBounds: Rect? by mutableStateOf(null)
 }
 
 class DrawerViewportScope<T : Any> internal constructor()
@@ -1027,7 +1003,8 @@ fun <T : Any> UnstyledDrawer(
   dismissOnClickOutside: Boolean = true,
   onDismissed: (change: DrawerValueChange<T>) -> Unit = {},
   overlay: (@Composable DrawerOverlayScope<T>.() -> Unit)? = null,
-  content: @Composable DrawerScope<T>.() -> Unit,
+  systemUi: SystemUi = SystemUi(),
+  content: @Composable DrawerScope.() -> Unit,
 ) {
   val animationScope = androidx.compose.runtime.rememberCoroutineScope()
   DisposableEffect(state, animationScope) {
@@ -1036,7 +1013,6 @@ fun <T : Any> UnstyledDrawer(
       state.attachAnimationScope(null)
     }
   }
-  val androidSystemUi = remember { SystemUi() }
   val zeroValue = state.zeroValue
   val visible = zeroValue == null ||
     state.hasVisiblePanel ||
@@ -1062,16 +1038,17 @@ fun <T : Any> UnstyledDrawer(
     gesturesEnabled,
     dismissOnClickOutside,
     overlay,
-    androidSystemUi,
+    systemUi,
   ) {
+    @Suppress("UNCHECKED_CAST")
+    val typedOverlay = overlay as? @Composable DrawerOverlayScope<*>.() -> Unit
     DrawerScope(
       drawerState = state,
       placement = placement,
       presentation = presentation,
       gesturesEnabled = gesturesEnabled,
       dismissOnClickOutside = dismissOnClickOutside,
-      overlay = overlay,
-      androidSystemUi = androidSystemUi,
+      overlay = typedOverlay,
     )
   }
 
@@ -1122,10 +1099,11 @@ fun <T : Any> UnstyledDrawer(
         }
       }
 
-      DrawerModalSourceHost(
+      DrawerModalSourceHost<T>(
         modifier = modifier,
         drawerScope = drawerScope,
         content = content,
+        systemUi = systemUi,
         showContent = visible.not() && modalState.hasMountedFragments.not(),
       )
       if (visible || modalState.hasMountedFragments) {
@@ -1136,16 +1114,18 @@ fun <T : Any> UnstyledDrawer(
             dismissOnNavigateBack = dismissOnNavigateBack,
           ),
         ) {
-          DrawerContent(
+          DrawerContent<T>(
             modifier = modifier,
             drawerScope = drawerScope,
             content = content,
+            systemUi = systemUi,
             isModal = true,
             dismissOnNavigateBack = dismissOnNavigateBack,
           )
         }
       }
     }
+
     DrawerPresentation.Inline -> {
       LaunchedEffect(state.pendingTargetKey) {
         val target = state.consumePendingTarget() ?: return@LaunchedEffect
@@ -1155,10 +1135,11 @@ fun <T : Any> UnstyledDrawer(
           state.snapPendingTarget(target)
         }
       }
-      DrawerContent(
+      DrawerContent<T>(
         modifier = modifier,
         drawerScope = drawerScope,
         content = content,
+        systemUi = systemUi,
         isModal = false,
         dismissOnNavigateBack = dismissOnNavigateBack,
       )
@@ -1169,8 +1150,9 @@ fun <T : Any> UnstyledDrawer(
 @Composable
 private fun <T : Any> DrawerModalSourceHost(
   modifier: Modifier,
-  drawerScope: DrawerScope<T>,
-  content: @Composable DrawerScope<T>.() -> Unit,
+  drawerScope: DrawerScope,
+  content: @Composable DrawerScope.() -> Unit,
+  systemUi: SystemUi,
   showContent: Boolean,
 ) {
   var sourceSize by remember { mutableStateOf(IntSize.Zero) }
@@ -1179,14 +1161,14 @@ private fun <T : Any> DrawerModalSourceHost(
   Box(
     modifier.onGloballyPositioned { coordinates ->
       sourceSize = coordinates.size
-      drawerScope.edgeGestureContext.sourceHostBounds = coordinates.boundsInWindow()
     },
   ) {
     if (showContent) {
-      DrawerContent(
+      DrawerContent<T>(
         modifier = Modifier,
         drawerScope = drawerScope,
         content = content,
+        systemUi = systemUi,
         isModal = false,
         dismissOnNavigateBack = false,
       )
@@ -1198,101 +1180,30 @@ private fun <T : Any> DrawerModalSourceHost(
         ),
       )
     }
-    DrawerModalEdgeGestureHandler(
-      modifier = Modifier.fillMaxSize(),
-      drawerScope = drawerScope,
-    )
-  }
-}
-
-@Composable
-private fun <T : Any> DrawerModalEdgeGestureHandler(
-  modifier: Modifier,
-  drawerScope: DrawerScope<T>,
-) {
-  val drawerState = drawerScope.drawerState
-  val layoutDirection = LocalLayoutDirection.current
-  val resolvedPlacement = drawerScope.placement.resolve(layoutDirection)
-  if (
-    drawerScope.gesturesEnabled &&
-    drawerState.hasZeroValue &&
-    drawerState.hasMultipleValues()
-  ) {
-    Box(
-      modifier = modifier,
-    ) {
-      val sourceHostBounds = drawerScope.edgeGestureContext.sourceHostBounds
-      val viewportBounds = drawerScope.edgeGestureContext.sourceViewportBounds
-      Layout(
-        modifier = Modifier.fillMaxSize(),
-        content = {
-          Box(
-            Modifier
-              .excludeDrawerEdgeFromSystemGesture()
-              .closedEdgeSwipe(
-                drawerState = drawerState,
-                resolvedPlacement = resolvedPlacement,
-              ),
-          )
-        },
-      ) { measurables, constraints ->
-        val hostBounds = sourceHostBounds
-        val viewport = viewportBounds
-        if (hostBounds == null || viewport == null) {
-          layout(constraints.minWidth, constraints.minHeight) {}
-        } else {
-          val viewportLeft = (viewport.left - hostBounds.left).roundToInt()
-          val viewportTop = (viewport.top - hostBounds.top).roundToInt()
-          val viewportWidth = viewport.width.roundToInt()
-          val viewportHeight = viewport.height.roundToInt()
-          val edgeSize = ClosedEdgeDragHandleSize.roundToPx()
-          val handleWidth = if (resolvedPlacement.isHorizontal) {
-            minOf(edgeSize, viewportWidth)
-          } else {
-            viewportWidth
-          }
-          val handleHeight = if (resolvedPlacement.isHorizontal) {
-            viewportHeight
-          } else {
-            minOf(edgeSize, viewportHeight)
-          }
-          val placeable = measurables.single().measure(
-            Constraints.fixed(handleWidth.coerceAtLeast(0), handleHeight.coerceAtLeast(0)),
-          )
-          layout(constraints.maxWidth, constraints.maxHeight) {
-            val x = when (resolvedPlacement) {
-              ResolvedDrawerPlacement.End -> viewportLeft + viewportWidth - handleWidth
-              else -> viewportLeft
-            }
-            val y = when (resolvedPlacement) {
-              ResolvedDrawerPlacement.Bottom -> viewportTop + viewportHeight - handleHeight
-              else -> viewportTop
-            }
-            placeable.place(x, y)
-          }
-        }
-      }
-    }
   }
 }
 
 @Composable
 private fun <T : Any> DrawerContent(
   modifier: Modifier,
-  drawerScope: DrawerScope<T>,
-  content: @Composable DrawerScope<T>.() -> Unit,
+  drawerScope: DrawerScope,
+  content: @Composable DrawerScope.() -> Unit,
+  systemUi: SystemUi,
   isModal: Boolean,
   dismissOnNavigateBack: Boolean,
 ) {
   ApplyAndroidSystemUi(
-    systemUi = drawerScope.androidSystemUi,
+    systemUi = systemUi,
     enabled = isModal,
   )
 
-  val zeroValue = drawerScope.drawerState.zeroValue
+  @Suppress("UNCHECKED_CAST")
+  val typedDrawerState = drawerScope.drawerState as UnstyledDrawerState<T>
+
+  val zeroValue = typedDrawerState.zeroValue
   if (dismissOnNavigateBack && zeroValue != null) {
     EscapeHandler {
-      drawerScope.drawerState.requestTarget(
+      typedDrawerState.requestTarget(
         value = zeroValue,
         reason = DrawerValueChange.Reason.NavigateBack,
       )
@@ -1328,12 +1239,36 @@ private fun <T : Any> drawerDismissKeyEvent(
 }
 
 @Composable
-fun <T : Any> DrawerScope<T>.Viewport(
+fun DrawerScope.SwipeArea(
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier
+      .then(
+        buildModifier {
+          if (gesturesEnabled) {
+            add(Modifier.excludeDrawerEdgeFromSystemGesture())
+          }
+        },
+      )
+      .closedEdgeSwipe(
+        drawerState = drawerState,
+        resolvedPlacement = placement.resolve(LocalLayoutDirection.current),
+        gesturesEnabled = gesturesEnabled,
+      ),
+  )
+}
+
+@Composable
+fun <T : Any> DrawerScope.Viewport(
   modifier: Modifier = Modifier,
   panelAlignment: DrawerPanelAlignment = DrawerPanelAlignment.Start,
   windowInsets: WindowInsets = WindowInsets(),
   content: @Composable DrawerViewportScope<T>.() -> Unit,
 ) {
+  @Suppress("UNCHECKED_CAST")
+  val typedDrawerState = drawerState as UnstyledDrawerState<T>
+  val typedOverlay = overlay as? @Composable DrawerOverlayScope<T>.() -> Unit
   DisposableEffect(this@Viewport) {
     declareViewport()
     onDispose {
@@ -1344,20 +1279,20 @@ fun <T : Any> DrawerScope<T>.Viewport(
   val interactionScope = androidx.compose.runtime.rememberCoroutineScope()
   val currentLayoutDirection = LocalLayoutDirection.current
   val context = remember(
-    drawerState,
+    typedDrawerState,
     placement,
     presentation,
     gesturesEnabled,
-    overlay,
+    typedOverlay,
     interactionSource,
   ) {
     DrawerContext(
-      state = drawerState,
+      state = typedDrawerState,
       placement = placement,
       presentation = presentation,
       gesturesEnabled = gesturesEnabled,
       dismissOnClickOutside = dismissOnClickOutside,
-      overlay = overlay,
+      overlay = typedOverlay,
       interactionSource = interactionSource,
     )
   }
@@ -1385,17 +1320,6 @@ fun <T : Any> DrawerScope<T>.Viewport(
 
   Layout(
     modifier = modifier
-      .then(
-        buildModifier {
-          if (presentation == DrawerPresentation.Modal && isInModalContent.not()) {
-            add(
-              Modifier.onGloballyPositioned { coordinates ->
-                edgeGestureContext.sourceViewportBounds = coordinates.boundsInWindow()
-              },
-            )
-          }
-        },
-      )
       .then(
         buildModifier {
           if (
@@ -1460,27 +1384,8 @@ fun <T : Any> DrawerScope<T>.Viewport(
               },
           )
         }
-        context.overlay?.invoke(DrawerOverlayScope(drawerState))
+        context.overlay?.invoke(DrawerOverlayScope(typedDrawerState))
         DrawerViewportScope<T>().content()
-
-        if (
-          presentation != DrawerPresentation.Modal &&
-          drawerState.hasZeroValue &&
-          drawerState.hasMultipleValues() &&
-          drawerState.isAtZeroValue &&
-          gesturesEnabled
-        ) {
-          Box(
-            Modifier
-              .drawerEdgeDragHandleParentData()
-              .excludeDrawerEdgeFromSystemGesture()
-              .closedEdgeSwipeSize(resolvedPlacementForModifier)
-              .closedEdgeSwipe(
-                drawerState = drawerState,
-                resolvedPlacement = resolvedPlacementForModifier,
-              ),
-          )
-        }
       }
     },
   ) { measurables, constraints ->
@@ -1613,25 +1518,7 @@ fun <T : Any> DrawerScope<T>.Viewport(
                 )
               }
             }
-            DrawerEdgeDragHandleParentData -> {
-              val x = if (resolvedPlacement.isHorizontal) {
-                if (resolvedPlacement.isMinEdge) {
-                  leftInset
-                } else {
-                  layoutWidth - rightInset - placeable.width
-                }
-              } else {
-                leftInset
-              }
-              val y = if (resolvedPlacement.isHorizontal) {
-                topInset
-              } else if (resolvedPlacement.isMinEdge) {
-                topInset
-              } else {
-                layoutHeight - bottomInset - placeable.height
-              }
-              placeable.place(x, y)
-            }
+
             else -> placeable.placeRelative(leftInset, topInset)
           }
         }
@@ -1868,8 +1755,6 @@ fun <T : Any> DrawerOverlayScope<T>.Overlay(
   }
 }
 
-private val ClosedEdgeDragHandleSize = 24.dp
-
 private class DrawerPanelBounds {
   var left = 0f
     private set
@@ -1926,12 +1811,14 @@ private fun <T : Any> Modifier.panelSwipe(
           dragInteraction = DragInteraction.Start().also(interactionSource::tryEmit)
         }
       }
+
       fun dispatchDragDelta(delta: Float) {
         fun dispatch(available: Offset): Offset {
           return drawerState.anchoredDraggableState
             .dispatchRawDelta(available.toFloat(resolvedPlacement.orientation))
             .toOffset(resolvedPlacement.orientation)
         }
+
         val effect = overscrollEffect()
         if (effect == null) {
           dispatch(delta.toOffset(resolvedPlacement.orientation))
@@ -1943,6 +1830,7 @@ private fun <T : Any> Modifier.panelSwipe(
           )
         }
       }
+
       fun finishDrag(completed: Boolean) {
         dragInteraction?.let { interaction ->
           val finishInteraction = if (completed) {
@@ -2033,15 +1921,19 @@ private fun Offset.isInside(panelBounds: DrawerPanelBounds): Boolean {
 private fun <T : Any> Modifier.closedEdgeSwipe(
   drawerState: UnstyledDrawerState<T>,
   resolvedPlacement: ResolvedDrawerPlacement,
+  gesturesEnabled: Boolean,
 ): Modifier {
-  return pointerInput(drawerState, resolvedPlacement) {
-    val edgeHandleSizePx = ClosedEdgeDragHandleSize.toPx()
+  return pointerInput(drawerState, resolvedPlacement, gesturesEnabled) {
     awaitEachGesture {
       val down = awaitFirstDown(requireUnconsumed = false)
-      if (down.type != PointerType.Touch) {
-        return@awaitEachGesture
-      }
-      if (down.position.isInsideClosedEdge(resolvedPlacement, edgeHandleSizePx, size).not()) {
+      val zeroValue = drawerState.zeroValue
+      if (
+        gesturesEnabled.not() ||
+        drawerState.hasZeroValue.not() ||
+        drawerState.hasMultipleValues().not() ||
+        drawerState.isAtZeroValue.not() ||
+        drawerState.targetValue != zeroValue
+      ) {
         return@awaitEachGesture
       }
 
@@ -2066,19 +1958,6 @@ private fun <T : Any> Modifier.closedEdgeSwipe(
   }
 }
 
-private fun Offset.isInsideClosedEdge(
-  resolvedPlacement: ResolvedDrawerPlacement,
-  edgeHandleSizePx: Float,
-  size: androidx.compose.ui.unit.IntSize,
-): Boolean {
-  return when (resolvedPlacement) {
-    ResolvedDrawerPlacement.Start -> x <= edgeHandleSizePx
-    ResolvedDrawerPlacement.End -> x >= size.width - edgeHandleSizePx
-    ResolvedDrawerPlacement.Top -> y <= edgeHandleSizePx
-    ResolvedDrawerPlacement.Bottom -> y >= size.height - edgeHandleSizePx
-  }
-}
-
 private class DrawerPanelParentData {
   var measuredWidth: Int = 0
     private set
@@ -2100,26 +1979,6 @@ private fun Modifier.drawerPanelParentData(drawerPanelParentData: DrawerPanelPar
       }
     },
   )
-}
-
-private object DrawerEdgeDragHandleParentData
-
-private fun Modifier.drawerEdgeDragHandleParentData(): Modifier {
-  return then(
-    object : ParentDataModifier {
-      override fun Density.modifyParentData(parentData: Any?): Any {
-        return DrawerEdgeDragHandleParentData
-      }
-    },
-  )
-}
-
-private fun Modifier.closedEdgeSwipeSize(resolvedPlacement: ResolvedDrawerPlacement): Modifier {
-  return if (resolvedPlacement.isHorizontal) {
-    fillMaxHeight().width(ClosedEdgeDragHandleSize)
-  } else {
-    fillMaxWidth().height(ClosedEdgeDragHandleSize)
-  }
 }
 
 private object DrawerModalBarrierParentData
@@ -2293,11 +2152,13 @@ private fun DrawerPlacement.resolve(layoutDirection: LayoutDirection): ResolvedD
     } else {
       ResolvedDrawerPlacement.End
     }
+
     DrawerPlacement.End -> if (layoutDirection == LayoutDirection.Ltr) {
       ResolvedDrawerPlacement.End
     } else {
       ResolvedDrawerPlacement.Start
     }
+
     else -> ResolvedDrawerPlacement.Bottom
   }
 }
