@@ -186,8 +186,8 @@ jobs:
       - name: Screenshot Tests
         run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
 
-  android-tests:
-    name: ${{ matrix.module }}-android-tests
+  android-tests-min-api:
+    name: ${{ matrix.module }}-android-tests-min-api
     needs: [ discover-android-modules, fast-checks ]
     if: needs.discover-android-modules.outputs.android_modules != '[]'
     strategy:
@@ -198,24 +198,42 @@ jobs:
       module: ${{ matrix.module }}
       test-command: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
 
+  android-tests-api29:
+    name: ${{ matrix.module }}-android-tests-api29
+    needs: [ discover-android-modules, fast-checks ]
+    if: needs.discover-android-modules.outputs.android_modules != '[]'
+    strategy:
+      matrix:
+        module: ${{ fromJson(needs.discover-android-modules.outputs.android_modules) }}
+    uses: ./.github/workflows/android-emulator-tests.yml
+    with:
+      module: ${{ matrix.module }}-api29
+      emulator-profile: android-emulator-api29.properties
+      test-command: >-
+        ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
+        -Pandroid.testInstrumentationRunnerArguments.annotation=androidx.test.filters.SdkSuppress
+
   release-gate:
     name: release-gate
     if: always() && startsWith(github.head_ref, 'changeset-release/')
-    needs: [ fast-checks, release-screenshot-tests, android-tests ]
+    needs: [ fast-checks, release-screenshot-tests, android-tests-min-api, android-tests-api29 ]
     runs-on: ubuntu-latest
     steps:
       - name: Verify release checks
         env:
           FAST_CHECKS_RESULT: ${{ needs.fast-checks.result }}
           SCREENSHOT_TESTS_RESULT: ${{ needs.release-screenshot-tests.result }}
-          ANDROID_TESTS_RESULT: ${{ needs.android-tests.result }}
+          ANDROID_TESTS_MIN_API_RESULT: ${{ needs.android-tests-min-api.result }}
+          ANDROID_TESTS_API29_RESULT: ${{ needs.android-tests-api29.result }}
         run: |
           set -euo pipefail
 
           printf 'fast-checks: %s\n' "$FAST_CHECKS_RESULT"
           printf 'release-screenshot-tests: %s\n' "$SCREENSHOT_TESTS_RESULT"
-          printf 'android-tests: %s\n' "$ANDROID_TESTS_RESULT"
+          printf 'android-tests-min-api: %s\n' "$ANDROID_TESTS_MIN_API_RESULT"
+          printf 'android-tests-api29: %s\n' "$ANDROID_TESTS_API29_RESULT"
 
           test "$FAST_CHECKS_RESULT" = success
           test "$SCREENSHOT_TESTS_RESULT" = success
-          test "$ANDROID_TESTS_RESULT" = success
+          test "$ANDROID_TESTS_MIN_API_RESULT" = success
+          test "$ANDROID_TESTS_API29_RESULT" = success
