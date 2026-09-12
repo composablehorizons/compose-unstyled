@@ -28,7 +28,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -243,12 +242,12 @@ private fun DemoSelection(startDestination: String) {
     availableDemos.forEach { component ->
       composable(component.id) {
         val launchedFromDemoList = initialDestination == "home"
-        Column {
-          if (launchedFromDemoList) {
-            AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
-          }
+        Box(modifier = Modifier.fillMaxSize()) {
           DemoContainer(component.previewOptions) {
             component.demo()
+          }
+          if (launchedFromDemoList) {
+            AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
           }
         }
       }
@@ -257,14 +256,13 @@ private fun DemoSelection(startDestination: String) {
 }
 
 @Composable
-private fun ColumnScope.DemoContainer(
+private fun DemoContainer(
   previewOptions: PreviewOptions,
   content: @Composable () -> Unit,
 ) {
   Box(
     modifier = Modifier
-      .fillMaxWidth()
-      .weight(1f)
+      .fillMaxSize()
       .background(Color.White)
       .padding(previewOptions.padding),
     contentAlignment = previewOptions.contentAlignment,
