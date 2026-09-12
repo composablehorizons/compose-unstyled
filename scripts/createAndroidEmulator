@@ -3,7 +3,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-PROFILE="$ROOT_DIR/android-emulator.properties"
+PROFILE="${1:-$ROOT_DIR/android-emulator.properties}"
+if [[ "$PROFILE" != /* ]]; then
+  PROFILE="$ROOT_DIR/$PROFILE"
+fi
 
 property() {
   awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print }' "$PROFILE"

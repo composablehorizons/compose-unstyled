@@ -16,6 +16,11 @@ on:
         description: Gradle command to run inside the Android emulator.
         required: true
         type: string
+      emulator-profile:
+        description: Repository emulator profile used for this test run.
+        required: false
+        type: string
+        default: android-emulator.properties
 
 jobs:
   android-test:
@@ -52,7 +57,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          profile="android-emulator.properties"
+          profile="${{ inputs.emulator-profile }}"
 
           property() {
             awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; found = 1 } END { exit found ? 0 : 1 }' "$profile"
