@@ -31,6 +31,7 @@ import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
@@ -59,7 +60,10 @@ private class PortalState {
           content = content,
         ),
       )
-    } else {
+    } else if (
+      entries[index].compositionLocalContext !== compositionLocalContext ||
+      entries[index].content !== content
+    ) {
       entries[index] = entries[index].copy(
         compositionLocalContext = compositionLocalContext,
         content = content,
@@ -102,6 +106,8 @@ fun Portal(
   val state = LocalPortalState.current
   val id = remember { Any() }
   val compositionLocalContext = currentCompositionLocalContext
+  val latestContent = rememberUpdatedState(content)
+  val portalContent = remember { @Composable { latestContent.value() } }
 
   if (state == null) {
     return
@@ -111,7 +117,7 @@ fun Portal(
     state.addOrUpdate(
       id = id,
       compositionLocalContext = compositionLocalContext,
-      content = content,
+      content = portalContent,
     )
   }
 
