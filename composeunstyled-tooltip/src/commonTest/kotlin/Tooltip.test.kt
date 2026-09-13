@@ -31,7 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performMouseInput
@@ -42,6 +45,50 @@ import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
 class TooltipCommonTest {
+
+  @Test
+  fun nestedGenericHostDoesNotInterceptTooltipLayer() = runComposeUiTest {
+    setContent {
+      TooltipHost(Modifier.testTag("tooltip_host")) {
+        PortalHost(Modifier.testTag("generic_host")) {
+          FloatingContent(
+            floatingContent = { BasicText("Tooltip content") },
+            anchor = { BasicText("Anchor") },
+          )
+        }
+      }
+    }
+
+    onNodeWithText("Tooltip content")
+      .assert(hasAnyAncestor(hasTestTag("tooltip_host")))
+      .assert(hasAnyAncestor(hasTestTag("generic_host")).not())
+  }
+
+  @Test
+  fun genericHostDoesNotAcceptTooltipLayer() = runComposeUiTest {
+    setContent {
+      PortalHost {
+        FloatingContent(
+          floatingContent = { BasicText("Tooltip content") },
+          anchor = { BasicText("Anchor") },
+        )
+      }
+    }
+
+    onNodeWithText("Anchor").assertExists()
+    onNodeWithText("Tooltip content").assertDoesNotExist()
+  }
+
+  @Test
+  fun tooltipHostDoesNotAcceptDefaultPortals() = runComposeUiTest {
+    setContent {
+      TooltipHost {
+        Portal { BasicText("Generic content") }
+      }
+    }
+
+    onNodeWithText("Generic content").assertDoesNotExist()
+  }
 
   fun ComposeUiTest.setPaddedContent(content: @Composable () -> Unit) {
     setContent {

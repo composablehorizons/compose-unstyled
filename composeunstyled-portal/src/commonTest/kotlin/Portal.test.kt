@@ -48,6 +48,107 @@ import kotlin.test.Test
 class PortalTest {
 
   @Test
+  fun routesEachTargetToItsNearestMatchingHost() = runComposeUiTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    setContent {
+      PortalHost(Modifier.size(100.dp), target = outer) {
+        PortalHost(Modifier.size(60.dp), target = inner) {
+          Portal(target = outer) { Box(Modifier.fillMaxSize().testTag("outer")) }
+          Portal(target = inner) { Box(Modifier.fillMaxSize().testTag("inner")) }
+        }
+      }
+    }
+
+    onNodeWithTag("outer").assertWidthIsEqualTo(100.dp)
+    onNodeWithTag("inner").assertWidthIsEqualTo(60.dp)
+  }
+
+  @Test
+  fun nearestHostOverridesOnlyItsOwnTarget() = runComposeUiTest {
+    val target = PortalTarget()
+    setContent {
+      PortalHost(Modifier.size(100.dp), target = target) {
+        PortalHost(Modifier.size(60.dp), target = target) {
+          Portal { BasicText("default") }
+          Portal(target = target) { Box(Modifier.fillMaxSize().testTag("nearest")) }
+        }
+      }
+    }
+
+    onNodeWithTag("nearest").assertWidthIsEqualTo(60.dp)
+    onNodeWithText("default").assertDoesNotExist()
+  }
+
+  @Test
+  fun unmatchedTargetDoesNotFallBackToDefaultHost() = runComposeUiTest {
+    val target = PortalTarget()
+    setContent {
+      PortalHost {
+        Portal(target = target) { BasicText("unmatched") }
+      }
+    }
+
+    onNodeWithText("unmatched").assertDoesNotExist()
+  }
+
+  @Test
+  fun changingPortalTargetMovesContentAndRemovesOldEntry() = runComposeUiTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    var target by mutableStateOf(outer)
+    setContent {
+      PortalHost(Modifier.size(100.dp), target = outer) {
+        PortalHost(Modifier.size(60.dp), target = inner) {
+          Portal(target = target) { Box(Modifier.fillMaxSize().testTag("content")) }
+        }
+      }
+    }
+
+    onNodeWithTag("content").assertWidthIsEqualTo(100.dp)
+    target = inner
+    onNodeWithTag("content").assertWidthIsEqualTo(60.dp)
+    target = PortalTarget()
+    onNodeWithTag("content").assertDoesNotExist()
+    target = outer
+    onNodeWithTag("content").assertWidthIsEqualTo(100.dp)
+  }
+
+  @Test
+  fun changingHostTargetUnregistersItsPreviousTarget() = runComposeUiTest {
+    val target = PortalTarget()
+    var hostTarget by mutableStateOf(target)
+    setContent {
+      PortalHost(target = hostTarget) {
+        Portal(target = target) { BasicText("content") }
+      }
+    }
+
+    onNodeWithText("content").assertExists()
+    hostTarget = PortalTarget()
+    onNodeWithText("content").assertDoesNotExist()
+    hostTarget = target
+    onNodeWithText("content").assertExists()
+  }
+
+  @Test
+  fun portalledContentRetainsAccessToOtherTargets() = runComposeUiTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    setContent {
+      PortalHost(Modifier.size(100.dp), target = outer) {
+        PortalHost(Modifier.size(60.dp), target = inner) {
+          Portal(target = outer) {
+            Portal(target = inner) { Box(Modifier.fillMaxSize().testTag("nested")) }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("nested").assertWidthIsEqualTo(60.dp)
+  }
+
+  @Test
   fun rendersContentInsidePortalHost() = runComposeUiTest {
     setContent {
       PortalHost {

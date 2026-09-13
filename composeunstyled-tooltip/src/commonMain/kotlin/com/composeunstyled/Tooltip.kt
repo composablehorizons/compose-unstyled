@@ -81,6 +81,8 @@ private enum class TooltipFocusTrigger {
   Keyboard, Pointer
 }
 
+internal val TooltipPortalTarget = PortalTarget()
+
 @Composable
 fun TooltipHost(
   modifier: Modifier = Modifier,
@@ -88,6 +90,7 @@ fun TooltipHost(
 ) {
   PortalHost(
     modifier = modifier,
+    target = TooltipPortalTarget,
     content = content,
   )
 }

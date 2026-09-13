@@ -19,39 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
-
 package com.composeunstyled
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import com.composeunstyled.test.runComposeRecompositionTest
+import kotlin.test.Test
 
-@Composable
-internal fun FloatingContent(
-  floatingContent: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
-  side: AnchorSide = AnchorSide.Top,
-  alignment: AnchorAlignment = AnchorAlignment.Center,
-  sideOffset: Dp = 0.dp,
-  alignmentOffset: Dp = 0.dp,
-  onPlaced: (FloatingPlacement) -> Unit = {},
-  anchor: @Composable () -> Unit,
-) {
-  AnchoredFloatingContent(
-    modifier = modifier,
-    layer = { content ->
-      Portal(target = TooltipPortalTarget) {
-        content()
+class PortalRecompositionTest {
+
+  @Test
+  fun parentRecompositionRecomposesTargetedContentOnce() = runComposeRecompositionTest {
+    val target = PortalTarget()
+    var parentState by mutableIntStateOf(0)
+
+    setContent {
+      parentState
+      PortalHost(target = target) {
+        PortalHost {
+          Portal(target = target) {
+            RecompositionCount("portal-content")
+            Box(Modifier.size(40.dp))
+          }
+        }
       }
-    },
-    content = floatingContent,
-    side = side,
-    alignment = alignment,
-    sideOffset = sideOffset,
-    alignmentOffset = alignmentOffset,
-    onPlaced = onPlaced,
-    anchor = anchor,
-  )
+    }
+
+    waitUntil { recompositionCount("portal-content") > 0 }
+    resetRecompositionCounts("portal-content")
+    parentState++
+    waitForIdle()
+
+    assertThat(recompositionCount("portal-content")).isEqualTo(1)
+  }
 }

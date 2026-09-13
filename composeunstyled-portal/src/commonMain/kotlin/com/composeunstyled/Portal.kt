@@ -27,6 +27,7 @@ import androidx.compose.runtime.CompositionLocalContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
@@ -35,7 +36,15 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
-private val LocalPortalState = staticCompositionLocalOf<PortalState?> { null }
+@Stable
+class PortalTarget {
+  companion object {
+    val Default = PortalTarget()
+  }
+}
+
+private val LocalPortalStates =
+  staticCompositionLocalOf<Map<PortalTarget, PortalState>> { emptyMap() }
 
 private data class PortalEntry(
   val id: Any,
@@ -79,11 +88,15 @@ private class PortalState {
 @Composable
 fun PortalHost(
   modifier: Modifier = Modifier,
+  target: PortalTarget = PortalTarget.Default,
   content: @Composable () -> Unit,
 ) {
   val state = remember { PortalState() }
 
-  CompositionLocalProvider(LocalPortalState provides state) {
+  val parentStates = LocalPortalStates.current
+  val states = remember(parentStates, target, state) { parentStates + (target to state) }
+
+  CompositionLocalProvider(LocalPortalStates provides states) {
     Box(modifier) {
       content()
       state.entries.forEach { entry ->
@@ -101,9 +114,10 @@ fun PortalHost(
 
 @Composable
 fun Portal(
+  target: PortalTarget = PortalTarget.Default,
   content: @Composable () -> Unit,
 ) {
-  val state = LocalPortalState.current
+  val state = LocalPortalStates.current[target]
   val id = remember { Any() }
   val compositionLocalContext = currentCompositionLocalContext
   val latestContent = rememberUpdatedState(content)
