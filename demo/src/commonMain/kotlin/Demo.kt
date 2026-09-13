@@ -43,7 +43,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -52,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -64,15 +64,25 @@ import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
+import com.composeunstyled.theme.buildTheme
+
+private val DemoTheme = buildTheme {
+  name = "DemoTheme"
+  defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
+  defaultContentColor = Color.Black
+}
 
 @Composable
 fun Demo(startDestination: String = "home") {
-  CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
-    Box(Modifier.fillMaxSize().background(Color.Black)) {
-      DemoSelection(startDestination)
+  DemoTheme {
+    CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
+      Box(Modifier.fillMaxSize().background(Color.Black)) {
+        DemoSelection(startDestination)
+      }
     }
   }
 }
@@ -281,17 +291,18 @@ private fun DemoSection(
   demos: List<DemoItem>,
   onClick: (DemoItem) -> Unit,
 ) {
-  BasicText(
+  Text(
     text = title,
     modifier = Modifier.padding(horizontal = 16.dp),
-    style = TextStyle(color = Color.White, fontWeight = FontWeight.SemiBold),
+    color = Color.White,
+    fontWeight = FontWeight.SemiBold,
   )
   demos.forEach { demo ->
     DemoListButton(
       onClick = { onClick(demo) },
       modifier = Modifier.fillMaxWidth(),
     ) {
-      BasicText(demo.name, style = TextStyle(color = Color.White))
+      Text(demo.name, color = Color.White)
     }
   }
 }
@@ -321,7 +332,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       }
     }
     Spacer(Modifier.width(8.dp))
-    BasicText(title, style = TextStyle(color = Color.White))
+    Text(title, color = Color.White)
   }
 }
 

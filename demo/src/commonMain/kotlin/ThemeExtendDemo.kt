@@ -21,16 +21,19 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Density
+import com.composeunstyled.Text
 import com.composeunstyled.theme.buildTheme
 
 @Composable
 fun ThemeExtendDemo() {
   val ExtendedTheme = buildTheme {
+    defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
     extend { content ->
       CompositionLocalProvider(LocalDensity provides Density(4.0f)) {
         content()
@@ -39,6 +42,6 @@ fun ThemeExtendDemo() {
   }
 
   ExtendedTheme {
-    BasicText("The density of this content comes from the Theme")
+    Text("The density of this content comes from the Theme")
   }
 }

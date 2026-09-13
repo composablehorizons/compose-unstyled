@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,12 +49,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.DialogPanel
 import com.composeunstyled.Scrim
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import kotlinx.coroutines.delay
@@ -99,20 +98,18 @@ fun DialogDemo() {
       ) {
         Column {
           Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            BasicText(
+            Text(
               text = "Update Available",
-              style = TextStyle(
-                color = Color(0xFF1A1A1A),
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                fontWeight = FontWeight.Medium,
-              ),
+              color = Color(0xFF1A1A1A),
+              fontSize = 16.sp,
+              lineHeight = 24.sp,
+              fontWeight = FontWeight.Medium,
             )
             Spacer(Modifier.height(8.dp))
-            BasicText(
+            Text(
               text = "A new version of the app is available. " +
                 "Please update to the latest version.",
-              style = TextStyle(color = Color(0xFF1A1A1A)),
+              color = Color(0xFF1A1A1A),
             )
           }
           Spacer(Modifier.height(24.dp))
@@ -124,10 +121,10 @@ fun DialogDemo() {
               .clip(RoundedCornerShape(6.dp)),
             indication = LocalIndication.current,
           ) {
-            BasicText(
+            Text(
               "Update",
               modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-              style = TextStyle(color = Color.Black),
+              color = Color.Black,
             )
           }
         }

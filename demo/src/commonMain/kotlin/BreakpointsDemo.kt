@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +36,6 @@ import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +44,7 @@ import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.ProvideWindowWidthBreakpoints
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
+import com.composeunstyled.Text
 import com.composeunstyled.WidthBreakpoint
 import com.composeunstyled.WindowWidthBreakpoints
 import com.composeunstyled.buildModifier
@@ -122,21 +121,17 @@ fun BreakpointsDemo() {
         orientation = StackOrientation.Vertical,
         spacing = 12.dp,
       ) {
-        BasicText(
+        Text(
           text = "Adaptive layouts",
-          style = TextStyle(
-            color = Color(0xFF18181B),
-            fontSize = 24.sp,
-            lineHeight = 30.sp,
-          ),
+          color = Color(0xFF18181B),
+          fontSize = 24.sp,
+          lineHeight = 30.sp,
         )
-        BasicText(
+        Text(
           text = "This card switches from vertical to horizontal at ${Expanded.name}",
-          style = TextStyle(
-            color = Color(0xFF52525B),
-            fontSize = 15.sp,
-            lineHeight = 22.sp,
-          ),
+          color = Color(0xFF52525B),
+          fontSize = 15.sp,
+          lineHeight = 22.sp,
         )
       }
     }

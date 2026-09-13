@@ -33,15 +33,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledVerticalSeparator
 
@@ -59,35 +58,35 @@ fun SeparatorsDemo() {
         .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp))
         .width(240.dp),
     ) {
-      BasicText(
+      Text(
         "New Window",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
       UnstyledHorizontalSeparator(Color.LightGray)
-      BasicText("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
+      Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
       UnstyledHorizontalSeparator(Color.LightGray)
-      BasicText(
+      Text(
         "New Incognito Tab",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
       UnstyledHorizontalSeparator(Color.LightGray)
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-        BasicText(
+        Text(
           "Copy",
           modifier = Modifier.padding(8.dp).weight(1f),
-          style = TextStyle(textAlign = TextAlign.Center),
+          textAlign = TextAlign.Center,
         )
         UnstyledVerticalSeparator(Color.LightGray)
-        BasicText(
+        Text(
           "Cut",
           modifier = Modifier.padding(8.dp).weight(1f),
-          style = TextStyle(textAlign = TextAlign.Center),
+          textAlign = TextAlign.Center,
         )
         UnstyledVerticalSeparator(Color.LightGray)
-        BasicText(
+        Text(
           "Paste",
           Modifier.padding(8.dp).weight(1f),
-          style = TextStyle(textAlign = TextAlign.Center),
+          textAlign = TextAlign.Center,
         )
       }
     }

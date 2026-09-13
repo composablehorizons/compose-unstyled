@@ -38,7 +38,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +49,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
@@ -61,6 +59,7 @@ import com.composables.icons.lucide.Scissors
 import com.composables.icons.lucide.Trash2
 import com.composeunstyled.DropdownMenuPanel
 import com.composeunstyled.LocalContentColor
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuItem
@@ -143,9 +142,9 @@ fun DropdownMenuDemo() {
                 tint = contentColor,
               )
               Spacer(Modifier.width(12.dp))
-              BasicText(
+              Text(
                 text = option.text,
-                style = TextStyle(color = contentColor),
+                color = contentColor,
               )
             }
           }
@@ -166,7 +165,7 @@ fun DropdownMenuDemo() {
           modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          BasicText("Options")
+          Text("Options")
           Spacer(Modifier.width(8.dp))
           UnstyledIcon(Lucide.ChevronDown, null)
         }

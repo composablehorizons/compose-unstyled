@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
+import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.platformtheme.EmojiVariant
 import com.composeunstyled.platformtheme.SpokenLanguage
@@ -61,7 +62,6 @@ import com.composeunstyled.platformtheme.text8
 import com.composeunstyled.platformtheme.text9
 import com.composeunstyled.platformtheme.textStyles
 import com.composeunstyled.theme.Theme
-import com.composeunstyled.Text as ThemedText
 
 private val PlatformTheme = buildPlatformTheme(
   webFontOptions = WebFontOptions(
@@ -92,23 +92,23 @@ fun PlatformThemeDemo() {
 
 @Composable
 fun TypographyDemo() {
-  ThemedText("Typography", style = Theme[textStyles][text9])
+  Text("Typography", style = Theme[textStyles][text9])
 
-  ThemedText(
+  Text(
     "The quick brown fox jumps over the lazy dog 😊🦊😘",
     style = Theme[textStyles][heading9],
   )
-  ThemedText("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][text9])
+  Text("The quick brown fox jumps over the lazy dog 😊🦊😘", style = Theme[textStyles][text9])
 
-  ThemedText("Multilanguage", style = Theme[textStyles][text9])
+  Text("Multilanguage", style = Theme[textStyles][text9])
 
-  ThemedText("Greek: Η γρήγορη καφέ αλεπού πηδά πάνω από το τεμπέλικο σκυλί")
-  ThemedText("Korean: 빠른 갈색 여우가 게으른 개를 뛰어넘습니다")
-  ThemedText(
+  Text("Greek: Η γρήγορη καφέ αλεπού πηδά πάνω από το τεμπέλικο σκυλί")
+  Text("Korean: 빠른 갈색 여우가 게으른 개를 뛰어넘습니다")
+  Text(
     "Japanese: あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
   )
-  ThemedText("Chinese Simplified: 敏捷的棕色狐狸跳过懒狗")
-  ThemedText("Chinese Traditional: 敏捷的棕色狐狸跳過懶狗")
+  Text("Chinese Simplified: 敏捷的棕色狐狸跳过懒狗")
+  Text("Chinese Traditional: 敏捷的棕色狐狸跳過懶狗")
 }
 
 @Composable
@@ -119,7 +119,7 @@ private fun TextStylesDemo() {
   ) {
     val isWide = currentWindowContainerSize().width >= 600.dp
     val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
-    ThemedText("Text Styles", style = Theme[textStyles][text9])
+    Text("Text Styles", style = Theme[textStyles][text9])
 
     Stack(
       orientation = orientation,
@@ -128,26 +128,26 @@ private fun TextStylesDemo() {
     ) {
       val text: String? = null
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ThemedText(text ?: "Text 9", style = Theme[textStyles][text9])
-        ThemedText(text ?: "Text 8", style = Theme[textStyles][text8])
-        ThemedText(text ?: "Text 7", style = Theme[textStyles][text7])
-        ThemedText(text ?: "Text 6", style = Theme[textStyles][text6])
-        ThemedText(text ?: "Text 5", style = Theme[textStyles][text5])
-        ThemedText(text ?: "Text 4", style = Theme[textStyles][text4])
-        ThemedText(text ?: "Text 3", style = Theme[textStyles][text3])
-        ThemedText(text ?: "Text 2", style = Theme[textStyles][text2])
-        ThemedText(text ?: "Text 1", style = Theme[textStyles][text1])
+        Text(text ?: "Text 9", style = Theme[textStyles][text9])
+        Text(text ?: "Text 8", style = Theme[textStyles][text8])
+        Text(text ?: "Text 7", style = Theme[textStyles][text7])
+        Text(text ?: "Text 6", style = Theme[textStyles][text6])
+        Text(text ?: "Text 5", style = Theme[textStyles][text5])
+        Text(text ?: "Text 4", style = Theme[textStyles][text4])
+        Text(text ?: "Text 3", style = Theme[textStyles][text3])
+        Text(text ?: "Text 2", style = Theme[textStyles][text2])
+        Text(text ?: "Text 1", style = Theme[textStyles][text1])
       }
       Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ThemedText(text ?: "Heading 9", style = Theme[textStyles][heading9])
-        ThemedText(text ?: "Heading 8", style = Theme[textStyles][heading8])
-        ThemedText(text ?: "Heading 7", style = Theme[textStyles][heading7])
-        ThemedText(text ?: "Heading 6", style = Theme[textStyles][heading6])
-        ThemedText(text ?: "Heading 5", style = Theme[textStyles][heading5])
-        ThemedText(text ?: "Heading 4", style = Theme[textStyles][heading4])
-        ThemedText(text ?: "Heading 3", style = Theme[textStyles][heading3])
-        ThemedText(text ?: "Heading 2", style = Theme[textStyles][heading2])
-        ThemedText(text ?: "Heading 1", style = Theme[textStyles][heading1])
+        Text(text ?: "Heading 9", style = Theme[textStyles][heading9])
+        Text(text ?: "Heading 8", style = Theme[textStyles][heading8])
+        Text(text ?: "Heading 7", style = Theme[textStyles][heading7])
+        Text(text ?: "Heading 6", style = Theme[textStyles][heading6])
+        Text(text ?: "Heading 5", style = Theme[textStyles][heading5])
+        Text(text ?: "Heading 4", style = Theme[textStyles][heading4])
+        Text(text ?: "Heading 3", style = Theme[textStyles][heading3])
+        Text(text ?: "Heading 2", style = Theme[textStyles][heading2])
+        Text(text ?: "Heading 1", style = Theme[textStyles][heading1])
       }
     }
   }

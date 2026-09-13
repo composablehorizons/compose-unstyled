@@ -45,17 +45,16 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.Text
 import com.composeunstyled.Thumb
 import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
@@ -119,14 +118,15 @@ fun VerticalScrollbarsDemo() {
           .fillMaxWidth()
           .padding(8.dp),
       ) {
-        BasicText(
+        Text(
           "Deserts",
           Modifier.padding(4.dp),
-          style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+          fontSize = 20.sp,
+          fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.height(12.dp))
         desserts.forEach { i ->
-          BasicText(i, Modifier.padding(4.dp).fillMaxWidth())
+          Text(i, Modifier.padding(4.dp).fillMaxWidth())
           Spacer(Modifier.height(12.dp))
         }
       }

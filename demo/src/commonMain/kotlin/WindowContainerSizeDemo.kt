@@ -26,15 +26,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
 
 @Composable
@@ -48,31 +47,25 @@ fun WindowContainerSizeDemo() {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
   ) {
-    BasicText(
+    Text(
       text = "Window container size",
-      style = TextStyle(
-        color = Color.Black,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        fontWeight = FontWeight.Medium,
-      ),
+      color = Color.Black,
+      fontSize = 22.sp,
+      lineHeight = 28.sp,
+      fontWeight = FontWeight.Medium,
     )
-    BasicText(
+    Text(
       text = "${windowContainerSize.width} x ${windowContainerSize.height}",
-      style = TextStyle(
-        color = Color.Black,
-        fontSize = 36.sp,
-        lineHeight = 44.sp,
-      ),
+      color = Color.Black,
+      fontSize = 36.sp,
+      lineHeight = 44.sp,
       modifier = Modifier.padding(top = 12.dp),
     )
-    BasicText(
+    Text(
       text = "Resize the window to watch this value update.",
-      style = TextStyle(
-        color = Color(0xFF525252),
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-      ),
+      color = Color(0xFF525252),
+      fontSize = 14.sp,
+      lineHeight = 20.sp,
       modifier = Modifier.padding(top = 8.dp),
     )
   }
