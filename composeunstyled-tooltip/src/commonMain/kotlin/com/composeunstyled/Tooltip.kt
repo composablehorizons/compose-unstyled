@@ -90,7 +90,7 @@ fun TooltipHost(
 ) {
   PortalHost(
     modifier = modifier,
-    target = TooltipPortalTarget,
+    key = TooltipPortalTarget,
     content = content,
   )
 }

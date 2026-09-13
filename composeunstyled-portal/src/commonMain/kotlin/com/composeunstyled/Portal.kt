@@ -88,13 +88,13 @@ private class PortalState {
 @Composable
 fun PortalHost(
   modifier: Modifier = Modifier,
-  target: PortalTarget = PortalTarget.Unspecified,
+  key: PortalTarget = PortalTarget.Unspecified,
   content: @Composable () -> Unit,
 ) {
   val state = remember { PortalState() }
 
   val parentStates = LocalPortalStates.current
-  val states = remember(parentStates, target, state) { parentStates + (target to state) }
+  val states = remember(parentStates, key, state) { parentStates + (key to state) }
 
   CompositionLocalProvider(LocalPortalStates provides states) {
     Box(modifier) {

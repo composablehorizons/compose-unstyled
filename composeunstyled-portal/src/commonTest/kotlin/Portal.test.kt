@@ -52,8 +52,8 @@ class PortalTest {
     val outer = PortalTarget()
     val inner = PortalTarget()
     setContent {
-      PortalHost(Modifier.size(100.dp), target = outer) {
-        PortalHost(Modifier.size(60.dp), target = inner) {
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
           Portal(target = outer) { Box(Modifier.fillMaxSize().testTag("outer")) }
           Portal(target = inner) { Box(Modifier.fillMaxSize().testTag("inner")) }
         }
@@ -68,8 +68,8 @@ class PortalTest {
   fun nearestHostOverridesOnlyItsOwnTarget() = runComposeUiTest {
     val target = PortalTarget()
     setContent {
-      PortalHost(Modifier.size(100.dp), target = target) {
-        PortalHost(Modifier.size(60.dp), target = target) {
+      PortalHost(Modifier.size(100.dp), key = target) {
+        PortalHost(Modifier.size(60.dp), key = target) {
           Portal { BasicText("untargeted") }
           Portal(target = target) { Box(Modifier.fillMaxSize().testTag("nearest")) }
         }
@@ -98,8 +98,8 @@ class PortalTest {
     val inner = PortalTarget()
     var target by mutableStateOf(outer)
     setContent {
-      PortalHost(Modifier.size(100.dp), target = outer) {
-        PortalHost(Modifier.size(60.dp), target = inner) {
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
           Portal(target = target) { Box(Modifier.fillMaxSize().testTag("content")) }
         }
       }
@@ -115,19 +115,19 @@ class PortalTest {
   }
 
   @Test
-  fun changingHostTargetUnregistersItsPreviousTarget() = runComposeUiTest {
+  fun changingHostKeyUnregistersItsPreviousKey() = runComposeUiTest {
     val target = PortalTarget()
-    var hostTarget by mutableStateOf(target)
+    var hostKey by mutableStateOf(target)
     setContent {
-      PortalHost(target = hostTarget) {
+      PortalHost(key = hostKey) {
         Portal(target = target) { BasicText("content") }
       }
     }
 
     onNodeWithText("content").assertExists()
-    hostTarget = PortalTarget()
+    hostKey = PortalTarget()
     onNodeWithText("content").assertDoesNotExist()
-    hostTarget = target
+    hostKey = target
     onNodeWithText("content").assertExists()
   }
 
@@ -136,8 +136,8 @@ class PortalTest {
     val outer = PortalTarget()
     val inner = PortalTarget()
     setContent {
-      PortalHost(Modifier.size(100.dp), target = outer) {
-        PortalHost(Modifier.size(60.dp), target = inner) {
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
           Portal(target = outer) {
             Portal(target = inner) { Box(Modifier.fillMaxSize().testTag("nested")) }
           }

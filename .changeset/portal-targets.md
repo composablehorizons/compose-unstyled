@@ -2,4 +2,4 @@
 "composeunstyled-portal": minor
 ---
 
-Add `PortalTarget` to `PortalHost` and `Portal` to choose where portal content renders. A portal uses the nearest host with a matching target. `PortalTarget.Unspecified` matches the nearest untargeted host. Portals with no matching host render nothing.
+Add a `key` parameter to `PortalHost` and a `target` parameter to `Portal`. Both accept a `PortalTarget` token. A portal uses the nearest host whose key matches its target. `PortalTarget.Unspecified` matches the nearest untargeted host. Portals with no matching host render nothing.
