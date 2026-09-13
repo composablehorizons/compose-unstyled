@@ -19,26 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composeunstyled.visualregressions
+package com.composeunstyled
 
-fun main(args: Array<String>) {
-  val requestedNames = args.toSet()
-  val screenshotNames = VisualRegressionScreenshots.map { screenshot -> screenshot.name } +
-    DrawerMovingOverscrollScreenshotName +
-    DrawerDrawingOverscrollScreenshotName
-  val unknownNames = requestedNames - screenshotNames.toSet()
-  check(unknownNames.isEmpty()) {
-    "Unknown visual regression screenshot names: ${unknownNames.joinToString()}"
-  }
+import androidx.compose.animation.core.AnimationVector
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.TwoWayConverter
+import androidx.compose.animation.core.VectorizedFiniteAnimationSpec
+import androidx.compose.animation.core.snap
 
-  VisualRegressionScreenshots
-    .filter { screenshot -> requestedNames.isEmpty() || screenshot.name in requestedNames }
-    .forEach(::updateVisualRegressionScreenshot)
+internal class RecordingAnimationSpec(
+  private val delegate: FiniteAnimationSpec<Float> = snap(),
+) : FiniteAnimationSpec<Float> {
+  var vectorizeCalls = 0
+    private set
 
-  if (requestedNames.isEmpty() || DrawerMovingOverscrollScreenshotName in requestedNames) {
-    updateDrawerOverscrollRegressionScreenshot()
-  }
-  if (requestedNames.isEmpty() || DrawerDrawingOverscrollScreenshotName in requestedNames) {
-    updateDrawerDrawingOverscrollRegressionScreenshot()
+  override fun <V : AnimationVector> vectorize(
+    converter: TwoWayConverter<Float, V>,
+  ): VectorizedFiniteAnimationSpec<V> {
+    vectorizeCalls += 1
+    return delegate.vectorize(converter)
   }
 }

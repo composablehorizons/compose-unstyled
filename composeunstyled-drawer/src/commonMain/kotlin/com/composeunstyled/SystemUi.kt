@@ -19,26 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.composeunstyled.visualregressions
+package com.composeunstyled
 
-fun main(args: Array<String>) {
-  val requestedNames = args.toSet()
-  val screenshotNames = VisualRegressionScreenshots.map { screenshot -> screenshot.name } +
-    DrawerMovingOverscrollScreenshotName +
-    DrawerDrawingOverscrollScreenshotName
-  val unknownNames = requestedNames - screenshotNames.toSet()
-  check(unknownNames.isEmpty()) {
-    "Unknown visual regression screenshot names: ${unknownNames.joinToString()}"
-  }
+import androidx.compose.runtime.Composable
+import kotlin.jvm.JvmInline
 
-  VisualRegressionScreenshots
-    .filter { screenshot -> requestedNames.isEmpty() || screenshot.name in requestedNames }
-    .forEach(::updateVisualRegressionScreenshot)
+data class SystemUi(
+  val statusBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
+  val navigationBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
+)
 
-  if (requestedNames.isEmpty() || DrawerMovingOverscrollScreenshotName in requestedNames) {
-    updateDrawerOverscrollRegressionScreenshot()
-  }
-  if (requestedNames.isEmpty() || DrawerDrawingOverscrollScreenshotName in requestedNames) {
-    updateDrawerDrawingOverscrollRegressionScreenshot()
+@JvmInline
+value class SystemUiAppearance internal constructor(private val value: Int) {
+  companion object {
+    val Unspecified = SystemUiAppearance(0)
+    val Light = SystemUiAppearance(1)
+    val Dark = SystemUiAppearance(2)
   }
 }
+
+@Composable
+internal expect fun ApplyAndroidSystemUi(
+  systemUi: SystemUi,
+)

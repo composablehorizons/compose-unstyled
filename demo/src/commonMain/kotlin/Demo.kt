@@ -92,7 +92,18 @@ private data class DemoItem(
   val id: String,
   val demo: @Composable () -> Unit,
   val previewOptions: PreviewOptions = PreviewOptions(),
-)
+) {
+  constructor(
+    id: String,
+    demo: @Composable () -> Unit,
+    previewOptions: PreviewOptions = PreviewOptions(),
+  ) : this(
+    name = id,
+    id = id,
+    demo = demo,
+    previewOptions = previewOptions,
+  )
+}
 
 private data class PreviewOptions(
   val contentAlignment: Alignment = Alignment.Center,
@@ -112,6 +123,18 @@ private val availablePrimitives = listOf(
   DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
   DemoItem("Tristate Checkbox", "tristatecheckbox", { TriStateCheckboxDemo() }),
   DemoItem("Dialog", "dialog", { DialogDemo() }),
+  DemoItem(
+    name = "Drawer",
+    id = "drawer",
+    demo = { DrawerDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
+  DemoItem(
+    name = "Drawer Form",
+    id = "drawer-form",
+    demo = { DrawerFormDemo() },
+    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
+  ),
   DemoItem(
     "Disclosure",
     "disclosure",
