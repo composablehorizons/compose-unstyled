@@ -81,13 +81,15 @@ val LocalModalState = staticCompositionLocalOf<ModalState> {
 
 internal val LocalIsInModalHost = staticCompositionLocalOf { false }
 
+private val ModalPortalTarget = PortalTarget()
+
 @Composable
 fun ModalHost(
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
 ) {
   CompositionLocalProvider(LocalIsInModalHost provides true) {
-    PortalHost(modifier = modifier, content = content)
+    PortalHost(modifier = modifier, target = ModalPortalTarget, content = content)
   }
 }
 
@@ -136,7 +138,7 @@ internal fun PortalModal(
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable ModalScope.() -> Unit,
 ) {
-  Portal {
+  Portal(target = ModalPortalTarget) {
     ModalContent(state = state, onKeyEvent = onKeyEvent, content = content)
   }
 }

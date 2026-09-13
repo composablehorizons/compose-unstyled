@@ -89,6 +89,7 @@ kotlin {
     }
 
     commonTest.dependencies {
+      implementation(projects.composeunstyledTest)
       implementation(kotlin("test"))
       implementation(libs.assertk)
 

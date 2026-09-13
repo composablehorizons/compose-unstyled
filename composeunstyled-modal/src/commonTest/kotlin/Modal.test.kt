@@ -22,6 +22,7 @@
 package com.composeunstyled
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
@@ -44,6 +46,35 @@ import assertk.assertions.isTrue
 import kotlin.test.Test
 
 class ModalTest {
+
+  @Test
+  fun nestedGenericHostDoesNotInterceptModalContent() = runComposeUiTest {
+    setContent {
+      ModalHost(Modifier.size(100.dp)) {
+        PortalHost(Modifier.size(60.dp)) {
+          Modal(state = rememberModalState(initiallyVisible = true)) {
+            Box(Modifier.fillMaxSize().testTag("modal"))
+          }
+          Portal { Box(Modifier.fillMaxSize().testTag("generic")) }
+        }
+      }
+    }
+
+    onNodeWithTag("modal").assertWidthIsEqualTo(100.dp)
+    onNodeWithTag("generic").assertWidthIsEqualTo(60.dp)
+    onNode(isDialog()).assertExists()
+  }
+
+  @Test
+  fun modalHostDoesNotAcceptDefaultPortals() = runComposeUiTest {
+    setContent {
+      ModalHost {
+        Portal { Box(Modifier.testTag("generic")) }
+      }
+    }
+
+    onNodeWithTag("generic").assertDoesNotExist()
+  }
 
   @Test
   fun add_isdialog_semantic() = runComposeUiTest {
