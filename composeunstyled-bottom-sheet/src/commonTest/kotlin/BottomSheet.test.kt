@@ -79,6 +79,7 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import assertk.assertFailure
 import assertk.assertThat
@@ -89,6 +90,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
+import com.composeunstyled.test.MeasurementCounter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.test.Test
@@ -1447,23 +1449,10 @@ class BottomSheetCommonTest {
 
   @Test
   fun sheet_measurement_counter_baseline() = runComposeUiTest {
-    class Counters {
-      var measureCalls = 0
-      var maxIntrinsicHeightCalls = 0
-      var detentHeightCalls = 0
-
-      fun reset() {
-        measureCalls = 0
-        maxIntrinsicHeightCalls = 0
-        detentHeightCalls = 0
-      }
-    }
-
-    val counters = Counters()
+    val counters = MeasurementCounter()
     var contentHeight by mutableStateOf(200.dp)
     val contentDetent = SheetDetent("content") { _, sheetHeight ->
-      counters.detentHeightCalls++
-      sheetHeight
+      counters.recordSizeCalculation { sheetHeight }
     }
 
     setContent {
@@ -1481,29 +1470,8 @@ class BottomSheetCommonTest {
             Layout(
               modifier = Modifier.testTag("sheet_contents"),
               content = {},
-              measurePolicy = object : MeasurePolicy {
-                override fun MeasureScope.measure(
-                  measurables: List<Measurable>,
-                  constraints: Constraints,
-                ): MeasureResult {
-                  counters.measureCalls++
-                  return layout(
-                    width = 1.coerceIn(constraints.minWidth, constraints.maxWidth),
-                    height = contentHeight.roundToPx().coerceIn(
-                      constraints.minHeight,
-                      constraints.maxHeight,
-                    ),
-                  ) {
-                  }
-                }
-
-                override fun IntrinsicMeasureScope.maxIntrinsicHeight(
-                  measurables: List<IntrinsicMeasurable>,
-                  width: Int,
-                ): Int {
-                  counters.maxIntrinsicHeightCalls++
-                  return contentHeight.roundToPx()
-                }
+              measurePolicy = counters.measurePolicy {
+                IntSize(1, contentHeight.roundToPx())
               },
             )
           }
@@ -1514,16 +1482,16 @@ class BottomSheetCommonTest {
     waitForIdle()
 
     assertThat(counters.measureCalls).isEqualTo(2)
-    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(0)
-    assertThat(counters.detentHeightCalls).isEqualTo(9)
+    assertThat(counters.intrinsicCalls).isEqualTo(0)
+    assertThat(counters.sizeCalculationCalls).isEqualTo(9)
 
     counters.reset()
     contentHeight = 250.dp
     waitForIdle()
 
     assertThat(counters.measureCalls).isEqualTo(1)
-    assertThat(counters.maxIntrinsicHeightCalls).isEqualTo(0)
-    assertThat(counters.detentHeightCalls).isEqualTo(0)
+    assertThat(counters.intrinsicCalls).isEqualTo(0)
+    assertThat(counters.sizeCalculationCalls).isEqualTo(0)
   }
 
   @Test

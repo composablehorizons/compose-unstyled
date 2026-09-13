@@ -107,6 +107,7 @@ val generateComposeUnstyledApiReference by tasks.registering(Exec::class) {
   description = "Expands Compose Unstyled API reference markers from Kotlin source."
 
   inputs.dir(composeUnstyledDocsSource.dir("pages"))
+  inputs.file(layout.projectDirectory.file("scripts/generate-compose-unstyled-api.mjs"))
   inputs.files(fileTree(rootDir) {
     include("composeunstyled-*/src/**/*.kt")
   })

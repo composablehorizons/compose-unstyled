@@ -71,6 +71,7 @@ kotlin {
         implementation(kotlin("test-junit"))
         implementation(libs.assertk)
         implementation(libs.compose.ui.test.junit4)
+        implementation(projects.composeunstyledDrawer)
         implementation(projects.composeunstyledDropdownMenu)
         implementation(projects.composeunstyledSlider)
         implementation(projects.composeunstyledScrollbars)
