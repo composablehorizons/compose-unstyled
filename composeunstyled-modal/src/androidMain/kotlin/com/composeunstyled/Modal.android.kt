@@ -41,12 +41,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
@@ -70,16 +71,17 @@ internal actual fun PlatformModal(
   val id = rememberSaveable { UUID.randomUUID() }
 
   DisposableEffect(parentView) {
-    val contentView: ComposeView
+    val contentView: AbstractComposeView
 
     val dialog = ComponentDialog(context, R.style.Modal).apply {
-      contentView = ComposeView(context).apply {
-        setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
-        setParentCompositionContext(composition)
-        setContent {
-          val localWindow = window
-            ?: error("Attempted to get the dialog's window without content. This should never happen and it's a bug in the library. Kindly open an issue with the steps to reproduce so that we fix it ASAP: https://github.com/composablehorizons/compose-unstyled/issues/new")
+      val modalWindow = requireNotNull(window) {
+        "Tried to use a Modal without a window. Is your parent composable attached to an Activity?"
+      }
+      contentView = object : AbstractComposeView(context), DialogWindowProvider {
+        override val window: Window = modalWindow
 
+        @Composable
+        override fun Content() {
           Box(
             Modifier
               .fillMaxSize()
@@ -88,13 +90,16 @@ internal actual fun PlatformModal(
           ) {
             CompositionLocalProvider(
               LocalModalState provides state,
-              LocalModalWindow provides localWindow,
+              LocalModalWindow provides window,
               LocalLayoutDirection provides layoutDirection,
             ) {
               ModalScopeContent(state = state, content = content)
             }
           }
         }
+      }.apply {
+        setTag(androidx.compose.ui.R.id.compose_view_saveable_id_tag, "modal_$id")
+        setParentCompositionContext(composition)
       }
 
       setContentView(contentView)
