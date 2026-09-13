@@ -51,7 +51,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -72,7 +71,6 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -83,6 +81,7 @@ import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.EscapeHandler
 import com.composeunstyled.Modal
 import com.composeunstyled.Scrim
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberModalState
@@ -158,13 +157,11 @@ fun ModalDemo() {
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-      BasicText(
+      Text(
         "Select a photo to preview",
-        style = TextStyle(
-          color = Color(0xFF18181B),
-          fontSize = 14.sp,
-          fontWeight = FontWeight.Medium,
-        ),
+        color = Color(0xFF18181B),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
       )
 
       FlowRow(

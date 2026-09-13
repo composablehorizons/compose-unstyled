@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,9 +46,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
@@ -136,16 +135,10 @@ fun TabGroupDemo() {
                 indication = LocalIndication.current,
               ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                  BasicText(
+                  Text(
                     text = key,
-                    style = TextStyle(
-                      fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                      color = if (selected) {
-                        Color.Black
-                      } else {
-                        Color(0xFF757575)
-                      },
-                    ),
+                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                    color = if (selected) Color.Black else Color(0xFF757575),
                   )
                   if (selected) {
                     Box(
@@ -185,18 +178,21 @@ fun TabGroupDemo() {
                   indication = LocalIndication.current,
                 ) {
                   Column(Modifier.padding(12.dp)) {
-                    BasicText(item.title, style = TextStyle(fontWeight = FontWeight.Medium))
+                    Text(
+                      item.title,
+                      fontWeight = FontWeight.Medium,
+                    )
                     Spacer(Modifier.height(4.dp))
                     Row(
                       horizontalArrangement = Arrangement.spacedBy(4.dp),
                       verticalAlignment = Alignment.CenterVertically,
                       modifier = Modifier.fillMaxWidth().alpha(0.6f),
                     ) {
-                      BasicText(item.relativeTime)
-                      BasicText("·")
-                      BasicText("${item.comments} comments")
-                      BasicText("·")
-                      BasicText("${item.points} shares")
+                      Text(item.relativeTime)
+                      Text("·")
+                      Text("${item.comments} comments")
+                      Text("·")
+                      Text("${item.points} shares")
                     }
                   }
                 }

@@ -37,7 +37,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +54,7 @@ import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.DisclosedContent
 import com.composeunstyled.DisclosureButton
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
 
@@ -81,7 +81,7 @@ fun DisclosureDemo() {
           modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          BasicText("What is Compose Unstyled", modifier = Modifier.weight(1f))
+          Text("What is Compose Unstyled", modifier = Modifier.weight(1f))
 
           val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
           UnstyledIcon(
@@ -100,7 +100,7 @@ fun DisclosureDemo() {
         ),
         exit = shrinkVertically(),
       ) {
-        BasicText(
+        Text(
           "Compose Unstyled is a collection of unstyled, accessible UI components for Compose " +
             "Multiplatform. It provides the building blocks for creating beautiful, consistent " +
             "user interfaces.",

@@ -25,12 +25,12 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 
 @Composable
@@ -48,6 +48,6 @@ internal fun SimpleButton(
     interactionSource = interactionSource,
     indication = LocalIndication.current,
   ) {
-    BasicText(text, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+    Text(text, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
   }
 }

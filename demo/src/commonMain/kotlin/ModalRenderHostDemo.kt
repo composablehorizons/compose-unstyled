@@ -29,20 +29,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Modal
 import com.composeunstyled.ModalHost
 import com.composeunstyled.Scrim
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.rememberModalState
 
@@ -112,14 +111,12 @@ private fun DemoButton(
       .clip(RoundedCornerShape(8.dp))
       .background(Color(0xFF18181B)),
   ) {
-    BasicText(
+    Text(
       text,
       modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-      style = TextStyle(
-        color = Color.White,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium,
-      ),
+      color = Color.White,
+      fontSize = 14.sp,
+      fontWeight = FontWeight.Medium,
     )
   }
 }

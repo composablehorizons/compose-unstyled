@@ -28,15 +28,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.LocalTextStyle
+import com.composeunstyled.Text
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -75,6 +77,7 @@ private val AppTheme = buildTheme {
       lineHeight = 22.sp,
     ),
   )
+  defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
 }
 
 @Composable
@@ -96,18 +99,18 @@ fun ThemingDemo() {
           .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        BasicText(
+        Text(
           text = "Create a theme",
-          style = Theme[textStyles][title].copy(
-            color = Theme[colors][onSurface],
+          style = LocalTextStyle.current.merge(
+            Theme[textStyles][title].copy(color = Theme[colors][onSurface]),
           ),
         )
 
-        BasicText(
+        Text(
           text = "Define theme properties and tokens, assign values in buildTheme {}, " +
             "then read them with Theme[property][token].",
-          style = Theme[textStyles][body].copy(
-            color = Theme[colors][onSurface],
+          style = LocalTextStyle.current.merge(
+            Theme[textStyles][body].copy(color = Theme[colors][onSurface]),
           ),
         )
 
@@ -119,11 +122,13 @@ fun ThemingDemo() {
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
         ) {
-          BasicText(
+          Text(
             text = "Themed action",
-            style = Theme[textStyles][body].copy(
-              color = Theme[colors][onPrimary],
-              fontWeight = FontWeight.Medium,
+            style = LocalTextStyle.current.merge(
+              Theme[textStyles][body].copy(
+                color = Theme[colors][onPrimary],
+                fontWeight = FontWeight.Medium,
+              ),
             ),
           )
         }

@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
@@ -39,9 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.composeunstyled.LocalTextStyle
+import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
 
@@ -71,21 +71,19 @@ fun TextFieldDemo() {
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
           cursorBrush = SolidColor(Color.Black),
-          textStyle = TextStyle(
+          textStyle = LocalTextStyle.current.copy(
             color = Color.Black,
             fontSize = 14.sp,
             lineHeight = 20.sp,
           ),
         ) {
           Column {
-            BasicText(
+            Text(
               "Display Name",
               modifier = Modifier.padding(bottom = 8.dp),
-              style = TextStyle(
-                color = Color.Black,
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-              ),
+              color = Color.Black,
+              fontSize = 16.sp,
+              lineHeight = 24.sp,
             )
             TextInput(
               Modifier
@@ -94,13 +92,11 @@ fun TextFieldDemo() {
                 .border(1.dp, Color(0xFFCACACA), fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
-                BasicText(
+                Text(
                   "Alex",
-                  style = TextStyle(
-                    color = Color.Black.copy(0.6f),
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                  ),
+                  color = Color.Black.copy(0.6f),
+                  fontSize = 14.sp,
+                  lineHeight = 20.sp,
                 )
               },
             )

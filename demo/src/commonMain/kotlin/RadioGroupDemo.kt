@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.SelectedIndicator
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 
@@ -109,7 +109,7 @@ fun RadioGroupDemo() {
                 }
               }
               Spacer(Modifier.width(16.dp))
-              BasicText(value)
+              Text(value)
             }
           }
         }

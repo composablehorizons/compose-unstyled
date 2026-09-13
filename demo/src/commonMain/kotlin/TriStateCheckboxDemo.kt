@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,13 +44,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Minus
 import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.StateIndicator
+import com.composeunstyled.Text
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
@@ -119,7 +118,10 @@ fun TriStateCheckboxDemo() {
         }
 
         Spacer(Modifier.width(12.dp))
-        BasicText("Select All", style = TextStyle(color = Color.Black))
+        Text(
+          "Select All",
+          color = Color.Black,
+        )
       }
     }
 
@@ -152,7 +154,7 @@ fun TriStateCheckboxDemo() {
           }
 
           Spacer(Modifier.width(12.dp))
-          BasicText(option, style = TextStyle(color = Color.Black))
+          Text(option, color = Color.Black)
         }
       }
     }

@@ -40,7 +40,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,13 +49,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
+import com.composeunstyled.Text
 import com.composeunstyled.TooltipHost
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.TooltipPlacement
@@ -144,7 +143,7 @@ private fun TooltipContainer() {
       .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100))
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
-    BasicText("Notifications", style = TextStyle(color = Color.Black))
+    Text("Notifications", color = Color.Black)
   }
 }
 
