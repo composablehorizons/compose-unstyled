@@ -70,18 +70,18 @@ class PortalTest {
     setContent {
       PortalHost(Modifier.size(100.dp), target = target) {
         PortalHost(Modifier.size(60.dp), target = target) {
-          Portal { BasicText("default") }
+          Portal { BasicText("untargeted") }
           Portal(target = target) { Box(Modifier.fillMaxSize().testTag("nearest")) }
         }
       }
     }
 
     onNodeWithTag("nearest").assertWidthIsEqualTo(60.dp)
-    onNodeWithText("default").assertDoesNotExist()
+    onNodeWithText("untargeted").assertDoesNotExist()
   }
 
   @Test
-  fun unmatchedTargetDoesNotFallBackToDefaultHost() = runComposeUiTest {
+  fun unmatchedTargetDoesNotFallBackToUntargetedHost() = runComposeUiTest {
     val target = PortalTarget()
     setContent {
       PortalHost {
