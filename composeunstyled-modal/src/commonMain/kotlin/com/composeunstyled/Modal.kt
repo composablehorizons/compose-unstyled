@@ -89,7 +89,7 @@ fun ModalHost(
   content: @Composable () -> Unit,
 ) {
   CompositionLocalProvider(LocalIsInModalHost provides true) {
-    PortalHost(modifier = modifier, target = ModalPortalTarget, content = content)
+    PortalHost(modifier = modifier, key = ModalPortalTarget, content = content)
   }
 }
 

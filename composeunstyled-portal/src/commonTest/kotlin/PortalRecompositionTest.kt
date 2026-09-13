@@ -42,7 +42,7 @@ class PortalRecompositionTest {
 
     setContent {
       parentState
-      PortalHost(target = target) {
+      PortalHost(key = target) {
         PortalHost {
           Portal(target = target) {
             RecompositionCount("portal-content")
