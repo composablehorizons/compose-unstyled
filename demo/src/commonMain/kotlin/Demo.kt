@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -72,7 +71,7 @@ import com.composeunstyled.currentWindowContainerSize
 @Composable
 fun Demo(startDestination: String = "home") {
   CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
-    Box(Modifier.fillMaxSize().background(Color(0xFFFAFAFA))) {
+    Box(Modifier.fillMaxSize().background(Color.Black)) {
       DemoSelection(startDestination)
     }
   }
@@ -205,7 +204,10 @@ private fun DemoSelection(startDestination: String) {
         contentAlignment = Alignment.TopStart,
       ) {
         Column(
-          Modifier.verticalScroll(rememberScrollState()).systemBarsPadding().padding(8.dp)
+          Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(WindowInsets.statusBars.asPaddingValues())
+            .padding(8.dp)
             .fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
@@ -242,12 +244,14 @@ private fun DemoSelection(startDestination: String) {
     availableDemos.forEach { component ->
       composable(component.id) {
         val launchedFromDemoList = initialDestination == "home"
-        Box(modifier = Modifier.fillMaxSize()) {
-          DemoContainer(component.previewOptions) {
-            component.demo()
-          }
+        Column(Modifier.fillMaxSize()) {
           if (launchedFromDemoList) {
             AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+          }
+          Box(Modifier.weight(1f)) {
+            DemoContainer(component.previewOptions) {
+              component.demo()
+            }
           }
         }
       }
@@ -280,14 +284,14 @@ private fun DemoSection(
   BasicText(
     text = title,
     modifier = Modifier.padding(horizontal = 16.dp),
-    style = TextStyle(fontWeight = FontWeight.SemiBold),
+    style = TextStyle(color = Color.White, fontWeight = FontWeight.SemiBold),
   )
   demos.forEach { demo ->
     DemoListButton(
       onClick = { onClick(demo) },
       modifier = Modifier.fillMaxWidth(),
     ) {
-      BasicText(demo.name)
+      BasicText(demo.name, style = TextStyle(color = Color.White))
     }
   }
 }
@@ -297,7 +301,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Color.White)
+      .background(Color.Black)
       .padding(WindowInsets.statusBars.asPaddingValues())
       .padding(4.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -309,11 +313,15 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       indication = LocalIndication.current,
     ) {
       Box(Modifier.padding(12.dp)) {
-        UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Go back")
+        UnstyledIcon(
+          imageVector = Lucide.ArrowLeft,
+          contentDescription = "Go back",
+          tint = Color.White,
+        )
       }
     }
     Spacer(Modifier.width(8.dp))
-    BasicText(title)
+    BasicText(title, style = TextStyle(color = Color.White))
   }
 }
 
