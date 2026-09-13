@@ -25,15 +25,16 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,21 +44,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Check
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Minus
 import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.StateIndicator
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledCheckbox
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
 
 @Composable
 fun TriStateCheckboxDemo() {
-  val checkboxOptions = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+  val checkboxOptions = listOf("OPTION 1", "OPTION 2", "OPTION 3", "OPTION 4")
   var selected by remember { mutableStateOf(listOf(true, true, false, false)) }
 
   val triState = when {
@@ -73,7 +71,7 @@ fun TriStateCheckboxDemo() {
       .padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
-    val triStateShape = RoundedCornerShape(4.dp)
+    val triStateShape = RectangleShape
     UnstyledTriStateCheckbox(
       value = triState,
       onClick = {
@@ -85,7 +83,7 @@ fun TriStateCheckboxDemo() {
         selected = List(checkboxOptions.size) { newState }
       },
       modifier = Modifier.fillMaxWidth(),
-      accessibilityLabel = "Select all options",
+      accessibilityLabel = "SELECT ALL OPTIONS",
       indication = null,
     ) {
       Row(
@@ -96,22 +94,22 @@ fun TriStateCheckboxDemo() {
           modifier = Modifier
             .clip(triStateShape)
             .size(24.dp)
-            .background(Color(0xFFF8FAFC), triStateShape)
-            .border(1.dp, Color(0xFFCACACA), triStateShape),
+            .background(Color.White, triStateShape)
+            .border(1.dp, Color.Black, triStateShape),
           indication = LocalIndication.current,
         ) { state ->
           when (state) {
-            ToggleableState.On -> UnstyledIcon(
-              Lucide.Check,
-              contentDescription = null,
-              tint = Color.Black,
-            )
+            ToggleableState.On -> Box(
+              Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center,
+            ) { Text("X") }
 
-            ToggleableState.Indeterminate -> UnstyledIcon(
-              Lucide.Minus,
-              contentDescription = null,
-              tint = Color.Black,
-            )
+            ToggleableState.Indeterminate -> Box(
+              Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center,
+            ) {
+              Text("-")
+            }
 
             ToggleableState.Off -> Unit
           }
@@ -119,13 +117,13 @@ fun TriStateCheckboxDemo() {
 
         Spacer(Modifier.width(12.dp))
         Text(
-          "Select All",
+          "SELECT ALL",
           color = Color.Black,
         )
       }
     }
 
-    val checkboxShape = RoundedCornerShape(4.dp)
+    val checkboxShape = RectangleShape
     checkboxOptions.forEachIndexed { index, option ->
       UnstyledCheckbox(
         checked = selected[index],
@@ -146,11 +144,11 @@ fun TriStateCheckboxDemo() {
             modifier = Modifier
               .clip(checkboxShape)
               .size(24.dp)
-              .background(Color(0xFFF8FAFC), checkboxShape)
-              .border(1.dp, Color(0xFFCACACA), checkboxShape),
+              .background(Color.White, checkboxShape)
+              .border(1.dp, Color.Black, checkboxShape),
             indication = LocalIndication.current,
           ) {
-            UnstyledIcon(Lucide.Check, contentDescription = null, tint = Color.Black)
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("X") }
           }
 
           Spacer(Modifier.width(12.dp))

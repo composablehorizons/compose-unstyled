@@ -31,12 +31,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragIndication
 import com.composeunstyled.Sheet
@@ -61,9 +61,9 @@ fun BottomSheetDemo() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
       Sheet(
         modifier = Modifier
-          .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+          .clip(RectangleShape)
+          .background(Color.White)
+          .border(1.dp, Color.Black, RectangleShape)
           .widthIn(max = 640.dp)
           .fillMaxWidth(),
       ) {
@@ -72,7 +72,7 @@ fun BottomSheetDemo() {
             modifier = Modifier
               .align(Alignment.TopCenter)
               .padding(top = 22.dp)
-              .background(Color(0xFFCACACA), RoundedCornerShape(100))
+              .background(Color.Black, RectangleShape)
               .size(32.dp, 4.dp),
             indication = LocalIndication.current,
           )

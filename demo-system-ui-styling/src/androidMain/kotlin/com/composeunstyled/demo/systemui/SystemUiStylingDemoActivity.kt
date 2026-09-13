@@ -32,6 +32,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,13 +52,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
-import com.composables.compose.ripple.rememberRippleIndication
 import com.composeunstyled.DialogPanel
 import com.composeunstyled.LocalModalWindow
 import com.composeunstyled.Scrim
@@ -93,22 +92,22 @@ private fun ModalSystemUiStylingDemo() {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Brush.linearGradient(listOf(Color(0xFF4A90E2), Color(0xFF50C9C3))))
+      .background(Color.White)
       .padding(vertical = 40.dp),
     contentAlignment = Alignment.Center,
   ) {
     UnstyledButton(
       onClick = { dialogVisible = true },
-      modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color.White),
-      indication = rememberRippleIndication(),
+      modifier = Modifier.clip(RectangleShape).background(Color.White).border(1.dp, Color.Black),
+      indication = null,
     ) {
-      BasicText("Show dialog", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
+      BasicText("SHOW DIALOG", modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
     }
     UnstyledDialog(
       visible = dialogVisible,
       onDismissRequest = { dialogVisible = false },
       overlay = {
-        Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+        Scrim(scrimColor = Color.White, enter = fadeIn(), exit = fadeOut())
       },
     ) {
       val window = LocalModalWindow.current
@@ -129,19 +128,19 @@ private fun ModalSystemUiStylingDemo() {
           .systemBarsPadding()
           .widthIn(max = 560.dp)
           .padding(20.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .background(Color.White),
-        paneTitle = "Dialog",
+          .clip(RectangleShape)
+          .background(Color.White).border(1.dp, Color.Black),
+        paneTitle = "DIALOG",
         enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
         exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
       ) {
         Column {
           Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            BasicText("Update Available")
+            BasicText("UPDATE AVAILABLE")
             Spacer(Modifier.height(8.dp))
             BasicText(
-              "A new version of the app is available. Please update to the latest version.",
-              style = TextStyle(color = Color(0xFF1A1A1A)),
+              "A NEW VERSION OF THE APP IS AVAILABLE. PLEASE UPDATE TO THE LATEST VERSION.",
+              style = TextStyle(color = Color.Black),
             )
           }
           Spacer(Modifier.height(24.dp))
@@ -150,13 +149,13 @@ private fun ModalSystemUiStylingDemo() {
             modifier = Modifier
               .padding(12.dp)
               .align(Alignment.End)
-              .clip(RoundedCornerShape(6.dp)),
-            indication = rememberRippleIndication(),
+              .clip(RectangleShape).border(1.dp, Color.Black),
+            indication = null,
           ) {
             BasicText(
-              "Update",
+              "UPDATE",
               modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-              style = TextStyle(color = Color(0xFF0D99FF)),
+              style = TextStyle(color = Color.Black),
             )
           }
         }

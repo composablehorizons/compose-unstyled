@@ -32,12 +32,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
@@ -53,38 +53,38 @@ fun SeparatorsDemo() {
   ) {
     Column(
       Modifier
-        .clip(RoundedCornerShape(6.dp))
-        .background(Color(0xFFF8FAFC))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp))
+        .clip(RectangleShape)
+        .background(Color.White)
+        .border(1.dp, Color.Black, RectangleShape)
         .width(240.dp),
     ) {
       Text(
-        "New Window",
+        "NEW WINDOW",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Color.LightGray)
-      Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
-      UnstyledHorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Color.Black)
+      Text("NEW TAB", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
+      UnstyledHorizontalSeparator(Color.Black)
       Text(
-        "New Incognito Tab",
+        "NEW INCOGNITO TAB",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Color.Black)
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Text(
-          "Copy",
+          "COPY",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Color.Black)
         Text(
-          "Cut",
+          "CUT",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Color.Black)
         Text(
-          "Paste",
+          "PASTE",
           Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )

@@ -70,6 +70,13 @@ val DedicatedRegressionScreenshots =
     DropdownMenuRegressionScreenshots
 
 val DemoRegressionScreenshots = listOf(
+  demoScreenshot(name = "home-demo", startDestination = "home"),
+  demoScreenshot(name = "avatar-demo", startDestination = "avatar"),
+  demoScreenshot(name = "breakpoints-demo", startDestination = "breakpoints"),
+  demoScreenshot(name = "modal-demo", startDestination = "modal"),
+  demoScreenshot(name = "modal-render-host-demo", startDestination = "modal-render-host"),
+  demoScreenshot(name = "tooltip-demo", startDestination = "tooltip"),
+  demoScreenshot(name = "theme-demo", startDestination = "theme"),
   demoScreenshot(name = "bottom-sheet-demo", startDestination = "bottom-sheet"),
   demoScreenshot(name = "modal-bottom-sheet-demo", startDestination = "modal-bottom-sheet"),
   demoScreenshot(name = "button-demo", startDestination = "button"),

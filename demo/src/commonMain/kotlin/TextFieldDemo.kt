@@ -23,6 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,13 +31,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,11 +46,13 @@ import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
+import com.composeunstyled.focusRing
 
 @Composable
 fun TextFieldDemo() {
   val displayName = rememberTextFieldState()
-  val fieldShape = RoundedCornerShape(8.dp)
+  val fieldShape = RectangleShape
+  val interactionSource = remember { MutableInteractionSource() }
 
   Box(
     modifier = Modifier
@@ -68,6 +72,7 @@ fun TextFieldDemo() {
       ) {
         UnstyledTextField(
           state = displayName,
+          interactionSource = interactionSource,
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
           cursorBrush = SolidColor(Color.Black),
@@ -79,7 +84,7 @@ fun TextFieldDemo() {
         ) {
           Column {
             Text(
-              "Display Name",
+              "DISPLAY NAME",
               modifier = Modifier.padding(bottom = 8.dp),
               color = Color.Black,
               fontSize = 16.sp,
@@ -88,13 +93,14 @@ fun TextFieldDemo() {
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFF8FAFC), fieldShape)
-                .border(1.dp, Color(0xFFCACACA), fieldShape)
+                .background(Color.White, fieldShape)
+                .border(1.dp, Color.Black, fieldShape)
+                .focusRing(interactionSource, 2.dp, Color.Black, fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(
-                  "Alex",
-                  color = Color.Black.copy(0.6f),
+                  "ALEX",
+                  color = Color.Black,
                   fontSize = 14.sp,
                   lineHeight = 20.sp,
                 )

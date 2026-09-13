@@ -21,14 +21,10 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,8 +33,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -48,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledSlider
 
@@ -59,7 +54,6 @@ fun SliderDemo() {
   ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val isPressed by interactionSource.collectIsPressedAsState()
 
     var value by remember { mutableFloatStateOf(0.7f) }
 
@@ -80,14 +74,14 @@ fun SliderDemo() {
               .fillMaxWidth()
               .height(8.dp)
               .padding(horizontal = 16.dp)
-              .clip(RoundedCornerShape(100.dp)),
+              .clip(RectangleShape),
           ) {
             // the 'not yet completed' part of the track
             Box(
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Color(0xFFCACACA)),
+                .background(Color.White).border(1.dp, Color.Black),
             )
             // the 'completed' part of the track
             Box(
@@ -99,23 +93,17 @@ fun SliderDemo() {
           }
         },
         thumb = {
-          val thumbSize by animateDpAsState(targetValue = if (isPressed) 22.dp else 18.dp)
-
-          val thumbInteractionSource = remember { MutableInteractionSource() }
-          val isHovered by thumbInteractionSource.collectIsHoveredAsState()
-          val glowColor by animateColorAsState(
-            if (isFocused || isHovered) Color.Black.copy(0.16f) else Color.Transparent,
-          )
-          // keep the size fixed to ensure that the resizing animation is always centered
           Box(
-            modifier = Modifier.size(36.dp).clip(CircleShape).background(glowColor),
+            modifier = Modifier.size(36.dp).border(
+              if (isFocused) 2.dp else 0.dp,
+              if (isFocused) Color.Black else Color.Transparent,
+            ),
             contentAlignment = Alignment.Center,
           ) {
             Box(
               modifier = Modifier
-                .size(thumbSize)
-                .hoverable(thumbInteractionSource)
-                .clip(CircleShape)
+                .size(18.dp)
+                .clip(RectangleShape)
                 .background(Color.Black),
             )
           }

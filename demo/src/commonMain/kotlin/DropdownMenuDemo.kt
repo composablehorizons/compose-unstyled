@@ -37,7 +37,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,40 +46,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.ChevronDown
-import com.composables.icons.lucide.Clipboard
-import com.composables.icons.lucide.Copy
-import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Maximize
-import com.composables.icons.lucide.Scissors
-import com.composables.icons.lucide.Trash2
 import com.composeunstyled.DropdownMenuPanel
-import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
-import com.composeunstyled.UnstyledIcon
 
 @Composable
 fun DropdownMenuDemo() {
   class DropdownOption(
     val text: String,
-    val icon: ImageVector,
     val enabled: Boolean = true,
-    val dangerous: Boolean = false,
   )
 
   val options = listOf(
-    DropdownOption("Select All", Lucide.Maximize),
-    DropdownOption("Copy", Lucide.Copy),
-    DropdownOption("Cut", Lucide.Scissors, enabled = false),
-    DropdownOption("Paste", Lucide.Clipboard),
-    DropdownOption("Delete", Lucide.Trash2, dangerous = true),
+    DropdownOption("SELECT ALL"),
+    DropdownOption("COPY"),
+    DropdownOption("CUT", enabled = false),
+    DropdownOption("PASTE"),
+    DropdownOption("DELETE"),
   )
   var expanded by remember { mutableStateOf(true) }
 
@@ -92,9 +81,9 @@ fun DropdownMenuDemo() {
       DropdownMenuPanel(
         modifier = Modifier
           .width(240.dp)
-          .clip(RoundedCornerShape(8.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+          .clip(RectangleShape)
+          .background(Color.White)
+          .border(1.dp, Color.Black, RectangleShape),
         enter = scaleIn(
           animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
           initialScale = 0.8f,
@@ -109,7 +98,7 @@ fun DropdownMenuDemo() {
       ) {
         options.forEachIndexed { index, option ->
           if (index == 1 || index == options.lastIndex) {
-            UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
+            UnstyledHorizontalSeparator(color = Color.Black)
           }
           UnstyledDropdownMenuItem(
             onClick = {},
@@ -118,7 +107,7 @@ fun DropdownMenuDemo() {
             modifier = Modifier
               .padding(4.dp)
               .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-              .clip(RoundedCornerShape(8.dp))
+              .clip(RectangleShape)
               .fillMaxWidth(),
           ) {
             Row(
@@ -128,23 +117,10 @@ fun DropdownMenuDemo() {
               horizontalArrangement = Arrangement.Start,
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              val contentColor = (
-                if (option.dangerous) {
-                  Color(0xFFDC2626)
-                } else {
-                  LocalContentColor.current
-                }
-                ).copy(alpha = if (option.enabled) 1f else 0.5f)
-
-              UnstyledIcon(
-                imageVector = option.icon,
-                contentDescription = null,
-                tint = contentColor,
-              )
-              Spacer(Modifier.width(12.dp))
               Text(
                 text = option.text,
-                color = contentColor,
+                color = Color.Black,
+                textDecoration = if (option.enabled) null else TextDecoration.LineThrough,
               )
             }
           }
@@ -153,21 +129,21 @@ fun DropdownMenuDemo() {
     },
     anchor = {
       UnstyledButton(
-        onClick = { expanded = true },
+        onClick = { expanded = expanded.not() },
         modifier = Modifier
           .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp)),
+          .clip(RectangleShape)
+          .background(Color.White)
+          .border(1.dp, Color.Black, RectangleShape),
         indication = LocalIndication.current,
       ) {
         Row(
           modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          Text("Options")
+          Text("OPTIONS")
           Spacer(Modifier.width(8.dp))
-          UnstyledIcon(Lucide.ChevronDown, null)
+          Text(if (expanded) "CLOSE" else "OPEN")
         }
       }
     },

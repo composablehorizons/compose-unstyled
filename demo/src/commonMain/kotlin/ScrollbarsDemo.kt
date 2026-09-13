@@ -43,14 +43,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -76,30 +75,30 @@ fun VerticalScrollbarsDemo() {
     contentAlignment = Alignment.TopCenter,
   ) {
     val desserts = listOf(
-      "Cupcake",
-      "Donut",
-      "Eclair",
-      "Froyo",
-      "Gingerbread",
-      "Honeycomb",
-      "Ice Cream Sandwich",
-      "Jelly Bean",
-      "KitKat",
-      "Lollipop",
-      "Marshmallow",
-      "Nougat",
-      "Oreo",
-      "Pie",
-      "Quince",
-      "Red Velvet Cake",
-      "Snow Cone",
-      "Tiramisu",
-      "Upside-down Cake",
-      "Vanilla Custard",
-      "Waffle",
-      "Xmas Pudding",
-      "Yogurt Parfait",
-      "Zabaglione",
+      "CUPCAKE",
+      "DONUT",
+      "ECLAIR",
+      "FROYO",
+      "GINGERBREAD",
+      "HONEYCOMB",
+      "ICE CREAM SANDWICH",
+      "JELLY BEAN",
+      "KITKAT",
+      "LOLLIPOP",
+      "MARSHMALLOW",
+      "NOUGAT",
+      "OREO",
+      "PIE",
+      "QUINCE",
+      "RED VELVET CAKE",
+      "SNOW CONE",
+      "TIRAMISU",
+      "UPSIDE-DOWN CAKE",
+      "VANILLA CUSTARD",
+      "WAFFLE",
+      "XMAS PUDDING",
+      "YOGURT PARFAIT",
+      "ZABAGLIONE",
     )
 
     val state = rememberScrollState()
@@ -108,8 +107,8 @@ fun VerticalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Color(0xFFF8FAFC), RoundedCornerShape(8.dp))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp))
+        .background(Color.White, RectangleShape)
+        .border(1.dp, Color.Black, RectangleShape)
         .fillMaxSize(),
     ) {
       Column(
@@ -119,7 +118,7 @@ fun VerticalScrollbarsDemo() {
           .padding(8.dp),
       ) {
         Text(
-          "Deserts",
+          "DESERTS",
           Modifier.padding(4.dp),
           fontSize = 20.sp,
           fontWeight = FontWeight.Bold,
@@ -142,7 +141,7 @@ fun VerticalScrollbarsDemo() {
             .fillMaxWidth()
             .padding(2.dp)
             .height(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+            .background(Color.Black, RectangleShape),
           thumbVisibility = ThumbVisibility.AlwaysVisible,
         )
       }
@@ -163,8 +162,8 @@ fun HorizontalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Color(0xFFF8FAFC), RoundedCornerShape(8.dp))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp))
+        .background(Color.White, RectangleShape)
+        .border(1.dp, Color.Black, RectangleShape)
         .wrapContentHeight(),
     ) {
       Row(
@@ -177,7 +176,7 @@ fun HorizontalScrollbarsDemo() {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         (1..100).forEach { i ->
-          Box(Modifier.size(90.dp).clip(CircleShape).background(Color.Black))
+          Box(Modifier.size(90.dp).clip(RectangleShape).background(Color.Black))
         }
       }
       UnstyledHorizontalScrollbar(
@@ -192,7 +191,7 @@ fun HorizontalScrollbarsDemo() {
             .fillMaxHeight()
             .padding(2.dp)
             .width(12.dp)
-            .background(Color.Black.copy(0.33f), RoundedCornerShape(100)),
+            .background(Color.Black, RectangleShape),
           thumbVisibility = ThumbVisibility.HideWhileIdle(
             enter = fadeIn(),
             exit = fadeOut(),

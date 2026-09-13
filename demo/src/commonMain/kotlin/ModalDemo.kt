@@ -22,7 +22,6 @@
 package com.composeunstyled.demo
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -49,8 +48,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,11 +57,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -74,55 +71,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.composables.icons.lucide.ArrowLeft
-import com.composables.icons.lucide.ArrowRight
-import com.composables.icons.lucide.Lucide
-import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.EscapeHandler
 import com.composeunstyled.Modal
 import com.composeunstyled.Scrim
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberModalState
 import kotlinx.coroutines.launch
 
 @Composable
 fun ModalDemo() {
-  data class GalleryItem(val url: String, val description: String)
+  val galleryItems = List(6) { "IMAGE ${it + 1}" }
 
-  val galleryItems = listOf(
-    GalleryItem(
-      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Golden wheat field",
-    ),
-    GalleryItem(
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Mountain landscape",
-    ),
-    GalleryItem(
-      "https://images.unsplash.com/photo-1500534623283-312aade485b7" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Sunlit forest",
-    ),
-    GalleryItem(
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Ocean wave",
-    ),
-    GalleryItem(
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Mountain lake at dawn",
-    ),
-    GalleryItem(
-      "https://images.unsplash.com/photo-1448375240586-882707db888b" +
-        "?q=80&w=1080&auto=format&fit=crop",
-      "Misty pine forest",
-    ),
-  )
   val modalState = rememberModalState(initiallyVisible = false)
   val modalFocusRequester = remember { FocusRequester() }
   val pagerState = rememberPagerState(pageCount = { galleryItems.size })
@@ -130,14 +90,6 @@ fun ModalDemo() {
   var selectedIndex by remember { mutableIntStateOf(0) }
   val canGoPrevious = pagerState.currentPage > 0
   val canGoNext = pagerState.currentPage < galleryItems.lastIndex
-  val previousButtonAlpha by animateFloatAsState(
-    targetValue = if (canGoPrevious) 1f else 0.33f,
-    animationSpec = tween(durationMillis = 180),
-  )
-  val nextButtonAlpha by animateFloatAsState(
-    targetValue = if (canGoNext) 1f else 0.33f,
-    animationSpec = tween(durationMillis = 180),
-  )
 
   LaunchedEffect(modalState.transitionState.targetState, selectedIndex) {
     if (modalState.transitionState.targetState) {
@@ -158,8 +110,8 @@ fun ModalDemo() {
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
       Text(
-        "Select a photo to preview",
-        color = Color(0xFF18181B),
+        "SELECT A PHOTO TO PREVIEW",
+        color = Color.Black,
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
       )
@@ -177,14 +129,14 @@ fun ModalDemo() {
             },
             modifier = Modifier
               .size(110.dp, 72.dp)
-              .clip(RoundedCornerShape(8.dp))
-              .background(Color(0xFFF8FAFC))
-              .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+              .clip(RectangleShape)
+              .background(Color.White)
+              .border(1.dp, Color.Black, RectangleShape),
             indication = LocalIndication.current,
           ) {
             Image(
-              painter = rememberUriPainter(item.url),
-              contentDescription = item.description,
+              painter = PrototypeImagePainter,
+              contentDescription = item,
               modifier = Modifier.fillMaxSize(),
               contentScale = ContentScale.Crop,
             )
@@ -225,6 +177,7 @@ fun ModalDemo() {
         modalState.transitionState.targetState = false
       }
       Scrim(
+        scrimColor = Color.White,
         enter = fadeIn(tween(durationMillis = 220)),
         exit = fadeOut(tween(durationMillis = 180)),
       )
@@ -267,12 +220,12 @@ fun ModalDemo() {
                   .padding(vertical = 20.dp),
               ) { page ->
                 Image(
-                  painter = rememberUriPainter(galleryItems[page].url),
-                  contentDescription = galleryItems[page].description,
+                  painter = PrototypeImagePainter,
+                  contentDescription = galleryItems[page],
                   modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF27272A)),
+                    .clip(RectangleShape)
+                    .background(Color.Black),
                   contentScale = ContentScale.Crop,
                 )
               }
@@ -288,17 +241,13 @@ fun ModalDemo() {
                 modifier = Modifier
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
-                  .clip(CircleShape)
-                  .background(Color(0xFFF8FAFC))
-                  .border(1.dp, Color(0xFFCACACA), CircleShape)
-                  .alpha(previousButtonAlpha),
+                  .clip(RectangleShape)
+                  .background(Color.White)
+                  .border(1.dp, Color.Black, RectangleShape),
                 indication = LocalIndication.current,
               ) {
                 Box(Modifier.padding(12.dp)) {
-                  UnstyledIcon(
-                    imageVector = Lucide.ArrowLeft,
-                    contentDescription = "Previous image",
-                  )
+                  Text(if (canGoPrevious) "PREVIOUS" else "FIRST IMAGE")
                 }
               }
 
@@ -313,17 +262,13 @@ fun ModalDemo() {
                 modifier = Modifier
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
-                  .clip(CircleShape)
-                  .background(Color(0xFFF8FAFC))
-                  .border(1.dp, Color(0xFFCACACA), CircleShape)
-                  .alpha(nextButtonAlpha),
+                  .clip(RectangleShape)
+                  .background(Color.White)
+                  .border(1.dp, Color.Black, RectangleShape),
                 indication = LocalIndication.current,
               ) {
                 Box(Modifier.padding(12.dp)) {
-                  UnstyledIcon(
-                    imageVector = Lucide.ArrowRight,
-                    contentDescription = "Next image",
-                  )
+                  Text(if (canGoNext) "NEXT" else "LAST IMAGE")
                 }
               }
             }

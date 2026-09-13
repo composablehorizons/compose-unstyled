@@ -22,11 +22,11 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.FocusRingVisibility
 import com.composeunstyled.FocusVisibilityProvider
@@ -54,8 +54,8 @@ private fun FocusRingVariant(visibility: FocusRingVisibility) {
     modifier = Modifier.focusRing(
       interactionSource = interactionSource,
       width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
+      color = Color.Black,
+      shape = RectangleShape,
       offset = 2.dp,
       visibility = visibility,
     ),

@@ -126,7 +126,6 @@ kotlin {
     commonMain.dependencies {
       implementation(libs.compose.components.resources)
       implementation(libs.compose.foundation)
-      implementation(libs.composables.ripple)
       implementation(project(":composeunstyled"))
       implementation(project(":composeunstyled-build-modifier"))
       implementation(project(":composeunstyled-escape-handler"))
@@ -135,7 +134,6 @@ kotlin {
       implementation(project(":composeunstyled-window-container-size"))
       implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
       implementation(libs.composables.icons.lucide)
-      implementation(libs.compose.uri.painter)
     }
 
     jvmMain.dependencies {

@@ -27,7 +27,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Indicator
 import com.composeunstyled.UnstyledProgress
@@ -61,10 +61,10 @@ fun ProgressIndicatorDemo() {
     modifier = Modifier
       .width(400.dp)
       .height(12.dp)
-      .clip(RoundedCornerShape(100))
-      .background(Color(0xFFF8FAFC), RoundedCornerShape(100))
-      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
+      .clip(RectangleShape)
+      .background(Color.White, RectangleShape)
+      .border(1.dp, Color.Black, RectangleShape),
   ) {
-    Indicator(Modifier.background(Color.Black, RoundedCornerShape(100)))
+    Indicator(Modifier.background(Color.Black, RectangleShape))
   }
 }

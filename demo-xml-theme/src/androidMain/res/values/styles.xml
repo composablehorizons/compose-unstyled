@@ -22,8 +22,8 @@
 <resources>
   <style name="AppTheme" parent="@style/Theme.NoActionBar">
     <item name="color_background">#FFFFFF</item>
-    <item name="color_onBackground">#262626</item>
-    <item name="color_primary">#3F51B5</item>
+    <item name="color_onBackground">#000000</item>
+    <item name="color_primary">#000000</item>
     <item name="color_onPrimary">#FFFFFF</item>
 
     <item name="textStyle_body">@style/Sans</item>

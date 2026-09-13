@@ -21,8 +21,7 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,8 +32,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
@@ -54,16 +52,14 @@ import com.composeunstyled.UnstyledSwitch
 @Composable
 fun ToggleSwitchDemo() {
   var toggled by remember { mutableStateOf(true) }
-  val backgroundColor by animateColorAsState(
-    if (toggled) Color.Black else Color(0xFFE0E0E0),
-  )
+  val backgroundColor = if (toggled) Color.Black else Color.White
 
   UnstyledSwitch(
     checked = toggled,
     onCheckedChange = { toggled = it },
     modifier = Modifier
       .width(300.dp)
-      .clip(RoundedCornerShape(10.dp)),
+      .clip(RectangleShape),
     indication = LocalIndication.current,
   ) {
     Row(
@@ -73,22 +69,22 @@ fun ToggleSwitchDemo() {
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Text("Airplane Mode", fontSize = 18.sp)
+      Text("AIRPLANE MODE", fontSize = 18.sp)
       Track(
         modifier = Modifier
           .width(58.dp)
           .height(32.dp)
-          .clip(RoundedCornerShape(100))
-          .background(backgroundColor, RoundedCornerShape(100))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
+          .clip(RectangleShape)
+          .background(backgroundColor, RectangleShape)
+          .border(1.dp, Color.Black, RectangleShape),
       ) {
         Thumb(
-          animationSpec = tween(),
+          animationSpec = snap(),
           modifier = Modifier
             .padding(4.dp)
-            .clip(CircleShape)
-            .background(Color(0xFFF8FAFC))
-            .border(1.dp, Color(0xFFCACACA), CircleShape)
+            .clip(RectangleShape)
+            .background(Color.White)
+            .border(1.dp, Color.Black, RectangleShape)
             .size(24.dp),
         )
       }

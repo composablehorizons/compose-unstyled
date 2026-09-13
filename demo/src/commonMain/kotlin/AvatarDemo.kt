@@ -27,18 +27,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledAvatar
-import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun AvatarDemo() {
@@ -55,15 +53,12 @@ fun AvatarDemo() {
       contentDescription = "@coolcat",
       modifier = Modifier
         .size(32.dp)
-        .clip(CircleShape)
-        .border(1.dp, Color.White, CircleShape)
-        .background(Color.LightGray),
+        .clip(RectangleShape)
+        .border(1.dp, Color.Black, RectangleShape)
+        .background(Color.White),
       contentScale = ContentScale.Crop,
     )
-    val painter = rememberUriPainter(
-      "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?q=80&w=1080",
-      crossfade = 50.milliseconds,
-    )
+    val painter = PrototypeImagePainter
 
     UnstyledAvatar(
       painter = painter,
@@ -73,9 +68,9 @@ fun AvatarDemo() {
       contentDescription = "@coolcat",
       modifier = Modifier
         .size(48.dp)
-        .clip(CircleShape)
-        .border(1.dp, Color.White, CircleShape)
-        .background(Color.LightGray),
+        .clip(RectangleShape)
+        .border(1.dp, Color.Black, RectangleShape)
+        .background(Color.White),
       contentScale = ContentScale.Crop,
     )
     UnstyledAvatar(
@@ -86,9 +81,9 @@ fun AvatarDemo() {
       contentDescription = "@coolcat",
       modifier = Modifier
         .size(56.dp)
-        .clip(CircleShape)
-        .border(1.dp, Color.White, CircleShape)
-        .background(Color.LightGray),
+        .clip(RectangleShape)
+        .border(1.dp, Color.Black, RectangleShape)
+        .background(Color.White),
       contentScale = ContentScale.Crop,
     )
   }

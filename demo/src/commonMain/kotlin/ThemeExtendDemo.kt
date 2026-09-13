@@ -42,6 +42,6 @@ fun ThemeExtendDemo() {
   }
 
   ExtendedTheme {
-    Text("The density of this content comes from the Theme")
+    Text("THE DENSITY OF THIS CONTENT COMES FROM THE THEME")
   }
 }

@@ -23,9 +23,7 @@ package com.composeunstyled.demo
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.LocalIndication
@@ -36,7 +34,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,19 +41,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.ChevronDown
-import com.composables.icons.lucide.Lucide
 import com.composeunstyled.DisclosedContent
 import com.composeunstyled.DisclosureButton
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
-import com.composeunstyled.UnstyledIcon
 
 @Composable
 fun DisclosureDemo() {
@@ -69,9 +62,9 @@ fun DisclosureDemo() {
     Column(
       modifier = Modifier
         .widthIn(max = 560.dp)
-        .clip(RoundedCornerShape(12.dp))
-        .background(Color(0xFFF8FAFC))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(12.dp)),
+        .clip(RectangleShape)
+        .background(Color.White)
+        .border(1.dp, Color.Black, RectangleShape),
     ) {
       DisclosureButton(
         modifier = Modifier.fillMaxWidth(),
@@ -81,14 +74,9 @@ fun DisclosureDemo() {
           modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          Text("What is Compose Unstyled", modifier = Modifier.weight(1f))
+          Text("WHAT IS COMPOSE UNSTYLED", modifier = Modifier.weight(1f))
 
-          val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
-          UnstyledIcon(
-            imageVector = Lucide.ChevronDown,
-            contentDescription = null,
-            modifier = Modifier.rotate(degrees),
-          )
+          Text(if (expanded) "CLOSE" else "OPEN")
         }
       }
       DisclosedContent(
@@ -101,10 +89,10 @@ fun DisclosureDemo() {
         exit = shrinkVertically(),
       ) {
         Text(
-          "Compose Unstyled is a collection of unstyled, accessible UI components for Compose " +
-            "Multiplatform. It provides the building blocks for creating beautiful, consistent " +
-            "user interfaces.",
-          modifier = Modifier.padding(16.dp).alpha(0.66f),
+          "COMPOSE UNSTYLED IS A COLLECTION OF UNSTYLED, ACCESSIBLE UI COMPONENTS FOR COMPOSE " +
+            "MULTIPLATFORM. IT PROVIDES THE BUILDING BLOCKS FOR CREATING BEAUTIFUL, CONSISTENT " +
+            "USER INTERFACES.",
+          modifier = Modifier.padding(16.dp),
         )
       }
     }

@@ -34,7 +34,7 @@ import com.composeunstyled.UnstyledIcon
 fun IconDemo() {
   UnstyledIcon(
     imageVector = Lucide.Heart,
-    contentDescription = "Favorite",
+    contentDescription = "FAVORITE",
     tint = Color.Black,
     modifier = Modifier.size(90.dp),
   )

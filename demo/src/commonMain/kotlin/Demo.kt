@@ -25,6 +25,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,8 +42,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -50,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -57,16 +57,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.composables.compose.ripple.rememberRippleIndication
-import com.composables.icons.lucide.ArrowLeft
-import com.composables.icons.lucide.Lucide
 import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.theme.buildTheme
 
@@ -79,8 +75,8 @@ private val DemoTheme = buildTheme {
 @Composable
 fun Demo(startDestination: String = "home") {
   DemoTheme {
-    CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
-      Box(Modifier.fillMaxSize().background(Color.Black)) {
+    CompositionLocalProvider(LocalIndication provides PrototypeIndication) {
+      Box(Modifier.fillMaxSize().background(Color.White).border(1.dp, Color.Black)) {
         DemoSelection(startDestination)
       }
     }
@@ -100,52 +96,52 @@ private data class PreviewOptions(
 )
 
 private val availablePrimitives = listOf(
-  DemoItem("Avatar", "avatar", { AvatarDemo() }),
+  DemoItem("AVATAR", "avatar", { AvatarDemo() }),
   DemoItem(
-    "Bottom Sheet",
+    "BOTTOM SHEET",
     "bottom-sheet",
     { BottomSheetDemo() },
     previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
   ),
-  DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
-  DemoItem("Button", "button", { ButtonDemo() }),
-  DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
-  DemoItem("Tristate Checkbox", "tristatecheckbox", { TriStateCheckboxDemo() }),
-  DemoItem("Dialog", "dialog", { DialogDemo() }),
+  DemoItem("MODAL BOTTOM SHEET", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
+  DemoItem("BUTTON", "button", { ButtonDemo() }),
+  DemoItem("CHECKBOX", "checkbox", { CheckboxDemo() }),
+  DemoItem("TRISTATE CHECKBOX", "tristatecheckbox", { TriStateCheckboxDemo() }),
+  DemoItem("DIALOG", "dialog", { DialogDemo() }),
   DemoItem(
-    "Disclosure",
+    "DISCLOSURE",
     "disclosure",
     { DisclosureDemo() },
     previewOptions = PreviewOptions(contentAlignment = Alignment.TopCenter),
   ),
   DemoItem(
-    "Dropdown Menu",
+    "DROPDOWN MENU",
     "dropdown-menu",
     { DropdownMenuDemo() },
     previewOptions = PreviewOptions(contentAlignment = Alignment.TopCenter),
   ),
-  DemoItem("Icon", "icon", { IconDemo() }),
-  DemoItem("Modal", "modal", { ModalDemo() }),
-  DemoItem("Modal Render Host", "modal-render-host", { ModalRenderHostDemo() }),
-  DemoItem("Progress Indicator", "progressindicator", { ProgressIndicatorDemo() }),
-  DemoItem("Radio Group", "radiogroup", { RadioGroupDemo() }),
-  DemoItem("Scrollbars", "scrollbars", { ScrollbarsDemo() }),
-  DemoItem("Separators", "separators", { SeparatorsDemo() }),
-  DemoItem("Slider", "slider", { SliderDemo() }),
-  DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
-  DemoItem("Text Field", "textfield", { TextFieldDemo() }),
-  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
-  DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
+  DemoItem("ICON", "icon", { IconDemo() }),
+  DemoItem("MODAL", "modal", { ModalDemo() }),
+  DemoItem("MODAL RENDER HOST", "modal-render-host", { ModalRenderHostDemo() }),
+  DemoItem("PROGRESS INDICATOR", "progressindicator", { ProgressIndicatorDemo() }),
+  DemoItem("RADIO GROUP", "radiogroup", { RadioGroupDemo() }),
+  DemoItem("SCROLLBARS", "scrollbars", { ScrollbarsDemo() }),
+  DemoItem("SEPARATORS", "separators", { SeparatorsDemo() }),
+  DemoItem("SLIDER", "slider", { SliderDemo() }),
+  DemoItem("TAB GROUP", "tabgroup", { TabGroupDemo() }),
+  DemoItem("TEXT FIELD", "textfield", { TextFieldDemo() }),
+  DemoItem("TOOLTIP", "tooltip", { TooltipDemo() }),
+  DemoItem("TOGGLE SWITCH", "toggleswitch", { ToggleSwitchDemo() }),
 )
 
 private val availableModifiers = listOf(
   DemoItem(
-    "Focus Ring (FocusVisible)",
+    "FOCUS RING (FOCUSVISIBLE)",
     "focus-ring-focus-visible",
     { FocusRingFocusVisibleDemo() },
   ),
-  DemoItem("Focus Ring (Focused)", "focus-ring-focused", { FocusRingFocusedDemo() }),
-  DemoItem("Outline", "outline", { OutlineDemo() }),
+  DemoItem("FOCUS RING (FOCUSED)", "focus-ring-focused", { FocusRingFocusedDemo() }),
+  DemoItem("OUTLINE", "outline", { OutlineDemo() }),
 ).map {
   it.copy(demo = {
     ModifierDemo {
@@ -155,14 +151,14 @@ private val availableModifiers = listOf(
 }
 
 private val themingDemos = listOf(
-  DemoItem("Platform Theme", "platform-theme", { PlatformThemeDemo() }),
-  DemoItem("Theme Extend", "theme-extend", { ThemeExtendDemo() }),
-  DemoItem("Theming", "theme", { ThemingDemo() }),
+  DemoItem("PLATFORM THEME", "platform-theme", { PlatformThemeDemo() }),
+  DemoItem("THEME EXTEND", "theme-extend", { ThemeExtendDemo() }),
+  DemoItem("THEMING", "theme", { ThemingDemo() }),
 )
 
 private val utilityDemos = listOf(
-  DemoItem("Breakpoints", "breakpoints", { BreakpointsDemo() }),
-  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
+  DemoItem("BREAKPOINTS", "breakpoints", { BreakpointsDemo() }),
+  DemoItem("WINDOW CONTAINER SIZE", "window-container-size", { WindowContainerSizeDemo() }),
 )
 
 private val availableDemos: List<DemoItem> =
@@ -222,28 +218,28 @@ private fun DemoSelection(startDestination: String) {
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
           if (availablePrimitives.isNotEmpty()) {
-            DemoSection("Components", availablePrimitives) { demo ->
+            DemoSection("COMPONENTS", availablePrimitives) { demo ->
               navController.navigate(demo.id)
             }
           }
 
           if (themingDemos.isNotEmpty()) {
             Spacer(Modifier.height(24.dp))
-            DemoSection("Theme", themingDemos) { demo ->
+            DemoSection("THEME", themingDemos) { demo ->
               navController.navigate(demo.id)
             }
           }
 
           if (availableModifiers.isNotEmpty()) {
             Spacer(Modifier.height(24.dp))
-            DemoSection("Modifiers", availableModifiers) { demo ->
+            DemoSection("MODIFIERS", availableModifiers) { demo ->
               navController.navigate(demo.id)
             }
           }
 
           if (utilityDemos.isNotEmpty()) {
             Spacer(Modifier.height(24.dp))
-            DemoSection("Utilities", utilityDemos) { demo ->
+            DemoSection("UTILITIES", utilityDemos) { demo ->
               navController.navigate(demo.id)
             }
           }
@@ -294,7 +290,7 @@ private fun DemoSection(
   Text(
     text = title,
     modifier = Modifier.padding(horizontal = 16.dp),
-    color = Color.White,
+    color = Color.Black,
     fontWeight = FontWeight.SemiBold,
   )
   demos.forEach { demo ->
@@ -302,7 +298,7 @@ private fun DemoSection(
       onClick = { onClick(demo) },
       modifier = Modifier.fillMaxWidth(),
     ) {
-      Text(demo.name, color = Color.White)
+      Text(demo.name, color = Color.Black)
     }
   }
 }
@@ -312,7 +308,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Color.Black)
+      .background(Color.White)
       .padding(WindowInsets.statusBars.asPaddingValues())
       .padding(4.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -320,19 +316,15 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
     UnstyledButton(
       onClick = onUpClick,
       modifier = Modifier
-        .clip(CircleShape),
+        .clip(RectangleShape).border(1.dp, Color.Black),
       indication = LocalIndication.current,
     ) {
       Box(Modifier.padding(12.dp)) {
-        UnstyledIcon(
-          imageVector = Lucide.ArrowLeft,
-          contentDescription = "Go back",
-          tint = Color.White,
-        )
+        Text("BACK")
       }
     }
     Spacer(Modifier.width(8.dp))
-    Text(title, color = Color.White)
+    Text(title, color = Color.Black)
   }
 }
 
@@ -346,7 +338,7 @@ private fun DemoListButton(
     onClick = onClick,
     modifier = modifier
       .sizeIn(minWidth = 40.dp, minHeight = 48.dp)
-      .clip(RoundedCornerShape(8.dp)),
+      .clip(RectangleShape).border(1.dp, Color.Black),
     indication = LocalIndication.current,
   ) {
     Box(

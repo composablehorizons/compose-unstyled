@@ -21,33 +21,28 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.Text
-import com.composeunstyled.UnstyledButton
 
-@Composable
-internal fun SimpleButton(
-  modifier: Modifier = Modifier,
-  text: String = "BUTTON",
-  shape: androidx.compose.ui.graphics.Shape = RectangleShape,
-  interactionSource: androidx.compose.foundation.interaction.MutableInteractionSource? = null,
-) {
-  UnstyledButton(
-    onClick = {},
-    modifier = modifier
-      .clip(shape)
-      .border(1.dp, Color.Black, shape),
-    interactionSource = interactionSource,
-    indication = LocalIndication.current,
-  ) {
-    Text(text, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+internal object PrototypeImagePainter : Painter() {
+  override val intrinsicSize: Size = Size.Unspecified
+
+  override fun DrawScope.onDraw() {
+    val strokeWidth = 1.dp.toPx()
+    val inset = strokeWidth / 2
+    drawRect(Color.White)
+    drawRect(
+      color = Color.Black,
+      topLeft = Offset(inset, inset),
+      size = Size(size.width - strokeWidth, size.height - strokeWidth),
+      style = Stroke(strokeWidth),
+    )
+    drawLine(Color.Black, Offset.Zero, Offset(size.width, size.height), strokeWidth)
+    drawLine(Color.Black, Offset(size.width, 0f), Offset(0f, size.height), strokeWidth)
   }
 }

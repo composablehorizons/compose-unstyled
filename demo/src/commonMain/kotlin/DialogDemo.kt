@@ -38,7 +38,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,7 +75,7 @@ fun DialogDemo() {
     visible = dialogVisible,
     onDismissRequest = { dialogVisible = false },
     overlay = {
-      Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
+      Scrim(scrimColor = Color.White, enter = fadeIn(), exit = fadeOut())
     },
   ) {
     Box(
@@ -89,27 +89,27 @@ fun DialogDemo() {
           .systemBarsPadding()
           .widthIn(max = 560.dp)
           .padding(20.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(12.dp)),
-        paneTitle = "Dialog",
+          .clip(RectangleShape)
+          .background(Color.White)
+          .border(1.dp, Color.Black, RectangleShape),
+        paneTitle = "DIALOG",
         enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
         exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
       ) {
         Column {
           Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
             Text(
-              text = "Update Available",
-              color = Color(0xFF1A1A1A),
+              text = "UPDATE AVAILABLE",
+              color = Color.Black,
               fontSize = 16.sp,
               lineHeight = 24.sp,
               fontWeight = FontWeight.Medium,
             )
             Spacer(Modifier.height(8.dp))
             Text(
-              text = "A new version of the app is available. " +
-                "Please update to the latest version.",
-              color = Color(0xFF1A1A1A),
+              text = "A NEW VERSION OF THE APP IS AVAILABLE. " +
+                "PLEASE UPDATE TO THE LATEST VERSION.",
+              color = Color.Black,
             )
           }
           Spacer(Modifier.height(24.dp))
@@ -118,11 +118,11 @@ fun DialogDemo() {
             modifier = Modifier
               .padding(12.dp)
               .align(Alignment.End)
-              .clip(RoundedCornerShape(6.dp)),
+              .clip(RectangleShape),
             indication = LocalIndication.current,
           ) {
             Text(
-              "Update",
+              "UPDATE",
               modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
               color = Color.Black,
             )

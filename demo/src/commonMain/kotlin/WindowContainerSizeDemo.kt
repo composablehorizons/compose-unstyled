@@ -48,7 +48,7 @@ fun WindowContainerSizeDemo() {
     verticalArrangement = Arrangement.Center,
   ) {
     Text(
-      text = "Window container size",
+      text = "WINDOW CONTAINER SIZE",
       color = Color.Black,
       fontSize = 22.sp,
       lineHeight = 28.sp,
@@ -62,8 +62,8 @@ fun WindowContainerSizeDemo() {
       modifier = Modifier.padding(top = 12.dp),
     )
     Text(
-      text = "Resize the window to watch this value update.",
-      color = Color(0xFF525252),
+      text = "RESIZE THE WINDOW TO WATCH THIS VALUE UPDATE.",
+      color = Color.Black,
       fontSize = 14.sp,
       lineHeight = 20.sp,
       modifier = Modifier.padding(top = 8.dp),

@@ -22,16 +22,17 @@
 package com.composeunstyled.demo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -60,10 +61,10 @@ private val AppTheme = buildTheme {
   name = "AppTheme"
 
   properties[colors] = mapOf(
-    background to Color(0xFFF8FAFC),
+    background to Color.White,
     surface to Color.White,
-    primary to Color(0xFF2563EB),
-    onSurface to Color(0xFF0F172A),
+    primary to Color.Black,
+    onSurface to Color.Black,
     onPrimary to Color.White,
   )
 
@@ -94,21 +95,22 @@ fun ThemingDemo() {
         modifier = Modifier
           .background(
             color = Theme[colors][surface],
-            shape = RoundedCornerShape(12.dp),
+            shape = RectangleShape,
           )
+          .border(1.dp, Theme[colors][onSurface])
           .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
       ) {
         Text(
-          text = "Create a theme",
+          text = "CREATE A THEME",
           style = LocalTextStyle.current.merge(
             Theme[textStyles][title].copy(color = Theme[colors][onSurface]),
           ),
         )
 
         Text(
-          text = "Define theme properties and tokens, assign values in buildTheme {}, " +
-            "then read them with Theme[property][token].",
+          text = "DEFINE THEME PROPERTIES AND TOKENS, ASSIGN VALUES IN buildTheme {}, " +
+            "THEN READ THEM WITH Theme[property][token].",
           style = LocalTextStyle.current.merge(
             Theme[textStyles][body].copy(color = Theme[colors][onSurface]),
           ),
@@ -118,12 +120,12 @@ fun ThemingDemo() {
           modifier = Modifier
             .background(
               color = Theme[colors][primary],
-              shape = RoundedCornerShape(8.dp),
+              shape = RectangleShape,
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
         ) {
           Text(
-            text = "Themed action",
+            text = "THEMED ACTION",
             style = LocalTextStyle.current.merge(
               Theme[textStyles][body].copy(
                 color = Theme[colors][onPrimary],

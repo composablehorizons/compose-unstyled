@@ -33,8 +33,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.SelectedIndicator
 import com.composeunstyled.Text
@@ -52,8 +51,8 @@ import com.composeunstyled.UnstyledRadioGroup
 
 @Composable
 fun RadioGroupDemo() {
-  val values = listOf("Light", "Dark", "System")
-  var selectedValue by remember { mutableStateOf("Light") }
+  val values = listOf("LIGHT", "DARK", "SYSTEM")
+  var selectedValue by remember { mutableStateOf("LIGHT") }
 
   Column(
     modifier = Modifier
@@ -66,7 +65,7 @@ fun RadioGroupDemo() {
       value = selectedValue,
       onValueChange = { selectedValue = it },
       modifier = Modifier.fillMaxWidth(),
-      accessibilityLabel = "Theme selection",
+      accessibilityLabel = "THEME SELECTION",
     ) {
       Column(
         horizontalAlignment = Alignment.Start,
@@ -75,7 +74,7 @@ fun RadioGroupDemo() {
       ) {
         values.forEach { value ->
           val selected = selectedValue == value
-          val itemShape = RoundedCornerShape(14.dp)
+          val itemShape = RectangleShape
           UnstyledRadioButton(
             value = value,
             modifier = Modifier
@@ -90,11 +89,11 @@ fun RadioGroupDemo() {
               Box(
                 modifier = Modifier
                   .size(20.dp)
-                  .clip(CircleShape)
+                  .clip(RectangleShape)
                   .background(
-                    if (selected) Color.Black else Color(0xFFF8FAFC),
+                    if (selected) Color.Black else Color.White,
                   )
-                  .border(1.dp, Color(0xFFCACACA), CircleShape),
+                  .border(1.dp, Color.Black, RectangleShape),
                 contentAlignment = Alignment.Center,
               ) {
                 SelectedIndicator(
@@ -103,7 +102,7 @@ fun RadioGroupDemo() {
                   Box(
                     Modifier
                       .size(8.dp)
-                      .clip(CircleShape)
+                      .clip(RectangleShape)
                       .background(Color.White),
                   )
                 }

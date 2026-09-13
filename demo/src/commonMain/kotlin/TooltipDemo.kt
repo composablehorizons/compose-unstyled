@@ -38,8 +38,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,11 +46,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.BellDot
-import com.composables.icons.lucide.Lucide
 import com.composeunstyled.AnchorAlignment
 import com.composeunstyled.AnchorSide
 import com.composeunstyled.Text
@@ -60,7 +57,6 @@ import com.composeunstyled.TooltipHost
 import com.composeunstyled.TooltipPanel
 import com.composeunstyled.TooltipPlacement
 import com.composeunstyled.UnstyledButton
-import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.focusRing
 
@@ -93,15 +89,15 @@ fun TooltipDemo() {
         UnstyledButton(
           onClick = { },
           modifier = Modifier
-            .clip(CircleShape)
-            .background(Color(0xFFF8FAFC))
-            .border(1.dp, Color(0xFFCACACA), CircleShape)
-            .focusRing(interactionSource, 1.dp, Color.Black, CircleShape),
+            .clip(RectangleShape)
+            .background(Color.White)
+            .border(1.dp, Color.Black, RectangleShape)
+            .focusRing(interactionSource, 2.dp, Color.Black, RectangleShape),
           interactionSource = interactionSource,
           indication = LocalIndication.current,
         ) {
           Box(Modifier.padding(8.dp)) {
-            UnstyledIcon(Lucide.BellDot, contentDescription = null)
+            Text("NOTIFICATIONS")
           }
         }
       }
@@ -138,12 +134,12 @@ private fun TooltipBubble(placement: TooltipPlacement) {
 private fun TooltipContainer() {
   Box(
     modifier = Modifier
-      .clip(RoundedCornerShape(100))
-      .background(Color(0xFFF8FAFC))
-      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100))
+      .clip(RectangleShape)
+      .background(Color.White)
+      .border(1.dp, Color.Black, RectangleShape)
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
-    Text("Notifications", color = Color.Black)
+    Text("NOTIFICATIONS", color = Color.Black)
   }
 }
 
@@ -166,7 +162,7 @@ private fun TooltipArrow(placement: TooltipPlacement) {
     AnchorSide.End -> 90f
   }
 
-  ArrowUp(modifier.rotate(degrees), Color(0xFFCACACA))
+  ArrowUp(modifier.rotate(degrees), Color.Black)
 }
 
 @Composable

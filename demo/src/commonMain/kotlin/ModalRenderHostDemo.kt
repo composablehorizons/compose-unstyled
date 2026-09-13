@@ -28,12 +28,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,13 +61,13 @@ fun ModalRenderHostDemo() {
       ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
           DemoButton(
-            text = "Show in modal",
+            text = "SHOW IN MODAL",
             onClick = {
               windowModalState.transitionState.targetState = true
             },
           )
           DemoButton(
-            text = "Show in portal",
+            text = "SHOW IN PORTAL",
             onClick = {
               portalModalState.transitionState.targetState = true
             },
@@ -82,7 +82,7 @@ fun ModalRenderHostDemo() {
               portalModalState.transitionState.targetState = false
             }
           },
-          scrimColor = Color.Black.copy(alpha = 0.32f),
+          scrimColor = Color.White,
         )
       }
     }
@@ -94,7 +94,7 @@ fun ModalRenderHostDemo() {
             windowModalState.transitionState.targetState = false
           }
         },
-        scrimColor = Color.Black.copy(alpha = 0.32f),
+        scrimColor = Color.White,
       )
     }
   }
@@ -108,8 +108,8 @@ private fun DemoButton(
   UnstyledButton(
     onClick = onClick,
     modifier = Modifier
-      .clip(RoundedCornerShape(8.dp))
-      .background(Color(0xFF18181B)),
+      .clip(RectangleShape)
+      .background(Color.Black),
   ) {
     Text(
       text,

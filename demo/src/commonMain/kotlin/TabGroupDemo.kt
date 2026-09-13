@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,9 +42,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
@@ -60,44 +59,44 @@ fun TabGroupDemo() {
   class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)
 
   val categories = mapOf(
-    "Trending" to listOf(
+    "TRENDING" to listOf(
       Article(
-        title = "I hosted my startup's backend on a Tamagotchi – AMA",
-        relativeTime = "11 hours ago",
+        title = "I HOSTED MY STARTUP'S BACKEND ON A TAMAGOTCHI – AMA",
+        relativeTime = "11 HOURS AGO",
         comments = 312,
         points = 1042,
       ),
       Article(
-        title = "I fired myself to improve company culture — it worked",
-        relativeTime = "9 hours ago",
+        title = "I FIRED MYSELF TO IMPROVE COMPANY CULTURE — IT WORKED",
+        relativeTime = "9 HOURS AGO",
         comments = 264,
         points = 928,
       ),
     ),
-    "Latest" to listOf(
+    "LATEST" to listOf(
       Article(
-        title = "The office microwave is now a Kubernetes node",
-        relativeTime = "2 hours ago",
+        title = "THE OFFICE MICROWAVE IS NOW A KUBERNETES NODE",
+        relativeTime = "2 HOURS AGO",
         comments = 87,
         points = 356,
       ),
       Article(
-        title = "We replaced scrum with interpretive dancing",
-        relativeTime = "1 hour ago",
+        title = "WE REPLACED SCRUM WITH INTERPRETIVE DANCING",
+        relativeTime = "1 HOUR AGO",
         comments = 52,
         points = 198,
       ),
     ),
-    "Popular" to listOf(
+    "POPULAR" to listOf(
       Article(
-        title = "Social network for ants is growing fast",
-        relativeTime = "14 hours ago",
+        title = "SOCIAL NETWORK FOR ANTS IS GROWING FAST",
+        relativeTime = "14 HOURS AGO",
         comments = 412,
         points = 1376,
       ),
       Article(
-        title = "Why I quit my $800K FAANG job to grow mushrooms",
-        relativeTime = "16 hours ago",
+        title = "WHY I QUIT MY $800K FAANG JOB TO GROW MUSHROOMS",
+        relativeTime = "16 HOURS AGO",
         comments = 391,
         points = 1204,
       ),
@@ -123,9 +122,9 @@ fun TabGroupDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFF8FAFC))
-            .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+            .clip(RectangleShape)
+            .background(Color.White)
+            .border(1.dp, Color.Black, RectangleShape),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -138,17 +137,17 @@ fun TabGroupDemo() {
                   Text(
                     text = key,
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                    color = if (selected) Color.Black else Color(0xFF757575),
+                    color = Color.Black,
                   )
                   if (selected) {
                     Box(
                       modifier = Modifier
                         .background(
                           color = Color.Black,
-                          shape = RoundedCornerShape(2.dp),
+                          shape = RectangleShape,
                         )
                         .fillMaxWidth()
-                        .height(3.dp)
+                        .height(1.dp)
                         .align(Alignment.BottomCenter),
                     )
                   }
@@ -165,16 +164,16 @@ fun TabGroupDemo() {
             modifier = Modifier
               .fillMaxWidth()
               .background(
-                color = Color(0xFFF8FAFC),
-                shape = RoundedCornerShape(8.dp),
+                color = Color.White,
+                shape = RectangleShape,
               )
-              .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
+              .border(1.dp, Color.Black, RectangleShape),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->
                 UnstyledButton(
                   onClick = { /* TODO */ },
-                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                  modifier = Modifier.clip(RectangleShape),
                   indication = LocalIndication.current,
                 ) {
                   Column(Modifier.padding(12.dp)) {
@@ -186,13 +185,13 @@ fun TabGroupDemo() {
                     Row(
                       horizontalArrangement = Arrangement.spacedBy(4.dp),
                       verticalAlignment = Alignment.CenterVertically,
-                      modifier = Modifier.fillMaxWidth().alpha(0.6f),
+                      modifier = Modifier.fillMaxWidth(),
                     ) {
                       Text(item.relativeTime)
                       Text("·")
-                      Text("${item.comments} comments")
+                      Text("${item.comments} COMMENTS")
                       Text("·")
-                      Text("${item.points} shares")
+                      Text("${item.points} SHARES")
                     }
                   }
                 }

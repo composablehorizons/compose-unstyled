@@ -46,7 +46,6 @@ kotlin {
         implementation(libs.compose.foundation)
         implementation(project(":composeunstyled-primitives"))
         implementation(libs.androidx.activitycompose)
-        implementation(libs.composables.ripple)
       }
     }
   }
