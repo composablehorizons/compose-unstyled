@@ -80,7 +80,7 @@ class TooltipCommonTest {
   }
 
   @Test
-  fun tooltipHostDoesNotAcceptDefaultPortals() = runComposeUiTest {
+  fun tooltipHostDoesNotAcceptUntargetedPortals() = runComposeUiTest {
     setContent {
       TooltipHost {
         Portal { BasicText("Generic content") }

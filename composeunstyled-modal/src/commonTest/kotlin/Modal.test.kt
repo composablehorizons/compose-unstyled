@@ -66,7 +66,7 @@ class ModalTest {
   }
 
   @Test
-  fun modalHostDoesNotAcceptDefaultPortals() = runComposeUiTest {
+  fun modalHostDoesNotAcceptUntargetedPortals() = runComposeUiTest {
     setContent {
       ModalHost {
         Portal { Box(Modifier.testTag("generic")) }

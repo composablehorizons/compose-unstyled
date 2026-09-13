@@ -39,7 +39,7 @@ import androidx.compose.ui.Modifier
 @Stable
 class PortalTarget {
   companion object {
-    val Default = PortalTarget()
+    val Unspecified = PortalTarget()
   }
 }
 
@@ -88,7 +88,7 @@ private class PortalState {
 @Composable
 fun PortalHost(
   modifier: Modifier = Modifier,
-  target: PortalTarget = PortalTarget.Default,
+  target: PortalTarget = PortalTarget.Unspecified,
   content: @Composable () -> Unit,
 ) {
   val state = remember { PortalState() }
@@ -114,7 +114,7 @@ fun PortalHost(
 
 @Composable
 fun Portal(
-  target: PortalTarget = PortalTarget.Default,
+  target: PortalTarget = PortalTarget.Unspecified,
   content: @Composable () -> Unit,
 ) {
   val state = LocalPortalStates.current[target]
