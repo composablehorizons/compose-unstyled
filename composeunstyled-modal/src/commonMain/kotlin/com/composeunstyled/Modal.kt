@@ -49,7 +49,11 @@ import kotlinx.coroutines.flow.first
 class ModalState(initiallyVisible: Boolean = false) {
   val transitionState = MutableTransitionState(initiallyVisible)
   internal var mountedFragments by mutableIntStateOf(0)
+  val hasMountedFragments: Boolean
+    get() = mountedFragments > 0
   internal var attachedToWindow by mutableStateOf(false)
+  val isAttachedToWindow: Boolean
+    get() = attachedToWindow
 
   suspend fun awaitAttachedToWindow() {
     snapshotFlow { attachedToWindow }.first { it }
