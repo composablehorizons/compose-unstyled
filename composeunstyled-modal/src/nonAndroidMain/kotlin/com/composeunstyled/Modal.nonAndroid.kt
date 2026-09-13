@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
@@ -40,6 +41,8 @@ internal actual fun PlatformModal(
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable ModalScope.() -> Unit,
 ) {
+  val layoutDirection = LocalLayoutDirection.current
+
   Dialog(
     onDismissRequest = {},
     properties = DialogProperties(
@@ -52,7 +55,10 @@ internal actual fun PlatformModal(
       animateTransition = false,
     ),
     content = {
-      CompositionLocalProvider(LocalModalState provides state) {
+      CompositionLocalProvider(
+        LocalModalState provides state,
+        LocalLayoutDirection provides layoutDirection,
+      ) {
         Box(Modifier.fillMaxSize().onKeyEvent(onKeyEvent)) {
           ModalScopeContent(state = state, content = content)
         }
