@@ -1,6 +1,5 @@
 ---
-"composeunstyled-tooltip": patch
-"composeunstyled-modal": patch
+"compose-unstyled": patch
 ---
 
 Fix tooltips and modals rendering in the wrong portal host. Each now renders in its matching `TooltipHost` or `ModalHost`, even when another portal host is nested inside. These hosts no longer display unrelated portal content.
