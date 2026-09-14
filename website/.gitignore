@@ -1,0 +1,8 @@
+node_modules/
+.astro/
+dist/
+src/content/docs/
+public/docs/
+public/llms*.txt
+public/composeunstyled-v2-assets/
+public/composeunstyled-v2-demos/
