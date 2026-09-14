@@ -1,4 +1,5 @@
 ---
+import '../styles/prototyping.css';
 import { sitePath, site } from '../../site.config.mjs';
 interface Props {
   title: string;
@@ -18,17 +19,18 @@ const { title, description, markdownUrl } = Astro.props;
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
   </head>
   <body>
-    <a href="#main">SKIP TO CONTENT</a>
-    <header>
+    <a class="skip-link" href="#main">SKIP TO CONTENT</a>
+    <header class="site-header">
+      <a class="brand" href={sitePath('/')}>COMPOSE UNSTYLED</a>
       <nav aria-label="Main navigation">
-        <a href={sitePath('/')}>HOME</a> |
-        <a href={sitePath('/docs/')}>DOCUMENTATION</a> |
+        <a href={sitePath('/')}>HOME</a>
+        <a href={sitePath('/docs/')}>DOCUMENTATION</a>
         <a href="https://github.com/composablehorizons/compose-unstyled">GITHUB</a>
       </nav>
     </header>
     <main id="main"><slot /></main>
-    <footer>
-      <a href={sitePath('/llms.txt')}>LLMS.TXT</a> |
+    <footer class="site-footer">
+      <a href={sitePath('/llms.txt')}>LLMS.TXT</a>
       <a href={sitePath('/llms-full.txt')}>FULL DOCUMENTATION FOR LLMS</a>
     </footer>
   </body>

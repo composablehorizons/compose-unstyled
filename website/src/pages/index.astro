@@ -3,11 +3,13 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { sitePath } from '../../site.config.mjs';
 ---
 <SiteLayout title="Compose Unstyled">
-  <h1>COMPOSE UNSTYLED</h1>
-  <p>BUILD YOUR OWN DESIGN SYSTEM WITH COMPOSE.</p>
-  <ul>
-    <li><a href={sitePath('/docs/installation/')}>GET STARTED</a></li>
-    <li><a href={sitePath('/docs/')}>READ THE DOCUMENTATION</a></li>
-    <li><a href={sitePath('/docs/components/')}>EXPLORE COMPONENTS AND DEMOS</a></li>
-  </ul>
+  <section class="landing">
+    <h1>COMPOSE UNSTYLED</h1>
+    <p>BUILD YOUR OWN DESIGN SYSTEM WITH COMPOSE.</p>
+    <ul class="landing-links">
+      <li><a href={sitePath('/docs/installation/')}>GET STARTED</a></li>
+      <li><a href={sitePath('/docs/')}>READ THE DOCUMENTATION</a></li>
+      <li><a href={sitePath('/docs/components/')}>EXPLORE COMPONENTS AND DEMOS</a></li>
+    </ul>
+  </section>
 </SiteLayout>
