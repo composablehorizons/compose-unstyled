@@ -1,0 +1,62 @@
+---
+import { sitePath } from '../../site.config.mjs';
+import '../styles/prototyping.css';
+const components = [
+  ['Bottom sheet', 'bottom-sheet', 'Drag, snap, and dismiss.'],
+  ['Dialog', 'dialog', 'Focus stays where it belongs.'],
+  ['Dropdown menu', 'dropdown-menu', 'Menus for touch and keyboard.'],
+  ['Checkbox', 'checkbox', 'States you can make your own.'],
+  ['Slider', 'slider', 'Let people choose a value.'],
+  ['Tab group', 'tabgroup', 'Switch between views.'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Build your own design system with Compose Unstyled." />
+    <title>Compose Unstyled — Your design. Your Compose.</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">SKIP TO CONTENT</a>
+    <div class="shell">
+      <header>
+        <a class="brand" href={sitePath('/')}>COMPOSE UNSTYLED</a>
+        <nav aria-label="Main navigation">
+          <a href={sitePath('/docs/overview/')}>DOCS</a>
+          <a href="#components">COMPONENTS</a>
+          <a href="https://github.com/composablehorizons/compose-unstyled">GITHUB ↗</a>
+        </nav>
+      </header>
+      <main id="main">
+        <section class="hero">
+          <p class="eyebrow">BUILD YOUR OWN DESIGN SYSTEM</p>
+          <h1>YOUR DESIGN.<br />YOUR COMPOSE.</h1>
+          <p class="intro">THE BUILDING BLOCKS FOR YOUR NEXT APP.<br />WE HANDLE THE BEHAVIOR. YOU BRING THE STYLE.</p>
+          <div class="actions">
+            <a class="button primary" href={sitePath('/docs/installation/')}>GET STARTED →</a>
+            <a class="button" href={sitePath('/docs/components/')}>EXPLORE COMPONENTS</a>
+          </div>
+          <p class="platforms">ANDROID / IOS / DESKTOP / WEB</p>
+        </section>
+        <section class="principles" aria-label="Why Compose Unstyled">
+          <article><span>01</span><h2>YOUR LOOK</h2><p>CHOOSE EVERY COLOR, SHAPE, AND STYLE.</p></article>
+          <article><span>02</span><h2>BUILT-IN BEHAVIOR</h2><p>FOCUS, KEYBOARD INPUT, AND ACCESSIBILITY SEMANTICS.</p></article>
+          <article><span>03</span><h2>SHARED CODE</h2><p>BUILD FOR EACH PLATFORM WITH COMPOSE.</p></article>
+        </section>
+        <section id="components" class="components">
+          <div class="section-title"><div><p class="eyebrow">START WITH THE BUILDING BLOCKS</p><h2>MAKE THEM YOURS.</h2></div><a href={sitePath('/docs/components/')}>ALL COMPONENTS →</a></div>
+          <div class="component-list">
+            {components.map(([title, slug, description]) => <a href={sitePath(`/docs/${slug}/`)}><h3>{title.toUpperCase()} <span>↗</span></h3><p>{description.toUpperCase()}</p></a>)}
+          </div>
+        </section>
+        <section class="start">
+          <div><p class="eyebrow">BRING YOUR NEXT IDEA</p><h2>START BUILDING.</h2><p>ADD UNSTYLED TO YOUR COMPOSE PROJECT.</p></div>
+          <a class="button primary" href={sitePath('/docs/installation/')}>READ THE INSTALL GUIDE →</a>
+        </section>
+      </main>
+      <footer><span>COMPOSE UNSTYLED</span><nav aria-label="Footer"><a href={sitePath('/docs/community/')}>COMMUNITY</a><a href={sitePath('/llms.txt')}>LLMS.TXT</a><a href={sitePath('/llms-full.txt')}>FULL DOCS FOR LLMS</a></nav></footer>
+    </div>
+  </body>
+</html>
