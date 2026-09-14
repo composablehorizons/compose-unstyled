@@ -1,0 +1,17 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import DocsNavigation from '../components/DocsNavigation.astro';
+const { title, description, markdownUrl } = Astro.props.frontmatter;
+---
+<SiteLayout title={title} description={description} markdownUrl={markdownUrl}>
+  <details>
+    <summary>DOCUMENTATION CONTENTS</summary>
+    <DocsNavigation />
+  </details>
+  <article>
+    <h1>{title}</h1>
+    {description && <p>{description}</p>}
+    <p><a href={markdownUrl}>VIEW MARKDOWN</a></p>
+    <slot />
+  </article>
+</SiteLayout>

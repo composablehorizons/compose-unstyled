@@ -1,0 +1,35 @@
+---
+import { sitePath, site } from '../../site.config.mjs';
+interface Props {
+  title: string;
+  description?: string;
+  markdownUrl?: string;
+}
+const { title, description, markdownUrl } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | Compose Unstyled</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={new URL(Astro.url.pathname, site)} />
+    {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
+  </head>
+  <body>
+    <a href="#main">SKIP TO CONTENT</a>
+    <header>
+      <nav aria-label="Main navigation">
+        <a href={sitePath('/')}>HOME</a> |
+        <a href={sitePath('/docs/')}>DOCUMENTATION</a> |
+        <a href="https://github.com/composablehorizons/compose-unstyled">GITHUB</a>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      <a href={sitePath('/llms.txt')}>LLMS.TXT</a> |
+      <a href={sitePath('/llms-full.txt')}>FULL DOCUMENTATION FOR LLMS</a>
+    </footer>
+  </body>
+</html>
