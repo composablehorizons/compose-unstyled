@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DrawerPlacement
+import com.composeunstyled.DrawerPresentation
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
 import com.composeunstyled.Panel
@@ -74,6 +75,7 @@ internal fun DrawerOverscrollRegression(
   overscrollEffect: OverscrollEffect = rememberElasticOverscrollEffect(),
 ) {
   val snapPoints = DrawerSnapPoints<DrawerRegressionValue> {
+    DrawerRegressionValue.Closed at DrawerSnapPoint.Zero
     DrawerRegressionValue.Open at DrawerSnapPoint.ContentSize
   }
   val drawerState = remember {
@@ -87,30 +89,31 @@ internal fun DrawerOverscrollRegression(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
     placement = DrawerPlacement.Bottom,
+    presentation = DrawerPresentation.Inline,
   ) {
     Viewport(
       modifier = Modifier.fillMaxSize(),
     ) {
       Panel(
         modifier = Modifier
-          .dropShadow(
-            shape = RectangleShape,
-            shadow = Shadow(
-              radius = 0.dp,
-              color = Color.Black,
-              spread = 0.dp,
-              offset = DpOffset(8.dp, 8.dp),
-              alpha = 0.33f,
-            ),
-          )
-          .background(Color.White)
-          .border(1.dp, Color.Black)
           .fillMaxWidth()
           .testTag(DrawerPanelTag),
         overscrollEffect = overscrollEffect,
       ) {
         Box(
           modifier = Modifier
+            .dropShadow(
+              shape = RectangleShape,
+              shadow = Shadow(
+                radius = 0.dp,
+                color = Color.Black,
+                spread = 0.dp,
+                offset = DpOffset(8.dp, 8.dp),
+                alpha = 0.33f,
+              ),
+            )
+            .background(Color.White)
+            .border(1.dp, Color.Black)
             .fillMaxWidth()
             .height(220.dp),
         )
@@ -120,6 +123,7 @@ internal fun DrawerOverscrollRegression(
 }
 
 private enum class DrawerRegressionValue {
+  Closed,
   Open,
 }
 
