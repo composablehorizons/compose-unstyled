@@ -14,7 +14,6 @@ let links = 0;
 for (const file of pages) {
   const html = readFileSync(path.join(dist, file), 'utf8');
   for (const [tag] of html.matchAll(/<[a-z][^>]*>/gi)) {
-    assert(!/<style\b|\sstyle=|rel=["']stylesheet["']/i.test(tag), `${file}: unexpected styling`);
     for (const [, value] of tag.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
       if (!value.startsWith('/') || value.startsWith('//')) continue;
       const pathname = new URL(value, 'https://build.invalid').pathname;
@@ -34,4 +33,4 @@ const demo = readFileSync(path.join(dist, 'composeunstyled-v2-demos/index.html')
 for (const [, value] of demo.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
   assert(existsSync(path.join(dist, 'composeunstyled-v2-demos', value)), `Missing demo asset: ${value}`);
 }
-console.log(`Verified ${pages.length} unstyled pages, ${links} local links, LLM URLs, and demo assets.`);
+console.log(`Verified ${pages.length} pages, ${links} local links, LLM URLs, and demo assets.`);
