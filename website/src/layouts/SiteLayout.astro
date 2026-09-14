@@ -13,6 +13,9 @@ const { title, description, markdownUrl } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={sitePath('/favicon.ico')} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={sitePath('/favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={sitePath('/favicon-16x16.png')} />
     <title>{title} | Compose Unstyled</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={new URL(Astro.url.pathname, site)} />
@@ -21,7 +24,10 @@ const { title, description, markdownUrl } = Astro.props;
   <body>
     <a class="skip-link" href="#main">SKIP TO CONTENT</a>
     <header class="site-header">
-      <a class="brand" href={sitePath('/')}>COMPOSE UNSTYLED</a>
+      <a class="brand" href={sitePath('/')}>
+        <img src={sitePath('/icons/compose-unstyled.svg')} width="32" height="32" alt="" />
+        COMPOSE UNSTYLED
+      </a>
       <nav aria-label="Main navigation">
         <a href={sitePath('/')}>HOME</a>
         <a href={sitePath('/docs/')}>DOCUMENTATION</a>
