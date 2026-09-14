@@ -15,7 +15,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .skip-link:focus { transform: none; }
 .site-header, .site-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; padding: 1.25rem 2rem; }
 .site-header { justify-content: space-between; border-bottom: 1px solid #000; }
-.brand { font-weight: 700; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; gap: 0.75rem; font-weight: 700; text-decoration: none; }
 .site-header nav { display: flex; flex-wrap: wrap; gap: 1.5rem; }
 .site-footer { border-top: 1px solid #000; font-size: 0.8rem; }
 .docs-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); }
