@@ -9,6 +9,7 @@ class SelectChecksTest(unittest.TestCase):
             "website/src/layouts/SiteLayout.astro",
             "website/public/favicon.ico",
             ".github/workflows/deploy-website.yml",
+            ".github/workflows/redeploy-docs.yml",
             ".github/workflows/ci.yml",
             ".github/scripts/select_pr_checks.py",
             ".github/scripts/test_select_pr_checks.py",
