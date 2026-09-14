@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, rm, cp, access } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm, cp, access, readdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -21,19 +21,19 @@ try {
 
 const generated = path.join(root, 'build/generated/website-docs/pages');
 execFileSync('bun', ['scripts/generate-compose-unstyled-api.mjs', generated], { cwd: root, stdio: 'inherit' });
-const contentDir = path.join(website, 'src/content/docs');
+const contentDir = path.join(website, 'src/pages/docs');
 const publicDir = path.join(website, 'public');
-// Re-render generated Markdown so code blocks cannot retain obsolete theme asset URLs.
-await rm(path.join(website, 'node_modules/.astro/data-store.json'), { force: true });
-await rm(contentDir, { recursive: true, force: true });
+await mkdir(contentDir, { recursive: true });
+for (const file of await readdir(contentDir)) {
+  if (file.endsWith('.md')) await rm(path.join(contentDir, file));
+}
 await rm(path.join(publicDir, 'docs'), { recursive: true, force: true });
-await mkdir(path.join(contentDir, 'docs'), { recursive: true });
 await mkdir(path.join(publicDir, 'docs'), { recursive: true });
 
 const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const primitives = navigation.sections.find(section => section.title === 'Primitives').pages;
 const componentLinks = primitives.map(page => `[${page.title}](/docs/${page.slug}/)`).join('\n\n');
-const componentGrid = `<div class="component-grid">${primitives.map(page => `<a href="/docs/${page.slug}/">${escape(page.title)}</a>`).join('')}</div>`;
+const componentList = `<ul>${primitives.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
 const llms = [`# Compose Unstyled ${version}`, '', '> Renderless components for Jetpack Compose and Compose Multiplatform.', '', `These docs describe version ${version}. Examples use this version's APIs.`, ''];
 const full = [`# Compose Unstyled ${version}`, ''];
 let count = 0;
@@ -50,7 +50,7 @@ for (const section of navigation.sections) {
       .replaceAll('/compose-unstyled/docs/', '/docs/')
       .replaceAll('](/docs/androidx.', '](https://composables.com/docs/androidx.')
       .replace(/\]\(([A-Za-z0-9._-]+)\.md(#[^)]*)?\)/g, (_, slug, hash = '') => `](/docs/${slug}/${hash})`);
-    let htmlBody = body.replaceAll('{{unstyled_component_grid}}', componentGrid);
+    let htmlBody = body.replaceAll('{{unstyled_component_grid}}', componentList);
     let markdownBody = body.replaceAll('{{unstyled_component_grid}}', componentLinks);
 
     for (const marker of body.matchAll(/<UnstyledDemo\s+id="([A-Za-z0-9._-]+)"\s*\/>/g)) {
@@ -60,8 +60,8 @@ for (const section of navigation.sections) {
       const source = (await read(`${sources.root}/${file}`))
         .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
         .replace(/^\s*package\s+[A-Za-z0-9_.]+\s*\n+/, '').trim();
-      const code = `\n\n\`\`\`kotlin title="${file}"\n${source}\n\`\`\`\n\n`;
-      htmlBody = htmlBody.replace(marker[0], `<div class="demo-frame"><iframe src="/composeunstyled-v2-demos/index.html?id=${id}" title="${escape(page.title)} interactive demo" loading="lazy"></iframe></div>\n\n<details class="demo-source" open data-pagefind-ignore>\n<summary>View Kotlin source</summary>\n${code}<a href="https://github.com/composablehorizons/compose-unstyled/blob/main/${sources.root}/${file}">Open source on GitHub</a>\n</details>\n`);
+      const code = `\n\n\`\`\`kotlin\n${source}\n\`\`\`\n\n`;
+      htmlBody = htmlBody.replace(marker[0], `<iframe src="/composeunstyled-v2-demos/index.html?id=${id}" title="${escape(page.title)} interactive demo" width="600" height="450" loading="lazy"></iframe>\n\n<p><a href="/composeunstyled-v2-demos/index.html?id=${id}">OPEN DEMO</a></p>\n\n<details>\n<summary>VIEW KOTLIN SOURCE</summary>\n${code}<a href="https://github.com/composablehorizons/compose-unstyled/blob/main/${sources.root}/${file}">OPEN SOURCE ON GITHUB</a>\n</details>\n`);
       markdownBody = markdownBody.replace(marker[0], `### Example: ${id}\n${code}`);
     }
 
@@ -70,11 +70,11 @@ for (const section of navigation.sections) {
     htmlBody = htmlBody
       .replace(/\]\(\/(?!\/)/g, `](${sitePath('/')}`)
       .replace(/\b(src|href)="\/(?!\/)/g, (_, attr) => `${attr}="${sitePath('/')}`);
-    await writeFile(path.join(contentDir, 'docs', `${page.slug}.md`), `---\n${stringify({
-      ...metadata,
-      slug: `docs/${page.slug}`,
-      editUrl: `https://github.com/composablehorizons/compose-unstyled/edit/main/docs/pages/${page.slug}.md`,
-      head: [{ tag: 'link', attrs: { rel: 'alternate', type: 'text/markdown', href: sitePath(`/docs/${page.slug}.md`) } }],
+    await writeFile(path.join(contentDir, `${page.slug}.md`), `---\n${stringify({
+      layout: '../../layouts/DocsLayout.astro',
+      title: metadata.title,
+      description: metadata.description,
+      markdownUrl: sitePath(`/docs/${page.slug}.md`),
     })}---\n${htmlBody}`);
     markdownBody = markdownBody
       .replace(/\]\(\/docs\/([^/)]+)\/(#[^)]*)?\)/g, (_, slug, hash = '') => `](${siteUrl(`/docs/${slug}.md`)}${hash})`)

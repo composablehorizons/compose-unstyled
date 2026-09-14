@@ -1,15 +1,14 @@
 {
-  "name": "unstyled-website-spike",
+  "name": "compose-unstyled-website",
   "private": true,
   "type": "module",
   "scripts": {
     "prepare:docs": "bun scripts/prepare-docs.mjs",
     "dev": "bun run prepare:docs && astro dev --host 127.0.0.1 --port 4321",
-    "build": "bun run prepare:docs && astro build",
+    "build": "bun run prepare:docs && astro build && bun scripts/check-build.mjs",
     "preview": "astro preview --host 127.0.0.1 --port 4321"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.42.0",
     "astro": "^7.3.2",
     "yaml": "^2.9.1"
   }

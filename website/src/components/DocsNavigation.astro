@@ -1,0 +1,18 @@
+---
+import docsYaml from '../../../docs/docs.yml?raw';
+import { parse } from 'yaml';
+import { sitePath } from '../../site.config.mjs';
+const navigation = parse(docsYaml);
+---
+<nav aria-label="Documentation">
+  {navigation.sections.map(section => (
+    <section>
+      <h2>{section.title}</h2>
+      <ul>
+        {section.pages.map(page => (
+          <li><a href={sitePath(`/docs/${page.slug}/`)}>{page.title}</a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</nav>
