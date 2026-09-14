@@ -1,0 +1,197 @@
+.landing-header img,
+.unstyled-page img,
+.landing-footer img {
+  filter: grayscale(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .landing-brand img,
+  .unstyled-brand img {
+    filter: grayscale(1) brightness(0) invert(1);
+  }
+}
+
+.unstyled-page {
+  --section-gap: 10rem;
+  --content-gap: var(--space-6);
+  --text-gap: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+  width: min(var(--content-max-width), calc(100% - var(--space-7)));
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.unstyled-page > section {
+  display: grid;
+  gap: var(--content-gap);
+}
+
+.unstyled-page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.unstyled-page p {
+  text-wrap: pretty;
+}
+
+.unstyled-page :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.unstyled-hero-copy,
+.unstyled-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--text-gap);
+}
+
+.unstyled-hero-copy,
+.unstyled-faq {
+  width: min(var(--content-readable-max-width), 100%);
+}
+
+.unstyled-faq details + details {
+  border-top: var(--stroke-thin) solid var(--color-outline);
+}
+
+.unstyled-faq summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+  list-style: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+}
+
+.unstyled-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.unstyled-faq-icon {
+  flex: 0 0 1em;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.unstyled-faq-icon::before {
+  content: '+';
+}
+
+.unstyled-faq details[open] .unstyled-faq-icon::before {
+  content: '−';
+}
+
+.unstyled-faq summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.unstyled-faq details p {
+  padding-bottom: var(--space-6);
+}
+
+.unstyled-page h1 {
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.unstyled-page h2 {
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+  line-height: 1.2;
+}
+
+.unstyled-page h3 {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.3;
+}
+
+.unstyled-hero-actions {
+  font-size: 1.25rem;
+  margin-top: calc(var(--content-gap) - var(--text-gap));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.unstyled-component-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-5) var(--space-7);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-body);
+}
+
+.unstyled-brands-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+}
+
+.unstyled-brand {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.unstyled-feature-link {
+  font-size: 1.25rem;
+}
+
+.unstyled-brand img {
+  display: block;
+  height: var(--product-logo-height);
+  width: auto;
+  max-width: 100%;
+}
+
+.landing-header, .landing-footer {
+  width: min(var(--content-max-width), calc(100% - var(--space-7)));
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+}
+.landing-brand { display: inline-flex; align-items: center; gap: var(--space-3); color: inherit; text-decoration: none; }
+.landing-footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.landing-footer { margin-top: 4rem; padding-block: var(--space-7); }
+.landing-footer a { color: inherit; }
+.landing-skip-link { position: absolute; z-index: 10; top: var(--space-2); left: var(--space-4); padding: var(--space-3); background: var(--color-surface); color: inherit; transform: translateY(-150%); }
+.landing-skip-link:focus { transform: none; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+.landing-sponsors-lede { font-size: var(--font-size-body); }
+@media (max-width: 639px) {
+  .unstyled-brands-grid { gap: 2rem; }
+}
+
+.landing-link {
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: var(--link-underline-offset);
+  cursor: pointer;
+}
+.landing-link:hover { text-decoration: none; }
+
+
+@media (max-width: 639px) {
+  .unstyled-page {
+    --section-gap: 6rem;
+    padding-block: 3rem;
+  }
+}

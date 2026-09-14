@@ -1,15 +1,67 @@
 ---
-import SiteLayout from '../layouts/SiteLayout.astro';
+import LandingLayout from '../layouts/LandingLayout.astro';
+import { brands } from '../data/landing.json';
 import { sitePath } from '../../site.config.mjs';
+import docsYaml from '../../../docs/docs.yml?raw';
+import { parse } from 'yaml';
+const navigation = parse(docsYaml);
+const components = navigation.sections.find(section => section.title === 'Primitives').pages;
 ---
-<SiteLayout title="Compose Unstyled">
-  <section class="landing">
-    <h1>COMPOSE UNSTYLED</h1>
-    <p>BUILD YOUR OWN DESIGN SYSTEM WITH COMPOSE.</p>
-    <ul class="landing-links">
-      <li><a href={sitePath('/docs/installation/')}>GET STARTED</a></li>
-      <li><a href={sitePath('/docs/')}>READ THE DOCUMENTATION</a></li>
-      <li><a href={sitePath('/docs/components/')}>EXPLORE COMPONENTS AND DEMOS</a></li>
-    </ul>
-  </section>
-</SiteLayout>
+<LandingLayout>
+  <div class="unstyled-page">
+    <header class="unstyled-hero">
+      <div class="unstyled-hero-copy">
+        <h1 class="headerLarge">The missing design system layer for Jetpack Compose</h1>
+        <p class="bodyMedium">Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Build high quality apps and design systems for every platform.</p>
+        <div class="unstyled-hero-actions">
+          <a href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow" class="landing-link">
+            View on Github (1,227 stars) →
+          </a>
+          <a href={sitePath('/docs/installation/')} class="landing-link">Get Started →</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="unstyled-components" aria-label="Components">
+      <h2 class="headerMedium"><a class="landing-link" href={sitePath('/docs/components/')}>Components →</a></h2>
+      <ul class="unstyled-component-links" role="list">
+        {components.map(component => (
+          <li><a class="landing-link" href={sitePath(`/docs/${component.slug}/`)}>{component.title} →</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="unstyled-brands" aria-labelledby="teams-title">
+      <div class="unstyled-section-header">
+        <h2 id="teams-title" class="headerMedium">Used by exceptional teams</h2>
+        <p class="landing-sponsors-lede">Used by exceptional product teams to deliver spectacular user experiences.</p>
+      </div>
+      <div class="unstyled-brands-grid">
+        {brands.map(brand => <div class="unstyled-brand"><img src={sitePath(brand.src)} alt={brand.alt} loading="lazy" /></div>)}
+      </div>
+      <p><a class="landing-link unstyled-feature-link" href="https://tally.so/r/jaWxRa" target="_blank" rel="noopener noreferrer nofollow">Apply to be featured →</a></p>
+    </section>
+
+    <section class="unstyled-faq" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="headerMedium">Frequently asked questions</h2>
+      <div class="unstyled-faq-items">
+        <details>
+          <summary>Is this a component library?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>
+          <p>No. Components in Unstyled are building blocks for your own components with your own styling. They handle UX details, accessibility and keyboard navigation. It's how you build your own component library.</p>
+        </details>
+        <details>
+          <summary>Is this based on Material Compose?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>
+          <p>No. Components are written from scratch. A few reuse source code from Material Compose for behavior, but bring no styling.</p>
+        </details>
+        <details>
+          <summary>Can I use this with Material Compose or other design systems?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>
+          <p>Yes. Many people use Unstyled because they prefer the simpler API and customization options of its <a class="landing-link" href={sitePath('/docs/modal-bottom-sheet/')}>Modal Bottom Sheet</a> over the Material one.</p>
+        </details>
+        <details>
+          <summary>Can I use the new Styles API with this?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>
+          <p>Yes. All components in Compose Unstyled accept a <code>modifier</code> parameter so you can style them as you like. The new Jetpack Compose Styles API is nothing more than a specialized Modifier.</p>
+        </details>
+      </div>
+    </section>
+  </div>
+</LandingLayout>

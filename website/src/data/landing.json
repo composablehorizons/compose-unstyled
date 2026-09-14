@@ -1,0 +1,16 @@
+{
+    "brands": [
+        {
+            "src": "/brands/perplexity-ai.svg",
+            "alt": "Perplexity"
+        },
+        {
+            "src": "/brands/warner-music-group.svg",
+            "alt": "Warner Bros Music"
+        },
+        {
+            "src": "/brands/webwag-mobile.svg",
+            "alt": "Webwag Mobile"
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+---
+import '../styles/tokens.css';
+import '../styles/landing.css';
+import { sitePath, siteUrl } from '../../site.config.mjs';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href={sitePath('/icons/compose-unstyled.svg')} />
+    <title>Compose Unstyled — The missing design system layer for Jetpack Compose</title>
+    <meta name="description" content="Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Build your own design system for every platform." />
+    <link rel="canonical" href={siteUrl('/')} />
+  </head>
+  <body>
+    <a class="landing-skip-link" href="#main">Skip to content</a>
+    <header class="landing-header">
+      <a class="landing-brand titleLarge" href={sitePath('/')}>
+        <img src={sitePath('/icons/compose-unstyled.svg')} width="32" height="32" alt="" />
+        Compose Unstyled
+      </a>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="landing-footer">
+      <a class="landing-brand titleMedium" href="https://composables.com" target="_blank" rel="noopener noreferrer nofollow">Made by Composables</a>
+      <nav aria-label="Footer navigation">
+        <a class="landing-link" href={sitePath('/docs/')}>Documentation</a>
+        <a class="landing-link" href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow">GitHub</a>
+        <a class="landing-link" href={sitePath('/llms.txt')}>llms.txt</a>
+      </nav>
+    </footer>
+  </body>
+</html>

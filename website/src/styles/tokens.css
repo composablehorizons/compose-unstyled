@@ -1,0 +1,151 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/Inter-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/PlusJakartaSans-Bold.woff2") format("woff2");
+}
+
+html {
+  color-scheme: light dark;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-on-background: rgb(29, 29, 31);
+  --color-accent: #000000;
+  --color-outline: rgba(0, 0, 0, 0.16);
+  --font-sans: "Inter", "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", sans-serif;
+  --font-size-body: 1rem;
+  --font-size-title-large: 1.125rem;
+  --font-size-header-medium: 2.75rem;
+  --font-size-header-large: 4.4rem;
+  --font-size-header-large-compact: 3.25rem;
+  --line-height-header: 1.08;
+  --line-height-header-large: 1.05;
+  --line-height-body: 1.5;
+  --line-height-loose: 1.6;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --stroke-thin: 1px;
+  --content-max-width: 1280px;
+  --content-readable-max-width: 800px;
+  --product-logo-height: 64px;
+  --link-underline-offset: 0.18em;
+
+  min-height: 100%;
+  background: var(--color-background);
+  color: var(--color-on-background);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --color-background: #121212;
+    --color-surface: #121212;
+    --color-on-background: #e5e5e5;
+    --color-accent: #e5e5e5;
+    --color-outline: rgba(255, 255, 255, 0.24);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+}
+
+:where(h1, h2, h3, h4, h5, h6, p) {
+  margin: 0;
+}
+
+p {
+  line-height: var(--line-height-loose);
+}
+
+.bodyMedium {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+}
+
+.titleMedium {
+  font-family: var(--font-display);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.titleLarge {
+  font-family: var(--font-display);
+  font-size: var(--font-size-title-large);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.headerMedium,
+.headerLarge {
+  font-family: var(--font-display);
+}
+
+.headerMedium {
+  font-size: var(--font-size-header-medium);
+  line-height: var(--line-height-header);
+  font-weight: var(--font-weight-bold);
+}
+
+.headerLarge {
+  font-size: var(--font-size-header-large);
+  line-height: var(--line-height-header-large);
+  font-weight: var(--font-weight-bold);
+}
+
+@media (max-width: 900px) {
+  .headerLarge {
+    font-size: var(--font-size-header-large-compact);
+  }
+}
