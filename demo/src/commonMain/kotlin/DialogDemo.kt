@@ -58,8 +58,8 @@ import com.composeunstyled.Scrim
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Preview
 @UnstyledDemo("dialog")

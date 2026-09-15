@@ -49,8 +49,8 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.UnstyledModalBottomSheet
 import com.composeunstyled.rememberModalBottomSheetState
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Preview
 @UnstyledDemo("modal-bottom-sheet")

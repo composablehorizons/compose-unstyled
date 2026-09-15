@@ -41,8 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Indicator
 import com.composeunstyled.UnstyledProgress
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Preview
 @UnstyledDemo("progressindicator")
