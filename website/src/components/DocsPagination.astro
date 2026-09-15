@@ -1,7 +1,7 @@
 ---
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
-import { sitePath } from '../../site.config.mjs';
+import { sitePath } from '../../site.config.js';
 const pages = parse(docsYaml).sections.flatMap(section => section.pages);
 const pathname = Astro.url.pathname.replace(/\/$/, '');
 const index = pages.findIndex(page => sitePath(`/docs/${page.slug}`) === pathname);

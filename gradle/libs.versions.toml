@@ -32,6 +32,8 @@ androidx-annotation = { module = "androidx.annotation:annotation", version.ref =
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 composables-icons-lucide = { module = "com.composables:icons-lucide", version.ref = "lucide" }
 composables-ripple = { module = "com.composables:ripple-indication", version.ref = "ripple" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
 compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
 compose-ui-test-junit4 = { module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "compose" }

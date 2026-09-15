@@ -25,7 +25,12 @@ class SelectChecksTest(unittest.TestCase):
                 self.assertEqual(needs_library_checks([path]), True)
 
     def test_docs_and_generator_skip_library_checks(self):
-        for path in ["docs/pages/button.md", "docs/docs.yml", "scripts/generate-compose-unstyled-api.mjs"]:
+        for path in [
+            "docs/pages/button.md",
+            "docs/docs.yml",
+            "scripts/generate-compose-unstyled-api.js",
+            "scripts/generate-demo-registry.js",
+        ]:
             with self.subTest(path=path):
                 self.assertEqual(needs_library_checks([path]), False)
 

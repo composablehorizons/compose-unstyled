@@ -1,7 +1,7 @@
 ---
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
-import { sitePath } from '../../site.config.mjs';
+import { sitePath } from '../../site.config.js';
 const navigation = parse(docsYaml);
 ---
 <nav id={Astro.props.id} class="docs-navigation" aria-label="Documentation">

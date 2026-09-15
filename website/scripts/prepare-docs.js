@@ -1,33 +1,34 @@
-import { readFile, writeFile, mkdir, rm, cp, access, readdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { sitePath, siteUrl } from '../site.config.mjs';
+import { sitePath, siteUrl } from '../site.config.js';
 import { parse, stringify } from 'yaml';
-import { renderDemo } from './render-demo.mjs';
+import { renderDemo } from './render-demo.js';
 
 const website = fileURLToPath(new URL('../', import.meta.url));
 const root = path.resolve(website, '..');
 const read = (file) => readFile(path.join(root, file), 'utf8');
 const navigation = parse(await read('docs/docs.yml'));
-const sources = parse(await read('docs/sources.yml')).demos;
 const version = (await read('gradle/libs.versions.toml')).match(/^unstyled\s*=\s*"([^"]+)"/m)?.[1];
 if (!version) throw new Error('Missing library version');
-const demoDistribution = path.join(root, 'demo/build/dist/wasmJs/productionExecutable');
-try {
-  await access(path.join(demoDistribution, 'index.html'));
-} catch {
-  throw new Error('Build the demo once with ./gradlew :demo:wasmJsBrowserDistribution before preparing the site.');
-}
+const demoSourceMap = path.join(root, 'demo/build/generated/demo-registry/DemoSourceMap.properties');
+execFileSync('bun', ['scripts/generate-demo-registry.js'], { cwd: root, stdio: 'inherit' });
+const demoSources = new Map(
+  (await readFile(demoSourceMap, 'utf8'))
+    .split('\n')
+    .filter(line => line && !line.startsWith('#'))
+    .map(line => line.split('=', 2)),
+);
 
 const generated = path.join(root, 'build/generated/website-docs/pages');
-execFileSync('bun', ['scripts/generate-compose-unstyled-api.mjs', generated], { cwd: root, stdio: 'inherit' });
+execFileSync('bun', ['scripts/generate-compose-unstyled-api.js', generated], { cwd: root, stdio: 'inherit' });
 const contentDir = path.join(website, 'src/pages/docs');
 const publicDir = path.join(website, 'public');
+const demoRevision = await readFile(path.join(publicDir, 'composeunstyled-v2-demos/.revision'), 'utf8')
+  .then(revision => revision.trim())
+  .catch(() => undefined);
 await mkdir(contentDir, { recursive: true });
-for (const file of await readdir(contentDir)) {
-  if (file.endsWith('.md')) await rm(path.join(contentDir, file));
-}
 await rm(path.join(publicDir, 'docs'), { recursive: true, force: true });
 await mkdir(path.join(publicDir, 'docs'), { recursive: true });
 
@@ -37,6 +38,7 @@ const componentLinks = primitives.map(page => `[${page.title}](/docs/${page.slug
 const componentList = `<ul>${primitives.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
 const llms = [`# Compose Unstyled ${version}`, '', '> Renderless components for Jetpack Compose and Compose Multiplatform.', '', `These docs describe version ${version}. Examples use this version's APIs.`, ''];
 const full = [`# Compose Unstyled ${version}`, ''];
+const generatedPages = new Set();
 let count = 0;
 
 for (const section of navigation.sections) {
@@ -56,14 +58,15 @@ for (const section of navigation.sections) {
 
     for (const marker of body.matchAll(/<UnstyledDemo\s+id="([A-Za-z0-9._-]+)"\s*\/>/g)) {
       const id = marker[1];
-      const file = sources.files[id];
-      if (!file) throw new Error(`Unknown demo: ${id}`);
-      const source = (await read(`${sources.root}/${file}`))
+      const sourcePath = demoSources.get(id);
+      if (!sourcePath) throw new Error(`Unknown demo: ${id}`);
+      const file = path.basename(sourcePath);
+      const source = (await read(sourcePath))
         .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
         .replace(/^\s*package\s+[A-Za-z0-9_.]+\s*\n+/, '').trim();
-      const code = `\n\n\`\`\`kotlin expandable title="${file}" githubUrl="https://github.com/composablehorizons/compose-unstyled/blob/main/${sources.root}/${file}"\n${source}\n\`\`\`\n\n`;
+      const code = `\n\n\`\`\`kotlin expandable title="${file}" githubUrl="https://github.com/composablehorizons/compose-unstyled/blob/main/${sourcePath}"\n${source}\n\`\`\`\n\n`;
       htmlBody = htmlBody.replace(marker[0], renderDemo({
-        id, title: page.title, code,
+        id, title: page.title, code, revision: demoRevision,
       }));
       markdownBody = markdownBody.replace(marker[0], code);
     }
@@ -79,6 +82,7 @@ for (const section of navigation.sections) {
       description: metadata.description,
       markdownUrl: sitePath(`/docs/${page.slug}.md`),
     })}---\n${htmlBody}`);
+    generatedPages.add(`${page.slug}.md`);
     markdownBody = markdownBody
       .replace(/\]\(\/docs\/([^/)]+)\/(#[^)]*)?\)/g, (_, slug, hash = '') => `](${siteUrl(`/docs/${slug}.md`)}${hash})`)
       .replace(/\b(src|href)="\//g, (_, attr) => `${attr}="${siteUrl('/')}`);
@@ -91,12 +95,13 @@ for (const section of navigation.sections) {
   llms.push('');
 }
 
+for (const file of await readdir(contentDir)) {
+  if (file.endsWith('.md') && !generatedPages.has(file)) await rm(path.join(contentDir, file));
+}
+
 await writeFile(path.join(publicDir, 'llms.txt'), llms.join('\n'));
 await writeFile(path.join(publicDir, 'llms-full.txt'), full.join('\n\n---\n\n'));
-for (const [source, target] of [
-  [demoDistribution, 'composeunstyled-v2-demos'],
-  [path.join(root, 'docs/assets'), 'composeunstyled-v2-assets'],
-]) {
+for (const [source, target] of [[path.join(root, 'docs/assets'), 'composeunstyled-v2-assets']]) {
   await rm(path.join(publicDir, target), { recursive: true, force: true });
   await cp(source, path.join(publicDir, target), { recursive: true });
 }

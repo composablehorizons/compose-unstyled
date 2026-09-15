@@ -33,6 +33,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
@@ -74,6 +75,8 @@ private val PlatformTheme = buildPlatformTheme(
   ),
 )
 
+@Preview
+@UnstyledDemo("platform-theme", section = DemoSection.Theme)
 @Composable
 fun PlatformThemeDemo() {
   PlatformTheme {

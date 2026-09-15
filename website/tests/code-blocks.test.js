@@ -1,5 +1,5 @@
 import { test, expect } from 'bun:test';
-import codePanels from '../plugins/code-blocks.mjs';
+import codePanels from '../plugins/code-blocks.js';
 
 function render(expandable) {
   return codePanels().element.visit({

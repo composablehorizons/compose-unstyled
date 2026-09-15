@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { site, sitePath, siteUrl } from '../site.config.mjs';
+import { site, sitePath, siteUrl } from '../site.config.js';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const files = readdirSync(dist, { recursive: true });

@@ -44,12 +44,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.SelectedIndicator
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 
+@Preview
+@UnstyledDemo("radiogroup")
 @Composable
 fun RadioGroupDemo() {
   val values = listOf("Light", "Dark", "System")

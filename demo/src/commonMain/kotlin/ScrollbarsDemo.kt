@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
@@ -62,11 +63,14 @@ import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.rememberScrollbarState
 import kotlin.time.Duration.Companion.seconds
 
+@Preview
+@UnstyledDemo("scrollbars")
 @Composable
 fun ScrollbarsDemo() {
   VerticalScrollbarsDemo()
 }
 
+@Preview
 @Composable
 fun VerticalScrollbarsDemo() {
   Box(
@@ -150,6 +154,7 @@ fun VerticalScrollbarsDemo() {
   }
 }
 
+@Preview
 @Composable
 fun HorizontalScrollbarsDemo() {
   Box(

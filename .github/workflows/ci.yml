@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - 'website/**'
       - 'docs/**'
-      - 'scripts/generate-compose-unstyled-api.mjs'
+      - 'scripts/generate-compose-unstyled-api.js'
       - '.github/workflows/docs.yml'
       - '.github/workflows/deploy-website.yml'
       - '.github/workflows/redeploy-docs.yml'

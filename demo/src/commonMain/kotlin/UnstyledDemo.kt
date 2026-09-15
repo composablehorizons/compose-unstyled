@@ -21,24 +21,12 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Heart
-import com.composables.icons.lucide.Lucide
-import com.composeunstyled.UnstyledIcon
-
-@Preview
-@UnstyledDemo("icon")
-@Composable
-fun IconDemo() {
-  UnstyledIcon(
-    imageVector = Lucide.Heart,
-    contentDescription = "Favorite",
-    tint = Color.Black,
-    modifier = Modifier.size(90.dp),
-  )
-}
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnstyledDemo(
+  val id: String,
+  val name: String = "",
+  val section: DemoSection = DemoSection.Components,
+  val contentAlignment: DemoContentAlignment = DemoContentAlignment.Center,
+  val padding: DemoPadding = DemoPadding.Default,
+)

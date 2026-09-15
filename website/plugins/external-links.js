@@ -1,4 +1,4 @@
-import { site } from '../site.config.mjs';
+import { site } from '../site.config.js';
 
 const siteOrigin = new URL(site).origin;
 

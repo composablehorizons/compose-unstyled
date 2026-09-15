@@ -72,6 +72,7 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.ArrowLeft
@@ -87,6 +88,8 @@ import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.rememberModalState
 import kotlinx.coroutines.launch
 
+@Preview
+@UnstyledDemo("modal")
 @Composable
 fun ModalDemo() {
   data class GalleryItem(val url: String, val description: String)

@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.BellDot
@@ -64,6 +65,8 @@ import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.focusRing
 
+@Preview
+@UnstyledDemo("tooltip")
 @Composable
 fun TooltipDemo() {
   TooltipHost(Modifier.fillMaxSize()) {

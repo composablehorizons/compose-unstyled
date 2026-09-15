@@ -77,6 +77,7 @@ kotlin {
       api(projects.composeunstyledAvatar)
       api(projects.composeunstyledBreakpoints)
       api(projects.composeunstyledBottomSheet)
+      api(projects.composeunstyledBuildModifier)
       api(projects.composeunstyledButton)
       api(projects.composeunstyledCheckbox)
       api(projects.composeunstyledDialog)
@@ -85,8 +86,12 @@ kotlin {
       api(projects.composeunstyledDropdownMenu)
       api(projects.composeunstyledFocusRing)
       api(projects.composeunstyledIcon)
+      api(projects.composeunstyledEscapeHandler)
+      api(projects.composeunstyledModal)
       api(projects.composeunstyledModalBottomSheet)
       api(projects.composeunstyledOutline)
+      api(projects.composeunstyledPlatformtheme)
+      api(projects.composeunstyledPortal)
       api(projects.composeunstyledProgress)
       api(projects.composeunstyledRadioGroup)
       api(projects.composeunstyledScrollbars)
@@ -98,6 +103,7 @@ kotlin {
       api(projects.composeunstyledToggleSwitch)
       api(projects.composeunstyledTooltip)
       api(projects.composeunstyledTriStateCheckbox)
+      api(projects.composeunstyledWindowContainerSize)
     }
 
     commonTest.dependencies {

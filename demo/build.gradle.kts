@@ -37,6 +37,30 @@ val demoVersionName = providers
   .orElse(libs.versions.unstyled)
   .get()
 
+val generatedDemoRegistry = layout.buildDirectory.file("generated/demo-registry/GeneratedDemoRegistry.kt")
+val generatedDemoSourceMap = layout.buildDirectory.file("generated/demo-registry/DemoSourceMap.properties")
+val bunExecutable = rootProject.file("${System.getProperty("user.home")}/.bun/bin/bun")
+  .takeIf { it.isFile }
+  ?.absolutePath
+  ?: "bun"
+
+val generateDemoRegistry by tasks.registering(Exec::class) {
+  group = "build"
+  description = "Generates the demo registry from @UnstyledDemo declarations."
+
+  inputs.dir(layout.projectDirectory.dir("src/commonMain/kotlin"))
+  inputs.file(rootProject.layout.projectDirectory.file("scripts/generate-demo-registry.js"))
+  outputs.file(generatedDemoRegistry)
+  outputs.file(generatedDemoSourceMap)
+
+  commandLine(
+    bunExecutable,
+    rootProject.layout.projectDirectory.file("scripts/generate-demo-registry.js").asFile.absolutePath,
+    generatedDemoRegistry.get().asFile.absolutePath,
+    generatedDemoSourceMap.get().asFile.absolutePath,
+  )
+}
+
 fun androidVersionCodeFrom(versionName: String): Int {
   val parts = versionName
     .substringBefore("-")
@@ -68,18 +92,8 @@ kotlin {
   }
   js {
     browser {
-      val rootDirPath = project.rootDir.path
-      val projectDirPath = project.projectDir.path
       commonWebpackConfig {
         outputFileName = "composeApp.js"
-
-        devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-          static = (static ?: mutableListOf()).apply {
-            // Serve sources to debug inside browser
-            add(rootDirPath)
-            add(projectDirPath)
-          }
-        }
       }
     }
     binaries.executable()
@@ -87,18 +101,8 @@ kotlin {
 
   wasmJs {
     browser {
-      val rootDirPath = project.rootDir.path
-      val projectDirPath = project.projectDir.path
       commonWebpackConfig {
         outputFileName = "composeApp.js"
-
-        devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-          static = (static ?: mutableListOf()).apply {
-            // Serve sources to debug inside browser
-            add(rootDirPath)
-            add(projectDirPath)
-          }
-        }
       }
     }
     binaries.executable()
@@ -123,44 +127,18 @@ kotlin {
       languageSettings.optIn("androidx.compose.foundation.ExperimentalFoundationApi")
       languageSettings.optIn("androidx.compose.ui.ExperimentalComposeUiApi")
     }
-    commonMain.dependencies {
-      implementation(libs.compose.components.resources)
-      implementation(libs.compose.foundation)
-      implementation(libs.composables.ripple)
-      implementation(project(":composeunstyled-theming"))
-      implementation(project(":composeunstyled-avatar"))
-      implementation(project(":composeunstyled-breakpoints"))
-      implementation(project(":composeunstyled-bottom-sheet"))
-      implementation(project(":composeunstyled-build-modifier"))
-      implementation(project(":composeunstyled-button"))
-      implementation(project(":composeunstyled-checkbox"))
-      implementation(project(":composeunstyled-dialog"))
-      implementation(project(":composeunstyled-disclosure"))
-      implementation(project(":composeunstyled-drawer"))
-      implementation(project(":composeunstyled-dropdown-menu"))
-      implementation(project(":composeunstyled-focus-ring"))
-      implementation(project(":composeunstyled-icon"))
-      implementation(project(":composeunstyled-modal"))
-      implementation(project(":composeunstyled-modal-bottom-sheet"))
-      implementation(project(":composeunstyled-outline"))
-      implementation(project(":composeunstyled-portal"))
-      implementation(project(":composeunstyled-progress"))
-      implementation(project(":composeunstyled-radio-group"))
-      implementation(project(":composeunstyled-scrollbars"))
-      implementation(project(":composeunstyled-separators"))
-      implementation(project(":composeunstyled-slider"))
-      implementation(project(":composeunstyled-stack"))
-      implementation(project(":composeunstyled-tab-group"))
-      implementation(project(":composeunstyled-text-field"))
-      implementation(project(":composeunstyled-toggle-switch"))
-      implementation(project(":composeunstyled-tooltip"))
-      implementation(project(":composeunstyled-tri-state-checkbox"))
-      implementation(project(":composeunstyled-platformtheme"))
-      implementation(project(":composeunstyled-escape-handler"))
-      implementation(project(":composeunstyled-window-container-size"))
-      implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
-      implementation(libs.composables.icons.lucide)
-      implementation(libs.compose.uri.painter)
+    commonMain {
+      kotlin.srcDir(generatedDemoRegistry.map { it.asFile.parentFile })
+
+      dependencies {
+        implementation(libs.compose.foundation)
+        implementation(libs.compose.ui.tooling.preview)
+        implementation(libs.composables.ripple)
+        implementation(project(":composeunstyled"))
+        implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
+        implementation(libs.composables.icons.lucide)
+        implementation(libs.compose.uri.painter)
+      }
     }
 
     jvmMain.dependencies {
@@ -176,6 +154,16 @@ kotlin {
       }
     }
   }
+}
+
+tasks.configureEach {
+  if (name.startsWith("compile") && name.contains("Kotlin")) {
+    dependsOn(generateDemoRegistry)
+  }
+}
+
+dependencies {
+  add("debugImplementation", libs.compose.ui.tooling)
 }
 
 compose.desktop {
