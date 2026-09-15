@@ -50,7 +50,7 @@ val generateDemoRegistry by tasks.registering(Exec::class) {
   outputs.file(generatedDemoSourceMap)
 
   commandLine(
-    "node",
+    "bun",
     rootProject.layout.projectDirectory.file("scripts/generate-demo-registry.js").asFile.absolutePath,
     generatedDemoRegistry.get().asFile.absolutePath,
     generatedDemoSourceMap.get().asFile.absolutePath,
