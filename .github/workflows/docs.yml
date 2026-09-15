@@ -1,0 +1,56 @@
+name: Docs CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      website: ${{ steps.select.outputs.website }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Test check selection
+        run: python3 -B -m unittest discover -s .github/scripts -p 'test_*.py'
+      - name: Select checks from changed paths
+        id: select
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: python3 -B .github/scripts/select_pr_checks.py >> "$GITHUB_OUTPUT"
+
+  website-checks:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.website == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+      - name: Install website dependencies
+        working-directory: website
+        run: bun install --frozen-lockfile
+      - name: Build interactive demos
+        run: ./gradlew :demo:wasmJsBrowserDistribution
+      - name: Build and verify website
+        working-directory: website
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: bun run build

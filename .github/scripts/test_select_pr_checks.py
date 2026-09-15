@@ -10,10 +10,19 @@ class SelectChecksTest(unittest.TestCase):
             "website/public/favicon.ico",
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
-            ".github/workflows/ci.yml",
+            ".github/workflows/docs.yml",
+        ]), (False, True))
+
+    def test_library_workflow_runs_library_checks(self):
+        self.assertEqual(select_checks([".github/workflows/ci.yml"]), (True, False))
+
+    def test_shared_selection_changes_run_both(self):
+        for path in [
             ".github/scripts/select_pr_checks.py",
             ".github/scripts/test_select_pr_checks.py",
-        ]), (False, True))
+        ]:
+            with self.subTest(path=path):
+                self.assertEqual(select_checks([path]), (True, True))
 
     def test_docs_and_generator_build_website(self):
         for path in ["docs/pages/button.md", "docs/docs.yml", "scripts/generate-compose-unstyled-api.mjs"]:
