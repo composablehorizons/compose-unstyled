@@ -8,7 +8,8 @@ def needs_library_checks(paths, branch=""):
 
     for path in paths:
         if path.startswith(("website/", "docs/")) or path in {
-            "scripts/generate-compose-unstyled-api.mjs",
+            "scripts/generate-compose-unstyled-api.js",
+            "scripts/generate-demo-registry.js",
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
             ".github/workflows/docs.yml",

@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,8 @@ private val DemoWidthBreakpoints = WindowWidthBreakpoints {
   Expanded startsAt 840.dp
 }
 
+@Preview
+@UnstyledDemo("breakpoints", section = DemoSection.Utilities)
 @Composable
 fun BreakpointsDemo() {
   ProvideWindowWidthBreakpoints(DemoWidthBreakpoints) {

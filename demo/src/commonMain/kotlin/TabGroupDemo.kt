@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
@@ -55,6 +56,8 @@ import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTabPanel
 
+@Preview
+@UnstyledDemo("tabgroup")
 @Composable
 fun TabGroupDemo() {
   class Article(val title: String, val relativeTime: String, val comments: Int, val points: Int)

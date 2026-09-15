@@ -28,7 +28,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -87,110 +86,6 @@ fun Demo(startDestination: String = "home") {
   }
 }
 
-private data class DemoItem(
-  val name: String,
-  val id: String,
-  val demo: @Composable () -> Unit,
-  val previewOptions: PreviewOptions = PreviewOptions(),
-) {
-  constructor(
-    id: String,
-    demo: @Composable () -> Unit,
-    previewOptions: PreviewOptions = PreviewOptions(),
-  ) : this(
-    name = id,
-    id = id,
-    demo = demo,
-    previewOptions = previewOptions,
-  )
-}
-
-private data class PreviewOptions(
-  val contentAlignment: Alignment = Alignment.Center,
-  val padding: PaddingValues = PaddingValues(16.dp),
-)
-
-private val availablePrimitives = listOf(
-  DemoItem("Avatar", "avatar", { AvatarDemo() }),
-  DemoItem(
-    "Bottom Sheet",
-    "bottom-sheet",
-    { BottomSheetDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem("Modal Bottom Sheet", "modal-bottom-sheet", { ModalBottomSheetDemo() }),
-  DemoItem("Button", "button", { ButtonDemo() }),
-  DemoItem("Checkbox", "checkbox", { CheckboxDemo() }),
-  DemoItem("Tristate Checkbox", "tristatecheckbox", { TriStateCheckboxDemo() }),
-  DemoItem("Dialog", "dialog", { DialogDemo() }),
-  DemoItem(
-    name = "Drawer",
-    id = "drawer",
-    demo = { DrawerDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    name = "Drawer Form",
-    id = "drawer-form",
-    demo = { DrawerFormDemo() },
-    previewOptions = PreviewOptions(padding = PaddingValues(0.dp)),
-  ),
-  DemoItem(
-    "Disclosure",
-    "disclosure",
-    { DisclosureDemo() },
-    previewOptions = PreviewOptions(contentAlignment = Alignment.TopCenter),
-  ),
-  DemoItem(
-    "Dropdown Menu",
-    "dropdown-menu",
-    { DropdownMenuDemo() },
-    previewOptions = PreviewOptions(contentAlignment = Alignment.TopCenter),
-  ),
-  DemoItem("Icon", "icon", { IconDemo() }),
-  DemoItem("Modal", "modal", { ModalDemo() }),
-  DemoItem("Modal Render Host", "modal-render-host", { ModalRenderHostDemo() }),
-  DemoItem("Progress Indicator", "progressindicator", { ProgressIndicatorDemo() }),
-  DemoItem("Radio Group", "radiogroup", { RadioGroupDemo() }),
-  DemoItem("Scrollbars", "scrollbars", { ScrollbarsDemo() }),
-  DemoItem("Separators", "separators", { SeparatorsDemo() }),
-  DemoItem("Slider", "slider", { SliderDemo() }),
-  DemoItem("Tab Group", "tabgroup", { TabGroupDemo() }),
-  DemoItem("Text Field", "textfield", { TextFieldDemo() }),
-  DemoItem("Tooltip", "tooltip", { TooltipDemo() }),
-  DemoItem("Toggle Switch", "toggleswitch", { ToggleSwitchDemo() }),
-)
-
-private val availableModifiers = listOf(
-  DemoItem(
-    "Focus Ring (FocusVisible)",
-    "focus-ring-focus-visible",
-    { FocusRingFocusVisibleDemo() },
-  ),
-  DemoItem("Focus Ring (Focused)", "focus-ring-focused", { FocusRingFocusedDemo() }),
-  DemoItem("Outline", "outline", { OutlineDemo() }),
-).map {
-  it.copy(demo = {
-    ModifierDemo {
-      it.demo()
-    }
-  })
-}
-
-private val themingDemos = listOf(
-  DemoItem("Platform Theme", "platform-theme", { PlatformThemeDemo() }),
-  DemoItem("Theme Extend", "theme-extend", { ThemeExtendDemo() }),
-  DemoItem("Theming", "theme", { ThemingDemo() }),
-)
-
-private val utilityDemos = listOf(
-  DemoItem("Breakpoints", "breakpoints", { BreakpointsDemo() }),
-  DemoItem("Window Container Size", "window-container-size", { WindowContainerSizeDemo() }),
-)
-
-private val availableDemos: List<DemoItem> =
-  availablePrimitives + availableModifiers + themingDemos + utilityDemos
-
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
   val size = currentWindowContainerSize()
@@ -210,7 +105,7 @@ fun ModifierDemo(content: @Composable () -> Unit) {
 @Composable
 private fun DemoSelection(startDestination: String) {
   val navController = rememberNavController()
-  val initialDestination = availableDemos
+  val initialDestination = generatedDemos
     .firstOrNull { it.id == startDestination }
     ?.id
     ?: "home"
@@ -244,37 +139,20 @@ private fun DemoSelection(startDestination: String) {
             .fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-          if (availablePrimitives.isNotEmpty()) {
-            DemoSection("Components", availablePrimitives) { demo ->
-              navController.navigate(demo.id)
-            }
-          }
-
-          if (themingDemos.isNotEmpty()) {
-            Spacer(Modifier.height(24.dp))
-            DemoSection("Theme", themingDemos) { demo ->
-              navController.navigate(demo.id)
-            }
-          }
-
-          if (availableModifiers.isNotEmpty()) {
-            Spacer(Modifier.height(24.dp))
-            DemoSection("Modifiers", availableModifiers) { demo ->
-              navController.navigate(demo.id)
-            }
-          }
-
-          if (utilityDemos.isNotEmpty()) {
-            Spacer(Modifier.height(24.dp))
-            DemoSection("Utilities", utilityDemos) { demo ->
-              navController.navigate(demo.id)
+          DemoSection.entries.forEachIndexed { index, section ->
+            val demos = generatedDemos.filter { it.section == section }
+            if (demos.isNotEmpty()) {
+              if (index > 0) Spacer(Modifier.height(24.dp))
+              DemoSectionList(section.title, demos) { demo ->
+                navController.navigate(demo.id)
+              }
             }
           }
         }
       }
     }
 
-    availableDemos.forEach { component ->
+    generatedDemos.forEach { component ->
       composable(component.id) {
         val launchedFromDemoList = initialDestination == "home"
         Column(Modifier.fillMaxSize()) {
@@ -282,8 +160,12 @@ private fun DemoSelection(startDestination: String) {
             AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
           }
           Box(Modifier.weight(1f)) {
-            DemoContainer(component.previewOptions) {
-              component.demo()
+            DemoContainer(component.presentation) {
+              if (component.section == DemoSection.Modifiers) {
+                ModifierDemo(component.demo)
+              } else {
+                component.demo()
+              }
             }
           }
         }
@@ -294,22 +176,22 @@ private fun DemoSelection(startDestination: String) {
 
 @Composable
 private fun DemoContainer(
-  previewOptions: PreviewOptions,
+  presentation: DemoPresentation,
   content: @Composable () -> Unit,
 ) {
   Box(
     modifier = Modifier
       .fillMaxSize()
       .background(Color.White)
-      .padding(previewOptions.padding),
-    contentAlignment = previewOptions.contentAlignment,
+      .padding(presentation.paddingValues),
+    contentAlignment = presentation.alignment,
   ) {
     content()
   }
 }
 
 @Composable
-private fun DemoSection(
+private fun DemoSectionList(
   title: String,
   demos: List<DemoItem>,
   onClick: (DemoItem) -> Unit,

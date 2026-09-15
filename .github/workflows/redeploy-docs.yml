@@ -6,6 +6,12 @@ on:
     paths:
       - 'docs/**'
       - 'website/**'
+      - 'demo/**'
+      - 'gradle/libs.versions.toml'
+      - 'scripts/generate-compose-unstyled-api.js'
+      - 'scripts/generate-demo-registry.js'
+      - '.github/workflows/deploy-website.yml'
+      - '.github/workflows/redeploy-docs.yml'
 
 permissions:
   contents: read

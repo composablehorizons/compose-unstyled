@@ -2,9 +2,10 @@
   "name": "compose-unstyled",
   "version": "2.9.2",
   "private": true,
+  "type": "module",
   "scripts": {
     "changeset": "changeset",
-    "changeset:version": "changeset version && node scripts/sync-release-version.mjs"
+    "changeset:version": "changeset version && bun scripts/sync-release-version.js"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7"

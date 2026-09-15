@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
@@ -55,6 +56,8 @@ import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
 
+@Preview
+@UnstyledDemo("tristatecheckbox", name = "Tristate Checkbox")
 @Composable
 fun TriStateCheckboxDemo() {
   val checkboxOptions = listOf("Option 1", "Option 2", "Option 3", "Option 4")

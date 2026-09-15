@@ -1,4 +1,4 @@
-import { codeToolbar, readCodeAttribute } from '../scripts/code-toolbar.mjs';
+import { codeToolbar, readCodeAttribute } from '../scripts/code-toolbar.js';
 
 export const codeTitleTransformer = {
   name: 'code-metadata',

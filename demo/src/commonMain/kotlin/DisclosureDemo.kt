@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
@@ -58,6 +59,8 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
 
+@Preview
+@UnstyledDemo("disclosure", contentAlignment = DemoContentAlignment.TopCenter)
 @Composable
 fun DisclosureDemo() {
   var expanded by remember { mutableStateOf(false) }

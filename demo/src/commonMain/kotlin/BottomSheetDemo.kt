@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragIndication
 import com.composeunstyled.Sheet
@@ -45,6 +46,8 @@ import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.rememberBottomSheetState
 
+@Preview
+@UnstyledDemo("bottom-sheet", padding = DemoPadding.None)
 @Composable
 fun BottomSheetDemo() {
   val Peek = SheetDetent("peek") { containerHeight, _ ->

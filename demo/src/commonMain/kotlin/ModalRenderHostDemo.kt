@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Modal
@@ -45,6 +46,8 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.rememberModalState
 
+@Preview
+@UnstyledDemo("modal-render-host")
 @Composable
 fun ModalRenderHostDemo() {
   val windowModalState = rememberModalState(initiallyVisible = false)

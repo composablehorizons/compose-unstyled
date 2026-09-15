@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ChevronDown
 import com.composables.icons.lucide.Clipboard
@@ -66,6 +67,8 @@ import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 
+@Preview
+@UnstyledDemo("dropdown-menu", contentAlignment = DemoContentAlignment.TopCenter)
 @Composable
 fun DropdownMenuDemo() {
   class DropdownOption(

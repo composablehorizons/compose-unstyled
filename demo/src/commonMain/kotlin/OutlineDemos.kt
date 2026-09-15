@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.MainAxisArrangement
@@ -34,6 +35,8 @@ import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.outline
 
+@Preview
+@UnstyledDemo("outline", section = DemoSection.Modifiers)
 @Composable
 fun OutlineDemo() {
   Stack(
