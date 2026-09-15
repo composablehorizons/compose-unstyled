@@ -1,0 +1,26 @@
+---
+import docsYaml from '../../../docs/docs.yml?raw';
+import { parse } from 'yaml';
+import { sitePath } from '../../site.config.mjs';
+const pages = parse(docsYaml).sections.flatMap(section => section.pages);
+const pathname = Astro.url.pathname.replace(/\/$/, '');
+const index = pages.findIndex(page => sitePath(`/docs/${page.slug}`) === pathname);
+const previous = index > 0 ? pages[index - 1] : undefined;
+const next = index >= 0 ? pages[index + 1] : undefined;
+---
+{(previous || next) && (
+  <nav class="docs-pagination" aria-label="Previous and next pages">
+    {previous && (
+      <a rel="prev" href={sitePath(`/docs/${previous.slug}/`)}>
+        <span class="docs-pagination-direction">← Previous</span>
+        <span>{previous.title}</span>
+      </a>
+    )}
+    {next && (
+      <a rel="next" href={sitePath(`/docs/${next.slug}/`)}>
+        <span class="docs-pagination-direction">Next →</span>
+        <span>{next.title}</span>
+      </a>
+    )}
+  </nav>
+)}

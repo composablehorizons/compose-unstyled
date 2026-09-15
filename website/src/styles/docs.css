@@ -243,5 +243,9 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
   .docs-navigation-sheet:modal { width: calc(100% - 112px); max-height: calc(100dvh - 56px); }
 }
 
+.docs-pagination { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); margin-top: 3rem; padding-top: var(--space-6); border-top: var(--stroke-thin) solid var(--color-outline); }
+.docs-pagination a { display: flex; flex-direction: column; gap: var(--space-2); overflow-wrap: anywhere; }
+.docs-pagination a[rel="next"] { grid-column: 2; text-align: right; align-items: flex-end; }
+.docs-pagination-direction { font-size: 0.8125rem; opacity: 0.65; }
 
 .docs-sheet-handle span { border-radius: 999px; }
