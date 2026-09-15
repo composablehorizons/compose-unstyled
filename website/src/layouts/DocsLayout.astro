@@ -1,6 +1,7 @@
 ---
 import SiteLayout from './SiteLayout.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
+import DocsPagination from '../components/DocsPagination.astro';
 const { title, description, markdownUrl } = Astro.props.frontmatter;
 const headings = Astro.props.headings.filter(heading => heading.depth === 2 || heading.depth === 3);
 ---
@@ -14,6 +15,7 @@ const headings = Astro.props.headings.filter(heading => heading.depth === 2 || h
         {markdownUrl && <a class="docs-markdown-link" href={markdownUrl}>View Markdown</a>}
       </header>
       <slot />
+      <DocsPagination />
     </article>
     {headings.length > 0 && (
       <aside class="docs-toc">
