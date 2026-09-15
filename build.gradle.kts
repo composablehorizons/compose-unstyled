@@ -2,7 +2,7 @@ plugins {
   alias(libs.plugins.kotlin.multiplatform).apply(false)
   alias(libs.plugins.compose).apply(false)
   alias(libs.plugins.android.application).apply(false)
-  alias(libs.plugins.android.library).apply(false)
+  alias(libs.plugins.android.kotlin.multiplatform.library).apply(false)
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.spotless)
 }
@@ -19,7 +19,7 @@ subprojects {
 
   plugins.withId(rootProject.libs.plugins.kotlin.multiplatform.get().pluginId) {
     extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
-      sourceSets.matching { it.name == "androidInstrumentedTest" }.configureEach {
+      sourceSets.matching { it.name == "androidDeviceTest" }.configureEach {
         dependencies {
           implementation(rootProject.libs.androidx.test.runner)
         }
