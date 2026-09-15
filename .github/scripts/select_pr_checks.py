@@ -9,13 +9,18 @@ def select_checks(paths, branch=""):
     library = False
     website = False
     for path in paths:
+        if path in {
+            ".github/scripts/select_pr_checks.py",
+            ".github/scripts/test_select_pr_checks.py",
+        }:
+            library = True
+            website = True
+            continue
         if path.startswith(("website/", "docs/")) or path in {
             "scripts/generate-compose-unstyled-api.mjs",
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
-            ".github/workflows/ci.yml",
-            ".github/scripts/select_pr_checks.py",
-            ".github/scripts/test_select_pr_checks.py",
+            ".github/workflows/docs.yml",
         }:
             website = True
             continue
