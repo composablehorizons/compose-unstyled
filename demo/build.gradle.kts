@@ -39,10 +39,6 @@ val demoVersionName = providers
 
 val generatedDemoRegistry = layout.buildDirectory.file("generated/demo-registry/GeneratedDemoRegistry.kt")
 val generatedDemoSourceMap = layout.buildDirectory.file("generated/demo-registry/DemoSourceMap.properties")
-val bunExecutable = rootProject.file("${System.getProperty("user.home")}/.bun/bin/bun")
-  .takeIf { it.isFile }
-  ?.absolutePath
-  ?: "bun"
 
 val generateDemoRegistry by tasks.registering(Exec::class) {
   group = "build"
@@ -54,7 +50,7 @@ val generateDemoRegistry by tasks.registering(Exec::class) {
   outputs.file(generatedDemoSourceMap)
 
   commandLine(
-    bunExecutable,
+    "node",
     rootProject.layout.projectDirectory.file("scripts/generate-demo-registry.js").asFile.absolutePath,
     generatedDemoRegistry.get().asFile.absolutePath,
     generatedDemoSourceMap.get().asFile.absolutePath,
