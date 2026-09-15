@@ -34,7 +34,11 @@ import com.composeunstyled.FocusVisibilityProvider
 import com.composeunstyled.focusRing
 
 @Preview
-@UnstyledDemo("focus-ring-focus-visible", name = "Focus Ring (FocusVisible)", section = DemoSection.Modifiers)
+@UnstyledDemo(
+  "focus-ring-focus-visible",
+  name = "Focus Ring (FocusVisible)",
+  section = DemoSection.Modifiers,
+)
 @Composable
 fun FocusRingFocusVisibleDemo() {
   FocusVisibilityProvider {
