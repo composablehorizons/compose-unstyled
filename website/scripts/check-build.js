@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { site, sitePath, siteUrl } from '../site.config.js';
+import { sharedSkikoUrl } from './skiko-runtime.js';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const files = readdirSync(dist, { recursive: true });
@@ -40,6 +41,8 @@ assert(files.some(file => file.startsWith('composeunstyled-v2-demos/') && file.e
   'The demo WebAssembly bundle is missing');
 const demo = readFileSync(path.join(dist, 'composeunstyled-v2-demos/index.html'), 'utf8');
 for (const [, value] of demo.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
+  if (new URL(value, 'https://build.invalid').origin !== 'https://build.invalid') continue;
   assert(existsSync(path.join(dist, 'composeunstyled-v2-demos', value)), `Missing demo asset: ${value}`);
 }
+assert(demo.includes(sharedSkikoUrl), 'The demo must use the shared Skiko runtime');
 console.log(`Verified ${pages.length} pages, ${links} local links, LLM URLs, and demo assets.`);

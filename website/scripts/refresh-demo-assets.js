@@ -1,6 +1,7 @@
 import { access, cp, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { shareSkikoRuntime } from './share-skiko-runtime.js';
 
 const website = fileURLToPath(new URL('../', import.meta.url));
 const root = path.resolve(website, '..');
@@ -20,5 +21,6 @@ const target = path.join(website, 'public/composeunstyled-v2-demos');
 await access(path.join(demoDistribution, 'index.html'));
 await rm(target, { recursive: true, force: true });
 await cp(demoDistribution, target, { recursive: true });
+await shareSkikoRuntime(target);
 await writeFile(path.join(target, '.revision'), `${Date.now()}\n`);
 console.log('Refreshed demo assets.');
