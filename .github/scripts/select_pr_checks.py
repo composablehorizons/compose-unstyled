@@ -13,6 +13,7 @@ def needs_library_checks(paths, branch=""):
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
             ".github/workflows/docs.yml",
+            ".github/workflows/version-packages.yml",
         }:
             continue
         if "/" not in path and path.endswith(".md"):
