@@ -41,7 +41,7 @@ Use `accessibilityLabel` when the text field does not include a readable label i
 
 Use the `placeholder` parameter on `TextInput` to render content while the field is empty:
 
-```kotlin
+```kotlin expandable
 val state = rememberTextFieldState()
 
 UnstyledTextField(state = state) {
@@ -57,7 +57,7 @@ UnstyledTextField(state = state) {
 
 Use the `lineLimits` parameter to restrict input to one line:
 
-```kotlin
+```kotlin expandable
 UnstyledTextField(
   state = state,
   lineLimits = TextFieldLineLimits.SingleLine,
@@ -70,7 +70,7 @@ UnstyledTextField(
 
 Use the `keyboardOptions` parameter to request a specific software keyboard:
 
-```kotlin
+```kotlin expandable
 UnstyledTextField(
   state = state,
   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -83,7 +83,7 @@ UnstyledTextField(
 
 Use the text style parameters to set the style of the editable text:
 
-```kotlin
+```kotlin expandable
 UnstyledTextField(
   state = state,
   fontWeight = FontWeight.Medium,
@@ -98,7 +98,7 @@ UnstyledTextField(
 By default, selection colors are unspecified. Use the `selectionColors` parameter to set the
 selection handle and background colors:
 
-```kotlin
+```kotlin expandable
 UnstyledTextField(
   state = state,
   selectionColors = TextSelectionColors(
@@ -114,7 +114,7 @@ UnstyledTextField(
 
 Use the `accessibilityLabel` parameter when the visible text field has no text label:
 
-```kotlin
+```kotlin expandable
 UnstyledTextField(
   state = state,
   accessibilityLabel = "Search",

@@ -51,7 +51,7 @@ Use `DragIndication` when your sheet can move between multiple detents. It provi
 
 Use the `targetDetent` property to animate the modal sheet to a new detent:
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberModalBottomSheetState(
   initialDetent = SheetDetent.Hidden,
 )
@@ -79,7 +79,7 @@ UnstyledModalBottomSheet(state = sheetState) {
 
 Use the suspend `animateTo()` function to wait until the sheet animation is done:
 
-```kotlin
+```kotlin expandable
 val scope = rememberCoroutineScope()
 
 BasicText(
@@ -96,7 +96,7 @@ BasicText(
 
 Use the `jumpTo()` function to move to a detent without animation:
 
-```kotlin
+```kotlin expandable
 BasicText(
   text = "Open immediately",
   modifier = Modifier.clickable {
@@ -110,7 +110,7 @@ BasicText(
 Use the `overlay` parameter to render content behind the modal sheet. `Scrim` provides a
 ready-made overlay for modal bottom sheets.
 
-```kotlin
+```kotlin expandable
 UnstyledModalBottomSheet(
   state = sheetState,
   overlay = { Scrim() },
@@ -129,7 +129,7 @@ the container, or taller than the sheet content.
 
 Keep this calculation fast. It runs during sheet measurement.
 
-```kotlin
+```kotlin expandable
 val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
   minOf(containerHeight * 0.4f, sheetHeight)
 }
@@ -145,7 +145,7 @@ val sheetState = rememberModalBottomSheetState(
 Use the `invalidateDetents()` function to recalculate sheet detents. This is useful when a custom
 detent reads a measured value that can change, such as a header height:
 
-```kotlin
+```kotlin expandable
 var peekHeight by remember { mutableStateOf(120.dp) }
 
 val Peek = remember {
@@ -170,7 +170,7 @@ Use a scrollable layout inside the `Sheet` component to make content scroll with
 
 Use the `offsetForIme` parameter on `ModalBottomSheetProperties` to automatically move the sheet above the soft keyboard:
 
-```kotlin
+```kotlin expandable
 val textState = rememberTextFieldState()
 
 UnstyledModalBottomSheet(
@@ -187,7 +187,7 @@ UnstyledModalBottomSheet(
 
 Use the `properties` parameter to control how the modal sheet can be dismissed:
 
-```kotlin
+```kotlin expandable
 UnstyledModalBottomSheet(
   state = sheetState,
   properties = ModalBottomSheetProperties(
@@ -205,7 +205,7 @@ UnstyledModalBottomSheet(
 
 Use the `onDismiss` parameter to run code when the sheet is dismissed:
 
-```kotlin
+```kotlin expandable
 UnstyledModalBottomSheet(
   state = sheetState,
   onDismiss = { selectedItem = null },
@@ -221,7 +221,7 @@ UnstyledModalBottomSheet(
 Use the `animationSpec` parameter to customize the default animation between detents. Use the
 `dismissAnimationSpec` parameter to customize the animation used when the modal sheet is dismissed:
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberModalBottomSheetState(
   initialDetent = SheetDetent.Hidden,
   animationSpec = tween(durationMillis = 300),

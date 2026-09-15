@@ -59,7 +59,7 @@ Keep `tabs` in the same order as the visual tabs. `TabList` uses that order for 
 
 Use the `selectedTab` parameter to control the active tab:
 
-```kotlin
+```kotlin expandable
 val tabs = listOf("account", "billing")
 var selectedTab by remember { mutableStateOf("account") }
 
@@ -90,7 +90,7 @@ UnstyledTabGroup(
 
 Use the `orientation` parameter on `TabList` to change arrow-key navigation for vertical tabs:
 
-```kotlin
+```kotlin expandable
 TabList(orientation = Orientation.Vertical) {
   tabs.forEach { tab ->
     Tab(tab) {
@@ -104,7 +104,7 @@ TabList(orientation = Orientation.Vertical) {
 
 Use the `activateOnFocus` parameter when arrow-key focus should not select tabs:
 
-```kotlin
+```kotlin expandable
 Tab("billing", activateOnFocus = false) {
   BasicText("Billing")
 }
@@ -114,7 +114,7 @@ Tab("billing", activateOnFocus = false) {
 
 Use the `enabled` parameter to keep a tab visible but unavailable:
 
-```kotlin
+```kotlin expandable
 Tab(
   key = "billing",
   enabled = false,

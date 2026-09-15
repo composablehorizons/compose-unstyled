@@ -22,10 +22,10 @@ Use `currentWindowContainerSize()` to get the current window dimensions:
 
 > **HINT:** Resize your __browser's__ width to see the size changing.
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.currentWindowContainerSize
 ```
 
-```kotlin
+```kotlin expandable
 val containerSize = currentWindowContainerSize()
 ```

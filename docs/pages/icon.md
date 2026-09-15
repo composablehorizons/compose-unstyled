@@ -34,7 +34,7 @@ Pass a short `contentDescription` for icons that communicate meaning. Use `null`
 
 Use the `tint` parameter to apply one color to the icon:
 
-```kotlin
+```kotlin expandable
 UnstyledIcon(
   imageVector = favoriteIcon,
   contentDescription = "Favorite",

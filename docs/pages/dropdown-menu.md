@@ -56,7 +56,7 @@ Home moves focus to the first item. End moves focus to the last item. Escape clo
 
 Use the `expanded` parameter to show the menu and the `onExpandedChange` callback to update that state:
 
-```kotlin
+```kotlin expandable
 var expanded by remember { mutableStateOf(false) }
 
 UnstyledDropdownMenu(
@@ -82,7 +82,7 @@ UnstyledDropdownMenu(
 
 Use the `side`, `alignment`, `sideOffset`, and `alignmentOffset` parameters to place the menu panel relative to the anchor:
 
-```kotlin
+```kotlin expandable
 UnstyledDropdownMenu(
   expanded = expanded,
   onExpandedChange = { expanded = it },
@@ -107,7 +107,7 @@ UnstyledDropdownMenu(
 `UnstyledDropdownMenuItem` closes the menu after click by default by calling the dropdown's `onExpandedChange`
 callback with `false`:
 
-```kotlin
+```kotlin expandable
 UnstyledDropdownMenu(
   expanded = expanded,
   onExpandedChange = { expanded = it },
@@ -128,7 +128,7 @@ UnstyledDropdownMenu(
 
 Use the `closeOnClick` parameter when a menu item should update state without dismissing the menu:
 
-```kotlin
+```kotlin expandable
 UnstyledDropdownMenu(
   expanded = expanded,
   onExpandedChange = { expanded = it },
@@ -152,7 +152,7 @@ UnstyledDropdownMenu(
 
 Use the `enter` and `exit` parameters on `DropdownMenuPanel` to animate the menu panel:
 
-```kotlin
+```kotlin expandable
 UnstyledDropdownMenu(
   expanded = expanded,
   onExpandedChange = { expanded = it },

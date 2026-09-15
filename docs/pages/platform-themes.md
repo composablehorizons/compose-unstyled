@@ -17,7 +17,7 @@ Use the `buildPlatformTheme` function to create your theme. Then wrap your app w
 
 <UnstyledDemo id="platform-theme" />
 
-```kotlin
+```kotlin expandable
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +46,7 @@ import com.composeunstyled.platformtheme.WebFontOptions
 import com.composeunstyled.theme.Theme
 ```
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildPlatformTheme(
     webFontOptions = WebFontOptions(
         emojiVariant = EmojiVariant.Colored
@@ -134,7 +134,7 @@ Use `webFontOptions` while building your Platform Theme to specify the scripts t
 
 <UnstyledDemo id="platform-theme" />
 
-```kotlin
+```kotlin expandable
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.text.BasicText
 import com.composeunstyled.platformtheme.buildPlatformTheme
@@ -145,7 +145,7 @@ import com.composeunstyled.platformtheme.WebFontOptions
 import com.composeunstyled.theme.Theme
 ```
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildPlatformTheme(
     webFontOptions = WebFontOptions(
         supportedLanguages = listOf(SpokenLanguage.Japanese)
@@ -175,7 +175,7 @@ By default, `Monochrome` is used as it is a good compromise between having emoji
 
 <UnstyledDemo id="platform-theme" />
 
-```kotlin
+```kotlin expandable
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -191,7 +191,7 @@ import com.composeunstyled.platformtheme.WebFontOptions
 import com.composeunstyled.theme.Theme
 ```
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildPlatformTheme(
     webFontOptions = WebFontOptions(
         emojiVariant = EmojiVariant.Colored
@@ -216,12 +216,12 @@ We provide two Theme tokens: `bright` and `dimmed`. The default indication is `b
 
 Use `platformIndication` when a component should ask for platform-native interaction feedback directly:
 
-```kotlin
+```kotlin expandable
 import androidx.compose.ui.graphics.Color
 import com.composeunstyled.platformtheme.platformIndication
 ```
 
-```kotlin
+```kotlin expandable
 val brightIndication = platformIndication(Color.White.copy(alpha = 0.18f))
 val dimmedIndication = platformIndication(Color.Black.copy(alpha = 0.08f))
 ```
@@ -261,7 +261,7 @@ We provide two size tokens: `sizeDefault` and `sizeMinimum`.
 
 Use the `interactiveSize` modifier to apply these sizes to your interactive elements:
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.UnstyledButton
 import androidx.compose.foundation.text.BasicText
 import com.composeunstyled.platformtheme.interactiveSize
@@ -270,7 +270,7 @@ import com.composeunstyled.platformtheme.sizeDefault
 import com.composeunstyled.theme.Theme
 ```
 
-```kotlin
+```kotlin expandable
 UnstyledButton(
     onClick = { /* ... */ },
     modifier = Modifier.interactiveSize(Theme[interactiveSizes][sizeDefault])
@@ -293,7 +293,7 @@ Shape theme tokens are not platform specific, however they are very handy when b
 | `roundedLarge` | 8dp    |
 | `roundedFull`  | 100%   |
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildPlatformTheme()
 
 AppTheme {

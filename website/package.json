@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "astro": "^7.3.2",
-    "yaml": "^2.9.1"
+    "yaml": "^2.9.1",
+    "@astrojs/markdown-satteri": "^0.4.1"
   }
 }

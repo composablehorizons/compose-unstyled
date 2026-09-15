@@ -24,7 +24,7 @@ The `shape` parameter accepts the shape of the composable you are styling.
 
 The final shape of the outline will be calculated based of the provided shape, width and offset.
 
-```kotlin
+```kotlin expandable
 SimpleButton(
     shape = RoundedCornerShape(8.dp),
     modifier = Modifier.outline(
@@ -38,7 +38,7 @@ SimpleButton(
 ### Customizing Width
 
 You can customize the thickness of the outline by adjusting the `width` parameter.
-```kotlin
+```kotlin expandable
 SimpleButton(
     modifier = Modifier.outline(1.dp, Color(0xFF3B82F6), shape = RoundedCornerShape(8.dp))
 )
@@ -55,7 +55,7 @@ SimpleButton(
 The outline adapts to different shapes. The `shape` parameter should match the shape of your composable for proper alignment.
 
 Note that generic shapes are not supported and will fail silently.
-```kotlin
+```kotlin expandable
 SimpleButton(
     shape = RectangleShape,
     modifier = Modifier.outline(2.dp, Color(0xFF3B82F6), shape = RectangleShape)
@@ -73,7 +73,7 @@ SimpleButton(
 ### Customizing Offset
 
 The `offset` parameter controls the distance between the composable and its outline, creating a gap effect.
-```kotlin
+```kotlin expandable
 SimpleButton(
     modifier = Modifier.outline(2.dp, Color(0xFF3B82F6), offset = 0.dp, shape = RoundedCornerShape(8.dp))
 )
@@ -88,7 +88,7 @@ SimpleButton(
 ### Customizing Color
 
 You can customize the outline color to match your design system or create visual emphasis.
-```kotlin
+```kotlin expandable
 SimpleButton(
     modifier = Modifier.outline(2.dp, Color(0xFFEF4444), offset = 2.dp, shape = RoundedCornerShape(8.dp))
 )

@@ -35,7 +35,7 @@ parameter is provided.
 
 Use the `progress` parameter when the current progress value is known:
 
-```kotlin
+```kotlin expandable
 UnstyledProgress(progress = 0.4f) {
   Indicator()
 }
@@ -45,7 +45,7 @@ UnstyledProgress(progress = 0.4f) {
 
 Use the overload without the `progress` parameter when the current progress value is unknown:
 
-```kotlin
+```kotlin expandable
 UnstyledProgress {
   BasicText("Loading")
 }
@@ -55,7 +55,7 @@ UnstyledProgress {
 
 Use the `ProgressScope.progress` property when the indicator needs custom measurement:
 
-```kotlin
+```kotlin expandable
 UnstyledProgress(progress = progress) {
   Box(Modifier.fillMaxWidth(progress))
 }

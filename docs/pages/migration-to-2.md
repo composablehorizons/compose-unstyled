@@ -51,7 +51,7 @@ interactive size helpers.
 Remove imports from `com.composables.core`. Bottom Sheet and Modal Bottom Sheet APIs now live in
 `com.composeunstyled`.
 
-```kotlin
+```kotlin expandable
 // 1.x
 import com.composables.core.BottomSheet
 import com.composables.core.ModalBottomSheet
@@ -63,7 +63,7 @@ import com.composeunstyled.UnstyledModalBottomSheet
 
 The theming APIs moved under `com.composeunstyled.theme`:
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.theme.LocalContentColor
 import com.composeunstyled.theme.Text
 ```
@@ -76,7 +76,7 @@ from component APIs.
 
 Move those decisions into modifiers, wrappers, or your design-system components:
 
-```kotlin
+```kotlin expandable
 // 1.x
 UnstyledButton(
   onClick = onClick,
@@ -130,7 +130,7 @@ Common replacements:
 
 `BottomSheet` was split into a container and panel:
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberBottomSheetState(
   initialDetent = SheetDetent.Hidden,
 )
@@ -150,7 +150,7 @@ Sheet now reuses the same `Sheet` and `DragIndication` model.
 Pass dimming UI through the new `overlay` slot. The sheet is IME-aware by default through
 `ModalBottomSheetProperties.offsetForIme`.
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberModalBottomSheetState(
   initialDetent = SheetDetent.Hidden,
 )
@@ -172,7 +172,7 @@ UnstyledModalBottomSheet(
 `UnstyledDialog` is controlled with `visible`. Put the rendered dialog content in `DialogPanel` and
 use `paneTitle` when the dialog needs an accessible pane title.
 
-```kotlin
+```kotlin expandable
 var visible by remember { mutableStateOf(false) }
 
 UnstyledDialog(
@@ -189,7 +189,7 @@ UnstyledDialog(
 
 `UnstyledDisclosure` is now controlled:
 
-```kotlin
+```kotlin expandable
 var expanded by remember { mutableStateOf(false) }
 
 UnstyledDisclosure(
@@ -213,7 +213,7 @@ and `UnstyledDropdownMenuItem`.
 Dropdown Menu also has new anchor placement parameters: `side`, `alignment`, `sideOffset`, and
 `alignmentOffset`. Use them instead of the old `DropdownPanelAnchor` values:
 
-```kotlin
+```kotlin expandable
 var expanded by remember { mutableStateOf(false) }
 
 UnstyledDropdownMenu(
@@ -244,7 +244,7 @@ Tooltip placement is now controlled with the same anchor placement model as Drop
 `TooltipPanel` is scoped inside `UnstyledTooltip`, and its content receives `TooltipPlacement` so
 custom visuals can react to the resolved placement:
 
-```kotlin
+```kotlin expandable
 UnstyledTooltip(
   side = AnchorSide.Top,
   alignment = AnchorAlignment.Center,
@@ -269,7 +269,7 @@ and render the actual editable text through the scoped `TextInput` slot.
 Text Field does not provide leading or trailing icon slots. Place icons in your own layout around
 `TextInput`:
 
-```kotlin
+```kotlin expandable
 val state = rememberTextFieldState()
 
 UnstyledTextField(state = state) {
@@ -288,7 +288,7 @@ UnstyledTextField(state = state) {
 
 `UnstyledSlider` now exposes `track` and `thumb` slots that receive a `SliderState`:
 
-```kotlin
+```kotlin expandable
 var value by remember { mutableStateOf(0f) }
 
 UnstyledSlider(
@@ -334,7 +334,7 @@ UnstyledSlider(
 
 Indicators are scoped child APIs so they can receive the primitive interaction source:
 
-```kotlin
+```kotlin expandable
 var checked by remember { mutableStateOf(false) }
 
 UnstyledCheckbox(
@@ -351,7 +351,7 @@ Radio groups also support generic values and scope `RadioButton` to `RadioGroupS
 
 Switch behavior and thumb placement are split. Put the visual thumb in `SwitchThumb`:
 
-```kotlin
+```kotlin expandable
 var checked by remember { mutableStateOf(false) }
 
 UnstyledSwitch(
@@ -367,7 +367,7 @@ UnstyledSwitch(
 `ScrollArea` was removed. Build the scrollable layout yourself and connect scrollbars with
 `rememberScrollbarState(...)`:
 
-```kotlin
+```kotlin expandable
 val scrollState = rememberScrollState()
 val scrollbarState = rememberScrollbarState(scrollState)
 

@@ -21,7 +21,7 @@ implementation("com.composables:composeunstyled-build-modifier")
 The `buildModifier` function provides a clean way to conditionally chain modifiers without creating nested conditional statements.
 
 Instead of writing:
-```kotlin
+```kotlin expandable
 val isSelected by remember { mutableStateOf(true) }
 val isClickable by remember { mutableStateOf(false) }
 
@@ -31,7 +31,7 @@ val modifier = Modifier.padding(16.dp)
 ```
 
 You can write:
-```kotlin
+```kotlin expandable
 val isSelected by remember { mutableStateOf(true) }
 val isClickable by remember { mutableStateOf(false) }
 
@@ -50,7 +50,7 @@ val modifier = buildModifier {
 
 Build modifiers based on component state or external conditions.
 
-```kotlin
+```kotlin expandable
 val isError by remember { mutableStateOf(true) }
 val isDisabled by remember { mutableStateOf(false) }
 
@@ -75,7 +75,7 @@ BasicText(
 
 Handle optional size constraints elegantly.
 
-```kotlin
+```kotlin expandable
 val maxWidth by remember { mutableStateOf<Dp?>(300.dp) }
 val fixedHeight by remember { mutableStateOf<Dp?>(null) }
 val backgroundColor by remember { mutableStateOf(Color(0xFFF5F5F5)) }
@@ -96,7 +96,7 @@ Card(
 
 Combine multiple conditions for sophisticated modifier logic.
 
-```kotlin
+```kotlin expandable
 val isLoading by remember { mutableStateOf(false) }
 val hasError by remember { mutableStateOf(true) }
 val isSelected by remember { mutableStateOf(false) }

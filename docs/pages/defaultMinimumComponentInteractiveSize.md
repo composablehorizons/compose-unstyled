@@ -20,7 +20,7 @@ Use the `defaultComponentInteractiveSize` theme property to specify the minimum 
 
 Use the `Modifier.defaultComponentInteractiveSize()` when creating your components to set the minimum size:
 
-```kotlin
+```kotlin expandable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -56,13 +56,13 @@ fun MinimumInteractiveSizeBasicExample() {
 }
 ```
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.minimumInteractiveComponentSize
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.ComponentInteractiveSize
 ```
 
-```kotlin
+```kotlin expandable
 val Theme = buildTheme {
     defaultComponentInteractiveSize = ComponentInteractiveSize(
         size = 48.dp,
@@ -84,7 +84,7 @@ fun MinimumInteractiveSizeExample() {
 Use the `touchInteractionSize` parameter to set the minimum interactive size when running on touch devices (such as mobile).
 Use the `nonTouchInteractionSize` parameter to set the size when running on non-touch devices (such as desktop).
 
-```kotlin
+```kotlin expandable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -120,13 +120,13 @@ fun MinimumInteractiveSizeResponsiveExample() {
 }
 ```
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.minimumInteractiveComponentSize
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.ComponentInteractiveSize
 ```
 
-```kotlin
+```kotlin expandable
 val Theme = buildTheme {
     defaultComponentInteractiveSize = ComponentInteractiveSize(
         touchInteractionSize = 48.dp,

@@ -42,7 +42,7 @@ Use `DisclosureButton` for the disclosure trigger so assistive technology receiv
 
 Use the `expanded` parameter to control whether `DisclosedContent` is visible:
 
-```kotlin
+```kotlin expandable
 var expanded by remember { mutableStateOf(false) }
 
 UnstyledDisclosure(
@@ -63,7 +63,7 @@ UnstyledDisclosure(
 
 Use the `enter` and `exit` parameters on `DisclosedContent` to animate the disclosed content:
 
-```kotlin
+```kotlin expandable
 UnstyledDisclosure(
   expanded = expanded,
   onExpandedChange = { expanded = it },

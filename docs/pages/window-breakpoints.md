@@ -56,7 +56,7 @@ Then use `ProvideWindowWidthBreakpoints` near the root of your app to make the c
 
 Use `currentWindowWidthBreakpoint()` to access the currently resolved breakpoint:
 
-```kotlin
+```kotlin expandable
 val Compact = WidthBreakpoint("compact")
 val Medium = WidthBreakpoint("medium")
 val Expanded = WidthBreakpoint("expanded")
@@ -84,7 +84,7 @@ ProvideWindowWidthBreakpoints(widthBreakpoints) {
 Use `ProvideWindowHeightBreakpoints` with `currentWindowHeightBreakpoint()` when layout behavior
 depends on available height:
 
-```kotlin
+```kotlin expandable
 val Short = HeightBreakpoint("short")
 val Tall = HeightBreakpoint("tall")
 

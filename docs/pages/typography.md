@@ -13,7 +13,7 @@ implementation("com.composables:composeunstyled-theming")
 
 The `Text` component is used to display text with various styles and properties.
 
-```kotlin
+```kotlin expandable
 Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 ```
 
@@ -36,7 +36,7 @@ It is recommended to use the provided `LocalTextStyle` in order to maintain cons
 
 If you need to override a text style for specific cases, you can either override a specific parameter via the `Text` modifier or pass an entire different style via the `style` parameter:
 
-```kotlin
+```kotlin expandable
 CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)) {
     Column {
         Text("This text will use the provided LocalTextStyle")
@@ -51,7 +51,7 @@ CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fon
 
 ### Styling Text
 
-```kotlin
+```kotlin expandable
 Text("Bold Text", fontWeight = FontWeight.Bold)
 Text("Italic Text", fontStyle = FontStyle.Italic)
 Text("Underlined Text", textDecoration = TextDecoration.Underline)
@@ -61,7 +61,7 @@ Text("Large Text", fontSize = 24.sp)
 
 ### Handling Text Overflow
 
-```kotlin
+```kotlin expandable
 Text(
     "This is a very long text that might overflow",
     maxLines = 1,

@@ -1,0 +1,85 @@
+---
+import filterIcon from '../assets/icons/filter.svg?raw';
+---
+<docs-filter>
+  <search aria-label="Documentation filter">
+    <span class="filter-icon" aria-hidden="true" set:html={filterIcon.replace(/<!--[\s\S]*?-->/g, '')} />
+    <input type="search" aria-label="Filter documentation" placeholder="Filter" autocomplete="off" aria-controls="docs-filter-navigation" />
+  </search>
+</docs-filter>
+
+<script>
+  class DocsFilter extends HTMLElement {
+    connectedCallback() {
+      const input = this.querySelector('input')!;
+      const panel = this.closest('.docs-sidebar-panel')!;
+      const navigation = panel.querySelector<HTMLElement>('.docs-navigation')!;
+      const sections = Array.from(navigation.querySelectorAll('section'));
+      const status = panel.querySelector<HTMLElement>('.docs-filter-status')!;
+      const footer = panel.querySelector<HTMLElement>('.docs-sidebar-footer')!;
+      const scroll = panel.querySelector<HTMLElement>('.docs-sidebar-scroll')!;
+      const storageKey = 'docs-navigation-filter';
+      try { input.value = sessionStorage.getItem(storageKey) ?? ''; } catch {}
+      const update = (resetScroll = true) => {
+        const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        let count = 0;
+        for (const section of sections) {
+          const heading = section.querySelector('h2')!.textContent || '';
+          let sectionCount = 0;
+          for (const item of section.querySelectorAll('li')) {
+            const link = item.querySelector('a')!;
+            const text = `${heading} ${link.textContent} ${link.getAttribute('href')}`.toLowerCase();
+            item.hidden = !terms.every(term => text.includes(term));
+            if (!item.hidden) sectionCount++;
+          }
+          section.hidden = sectionCount === 0;
+          count += sectionCount;
+        }
+        footer.hidden = terms.length > 0;
+        status.textContent = count ? '' : 'No results found.';
+        if (resetScroll) scroll.scrollTop = 0;
+        try {
+          if (input.value) sessionStorage.setItem(storageKey, input.value);
+          else sessionStorage.removeItem(storageKey);
+        } catch {}
+      };
+      update(false);
+      input.addEventListener('input', () => update());
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && input.value) {
+          event.preventDefault();
+          input.value = '';
+          update();
+        }
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          const links = Array.from(navigation.querySelectorAll<HTMLAnchorElement>('li:not([hidden]) a'));
+          const link = event.key === 'ArrowDown' ? links[0] : links.at(-1);
+          if (link) { event.preventDefault(); link.focus(); }
+        }
+      });
+    }
+  }
+  customElements.define('docs-filter', DocsFilter);
+</script>
+
+<style>
+  docs-filter { display: block; position: relative; z-index: 20; flex-shrink: 0; width: 100%; min-width: 0; margin-bottom: var(--space-6); }
+  .filter-icon { position: absolute; top: 50%; left: var(--space-3); transform: translateY(-50%); width: 16px; height: 16px; pointer-events: none; }
+  .filter-icon :global(svg) { display: block; width: 16px; height: 16px; }
+  input {
+    width: 100%;
+    padding: 0.65rem var(--space-3) 0.65rem 2.5rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--color-input-background);
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+  }
+  input::-webkit-search-cancel-button { cursor: pointer; }
+  input::placeholder { color: inherit; opacity: 0.65; }
+  input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  @media (max-width: 760px) {
+    docs-filter { position: absolute; inset: auto 0 0; margin: 0; }
+  }
+</style>

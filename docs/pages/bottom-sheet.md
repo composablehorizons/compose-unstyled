@@ -50,7 +50,7 @@ collapse, and dismiss actions so users can control the sheet without dragging.
 
 Use the `targetDetent` property to animate the sheet to a new detent:
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberBottomSheetState(
   initialDetent = SheetDetent.Hidden,
 )
@@ -78,7 +78,7 @@ UnstyledBottomSheet(state = sheetState) {
 
 Use the suspend `animateTo()` function to wait until the sheet animation is done:
 
-```kotlin
+```kotlin expandable
 val scope = rememberCoroutineScope()
 
 BasicText(
@@ -95,7 +95,7 @@ BasicText(
 
 Use the `jumpTo()` function to move to a detent without animation:
 
-```kotlin
+```kotlin expandable
 BasicText(
   text = "Open immediately",
   modifier = Modifier.clickable {
@@ -114,7 +114,7 @@ Keep this calculation fast. It runs during sheet measurement.
 
 Make sure to pass your new detent when creating your bottom sheet state:
 
-```kotlin
+```kotlin expandable
 val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
   containerHeight * 0.6f
 }
@@ -136,7 +136,7 @@ UnstyledBottomSheet(state = sheetState) {
 Use the `invalidateDetents()` function to recalculate sheet detents. This is useful when a custom
 detent reads a measured value that can change, such as a header height:
 
-```kotlin
+```kotlin expandable
 val peekHeight = remember { mutableStateOf(96.dp) }
 val Peek = remember {
   SheetDetent("peek") { _, _ -> peekHeight.value }
@@ -160,7 +160,7 @@ Use a scrollable layout inside the `Sheet` component to make content scroll with
 
 Use the `offsetForIme` parameter to automatically move the sheet above the soft keyboard:
 
-```kotlin
+```kotlin expandable
 var value by remember { mutableStateOf("") }
 
 UnstyledBottomSheet(
@@ -180,7 +180,7 @@ UnstyledBottomSheet(
 
 Use the `animationSpec` parameter to customize the default animation between detents:
 
-```kotlin
+```kotlin expandable
 val sheetState = rememberBottomSheetState(
   initialDetent = SheetDetent.Hidden,
   animationSpec = spring(

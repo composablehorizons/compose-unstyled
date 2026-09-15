@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { sitePath, siteUrl } from '../site.config.mjs';
 import { parse, stringify } from 'yaml';
+import { renderDemo } from './render-demo.mjs';
 
 const website = fileURLToPath(new URL('../', import.meta.url));
 const root = path.resolve(website, '..');
@@ -60,9 +61,11 @@ for (const section of navigation.sections) {
       const source = (await read(`${sources.root}/${file}`))
         .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
         .replace(/^\s*package\s+[A-Za-z0-9_.]+\s*\n+/, '').trim();
-      const code = `\n\n\`\`\`kotlin\n${source}\n\`\`\`\n\n`;
-      htmlBody = htmlBody.replace(marker[0], `<iframe src="/composeunstyled-v2-demos/index.html?id=${id}" title="${escape(page.title)} interactive demo" width="600" height="450" loading="lazy"></iframe>\n\n<p><a href="/composeunstyled-v2-demos/index.html?id=${id}">OPEN DEMO</a></p>\n\n<details>\n<summary>VIEW KOTLIN SOURCE</summary>\n${code}<a href="https://github.com/composablehorizons/compose-unstyled/blob/main/${sources.root}/${file}">OPEN SOURCE ON GITHUB</a>\n</details>\n`);
-      markdownBody = markdownBody.replace(marker[0], `### Example: ${id}\n${code}`);
+      const code = `\n\n\`\`\`kotlin expandable title="${file}" githubUrl="https://github.com/composablehorizons/compose-unstyled/blob/main/${sources.root}/${file}"\n${source}\n\`\`\`\n\n`;
+      htmlBody = htmlBody.replace(marker[0], renderDemo({
+        id, title: page.title, code,
+      }));
+      markdownBody = markdownBody.replace(marker[0], code);
     }
 
     if (/<ApiReference|<UnstyledDemo|\{\{/.test(htmlBody)) throw new Error(`Unresolved marker: ${page.slug}`);
@@ -79,7 +82,7 @@ for (const section of navigation.sections) {
     markdownBody = markdownBody
       .replace(/\]\(\/docs\/([^/)]+)\/(#[^)]*)?\)/g, (_, slug, hash = '') => `](${siteUrl(`/docs/${slug}.md`)}${hash})`)
       .replace(/\b(src|href)="\//g, (_, attr) => `${attr}="${siteUrl('/')}`);
-    const markdown = `# ${metadata.title}\n\nCompose Unstyled ${version}\n\n${markdownBody}`;
+    const markdown = `${match[0]}${markdownBody}`;
     await writeFile(path.join(publicDir, 'docs', `${page.slug}.md`), markdown);
     llms.push(`- [${metadata.title}](${siteUrl(`/docs/${page.slug}.md`)}): ${metadata.description || metadata.title}`);
     full.push(markdown);

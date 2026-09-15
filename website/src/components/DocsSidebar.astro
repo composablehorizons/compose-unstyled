@@ -1,0 +1,113 @@
+---
+import searchIcon from '../assets/icons/search.svg?raw';
+import closeIcon from '../assets/icons/x.svg?raw';
+import DocsNavigation from './DocsNavigation.astro';
+import DocsFilter from './DocsFilter.astro';
+import { sitePath } from '../../site.config.mjs';
+---
+<header class="docs-mobile-appbar">
+  <a class="brand" href={sitePath('/')}>
+    <img src={sitePath('/icons/compose-unstyled.svg')} width="28" height="28" alt="" />
+    Compose Unstyled
+  </a>
+</header>
+<aside class="docs-sidebar">
+  <button class="docs-mobile-search" type="button" aria-label="Search documentation and navigation" aria-haspopup="dialog" aria-controls="docs-navigation-sheet" disabled><span aria-hidden="true" set:html={searchIcon} /></button>
+  <dialog id="docs-navigation-sheet" class="docs-navigation-sheet" aria-label="Documentation navigation" open>
+  <div class="docs-sidebar-panel">
+    <div class="docs-sidebar-header">
+      <div class="docs-sheet-handle" aria-hidden="true"><span></span></div>
+      <button class="docs-sheet-close" type="button" aria-label="Close navigation"><span aria-hidden="true" set:html={closeIcon} /></button>
+      <a class="brand" href={sitePath('/')}>
+        <img src={sitePath('/icons/compose-unstyled.svg')} width="28" height="28" alt="" />
+        Compose Unstyled
+      </a>
+    </div>
+    <DocsFilter />
+    <div class="docs-sidebar-scroll">
+      <DocsNavigation id="docs-filter-navigation" />
+      <p class="docs-filter-status" role="status" aria-live="polite"></p>
+      <footer class="docs-sidebar-footer">
+        <a href={sitePath('/llms.txt')}>llms.txt</a>
+        <a href={sitePath('/llms-full.txt')}>Full documentation for LLMs</a>
+      </footer>
+    </div>
+  </div>
+  </dialog>
+</aside>
+
+<script is:inline>
+  (() => {
+    const scroll = document.querySelector('.docs-sidebar-scroll');
+    const desktop = window.matchMedia('(min-width: 761px)');
+    const key = 'docs-sidebar-scroll';
+    const restore = () => {
+      if (!desktop.matches) return;
+      try {
+        const saved = Number(sessionStorage.getItem(key));
+        if (Number.isFinite(saved)) scroll.scrollTop = saved;
+      } catch {}
+    };
+    restore();
+    desktop.addEventListener('change', restore);
+    scroll.addEventListener('scroll', () => {
+      if (!desktop.matches) return;
+      try { sessionStorage.setItem(key, String(scroll.scrollTop)); } catch {}
+    }, { passive: true });
+  })();
+</script>
+
+<script>
+  const sheet = document.querySelector<HTMLDialogElement>('#docs-navigation-sheet')!;
+  const trigger = document.querySelector<HTMLButtonElement>('.docs-mobile-search')!;
+  const mobile = window.matchMedia('(max-width: 760px)');
+  const closeSheet = async () => {
+    if (!sheet.matches(':modal') || sheet.dataset.closing) return;
+    sheet.style.setProperty('--sheet-exit-start', getComputedStyle(sheet).transform);
+    sheet.dataset.closing = 'true';
+    await Promise.allSettled(sheet.getAnimations().map(animation => animation.finished));
+    if (!sheet.dataset.closing) return;
+    sheet.close();
+    delete sheet.dataset.closing;
+    sheet.style.removeProperty('--sheet-exit-start');
+  };
+  const syncLayout = () => {
+    delete sheet.dataset.closing;
+    sheet.style.removeProperty('--sheet-exit-start');
+    sheet.close();
+    if (!mobile.matches) sheet.open = true;
+  };
+  syncLayout();
+  mobile.addEventListener('change', syncLayout);
+  trigger.disabled = false;
+  trigger.addEventListener('click', () => sheet.showModal());
+  sheet.querySelector('.docs-sheet-close')!.addEventListener('click', closeSheet);
+  sheet.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeSheet();
+  });
+  const handle = sheet.querySelector<HTMLElement>('.docs-sheet-handle')!;
+  let dragStart: number | undefined;
+  handle.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0 || sheet.dataset.closing) return;
+    dragStart = event.clientY;
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle.addEventListener('pointermove', event => {
+    if (dragStart === undefined) return;
+    sheet.style.transform = `translateY(${Math.max(0, event.clientY - dragStart)}px)`;
+  });
+  const endDrag = (event: PointerEvent) => {
+    if (dragStart === undefined) return;
+    if (event.type === 'pointerup' && event.clientY - dragStart > 80) closeSheet();
+    dragStart = undefined;
+    sheet.style.removeProperty('transform');
+  };
+  handle.addEventListener('pointerup', endDrag);
+  handle.addEventListener('pointercancel', endDrag);
+  sheet.addEventListener('click', event => {
+    if (event.target !== sheet) return;
+    const bounds = sheet.getBoundingClientRect();
+    if (event.clientY < bounds.top || event.clientX < bounds.left || event.clientX > bounds.right || event.clientY > bounds.bottom) closeSheet();
+  });
+</script>

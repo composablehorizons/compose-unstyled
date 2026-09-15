@@ -34,6 +34,7 @@ html {
   color-scheme: light dark;
   --color-background: #ffffff;
   --color-surface: #ffffff;
+  --color-input-background: #ededed;
   --color-on-background: rgb(29, 29, 31);
   --color-accent: #000000;
   --color-outline: rgba(0, 0, 0, 0.16);
@@ -72,6 +73,7 @@ html {
   html {
     --color-background: #121212;
     --color-surface: #121212;
+    --color-input-background: #303030;
     --color-on-background: #e5e5e5;
     --color-accent: #e5e5e5;
     --color-outline: rgba(255, 255, 255, 0.24);

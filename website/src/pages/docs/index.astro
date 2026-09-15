@@ -1,10 +1,4 @@
 ---
-import SiteLayout from '../../layouts/SiteLayout.astro';
-import DocsNavigation from '../../components/DocsNavigation.astro';
+import { sitePath } from '../../../site.config.mjs';
+return Astro.redirect(sitePath('/docs/overview/'), 301);
 ---
-<SiteLayout title="Documentation">
-  <div class="docs-index">
-    <h1>DOCUMENTATION</h1>
-    <DocsNavigation />
-  </div>
-</SiteLayout>

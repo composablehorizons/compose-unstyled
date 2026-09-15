@@ -38,7 +38,7 @@ Use tri-state checkboxes for parent selection controls where only some child ite
 
 Use the `StateIndicator` component to render content for each `ToggleableState`:
 
-```kotlin
+```kotlin expandable
 UnstyledTriStateCheckbox(
   value = value,
   onClick = { toggleParent() },
@@ -57,7 +57,7 @@ UnstyledTriStateCheckbox(
 
 Use the `ToggleableState.Indeterminate` value when only some items are selected:
 
-```kotlin
+```kotlin expandable
 val selectedCount = selectedItems.count()
 val parentState = when (selectedCount) {
   0 -> ToggleableState.Off

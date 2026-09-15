@@ -18,7 +18,7 @@ Every [component](components.md) in Unstyled is themable. They will make use of 
 
 Instead of styling each component individually:
 
-```kotlin
+```kotlin expandable
 Column {
     BasicText("Less than 10 minutes remaining")
     UnstyledIcon(Lucide.AlarmClock, contentDescription = null, tint = Color.Red.copy(alpha = 0.6f))
@@ -28,7 +28,7 @@ Column {
 
 use the `ProvideContentColor` to override the content color used:
 
-```kotlin
+```kotlin expandable
 Column {
     BasicText("Less than 10 minutes remaining")
     ProvideContentColor(Color.Red.copy(alpha = 0.6f)) {
@@ -48,7 +48,7 @@ If you need to override an entire theme use `ThemeOverride` which allows to over
 
 You can use theme overrides to provide a specific styling to the content of your slots:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun Card(
     contentColor: Color = Color.Black,
