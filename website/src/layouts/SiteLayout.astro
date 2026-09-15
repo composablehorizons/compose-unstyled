@@ -3,6 +3,7 @@ import Favicon from '../components/Favicon.astro';
 import '../styles/tokens.css';
 import '../styles/docs.css';
 import { site } from '../../site.config.js';
+import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
 interface Props {
   title: string;
   description?: string;
@@ -23,6 +24,8 @@ const { title, description, markdownUrl } = Astro.props;
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={new URL(Astro.url.pathname, site)} />
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
+    <link rel="preconnect" href="https://cdn.composables.com" crossorigin />
+    <link rel="preload" href={sharedSkikoUrl} as="fetch" type="application/wasm" crossorigin />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

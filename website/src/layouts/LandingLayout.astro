@@ -3,6 +3,7 @@ import Favicon from '../components/Favicon.astro';
 import '../styles/tokens.css';
 import '../styles/landing.css';
 import { sitePath, siteUrl } from '../../site.config.js';
+import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
 ---
 <!doctype html>
 <html lang="en">
@@ -16,6 +17,8 @@ import { sitePath, siteUrl } from '../../site.config.js';
     <title>Compose Unstyled — The missing design system layer for Jetpack Compose</title>
     <meta name="description" content="Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Build your own design system for every platform." />
     <link rel="canonical" href={siteUrl('/')} />
+    <link rel="preconnect" href="https://cdn.composables.com" crossorigin />
+    <link rel="preload" href={sharedSkikoUrl} as="fetch" type="application/wasm" crossorigin />
   </head>
   <body>
     <a class="landing-skip-link" href="#main">Skip to content</a>
