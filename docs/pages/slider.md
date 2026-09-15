@@ -48,7 +48,7 @@ UnstyledSlider(
 
 Use the `steps` parameter to snap the slider value to discrete stops:
 
-```kotlin
+```kotlin expandable
 UnstyledSlider(
   value = value,
   onValueChange = { value = it },
@@ -66,7 +66,7 @@ UnstyledSlider(
 
 Use the `valueRange` parameter when the slider value is not from `0f` to `1f`:
 
-```kotlin
+```kotlin expandable
 UnstyledSlider(
   value = volume,
   onValueChange = { volume = it },
@@ -84,7 +84,7 @@ UnstyledSlider(
 
 Use the `orientation` parameter to make the slider vertical:
 
-```kotlin
+```kotlin expandable
 UnstyledSlider(
   value = value,
   onValueChange = { value = it },
@@ -102,7 +102,7 @@ UnstyledSlider(
 
 Use the `onValueChangeFinished` callback to react after drag, tap, keyboard, or screen reader changes finish:
 
-```kotlin
+```kotlin expandable
 UnstyledSlider(
   value = value,
   onValueChange = { value = it },

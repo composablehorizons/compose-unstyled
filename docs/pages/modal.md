@@ -36,7 +36,7 @@ Use higher-level components such as `Dialog` or `UnstyledModalBottomSheet` when 
 
 Use the `rememberModalState()` function to create the modal state:
 
-```kotlin
+```kotlin expandable
 val state = rememberModalState(initiallyVisible = true)
 
 Modal(state = state) {
@@ -51,7 +51,7 @@ Modal(state = state) {
 
 Use `Scrim` inside `Modal` content to render a ready-made overlay:
 
-```kotlin
+```kotlin expandable
 Modal(state = state) {
   Scrim(scrimColor = Color.Black.copy(alpha = 0.4f))
 }
@@ -61,7 +61,7 @@ Modal(state = state) {
 
 Use the `onKeyEvent` parameter to handle keyboard dismissal:
 
-```kotlin
+```kotlin expandable
 Modal(
   state = state,
   onKeyEvent = { event ->

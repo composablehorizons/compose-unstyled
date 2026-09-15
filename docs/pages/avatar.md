@@ -47,7 +47,7 @@ Pass a `contentDescription` when the avatar identifies a person, account, or bra
 
 Use the `underlay` parameter to provide fallback content behind the image. This is useful when the image may be missing or still loading.
 
-```kotlin
+```kotlin expandable
 UnstyledAvatar(
   painter = null,
   contentDescription = "@coolcat",
@@ -64,7 +64,7 @@ UnstyledAvatar(
 
 Use the `contentScale` parameter to crop the image to the avatar container.
 
-```kotlin
+```kotlin expandable
 val painter = rememberUriPainter(
   uri = "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?q=80&w=1080",
   crossfade = 50.milliseconds,

@@ -39,7 +39,7 @@ accessible parent component owns the toggle interaction.
 
 Use the `checked` and `onCheckedChange` parameters to control switch state:
 
-```kotlin
+```kotlin expandable
 var checked by remember { mutableStateOf(false) }
 
 UnstyledSwitch(
@@ -56,7 +56,7 @@ UnstyledSwitch(
 
 Use the `animationSpec` parameter on `SwitchThumb` to change the thumb animation:
 
-```kotlin
+```kotlin expandable
 UnstyledSwitch(
   checked = checked,
   onCheckedChange = { checked = it },
@@ -72,7 +72,7 @@ UnstyledSwitch(
 Use the `onCheckedChange` parameter with `null` when a parent toggleable surface owns the
 interaction. This is useful when the switch is only the visual control inside a larger row.
 
-```kotlin
+```kotlin expandable
 Row(
   modifier = Modifier.toggleable(
     value = checked,

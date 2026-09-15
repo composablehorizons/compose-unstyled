@@ -50,7 +50,7 @@ Use the `accessibilityLabel` parameter when the checkbox has no visible text lab
 
 Use the `UnstyledCheckbox` component as the row container to make the full row toggleable. This is useful when the label should also toggle the checkbox:
 
-```kotlin
+```kotlin expandable
 UnstyledCheckbox(
   checked = checked,
   onCheckedChange = { checked = it },
@@ -75,7 +75,7 @@ checkbox:
 
 Use the `enter` and `exit` parameters on `CheckedIndicator` to animate the checked content.
 
-```kotlin
+```kotlin expandable
 UnstyledCheckbox(
   checked = checked,
   onCheckedChange = { checked = it },
@@ -97,7 +97,7 @@ Use the `checked` state value to draw your own indicator instead of `CheckedIndi
 
 Use the `accessibilityLabel` parameter when the checkbox content has no text:
 
-```kotlin
+```kotlin expandable
 UnstyledCheckbox(
   checked = checked,
   onCheckedChange = { checked = it },

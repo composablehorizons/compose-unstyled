@@ -27,7 +27,7 @@ Stack {
 
 Use the `orientation` parameter to arrange content vertically:
 
-```kotlin
+```kotlin expandable
 Stack(orientation = StackOrientation.Vertical) {
   BasicText("One")
   BasicText("Two")
@@ -38,7 +38,7 @@ Stack(orientation = StackOrientation.Vertical) {
 
 Use the `spacing` parameter to add equal space between children:
 
-```kotlin
+```kotlin expandable
 Stack(spacing = 12.dp) {
   BasicText("One")
   BasicText("Two")
@@ -49,7 +49,7 @@ Stack(spacing = 12.dp) {
 
 Use the `mainAxisArrangement` and `crossAxisAlignment` parameters to align children:
 
-```kotlin
+```kotlin expandable
 Stack(
   mainAxisArrangement = MainAxisArrangement.Center,
   crossAxisAlignment = CrossAxisAlignment.Center,
@@ -63,7 +63,7 @@ Stack(
 
 Use the `weight()` modifier inside `Stack` content to distribute remaining space:
 
-```kotlin
+```kotlin expandable
 Stack {
   BasicText(
     text = "Primary",

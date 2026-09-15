@@ -15,13 +15,13 @@ implementation("com.composables:composeunstyled-theming")
 
 To create a theme, use the `buildTheme { }` function.
 
-```kotlin
+```kotlin expandable
 val MyTheme = buildTheme { }
 ```
 
 It returns a theming `@Composable` that you can use to wrap your app with:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun App() {
     MyTheme {
@@ -44,7 +44,7 @@ Let's define some colors. To do this, let's create a 'colors' **theme property**
 
 Theme Properties hold a `Map` of **theme tokens**. This links the tokens to the actual values.
 
-```kotlin
+```kotlin expandable
 val colors = ThemeProperty<Color>("colors")
 val background = ThemeToken<Color>("background")
 val onBackground = ThemeToken<Color>("on_background")
@@ -70,7 +70,7 @@ You can create any kind of properties you need that fit your design needs.
 
 We can now style our app using the `Theme` object to access the values for each token:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun App() {
     MyTheme {
@@ -92,7 +92,7 @@ Compose Unstyled themes come with some default properties you can set to style y
 
 Sets the default `Color` used by all Unstyled [components](/compose-unstyled/docs/components) to render their content.
 
-```kotlin
+```kotlin expandable
 val MyTheme = buildTheme {
     defaultContentColor = Color(0XFF0C0A09)
 }
@@ -103,7 +103,7 @@ val MyTheme = buildTheme {
 Sets the default `TextStyle` used by [Text](typography.md) and [TextField](textfield.md) components to render their text
 contents.
 
-```kotlin
+```kotlin expandable
 val MyTheme = buildTheme {
     defaultTextStyle = TextStyle(
         fontWeight = FontWeight.Medium,
@@ -117,7 +117,7 @@ val MyTheme = buildTheme {
 Sets the default `Indication` used by interactive elements such as buttons and clickables. This is the same as providing
 an `Indication` value for the `LocalIndication`.
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.theme.rememberColoredIndication
 
 val MyTheme = buildTheme {
@@ -134,7 +134,7 @@ val MyTheme = buildTheme {
 Controls the colors used by text and text fields for text selection. This is the same as providing a
 `TextSelectionColors` value for the `LocalTextSelectionColors`.
 
-```kotlin
+```kotlin expandable
 val MyTheme = buildTheme {
     defaultTextSelectionColors = TextSelectionColors(
         handleColor = Color.Blue,
@@ -152,7 +152,7 @@ To make it simpler to debug such scenarios, it is highly recommended to name you
 By doing so, Unstyled will provide descriptive error messages when you try to access a token that does not exist during
 runtime.
 
-```kotlin
+```kotlin expandable
 val LightTheme = buildTheme {
     name = "LightTheme"
 }

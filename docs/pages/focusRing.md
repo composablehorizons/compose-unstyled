@@ -21,7 +21,7 @@ implementation("com.composables:composeunstyled-focus-ring")
 Focus ring requires an `interactionSource`, `width` and `color` to render a focus indicator around the component.
 
 The `shape` parameter should match the shape of the composable you are styling for proper alignment.
-```kotlin
+```kotlin expandable
 val interactionSource = remember { MutableInteractionSource() }
 
 FocusVisibilityProvider {
@@ -44,7 +44,7 @@ Wrap your app or screen content with `FocusVisibilityProvider` so Compose Unstyl
 
 Use `visibility = FocusRingVisibility.Focused` when you need the old behavior where any focused component shows the ring.
 
-```kotlin
+```kotlin expandable
 FocusVisibilityProvider {
     SimpleButton(
         modifier = Modifier.focusRing(
@@ -61,7 +61,7 @@ FocusVisibilityProvider {
 ### Customizing Width
 
 You can customize the thickness of the focus ring by adjusting the `width` parameter.
-```kotlin
+```kotlin expandable
 val interactionSource = remember { MutableInteractionSource() }
 
 SimpleButton(
@@ -83,7 +83,7 @@ SimpleButton(
 The focus ring adapts to different shapes. The `shape` parameter should match the shape of your composable for proper alignment.
 
 Note that generic shapes are not supported and will fail silently.
-```kotlin
+```kotlin expandable
 val interactionSource = remember { MutableInteractionSource() }
 
 SimpleButton(
@@ -106,7 +106,7 @@ SimpleButton(
 ### Customizing Offset
 
 The `offset` parameter controls the distance between the composable and its focus ring, creating a gap effect.
-```kotlin
+```kotlin expandable
 val interactionSource = remember { MutableInteractionSource() }
 
 SimpleButton(
@@ -126,7 +126,7 @@ SimpleButton(
 ### Customizing Color
 
 You can customize the focus ring color to match your design system or create visual emphasis.
-```kotlin
+```kotlin expandable
 val redInteractionSource = remember { MutableInteractionSource() }
 val greenInteractionSource = remember { MutableInteractionSource() }
 val purpleInteractionSource = remember { MutableInteractionSource() }

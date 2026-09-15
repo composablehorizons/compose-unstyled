@@ -45,7 +45,7 @@ Use the `paneTitle` parameter on `DialogPanel` when the dialog has a clear title
 
 Use the `visible` parameter to show the dialog and the `onDismissRequest` callback to update that state:
 
-```kotlin
+```kotlin expandable
 var visible by remember { mutableStateOf(false) }
 
 BasicText(
@@ -68,7 +68,7 @@ UnstyledDialog(
 Use the `overlay` parameter to render content behind the dialog panel. `Scrim` provides a
 ready-made overlay for dialogs.
 
-```kotlin
+```kotlin expandable
 UnstyledDialog(
   visible = visible,
   onDismissRequest = { visible = false },
@@ -84,7 +84,7 @@ UnstyledDialog(
 
 Use the `properties` parameter to control how the dialog can be dismissed:
 
-```kotlin
+```kotlin expandable
 UnstyledDialog(
   visible = visible,
   onDismissRequest = { visible = false },
@@ -103,7 +103,7 @@ UnstyledDialog(
 
 Use the `enter` and `exit` parameters on `DialogPanel` to animate the dialog panel:
 
-```kotlin
+```kotlin expandable
 UnstyledDialog(
   visible = visible,
   onDismissRequest = { visible = false },

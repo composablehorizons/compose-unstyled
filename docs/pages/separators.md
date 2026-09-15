@@ -30,7 +30,7 @@ UnstyledVerticalSeparator(color = Color.Black)
 
 Use the `thickness` parameter to change the line thickness:
 
-```kotlin
+```kotlin expandable
 UnstyledHorizontalSeparator(
   color = Color.Black,
   thickness = 2.dp,

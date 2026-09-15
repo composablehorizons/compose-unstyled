@@ -1,21 +1,37 @@
 ---
 import SiteLayout from './SiteLayout.astro';
-import DocsNavigation from '../components/DocsNavigation.astro';
+import DocsSidebar from '../components/DocsSidebar.astro';
 const { title, description, markdownUrl } = Astro.props.frontmatter;
+const headings = Astro.props.headings.filter(heading => heading.depth === 2 || heading.depth === 3);
 ---
 <SiteLayout title={title} description={description} markdownUrl={markdownUrl}>
-  <div class="docs-layout">
-    <aside class="docs-sidebar">
-      <details open>
-        <summary>DOCUMENTATION CONTENTS</summary>
-        <DocsNavigation />
-      </details>
-    </aside>
+  <div class:list={["docs-layout", { "docs-layout-with-toc": headings.length > 0 }]}>
+    <DocsSidebar />
     <article class="docs-content">
-      <h1>{title}</h1>
-      {description && <p>{description}</p>}
-      <p><a href={markdownUrl}>VIEW MARKDOWN</a></p>
+      <header class="docs-article-header">
+        <h1>{title}</h1>
+        {description && <p class="docs-description">{description}</p>}
+        {markdownUrl && <a class="docs-markdown-link" href={markdownUrl}>View Markdown</a>}
+      </header>
       <slot />
     </article>
+    {headings.length > 0 && (
+      <aside class="docs-toc">
+        <nav aria-labelledby="on-this-page">
+          <h2 id="on-this-page">On this page</h2>
+          <ul>
+            {headings.map(heading => (
+              <li class:list={{ "docs-toc-subheading": heading.depth === 3 }}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    )}
   </div>
 </SiteLayout>
+
+<script>
+  import '../scripts/code-panels';
+</script>

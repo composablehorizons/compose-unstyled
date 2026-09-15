@@ -18,7 +18,7 @@ implementation("com.composables:composeunstyled-colored-indication")
 
 Use `rememberColoredIndication` to create a colored indication effect with a single base color:
 
-```kotlin
+```kotlin expandable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,12 +49,12 @@ fun ColoredIndicationBasicExample() {
 }
 ```
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.theme.rememberColoredIndication
 ```
 
-```kotlin
+```kotlin expandable
 UnstyledButton(
     onClick = { },
     indication = rememberColoredIndication(color = Color.White),

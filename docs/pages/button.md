@@ -32,7 +32,7 @@ UnstyledButton(onClick = onClick) {
 
 Use the `enabled` parameter to prevent button activation:
 
-```kotlin
+```kotlin expandable
 UnstyledButton(
   enabled = false,
   onClick = { submit() },

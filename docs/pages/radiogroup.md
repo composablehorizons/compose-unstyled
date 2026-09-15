@@ -47,7 +47,7 @@ Use `accessibilityLabel` when the radio group does not contain a readable group 
 
 Use the `value` parameter on each `RadioButton` to connect it to the group value:
 
-```kotlin
+```kotlin expandable
 var selected by remember { mutableStateOf("small") }
 
 UnstyledRadioGroup(
@@ -68,7 +68,7 @@ UnstyledRadioGroup(
 
 Use the `SelectedIndicator` component to render content only for the selected option:
 
-```kotlin
+```kotlin expandable
 RadioButton("large") {
   SelectedIndicator {
     BasicText("Selected")
@@ -82,7 +82,7 @@ RadioButton("large") {
 
 Use the `enter` and `exit` parameters on `SelectedIndicator` to animate the selected indicator:
 
-```kotlin
+```kotlin expandable
 RadioButton("large") {
   SelectedIndicator(
     enter = fadeIn(),

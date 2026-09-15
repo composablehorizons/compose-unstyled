@@ -31,7 +31,7 @@ PortalHost {
 
 Place `PortalHost` above the content that needs to render portals:
 
-```kotlin
+```kotlin expandable
 PortalHost {
   BasicText("Screen content")
 
@@ -45,7 +45,7 @@ PortalHost {
 
 Add or remove the `Portal` from composition to control whether its content is rendered:
 
-```kotlin
+```kotlin expandable
 var showPortal by remember { mutableStateOf(false) }
 
 PortalHost {
@@ -66,7 +66,7 @@ PortalHost {
 
 A single `PortalHost` can render content from multiple `Portal` calls:
 
-```kotlin
+```kotlin expandable
 PortalHost {
   Portal {
     BasicText("First portal")

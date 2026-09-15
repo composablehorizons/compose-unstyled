@@ -108,7 +108,7 @@ const apiReferences = {
       fn('SelectedIndicator', 'RadioButtonScope.SelectedIndicator'),
     ]),
   ],
-  scrollarea: [
+  scrollbars: [
     source('composeunstyled-scrollbars/src/commonMain/kotlin/com/composeunstyled/Scrollbars.kt', [
       fn('rememberScrollbarState'),
       fn('UnstyledVerticalScrollbar'),

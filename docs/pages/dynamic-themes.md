@@ -25,7 +25,7 @@ Compose Foundation comes with a `isSystemInDarkTheme()` function that emits whet
 
 You can use this information to provide a light and dark color scheme respectively when defining your theme:
 
-```kotlin
+```kotlin expandable
 import androidx.compose.foundation.isSystemInDarkTheme
 
 val colors = ThemeProperty<Color>("colors")
@@ -56,7 +56,7 @@ That's it. When the system option changes, the scope of the `buildTheme` will re
 
 Since the `buildTheme` scope is composable, you can load resources that might not be immediately available. For example, loading custom fonts from disk or fetching theme data from a network source:
 
-```kotlin
+```kotlin expandable
 val typography = ThemeProperty<FontFamily>("typography")
 val body = ThemeToken<FontFamily>("body")
 

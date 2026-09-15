@@ -12,7 +12,7 @@ composables.
 
 For the following guide, we will use this typical theme as a reference:
 
-```xml
+```xml expandable
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="@style/Theme.NoActionBar">
@@ -67,7 +67,7 @@ If you are coming from Material Compose, the result of `buildTheme {}` works the
 
 Let's create a blank theme and use it to wrap the contents of our app:
 
-```kotlin
+```kotlin expandable
 import com.composeunstyled.UnstyledButton
 import androidx.compose.foundation.text.BasicText
 import com.composeunstyled.theme.buildTheme
@@ -112,7 +112,7 @@ similar to Material's `MaterialTheme` object, but in our case it's way more flex
 Let's create a **colors** `ThemeProperty` and put some color `ThemeTokens` to it. We will use these tokens to populate
 our theme and style our app:
 
-```kotlin
+```kotlin expandable
 val colors = ThemeProperty<Color>("colors")
 
 val background = ThemeToken<Color>("background")
@@ -125,7 +125,7 @@ We can now use them in our theme function to read the values of our XML theme.
 
 Compose Unstyled comes with `resolveThemeX()` composable functions so that you can read your XML theme values:
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildTheme {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
@@ -152,7 +152,7 @@ We can now use our XML theme colors directly in Compose.
 
 To access them, use the `Theme` object like this:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun App() {
     AppTheme {
@@ -200,7 +200,7 @@ That's it. Now whenever you update your colors in your XML theme, the changes wi
 
 Let's create some theme tokens for our spacing theme attributes, like we did for our colors:
 
-```kotlin
+```kotlin expandable
 val spacing = ThemeProperty<Dp>("spacing")
 val small = ThemeToken<Dp>("small")
 val medium = ThemeToken<Dp>("medium")
@@ -209,7 +209,7 @@ val large = ThemeToken<Dp>("large")
 
 and now let's map them to our theme:
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildTheme {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
@@ -237,7 +237,7 @@ We can now use our spacing inside our app, using `Theme[spacing][small]`, `Theme
 
 For our example let's put some spacing between our elements using a `Spacer`:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun App() {
     AppTheme {
@@ -274,14 +274,14 @@ fun App() {
 
 Let's create theme tokens for our text appearance attributes:
 
-```kotlin
+```kotlin expandable
 val typography = ThemeProperty<TextStyle>("typography")
 val body = ThemeToken<TextStyle>("body")
 ```
 
 Now we can map our XML text appearance to our theme tokens using `resolveThemeTextAppearance`:
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildTheme {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
@@ -311,7 +311,7 @@ val AppTheme = buildTheme {
 
 Now you can use your XML typography in your composables using the new tokens and the `ProvideTextStyle` composable:
 
-```kotlin
+```kotlin expandable
 @Composable
 fun App() {
     AppTheme {
@@ -361,14 +361,13 @@ touch effect.
 
 For this, we provide a Compose Ripple Indication library:
 
-```kotlin
-// app/build.gradle.kts
+```kotlin title="app/build.gradle.kts"
 implementation("com.composables:ripple-indication:1.0.0")
 ```
 
 This introduces the `rememberRippleIndication()` function, that we can use in our compose theme:
 
-```kotlin
+```kotlin expandable
 val AppTheme = buildTheme {
     // get a reference to the calling (themed) context
     val context = LocalContext.current

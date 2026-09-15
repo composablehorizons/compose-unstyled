@@ -57,7 +57,7 @@ the tooltip needs to show on keyboard focus.
 Use the `side`, `alignment`, `sideOffset`, and `alignmentOffset` parameters to place the tooltip
 relative to the anchor:
 
-```kotlin
+```kotlin expandable
 UnstyledTooltip(
   side = AnchorSide.Bottom,
   alignment = AnchorAlignment.Center,
@@ -76,7 +76,7 @@ UnstyledTooltip(
 
 Use the `hoverDelayMillis` parameter to wait before showing the tooltip on hover:
 
-```kotlin
+```kotlin expandable
 UnstyledTooltip(
   hoverDelayMillis = 500,
   panel = {
@@ -94,7 +94,7 @@ UnstyledTooltip(
 Use the `longPressShowDurationMillis` parameter to change how long the tooltip stays visible after a
 long press:
 
-```kotlin
+```kotlin expandable
 UnstyledTooltip(
   longPressShowDurationMillis = 3_000,
   panel = {
@@ -111,7 +111,7 @@ UnstyledTooltip(
 
 Use the `enter` and `exit` parameters on `TooltipPanel` to animate the tooltip panel:
 
-```kotlin
+```kotlin expandable
 UnstyledTooltip(
   panel = {
     TooltipPanel(

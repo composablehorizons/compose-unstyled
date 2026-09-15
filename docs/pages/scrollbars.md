@@ -41,7 +41,7 @@ UnstyledVerticalScrollbar(scrollbarState) {
 
 Use the `rememberScrollbarState(LazyListState)` function to connect a scrollbar to lazy list scroll position:
 
-```kotlin
+```kotlin expandable
 val listState = rememberLazyListState()
 val scrollbarState = rememberScrollbarState(listState)
 
@@ -60,7 +60,7 @@ UnstyledVerticalScrollbar(scrollbarState) {
 
 Use the `rememberScrollbarState(LazyGridState)` function to connect a scrollbar to lazy grid scroll position:
 
-```kotlin
+```kotlin expandable
 val gridState = rememberLazyGridState()
 val scrollbarState = rememberScrollbarState(gridState)
 
@@ -82,7 +82,7 @@ UnstyledVerticalScrollbar(scrollbarState) {
 
 Use the `rememberScrollbarState(ScrollState)` function for content that uses a regular scroll state:
 
-```kotlin
+```kotlin expandable
 val scrollState = rememberScrollState()
 val scrollbarState = rememberScrollbarState(scrollState)
 
@@ -101,7 +101,7 @@ UnstyledVerticalScrollbar(scrollbarState) {
 
 Use the `thumbVisibility` parameter to hide the thumb when the user is not interacting with the scrollable content:
 
-```kotlin
+```kotlin expandable
 UnstyledVerticalScrollbar(scrollbarState) {
   Thumb(
     thumbVisibility = ThumbVisibility.HideWhileIdle(
@@ -117,7 +117,7 @@ UnstyledVerticalScrollbar(scrollbarState) {
 
 Use the `reverseLayout` parameter when the scrollable content uses reverse layout:
 
-```kotlin
+```kotlin expandable
 UnstyledVerticalScrollbar(
   scrollbarState = scrollbarState,
   reverseLayout = true,
@@ -126,4 +126,4 @@ UnstyledVerticalScrollbar(
 }
 ```
 
-<ApiReference id="scrollarea" />
+<ApiReference id="scrollbars" />

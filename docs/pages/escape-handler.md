@@ -13,7 +13,7 @@ implementation("com.composables:composeunstyled-escape-handler")
 
 Use `EscapeHandler` when a visible surface should close from Escape or Back interactions.
 
-```kotlin
+```kotlin expandable
 var visible by remember { mutableStateOf(false) }
 
 if (visible) {

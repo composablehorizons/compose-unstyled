@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { sitePath, siteUrl } from '../site.config.mjs';
+import { site, sitePath, siteUrl } from '../site.config.mjs';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const files = readdirSync(dist, { recursive: true });
@@ -14,6 +14,15 @@ let links = 0;
 for (const file of pages) {
   const html = readFileSync(path.join(dist, file), 'utf8');
   for (const [tag] of html.matchAll(/<[a-z][^>]*>/gi)) {
+    if (/^<a\s/i.test(tag)) {
+      const attributes = Object.fromEntries([...tag.matchAll(/\b(href|target|rel)=["']([^"']*)["']/g)].map(([, name, value]) => [name, value]));
+      const url = new URL(attributes.href || '', site);
+      if (['http:', 'https:'].includes(url.protocol) && url.origin !== new URL(site).origin) {
+        assert.equal(attributes.target, '_blank', `${file}: external link must open in a new tab: ${url}`);
+        const rel = new Set((attributes.rel || '').split(/\s+/));
+        assert(rel.has('noopener') && rel.has('noreferrer'), `${file}: external link is missing safe rel attributes: ${url}`);
+      }
+    }
     for (const [, value] of tag.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
       if (!value.startsWith('/') || value.startsWith('//')) continue;
       const pathname = new URL(value, 'https://build.invalid').pathname;
