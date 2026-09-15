@@ -23,7 +23,9 @@
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnResolution
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootEnvSpec
 
 plugins {
   alias(libs.plugins.compose)
@@ -103,6 +105,11 @@ kotlin {
     }
     binaries.executable()
   }
+
+  rootProject.extensions.configure<WasmYarnRootEnvSpec> {
+    resolutions.add(YarnResolution("ws").apply { include("8.20.1") })
+  }
+
   jvm()
 
   androidTarget {
