@@ -11,6 +11,7 @@ class SelectChecksTest(unittest.TestCase):
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
             ".github/workflows/docs.yml",
+            ".github/workflows/version-packages.yml",
         ]), False)
 
     def test_library_workflow_runs_library_checks(self):
