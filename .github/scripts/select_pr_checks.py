@@ -2,42 +2,24 @@ import os
 import subprocess
 
 
-def select_checks(paths, branch=""):
+def needs_library_checks(paths, branch=""):
     if branch.startswith("changeset-release/"):
-        return True, True
+        return True
 
-    library = False
-    website = False
     for path in paths:
-        if path in {
-            ".github/scripts/select_pr_checks.py",
-            ".github/scripts/test_select_pr_checks.py",
-        }:
-            library = True
-            website = True
-            continue
         if path.startswith(("website/", "docs/")) or path in {
             "scripts/generate-compose-unstyled-api.mjs",
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
             ".github/workflows/docs.yml",
         }:
-            website = True
             continue
         if "/" not in path and path.endswith(".md"):
             continue
 
         # Keep existing library checks for all paths not explicitly exempted.
-        library = True
-        if (
-            path.startswith(("demo/", "gradle/", "buildSrc/", "build-logic/"))
-            or path.endswith((".gradle.kts", ".gradle"))
-            or path in {"gradlew", "gradlew.bat", "gradle.properties"}
-            or "/src/commonMain/" in path
-            or "/src/wasmJsMain/" in path
-        ):
-            website = True
-    return library, website
+        return True
+    return False
 
 
 if __name__ == "__main__":
@@ -50,6 +32,5 @@ if __name__ == "__main__":
     changed = subprocess.check_output(
         ["git", "diff", "--no-renames", "--name-only", "-z", merge_base, head]
     ).decode().split("\0")
-    library, website = select_checks(filter(None, changed), os.environ.get("HEAD_REF", ""))
+    library = needs_library_checks(filter(None, changed), os.environ.get("HEAD_REF", ""))
     print(f"library={str(library).lower()}")
-    print(f"website={str(website).lower()}")

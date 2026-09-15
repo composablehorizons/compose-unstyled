@@ -2,32 +2,19 @@ name: Docs CI
 
 on:
   pull_request:
+    paths:
+      - 'website/**'
+      - 'docs/**'
+      - 'scripts/generate-compose-unstyled-api.mjs'
+      - '.github/workflows/docs.yml'
+      - '.github/workflows/deploy-website.yml'
+      - '.github/workflows/redeploy-docs.yml'
 
 permissions:
   contents: read
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      website: ${{ steps.select.outputs.website }}
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-      - name: Test check selection
-        run: python3 -B -m unittest discover -s .github/scripts -p 'test_*.py'
-      - name: Select checks from changed paths
-        id: select
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          HEAD_REF: ${{ github.head_ref }}
-        run: python3 -B .github/scripts/select_pr_checks.py >> "$GITHUB_OUTPUT"
-
   website-checks:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.website == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
