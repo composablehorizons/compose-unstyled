@@ -1,61 +1,61 @@
 import unittest
 
-from select_pr_checks import select_checks
+from select_pr_checks import needs_library_checks
 
 
 class SelectChecksTest(unittest.TestCase):
     def test_website_only_skips_library_checks(self):
-        self.assertEqual(select_checks([
+        self.assertEqual(needs_library_checks([
             "website/src/layouts/SiteLayout.astro",
             "website/public/favicon.ico",
             ".github/workflows/deploy-website.yml",
             ".github/workflows/redeploy-docs.yml",
             ".github/workflows/docs.yml",
-        ]), (False, True))
+        ]), False)
 
     def test_library_workflow_runs_library_checks(self):
-        self.assertEqual(select_checks([".github/workflows/ci.yml"]), (True, False))
+        self.assertEqual(needs_library_checks([".github/workflows/ci.yml"]), True)
 
-    def test_shared_selection_changes_run_both(self):
+    def test_selection_changes_run_library_checks(self):
         for path in [
             ".github/scripts/select_pr_checks.py",
             ".github/scripts/test_select_pr_checks.py",
         ]:
             with self.subTest(path=path):
-                self.assertEqual(select_checks([path]), (True, True))
+                self.assertEqual(needs_library_checks([path]), True)
 
-    def test_docs_and_generator_build_website(self):
+    def test_docs_and_generator_skip_library_checks(self):
         for path in ["docs/pages/button.md", "docs/docs.yml", "scripts/generate-compose-unstyled-api.mjs"]:
             with self.subTest(path=path):
-                self.assertEqual(select_checks([path]), (False, True))
+                self.assertEqual(needs_library_checks([path]), False)
 
-    def test_library_and_demo_inputs_run_both(self):
+    def test_library_and_demo_inputs_run_library_checks(self):
         for path in [
             "composeunstyled-button/src/commonMain/kotlin/Button.kt",
             "demo/src/wasmJsMain/resources/index.html",
             "gradle/libs.versions.toml", "settings.gradle.kts", "gradle.properties",
         ]:
             with self.subTest(path=path):
-                self.assertEqual(select_checks([path]), (True, True))
+                self.assertEqual(needs_library_checks([path]), True)
 
     def test_platform_tests_keep_library_checks(self):
-        self.assertEqual(select_checks([
+        self.assertEqual(needs_library_checks([
             "composeunstyled-button/src/androidInstrumentedTest/ButtonTest.kt",
-        ]), (True, False))
+        ]), True)
 
-    def test_mixed_pr_runs_both(self):
-        self.assertEqual(select_checks([
+    def test_mixed_pr_runs_library_checks(self):
+        self.assertEqual(needs_library_checks([
             "website/package.json", "composeunstyled-button/src/commonTest/ButtonTest.kt",
-        ]), (True, True))
+        ]), True)
 
-    def test_releases_always_keep_all_checks(self):
-        self.assertEqual(select_checks(["CHANGELOG.md"], "changeset-release/main"), (True, True))
+    def test_releases_keep_library_checks(self):
+        self.assertEqual(needs_library_checks(["CHANGELOG.md"], "changeset-release/main"), True)
 
     def test_unknown_paths_keep_library_checks(self):
-        self.assertEqual(select_checks(["new-tool/config.json"]), (True, False))
+        self.assertEqual(needs_library_checks(["new-tool/config.json"]), True)
 
     def test_root_markdown_needs_no_build(self):
-        self.assertEqual(select_checks(["README.md", "CONTRIBUTING.md"]), (False, False))
+        self.assertEqual(needs_library_checks(["README.md", "CONTRIBUTING.md"]), False)
 
 
 if __name__ == "__main__":
