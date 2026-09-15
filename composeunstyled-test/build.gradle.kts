@@ -25,13 +25,12 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
   alias(libs.plugins.compose)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 java {
@@ -45,11 +44,16 @@ kotlin {
     optIn.add("androidx.compose.ui.test.ExperimentalTestApi")
   }
 
-  androidTarget {
+  android {
+    namespace = "com.composeunstyled.test"
+    compileSdk = libs.versions.android.compileSDK.get().toInt()
+    minSdk = libs.versions.android.minSDK.get().toInt()
+    withDeviceTestBuilder {
+      sourceSetTreeName = "test"
+    }
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
-    instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
   }
 
   jvm()
@@ -75,18 +79,10 @@ kotlin {
       api(libs.compose.ui.test)
     }
 
-    androidInstrumentedTest.dependencies {
+    getByName("androidDeviceTest").dependencies {
       implementation(libs.androidx.compose.test)
       implementation(libs.androidx.compose.test.manifest)
       implementation(libs.androidx.espresso)
     }
-  }
-}
-
-android {
-  namespace = "com.composeunstyled.test"
-  compileSdk = libs.versions.android.compileSDK.get().toInt()
-  defaultConfig {
-    minSdk = libs.versions.android.minSDK.get().toInt()
   }
 }

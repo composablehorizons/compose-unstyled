@@ -29,13 +29,8 @@ plugins {
   alias(libs.plugins.compose)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.multiplatform)
-  alias(libs.plugins.android.application)
+  alias(libs.plugins.android.kotlin.multiplatform.library)
 }
-
-val demoVersionName = providers
-  .gradleProperty("publishVersion")
-  .orElse(libs.versions.unstyled)
-  .get()
 
 val generatedDemoRegistry = layout.buildDirectory.file("generated/demo-registry/GeneratedDemoRegistry.kt")
 val generatedDemoSourceMap = layout.buildDirectory.file("generated/demo-registry/DemoSourceMap.properties")
@@ -55,25 +50,6 @@ val generateDemoRegistry by tasks.registering(Exec::class) {
     generatedDemoRegistry.get().asFile.absolutePath,
     generatedDemoSourceMap.get().asFile.absolutePath,
   )
-}
-
-fun androidVersionCodeFrom(versionName: String): Int {
-  val parts = versionName
-    .substringBefore("-")
-    .removePrefix("v")
-    .split(".")
-    .map { it.toInt() }
-
-  check(parts.size == 3) {
-    "Expected a semantic version with major, minor, and patch parts, got '$versionName'."
-  }
-
-  val (major, minor, patch) = parts
-  check(minor in 0..99 && patch in 0..99) {
-    "Android versionCode only supports minor and patch values from 0 to 99, got '$versionName'."
-  }
-
-  return major * 10_000 + minor * 100 + patch
 }
 
 java {
@@ -105,7 +81,10 @@ kotlin {
   }
   jvm()
 
-  androidTarget {
+  android {
+    namespace = "com.composeunstyled.demo.shared"
+    compileSdk = libs.versions.android.compileSDK.get().toInt()
+    minSdk = 23
     compilerOptions {
       jvmTarget = JvmTarget.JVM_17
     }
@@ -144,52 +123,17 @@ kotlin {
       }
     }
 
-    val androidMain by getting {
-      dependencies {
-        implementation(libs.androidx.activitycompose)
-      }
-    }
   }
 }
 
 tasks.configureEach {
-  if (name.startsWith("compile") && name.contains("Kotlin")) {
+  if (name.startsWith("compile")) {
     dependsOn(generateDemoRegistry)
   }
-}
-
-dependencies {
-  add("debugImplementation", libs.compose.ui.tooling)
 }
 
 compose.desktop {
   application {
     mainClass = "com.composeunstyled.demo.MainKt"
-  }
-}
-
-android {
-  namespace = "com.composeunstyled.demo"
-  compileSdk = libs.versions.android.compileSDK.get().toInt()
-  signingConfigs {
-    getByName("debug") {
-      storeFile = layout.projectDirectory.file("demo-debug.keystore").asFile
-      storePassword = "android"
-      keyAlias = "demo-debug"
-      keyPassword = "android"
-    }
-  }
-  defaultConfig {
-    minSdk = 23
-    targetSdk = libs.versions.android.compileSDK.get().toInt()
-    applicationId = "com.composeunstyled.demo"
-    versionCode = androidVersionCodeFrom(demoVersionName)
-    versionName = demoVersionName
-  }
-}
-
-androidComponents {
-  beforeVariants(selector().withBuildType("release")) { variantBuilder ->
-    variantBuilder.enable = false
   }
 }

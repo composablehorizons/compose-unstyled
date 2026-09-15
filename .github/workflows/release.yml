@@ -196,7 +196,7 @@ jobs:
 
       - name: Build installable demo APK
         shell: bash
-        run: ./gradlew --console=plain :demo:assembleDebug
+        run: ./gradlew --console=plain :demo-android:assembleDebug
 
       - name: Verify demo APK signing
         shell: bash

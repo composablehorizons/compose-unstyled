@@ -19,21 +19,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 plugins {
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.android.application)
+}
+
+val demoVersionName = providers
+  .gradleProperty("publishVersion")
+  .orElse(libs.versions.unstyled)
+  .get()
+
+fun androidVersionCodeFrom(versionName: String): Int {
+  val parts = versionName
+    .substringBefore("-")
+    .removePrefix("v")
+    .split(".")
+    .map { it.toInt() }
+
+  check(parts.size == 3) {
+    "Expected a semantic version with major, minor, and patch parts, got '$versionName'."
+  }
+
+  val (major, minor, patch) = parts
+  check(minor in 0..99 && patch in 0..99) {
+    "Android versionCode only supports minor and patch values from 0 to 99, got '$versionName'."
+  }
+
+  return major * 10_000 + minor * 100 + patch
 }
 
 android {
   namespace = "com.composeunstyled.demo"
   compileSdk = libs.versions.android.compileSDK.get().toInt()
 
+  signingConfigs {
+    getByName("debug") {
+      storeFile = layout.projectDirectory.file("demo-debug.keystore").asFile
+      storePassword = "android"
+      keyAlias = "demo-debug"
+      keyPassword = "android"
+    }
+  }
+
   defaultConfig {
     minSdk = 23
     targetSdk = libs.versions.android.compileSDK.get().toInt()
     applicationId = "com.composeunstyled.demo"
-    versionCode = 1
-    versionName = "1.0.0"
+    versionCode = androidVersionCodeFrom(demoVersionName)
+    versionName = demoVersionName
   }
 }
 
@@ -44,12 +78,7 @@ androidComponents {
 }
 
 dependencies {
-  implementation(libs.compose.components.resources)
-  implementation(projects.composeunstyledTheming)
-  implementation(projects.composeunstyledPrimitives)
-  implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta01")
-  implementation(libs.composables.icons.lucide)
+  implementation(projects.demo)
   implementation(libs.androidx.activitycompose)
-  implementation("com.google.android.material:material:1.12.0")
-  implementation(libs.compose.material3)
+  debugImplementation(libs.compose.ui.tooling)
 }

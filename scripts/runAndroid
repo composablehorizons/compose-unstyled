@@ -17,7 +17,7 @@ if [ -z "${device_id}" ]; then
 fi
 
 echo "Installing demo app on ${device_id}..."
-./gradlew :demo:installDebug
+./gradlew :demo-android:installDebug
 
 echo "Launching demo app..."
 adb -s "${device_id}" shell am start -n "${PACKAGE_NAME}/${ACTIVITY_NAME}" >/dev/null
