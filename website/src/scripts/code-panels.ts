@@ -1,3 +1,5 @@
+import checkIcon from '../assets/icons/check.svg?raw';
+
 for (const panel of document.querySelectorAll<HTMLElement>('[data-code-panel]')) {
   const source = panel.querySelector<HTMLElement>('.code-source')!;
   const code = source.querySelector('code')!;
@@ -34,13 +36,33 @@ for (const panel of document.querySelectorAll<HTMLElement>('[data-code-panel]'))
       if (panel.dataset.collapsed === 'true') setExpanded(true);
     });
   }
+  const copyIcon = copy.innerHTML;
+  let confirmationTimer: ReturnType<typeof setTimeout> | undefined;
+  const resetCopy = () => {
+    copy.innerHTML = copyIcon;
+    delete copy.dataset.copied;
+    copy.setAttribute('aria-label', 'Copy code');
+    copy.title = 'Copy code';
+  };
   copy.disabled = false;
   copy.addEventListener('click', async () => {
     copy.disabled = true;
     status.textContent = '';
+    delete status.dataset.copied;
+    clearTimeout(confirmationTimer);
+    resetCopy();
     try {
       await navigator.clipboard.writeText(code.textContent || '');
+      copy.innerHTML = `<span aria-hidden="true">${checkIcon.replace(/<!--[\s\S]*?-->/g, '')}</span>`;
+      copy.dataset.copied = 'true';
+      copy.setAttribute('aria-label', 'Copied');
+      copy.title = 'Copied';
+      status.dataset.copied = 'true';
       status.textContent = 'Code copied.';
+      confirmationTimer = setTimeout(() => {
+        resetCopy();
+        status.textContent = '';
+      }, 1800);
     } catch {
       setExpanded(true);
       status.textContent = 'Could not copy. Select the code to copy it manually.';

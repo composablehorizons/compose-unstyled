@@ -249,3 +249,9 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-pagination-direction { font-size: 0.8125rem; opacity: 0.65; }
 
 .docs-sheet-handle span { border-radius: 999px; }
+
+.code-actions button[data-copied] { color: #16803c; }
+.docs-content .code-status[data-copied] { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (prefers-color-scheme: dark) {
+  .code-actions button[data-copied] { color: #4ade80; }
+}
