@@ -29,12 +29,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import com.composeunstyled.Text
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.theme.buildTheme
 
 @Preview
-@UnstyledDemo("theme-extend", section = DemoSection.Theme)
+@UnstyledDemo("theme-extend")
 @Composable
 fun ThemeExtendDemo() {
   val ExtendedTheme = buildTheme {

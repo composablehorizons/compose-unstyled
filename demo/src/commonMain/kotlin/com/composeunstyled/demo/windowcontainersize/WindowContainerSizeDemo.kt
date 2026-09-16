@@ -36,11 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 
 @Preview
-@UnstyledDemo("window-container-size", section = DemoSection.Utilities)
+@UnstyledDemo("window-container-size")
 @Composable
 fun WindowContainerSizeDemo() {
   val windowContainerSize = currentWindowContainerSize()

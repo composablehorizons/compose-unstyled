@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.platformtheme.EmojiVariant
 import com.composeunstyled.platformtheme.SpokenLanguage
@@ -78,7 +77,7 @@ private val PlatformTheme = buildPlatformTheme(
 )
 
 @Preview
-@UnstyledDemo("platform-theme", section = DemoSection.Theme)
+@UnstyledDemo("platform-theme")
 @Composable
 fun PlatformThemeDemo() {
   PlatformTheme {
