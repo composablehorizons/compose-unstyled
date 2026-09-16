@@ -877,7 +877,15 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
   }
 
   Layout(
-    modifier = modifier
+    modifier = Modifier
+      .then(
+        buildModifier {
+          if (panelOverscrollVisualEffect != null) {
+            add(Modifier.overscroll(panelOverscrollVisualEffect))
+          }
+        },
+      )
+      .then(modifier)
       .zIndex(1f)
       .then(
         buildModifier {
@@ -887,13 +895,6 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
                 .semantics { hideFromAccessibility() }
                 .focusProperties { canFocus = false },
             )
-          }
-        },
-      )
-      .then(
-        buildModifier {
-          if (panelOverscrollVisualEffect != null) {
-            add(Modifier.overscroll(panelOverscrollVisualEffect))
           }
         },
       )
