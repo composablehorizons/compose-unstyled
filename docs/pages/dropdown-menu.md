@@ -172,4 +172,8 @@ UnstyledDropdownMenu(
 )
 ```
 
-<ApiReference id="dropdown-menu" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledDropdownMenu" />
+<ApiReference declaration="com.composeunstyled.DropdownMenuScope.DropdownMenuPanel" />
+<ApiReference declaration="com.composeunstyled.DropdownMenuPanelScope.MenuItem" />

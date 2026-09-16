@@ -61,4 +61,8 @@ UnstyledProgress(progress = progress) {
 }
 ```
 
-<ApiReference id="progressindicator" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledProgress" />
+<ApiReference declaration="com.composeunstyled.ProgressScope" />
+<ApiReference declaration="com.composeunstyled.ProgressScope.Indicator" />

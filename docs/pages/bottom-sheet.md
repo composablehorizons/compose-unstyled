@@ -190,4 +190,10 @@ val sheetState = rememberBottomSheetState(
 )
 ```
 
-<ApiReference id="bottom-sheet" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.rememberBottomSheetState" />
+<ApiReference declaration="com.composeunstyled.BottomSheetState" />
+<ApiReference declaration="com.composeunstyled.UnstyledBottomSheet" title="BottomSheet" />
+<ApiReference declaration="com.composeunstyled.BottomSheetScope.Sheet" />
+<ApiReference declaration="com.composeunstyled.BottomSheetScope.DragIndication" />

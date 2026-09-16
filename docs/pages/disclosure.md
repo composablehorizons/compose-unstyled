@@ -81,4 +81,10 @@ UnstyledDisclosure(
 }
 ```
 
-<ApiReference id="disclosure" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledDisclosure" />
+<ApiReference declaration="com.composeunstyled.UnstyledDisclosureButton" />
+<ApiReference declaration="com.composeunstyled.UnstyledDisclosedContent" />
+<ApiReference declaration="com.composeunstyled.DisclosureScope.DisclosureButton" />
+<ApiReference declaration="com.composeunstyled.DisclosureScope.DisclosedContent" />

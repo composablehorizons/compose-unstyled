@@ -306,4 +306,8 @@ AppTheme {
 
 <UnstyledDemo id="platform-theme" />
 
-<ApiReference id="platform-themes" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.platformtheme.buildPlatformTheme" />
+<ApiReference declaration="com.composeunstyled.platformtheme.platformIndication" />
+<ApiReference declaration="com.composeunstyled.platformtheme.Modifier.interactiveSize" />

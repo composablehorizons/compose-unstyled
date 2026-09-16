@@ -126,4 +126,9 @@ UnstyledTooltip(
 }
 ```
 
-<ApiReference id="tooltip" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.TooltipHost" />
+<ApiReference declaration="com.composeunstyled.UnstyledTooltip" />
+<ApiReference declaration="com.composeunstyled.TooltipPlacement" />
+<ApiReference declaration="com.composeunstyled.TooltipScope.TooltipPanel" />

@@ -123,4 +123,9 @@ Tab(
 }
 ```
 
-<ApiReference id="tabgroup" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledTabGroup" />
+<ApiReference declaration="com.composeunstyled.TabGroupScope.TabList" />
+<ApiReference declaration="com.composeunstyled.TabListScope.Tab" />
+<ApiReference declaration="com.composeunstyled.TabGroupScope.TabPanel" />

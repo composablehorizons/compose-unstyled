@@ -79,4 +79,6 @@ UnstyledAvatar(
 )
 ```
 
-<ApiReference id="avatar" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledAvatar" />

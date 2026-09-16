@@ -117,4 +117,8 @@ UnstyledDialog(
 }
 ```
 
-<ApiReference id="dialog" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledDialog" />
+<ApiReference declaration="com.composeunstyled.DialogOverlayScope.Scrim" />
+<ApiReference declaration="com.composeunstyled.DialogScope.DialogPanel" />

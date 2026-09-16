@@ -410,4 +410,14 @@ and rerun the app:
 
 ---
 
-<ApiReference id="android-xml-themes" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeColor" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeDp" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeSp" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemePx" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeInt" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeFloat" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeString" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeBoolean" />
+<ApiReference declaration="com.composeunstyled.theme.resolveThemeTextAppearance" />

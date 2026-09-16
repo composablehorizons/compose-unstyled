@@ -93,4 +93,8 @@ Row(
 }
 ```
 
-<ApiReference id="toggleswitch" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledSwitch" />
+<ApiReference declaration="com.composeunstyled.SwitchScope" />
+<ApiReference declaration="com.composeunstyled.SwitchScope.SwitchThumb" />

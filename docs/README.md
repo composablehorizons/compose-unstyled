@@ -6,9 +6,25 @@ This directory is the source of truth for the current Compose Unstyled documenta
 - `pages/` contains the markdown docs pages.
 - `assets/` contains images, videos, and other static files referenced by the docs.
 - `<UnstyledDemo id="...">` embeds a destination from the Compose Unstyled demo app and links it to its Kotlin source.
-- `<ApiReference id="...">` expands into generated API tables during website preparation.
+- `<ApiReference declaration="...">` expands into generated API tables during website preparation.
 
 Demo source attachments are generated from `@UnstyledDemo` declarations in the demo source.
+
+## API references
+
+API reference tables are generated from public Kotlin declarations. Add one marker for each
+fully-qualified declaration in the order it should appear:
+
+```md
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledExample" />
+<ApiReference declaration="com.composeunstyled.ExampleScope.Item" />
+```
+
+The generator finds declarations in Compose Unstyled's public `commonMain` Kotlin sources. It
+validates every marker, derives the signatures and parameters from Kotlin, and preserves the order
+in the page.
 
 Run the documentation site locally:
 

@@ -5,7 +5,10 @@ description: A modifier that draws an outline around a composable's bounds when 
 
 The `focusRing` is based on the [outline](outline.md) modifier and does not affect layout or size - it draws purely outside the composable's bounds. By default it follows focus-visible behavior: keyboard focus shows the ring, while pointer-origin focus does not.
 
-<ApiReference id="focusRing" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.FocusVisibilityProvider" />
+<ApiReference declaration="com.composeunstyled.Modifier.focusRing" />
 
 ## Installation
 

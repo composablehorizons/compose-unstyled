@@ -78,4 +78,7 @@ PortalHost {
 }
 ```
 
-<ApiReference id="portal" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.PortalHost" />
+<ApiReference declaration="com.composeunstyled.Portal" />

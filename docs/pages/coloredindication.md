@@ -3,7 +3,10 @@ title: ColoredIndication
 description: A customizable indication effect that displays colored overlays based on user interactions like hover, press, focus, and drag.
 ---
 
-<ApiReference id="coloredindication" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.theme.rememberColoredIndication" />
+<ApiReference declaration="com.composeunstyled.theme.ColoredIndication" />
 
 ## Installation
 

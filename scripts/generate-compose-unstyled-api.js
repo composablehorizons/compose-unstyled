@@ -8,226 +8,10 @@ const outputPagesDir = process.argv[2]
   ? path.resolve(process.argv[2])
   : path.join(root, 'build/generated/compose-unstyled-docs/pages');
 
-const apiReferences = {
-  avatar: [source('composeunstyled-avatar/src/commonMain/kotlin/com/composeunstyled/Avatar.kt', [fn('UnstyledAvatar')])],
-  'bottom-sheet': [
-    source('composeunstyled-bottom-sheet/src/commonMain/kotlin/com/composeunstyled/BottomSheet.kt', [
-      fn('rememberBottomSheetState'),
-      cls('BottomSheetState'),
-      fn('UnstyledBottomSheet', 'BottomSheet'),
-      fn('Sheet', 'BottomSheetScope.Sheet'),
-      fn('DragIndication', 'BottomSheetScope.DragIndication'),
-    ]),
-  ],
-  breakpoints: [
-    source('composeunstyled-breakpoints/src/commonMain/kotlin/com/composeunstyled/Breakpoints.kt', [
-      cls('WidthBreakpoint'),
-      cls('HeightBreakpoint'),
-      cls('WindowWidthBreakpoints'),
-      fn('WindowWidthBreakpoints'),
-      cls('WindowHeightBreakpoints'),
-      fn('WindowHeightBreakpoints'),
-      cls('ResolvedWidthBreakpoint'),
-      cls('ResolvedHeightBreakpoint'),
-      fn('ProvideWindowBreakpoints'),
-      fn('ProvideWindowWidthBreakpoints'),
-      fn('ProvideWindowHeightBreakpoints'),
-      fn('currentWindowWidthBreakpoint'),
-      fn('currentWindowHeightBreakpoint'),
-    ]),
-  ],
-  'modal-bottom-sheet': [
-    source('composeunstyled-modal-bottom-sheet/src/commonMain/kotlin/com/composeunstyled/ModalBottomSheet.kt', [
-      fn('rememberModalBottomSheetState'),
-      cls('ModalBottomSheetState'),
-      fn('UnstyledModalBottomSheet'),
-      fn('Scrim', 'ModalBottomSheetOverlayScope.Scrim'),
-      fn('Sheet', 'ModalBottomSheetScope.Sheet'),
-      fn('DragIndication', 'ModalBottomSheetScope.DragIndication'),
-    ]),
-  ],
-  button: [source('composeunstyled-button/src/commonMain/kotlin/com/composeunstyled/Button.kt', [fn('UnstyledButton')])],
-  checkbox: [
-    source('composeunstyled-checkbox/src/commonMain/kotlin/com/composeunstyled/CheckBox.kt', [
-      fn('UnstyledCheckbox'),
-      fn('CheckedIndicator', 'CheckboxScope.CheckedIndicator'),
-    ]),
-  ],
-  tristatecheckbox: [
-    source('composeunstyled-tri-state-checkbox/src/commonMain/kotlin/com/composeunstyled/TriStateCheckBox.kt', [
-      fn('UnstyledTriStateCheckbox'),
-      cls('TriStateCheckboxScope'),
-      fn('StateIndicator', 'TriStateCheckboxScope.StateIndicator'),
-    ]),
-  ],
-  dialog: [
-    source('composeunstyled-dialog/src/commonMain/kotlin/com/composeunstyled/Dialog.kt', [
-      fn('UnstyledDialog'),
-      fn('Scrim', 'DialogOverlayScope.Scrim'),
-      fn('DialogPanel', 'DialogScope.DialogPanel'),
-    ]),
-  ],
-  modal: [
-    source('composeunstyled-modal/src/commonMain/kotlin/com/composeunstyled/Modal.kt', [
-      cls('ModalState'),
-      fn('rememberModalState'),
-      fn('Modal'),
-    ]),
-    source('composeunstyled-modal/src/commonMain/kotlin/com/composeunstyled/Scrim.kt', [
-      fn('Scrim', 'ModalScope.Scrim'),
-    ]),
-  ],
-  disclosure: [
-    source('composeunstyled-disclosure/src/commonMain/kotlin/com/composeunstyled/Disclosure.kt', [
-      fn('UnstyledDisclosure'),
-      fn('UnstyledDisclosureButton'),
-      fn('UnstyledDisclosedContent'),
-      fn('DisclosureButton', 'DisclosureScope.DisclosureButton'),
-      fn('DisclosedContent', 'DisclosureScope.DisclosedContent'),
-    ]),
-  ],
-  'dropdown-menu': [
-    source('composeunstyled-dropdown-menu/src/commonMain/kotlin/com/composeunstyled/DropdownMenu.kt', [
-      fn('UnstyledDropdownMenu'),
-      fn('DropdownMenuPanel', 'DropdownMenuScope.DropdownMenuPanel'),
-      fn('MenuItem', 'DropdownMenuPanelScope.MenuItem'),
-    ]),
-  ],
-  icon: [source('composeunstyled-icon/src/commonMain/kotlin/com/composeunstyled/Icon.kt', [fn('UnstyledIcon')])],
-  progressindicator: [
-    source('composeunstyled-progress/src/commonMain/kotlin/com/composeunstyled/ProgressIndicator.kt', [
-      fn('UnstyledProgress'),
-      cls('ProgressScope'),
-      fn('Indicator', 'ProgressScope.Indicator'),
-    ]),
-  ],
-  radiogroup: [
-    source('composeunstyled-radio-group/src/commonMain/kotlin/com/composeunstyled/RadioGroup.kt', [
-      fn('UnstyledRadioGroup'),
-      fn('RadioButton', 'RadioGroupScope.RadioButton'),
-      fn('SelectedIndicator', 'RadioButtonScope.SelectedIndicator'),
-    ]),
-  ],
-  scrollbars: [
-    source('composeunstyled-scrollbars/src/commonMain/kotlin/com/composeunstyled/Scrollbars.kt', [
-      fn('rememberScrollbarState'),
-      fn('UnstyledVerticalScrollbar'),
-      fn('UnstyledHorizontalScrollbar'),
-      fn('Thumb', 'ScrollbarScope.Thumb'),
-    ]),
-  ],
-  portal: [
-    source('composeunstyled-portal/src/commonMain/kotlin/com/composeunstyled/Portal.kt', [
-      fn('PortalHost'),
-      fn('Portal'),
-    ]),
-  ],
-  separators: [
-    source('composeunstyled-separators/src/commonMain/kotlin/com/composeunstyled/Separators.kt', [
-      fn('UnstyledHorizontalSeparator'),
-      fn('UnstyledVerticalSeparator'),
-    ]),
-  ],
-  slider: [
-    source('composeunstyled-slider/src/commonMain/kotlin/com/composeunstyled/Slider.kt', [
-      cls('SliderState'),
-      fn('UnstyledSlider'),
-    ]),
-  ],
-  stack: [source('composeunstyled-stack/src/commonMain/kotlin/com/composeunstyled/Stack.kt', [fn('Stack')])],
-  tabgroup: [
-    source('composeunstyled-tab-group/src/commonMain/kotlin/com/composeunstyled/TabGroup.kt', [
-      fn('UnstyledTabGroup'),
-      fn('TabList', 'TabGroupScope.TabList'),
-      fn('Tab', 'TabListScope.Tab'),
-      fn('TabPanel', 'TabGroupScope.TabPanel'),
-    ]),
-  ],
-  textfield: [
-    source('composeunstyled-text-field/src/commonMain/kotlin/com/composeunstyled/TextField.kt', [
-      fn('UnstyledTextField'),
-      fn('TextInput', 'TextFieldScope.TextInput'),
-    ]),
-  ],
-  toggleswitch: [
-    source('composeunstyled-toggle-switch/src/commonMain/kotlin/com/composeunstyled/ToggleSwitch.kt', [
-      fn('UnstyledSwitch'),
-      cls('SwitchScope'),
-      fn('SwitchThumb', 'SwitchScope.SwitchThumb'),
-    ]),
-  ],
-  tooltip: [
-    source('composeunstyled-tooltip/src/commonMain/kotlin/com/composeunstyled/Tooltip.kt', [
-      fn('TooltipHost'),
-      fn('UnstyledTooltip'),
-      cls('TooltipPlacement'),
-      fn('TooltipPanel', 'TooltipScope.TooltipPanel'),
-    ]),
-  ],
-  typography: [
-    source('composeunstyled-theming/src/commonMain/kotlin/com/composeunstyled/theme/Text.kt', [fn('Text')]),
-  ],
-  'android-xml-themes': [
-    source('composeunstyled-theming/src/androidMain/kotlin/com/composeunstyled/theme/XmlTheme.kt', [
-      fn('resolveThemeColor'),
-      fn('resolveThemeDp'),
-      fn('resolveThemeSp'),
-      fn('resolveThemePx'),
-      fn('resolveThemeInt'),
-      fn('resolveThemeFloat'),
-      fn('resolveThemeString'),
-      fn('resolveThemeBoolean'),
-      fn('resolveThemeTextAppearance'),
-    ]),
-  ],
-  'platform-themes': [
-    source('composeunstyled-platformtheme/src/commonMain/kotlin/com/composeunstyled/platformtheme/PlatformTheme.kt', [
-      fn('buildPlatformTheme'),
-      fn('platformIndication'),
-      fn('interactiveSize', 'Modifier.interactiveSize'),
-    ]),
-  ],
-  buildModifier: [
-    source('composeunstyled-build-modifier/src/commonMain/kotlin/com/composeunstyled/BuildModifier.kt', [fn('buildModifier')]),
-  ],
-  focusRing: [
-    source('composeunstyled-focus-ring/src/commonMain/kotlin/com/composeunstyled/FocusRing.kt', [
-      fn('FocusVisibilityProvider'),
-      fn('focusRing', 'Modifier.focusRing'),
-    ]),
-  ],
-  outline: [
-    source('composeunstyled-outline/src/commonMain/kotlin/com/composeunstyled/Outline.kt', [fn('outline', 'Modifier.outline')]),
-  ],
-  'window-container-size': [
-    source('composeunstyled-window-container-size/src/commonMain/kotlin/com/composeunstyled/WindowContainerSize.kt', [fn('rememberWindowContainerSize')], { optional: true }),
-  ],
-  defaultMinimumComponentInteractiveSize: [
-    source('composeunstyled-primitives/src/commonMain/kotlin/com/composeunstyled/DefaultMinimumComponentInteractiveSize.kt', [fn('defaultMinimumComponentInteractiveSize')], { optional: true }),
-  ],
-  coloredindication: [
-    source('composeunstyled-colored-indication/src/commonMain/kotlin/com/composeunstyled/theme/ColoredIndication.kt', [
-      fn('rememberColoredIndication'),
-      cls('ColoredIndication'),
-    ]),
-  ],
-};
-
 const apiDescriptions = fs.existsSync(apiDescriptionsPath)
   ? JSON.parse(fs.readFileSync(apiDescriptionsPath, 'utf8'))
   : {};
-
-function source(file, declarations, options = {}) {
-  return { file, declarations, optional: options.optional === true };
-}
-
-function fn(name, title = name) {
-  return { kind: 'function', name, title };
-}
-
-function cls(name, title = name) {
-  return { kind: 'class', name, title };
-}
+let publicKotlinSources;
 
 fs.rmSync(outputPagesDir, { recursive: true, force: true });
 fs.mkdirSync(outputPagesDir, { recursive: true });
@@ -239,39 +23,80 @@ for (const entry of fs.readdirSync(docsPagesDir, { withFileTypes: true })) {
   const outputPath = path.join(outputPagesDir, entry.name);
   let page = fs.readFileSync(inputPath, 'utf8');
 
-  page = page.replace(/<ApiReference\s+id="([A-Za-z0-9._-]+)"\s*\/>/g, (_, id) => {
-    const references = apiReferences[id];
-    if (!references) {
-      throw new Error(`No API reference generator registered for '${id}' in ${entry.name}`);
+  const pageId = path.basename(entry.name, '.md');
+  page = page.replace(/<ApiReference\s+([^>]*?)\/>/g, (_, attributes) => {
+    const marker = parseAttributes(attributes);
+    if (marker.declaration) {
+      return renderApiDeclaration(pageId, marker.declaration, marker.title).trimEnd();
     }
-    return renderApiReference(id, references).trimEnd();
+
+    if (!marker.declaration) {
+      throw new Error(`Invalid API reference marker in ${entry.name}.`);
+    }
+    return renderApiDeclaration(pageId, marker.declaration, marker.title).trimEnd();
   });
 
   fs.writeFileSync(outputPath, page.endsWith('\n') ? page : `${page}\n`);
 }
 
-function renderApiReference(id, references) {
-  const sections = [];
-  for (const reference of references) {
-    const absoluteSource = path.join(root, reference.file);
-    if (!fs.existsSync(absoluteSource)) {
-      if (reference.optional) continue;
-      throw new Error(`Missing API source for '${id}': ${reference.file}`);
-    }
-    const kotlin = stripComments(fs.readFileSync(absoluteSource, 'utf8'));
-    for (const declaration of reference.declarations) {
-      const rows = declaration.kind === 'class'
-        ? classRows(kotlin, declaration.name)
-        : functionRows(kotlin, declaration.name);
-      if (rows.length === 0 && !reference.optional) {
-        throw new Error(`Could not generate '${declaration.title}' from ${reference.file}`);
-      }
-      if (rows.length > 0) {
-        sections.push(renderTable(id, declaration.title, rows));
-      }
-    }
+function parseAttributes(attributes) {
+  return Object.fromEntries(
+    [...attributes.matchAll(/([A-Za-z][A-Za-z0-9]*)="([^"]+)"/g)].map(([, name, value]) => [name, value]),
+  );
+}
+
+function renderApiDeclaration(id, declaration, title) {
+  const declarationSources = publicApiSources().flatMap((source) => {
+    if (!declaration.startsWith(`${source.packageName}.`)) return [];
+    const [receiver, name] = splitDeclaration(declaration.slice(source.packageName.length + 1));
+    const rows = functionRows(source.kotlin, name, receiver);
+    const declarationRows = rows.length > 0 ? rows : classRows(source.kotlin, name);
+    return declarationRows.length > 0
+      ? [{ declarationRows, title: declaration.slice(source.packageName.length + 1) }]
+      : [];
+  });
+  const declarationRows = uniqueRows(declarationSources.flatMap((source) => source.declarationRows));
+  if (declarationRows.length === 0) {
+    throw new Error(`Could not generate public API reference '${declaration}'.`);
   }
-  return `## API Reference\n\n${sections.join('\n\n')}\n`;
+  return renderTable(id, title ?? declarationSources[0].title, declarationRows);
+}
+
+function publicApiSources() {
+  if (publicKotlinSources) return publicKotlinSources;
+  publicKotlinSources = fs.readdirSync(root, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name.startsWith('composeunstyled'))
+    .flatMap((entry) => {
+      const sourceSets = path.join(root, entry.name, 'src');
+      return fs.existsSync(sourceSets)
+        ? fs.readdirSync(sourceSets, { withFileTypes: true })
+          .filter((sourceSet) => sourceSet.isDirectory() && sourceSet.name.endsWith('Main'))
+          .flatMap((sourceSet) => kotlinFiles(path.join(sourceSets, sourceSet.name, 'kotlin')))
+        : [];
+    })
+    .map((file) => {
+      const kotlin = stripComments(fs.readFileSync(file, 'utf8'));
+      const packageName = /^package\s+([A-Za-z0-9_.]+)/m.exec(kotlin)?.[1];
+      return packageName ? { kotlin, packageName } : undefined;
+    })
+    .filter(Boolean);
+  return publicKotlinSources;
+}
+
+function kotlinFiles(directory) {
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(directory, entry.name);
+    if (entry.isDirectory()) return kotlinFiles(file);
+    return entry.isFile() && entry.name.endsWith('.kt') ? [file] : [];
+  });
+}
+
+function splitDeclaration(declaration) {
+  const separator = declaration.lastIndexOf('.');
+  return separator < 0
+    ? [undefined, declaration]
+    : [declaration.slice(0, separator), declaration.slice(separator + 1)];
 }
 
 function renderTable(id, title, rows) {
@@ -287,8 +112,9 @@ function renderTable(id, title, rows) {
   ].join('\n');
 }
 
-function functionRows(kotlin, name) {
-  const signatures = findCallableBlocks(kotlin, 'fun', name);
+function functionRows(kotlin, name, receiver) {
+  const sources = Array.isArray(kotlin) ? kotlin : [kotlin];
+  const signatures = sources.flatMap((source) => findCallableBlocks(source, 'fun', name, receiver));
   const rows = [];
   for (const signature of signatures) {
     const parameters = parameterRows(signature.parameters);
@@ -302,10 +128,13 @@ function functionRows(kotlin, name) {
 }
 
 function classRows(kotlin, name) {
-  let blocks = findCallableBlocks(kotlin, 'class', name);
+  const sources = Array.isArray(kotlin) ? kotlin : [kotlin];
+  let blocks = sources.flatMap((source) => findCallableBlocks(source, 'class', name));
   if (blocks.length === 0) {
-    const body = findClassBody(kotlin, name);
-    if (body) blocks = [{ parameters: '', body }];
+    blocks = sources.flatMap((source) => {
+      const body = findClassBody(source, name);
+      return body ? [{ parameters: '', body }] : [];
+    });
   }
   const rows = [];
   for (const block of blocks) {
@@ -364,9 +193,10 @@ function findClassBody(kotlin, name) {
   return bodyEnd > bodyStart ? kotlin.slice(bodyStart + 1, bodyEnd) : '';
 }
 
-function findCallableBlocks(kotlin, keyword, name) {
+function findCallableBlocks(kotlin, keyword, name, receiver) {
   const classConstructor = keyword === 'class' ? '(?:\\s+[A-Za-z]+\\s+constructor)?' : '';
-  const pattern = new RegExp(`(?:@[A-Za-z0-9_.()=,\\s]+\\n\\s*)*(?:[A-Za-z]+\\s+)*${keyword}(?:\\s*<[^>]+>)?\\s+(?:[A-Za-z0-9_<>]+\\.)?${name}${classConstructor}\\s*\\(`, 'g');
+  const receiverPattern = receiver ? `${escapeRegex(receiver)}(?:<[^>]+>)?\\.` : '(?:[A-Za-z0-9_<>]+\\.)?';
+  const pattern = new RegExp(`^\\s*(?:@[A-Za-z0-9_.()=,\\s]+\\n\\s*)*(?!private\\b|internal\\b)(?:[A-Za-z]+\\s+)*${keyword}(?:\\s*<[^>]+>)?\\s+${receiverPattern}${escapeRegex(name)}${classConstructor}\\s*\\(`, 'gm');
   const blocks = [];
   let match;
   while ((match = pattern.exec(kotlin)) !== null) {
@@ -385,6 +215,10 @@ function findCallableBlocks(kotlin, keyword, name) {
     blocks.push({ parameters, returnType, body });
   }
   return blocks;
+}
+
+function escapeRegex(value) {
+  return value.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
 }
 
 function parameterRows(parameters) {

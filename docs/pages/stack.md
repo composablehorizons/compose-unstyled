@@ -73,4 +73,6 @@ Stack {
 }
 ```
 
-<ApiReference id="stack" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.Stack" />

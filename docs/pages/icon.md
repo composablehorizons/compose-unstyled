@@ -42,4 +42,6 @@ UnstyledIcon(
 )
 ```
 
-<ApiReference id="icon" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledIcon" />

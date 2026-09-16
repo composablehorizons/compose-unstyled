@@ -3,8 +3,6 @@ title: defaultMinimumComponentInteractiveSize
 description: A modifier that sets the minimum interactive size of a composable based on the current device type and theme configuration.
 ---
 
-<ApiReference id="defaultMinimumComponentInteractiveSize" />
-
 ## Installation
 
 ```kotlin

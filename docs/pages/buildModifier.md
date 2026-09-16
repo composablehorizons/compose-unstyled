@@ -3,7 +3,9 @@ title: buildModifier
 description: A utility function that enables conditional chaining of modifiers using a builder pattern, providing a clean alternative to nested conditional statements or multiple modifier chains.
 ---
 
-<ApiReference id="buildModifier" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.buildModifier" />
 
 The function returns a single `Modifier` that is the result of chaining all the modifiers added to the list.
 
