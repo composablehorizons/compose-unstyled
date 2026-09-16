@@ -53,7 +53,7 @@ class DrawerRecompositionTest {
             snapPoints = snapPoints,
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
           Viewport(Modifier.requiredSize(100.dp)) {
             Panel(Modifier.fillMaxWidth().height(60.dp)) {
               RecompositionCount("drawer-panel-content")
@@ -89,7 +89,7 @@ class DrawerRecompositionTest {
             snapPoints = snapPoints,
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
           Viewport(Modifier.requiredSize(100.dp)) {
             Panel(Modifier.fillMaxWidth().height(60.dp)) {
               RecompositionCount("drawer-panel-content")
@@ -125,7 +125,7 @@ class DrawerRecompositionTest {
             snapPoints = snapPoints,
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
           Viewport(Modifier.requiredSize(100.dp)) {
             Panel(Modifier.fillMaxWidth().height(60.dp)) {
               RecompositionCount("drawer-panel-content")
@@ -160,7 +160,7 @@ class DrawerRecompositionTest {
             snapPoints = snapPoints,
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline, overlay = {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace, overlay = {
           Overlay(exit = fadeOut(tween(durationMillis = 300))) {
             RecompositionCount("drawer-overlay-content")
           }
