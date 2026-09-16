@@ -58,11 +58,10 @@ import com.composeunstyled.DisclosureButton
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.demo.DemoContentAlignment
 import com.composeunstyled.demo.UnstyledDemo
 
 @Preview
-@UnstyledDemo("disclosure", contentAlignment = DemoContentAlignment.TopCenter)
+@UnstyledDemo("disclosure")
 @Composable
 fun DisclosureDemo() {
   var expanded by remember { mutableStateOf(false) }

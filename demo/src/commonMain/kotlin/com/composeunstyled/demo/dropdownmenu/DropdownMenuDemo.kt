@@ -66,11 +66,10 @@ import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.demo.DemoContentAlignment
 import com.composeunstyled.demo.UnstyledDemo
 
 @Preview
-@UnstyledDemo("dropdown-menu", contentAlignment = DemoContentAlignment.TopCenter)
+@UnstyledDemo("dropdown-menu")
 @Composable
 fun DropdownMenuDemo() {
   class DropdownOption(

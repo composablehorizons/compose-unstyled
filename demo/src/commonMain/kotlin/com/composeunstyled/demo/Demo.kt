@@ -135,31 +135,12 @@ private fun DemoSelection(startDestination: String) {
           if (launchedFromDemoList) {
             AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
           }
-          DemoContainer(
-            presentation = component.presentation,
-            modifier = Modifier.weight(1f),
-          ) {
+          Box(Modifier.weight(1f)) {
             component.demo()
           }
         }
       }
     }
-  }
-}
-
-@Composable
-private fun DemoContainer(
-  presentation: DemoPresentation,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit,
-) {
-  Box(
-    modifier = modifier
-      .fillMaxSize()
-      .background(Color.White),
-    contentAlignment = presentation.alignment,
-  ) {
-    content()
   }
 }
 
