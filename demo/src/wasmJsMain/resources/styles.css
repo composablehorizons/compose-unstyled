@@ -3,5 +3,12 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: #ffffff;
   overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: #121212;
+  }
 }
