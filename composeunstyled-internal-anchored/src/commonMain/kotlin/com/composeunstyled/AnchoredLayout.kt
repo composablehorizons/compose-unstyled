@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -50,7 +51,7 @@ fun AnchoredLayout(
   anchor: @Composable () -> Unit,
 ) {
   val density = LocalDensity.current
-  val windowSize = currentWindowContainerSize().toIntSize(density)
+  val windowSize = LocalWindowInfo.current.containerDpSize.toIntSize(density)
   var anchorBounds by remember { mutableStateOf<IntRect?>(null) }
 
   Layout(

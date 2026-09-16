@@ -33,12 +33,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
-import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.platformtheme.EmojiVariant
@@ -122,7 +122,7 @@ private fun TextStylesDemo() {
     modifier = Modifier.fillMaxWidth().widthIn(max = 1200.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
-    val isWide = currentWindowContainerSize().width >= 600.dp
+    val isWide = LocalWindowInfo.current.containerDpSize.width >= 600.dp
     val orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical
     Text("Text Styles", style = Theme[textStyles][text9])
 

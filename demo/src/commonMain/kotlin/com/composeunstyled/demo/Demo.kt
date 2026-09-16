@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -66,7 +67,6 @@ import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.theme.buildTheme
 
 private val DemoTheme = buildTheme {
@@ -88,7 +88,7 @@ fun Demo(startDestination: String = "home") {
 
 @Composable
 fun ModifierDemo(content: @Composable () -> Unit) {
-  val size = currentWindowContainerSize()
+  val size = LocalWindowInfo.current.containerDpSize
   val isWide = size.width > 600.dp
   val spacedBy = if (isWide) 60.dp else 30.dp
   Stack(
