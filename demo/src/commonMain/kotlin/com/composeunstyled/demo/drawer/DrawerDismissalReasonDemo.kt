@@ -34,7 +34,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragHandle
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
+import com.composeunstyled.DrawerValueChange
 import com.composeunstyled.Panel
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
@@ -54,42 +58,50 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerDismissalReasonDemoValue {
   Closed,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-dismissal-reason")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerDismissalReasonDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerDismissalReasonDemoValue.Open,
+      snapPoints = DrawerSnapPoints {
+        DrawerDismissalReasonDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerDismissalReasonDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
+  var dismissalReason by remember { mutableStateOf("No dismissal yet") }
 
   Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
-    UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
-      contentPadding = PaddingValues(12.dp),
-      modifier = Modifier
-        .align(Alignment.Center)
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoContent]),
-      indication = LocalIndication.current,
+    Column(
+      modifier = Modifier.align(Alignment.Center).padding(24.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-      Text("Open drawer")
+      Text("Dismissal reason: $dismissalReason")
+      UnstyledButton(
+        onClick = { drawerState.targetValue = DrawerDismissalReasonDemoValue.Open },
+        contentPadding = PaddingValues(12.dp),
+        modifier = Modifier
+          .background(Theme[demoColors][demoSurface])
+          .border(1.dp, Theme[demoColors][demoContent]),
+        indication = LocalIndication.current,
+      ) {
+        Text("Open drawer")
+      }
     }
 
-    UnstyledDrawer(state = drawerState) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+      onDismissed = { dismissalReason = it.reason.label() },
+    ) {
       Viewport(Modifier.fillMaxSize()) {
         Panel(
           modifier = Modifier
@@ -112,8 +124,9 @@ fun DrawerDemo() {
               )
             }
             Text("Here is the content of the drawer.")
+            Text("Close with a gesture, outside click, Back, or Escape.")
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { drawerState.targetValue = DrawerDismissalReasonDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])
@@ -127,4 +140,13 @@ fun DrawerDemo() {
       }
     }
   }
+}
+
+private fun DrawerValueChange.Reason.label(): String = when (this) {
+  DrawerValueChange.Reason.Gesture -> "Gesture"
+  DrawerValueChange.Reason.NavigateBack -> "Navigate back"
+  DrawerValueChange.Reason.ClickOutside -> "Click outside"
+  DrawerValueChange.Reason.AccessibilityAction -> "Accessibility action"
+  DrawerValueChange.Reason.Programmatic -> "Programmatic"
+  else -> "Unknown"
 }

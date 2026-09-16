@@ -28,9 +28,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -39,10 +38,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.DragHandle
+import com.composeunstyled.DrawerHost
+import com.composeunstyled.DrawerPlacement
+import com.composeunstyled.DrawerPresentation
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
 import com.composeunstyled.Panel
+import com.composeunstyled.SwipeArea
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
@@ -51,79 +53,78 @@ import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.demoColors
 import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoInputBackground
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerSwipeAreaDemoValue {
   Closed,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-swipe-area")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerSwipeAreaDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerSwipeAreaDemoValue.Closed,
+      snapPoints = DrawerSnapPoints {
+        DrawerSwipeAreaDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerSwipeAreaDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
 
-  Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
-    UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
-      contentPadding = PaddingValues(12.dp),
-      modifier = Modifier
-        .align(Alignment.Center)
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoContent]),
-      indication = LocalIndication.current,
+  DrawerHost(Modifier.fillMaxSize()) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+      placement = DrawerPlacement.Start,
+      presentation = DrawerPresentation.Overlay,
     ) {
-      Text("Open drawer")
-    }
+      Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
+        val swipeAreaModifier = Modifier
+          .align(Alignment.CenterStart)
+          .width(200.dp)
+          .fillMaxHeight()
 
-    UnstyledDrawer(state = drawerState) {
-      Viewport(Modifier.fillMaxSize()) {
-        Panel(
-          modifier = Modifier
-            .fillMaxWidth()
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoContent])
-            .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
+        Box(
+          modifier = swipeAreaModifier.border(1.dp, Theme[demoColors][demoContent]),
+          contentAlignment = Alignment.Center,
         ) {
-          Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+          Text(
+            "Start a swipe anywhere inside this area",
+            modifier = Modifier.padding(16.dp),
+          )
+        }
+
+        Viewport(Modifier.fillMaxSize()) {
+          Panel(
+            modifier = Modifier
+              .width(288.dp)
+              .fillMaxHeight()
+              .background(Theme[demoColors][demoInputBackground])
+              .border(1.dp, Theme[demoColors][demoContent])
+              .padding(start = 12.dp, top = 24.dp, end = 24.dp, bottom = 24.dp),
           ) {
-            DragHandle {
-              Box(
-                Modifier
-                  .width(32.dp)
-                  .height(4.dp)
-                  .background(Theme[demoColors][demoContent]),
-              )
-            }
-            Text("Here is the content of the drawer.")
-            UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
-              contentPadding = PaddingValues(12.dp),
-              modifier = Modifier
-                .background(Theme[demoColors][demoSurface])
-                .border(1.dp, Theme[demoColors][demoContent]),
-              indication = LocalIndication.current,
-            ) {
-              Text("Close")
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+              Text("Here is the content of the drawer.")
+              UnstyledButton(
+                onClick = { drawerState.targetValue = DrawerSwipeAreaDemoValue.Closed },
+                contentPadding = PaddingValues(12.dp),
+                modifier = Modifier
+                  .background(Theme[demoColors][demoSurface])
+                  .border(1.dp, Theme[demoColors][demoContent]),
+                indication = LocalIndication.current,
+              ) {
+                Text("Close")
+              }
             }
           }
         }
+
+        SwipeArea(swipeAreaModifier)
       }
     }
   }

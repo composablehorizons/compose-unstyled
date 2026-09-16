@@ -21,6 +21,7 @@
  */
 package com.composeunstyled.demo.drawer
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,7 +35,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,31 +58,29 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerDynamicContentDemoValue {
   Closed,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-dynamic-content")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerDynamicContentDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerDynamicContentDemoValue.Open,
+      snapPoints = DrawerSnapPoints {
+        DrawerDynamicContentDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerDynamicContentDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
+  var showDetails by remember { mutableStateOf(false) }
 
   Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
     UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
+      onClick = { drawerState.targetValue = DrawerDynamicContentDemoValue.Open },
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
@@ -89,11 +91,15 @@ fun DrawerDemo() {
       Text("Open drawer")
     }
 
-    UnstyledDrawer(state = drawerState) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+    ) {
       Viewport(Modifier.fillMaxSize()) {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .background(Theme[demoColors][demoSurface])
             .border(1.dp, Theme[demoColors][demoContent])
             .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
@@ -112,15 +118,18 @@ fun DrawerDemo() {
               )
             }
             Text("Here is the content of the drawer.")
+            if (showDetails) {
+              Text("Additional content.")
+            }
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { showDetails = showDetails.not() },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])
                 .border(1.dp, Theme[demoColors][demoContent]),
               indication = LocalIndication.current,
             ) {
-              Text("Close")
+              Text(if (showDetails) "Remove content" else "Add content")
             }
           }
         }
