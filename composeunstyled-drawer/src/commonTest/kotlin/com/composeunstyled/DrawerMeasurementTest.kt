@@ -41,6 +41,20 @@ import kotlin.test.Test
 
 class DrawerMeasurementTest {
   @Test
+  fun customSnapPointDoesNotExposeMoreThanThePanelContent() {
+    val state = UnstyledDrawerState(
+      initialValue = Value.Open,
+      snapPoints = DrawerSnapPoints {
+        Value.Open at DrawerSnapPoint { viewportSize, _ -> viewportSize / 2 }
+      },
+    )
+    state.updateViewportSize(400f, false, 0f, Density(1f))
+    state.updateContentSize(100f)
+
+    assertThat(state.offset).isEqualTo(100f)
+  }
+
+  @Test
   fun progressUsesMeasuredAnchorsUntilTheyAreInvalidated() {
     val counters = MeasurementCounter()
     var requestedSize = 200.dp
@@ -54,7 +68,7 @@ class DrawerMeasurementTest {
       },
     )
     state.updateViewportSize(400f, false, 0f, Density(1f))
-    state.updateContentSize(200f)
+    state.updateContentSize(400f)
     counters.reset()
 
     assertThat(state.progress(Value.Closed, Value.Open)).isEqualTo(1f)
@@ -126,7 +140,7 @@ class DrawerMeasurementTest {
       IntSize(size, size)
     }
     setContent {
-      UnstyledDrawer(state, placement = placement, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, placement = placement, presentation = DrawerPresentation.InPlace) {
         Viewport(
           Modifier.requiredSize(viewportSize),
           windowInsets = WindowInsets(inset, inset, inset, inset),
