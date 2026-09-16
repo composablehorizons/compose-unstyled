@@ -3,14 +3,10 @@ import path from 'node:path';
 
 const root = process.cwd();
 const docsPagesDir = path.join(root, 'docs/pages');
-const apiDescriptionsPath = path.join(root, 'docs/api-descriptions.json');
 const outputPagesDir = process.argv[2]
   ? path.resolve(process.argv[2])
   : path.join(root, 'build/generated/compose-unstyled-docs/pages');
 
-const apiDescriptions = fs.existsSync(apiDescriptionsPath)
-  ? JSON.parse(fs.readFileSync(apiDescriptionsPath, 'utf8'))
-  : {};
 let publicKotlinSources;
 
 fs.rmSync(outputPagesDir, { recursive: true, force: true });
@@ -23,17 +19,16 @@ for (const entry of fs.readdirSync(docsPagesDir, { withFileTypes: true })) {
   const outputPath = path.join(outputPagesDir, entry.name);
   let page = fs.readFileSync(inputPath, 'utf8');
 
-  const pageId = path.basename(entry.name, '.md');
   page = page.replace(/<ApiReference\s+([^>]*?)\/>/g, (_, attributes) => {
     const marker = parseAttributes(attributes);
     if (marker.declaration) {
-      return renderApiDeclaration(pageId, marker.declaration, marker.title).trimEnd();
+      return renderApiDeclaration(marker.declaration, marker.title).trimEnd();
     }
 
     if (!marker.declaration) {
       throw new Error(`Invalid API reference marker in ${entry.name}.`);
     }
-    return renderApiDeclaration(pageId, marker.declaration, marker.title).trimEnd();
+    return renderApiDeclaration(marker.declaration, marker.title).trimEnd();
   });
 
   fs.writeFileSync(outputPath, page.endsWith('\n') ? page : `${page}\n`);
@@ -45,7 +40,7 @@ function parseAttributes(attributes) {
   );
 }
 
-function renderApiDeclaration(id, declaration, title) {
+function renderApiDeclaration(declaration, title) {
   const declarationSources = publicApiSources().flatMap((source) => {
     if (!declaration.startsWith(`${source.packageName}.`)) return [];
     const [receiver, name] = splitDeclaration(declaration.slice(source.packageName.length + 1));
@@ -59,7 +54,7 @@ function renderApiDeclaration(id, declaration, title) {
   if (declarationRows.length === 0) {
     throw new Error(`Could not generate public API reference '${declaration}'.`);
   }
-  return renderTable(id, title ?? declarationSources[0].title, declarationRows);
+  return renderTable(title ?? declarationSources[0].title, declarationRows);
 }
 
 function publicApiSources() {
@@ -75,7 +70,7 @@ function publicApiSources() {
         : [];
     })
     .map((file) => {
-      const kotlin = stripComments(fs.readFileSync(file, 'utf8'));
+      const kotlin = fs.readFileSync(file, 'utf8');
       const packageName = /^package\s+([A-Za-z0-9_.]+)/m.exec(kotlin)?.[1];
       return packageName ? { kotlin, packageName } : undefined;
     })
@@ -99,15 +94,14 @@ function splitDeclaration(declaration) {
     : [declaration.slice(0, separator), declaration.slice(separator + 1)];
 }
 
-function renderTable(id, title, rows) {
+function renderTable(title, rows) {
   return [
     `### ${title}`,
     '',
     '| Parameter | Type | Description |',
     '|-----------|------|-------------|',
     ...rows.map((row) => {
-      const description = apiDescriptions[id]?.[`${title}.${row.name}`] ?? apiDescriptions[id]?.[row.name] ?? '';
-      return `| \`${escapePipes(row.name)}\` | \`${escapePipes(row.type)}\` | ${description} |`;
+      return `| \`${escapePipes(row.name)}\` | \`${escapePipes(row.type)}\` | ${row.description ?? ''} |`;
     }),
   ].join('\n');
 }
@@ -117,11 +111,11 @@ function functionRows(kotlin, name, receiver) {
   const signatures = sources.flatMap((source) => findCallableBlocks(source, 'fun', name, receiver));
   const rows = [];
   for (const signature of signatures) {
-    const parameters = parameterRows(signature.parameters);
+    const parameters = parameterRows(signature.parameters, signature.tags.param);
     if (parameters.length > 0) {
       rows.push(...parameters);
     } else {
-      rows.push({ name: 'returns', type: signature.returnType || 'Unit' });
+      rows.push({ name: 'returns', type: signature.returnType || 'Unit', description: signature.description });
     }
   }
   return uniqueRows(rows);
@@ -133,44 +127,44 @@ function classRows(kotlin, name) {
   if (blocks.length === 0) {
     blocks = sources.flatMap((source) => {
       const body = findClassBody(source, name);
-      return body ? [{ parameters: '', body }] : [];
+      return body ? [{ parameters: '', body, tags: { param: {}, property: {} } }] : [];
     });
   }
   const rows = [];
   for (const block of blocks) {
-    const constructorRows = constructorPropertyRows(block.parameters);
+    const constructorRows = constructorPropertyRows(block.parameters, block.tags.property);
     rows.push(...constructorRows);
     if (block.body) {
       const propertyRegex = /^\s*(?:override\s+)?(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*([^\n=]+?)(?:\s+by\b|\s*=|\s*$)/gm;
       for (const match of block.body.matchAll(propertyRegex)) {
         if (match[1].startsWith('_')) continue;
-        rows.push({ name: match[1], type: cleanupType(match[2]) });
+        rows.push({ name: match[1], type: cleanupType(match[2]), description: attachedKDoc(block.body, match.index).summary });
       }
       const inferredStateRegex = /^\s*(?:override\s+)?(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)\s+by\s+mutableStateOf\(([^)]*)\)/gm;
       for (const match of block.body.matchAll(inferredStateRegex)) {
         if (match[1].startsWith('_')) continue;
-        rows.push({ name: match[1], type: inferLiteralType(match[2]) });
+        rows.push({ name: match[1], type: inferLiteralType(match[2]), description: attachedKDoc(block.body, match.index).summary });
       }
       const methodRegex = /^\s*(suspend\s+)?fun\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*([^{=\n]+))?/gm;
       for (const match of block.body.matchAll(methodRegex)) {
         const params = parameterRows(match[3]).map((row) => row.type).join(', ');
         const returnType = cleanupType(match[4] ?? 'Unit');
         const type = `${match[1] ?? ''}(${params}) -> ${returnType}`.trim();
-        rows.push({ name: `${match[1] ?? ''}fun ${match[2]}()`.trim(), type });
+        rows.push({ name: `${match[1] ?? ''}fun ${match[2]}()`.trim(), type, description: attachedKDoc(block.body, match.index).summary });
       }
     }
     if (constructorRows.length === 0 && rows.length === 0) {
-      rows.push(...parameterRows(block.parameters));
+      rows.push(...parameterRows(block.parameters, block.tags.param));
     }
   }
   return uniqueRows(rows);
 }
 
-function constructorPropertyRows(parameters) {
+function constructorPropertyRows(parameters, descriptions) {
   return splitTopLevel(parameters, ',')
     .map((parameter) => parameter.trim())
     .filter((parameter) => /^(?:override\s+)?(?:val|var)\s+/.test(parameter))
-    .map((parameter) => parameterRows(parameter)[0])
+    .map((parameter) => parameterRows(parameter, descriptions)[0])
     .filter(Boolean);
 }
 
@@ -212,7 +206,8 @@ function findCallableBlocks(kotlin, keyword, name, receiver) {
       const bodyEnd = findMatching(kotlin, bodyStart, '{', '}');
       if (bodyEnd > bodyStart) body = kotlin.slice(bodyStart + 1, bodyEnd);
     }
-    blocks.push({ parameters, returnType, body });
+    const kdoc = attachedKDoc(kotlin, match.index);
+    blocks.push({ parameters, returnType, body, description: kdoc.summary, tags: kdoc.tags });
   }
   return blocks;
 }
@@ -221,7 +216,7 @@ function escapeRegex(value) {
   return value.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
 }
 
-function parameterRows(parameters) {
+function parameterRows(parameters, descriptions = {}) {
   return splitTopLevel(parameters, ',')
     .map((parameter) => parameter.trim())
     .filter(Boolean)
@@ -231,7 +226,7 @@ function parameterRows(parameters) {
       const colon = parameter.indexOf(':');
       const rawName = parameter.slice(0, colon).trim().replace(/^(?:(?:private|internal|public|override)\s+)*(?:val|var)\s+/, '');
       const rawType = parameter.slice(colon + 1).split('=')[0].trim().replace(/,$/, '');
-      return { name: rawName, type: cleanupType(rawType) };
+      return { name: rawName, type: cleanupType(rawType), description: descriptions[rawName] };
     })
     .filter((row) => row.name && row.type);
 }
@@ -293,10 +288,32 @@ function uniqueRows(rows) {
   });
 }
 
-function stripComments(text) {
-  return text
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/^\s*\/\/.*$/gm, '');
+function attachedKDoc(text, declarationStart) {
+  const beforeDeclaration = text.slice(0, declarationStart);
+  const start = beforeDeclaration.lastIndexOf('/**');
+  const end = beforeDeclaration.lastIndexOf('*/');
+  if (start < 0 || end < start) return { summary: '', tags: { param: {}, property: {} } };
+  const between = beforeDeclaration.slice(end + 2);
+  if (!/^\s*(?:@[^\n]+\s*)*$/.test(between)) return { summary: '', tags: { param: {}, property: {} } };
+  return parseKDoc(beforeDeclaration.slice(start, end + 2));
+}
+
+function parseKDoc(kdoc) {
+  const lines = kdoc
+    .slice(3, -2)
+    .split('\n')
+    .map((line) => line.replace(/^\s*\* ?/, '').trim());
+  const tags = { param: {}, property: {} };
+  const summary = [];
+  for (const line of lines) {
+    const tag = /^@(param|property)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(.*)$/.exec(line);
+    if (tag) {
+      tags[tag[1]][tag[2]] = tag[3];
+    } else if (!line.startsWith('@')) {
+      summary.push(line);
+    }
+  }
+  return { summary: summary.filter(Boolean).join(' '), tags };
 }
 
 function cleanupType(type) {
