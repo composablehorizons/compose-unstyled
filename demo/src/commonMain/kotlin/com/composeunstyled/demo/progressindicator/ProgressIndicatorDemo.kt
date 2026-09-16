@@ -25,6 +25,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,14 +36,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Indicator
 import com.composeunstyled.UnstyledProgress
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -60,15 +67,20 @@ fun ProgressIndicatorDemo() {
     hasProgressed = true
   }
 
-  UnstyledProgress(
-    progress = progress,
-    modifier = Modifier
-      .width(400.dp)
-      .height(12.dp)
-      .clip(RoundedCornerShape(100))
-      .background(Color(0xFFF8FAFC), RoundedCornerShape(100))
-      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100)),
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    Indicator(Modifier.background(Color.Black, RoundedCornerShape(100)))
+    UnstyledProgress(
+      progress = progress,
+      modifier = Modifier
+        .width(400.dp)
+        .height(12.dp)
+        .clip(RoundedCornerShape(100))
+        .background(Theme[demoColors][demoSurface], RoundedCornerShape(100))
+        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(100)),
+    ) {
+      Indicator(Modifier.background(Theme[demoColors][demoContent], RoundedCornerShape(100)))
+    }
   }
 }

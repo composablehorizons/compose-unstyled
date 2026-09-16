@@ -21,25 +21,35 @@
  */
 package com.composeunstyled.demo.icon
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Heart
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("icon")
 @Composable
 fun IconDemo() {
-  UnstyledIcon(
-    imageVector = Lucide.Heart,
-    contentDescription = "Favorite",
-    tint = Color.Black,
-    modifier = Modifier.size(90.dp),
-  )
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
+  ) {
+    UnstyledIcon(
+      imageVector = Lucide.Heart,
+      contentDescription = "Favorite",
+      tint = Theme[demoColors][demoContent],
+      modifier = Modifier.size(90.dp),
+    )
+  }
 }

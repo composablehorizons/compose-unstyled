@@ -31,8 +31,10 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -47,7 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -59,6 +60,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("disclosure")
@@ -66,50 +72,56 @@ import com.composeunstyled.demo.UnstyledDemo
 fun DisclosureDemo() {
   var expanded by remember { mutableStateOf(false) }
 
-  UnstyledDisclosure(
-    expanded = expanded,
-    onExpandedChange = { expanded = it },
+  Box(
+    modifier = Modifier.fillMaxSize().padding(top = 24.dp),
+    contentAlignment = Alignment.TopCenter,
   ) {
-    Column(
-      modifier = Modifier
-        .widthIn(max = 560.dp)
-        .clip(RoundedCornerShape(12.dp))
-        .background(Color(0xFFF8FAFC))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(12.dp)),
+    UnstyledDisclosure(
+      expanded = expanded,
+      onExpandedChange = { expanded = it },
     ) {
-      DisclosureButton(
-        modifier = Modifier.fillMaxWidth(),
-        indication = LocalIndication.current,
+      Column(
+        modifier = Modifier
+          .widthIn(max = 560.dp)
+          .clip(RoundedCornerShape(12.dp))
+          .background(Theme[demoColors][demoSurface])
+          .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(12.dp)),
       ) {
-        Row(
-          modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
-          verticalAlignment = Alignment.CenterVertically,
+        DisclosureButton(
+          modifier = Modifier.fillMaxWidth(),
+          indication = LocalIndication.current,
         ) {
-          Text("What is Compose Unstyled", modifier = Modifier.weight(1f))
+          Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Text("What is Compose Unstyled", modifier = Modifier.weight(1f))
 
-          val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
-          UnstyledIcon(
-            imageVector = Lucide.ChevronDown,
-            contentDescription = null,
-            modifier = Modifier.rotate(degrees),
+            val degrees by animateFloatAsState(if (expanded) -180f else 0f, tween())
+            UnstyledIcon(
+              imageVector = Lucide.ChevronDown,
+              contentDescription = null,
+              modifier = Modifier.rotate(degrees),
+              tint = Theme[demoColors][demoContent],
+            )
+          }
+        }
+        DisclosedContent(
+          enter = expandVertically(
+            spring(
+              stiffness = Spring.StiffnessMediumLow,
+              visibilityThreshold = IntSize.VisibilityThreshold,
+            ),
+          ),
+          exit = shrinkVertically(),
+        ) {
+          Text(
+            "Compose Unstyled is a collection of unstyled, accessible UI components for Compose " +
+              "Multiplatform. It provides the building blocks for creating beautiful, consistent " +
+              "user interfaces.",
+            modifier = Modifier.padding(16.dp).alpha(0.66f),
           )
         }
-      }
-      DisclosedContent(
-        enter = expandVertically(
-          spring(
-            stiffness = Spring.StiffnessMediumLow,
-            visibilityThreshold = IntSize.VisibilityThreshold,
-          ),
-        ),
-        exit = shrinkVertically(),
-      ) {
-        Text(
-          "Compose Unstyled is a collection of unstyled, accessible UI components for Compose " +
-            "Multiplatform. It provides the building blocks for creating beautiful, consistent " +
-            "user interfaces.",
-          modifier = Modifier.padding(16.dp).alpha(0.66f),
-        )
       }
     }
   }

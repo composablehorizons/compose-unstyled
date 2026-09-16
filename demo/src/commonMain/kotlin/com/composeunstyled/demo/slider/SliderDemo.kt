@@ -47,11 +47,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoTransparent
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("slider")
@@ -91,14 +95,14 @@ fun SliderDemo() {
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Color(0xFFCACACA)),
+                .background(Theme[demoColors][demoOutline]),
             )
             // the 'completed' part of the track
             Box(
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(state.fraction)
-                .background(Color.Black),
+                .background(Theme[demoColors][demoContent]),
             )
           }
         },
@@ -108,7 +112,11 @@ fun SliderDemo() {
           val thumbInteractionSource = remember { MutableInteractionSource() }
           val isHovered by thumbInteractionSource.collectIsHoveredAsState()
           val glowColor by animateColorAsState(
-            if (isFocused || isHovered) Color.Black.copy(0.16f) else Color.Transparent,
+            if (isFocused || isHovered) {
+              Theme[demoColors][demoContent].copy(0.16f)
+            } else {
+              Theme[demoColors][demoTransparent]
+            },
           )
           // keep the size fixed to ensure that the resizing animation is always centered
           Box(
@@ -120,7 +128,7 @@ fun SliderDemo() {
                 .size(thumbSize)
                 .hoverable(thumbInteractionSource)
                 .clip(CircleShape)
-                .background(Color.Black),
+                .background(Theme[demoColors][demoContent]),
             )
           }
         },

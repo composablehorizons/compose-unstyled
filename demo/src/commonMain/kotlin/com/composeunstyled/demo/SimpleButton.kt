@@ -28,10 +28,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.theme.Theme
 
 @Composable
 internal fun SimpleButton(
@@ -44,7 +44,7 @@ internal fun SimpleButton(
     onClick = {},
     modifier = modifier
       .clip(shape)
-      .border(1.dp, Color.Black.copy(alpha = 0.2f), shape),
+      .border(1.dp, Theme[demoColors][demoContent].copy(alpha = 0.2f), shape),
     interactionSource = interactionSource,
     indication = LocalIndication.current,
   ) {

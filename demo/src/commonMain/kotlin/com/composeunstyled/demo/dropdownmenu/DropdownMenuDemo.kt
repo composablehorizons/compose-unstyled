@@ -31,8 +31,10 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -46,7 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +68,12 @@ import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoError
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("dropdown-menu")
@@ -88,92 +95,101 @@ fun DropdownMenuDemo() {
   )
   var expanded by remember { mutableStateOf(true) }
 
-  UnstyledDropdownMenu(
-    expanded = expanded,
-    onExpandedChange = { expanded = it },
-    sideOffset = 4.dp,
-    panel = {
-      DropdownMenuPanel(
-        modifier = Modifier
-          .width(240.dp)
-          .clip(RoundedCornerShape(8.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(8.dp)),
-        enter = scaleIn(
-          animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
-          initialScale = 0.8f,
-          transformOrigin = TransformOrigin(0f, 0f),
-        ) + fadeIn(tween(durationMillis = 30)),
-        exit = scaleOut(
-          animationSpec = tween(durationMillis = 75),
-          targetScale = 0.8f,
-          transformOrigin = TransformOrigin(0f, 0f),
-        ) +
-          fadeOut(tween(durationMillis = 75)),
-      ) {
-        options.forEachIndexed { index, option ->
-          if (index == 1 || index == options.lastIndex) {
-            UnstyledHorizontalSeparator(color = Color(0xFFBDBDBD))
-          }
-          UnstyledDropdownMenuItem(
-            onClick = {},
-            enabled = option.enabled,
-            indication = LocalIndication.current,
-            modifier = Modifier
-              .padding(4.dp)
-              .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-              .clip(RoundedCornerShape(8.dp))
-              .fillMaxWidth(),
-          ) {
-            Row(
+  Box(
+    modifier = Modifier.fillMaxSize().padding(top = 24.dp),
+    contentAlignment = Alignment.TopCenter,
+  ) {
+    UnstyledDropdownMenu(
+      expanded = expanded,
+      onExpandedChange = { expanded = it },
+      sideOffset = 4.dp,
+      panel = {
+        DropdownMenuPanel(
+          modifier = Modifier
+            .width(240.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Theme[demoColors][demoSurface])
+            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp)),
+          enter = scaleIn(
+            animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
+            initialScale = 0.8f,
+            transformOrigin = TransformOrigin(0f, 0f),
+          ) + fadeIn(tween(durationMillis = 30)),
+          exit = scaleOut(
+            animationSpec = tween(durationMillis = 75),
+            targetScale = 0.8f,
+            transformOrigin = TransformOrigin(0f, 0f),
+          ) +
+            fadeOut(tween(durationMillis = 75)),
+        ) {
+          options.forEachIndexed { index, option ->
+            if (index == 1 || index == options.lastIndex) {
+              UnstyledHorizontalSeparator(color = Theme[demoColors][demoOutline])
+            }
+            UnstyledDropdownMenuItem(
+              onClick = {},
+              enabled = option.enabled,
+              indication = LocalIndication.current,
               modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-              horizontalArrangement = Arrangement.Start,
-              verticalAlignment = Alignment.CenterVertically,
+                .padding(4.dp)
+                .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .fillMaxWidth(),
             ) {
-              val contentColor = (
-                if (option.dangerous) {
-                  Color(0xFFDC2626)
-                } else {
-                  LocalContentColor.current
-                }
-                ).copy(alpha = if (option.enabled) 1f else 0.5f)
+              Row(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+              ) {
+                val contentColor = (
+                  if (option.dangerous) {
+                    Theme[demoColors][demoError]
+                  } else {
+                    LocalContentColor.current
+                  }
+                  ).copy(alpha = if (option.enabled) 1f else 0.5f)
 
-              UnstyledIcon(
-                imageVector = option.icon,
-                contentDescription = null,
-                tint = contentColor,
-              )
-              Spacer(Modifier.width(12.dp))
-              Text(
-                text = option.text,
-                color = contentColor,
-              )
+                UnstyledIcon(
+                  imageVector = option.icon,
+                  contentDescription = null,
+                  tint = contentColor,
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                  text = option.text,
+                  color = contentColor,
+                )
+              }
             }
           }
         }
-      }
-    },
-    anchor = {
-      UnstyledButton(
-        onClick = { expanded = true },
-        modifier = Modifier
-          .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-          .clip(RoundedCornerShape(6.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp)),
-        indication = LocalIndication.current,
-      ) {
-        Row(
-          modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-          verticalAlignment = Alignment.CenterVertically,
+      },
+      anchor = {
+        UnstyledButton(
+          onClick = { expanded = true },
+          modifier = Modifier
+            .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(Theme[demoColors][demoSurface])
+            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(6.dp)),
+          indication = LocalIndication.current,
         ) {
-          Text("Options")
-          Spacer(Modifier.width(8.dp))
-          UnstyledIcon(Lucide.ChevronDown, null)
+          Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Text("Options")
+            Spacer(Modifier.width(8.dp))
+            UnstyledIcon(
+              imageVector = Lucide.ChevronDown,
+              contentDescription = null,
+              tint = Theme[demoColors][demoContent],
+            )
+          }
         }
-      }
-    },
-  )
+      },
+    )
+  }
 }
