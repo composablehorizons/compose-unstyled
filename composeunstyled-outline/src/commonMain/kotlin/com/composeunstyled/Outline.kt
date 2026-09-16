@@ -35,6 +35,12 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * @param width The thickness of the outline
+ * @param color The color of the outline
+ * @param shape The shape of the composable (defaults to `RectangleShape`)
+ * @param offset Distance between composable and outline (defaults to `0.dp`)
+ */
 fun Modifier.outline(
   width: Dp,
   color: Color,

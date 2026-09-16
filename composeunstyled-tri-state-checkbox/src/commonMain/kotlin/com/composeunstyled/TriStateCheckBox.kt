@@ -34,6 +34,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 
+/**
+ * @param onClick Callback invoked when the checkbox is clicked
+ * @param modifier Modifier to be applied to the checkbox
+ * @param enabled Whether the checkbox is enabled for interaction (defaults to `true`)
+ * @param interactionSource MutableInteractionSource for handling interactions
+ * @param indication Visual indication for interactions
+ */
 @Composable
 fun UnstyledTriStateCheckbox(
   value: ToggleableState,
@@ -73,12 +80,21 @@ fun UnstyledTriStateCheckbox(
   }
 }
 
+/**
+ * @property value The current state (`ToggleableState.On`, `ToggleableState.Off`, or `ToggleableState.Indeterminate`)
+ * @property enabled Whether the checkbox is enabled for interaction (defaults to `true`)
+ * @property interactionSource MutableInteractionSource for handling interactions
+ */
 class TriStateCheckboxScope internal constructor(
   internal val value: ToggleableState,
   internal val enabled: Boolean,
   internal val interactionSource: MutableInteractionSource,
 )
 
+/**
+ * @param modifier Modifier to be applied to the checkbox
+ * @param indication Visual indication for interactions
+ */
 @Composable
 fun TriStateCheckboxScope.StateIndicator(
   modifier: Modifier = Modifier,

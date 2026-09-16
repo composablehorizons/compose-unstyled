@@ -36,6 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * @param modifier Modifier to be applied to the Stack
+ * @param orientation Controls whether children are laid out horizontally or vertically. Defaults to `StackOrientation.Horizontal`
+ * @param mainAxisArrangement Controls the arrangement of children along the main axis (horizontal for horizontal orientation, vertical for vertical orientation). Defaults to `MainAxisArrangement.Start`
+ * @param crossAxisAlignment Controls the alignment of children on the cross axis (vertical for horizontal orientation, horizontal for vertical orientation). Defaults to `CrossAxisAlignment.Start`
+ * @param spacing Space between children. Ignored when using `SpaceEvenly`, `SpaceBetween`, or `SpaceAround` arrangements. Defaults to `0.dp`
+ * @param content The composable content to be laid out within the Stack
+ */
 @Composable
 fun Stack(
   modifier: Modifier = Modifier,

@@ -85,6 +85,12 @@ import kotlin.math.roundToInt
 private val KeyEvent.isKeyDown: Boolean
   get() = type == KeyEventType.KeyDown
 
+/**
+ * @property valueRange The range of values the slider can take.
+ * @property steps The number of discrete steps in the slider.
+ * @property enabled Whether the slider can receive user input.
+ * @property orientation Horizontal or vertical slider orientation.
+ */
 @Stable
 class SliderState(
   value: Float,
@@ -103,6 +109,9 @@ class SliderState(
 
   val tickFractions: FloatArray = stepsToTickFractions(steps)
 
+/**
+   * The current value of the slider.
+   */
   val value: Float = snapValueToTick(
     value.coerceIn(valueRange.start, valueRange.endInclusive),
     tickFractions,
@@ -144,6 +153,16 @@ internal suspend fun AwaitPointerEventScope.waitRelease(
   }
 }
 
+/**
+ * @param onValueChange Callback invoked when the user changes the value.
+ * @param modifier Modifier to be applied to the slider.
+ * @param enabled Whether the slider can receive user input.
+ * @param interactionSource Interaction source for press, focus, and drag interactions.
+ * @param orientation Horizontal or vertical slider orientation.
+ * @param reverseDirection Whether to reverse the visual and input direction.
+ * @param track Composable function to define the track of the slider.
+ * @param thumb Composable function to define the thumb of the slider.
+ */
 @Composable
 fun UnstyledSlider(
   value: Float,

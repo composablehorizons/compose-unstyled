@@ -40,6 +40,22 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.isSpecified
 
+/**
+ * @param text The text to display.
+ * @param modifier The `Modifier` for the text.
+ * @param style The style to apply to the text.
+ * @param textAlign The alignment of the text.
+ * @param lineHeight The height of the lines.
+ * @param fontSize The size of the font.
+ * @param letterSpacing The spacing between letters.
+ * @param fontWeight The weight of the font.
+ * @param color The color of the text.
+ * @param fontFamily The family of the font.
+ * @param singleLine Whether the text is single line.
+ * @param minLines Minimum number of lines to display.
+ * @param maxLines Maximum number of lines to display.
+ * @param overflow How visual overflow should be handled.
+ */
 @Composable
 fun Text(
   text: String,

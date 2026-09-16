@@ -93,6 +93,10 @@ internal val LocalFocusVisibilityManager = staticCompositionLocalOf<FocusVisibil
   DefaultFocusVisibilityManager(FocusVisibilityMode.Keyboard)
 }
 
+/**
+ * @param modifier Modifier to be applied to the provider container.
+ * @param content The content that should share focus-visible input tracking.
+ */
 @Composable
 fun FocusVisibilityProvider(
   modifier: Modifier = Modifier,
@@ -112,6 +116,14 @@ fun FocusVisibilityProvider(
   }
 }
 
+/**
+ * @param interactionSource The InteractionSource to subscribe to for focus events
+ * @param width The thickness of the focus ring
+ * @param color The color of the focus ring
+ * @param shape The shape of the composable (defaults to `RectangleShape`)
+ * @param offset Distance between composable and ring (defaults to `0.dp`)
+ * @param visibility Controls whether the ring appears for any focus or only focus-visible focus (defaults to `FocusRingVisibility.FocusVisible`)
+ */
 @Composable
 fun Modifier.focusRing(
   interactionSource: InteractionSource,

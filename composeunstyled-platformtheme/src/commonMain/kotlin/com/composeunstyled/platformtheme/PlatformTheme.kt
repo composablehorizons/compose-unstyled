@@ -85,6 +85,10 @@ val interactiveSizes = ThemeProperty<Dp>("platform_interactive_sizes")
 val sizeDefault = ThemeToken<Dp>("size_default")
 val sizeMinimum = ThemeToken<Dp>("size_minimum")
 
+/**
+ * @param webFontOptions Options for loading platform fonts on web targets.
+ * @param themeAction Theme builder block for overriding or adding theme values.
+ */
 fun buildPlatformTheme(
   webFontOptions: WebFontOptions = WebFontOptions(),
   themeAction: @Composable ThemeBuilder.() -> Unit = {},
@@ -228,6 +232,9 @@ fun buildPlatformTheme(
   }
 }
 
+/**
+ * @param color Color to apply to the platform indication where the platform supports it.
+ */
 @Composable
 fun platformIndication(
   color: Color,
@@ -453,6 +460,9 @@ internal expect fun loadPlatformFonts(webFontOptions: WebFontOptions): PlatformF
 @Composable
 internal expect fun rememberPlatformIndication(tint: Color): Indication
 
+/**
+ * @param size Minimum interactive size to apply to the modifier.
+ */
 fun Modifier.interactiveSize(size: Dp): Modifier {
   return this then Modifier.sizeIn(minWidth = size, minHeight = size)
 }

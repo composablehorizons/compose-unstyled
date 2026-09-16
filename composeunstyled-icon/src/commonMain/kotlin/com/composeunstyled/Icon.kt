@@ -33,6 +33,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * @param painter a `Painter`  to draw inside this icon.
+ * @param contentDescription text used by accessibility services to describe what this icon represents. This value can be ommited if the icon is used for stylistic purposes only.
+ * @param modifier the `Modifier` to be used to this icon.
+ * @param tint a `Color` that will be used to tint the `painter`. If `Color.Unspecified` is passed, then no tinting will be used.
+ */
 @Composable
 fun UnstyledIcon(
   painter: Painter,

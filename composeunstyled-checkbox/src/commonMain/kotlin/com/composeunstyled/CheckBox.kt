@@ -37,6 +37,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 
+/**
+ * @param checked Whether the checkbox is checked.
+ * @param onCheckedChange Callback when the checked state changes.
+ * @param modifier Modifier to be applied to the checkbox.
+ */
 @Composable
 fun UnstyledCheckbox(
   checked: Boolean,
@@ -83,6 +88,9 @@ class CheckboxScope internal constructor(
   internal val interactionSource: MutableInteractionSource,
 )
 
+/**
+ * @param modifier Modifier to be applied to the checkbox.
+ */
 @Composable
 fun CheckboxScope.CheckedIndicator(
   modifier: Modifier = Modifier,

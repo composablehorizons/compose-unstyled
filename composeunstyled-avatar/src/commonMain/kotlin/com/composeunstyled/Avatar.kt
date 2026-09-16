@@ -31,6 +31,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 
+/**
+ * @param painter The `Painter` to draw inside the avatar. Pass `null` to show only the fallback content.
+ * @param modifier The `Modifier` applied to the avatar container.
+ * @param contentDescription Accessibility text describing what the avatar represents.
+ * @param underlay Composable content placed behind the image, such as initials or a placeholder.
+ * @param contentScale Controls how the image is scaled inside the avatar bounds.
+ */
 @Composable
 fun UnstyledAvatar(
   painter: Painter?,

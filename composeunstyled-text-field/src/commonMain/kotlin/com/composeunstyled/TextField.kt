@@ -69,6 +69,10 @@ class TextFieldScope internal constructor() {
   internal var enabled by mutableStateOf(true)
 }
 
+/**
+ * @param modifier Modifier to be applied to the text input.
+ * @param placeholder Placeholder composable when the field is empty.
+ */
 @Composable
 fun TextFieldScope.TextInput(
   modifier: Modifier = Modifier,
@@ -94,6 +98,25 @@ fun TextFieldScope.TextInput(
   }
 }
 
+/**
+ * @param state The `TextFieldState` that manages the text field's content.
+ * @param modifier Modifier to be applied to the text input.
+ * @param cursorBrush The brush to use for the cursor.
+ * @param selectionColors Colors to use for text selection handles and background. Defaults to unspecified colors.
+ * @param textStyle Style to apply to the text.
+ * @param textAlign Alignment of the text.
+ * @param lineHeight Height of each line of text.
+ * @param fontSize Size of the font.
+ * @param letterSpacing Spacing between letters.
+ * @param fontWeight Weight of the font.
+ * @param fontFamily Family of the font.
+ * @param onKeyboardAction Handler for keyboard actions.
+ * @param keyboardOptions Options for the keyboard.
+ * @param interactionSource Interaction source for the text field.
+ * @param textColor Color of the text.
+ * @param scrollState Scroll state for the text field.
+ * @param content Content composable that defines the text field's appearance.
+ */
 @Composable
 fun UnstyledTextField(
   state: TextFieldState,

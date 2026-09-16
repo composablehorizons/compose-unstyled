@@ -54,6 +54,11 @@ private class DisclosureContext(
   val onExpandedChange: (Boolean) -> Unit,
 )
 
+/**
+ * @param expanded Controls whether the disclosure is expanded.
+ * @param modifier Modifier to be applied to the panel.
+ * @param content A composable function that defines the content of the panel.
+ */
 @Composable
 fun UnstyledDisclosure(
   expanded: Boolean,
@@ -73,6 +78,14 @@ fun UnstyledDisclosure(
   }
 }
 
+/**
+ * @param modifier Modifier to be applied to the panel.
+ * @param enabled Indicates if the heading is enabled.
+ * @param contentPadding Padding values for the content.
+ * @param indication The indication to be shown when the heading is interacted with.
+ * @param interactionSource The interaction source for the heading.
+ * @param content A composable function that defines the content of the panel.
+ */
 @Composable
 fun DisclosureScope.DisclosureButton(
   modifier: Modifier = Modifier,
@@ -92,6 +105,14 @@ fun DisclosureScope.DisclosureButton(
   content = content,
 )
 
+/**
+ * @param modifier Modifier to be applied to the panel.
+ * @param enabled Indicates if the heading is enabled.
+ * @param contentPadding Padding values for the content.
+ * @param indication The indication to be shown when the heading is interacted with.
+ * @param interactionSource The interaction source for the heading.
+ * @param content A composable function that defines the content of the panel.
+ */
 @Composable
 fun UnstyledDisclosureButton(
   modifier: Modifier = Modifier,
@@ -135,6 +156,12 @@ fun UnstyledDisclosureButton(
   }
 }
 
+/**
+ * @param modifier Modifier to be applied to the panel.
+ * @param enter The enter transition for the panel.
+ * @param exit The exit transition for the panel.
+ * @param content A composable function that defines the content of the panel.
+ */
 @Composable
 fun UnstyledDisclosedContent(
   modifier: Modifier = Modifier,
@@ -156,6 +183,12 @@ fun UnstyledDisclosedContent(
   }
 }
 
+/**
+ * @param modifier Modifier to be applied to the panel.
+ * @param enter The enter transition for the panel.
+ * @param exit The exit transition for the panel.
+ * @param content A composable function that defines the content of the panel.
+ */
 @Composable
 fun DisclosureScope.DisclosedContent(
   modifier: Modifier = Modifier,
