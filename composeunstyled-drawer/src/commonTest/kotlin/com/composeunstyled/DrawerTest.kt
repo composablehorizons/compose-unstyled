@@ -94,6 +94,12 @@ import kotlin.test.Test
 
 class DrawerTest {
   @Test
+  @Suppress("DEPRECATION")
+  fun inlinePresentationRemainsAnAliasForInPlace() {
+    assertThat(DrawerPresentation.Inline).isEqualTo(DrawerPresentation.InPlace)
+  }
+
+  @Test
   fun snapPointMappingsKeepTheirOrderedEqualityAndHashCode() {
     fun mapping() = DrawerSnapPoints {
       DrawerValue.Closed at DrawerSnapPoint.Zero
@@ -472,7 +478,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Peek, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(
             Modifier
@@ -505,7 +511,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Open, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth()) {
             Layout(
@@ -548,7 +554,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Open, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(panelHeight.value).testTag(PanelTag)) {}
         }
@@ -578,7 +584,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Open, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(panelHeight.value).testTag(PanelTag)) {}
         }
@@ -791,7 +797,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Closed, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(
           modifier = Modifier.requiredSize(100.dp),
           windowInsets = WindowInsets(bottom = bottomInset.value),
@@ -828,7 +834,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Closed, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(
           modifier = Modifier.requiredSize(100.dp),
           windowInsets = WindowInsets(bottom = bottomInset.value),
@@ -870,7 +876,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Open, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp, viewportHeight.value)) {
           Panel(Modifier.fillMaxWidth().height(80.dp)) {}
         }
@@ -898,7 +904,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Closed, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp, viewportHeight.value)) {
           Panel(Modifier.fillMaxWidth().height(80.dp)) {}
         }
@@ -936,7 +942,7 @@ class DrawerTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerValue.Closed, snapPoints) }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp, viewportHeight.value)) {
           Panel(Modifier.fillMaxWidth().height(100.dp)) {}
         }
@@ -1297,7 +1303,7 @@ class DrawerTest {
     state.jumpTo(DrawerValue.Open)
 
     setContent {
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(60.dp)) {}
         }
@@ -1389,7 +1395,7 @@ class DrawerTest {
     )
     var state by mutableStateOf(newState())
     setContent {
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.requiredSize(60.dp)) {}
         }
@@ -1526,7 +1532,7 @@ class DrawerTest {
           },
         )
       }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(60.dp)) {}
         }
@@ -1571,7 +1577,7 @@ class DrawerTest {
             DrawerSnapPoints { DrawerValue.Closed at DrawerSnapPoint.Zero },
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
           Viewport<DrawerValue>(Modifier.requiredSize(100.dp)) {}
         }
       }
@@ -1591,7 +1597,7 @@ class DrawerTest {
             DrawerSnapPoints { DrawerValue.Closed at DrawerSnapPoint.Zero },
           )
         }
-        UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
           Viewport(Modifier.requiredSize(100.dp)) {
             Panel(Modifier.fillMaxWidth().height(10.dp)) {}
             Panel(Modifier.fillMaxWidth().height(10.dp)) {}
@@ -1616,7 +1622,7 @@ class DrawerTest {
         }
         UnstyledDrawer(
           state = state,
-          presentation = DrawerPresentation.Inline,
+          presentation = DrawerPresentation.InPlace,
           overlay = {
             Overlay {}
             Overlay {}
@@ -1645,7 +1651,7 @@ class DrawerTest {
         }
         Layout(
           content = {
-            UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+            UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
               Viewport {
                 Panel(Modifier.fillMaxWidth().height(10.dp)) {}
               }
@@ -1887,7 +1893,7 @@ class DrawerTest {
     setContent {
       BottomDrawerLayout(
         initialValue = DrawerValue.Open,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
         onState = { state = it },
       )
     }
@@ -1990,7 +1996,7 @@ class DrawerTest {
     setContent {
       BottomDrawerLayout(
         initialValue = DrawerValue.Open,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
         onState = { state = it },
       )
     }
@@ -2094,7 +2100,7 @@ class DrawerTest {
     setContent {
       BottomDrawerLayout(
         initialValue = DrawerValue.Open,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
         overlay = {
           Overlay(Modifier.testTag(OverlayTag))
         },
@@ -2446,10 +2452,37 @@ class DrawerTest {
         )
         BottomDrawerLayout(
           initialValue = DrawerValue.Open,
-          presentation = DrawerPresentation.Inline,
+          presentation = DrawerPresentation.InPlace,
           overlay = {
             Overlay(Modifier.fillMaxSize().testTag(OverlayTag))
           },
+        )
+      }
+    }
+    waitForIdle()
+
+    onNodeWithTag(BackgroundTag).performTouchInput {
+      click(Offset(centerX, 4f))
+    }
+
+    assertThat(backgroundClicks).isEqualTo(1)
+  }
+
+  @Test
+  fun overlayDrawerDoesNotBlockUnderlyingPointerInput() = runComposeUiTest {
+    var backgroundClicks = 0
+
+    setContent {
+      DrawerHost(Modifier.requiredSize(100.dp)) {
+        Box(
+          Modifier
+            .fillMaxSize()
+            .clickable { backgroundClicks += 1 }
+            .testTag(BackgroundTag),
+        )
+        BottomDrawerLayout(
+          initialValue = DrawerValue.Open,
+          presentation = DrawerPresentation.Overlay,
         )
       }
     }
@@ -2467,7 +2500,7 @@ class DrawerTest {
     setContent {
       BottomDrawerLayout(
         initialValue = DrawerValue.Open,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
       )
     }
 
@@ -2488,7 +2521,7 @@ class DrawerTest {
           },
         )
       }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(60.dp)) {
             DragHandle(Modifier.testTag(DragHandleTag))
@@ -2516,7 +2549,7 @@ class DrawerTest {
           },
         )
       }
-      UnstyledDrawer(state, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(60.dp)) {
             DragHandle(Modifier.testTag(DragHandleTag))
@@ -2547,7 +2580,7 @@ class DrawerTest {
       UnstyledDrawer(
         state,
         placement = DrawerPlacement.Top,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
       ) {
         Viewport(Modifier.requiredSize(100.dp).testTag(ViewportTag)) {
           Panel(Modifier.fillMaxWidth().height(60.dp).testTag(PanelTag)) {}
@@ -2673,6 +2706,31 @@ class DrawerTest {
     waitUntil { state.currentValue == DrawerValue.Closed && state.isIdle }
 
     assertThat(state.currentValue).isEqualTo(DrawerValue.Closed)
+  }
+
+  @Test
+  fun rejectedClosingFlingReturnsTheDrawerToItsCurrentValue() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    var confirmationCalls = 0
+
+    setContent {
+      BottomDrawerLayout(
+        initialValue = DrawerValue.Open,
+        confirmValueChange = {
+          confirmationCalls += 1
+          false
+        },
+        onState = { state = it },
+      )
+    }
+    waitForIdle()
+
+    state.anchoredDraggableState.dispatchRawDelta(24f)
+    state.settleFromFling(240f)
+    waitUntil { state.currentValue == DrawerValue.Open && state.isIdle }
+
+    assertThat(confirmationCalls).isEqualTo(1)
+    assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
   }
 
   @Test
@@ -2873,7 +2931,7 @@ class DrawerTest {
         }
         drawerState = remember { UnstyledDrawerState(DrawerValue.Open, snapPoints) }
         listState = rememberLazyListState()
-        UnstyledDrawer(drawerState, presentation = DrawerPresentation.Inline) {
+        UnstyledDrawer(drawerState, presentation = DrawerPresentation.InPlace) {
           Viewport(Modifier.requiredSize(100.dp).testTag(ViewportTag)) {
             Panel(Modifier.fillMaxWidth().testTag(PanelTag)) {
               LazyColumn(Modifier.testTag("lazy-column"), state = listState) {
@@ -2922,7 +2980,7 @@ class DrawerTest {
           listState.scrollToItem(0)
         }
       }
-      UnstyledDrawer(drawerState, presentation = DrawerPresentation.Inline) {
+      UnstyledDrawer(drawerState, presentation = DrawerPresentation.InPlace) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.fillMaxWidth().height(60.dp)) {
             LazyColumn(Modifier.fillMaxSize().testTag("scrollable-panel"), state = listState) {
@@ -2968,7 +3026,7 @@ class DrawerTest {
   }
 
   @Test
-  fun updatingSnapPointsRecalculatesTheVisiblePanelSizeWithoutChangingValue() = runComposeUiTest {
+  fun updatingSnapPointsBoundsTheVisiblePanelSizeToThePanelContent() = runComposeUiTest {
     lateinit var state: UnstyledDrawerState<DrawerValue>
 
     setContent {
@@ -2992,7 +3050,7 @@ class DrawerTest {
     waitForIdle()
 
     assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
-    assertThat(state.offset.roundToInt()).isEqualTo(80)
+    assertThat(state.offset.roundToInt()).isEqualTo(60)
   }
 
   @Test
@@ -3044,7 +3102,7 @@ private fun BottomDrawerLayout(
     DrawerValue.Open at DrawerSnapPoint.ContentSize
   },
   windowInsets: WindowInsets = WindowInsets(),
-  presentation: DrawerPresentation = DrawerPresentation.Inline,
+  presentation: DrawerPresentation = DrawerPresentation.InPlace,
   gesturesEnabled: Boolean = true,
   dismissOnClickOutside: Boolean = true,
   overlay: (@Composable DrawerOverlayScope<DrawerValue>.() -> Unit)? = null,
@@ -3102,7 +3160,7 @@ private fun BottomDrawerLayout(
 private fun StartDrawerLayout(
   initialValue: DrawerValue,
   placement: DrawerPlacement = DrawerPlacement.Start,
-  presentation: DrawerPresentation = DrawerPresentation.Inline,
+  presentation: DrawerPresentation = DrawerPresentation.InPlace,
   gesturesEnabled: Boolean = true,
   swipeArea: Boolean = false,
   overlay: (@Composable DrawerOverlayScope<DrawerValue>.() -> Unit)? = null,
