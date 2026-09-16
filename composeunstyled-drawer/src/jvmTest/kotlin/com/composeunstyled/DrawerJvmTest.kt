@@ -145,7 +145,7 @@ class DrawerJvmTest {
           UnstyledDrawer(
             state = state,
             placement = DrawerPlacement.Start,
-            presentation = DrawerPresentation.Inline,
+            presentation = DrawerPresentation.InPlace,
           ) {
             Viewport(Modifier.requiredSize(100.dp)) {
               Panel(Modifier.width(60.dp).fillMaxHeight()) {
@@ -183,7 +183,7 @@ class DrawerJvmTest {
           UnstyledDrawer(
             state = state,
             placement = DrawerPlacement.Start,
-            presentation = DrawerPresentation.Inline,
+            presentation = DrawerPresentation.InPlace,
           ) {
             Viewport(Modifier.requiredSize(100.dp)) {
               Panel(Modifier.width(60.dp).fillMaxHeight()) {
@@ -300,7 +300,7 @@ class DrawerJvmTest {
       UnstyledDrawer(
         state = state,
         placement = DrawerPlacement.Start,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
       ) {
         Viewport(Modifier.requiredSize(100.dp)) {
           Panel(Modifier.width(60.dp).fillMaxHeight().testTag("panel")) {
@@ -323,7 +323,7 @@ class DrawerJvmTest {
   }
 
   @Test
-  fun closedEdgeSwipeDoesNotOpenTheDrawerWithAMouse() = runComposeUiTest {
+  fun mouseEdgeSwipeOpensTheDrawer() = runComposeUiTest {
     lateinit var state: UnstyledDrawerState<DrawerJvmValue>
 
     setContent {
@@ -334,26 +334,28 @@ class DrawerJvmTest {
         }
       }
       state = remember { UnstyledDrawerState(DrawerJvmValue.Closed, snapPoints) }
-      UnstyledDrawer(
-        state = state,
-        placement = DrawerPlacement.Start,
-        presentation = DrawerPresentation.Inline,
-      ) {
-        Viewport(Modifier.requiredSize(100.dp).testTag("viewport")) {
-          Panel(
-            Modifier
-              .width(60.dp)
-              .fillMaxHeight()
-              .background(Color.Red),
-          ) {
-            Box(Modifier.requiredSize(1.dp))
+      DrawerHost(Modifier.requiredSize(100.dp)) {
+        UnstyledDrawer(
+          state = state,
+          placement = DrawerPlacement.Start,
+          presentation = DrawerPresentation.Overlay,
+        ) {
+          Viewport(Modifier.requiredSize(100.dp).testTag("viewport")) {
+            Panel(
+              Modifier
+                .width(60.dp)
+                .fillMaxHeight()
+                .background(Color.Red),
+            ) {
+              Box(Modifier.requiredSize(1.dp))
+            }
           }
+          SwipeArea(
+            Modifier
+              .requiredSize(width = 24.dp, height = 100.dp)
+              .testTag("swipe-area"),
+          )
         }
-        SwipeArea(
-          Modifier
-            .requiredSize(width = 24.dp, height = 100.dp)
-            .testTag("swipe-area"),
-        )
       }
     }
     waitForIdle()
@@ -364,9 +366,9 @@ class DrawerJvmTest {
       moveTo(Offset(80f, centerY))
       release()
     }
-    waitForIdle()
+    waitUntil { state.currentValue == DrawerJvmValue.Open && state.isIdle }
 
-    assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Closed)
+    assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Open)
   }
 
   @Test
