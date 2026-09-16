@@ -80,6 +80,21 @@ import androidx.compose.ui.zIndex
 import kotlin.jvm.JvmInline
 import kotlin.math.roundToInt
 
+/**
+ * Hosts a drawer with caller-provided state, placement, presentation, and content.
+ *
+ * @param state Controls the drawer's current and target values.
+ * @param modifier Applied to the drawer's top-level container.
+ * @param placement Edge from which the panel appears.
+ * @param presentation Whether the drawer is modal, overlaid through a portal, or rendered in place.
+ * @param gesturesEnabled Whether users can drag the panel.
+ * @param dismissOnNavigateBack Whether Back and Escape dismiss a visible drawer.
+ * @param dismissOnClickOutside Whether outside interaction dismisses a modal drawer.
+ * @param onDismissed Called after the drawer settles at its zero snap point.
+ * @param overlay Caller-owned content rendered behind the panel.
+ * @param systemUi System UI behavior while the drawer is presented.
+ * @param content Drawer slots, including [DrawerScope.Viewport] and [DrawerScope.SwipeArea].
+ */
 @Composable
 fun <T : Any> UnstyledDrawer(
   state: UnstyledDrawerState<T>,
@@ -415,6 +430,9 @@ internal sealed class ResolvedDrawerPlacement(
  * Provides the full-area render destination for [DrawerPresentation.Overlay] drawers.
  *
  * Overlay drawers outside a host render no overlay content.
+ *
+ * @param modifier Applied to the host container.
+ * @param content Content that can contain overlay drawers.
  */
 @Composable
 fun DrawerHost(
@@ -428,6 +446,11 @@ fun DrawerHost(
   )
 }
 
+/**
+ * Defines the edge area that opens a closed overlay drawer by swipe.
+ *
+ * @param modifier Applied to the swipe area.
+ */
 @Composable
 fun DrawerScope.SwipeArea(
   modifier: Modifier = Modifier,
@@ -473,6 +496,14 @@ private fun DrawerPlacement.resolve(layoutDirection: LayoutDirection): ResolvedD
   }
 }
 
+/**
+ * Defines the finite area used to measure and place a drawer panel.
+ *
+ * @param modifier Applied to the viewport.
+ * @param panelAlignment Cross-axis alignment for the panel.
+ * @param windowInsets Insets excluded from the available viewport.
+ * @param content The panel slot.
+ */
 @Composable
 fun <T : Any> DrawerScope.Viewport(
   modifier: Modifier = Modifier,
@@ -847,6 +878,13 @@ private fun androidx.compose.ui.layout.Placeable.PlacementScope.placePanel(
   }
 }
 
+/**
+ * Defines the draggable drawer surface.
+ *
+ * @param modifier Applied to the panel.
+ * @param overscrollEffect Optional overscroll behavior for panel dragging.
+ * @param content The panel content and [DrawerPanelScope.DragHandle] slot.
+ */
 @Composable
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> DrawerViewportScope<T>.Panel(
@@ -969,6 +1007,12 @@ private fun Modifier.drawerPanelParentData(drawerPanelParentData: DrawerPanelPar
   )
 }
 
+/**
+ * Adds accessibility expand, collapse, and dismiss actions for a movable panel.
+ *
+ * @param modifier Applied to the handle.
+ * @param content Caller-owned handle content.
+ */
 @Composable
 fun <T : Any> DrawerPanelScope<T>.DragHandle(
   modifier: Modifier = Modifier,
@@ -1023,6 +1067,14 @@ fun <T : Any> DrawerPanelScope<T>.DragHandle(
   }
 }
 
+/**
+ * Defines caller-owned overlay content behind the drawer panel.
+ *
+ * @param modifier Applied to the overlay.
+ * @param enter Transition used when the overlay appears.
+ * @param exit Transition used when the overlay disappears.
+ * @param content Caller-owned overlay content.
+ */
 @Composable
 fun <T : Any> DrawerOverlayScope<T>.Overlay(
   modifier: Modifier = Modifier,

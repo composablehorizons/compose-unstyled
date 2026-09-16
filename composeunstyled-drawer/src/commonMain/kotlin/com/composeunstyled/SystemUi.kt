@@ -24,11 +24,18 @@ package com.composeunstyled
 import androidx.compose.runtime.Composable
 import kotlin.jvm.JvmInline
 
+/**
+ * Controls the Android system-bar icon appearance while a drawer is presented.
+ *
+ * @property statusBar The requested status-bar icon appearance.
+ * @property navigationBar The requested navigation-bar icon appearance.
+ */
 data class SystemUi(
   val statusBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
   val navigationBar: SystemUiAppearance = SystemUiAppearance.Unspecified,
 )
 
+/** The requested appearance for status-bar or navigation-bar icons. */
 @JvmInline
 value class SystemUiAppearance internal constructor(private val value: Int) {
   companion object {
