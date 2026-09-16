@@ -549,7 +549,7 @@ class UnstyledDrawerState<T : Any>(
         requestedSize.isSpecified.not() || requestedSize.value.isNaN() -> 0f
         requestedSize.value == Float.NEGATIVE_INFINITY -> 0f
         requestedSize.value == Float.POSITIVE_INFINITY -> viewportSizePx
-        else -> requestedSize.coerceIn(0.dp, viewportSize).toPx()
+        else -> requestedSize.coerceIn(0.dp, minOf(viewportSize, contentSize)).toPx()
       }
     }
   }
