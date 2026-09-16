@@ -83,6 +83,10 @@ private enum class TooltipFocusTrigger {
 
 internal val TooltipPortalTarget = PortalTarget()
 
+/**
+ * @param modifier Modifier to be applied to the tooltip host.
+ * @param content Content that can render tooltip panels into this host.
+ */
 @Composable
 fun TooltipHost(
   modifier: Modifier = Modifier,
@@ -95,6 +99,13 @@ fun TooltipHost(
   )
 }
 
+/**
+ * @param enabled Whether the tooltip is enabled. When disabled, the tooltip will not show.
+ * @param panel A composable function that defines the tooltip content panel.
+ * @param longPressShowDurationMillis Duration in milliseconds to show the tooltip after a long press. Default is 1500ms.
+ * @param hoverDelayMillis Delay in milliseconds before showing the tooltip on hover. Default is 0ms.
+ * @param anchor A composable function that defines the anchor element that triggers the tooltip.
+ */
 @Composable
 fun UnstyledTooltip(
   enabled: Boolean = true,
@@ -254,6 +265,12 @@ fun UnstyledTooltip(
   )
 }
 
+/**
+ * @param modifier Modifier to be applied to the tooltip panel.
+ * @param enter The enter transition for the tooltip panel. Default is instant appearance.
+ * @param exit The exit transition for the tooltip panel. Default is instant disappearance.
+ * @param content A composable function that defines the content of the tooltip.
+ */
 @Composable
 fun TooltipScope.TooltipPanel(
   modifier: Modifier = Modifier,

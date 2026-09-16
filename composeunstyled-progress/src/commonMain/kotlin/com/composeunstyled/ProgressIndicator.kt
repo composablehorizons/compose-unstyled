@@ -41,6 +41,10 @@ class ProgressScope {
     internal set
 }
 
+/**
+ * @param modifier Modifier to be applied to the progress container.
+ * @param content A composable function that defines the content of the progress indicator.
+ */
 @Composable
 fun UnstyledProgress(
   @FloatRange(from = 0.0, to = 1.0) progress: Float,
@@ -74,6 +78,9 @@ fun UnstyledProgress(
   }
 }
 
+/**
+ * @param modifier Modifier to apply to the filled progress content.
+ */
 @Composable
 fun ProgressScope.Indicator(
   modifier: Modifier = Modifier,

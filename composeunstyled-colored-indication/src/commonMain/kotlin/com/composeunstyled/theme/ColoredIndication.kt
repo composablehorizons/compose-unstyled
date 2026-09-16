@@ -41,6 +41,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.TimeSource
 
+/**
+ * @param hoveredColor Color overlay to display when the component is hovered
+ * @param pressedColor Color overlay to display when the component is pressed
+ * @param focusedColor Color overlay to display when the component is focused
+ * @param draggedColor Color overlay to display when the component is being dragged
+ */
 @Composable
 fun rememberColoredIndication(
   hoveredColor: Color = Color.Unspecified,
@@ -84,6 +90,12 @@ fun rememberColoredIndication(
   }
 }
 
+/**
+ * @property hoveredColor Color overlay to display when the component is hovered
+ * @property pressedColor Color overlay to display when the component is pressed
+ * @property focusedColor Color overlay to display when the component is focused
+ * @property draggedColor Color overlay to display when the component is being dragged
+ */
 class ColoredIndication(
   private val hoveredColor: Color,
   private val pressedColor: Color,

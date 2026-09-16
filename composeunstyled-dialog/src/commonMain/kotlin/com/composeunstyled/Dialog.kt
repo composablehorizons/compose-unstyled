@@ -69,6 +69,12 @@ fun DialogHost(
   ModalHost(modifier = modifier, content = content)
 }
 
+/**
+ * @param modifier `Modifier` for the Scrim
+ * @param scrimColor Controls the color of the Scrim. The default color is Black with an alpha of 60%.
+ * @param enter The `EnterTransition` when the Scrim enters the composition
+ * @param exit The `ExitTransition` when the Scrim enters the composition
+ */
 @Composable
 fun DialogOverlayScope.Scrim(
   modifier: Modifier = Modifier,
@@ -88,6 +94,10 @@ fun DialogOverlayScope.Scrim(
   }
 }
 
+/**
+ * @param properties Properties that control when the dialog needs to be dismissed (such as clicking outside of the panel or pressing Esc or Back.
+ * @param content A `@Composable` function that provides a `DialogScope`.
+ */
 @Composable
 fun UnstyledDialog(
   visible: Boolean,
@@ -146,6 +156,12 @@ fun UnstyledDialog(
   }
 }
 
+/**
+ * @param modifier `Modifier` for the Scrim
+ * @param enter The `EnterTransition` when the Scrim enters the composition
+ * @param exit The `ExitTransition` when the Scrim enters the composition
+ * @param content A `@Composable` function that provides a `DialogScope`.
+ */
 @Composable
 fun DialogScope.DialogPanel(
   modifier: Modifier = Modifier,

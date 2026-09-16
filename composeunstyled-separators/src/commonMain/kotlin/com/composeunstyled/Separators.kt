@@ -34,6 +34,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
+/**
+ * @param color the `Color` of the separator.
+ * @param modifier the `Modifier` to be used to this separator.
+ * @param thickness a `Dp` of how thick the separator should rendered.
+ */
 @Composable
 fun UnstyledHorizontalSeparator(
   color: Color,
@@ -50,6 +55,11 @@ fun UnstyledHorizontalSeparator(
   }
 }
 
+/**
+ * @param color the `Color` of the separator.
+ * @param modifier the `Modifier` to be used to this separator.
+ * @param thickness a `Dp` of how thick the separator should rendered.
+ */
 @Composable
 fun UnstyledVerticalSeparator(
   color: Color,

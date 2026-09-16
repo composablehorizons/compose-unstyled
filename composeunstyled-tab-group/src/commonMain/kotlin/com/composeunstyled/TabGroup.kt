@@ -99,6 +99,11 @@ private fun currentTabGroupRegistry(): TabsRegistry<Any?>? = LocalTabGroupRegist
 @Composable
 private fun currentTabListRegistry(): TabsRegistry<Any?>? = LocalTabListRegistry.current
 
+/**
+ * @param selectedTab The initial selected tab for the tab group state.
+ * @param modifier Modifier to be applied to the tab.
+ * @param content Composable function to define the content of the tab panel.
+ */
 @Composable
 fun <T> UnstyledTabGroup(
   selectedTab: T,
@@ -148,6 +153,11 @@ fun <T> UnstyledTabGroup(
   }
 }
 
+/**
+ * @param modifier Modifier to be applied to the tab.
+ * @param orientation The orientation of the tab list (horizontal or vertical).
+ * @param content Composable function to define the content of the tab panel.
+ */
 @Composable
 fun <T> TabGroupScope<T>.TabList(
   modifier: Modifier = Modifier,
@@ -282,6 +292,15 @@ fun UnstyledTabList(
   }
 }
 
+/**
+ * @param key The unique key for the tab panel.
+ * @param modifier Modifier to be applied to the tab.
+ * @param enabled Whether the tab is enabled.
+ * @param activateOnFocus Whether to activate a tab when it receives focus.
+ * @param indication Visual indication for interactions.
+ * @param interactionSource Interaction source for the tab.
+ * @param content Composable function to define the content of the tab panel.
+ */
 @Composable
 fun <T> TabListScope<T>.Tab(
   key: T,
@@ -412,6 +431,11 @@ fun <T> UnstyledTab(
   }
 }
 
+/**
+ * @param key The unique key for the tab panel.
+ * @param modifier Modifier to be applied to the tab.
+ * @param content Composable function to define the content of the tab panel.
+ */
 @Composable
 fun <T> TabGroupScope<T>.TabPanel(
   key: T,

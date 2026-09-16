@@ -128,6 +128,10 @@ private fun Saver(
     )
   })
 
+/**
+ * @param initialDetent A `SheetDetent` which controls the height in which the sheet will be introduced within its container.
+ * @param animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
+ */
 @Composable
 fun rememberBottomSheetState(
   initialDetent: SheetDetent,
@@ -204,6 +208,9 @@ class SheetDetent(
   }
 }
 
+/**
+ * @property animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
+ */
 class BottomSheetState internal constructor(
   initialDetent: SheetDetent,
   detents: List<SheetDetent>,
@@ -297,6 +304,9 @@ class BottomSheetState internal constructor(
     confirmValueChange = confirmDetentChange,
   )
 
+/**
+   * The `SheetDetent` in which the sheet is currently rested on. Setting a new detent will cause the sheet to animate to that detent.
+   */
   val currentDetent: SheetDetent
     get() {
       return anchoredDraggableState.settledValue
@@ -306,6 +316,9 @@ class BottomSheetState internal constructor(
     anchoredDraggableState.targetValue
   }
 
+/**
+   * The `SheetDetent` in which the sheet is about to rest on, if it is being dragged or animated.
+   */
   var targetDetent: SheetDetent
     get() {
       return derivedTargetDetent
@@ -324,6 +337,9 @@ class BottomSheetState internal constructor(
       }
     }
 
+/**
+   * Whether the sheet is currently resting at a specific detent.
+   */
   val isIdle: Boolean by derivedStateOf {
     val currentPosition = anchoredDraggableState.anchors.positionOf(currentDetent)
     val currentOffset = anchoredDraggableState.offset
@@ -346,6 +362,10 @@ class BottomSheetState internal constructor(
 
   internal fun targetDetentAfterFling(velocity: Float): SheetDetent {
     val currentOffset = anchoredDraggableState.requireOffset()
+
+/**
+     * The `SheetDetent` in which the sheet is about to rest on, if it is being dragged or animated.
+     */
     val targetDetent = anchoredDraggableState.anchors.computeTarget(
       currentOffset = currentOffset,
       currentDetent = currentDetent,
@@ -364,6 +384,9 @@ class BottomSheetState internal constructor(
     animateTo(targetDetentAfterFling(velocity))
   }
 
+/**
+   * The current offset of the sheet.
+   */
   val offset: Float by derivedStateOf {
     if (anchoredDraggableState.offset.isNaN() || closestDetentToTopPx.isNaN()) {
       0f
@@ -468,6 +491,9 @@ class BottomSheetState internal constructor(
   }
 
   private fun currentOffsetHeight(): Float {
+/**
+     * The current offset of the sheet.
+     */
     val offset = anchoredDraggableState.offset
     return if (containerHeightPx.isNaN() || offset.isNaN()) {
       Float.NaN
@@ -593,6 +619,9 @@ class BottomSheetState internal constructor(
     invalidateDetents()
   }
 
+/**
+   * Animates the sheet to the given detent. This is a `suspend` function, which you can use to wait until the animation is complete.
+   */
   suspend fun animateTo(value: SheetDetent, animationSpec: AnimationSpec<Float>? = null) {
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -608,6 +637,9 @@ class BottomSheetState internal constructor(
     }
   }
 
+/**
+   * Makes the sheet to immediately appear to the given detent without any animation.
+   */
   fun jumpTo(value: SheetDetent) {
     check(innerDetents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -670,6 +702,10 @@ class BottomSheetState internal constructor(
           val detentHeight = detentHeightPx.toDp()
 
           val offsetDp = containerHeight - detentHeight
+
+/**
+           * The current offset of the sheet.
+           */
           val offset = offsetDp.toPx()
           if (nextClosestDetentToTopPx.isNaN() || nextClosestDetentToTopPx > offset) {
             nextClosestDetentToTopPx = offset
@@ -792,6 +828,12 @@ interface BottomSheetScope
 
 private object BottomSheetScopeInstance : BottomSheetScope
 
+/**
+ * @param state The `BottomSheetState` for the component
+ * @param modifier The `Modifier` for the component
+ * @param enabled Enables or disables dragging.
+ * @param content The contents of the sheet.
+ */
 @Composable
 fun UnstyledBottomSheet(
   state: BottomSheetState,
@@ -848,6 +890,10 @@ fun UnstyledBottomSheet(
   }
 }
 
+/**
+ * @param modifier The `Modifier` for the component
+ * @param content The contents of the sheet.
+ */
 @Composable
 fun BottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
@@ -1181,6 +1227,9 @@ private fun DraggableAnchors<SheetDetent>.firstAnchor(): SheetDetent {
   }
 }
 
+/**
+ * @param modifier The `Modifier` for the component
+ */
 @Composable
 fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,

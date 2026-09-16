@@ -55,6 +55,9 @@ private const val TYPEFACE_SANS = 1
 private const val TYPEFACE_SERIF = 2
 private const val TYPEFACE_MONOSPACE = 3
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeColor(context: Context, @AttrRes resId: Int): Color {
   return remember(context, resId) {
@@ -64,6 +67,9 @@ fun resolveThemeColor(context: Context, @AttrRes resId: Int): Color {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeDp(context: Context, @AttrRes resId: Int): Dp {
   val density = LocalDensity.current
@@ -78,6 +84,9 @@ fun resolveThemeDp(context: Context, @AttrRes resId: Int): Dp {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeSp(context: Context, @AttrRes resId: Int): TextUnit {
   val density = LocalDensity.current
@@ -92,6 +101,9 @@ fun resolveThemeSp(context: Context, @AttrRes resId: Int): TextUnit {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeInt(context: Context, @AttrRes resId: Int): Int {
   return remember(context, resId) {
@@ -101,6 +113,9 @@ fun resolveThemeInt(context: Context, @AttrRes resId: Int): Int {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeFloat(context: Context, @AttrRes resId: Int): Float {
   return remember(context, resId) {
@@ -110,6 +125,9 @@ fun resolveThemeFloat(context: Context, @AttrRes resId: Int): Float {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemePx(context: Context, @AttrRes resId: Int): Float {
   val resources = context.resources
@@ -121,6 +139,9 @@ fun resolveThemePx(context: Context, @AttrRes resId: Int): Float {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeString(context: Context, @AttrRes resId: Int): String {
   return remember(context, resId) {
@@ -130,6 +151,9 @@ fun resolveThemeString(context: Context, @AttrRes resId: Int): String {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 fun resolveThemeBoolean(context: Context, @AttrRes resId: Int): Boolean {
   return remember(context, resId) {
@@ -139,6 +163,9 @@ fun resolveThemeBoolean(context: Context, @AttrRes resId: Int): Boolean {
   }
 }
 
+/**
+ * @param context The Android Context to resolve attributes from
+ */
 @Composable
 @SuppressLint("ResourceType")
 fun resolveThemeTextAppearance(context: Context, @AttrRes resId: Int): TextStyle {

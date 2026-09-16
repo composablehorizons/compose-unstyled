@@ -52,8 +52,19 @@ import kotlin.math.roundToInt
 
 @Stable
 interface SwitchScope {
+  /**
+   * Whether the switch is on or off.
+   */
   val checked: Boolean
+
+  /**
+   * Whether the switch is enabled.
+   */
   val enabled: Boolean
+
+  /**
+   * Interaction source for press, focus, and drag interactions.
+   */
   val interactionSource: MutableInteractionSource
 }
 
@@ -72,6 +83,15 @@ private class SwitchTrackScopeImpl(
   override val interactionSource: MutableInteractionSource,
 ) : SwitchTrackScope
 
+/**
+ * @param checked Whether the switch is on or off.
+ * @param onCheckedChange Callback when the switch changes state. Pass `null` when another control owns the interaction.
+ * @param modifier Modifier to be applied to the switch.
+ * @param enabled Whether the switch is enabled.
+ * @param interactionSource Interaction source for press, focus, and drag interactions.
+ * @param indication Indication used for the switch interaction.
+ * @param content Content drawn inside the switch scope.
+ */
 @Composable
 fun UnstyledSwitch(
   checked: Boolean,
@@ -158,6 +178,11 @@ fun SwitchTrackScope.Thumb(
   )
 }
 
+/**
+ * @param modifier Modifier to apply to the thumb container.
+ * @param animationSpec Animation used when the thumb moves between states.
+ * @param content Thumb content.
+ */
 @Composable
 fun SwitchScope.SwitchThumb(
   modifier: Modifier = Modifier,

@@ -51,6 +51,10 @@ import androidx.compose.ui.semantics.semantics
 
 private val LocalRadioGroupState = staticCompositionLocalOf<InnerRadioGroupState?> { null }
 
+/**
+ * @param modifier Modifier to be applied to the radio button.
+ * @param content Composable function to define the content of the radio button.
+ */
 @Composable
 fun <T> UnstyledRadioGroup(
   value: T?,
@@ -110,6 +114,13 @@ private class InnerRadioGroupState(
   val onValueChange: (Any?) -> Unit,
 )
 
+/**
+ * @param modifier Modifier to be applied to the radio button.
+ * @param enabled Whether the radio button is enabled.
+ * @param interactionSource Interaction source for the radio button.
+ * @param indication Visual indication for interactions.
+ * @param content Composable function to define the content of the radio button.
+ */
 @Composable
 fun <T> RadioGroupScope.RadioButton(
   value: T,
@@ -170,6 +181,11 @@ class RadioButtonScope internal constructor(
   internal val interactionSource: MutableInteractionSource,
 )
 
+/**
+ * @param modifier Modifier to be applied to the radio button.
+ * @param indication Visual indication for interactions.
+ * @param content Composable function to define the content of the radio button.
+ */
 @Composable
 fun RadioButtonScope.SelectedIndicator(
   modifier: Modifier = Modifier,

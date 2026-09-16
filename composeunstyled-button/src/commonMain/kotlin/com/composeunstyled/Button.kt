@@ -39,6 +39,16 @@ import androidx.compose.ui.unit.dp
 
 private val NoPadding = PaddingValues(0.dp)
 
+/**
+ * @param onClick The callback to be invoked when the button is clicked.
+ * @param enabled Whether the button is enabled.
+ * @param contentPadding Padding values for the content.
+ * @param modifier Modifier to be applied to the button.
+ * @param role The role of the button for accessibility purposes.
+ * @param indication The indication to be shown when the button is interacted with.
+ * @param interactionSource The interaction source for the button.
+ * @param content A composable function that defines the content of the button.
+ */
 @Composable
 fun UnstyledButton(
   onClick: () -> Unit,

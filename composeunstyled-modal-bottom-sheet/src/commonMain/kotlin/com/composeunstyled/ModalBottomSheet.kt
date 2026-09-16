@@ -74,6 +74,9 @@ interface ModalBottomSheetOverlayScope
 
 private object ModalBottomSheetOverlayScopeInstance : ModalBottomSheetOverlayScope
 
+/**
+ * @param modifier The `Modifier` for the component
+ */
 @Composable
 fun ModalBottomSheetOverlayScope.Scrim(
   modifier: Modifier = Modifier,
@@ -97,6 +100,20 @@ data class ModalBottomSheetProperties(
   val offsetForIme: Boolean = true,
 )
 
+/**
+ * @param initialDetent A `SheetDetent` which controls the height in which the sheet will be introduced within its container.
+ * @param detents A list of `SheetDetent` which the sheet can be rested for dragging purposes.
+ * @param animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
+ * @param velocityThreshold The velocity threshold (in px per second) that the end velocity has to exceed in order to animate to the next state, even if the [positionalThreshold] has not been reached.
+ * @param positionalThreshold The positional threshold, in px, to be used when calculating the target state while a drag is in progress and when settling after the drag ends. This is the distance from the start of a transition. It will be, depending on the direction of the interaction, added or subtracted from/to the origin offset. It should always be a positive value.
+ */
+/**
+ * @param initialDetent A `SheetDetent` which controls the height in which the sheet will be introduced within its container.
+ * @param detents A list of `SheetDetent` which the sheet can be rested for dragging purposes.
+ * @param animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
+ * @param velocityThreshold The velocity threshold (in px per second) that the end velocity has to exceed in order to animate to the next state, even if the [positionalThreshold] has not been reached.
+ * @param positionalThreshold The positional threshold, in px, to be used when calculating the target state while a drag is in progress and when settling after the drag ends. This is the distance from the start of a transition. It will be, depending on the direction of the interaction, added or subtracted from/to the origin offset. It should always be a positive value.
+ */
 @Composable
 fun rememberModalBottomSheetState(
   initialDetent: SheetDetent,
@@ -144,10 +161,17 @@ class ModalBottomSheetState(
   internal var dismissAnimationSpec by mutableStateOf(dismissAnimationSpec)
   private var pendingTargetDetent: SheetDetent? by mutableStateOf(null)
 
+  /**
+   * The `SheetDetent` in which the sheet is currently rested on. Setting a new detent will cause the sheet to animate to that detent.
+   */
   val currentDetent: SheetDetent
     get() {
       return modalDetent
     }
+
+  /**
+   * The `SheetDetent` in which the sheet is about to rest on, if it is being dragged or animated.
+   */
   var targetDetent: SheetDetent
     get() = pendingTargetDetent ?: bottomSheetState.targetDetent
     set(value) {
@@ -156,6 +180,9 @@ class ModalBottomSheetState(
       }
     }
 
+  /**
+   * Whether the sheet is currently resting at a specific detent.
+   */
   val isIdle: Boolean
     get() = pendingTargetDetent == null && bottomSheetState.isIdle
 
@@ -163,10 +190,16 @@ class ModalBottomSheetState(
     return bottomSheetState.progress(from, to)
   }
 
+  /**
+   * The current offset of the sheet.
+   */
   val offset: Float by derivedStateOf {
     bottomSheetState.offset
   }
 
+/**
+   * Animates the sheet to the given detent. This is a `suspend` function, which you can use to wait until the animation is complete.
+   */
   suspend fun animateTo(value: SheetDetent) {
     pendingTargetDetent = value
 
@@ -202,6 +235,9 @@ class ModalBottomSheetState(
     }
   }
 
+/**
+   * Makes the sheet to immediately appear to the given detent without any animation.
+   */
   fun jumpTo(value: SheetDetent) {
     check(bottomSheetState.detents.contains(value)) {
       "Tried to set currentDetent to an unknown detent with identifier ${value.identifier}. Make sure that the detent is passed to the list of detents when instantiating the sheet's state."
@@ -259,6 +295,13 @@ class ModalBottomSheetState(
   }
 }
 
+/**
+ * @param state The `ModalBottomSheetState` for the component
+ * @param enabled Enables or disables dragging.
+ * @param properties `ModalSheetProperties` that control whether the sheet needs to be dismissed on clicked outside, etc.
+ * @param onDismiss Called when the sheet is being dismissed either by tapping outside or by pressing `Esc` or `Back`.
+ * @param content The contents of the Modal Bottom Sheet.
+ */
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
@@ -363,6 +406,10 @@ fun UnstyledModalBottomSheet(
   }
 }
 
+/**
+ * @param modifier The `Modifier` for the component
+ * @param content The contents of the sheet.
+ */
 @Composable
 fun ModalBottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
