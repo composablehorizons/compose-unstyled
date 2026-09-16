@@ -246,9 +246,13 @@ class UnstyledDrawerState<T : Any>(
     validateValue(value)
     val isLogicalNoOp = value == targetValue
     if (force.not() && isLogicalNoOp) return false
+    val requiresConfirmation = when (reason) {
+      DrawerValueChange.Reason.Gesture -> value != innerTargetValue
+      else -> isLogicalNoOp.not()
+    }
     if (
       alreadyConfirmed.not() &&
-      isLogicalNoOp.not() &&
+      requiresConfirmation &&
       confirmTargetValue(value, reason).not()
     ) {
       return false
@@ -266,21 +270,7 @@ class UnstyledDrawerState<T : Any>(
     if (offset.isNaN()) return
 
     val target = closestValueTo(offset, direction) ?: return
-    if (
-      requestTarget(
-        value = target,
-        reason = reason,
-        shouldAnimate = true,
-        force = true,
-      ).not()
-    ) {
-      requestTarget(
-        value = currentValue,
-        reason = reason,
-        alreadyConfirmed = true,
-        force = true,
-      )
-    }
+    settleTo(target, reason)
   }
 
   internal fun settleFromFling(velocity: Float) {
@@ -308,9 +298,27 @@ class UnstyledDrawerState<T : Any>(
         direction = velocity,
       )
     } else {
+      settleTo(target, DrawerValueChange.Reason.Gesture)
+    }
+  }
+
+  private fun settleTo(
+    value: T,
+    reason: DrawerValueChange.Reason,
+  ) {
+    val valueBeforeGesture = innerTargetValue
+    if (
       requestTarget(
-        value = target,
-        reason = DrawerValueChange.Reason.Gesture,
+        value = value,
+        reason = reason,
+        shouldAnimate = true,
+        force = true,
+      ).not()
+    ) {
+      requestTarget(
+        value = valueBeforeGesture,
+        reason = reason,
+        alreadyConfirmed = true,
         force = true,
       )
     }
