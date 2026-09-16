@@ -50,7 +50,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +72,10 @@ import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 private enum class DrawerFormDemoValue {
   Closed,
@@ -98,12 +101,12 @@ fun DrawerFormDemo() {
   val name = rememberTextFieldState()
   val email = rememberTextFieldState()
   val fieldTextStyle = TextStyle(
-    color = Color.Black,
+    color = Theme[demoColors][demoContent],
     fontSize = 16.sp,
     lineHeight = 24.sp,
   )
 
-  Box(Modifier.fillMaxSize().background(Color.White)) {
+  Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
     Box(
       modifier = Modifier.fillMaxSize().padding(24.dp),
       contentAlignment = Alignment.Center,
@@ -111,7 +114,9 @@ fun DrawerFormDemo() {
       UnstyledButton(
         onClick = { drawerState.targetValue = DrawerFormDemoValue.Open },
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-        modifier = Modifier.background(Color.White).border(1.dp, Color.Black),
+        modifier = Modifier.background(
+          Theme[demoColors][demoSurface],
+        ).border(1.dp, Theme[demoColors][demoContent]),
         indication = LocalIndication.current,
       ) {
         BasicText("Open form")
@@ -124,7 +129,9 @@ fun DrawerFormDemo() {
       placement = DrawerPlacement.Bottom,
       overlay = {
         Overlay(
-          modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.33f)),
+          modifier = Modifier.fillMaxSize().background(
+            Theme[demoColors][demoContent].copy(alpha = 0.33f),
+          ),
           enter = fadeIn(),
           exit = fadeOut(),
         )
@@ -144,8 +151,8 @@ fun DrawerFormDemo() {
             modifier = Modifier
               .widthIn(max = 640.dp)
               .fillMaxWidth()
-              .background(Color.White)
-              .border(1.dp, Color.Black),
+              .background(Theme[demoColors][demoSurface])
+              .border(1.dp, Theme[demoColors][demoContent]),
           ) {
             Box {
               Column(
@@ -158,7 +165,7 @@ fun DrawerFormDemo() {
                 BasicText(
                   "Contact form",
                   style = TextStyle(
-                    color = Color.Black,
+                    color = Theme[demoColors][demoContent],
                     fontSize = 24.sp,
                     lineHeight = 32.sp,
                   ),
@@ -166,7 +173,7 @@ fun DrawerFormDemo() {
                 BasicText(
                   "Focus a field to test the keyboard inset.",
                   style = TextStyle(
-                    color = Color.Black,
+                    color = Theme[demoColors][demoContent],
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
                   ),
@@ -177,7 +184,7 @@ fun DrawerFormDemo() {
                   modifier = Modifier.fillMaxWidth(),
                   accessibilityLabel = "Name",
                   lineLimits = TextFieldLineLimits.SingleLine,
-                  cursorBrush = SolidColor(Color.Black),
+                  cursorBrush = SolidColor(Theme[demoColors][demoContent]),
                   textStyle = fieldTextStyle,
                 ) {
                   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -185,12 +192,14 @@ fun DrawerFormDemo() {
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Color.Black)
+                        .border(1.dp, Theme[demoColors][demoContent])
                         .padding(horizontal = 12.dp, vertical = 10.dp),
                       placeholder = {
                         BasicText(
                           "Alex",
-                          style = fieldTextStyle.copy(color = Color.Black.copy(alpha = 0.5f)),
+                          style = fieldTextStyle.copy(
+                            color = Theme[demoColors][demoContent].copy(alpha = 0.5f),
+                          ),
                         )
                       },
                     )
@@ -202,7 +211,7 @@ fun DrawerFormDemo() {
                   modifier = Modifier.fillMaxWidth(),
                   accessibilityLabel = "Email",
                   lineLimits = TextFieldLineLimits.SingleLine,
-                  cursorBrush = SolidColor(Color.Black),
+                  cursorBrush = SolidColor(Theme[demoColors][demoContent]),
                   textStyle = fieldTextStyle,
                 ) {
                   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -210,12 +219,14 @@ fun DrawerFormDemo() {
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Color.Black)
+                        .border(1.dp, Theme[demoColors][demoContent])
                         .padding(horizontal = 12.dp, vertical = 10.dp),
                       placeholder = {
                         BasicText(
                           "alex@example.com",
-                          style = fieldTextStyle.copy(color = Color.Black.copy(alpha = 0.5f)),
+                          style = fieldTextStyle.copy(
+                            color = Theme[demoColors][demoContent].copy(alpha = 0.5f),
+                          ),
                         )
                       },
                     )
@@ -231,8 +242,8 @@ fun DrawerFormDemo() {
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier
                       .weight(1f)
-                      .background(Color.White)
-                      .border(1.dp, Color.Black),
+                      .background(Theme[demoColors][demoSurface])
+                      .border(1.dp, Theme[demoColors][demoContent]),
                     indication = LocalIndication.current,
                   ) {
                     BasicText("Cancel")
@@ -240,10 +251,10 @@ fun DrawerFormDemo() {
                   UnstyledButton(
                     onClick = { drawerState.targetValue = DrawerFormDemoValue.Closed },
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    modifier = Modifier.weight(1f).background(Color.Black),
+                    modifier = Modifier.weight(1f).background(Theme[demoColors][demoContent]),
                     indication = LocalIndication.current,
                   ) {
-                    BasicText("Submit", style = TextStyle(color = Color.White))
+                    BasicText("Submit", style = TextStyle(color = Theme[demoColors][demoSurface]))
                   }
                 }
               }
@@ -257,7 +268,7 @@ fun DrawerFormDemo() {
                 contentAlignment = Alignment.TopCenter,
               ) {
                 DragHandle {
-                  Box(Modifier.width(48.dp).height(4.dp).background(Color.Black))
+                  Box(Modifier.width(48.dp).height(4.dp).background(Theme[demoColors][demoContent]))
                 }
               }
             }

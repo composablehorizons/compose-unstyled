@@ -37,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +44,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoInputBackground
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("separators")
@@ -58,35 +62,35 @@ fun SeparatorsDemo() {
     Column(
       Modifier
         .clip(RoundedCornerShape(6.dp))
-        .background(Color(0xFFF8FAFC))
-        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(6.dp))
+        .background(Theme[demoColors][demoSurface])
+        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(6.dp))
         .width(240.dp),
     ) {
       Text(
         "New Window",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
       Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
-      UnstyledHorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
       Text(
         "New Incognito Tab",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Color.LightGray)
+      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Text(
           "Copy",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Theme[demoColors][demoInputBackground])
         Text(
           "Cut",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Color.LightGray)
+        UnstyledVerticalSeparator(Theme[demoColors][demoInputBackground])
         Text(
           "Paste",
           Modifier.padding(8.dp).weight(1f),

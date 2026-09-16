@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.SelectedIndicator
@@ -51,6 +51,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("radiogroup")
@@ -59,61 +64,70 @@ fun RadioGroupDemo() {
   val values = listOf("Light", "Dark", "System")
   var selectedValue by remember { mutableStateOf("Light") }
 
-  Column(
-    modifier = Modifier
-      .width(300.dp)
-      .padding(16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp),
-    horizontalAlignment = Alignment.CenterHorizontally,
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    UnstyledRadioGroup(
-      value = selectedValue,
-      onValueChange = { selectedValue = it },
-      modifier = Modifier.fillMaxWidth(),
-      accessibilityLabel = "Theme selection",
+    Column(
+      modifier = Modifier
+        .width(300.dp)
+        .padding(16.dp),
+      verticalArrangement = Arrangement.spacedBy(16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      Column(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+      UnstyledRadioGroup(
+        value = selectedValue,
+        onValueChange = { selectedValue = it },
         modifier = Modifier.fillMaxWidth(),
+        accessibilityLabel = "Theme selection",
       ) {
-        values.forEach { value ->
-          val selected = selectedValue == value
-          val itemShape = RoundedCornerShape(14.dp)
-          UnstyledRadioButton(
-            value = value,
-            modifier = Modifier
-              .fillMaxWidth()
-              .clip(itemShape),
-            indication = LocalIndication.current,
-          ) {
-            Row(
-              modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
-              verticalAlignment = Alignment.CenterVertically,
+        Column(
+          horizontalAlignment = Alignment.Start,
+          verticalArrangement = Arrangement.spacedBy(8.dp),
+          modifier = Modifier.fillMaxWidth(),
+        ) {
+          values.forEach { value ->
+            val selected = selectedValue == value
+            val itemShape = RoundedCornerShape(14.dp)
+            UnstyledRadioButton(
+              value = value,
+              modifier = Modifier
+                .fillMaxWidth()
+                .clip(itemShape),
+              indication = LocalIndication.current,
             ) {
-              Box(
-                modifier = Modifier
-                  .size(20.dp)
-                  .clip(CircleShape)
-                  .background(
-                    if (selected) Color.Black else Color(0xFFF8FAFC),
-                  )
-                  .border(1.dp, Color(0xFFCACACA), CircleShape),
-                contentAlignment = Alignment.Center,
+              Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
               ) {
-                SelectedIndicator(
-                  indication = LocalIndication.current,
+                Box(
+                  modifier = Modifier
+                    .size(20.dp)
+                    .clip(CircleShape)
+                    .background(
+                      if (selected) {
+                        Theme[demoColors][demoContent]
+                      } else {
+                        Theme[demoColors][demoSurface]
+                      },
+                    )
+                    .border(1.dp, Theme[demoColors][demoOutline], CircleShape),
+                  contentAlignment = Alignment.Center,
                 ) {
-                  Box(
-                    Modifier
-                      .size(8.dp)
-                      .clip(CircleShape)
-                      .background(Color.White),
-                  )
+                  SelectedIndicator(
+                    indication = LocalIndication.current,
+                  ) {
+                    Box(
+                      Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Theme[demoColors][demoSurface]),
+                    )
+                  }
                 }
+                Spacer(Modifier.width(16.dp))
+                Text(value)
               }
-              Spacer(Modifier.width(16.dp))
-              Text(value)
             }
           }
         }

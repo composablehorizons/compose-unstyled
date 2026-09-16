@@ -24,33 +24,44 @@ package com.composeunstyled.demo.button
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("button")
 @Composable
 fun ButtonDemo() {
-  UnstyledButton(
-    onClick = { },
-    modifier = Modifier
-      .clip(RoundedCornerShape(10.dp))
-      .heightIn(32.dp)
-      .background(Color(0xFFF8FAFC))
-      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(10.dp)),
-    contentPadding = PaddingValues(horizontal = 10.dp),
-    indication = LocalIndication.current,
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    Text("Button")
+    UnstyledButton(
+      onClick = { },
+      modifier = Modifier
+        .clip(RoundedCornerShape(10.dp))
+        .heightIn(32.dp)
+        .background(Theme[demoColors][demoSurface])
+        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(10.dp)),
+      contentPadding = PaddingValues(horizontal = 10.dp),
+      indication = LocalIndication.current,
+    ) {
+      Text("Button")
+    }
   }
 }

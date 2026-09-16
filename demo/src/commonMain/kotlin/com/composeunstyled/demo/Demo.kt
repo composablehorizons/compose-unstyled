@@ -43,38 +43,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.composables.compose.ripple.rememberRippleIndication
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
+import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
-import com.composeunstyled.theme.buildTheme
-
-private val DemoTheme = buildTheme {
-  name = "DemoTheme"
-  defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
-  defaultContentColor = Color.Black
-}
+import com.composeunstyled.theme.Theme
 
 @Composable
 fun Demo(startDestination: String = "home") {
   DemoTheme {
-    CompositionLocalProvider(LocalIndication provides rememberRippleIndication()) {
-      Box(Modifier.fillMaxSize().background(Color.Black)) {
-        DemoSelection(startDestination)
-      }
+    Box(Modifier.fillMaxSize().background(Theme[demoColors][demoBackground])) {
+      DemoSelection(startDestination)
     }
   }
 }
@@ -121,7 +109,7 @@ private fun DemoSelection(startDestination: String) {
               onClick = { navController.navigate(demo.id) },
               modifier = Modifier.fillMaxWidth(),
             ) {
-              Text(demo.name, color = Color.White)
+              Text(demo.name)
             }
           }
         }
@@ -133,7 +121,10 @@ private fun DemoSelection(startDestination: String) {
         val launchedFromDemoList = initialDestination == "home"
         Column(Modifier.fillMaxSize()) {
           if (launchedFromDemoList) {
-            AppBar(onUpClick = { navController.navigateUp() }, title = component.name)
+            AppBar(
+              onUpClick = { navController.navigateUp() },
+              title = component.name,
+            )
           }
           Box(Modifier.weight(1f)) {
             component.demo()
@@ -149,7 +140,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Color.Black)
+      .background(Theme[demoColors][demoBackground])
       .padding(WindowInsets.statusBars.asPaddingValues())
       .padding(4.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -164,12 +155,12 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
         UnstyledIcon(
           imageVector = Lucide.ArrowLeft,
           contentDescription = "Go back",
-          tint = Color.White,
+          tint = LocalContentColor.current,
         )
       }
     }
     Spacer(Modifier.width(8.dp))
-    Text(title, color = Color.White)
+    Text(title)
   }
 }
 

@@ -24,6 +24,8 @@ package com.composeunstyled.demo.checkbox
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -31,9 +33,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -46,6 +48,11 @@ import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("checkbox")
@@ -53,31 +60,35 @@ import com.composeunstyled.demo.UnstyledDemo
 fun CheckboxDemo() {
   var checked by remember { mutableStateOf(true) }
   val checkboxShape = RoundedCornerShape(4.dp)
-  UnstyledCheckbox(
-    checked = checked,
-    onCheckedChange = { checked = it },
-    modifier = Modifier.clip(checkboxShape),
-    accessibilityLabel = "Enable notifications",
-    indication = LocalIndication.current,
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    CheckedIndicator(
-      modifier = Modifier
-        .size(24.dp)
-        .background(Color(0xFFF8FAFC), checkboxShape)
-        .border(1.dp, Color(0xFFCACACA), checkboxShape),
+    UnstyledCheckbox(
+      checked = checked,
+      onCheckedChange = { checked = it },
+      modifier = Modifier.clip(checkboxShape),
+      accessibilityLabel = "Enable notifications",
       indication = LocalIndication.current,
     ) {
-      UnstyledIcon(Check)
+      CheckedIndicator(
+        modifier = Modifier
+          .size(24.dp)
+          .background(Theme[demoColors][demoSurface], checkboxShape)
+          .border(1.dp, Theme[demoColors][demoOutline], checkboxShape),
+        indication = LocalIndication.current,
+      ) {
+        UnstyledIcon(checkIcon())
+      }
     }
   }
 }
 
-private val Check: ImageVector
-  get() {
-    if (_Check != null) {
-      return _Check!!
-    }
-    _Check = ImageVector.Builder(
+@Composable
+private fun checkIcon(): ImageVector {
+  val color = Theme[demoColors][demoContent]
+  return remember(color) {
+    ImageVector.Builder(
       name = "Check",
       defaultWidth = 24.dp,
       defaultHeight = 24.dp,
@@ -87,7 +98,7 @@ private val Check: ImageVector
       path(
         fill = null,
         fillAlpha = 1.0f,
-        stroke = SolidColor(Color(0xFF000000)),
+        stroke = SolidColor(color),
         strokeAlpha = 1.0f,
         strokeLineWidth = 2f,
         strokeLineCap = StrokeCap.Round,
@@ -100,7 +111,5 @@ private val Check: ImageVector
         lineToRelative(-5f, -5f)
       }
     }.build()
-    return _Check!!
   }
-
-private var _Check: ImageVector? = null
+}

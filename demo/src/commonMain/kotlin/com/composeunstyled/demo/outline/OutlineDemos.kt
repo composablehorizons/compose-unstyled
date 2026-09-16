@@ -21,11 +21,13 @@
  */
 package com.composeunstyled.demo.outline
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,23 +37,34 @@ import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoError
+import com.composeunstyled.demo.demoFocus
+import com.composeunstyled.demo.demoHighlight
+import com.composeunstyled.demo.demoSuccess
 import com.composeunstyled.outline
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("outline")
 @Composable
 fun OutlineDemo() {
-  Stack(
-    orientation = StackOrientation.Vertical,
-    mainAxisArrangement = MainAxisArrangement.Center,
-    crossAxisAlignment = CrossAxisAlignment.Center,
-    spacing = 32.dp,
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    OutlineBasicDemo()
-    OutlineWidthDemo()
-    OutlineShapeDemo()
-    OutlineOffsetDemo()
-    OutlineColorDemo()
+    Stack(
+      orientation = StackOrientation.Vertical,
+      mainAxisArrangement = MainAxisArrangement.Center,
+      crossAxisAlignment = CrossAxisAlignment.Center,
+      spacing = 32.dp,
+    ) {
+      OutlineBasicDemo()
+      OutlineWidthDemo()
+      OutlineShapeDemo()
+      OutlineOffsetDemo()
+      OutlineColorDemo()
+    }
   }
 }
 
@@ -60,7 +73,7 @@ private fun OutlineBasicDemo() {
   SimpleButton(
     modifier = Modifier.outline(
       width = 2.dp,
-      color = Color(0xFF3B82F6),
+      color = Theme[demoColors][demoFocus],
       shape = RoundedCornerShape(8.dp),
       offset = 2.dp,
     ),
@@ -73,7 +86,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 1.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -81,7 +94,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -89,7 +102,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 4.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -104,7 +117,7 @@ private fun OutlineShapeDemo() {
       shape = RectangleShape,
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -113,7 +126,7 @@ private fun OutlineShapeDemo() {
       shape = RoundedCornerShape(8.dp),
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -122,7 +135,7 @@ private fun OutlineShapeDemo() {
       shape = CircleShape,
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = CircleShape,
         offset = 2.dp,
       ),
@@ -136,7 +149,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 0.dp,
       ),
@@ -144,7 +157,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 4.dp,
       ),
@@ -152,7 +165,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF3B82F6),
+        color = Theme[demoColors][demoFocus],
         shape = RoundedCornerShape(8.dp),
         offset = 8.dp,
       ),
@@ -166,7 +179,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFFEF4444), // red-500
+        color = Theme[demoColors][demoError], // red-500
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -174,7 +187,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF10B981), // emerald-500
+        color = Theme[demoColors][demoSuccess], // emerald-500
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -182,7 +195,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Color(0xFF8B5CF6), // violet-500
+        color = Theme[demoColors][demoHighlight], // violet-500
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),

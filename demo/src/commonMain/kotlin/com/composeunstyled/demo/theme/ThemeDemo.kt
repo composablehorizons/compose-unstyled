@@ -41,12 +41,16 @@ import androidx.compose.ui.unit.sp
 import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoFocus
+import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
 
-private val colors = ThemeProperty<Color>("colors")
+private val exampleColors = ThemeProperty<Color>("colors")
 private val textStyles = ThemeProperty<TextStyle>("textStyles")
 
 private val background = ThemeToken<Color>("background")
@@ -61,12 +65,12 @@ private val body = ThemeToken<TextStyle>("body")
 private val AppTheme = buildTheme {
   name = "AppTheme"
 
-  properties[colors] = mapOf(
-    background to Color(0xFFF8FAFC),
-    surface to Color.White,
-    primary to Color(0xFF2563EB),
-    onSurface to Color(0xFF0F172A),
-    onPrimary to Color.White,
+  properties[exampleColors] = mapOf(
+    background to Theme[demoColors][demoSurface],
+    surface to Theme[demoColors][demoSurface],
+    primary to Theme[demoColors][demoFocus],
+    onSurface to Theme[demoColors][demoContent],
+    onPrimary to Theme[demoColors][demoSurface],
   )
 
   properties[textStyles] = mapOf(
@@ -90,14 +94,14 @@ fun ThemingDemo() {
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(Theme[colors][background])
+        .background(Theme[exampleColors][background])
         .padding(24.dp),
       contentAlignment = Alignment.Center,
     ) {
       Column(
         modifier = Modifier
           .background(
-            color = Theme[colors][surface],
+            color = Theme[exampleColors][surface],
             shape = RoundedCornerShape(12.dp),
           )
           .padding(24.dp),
@@ -106,7 +110,7 @@ fun ThemingDemo() {
         Text(
           text = "Create a theme",
           style = LocalTextStyle.current.merge(
-            Theme[textStyles][title].copy(color = Theme[colors][onSurface]),
+            Theme[textStyles][title].copy(color = Theme[exampleColors][onSurface]),
           ),
         )
 
@@ -114,14 +118,14 @@ fun ThemingDemo() {
           text = "Define theme properties and tokens, assign values in buildTheme {}, " +
             "then read them with Theme[property][token].",
           style = LocalTextStyle.current.merge(
-            Theme[textStyles][body].copy(color = Theme[colors][onSurface]),
+            Theme[textStyles][body].copy(color = Theme[exampleColors][onSurface]),
           ),
         )
 
         Box(
           modifier = Modifier
             .background(
-              color = Theme[colors][primary],
+              color = Theme[exampleColors][primary],
               shape = RoundedCornerShape(8.dp),
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
@@ -130,7 +134,7 @@ fun ThemingDemo() {
             text = "Themed action",
             style = LocalTextStyle.current.merge(
               Theme[textStyles][body].copy(
-                color = Theme[colors][onPrimary],
+                color = Theme[exampleColors][onPrimary],
                 fontWeight = FontWeight.Medium,
               ),
             ),

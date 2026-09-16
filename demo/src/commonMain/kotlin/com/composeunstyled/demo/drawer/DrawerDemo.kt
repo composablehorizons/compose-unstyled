@@ -39,7 +39,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragHandle
@@ -56,6 +55,10 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 private enum class DrawerDemoValue {
   Closed,
@@ -80,14 +83,14 @@ fun DrawerDemo() {
   }
 
   DrawerHost(Modifier.fillMaxSize()) {
-    Box(Modifier.fillMaxSize().background(Color.White)) {
+    Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
       UnstyledButton(
         onClick = { drawerState.targetValue = DrawerDemoValue.Open },
         contentPadding = PaddingValues(12.dp),
         modifier = Modifier
           .align(Alignment.Center)
-          .background(Color.White)
-          .border(1.dp, Color.Black),
+          .background(Theme[demoColors][demoSurface])
+          .border(1.dp, Theme[demoColors][demoContent]),
         indication = LocalIndication.current,
       ) {
         BasicText("Open navigation")
@@ -99,7 +102,9 @@ fun DrawerDemo() {
         presentation = DrawerPresentation.Overlay,
         overlay = {
           Overlay(
-            modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.33f)),
+            modifier = Modifier.fillMaxSize().background(
+              Theme[demoColors][demoContent].copy(alpha = 0.33f),
+            ),
             enter = fadeIn(),
             exit = fadeOut(),
           )
@@ -111,14 +116,14 @@ fun DrawerDemo() {
             modifier = Modifier
               .width(288.dp)
               .fillMaxHeight()
-              .background(Color.White)
-              .border(1.dp, Color.Black)
+              .background(Theme[demoColors][demoSurface])
+              .border(1.dp, Theme[demoColors][demoContent])
               .padding(24.dp),
           ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
               DragHandle {
                 Box(
-                  modifier = Modifier.width(32.dp).border(1.dp, Color.Black),
+                  modifier = Modifier.width(32.dp).border(1.dp, Theme[demoColors][demoContent]),
                 )
               }
               BasicText("Navigation")
@@ -127,7 +132,9 @@ fun DrawerDemo() {
               UnstyledButton(
                 onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
                 contentPadding = PaddingValues(12.dp),
-                modifier = Modifier.background(Color.White).border(1.dp, Color.Black),
+                modifier = Modifier.background(
+                  Theme[demoColors][demoSurface],
+                ).border(1.dp, Theme[demoColors][demoContent]),
                 indication = LocalIndication.current,
               ) {
                 BasicText("Close")

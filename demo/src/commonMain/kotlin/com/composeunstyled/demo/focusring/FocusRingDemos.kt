@@ -22,18 +22,23 @@
 package com.composeunstyled.demo.focusring
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.FocusRingVisibility
 import com.composeunstyled.FocusVisibilityProvider
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoFocus
 import com.composeunstyled.focusRing
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("focus-ring-focus-visible", name = "Focus Ring (FocusVisible)")
@@ -57,15 +62,20 @@ fun FocusRingFocusedDemo() {
 private fun FocusRingVariant(visibility: FocusRingVisibility) {
   val interactionSource = remember { MutableInteractionSource() }
 
-  SimpleButton(
-    modifier = Modifier.focusRing(
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
+  ) {
+    SimpleButton(
+      modifier = Modifier.focusRing(
+        interactionSource = interactionSource,
+        width = 2.dp,
+        color = Theme[demoColors][demoFocus],
+        shape = RoundedCornerShape(8.dp),
+        offset = 2.dp,
+        visibility = visibility,
+      ),
       interactionSource = interactionSource,
-      width = 2.dp,
-      color = Color(0xFF3B82F6),
-      shape = RoundedCornerShape(8.dp),
-      offset = 2.dp,
-      visibility = visibility,
-    ),
-    interactionSource = interactionSource,
-  )
+    )
+  }
 }

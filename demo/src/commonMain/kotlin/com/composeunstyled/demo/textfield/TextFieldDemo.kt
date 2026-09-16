@@ -36,7 +36,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +45,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("textfield")
@@ -74,9 +78,9 @@ fun TextFieldDemo() {
           state = displayName,
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
-          cursorBrush = SolidColor(Color.Black),
+          cursorBrush = SolidColor(Theme[demoColors][demoContent]),
           textStyle = LocalTextStyle.current.copy(
-            color = Color.Black,
+            color = Theme[demoColors][demoContent],
             fontSize = 14.sp,
             lineHeight = 20.sp,
           ),
@@ -85,20 +89,20 @@ fun TextFieldDemo() {
             Text(
               "Display Name",
               modifier = Modifier.padding(bottom = 8.dp),
-              color = Color.Black,
+              color = Theme[demoColors][demoContent],
               fontSize = 16.sp,
               lineHeight = 24.sp,
             )
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFF8FAFC), fieldShape)
-                .border(1.dp, Color(0xFFCACACA), fieldShape)
+                .background(Theme[demoColors][demoSurface], fieldShape)
+                .border(1.dp, Theme[demoColors][demoOutline], fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(
                   "Alex",
-                  color = Color.Black.copy(0.6f),
+                  color = Theme[demoColors][demoContent].copy(0.6f),
                   fontSize = 14.sp,
                   lineHeight = 20.sp,
                 )

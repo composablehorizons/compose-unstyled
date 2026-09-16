@@ -64,7 +64,12 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.focusRing
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("tooltip")
@@ -98,14 +103,18 @@ fun TooltipDemo() {
           onClick = { },
           modifier = Modifier
             .clip(CircleShape)
-            .background(Color(0xFFF8FAFC))
-            .border(1.dp, Color(0xFFCACACA), CircleShape)
-            .focusRing(interactionSource, 1.dp, Color.Black, CircleShape),
+            .background(Theme[demoColors][demoSurface])
+            .border(1.dp, Theme[demoColors][demoOutline], CircleShape)
+            .focusRing(interactionSource, 1.dp, Theme[demoColors][demoContent], CircleShape),
           interactionSource = interactionSource,
           indication = LocalIndication.current,
         ) {
           Box(Modifier.padding(8.dp)) {
-            UnstyledIcon(Lucide.BellDot, contentDescription = null)
+            UnstyledIcon(
+              imageVector = Lucide.BellDot,
+              contentDescription = null,
+              tint = Theme[demoColors][demoContent],
+            )
           }
         }
       }
@@ -143,11 +152,11 @@ private fun TooltipContainer() {
   Box(
     modifier = Modifier
       .clip(RoundedCornerShape(100))
-      .background(Color(0xFFF8FAFC))
-      .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(100))
+      .background(Theme[demoColors][demoSurface])
+      .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(100))
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
-    Text("Notifications", color = Color.Black)
+    Text("Notifications", color = Theme[demoColors][demoContent])
   }
 }
 
@@ -170,7 +179,7 @@ private fun TooltipArrow(placement: TooltipPlacement) {
     AnchorSide.End -> 90f
   }
 
-  ArrowUp(modifier.rotate(degrees), Color(0xFFCACACA))
+  ArrowUp(modifier.rotate(degrees), Theme[demoColors][demoOutline])
 }
 
 @Composable

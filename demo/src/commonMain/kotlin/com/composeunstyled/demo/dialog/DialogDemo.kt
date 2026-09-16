@@ -31,16 +31,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,8 +59,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.demo.UnstyledDemo
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
+import com.composeunstyled.demo.demoColors
+import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.demoOutline
+import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.theme.Theme
 
 @Preview
 @UnstyledDemo("dialog")
@@ -68,68 +71,84 @@ import kotlin.time.Duration.Companion.seconds
 fun DialogDemo() {
   var dialogVisible by remember { mutableStateOf(true) }
 
-  LaunchedEffect(dialogVisible) {
-    if (dialogVisible.not()) {
-      delay(1.seconds)
-      dialogVisible = true
-    }
-  }
-
-  UnstyledDialog(
-    visible = dialogVisible,
-    onDismissRequest = { dialogVisible = false },
-    overlay = {
-      Scrim(scrimColor = Color.Black.copy(0.3f), enter = fadeIn(), exit = fadeOut())
-    },
+  Box(
+    modifier = Modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center,
   ) {
-    Box(
-      modifier = Modifier.fillMaxSize(),
-      contentAlignment = Alignment.Center,
+    UnstyledButton(
+      onClick = { dialogVisible = true },
+      modifier = Modifier
+        .clip(RoundedCornerShape(10.dp))
+        .heightIn(32.dp)
+        .background(Theme[demoColors][demoSurface])
+        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(10.dp)),
+      contentPadding = PaddingValues(horizontal = 10.dp),
+      indication = LocalIndication.current,
     ) {
-      DialogPanel(
+      Text("Show dialog")
+    }
+
+    UnstyledDialog(
+      visible = dialogVisible,
+      onDismissRequest = { dialogVisible = false },
+      overlay = {
+        Scrim(
+          scrimColor = Theme[demoColors][demoContent].copy(0.3f),
+          enter = fadeIn(),
+          exit = fadeOut(),
+        )
+      },
+    ) {
+      Box(
         modifier = Modifier
-          .padding(20.dp)
-          .displayCutoutPadding()
-          .systemBarsPadding()
-          .widthIn(max = 560.dp)
-          .padding(20.dp)
-          .clip(RoundedCornerShape(12.dp))
-          .background(Color(0xFFF8FAFC))
-          .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(12.dp)),
-        paneTitle = "Dialog",
-        enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
-        exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+          .fillMaxSize(),
+        contentAlignment = Alignment.Center,
       ) {
-        Column {
-          Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
-            Text(
-              text = "Update Available",
-              color = Color(0xFF1A1A1A),
-              fontSize = 16.sp,
-              lineHeight = 24.sp,
-              fontWeight = FontWeight.Medium,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-              text = "A new version of the app is available. " +
-                "Please update to the latest version.",
-              color = Color(0xFF1A1A1A),
-            )
-          }
-          Spacer(Modifier.height(24.dp))
-          UnstyledButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier
-              .padding(12.dp)
-              .align(Alignment.End)
-              .clip(RoundedCornerShape(6.dp)),
-            indication = LocalIndication.current,
-          ) {
-            Text(
-              "Update",
-              modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-              color = Color.Black,
-            )
+        DialogPanel(
+          modifier = Modifier
+            .padding(20.dp)
+            .displayCutoutPadding()
+            .systemBarsPadding()
+            .widthIn(max = 560.dp)
+            .padding(20.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Theme[demoColors][demoSurface])
+            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(12.dp)),
+          paneTitle = "Dialog",
+          enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
+          exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
+        ) {
+          Column {
+            Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
+              Text(
+                text = "Update Available",
+                color = Theme[demoColors][demoContent],
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                fontWeight = FontWeight.Medium,
+              )
+              Spacer(Modifier.height(8.dp))
+              Text(
+                text = "A new version of the app is available. " +
+                  "Please update to the latest version.",
+                color = Theme[demoColors][demoContent],
+              )
+            }
+            Spacer(Modifier.height(24.dp))
+            UnstyledButton(
+              onClick = { dialogVisible = false },
+              modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.End)
+                .clip(RoundedCornerShape(6.dp)),
+              indication = LocalIndication.current,
+            ) {
+              Text(
+                "Update",
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                color = Theme[demoColors][demoContent],
+              )
+            }
           }
         }
       }
