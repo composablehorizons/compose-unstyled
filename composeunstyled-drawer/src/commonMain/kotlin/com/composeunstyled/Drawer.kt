@@ -544,9 +544,9 @@ fun <T : Any> DrawerScope.Viewport(
       )
       .then(
         buildModifier {
-          if (presentation != DrawerPresentation.Inline && isInOverlayContent) {
+          if (presentation == DrawerPresentation.Modal && isInOverlayContent) {
             add(
-              Modifier.consumeOverlayOutsideTap(
+              Modifier.consumeModalOutsideTap(
                 panelBounds = panelBounds,
                 onOutsideTap = if (context.dismissOnClickOutside && zeroValue != null) {
                   {
@@ -566,7 +566,7 @@ fun <T : Any> DrawerScope.Viewport(
       .then(
         buildModifier {
           if (
-            presentation != DrawerPresentation.Inline &&
+            presentation == DrawerPresentation.Modal &&
             visible &&
             gesturesEnabled &&
             drawerState.hasMultipleValues()
@@ -586,7 +586,7 @@ fun <T : Any> DrawerScope.Viewport(
       ),
     content = {
       CompositionLocalProvider(LocalDrawerContext provides context) {
-        if (presentation != DrawerPresentation.Inline && visible) {
+        if (presentation == DrawerPresentation.Modal && visible) {
           Box(
             Modifier
               .drawerOverlayBarrierParentData()

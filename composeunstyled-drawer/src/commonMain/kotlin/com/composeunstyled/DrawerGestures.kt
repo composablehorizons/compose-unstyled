@@ -135,7 +135,7 @@ internal class DrawerPanelBounds {
   }
 }
 
-internal fun Modifier.consumeOverlayOutsideTap(
+internal fun Modifier.consumeModalOutsideTap(
   panelBounds: DrawerPanelBounds,
   onOutsideTap: (() -> Unit)?,
 ): Modifier {
