@@ -28,18 +28,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.DragHandle
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
 import com.composeunstyled.Panel
@@ -54,66 +52,79 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerCustomSnapPointDemoValue {
   Closed,
+  Half,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-custom-snap-point")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerCustomSnapPointDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerCustomSnapPointDemoValue.Half,
+      snapPoints = DrawerSnapPoints {
+        DrawerCustomSnapPointDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerCustomSnapPointDemoValue.Half at DrawerSnapPoint { viewportSize, _ ->
+          viewportSize * 0.5f
+        }
+        DrawerCustomSnapPointDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
 
   Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
-    UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
-      contentPadding = PaddingValues(12.dp),
-      modifier = Modifier
-        .align(Alignment.Center)
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoContent]),
-      indication = LocalIndication.current,
+    Column(
+      modifier = Modifier.align(Alignment.Center),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-      Text("Open drawer")
+      Text("The half state uses half of the viewport height.")
+      UnstyledButton(
+        onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Half },
+        contentPadding = PaddingValues(12.dp),
+        modifier = Modifier
+          .background(Theme[demoColors][demoSurface])
+          .border(1.dp, Theme[demoColors][demoContent]),
+        indication = LocalIndication.current,
+      ) {
+        Text("Show half")
+      }
     }
 
-    UnstyledDrawer(state = drawerState) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+    ) {
       Viewport(Modifier.fillMaxSize()) {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .background(Theme[demoColors][demoSurface])
             .border(1.dp, Theme[demoColors][demoContent])
-            .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
+            .padding(24.dp),
         ) {
           Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
           ) {
-            DragHandle {
-              Box(
-                Modifier
-                  .width(32.dp)
-                  .height(4.dp)
-                  .background(Theme[demoColors][demoContent]),
-              )
-            }
             Text("Here is the content of the drawer.")
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Open },
+              contentPadding = PaddingValues(12.dp),
+              modifier = Modifier
+                .background(Theme[demoColors][demoSurface])
+                .border(1.dp, Theme[demoColors][demoContent]),
+              indication = LocalIndication.current,
+            ) {
+              Text("Open fully")
+            }
+            UnstyledButton(
+              onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])
