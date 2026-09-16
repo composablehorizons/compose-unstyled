@@ -219,7 +219,7 @@ fun <T : Any> UnstyledDrawer(
       }
     }
 
-    DrawerPresentation.Inline -> {
+    DrawerPresentation.InPlace -> {
       LaunchedEffect(state, state.pendingTarget) {
         val target = state.pendingTarget ?: return@LaunchedEffect
         state.settlePendingTarget(target)
@@ -251,7 +251,14 @@ value class DrawerPresentation internal constructor(private val value: Int) {
   companion object {
     val Modal = DrawerPresentation(0)
     val Overlay = DrawerPresentation(1)
-    val Inline = DrawerPresentation(2)
+    val InPlace = DrawerPresentation(2)
+
+    @Deprecated(
+      message = "Renamed to InPlace. Inline drawers render in place, within their Viewport.",
+      replaceWith = ReplaceWith("InPlace"),
+    )
+    val Inline: DrawerPresentation
+      get() = InPlace
   }
 }
 

@@ -152,7 +152,7 @@ class DrawerAndroidTest {
   @Test
   @SdkSuppress(minSdkVersion = Build.VERSION_CODES.Q)
   fun inlineSwipeAreaDoesNotExcludeSystemGestures() = assertInactiveSwipeArea(
-    DrawerPresentation.Inline,
+    DrawerPresentation.InPlace,
   )
 
   private fun assertInactiveSwipeArea(presentation: DrawerPresentation) = runComposeUiTest {
@@ -437,7 +437,7 @@ class DrawerAndroidTest {
         UnstyledDrawer(
           state = imeState,
           modifier = Modifier.fillMaxSize(),
-          presentation = DrawerPresentation.Inline,
+          presentation = DrawerPresentation.InPlace,
         ) {
           Viewport(Modifier.fillMaxSize(), windowInsets = imeInsets) {
             Panel(Modifier.fillMaxWidth().height(24.dp)) {}
@@ -446,7 +446,7 @@ class DrawerAndroidTest {
         UnstyledDrawer(
           state = zeroState,
           modifier = Modifier.fillMaxSize(),
-          presentation = DrawerPresentation.Inline,
+          presentation = DrawerPresentation.InPlace,
         ) {
           Viewport(Modifier.fillMaxSize(), windowInsets = WindowInsets()) {
             Panel(Modifier.fillMaxWidth().height(24.dp)) {}
@@ -564,7 +564,7 @@ class DrawerAndroidTest {
       EscapeHandler { hostBackCount += 1 }
       DrawerLayout(
         initialValue = AndroidDrawerValue.Closed,
-        presentation = DrawerPresentation.Inline,
+        presentation = DrawerPresentation.InPlace,
         onState = { state = it },
       )
     }
