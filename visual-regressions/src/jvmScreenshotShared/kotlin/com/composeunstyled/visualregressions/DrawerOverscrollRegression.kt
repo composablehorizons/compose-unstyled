@@ -89,7 +89,7 @@ internal fun DrawerOverscrollRegression(
     state = drawerState,
     modifier = Modifier.fillMaxSize(),
     placement = DrawerPlacement.Bottom,
-    presentation = DrawerPresentation.Inline,
+    presentation = DrawerPresentation.InPlace,
   ) {
     Viewport(
       modifier = Modifier.fillMaxSize(),
