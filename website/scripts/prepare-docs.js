@@ -33,6 +33,9 @@ await rm(path.join(publicDir, 'docs'), { recursive: true, force: true });
 await mkdir(path.join(publicDir, 'docs'), { recursive: true });
 
 const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+const withoutDemoMetadata = source => source
+  .replace(/^import com\.composeunstyled\.demo\.UnstyledDemo\s*\n/m, '')
+  .replace(/^@UnstyledDemo\([\s\S]*?\)\s*\n/m, '');
 const primitives = navigation.sections.find(section => section.title === 'Primitives').pages;
 const componentLinks = primitives.map(page => `[${page.title}](/docs/${page.slug}/)`).join('\n\n');
 const componentList = `<ul>${primitives.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
@@ -63,8 +66,9 @@ for (const section of navigation.sections) {
       const file = path.basename(sourcePath);
       const source = (await read(sourcePath))
         .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
-        .replace(/^\s*package\s+[A-Za-z0-9_.]+\s*\n+/, '').trim();
-      const code = `\n\n\`\`\`kotlin expandable title="${file}" githubUrl="https://github.com/composablehorizons/compose-unstyled/blob/main/${sourcePath}"\n${source}\n\`\`\`\n\n`;
+        .replace(/^\s*package\s+[A-Za-z0-9_.]+\s*\n+/, '');
+      const codeSource = withoutDemoMetadata(source).trim();
+      const code = `\n\n\`\`\`kotlin expandable title="${file}" githubUrl="https://github.com/composablehorizons/compose-unstyled/blob/main/${sourcePath}"\n${codeSource}\n\`\`\`\n\n`;
       htmlBody = htmlBody.replace(marker[0], renderDemo({
         id, title: page.title, code, revision: demoRevision,
       }));
