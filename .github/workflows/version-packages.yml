@@ -95,15 +95,31 @@ jobs:
           )"
 
           if [ -n "$existing_pr" ]; then
+            pr_number="$existing_pr"
             gh pr edit "$existing_pr" \
               --title "Release Compose Unstyled" \
               --body-file "$body_file"
           else
-            gh pr create \
+            pr_url="$(gh pr create \
               --base main \
               --head "$version_branch" \
               --title "Release Compose Unstyled" \
-              --body-file "$body_file"
+              --body-file "$body_file")"
+            pr_number="${pr_url##*/}"
+          fi
+
+          # CODEOWNERS automatically requests reviews on every new pull request.
+          # Release PRs are automated, so clear those requests after creating or
+          # updating the PR to avoid sending unnecessary reviewer notifications.
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number/requested_reviewers" \
+            --jq '{reviewers: [.users[].login], team_reviewers: [.teams[].slug]}' \
+            > "$RUNNER_TEMP/requested-reviewers.json"
+          if jq -e '(.reviewers | length) > 0 or (.team_reviewers | length) > 0' \
+            "$RUNNER_TEMP/requested-reviewers.json" >/dev/null; then
+            gh api \
+              --method DELETE \
+              "repos/$GITHUB_REPOSITORY/pulls/$pr_number/requested_reviewers" \
+              --input "$RUNNER_TEMP/requested-reviewers.json"
           fi
 
       - name: Create release tag and start release
