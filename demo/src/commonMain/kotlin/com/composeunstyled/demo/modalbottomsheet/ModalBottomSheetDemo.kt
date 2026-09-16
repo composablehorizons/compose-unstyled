@@ -64,7 +64,7 @@ import com.composeunstyled.rememberModalBottomSheetState
 import com.composeunstyled.theme.Theme
 
 @Preview
-@UnstyledDemo("modal-bottom-sheet")
+@UnstyledDemo("modal-bottom-sheet", name = "Bottom Sheet (Modal)")
 @Composable
 fun ModalBottomSheetDemo() {
   val sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
