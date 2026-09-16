@@ -59,7 +59,7 @@ const buildDemo = () => {
   console.log('Building development demo…');
   demoBuild = spawn(
     './gradlew',
-    [':demo:wasmJsBrowserDevelopmentExecutableDistribution', '--console=plain', '--configuration-cache'],
+    [':demo:wasmJsBrowserDevelopmentExecutableDistribution', '--console=plain', '--warn', '--configuration-cache'],
     { cwd: root, stdio: 'inherit' },
   );
   demoBuild.on('close', (code) => {
