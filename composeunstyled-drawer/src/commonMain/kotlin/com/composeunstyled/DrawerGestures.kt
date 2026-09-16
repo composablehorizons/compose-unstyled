@@ -40,7 +40,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
@@ -57,9 +56,6 @@ internal fun <T : Any> Modifier.closedEdgeSwipe(
   return pointerInput(drawerState, resolvedPlacement, gesturesEnabled) {
     awaitEachGesture {
       val down = awaitFirstDown(requireUnconsumed = false)
-      if (down.type == PointerType.Mouse) {
-        return@awaitEachGesture
-      }
       val zeroValue = drawerState.zeroValue
       if (
         gesturesEnabled.not() ||
