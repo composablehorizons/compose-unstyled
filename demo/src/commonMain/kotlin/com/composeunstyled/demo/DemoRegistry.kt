@@ -22,26 +22,9 @@
 package com.composeunstyled.demo
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-
-enum class DemoContentAlignment {
-  Center,
-  TopCenter,
-}
-
-internal data class DemoPresentation(
-  val contentAlignment: DemoContentAlignment = DemoContentAlignment.Center,
-) {
-  val alignment: Alignment
-    get() = when (contentAlignment) {
-      DemoContentAlignment.Center -> Alignment.Center
-      DemoContentAlignment.TopCenter -> Alignment.TopCenter
-    }
-}
 
 internal data class DemoItem(
   val name: String,
   val id: String,
   val demo: @Composable () -> Unit,
-  val presentation: DemoPresentation = DemoPresentation(),
 )

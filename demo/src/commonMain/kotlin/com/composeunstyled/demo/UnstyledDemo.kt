@@ -26,5 +26,4 @@ package com.composeunstyled.demo
 annotation class UnstyledDemo(
   val id: String,
   val name: String = "",
-  val contentAlignment: DemoContentAlignment = DemoContentAlignment.Center,
 )
