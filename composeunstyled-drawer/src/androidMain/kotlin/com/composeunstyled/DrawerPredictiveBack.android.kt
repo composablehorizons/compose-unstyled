@@ -41,7 +41,7 @@ internal actual fun <T : Any> RegisterDrawerPredictiveBack(
   val dispatcher = when (presentation) {
     DrawerPresentation.Modal -> LocalModalWindow.current.onBackInvokedDispatcher
     DrawerPresentation.Overlay,
-    DrawerPresentation.Inline,
+    DrawerPresentation.InPlace,
     -> view.context.findActivity()?.window?.onBackInvokedDispatcher
     else -> null
   } ?: return
