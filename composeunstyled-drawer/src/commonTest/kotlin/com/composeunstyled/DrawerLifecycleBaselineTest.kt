@@ -48,35 +48,35 @@ import kotlin.test.Test
 class DrawerLifecycleBaselineTest {
   @Test
   fun inlineBottomLtrBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Bottom, LayoutDirection.Ltr)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Bottom, LayoutDirection.Ltr)
 
   @Test
   fun inlineBottomRtlBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Bottom, LayoutDirection.Rtl)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Bottom, LayoutDirection.Rtl)
 
   @Test
   fun inlineTopLtrBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Top, LayoutDirection.Ltr)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Top, LayoutDirection.Ltr)
 
   @Test
   fun inlineTopRtlBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Top, LayoutDirection.Rtl)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Top, LayoutDirection.Rtl)
 
   @Test
   fun inlineStartLtrBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Start, LayoutDirection.Ltr)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Start, LayoutDirection.Ltr)
 
   @Test
   fun inlineStartRtlBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.Start, LayoutDirection.Rtl)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.Start, LayoutDirection.Rtl)
 
   @Test
   fun inlineEndLtrBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.End, LayoutDirection.Ltr)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.End, LayoutDirection.Ltr)
 
   @Test
   fun inlineEndRtlBaseline() =
-    lifecycleBaseline(DrawerPresentation.Inline, DrawerPlacement.End, LayoutDirection.Rtl)
+    lifecycleBaseline(DrawerPresentation.InPlace, DrawerPlacement.End, LayoutDirection.Rtl)
 
   @Test
   fun overlayBottomLtrBaseline() =
@@ -342,7 +342,7 @@ private fun Baseline.assertMatches(
   presentation: DrawerPresentation,
   placement: DrawerPlacement,
 ) {
-  val inline = presentation == DrawerPresentation.Inline
+  val inline = presentation == DrawerPresentation.InPlace
   val portal = presentation == DrawerPresentation.Overlay
   val horizontal = placement == DrawerPlacement.Start || placement == DrawerPlacement.End
   // Bounds were observed on JVM and Android. Native-window layout can coalesce a direction
@@ -381,7 +381,7 @@ private fun Baseline.assertMatches(
     "drag settle" -> Budget(0..0, 0..0, 0..0, 6..6, 5..5)
     "back cancel" -> Budget(0..0, 0..0, 0..0, 5..5, 5..5)
     "back commit" -> when (presentation) {
-      DrawerPresentation.Inline -> Budget(0..0, 0..0, 0..0, 2..2, 2..2)
+      DrawerPresentation.InPlace -> Budget(0..0, 0..0, 0..0, 2..2, 2..2)
       DrawerPresentation.Overlay -> Budget(1..1, 0..0, 0..0, 3..3, 2..2)
       else -> Budget(1..1, if (horizontal) 0..1 else 0..0, 0..0, 3..4, 2..2)
     }
@@ -393,7 +393,7 @@ private fun Baseline.assertMatches(
       overlayCompositions = 1..1,
     )
     "close" -> when (presentation) {
-      DrawerPresentation.Inline -> Budget(0..0, 0..0, 0..0, 5..6, 5..5)
+      DrawerPresentation.InPlace -> Budget(0..0, 0..0, 0..0, 5..6, 5..5)
       else -> Budget(1..1, 0..0, 0..0, 6..7, 5..5)
     }
     "reopen" -> Budget(
