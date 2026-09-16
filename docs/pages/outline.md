@@ -5,7 +5,9 @@ description: A modifier that draws an outline outside a composable's bounds, sim
 
 Unlike Compose's built-in `border` modifier, `outline` does not affect layout or size - it draws purely outside the composable's bounds.
 
-<ApiReference id="outline" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.Modifier.outline" />
 
 ## Installation
 

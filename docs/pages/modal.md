@@ -79,4 +79,9 @@ Modal(
 }
 ```
 
-<ApiReference id="modal" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.ModalState" />
+<ApiReference declaration="com.composeunstyled.rememberModalState" />
+<ApiReference declaration="com.composeunstyled.Modal" />
+<ApiReference declaration="com.composeunstyled.ModalScope.Scrim" />

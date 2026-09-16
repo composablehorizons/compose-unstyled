@@ -37,4 +37,7 @@ UnstyledHorizontalSeparator(
 )
 ```
 
-<ApiReference id="separators" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledHorizontalSeparator" />
+<ApiReference declaration="com.composeunstyled.UnstyledVerticalSeparator" />

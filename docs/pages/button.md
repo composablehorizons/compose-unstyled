@@ -41,4 +41,6 @@ UnstyledButton(
 }
 ```
 
-<ApiReference id="button" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledButton" />

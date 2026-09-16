@@ -99,4 +99,16 @@ ProvideWindowHeightBreakpoints(heightBreakpoints) {
 }
 ```
 
-<ApiReference id="breakpoints" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.WidthBreakpoint" />
+<ApiReference declaration="com.composeunstyled.HeightBreakpoint" />
+<ApiReference declaration="com.composeunstyled.WindowWidthBreakpoints" />
+<ApiReference declaration="com.composeunstyled.WindowHeightBreakpoints" />
+<ApiReference declaration="com.composeunstyled.ResolvedWidthBreakpoint" />
+<ApiReference declaration="com.composeunstyled.ResolvedHeightBreakpoint" />
+<ApiReference declaration="com.composeunstyled.ProvideWindowBreakpoints" />
+<ApiReference declaration="com.composeunstyled.ProvideWindowWidthBreakpoints" />
+<ApiReference declaration="com.composeunstyled.ProvideWindowHeightBreakpoints" />
+<ApiReference declaration="com.composeunstyled.currentWindowWidthBreakpoint" />
+<ApiReference declaration="com.composeunstyled.currentWindowHeightBreakpoint" />

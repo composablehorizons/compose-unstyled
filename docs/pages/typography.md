@@ -69,4 +69,6 @@ Text(
 )
 ```
 
-<ApiReference id="typography" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.Text" />

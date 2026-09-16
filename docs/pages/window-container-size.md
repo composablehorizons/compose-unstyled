@@ -3,8 +3,6 @@ title: Window Container Size
 description: A Composable function that returns the current window size and automatically triggers recomposition when the window is resized, enabling responsive layouts.
 ---
 
-<ApiReference id="window-container-size" />
-
 ## Installation
 
 ```kotlin

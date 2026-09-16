@@ -116,4 +116,7 @@ UnstyledSlider(
 )
 ```
 
-<ApiReference id="slider" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.SliderState" />
+<ApiReference declaration="com.composeunstyled.UnstyledSlider" />

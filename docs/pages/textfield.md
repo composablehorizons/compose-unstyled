@@ -123,4 +123,7 @@ UnstyledTextField(
 }
 ```
 
-<ApiReference id="textfield" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledTextField" />
+<ApiReference declaration="com.composeunstyled.TextFieldScope.TextInput" />

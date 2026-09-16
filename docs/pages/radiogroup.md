@@ -93,4 +93,8 @@ RadioButton("large") {
 }
 ```
 
-<ApiReference id="radiogroup" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledRadioGroup" />
+<ApiReference declaration="com.composeunstyled.RadioGroupScope.RadioButton" />
+<ApiReference declaration="com.composeunstyled.RadioButtonScope.SelectedIndicator" />

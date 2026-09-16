@@ -126,4 +126,9 @@ UnstyledVerticalScrollbar(
 }
 ```
 
-<ApiReference id="scrollbars" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.rememberScrollbarState" />
+<ApiReference declaration="com.composeunstyled.UnstyledVerticalScrollbar" />
+<ApiReference declaration="com.composeunstyled.UnstyledHorizontalScrollbar" />
+<ApiReference declaration="com.composeunstyled.ScrollbarScope.Thumb" />

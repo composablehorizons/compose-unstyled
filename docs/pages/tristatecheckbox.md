@@ -77,4 +77,8 @@ UnstyledTriStateCheckbox(
 }
 ```
 
-<ApiReference id="tristatecheckbox" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledTriStateCheckbox" />
+<ApiReference declaration="com.composeunstyled.TriStateCheckboxScope" />
+<ApiReference declaration="com.composeunstyled.TriStateCheckboxScope.StateIndicator" />

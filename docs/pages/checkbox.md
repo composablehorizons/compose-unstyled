@@ -109,4 +109,7 @@ UnstyledCheckbox(
 }
 ```
 
-<ApiReference id="checkbox" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.UnstyledCheckbox" />
+<ApiReference declaration="com.composeunstyled.CheckboxScope.CheckedIndicator" />

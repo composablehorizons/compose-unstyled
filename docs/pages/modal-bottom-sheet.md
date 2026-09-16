@@ -229,4 +229,11 @@ val sheetState = rememberModalBottomSheetState(
 )
 ```
 
-<ApiReference id="modal-bottom-sheet" />
+## API Reference
+
+<ApiReference declaration="com.composeunstyled.rememberModalBottomSheetState" />
+<ApiReference declaration="com.composeunstyled.ModalBottomSheetState" />
+<ApiReference declaration="com.composeunstyled.UnstyledModalBottomSheet" />
+<ApiReference declaration="com.composeunstyled.ModalBottomSheetOverlayScope.Scrim" />
+<ApiReference declaration="com.composeunstyled.ModalBottomSheetScope.Sheet" />
+<ApiReference declaration="com.composeunstyled.ModalBottomSheetScope.DragIndication" />
