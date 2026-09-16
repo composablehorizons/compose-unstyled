@@ -80,7 +80,6 @@ kotlin {
       dependencies {
         api(projects.composeunstyledAnchoredApi)
         implementation(libs.compose.foundation)
-        implementation(projects.composeunstyledWindowContainerSize)
       }
     }
 
