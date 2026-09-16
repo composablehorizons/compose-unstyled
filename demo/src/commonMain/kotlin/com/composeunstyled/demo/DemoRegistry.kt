@@ -21,49 +21,27 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
-
-enum class DemoSection(val title: String) {
-  Components("Components"),
-  Theme("Theme"),
-  Modifiers("Modifiers"),
-  Utilities("Utilities"),
-}
 
 enum class DemoContentAlignment {
   Center,
   TopCenter,
 }
 
-enum class DemoPadding {
-  Default,
-  None,
-}
-
 internal data class DemoPresentation(
   val contentAlignment: DemoContentAlignment = DemoContentAlignment.Center,
-  val padding: DemoPadding = DemoPadding.Default,
 ) {
   val alignment: Alignment
     get() = when (contentAlignment) {
       DemoContentAlignment.Center -> Alignment.Center
       DemoContentAlignment.TopCenter -> Alignment.TopCenter
     }
-
-  val paddingValues: PaddingValues
-    get() = when (padding) {
-      DemoPadding.Default -> PaddingValues(16.dp)
-      DemoPadding.None -> PaddingValues(0.dp)
-    }
 }
 
 internal data class DemoItem(
   val name: String,
   val id: String,
-  val section: DemoSection,
   val demo: @Composable () -> Unit,
   val presentation: DemoPresentation = DemoPresentation(),
 )

@@ -31,17 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.FocusRingVisibility
 import com.composeunstyled.FocusVisibilityProvider
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.focusRing
 
 @Preview
-@UnstyledDemo(
-  "focus-ring-focus-visible",
-  name = "Focus Ring (FocusVisible)",
-  section = DemoSection.Modifiers,
-)
+@UnstyledDemo("focus-ring-focus-visible", name = "Focus Ring (FocusVisible)")
 @Composable
 fun FocusRingFocusVisibleDemo() {
   FocusVisibilityProvider {
@@ -50,7 +45,7 @@ fun FocusRingFocusVisibleDemo() {
 }
 
 @Preview
-@UnstyledDemo("focus-ring-focused", name = "Focus Ring (Focused)", section = DemoSection.Modifiers)
+@UnstyledDemo("focus-ring-focused", name = "Focus Ring (Focused)")
 @Composable
 fun FocusRingFocusedDemo() {
   FocusVisibilityProvider {

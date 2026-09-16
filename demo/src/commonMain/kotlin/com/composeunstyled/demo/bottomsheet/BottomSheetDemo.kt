@@ -44,12 +44,11 @@ import com.composeunstyled.Sheet
 import com.composeunstyled.SheetDetent
 import com.composeunstyled.SheetDetent.Companion.FullyExpanded
 import com.composeunstyled.UnstyledBottomSheet
-import com.composeunstyled.demo.DemoPadding
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.rememberBottomSheetState
 
 @Preview
-@UnstyledDemo("bottom-sheet", padding = DemoPadding.None)
+@UnstyledDemo("bottom-sheet")
 @Composable
 fun BottomSheetDemo() {
   val Peek = SheetDetent("peek") { containerHeight, _ ->

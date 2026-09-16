@@ -50,7 +50,6 @@ import com.composeunstyled.WidthBreakpoint
 import com.composeunstyled.WindowWidthBreakpoints
 import com.composeunstyled.buildModifier
 import com.composeunstyled.currentWindowWidthBreakpoint
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 
 private val Compact = WidthBreakpoint("compact")
@@ -64,7 +63,7 @@ private val DemoWidthBreakpoints = WindowWidthBreakpoints {
 }
 
 @Preview
-@UnstyledDemo("breakpoints", section = DemoSection.Utilities)
+@UnstyledDemo("breakpoints")
 @Composable
 fun BreakpointsDemo() {
   ProvideWindowWidthBreakpoints(DemoWidthBreakpoints) {

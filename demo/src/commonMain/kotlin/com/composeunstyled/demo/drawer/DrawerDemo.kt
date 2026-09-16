@@ -55,7 +55,6 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
-import com.composeunstyled.demo.DemoPadding
 import com.composeunstyled.demo.UnstyledDemo
 
 private enum class DrawerDemoValue {
@@ -64,7 +63,7 @@ private enum class DrawerDemoValue {
 }
 
 @Preview
-@UnstyledDemo("drawer", padding = DemoPadding.None)
+@UnstyledDemo("drawer")
 @Composable
 fun DrawerDemo() {
   val snapPoints = remember {

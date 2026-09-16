@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
@@ -84,7 +83,7 @@ private val AppTheme = buildTheme {
 }
 
 @Preview
-@UnstyledDemo("theme", section = DemoSection.Theme)
+@UnstyledDemo("theme")
 @Composable
 fun ThemingDemo() {
   AppTheme {

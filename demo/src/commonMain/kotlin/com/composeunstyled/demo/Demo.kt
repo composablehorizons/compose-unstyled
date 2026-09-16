@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
@@ -49,10 +48,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -60,10 +57,6 @@ import androidx.navigation.compose.rememberNavController
 import com.composables.compose.ripple.rememberRippleIndication
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
-import com.composeunstyled.CrossAxisAlignment
-import com.composeunstyled.MainAxisArrangement
-import com.composeunstyled.Stack
-import com.composeunstyled.StackOrientation
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
@@ -83,22 +76,6 @@ fun Demo(startDestination: String = "home") {
         DemoSelection(startDestination)
       }
     }
-  }
-}
-
-@Composable
-fun ModifierDemo(content: @Composable () -> Unit) {
-  val size = LocalWindowInfo.current.containerDpSize
-  val isWide = size.width > 600.dp
-  val spacedBy = if (isWide) 60.dp else 30.dp
-  Stack(
-    modifier = Modifier.fillMaxSize().background(Color.White),
-    orientation = if (isWide) StackOrientation.Horizontal else StackOrientation.Vertical,
-    mainAxisArrangement = MainAxisArrangement.Center,
-    crossAxisAlignment = CrossAxisAlignment.Center,
-    spacing = spacedBy,
-  ) {
-    content()
   }
 }
 
@@ -139,13 +116,12 @@ private fun DemoSelection(startDestination: String) {
             .fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-          DemoSection.entries.forEachIndexed { index, section ->
-            val demos = generatedDemos.filter { it.section == section }
-            if (demos.isNotEmpty()) {
-              if (index > 0) Spacer(Modifier.height(24.dp))
-              DemoSectionList(section.title, demos) { demo ->
-                navController.navigate(demo.id)
-              }
+          generatedDemos.forEach { demo ->
+            DemoListButton(
+              onClick = { navController.navigate(demo.id) },
+              modifier = Modifier.fillMaxWidth(),
+            ) {
+              Text(demo.name, color = Color.White)
             }
           }
         }
@@ -161,11 +137,7 @@ private fun DemoSelection(startDestination: String) {
           }
           Box(Modifier.weight(1f)) {
             DemoContainer(component.presentation) {
-              if (component.section == DemoSection.Modifiers) {
-                ModifierDemo(component.demo)
-              } else {
-                component.demo()
-              }
+              component.demo()
             }
           }
         }
@@ -182,33 +154,10 @@ private fun DemoContainer(
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Color.White)
-      .padding(presentation.paddingValues),
+      .background(Color.White),
     contentAlignment = presentation.alignment,
   ) {
     content()
-  }
-}
-
-@Composable
-private fun DemoSectionList(
-  title: String,
-  demos: List<DemoItem>,
-  onClick: (DemoItem) -> Unit,
-) {
-  Text(
-    text = title,
-    modifier = Modifier.padding(horizontal = 16.dp),
-    color = Color.White,
-    fontWeight = FontWeight.SemiBold,
-  )
-  demos.forEach { demo ->
-    DemoListButton(
-      onClick = { onClick(demo) },
-      modifier = Modifier.fillMaxWidth(),
-    ) {
-      Text(demo.name, color = Color.White)
-    }
   }
 }
 

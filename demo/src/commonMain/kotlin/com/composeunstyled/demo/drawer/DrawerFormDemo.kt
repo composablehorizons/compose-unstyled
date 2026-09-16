@@ -72,7 +72,6 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.Viewport
-import com.composeunstyled.demo.DemoPadding
 import com.composeunstyled.demo.UnstyledDemo
 
 private enum class DrawerFormDemoValue {
@@ -81,7 +80,7 @@ private enum class DrawerFormDemoValue {
 }
 
 @Preview
-@UnstyledDemo("drawer-form", padding = DemoPadding.None)
+@UnstyledDemo("drawer-form")
 @Composable
 fun DrawerFormDemo() {
   val snapPoints = remember {

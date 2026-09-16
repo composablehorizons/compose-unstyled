@@ -33,13 +33,12 @@ import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
-import com.composeunstyled.demo.DemoSection
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.outline
 
 @Preview
-@UnstyledDemo("outline", section = DemoSection.Modifiers)
+@UnstyledDemo("outline")
 @Composable
 fun OutlineDemo() {
   Stack(
