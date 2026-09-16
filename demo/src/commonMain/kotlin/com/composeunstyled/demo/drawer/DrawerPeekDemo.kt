@@ -54,31 +54,30 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerPeekDemoValue {
   Closed,
-  Open,
+  Peek,
+  Expanded,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-peek")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerPeekDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerPeekDemoValue.Peek,
+      snapPoints = DrawerSnapPoints {
+        DrawerPeekDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerPeekDemoValue.Peek at DrawerSnapPoint { viewportSize, _ -> viewportSize * 0.2f }
+        DrawerPeekDemoValue.Expanded at DrawerSnapPoint.ContentSize
+      },
     )
   }
 
   Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
     UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
+      onClick = { drawerState.targetValue = DrawerPeekDemoValue.Peek },
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
@@ -86,10 +85,13 @@ fun DrawerDemo() {
         .border(1.dp, Theme[demoColors][demoContent]),
       indication = LocalIndication.current,
     ) {
-      Text("Open drawer")
+      Text("Show drawer")
     }
 
-    UnstyledDrawer(state = drawerState) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+    ) {
       Viewport(Modifier.fillMaxSize()) {
         Panel(
           modifier = Modifier
@@ -113,14 +115,24 @@ fun DrawerDemo() {
             }
             Text("Here is the content of the drawer.")
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { drawerState.targetValue = DrawerPeekDemoValue.Expanded },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])
                 .border(1.dp, Theme[demoColors][demoContent]),
               indication = LocalIndication.current,
             ) {
-              Text("Close")
+              Text("Expand")
+            }
+            UnstyledButton(
+              onClick = { drawerState.targetValue = DrawerPeekDemoValue.Peek },
+              contentPadding = PaddingValues(12.dp),
+              modifier = Modifier
+                .background(Theme[demoColors][demoSurface])
+                .border(1.dp, Theme[demoColors][demoContent]),
+              indication = LocalIndication.current,
+            ) {
+              Text("Peek")
             }
           }
         }

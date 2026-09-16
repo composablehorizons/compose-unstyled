@@ -29,6 +29,8 @@ sections:
         slug: dialog
       - title: Disclosure
         slug: disclosure
+      - title: Drawer
+        slug: drawer
       - title: Dropdown Menu
         slug: dropdown-menu
       - title: Icon

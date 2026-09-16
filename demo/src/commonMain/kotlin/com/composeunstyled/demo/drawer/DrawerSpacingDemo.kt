@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragHandle
@@ -54,31 +56,34 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerSpacingDemoValue {
   Closed,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-spacing")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerSpacingDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerSpacingDemoValue.Open,
+      snapPoints = DrawerSnapPoints {
+        DrawerSpacingDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerSpacingDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
+  val spacing = with(LocalDensity.current) { 24.dp.roundToPx() }
 
-  Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
+  Box(
+    Modifier
+      .fillMaxSize()
+      .background(Theme[demoColors][demoSurface])
+      .border(1.dp, Theme[demoColors][demoContent]),
+  ) {
     UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
+      onClick = { drawerState.targetValue = DrawerSpacingDemoValue.Open },
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
@@ -89,8 +94,18 @@ fun DrawerDemo() {
       Text("Open drawer")
     }
 
-    UnstyledDrawer(state = drawerState) {
-      Viewport(Modifier.fillMaxSize()) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+    ) {
+      Viewport(
+        modifier = Modifier.fillMaxSize(),
+        windowInsets = WindowInsets(
+          left = spacing,
+          right = spacing,
+          bottom = spacing,
+        ),
+      ) {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +128,7 @@ fun DrawerDemo() {
             }
             Text("Here is the content of the drawer.")
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { drawerState.targetValue = DrawerSpacingDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])

@@ -21,6 +21,8 @@
  */
 package com.composeunstyled.demo.drawer
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragHandle
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
+import com.composeunstyled.Overlay
 import com.composeunstyled.Panel
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
@@ -54,31 +57,28 @@ import com.composeunstyled.demo.demoContent
 import com.composeunstyled.demo.demoSurface
 import com.composeunstyled.theme.Theme
 
-private enum class DrawerDemoValue {
+private enum class DrawerOverlayDemoValue {
   Closed,
   Open,
 }
 
 @Preview
-@UnstyledDemo("drawer")
+@UnstyledDemo("drawer-overlay")
 @Composable
-fun DrawerDemo() {
-  val snapPoints = remember {
-    DrawerSnapPoints<DrawerDemoValue> {
-      DrawerDemoValue.Closed at DrawerSnapPoint.Zero
-      DrawerDemoValue.Open at DrawerSnapPoint.ContentSize
-    }
-  }
+fun DrawerOverlayDemo() {
   val drawerState = remember {
     UnstyledDrawerState(
-      initialValue = DrawerDemoValue.Open,
-      snapPoints = snapPoints,
+      initialValue = DrawerOverlayDemoValue.Open,
+      snapPoints = DrawerSnapPoints {
+        DrawerOverlayDemoValue.Closed at DrawerSnapPoint.Zero
+        DrawerOverlayDemoValue.Open at DrawerSnapPoint.ContentSize
+      },
     )
   }
 
   Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
     UnstyledButton(
-      onClick = { drawerState.targetValue = DrawerDemoValue.Open },
+      onClick = { drawerState.targetValue = DrawerOverlayDemoValue.Open },
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
@@ -89,7 +89,19 @@ fun DrawerDemo() {
       Text("Open drawer")
     }
 
-    UnstyledDrawer(state = drawerState) {
+    UnstyledDrawer(
+      state = drawerState,
+      modifier = Modifier.fillMaxSize(),
+      overlay = {
+        Overlay(
+          modifier = Modifier.fillMaxSize().background(
+            Theme[demoColors][demoContent].copy(alpha = 0.33f),
+          ),
+          enter = fadeIn(),
+          exit = fadeOut(),
+        )
+      },
+    ) {
       Viewport(Modifier.fillMaxSize()) {
         Panel(
           modifier = Modifier
@@ -113,7 +125,7 @@ fun DrawerDemo() {
             }
             Text("Here is the content of the drawer.")
             UnstyledButton(
-              onClick = { drawerState.targetValue = DrawerDemoValue.Closed },
+              onClick = { drawerState.targetValue = DrawerOverlayDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[demoColors][demoSurface])
