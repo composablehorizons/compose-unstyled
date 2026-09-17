@@ -28,11 +28,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
@@ -54,10 +54,10 @@ fun ButtonDemo() {
     UnstyledButton(
       onClick = { },
       modifier = Modifier
-        .clip(RoundedCornerShape(10.dp))
+        .clip(RectangleShape)
         .heightIn(32.dp)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(10.dp)),
+        .border(1.dp, Theme[colors][borderToken], RectangleShape),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {

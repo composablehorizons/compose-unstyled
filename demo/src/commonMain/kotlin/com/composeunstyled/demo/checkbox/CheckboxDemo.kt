@@ -27,7 +27,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -59,7 +59,6 @@ import com.composeunstyled.theme.Theme
 @Composable
 fun CheckboxDemo() {
   var checked by remember { mutableStateOf(true) }
-  val checkboxShape = RoundedCornerShape(4.dp)
   Box(
     modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
@@ -67,15 +66,15 @@ fun CheckboxDemo() {
     UnstyledCheckbox(
       checked = checked,
       onCheckedChange = { checked = it },
-      modifier = Modifier.clip(checkboxShape),
+      modifier = Modifier.clip(RectangleShape),
       accessibilityLabel = "Enable notifications",
       indication = LocalIndication.current,
     ) {
       CheckedIndicator(
         modifier = Modifier
           .size(24.dp)
-          .background(Theme[colors][surfaceToken], checkboxShape)
-          .border(1.dp, Theme[colors][borderToken], checkboxShape),
+          .background(Theme[colors][surfaceToken], RectangleShape)
+          .border(1.dp, Theme[colors][borderToken], RectangleShape),
         indication = LocalIndication.current,
       ) {
         UnstyledIcon(checkIcon())

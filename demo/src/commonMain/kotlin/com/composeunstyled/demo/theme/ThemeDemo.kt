@@ -27,11 +27,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -102,7 +102,7 @@ fun ThemingDemo() {
         modifier = Modifier
           .background(
             color = Theme[exampleColors][surface],
-            shape = RoundedCornerShape(12.dp),
+            shape = RectangleShape,
           )
           .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -126,7 +126,7 @@ fun ThemingDemo() {
           modifier = Modifier
             .background(
               color = Theme[exampleColors][primary],
-              shape = RoundedCornerShape(8.dp),
+              shape = RectangleShape,
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
         ) {

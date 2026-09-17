@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,7 +69,6 @@ import com.composeunstyled.theme.Theme
 fun TriStateCheckboxDemo() {
   val checkboxOptions = listOf("Option 1", "Option 2", "Option 3", "Option 4")
   var selected by remember { mutableStateOf(listOf(true, true, false, false)) }
-
   val triState = when {
     selected.all { it } -> ToggleableState.On
     selected.none { it } -> ToggleableState.Off
@@ -87,7 +86,6 @@ fun TriStateCheckboxDemo() {
         .padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-      val triStateShape = RoundedCornerShape(4.dp)
       UnstyledTriStateCheckbox(
         value = triState,
         onClick = {
@@ -108,10 +106,10 @@ fun TriStateCheckboxDemo() {
         ) {
           StateIndicator(
             modifier = Modifier
-              .clip(triStateShape)
+              .clip(RectangleShape)
               .size(24.dp)
-              .background(Theme[colors][surfaceToken], triStateShape)
-              .border(1.dp, Theme[colors][borderToken], triStateShape),
+              .background(Theme[colors][surfaceToken], RectangleShape)
+              .border(1.dp, Theme[colors][borderToken], RectangleShape),
             indication = LocalIndication.current,
           ) { state ->
             when (state) {
@@ -139,7 +137,6 @@ fun TriStateCheckboxDemo() {
         }
       }
 
-      val checkboxShape = RoundedCornerShape(4.dp)
       checkboxOptions.forEachIndexed { index, option ->
         UnstyledCheckbox(
           checked = selected[index],
@@ -158,10 +155,10 @@ fun TriStateCheckboxDemo() {
           ) {
             CheckedIndicator(
               modifier = Modifier
-                .clip(checkboxShape)
+                .clip(RectangleShape)
                 .size(24.dp)
-                .background(Theme[colors][surfaceToken], checkboxShape)
-                .border(1.dp, Theme[colors][borderToken], checkboxShape),
+                .background(Theme[colors][surfaceToken], RectangleShape)
+                .border(1.dp, Theme[colors][borderToken], RectangleShape),
               indication = LocalIndication.current,
             ) {
               UnstyledIcon(
