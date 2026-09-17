@@ -78,6 +78,18 @@ fun DrawerConfirmValueChangeDemo() {
   }
 
   Box(Modifier.fillMaxSize()) {
+    UnstyledButton(
+      onClick = { drawerState.targetValue = DrawerConfirmValueChangeDemoValue.Open },
+      contentPadding = PaddingValues(12.dp),
+      modifier = Modifier
+        .align(Alignment.Center)
+        .background(Theme[colors][surfaceToken])
+        .border(1.dp, Theme[colors][contentToken]),
+      indication = LocalIndication.current,
+    ) {
+      Text("Open drawer")
+    }
+
     UnstyledDrawer(
       state = drawerState,
       modifier = Modifier.fillMaxSize(),
