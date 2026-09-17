@@ -15,7 +15,7 @@ description: A checkbox component with full control over the indicator, bounds, 
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-checkbox")
+implementation("com.composables:composeunstyled-checkbox:2.9.2")
 ```
 
 ## Anatomy

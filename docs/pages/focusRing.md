@@ -13,7 +13,7 @@ The `focusRing` is based on the [outline](outline.md) modifier and does not affe
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-focus-ring")
+implementation("com.composables:composeunstyled-focus-ring:2.9.2")
 ```
 
 

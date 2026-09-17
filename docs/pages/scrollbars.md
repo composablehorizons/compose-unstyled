@@ -15,7 +15,7 @@ description: Scrollbar components for scroll state, lazy lists, and lazy grids.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-scrollbars")
+implementation("com.composables:composeunstyled-scrollbars:2.9.2")
 ```
 
 ## Anatomy

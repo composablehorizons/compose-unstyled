@@ -6,7 +6,7 @@ description: A same-window portal utility for rendering content from one place i
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-portal")
+implementation("com.composables:composeunstyled-portal:2.9.2")
 ```
 
 ## Anatomy
