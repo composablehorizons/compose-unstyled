@@ -9,8 +9,9 @@
     "preview": "astro preview --host 127.0.0.1 --port 4321"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.1",
     "astro": "^7.3.2",
-    "yaml": "^2.9.1",
-    "@astrojs/markdown-satteri": "^0.4.1"
+    "github-slugger": "^2.0.0",
+    "yaml": "^2.9.1"
   }
 }

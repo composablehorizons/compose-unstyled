@@ -130,6 +130,8 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-content h2 { margin: 3rem 0 var(--space-4); font-size: clamp(1.375rem, 3vw, 1.75rem); line-height: 1.2; }
 .docs-content h3 { margin: var(--space-7) 0 var(--space-3); font-size: 1.125rem; line-height: 1.3; }
 .docs-content h4 { margin: var(--space-6) 0 var(--space-3); }
+.docs-heading-link { color: inherit; text-decoration: none; }
+.docs-heading-link:hover { text-decoration: underline; }
 .docs-content p, .docs-content ul, .docs-content ol { margin-block: var(--space-4); }
 .docs-content li + li { margin-top: var(--space-2); }
 .docs-content ul, .docs-content ol { padding-left: var(--space-6); }
