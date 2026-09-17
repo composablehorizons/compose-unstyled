@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +69,7 @@ fun ToggleSwitchDemo() {
   val backgroundColor by animateColorAsState(
     if (toggled) Theme[colors][contentToken] else Theme[colors][inputBackgroundToken],
   )
+  val pillShape = RoundedCornerShape(100)
 
   Box(
     modifier = Modifier.fillMaxSize(),
@@ -78,7 +80,7 @@ fun ToggleSwitchDemo() {
       onCheckedChange = { toggled = it },
       modifier = Modifier
         .width(300.dp)
-        .clip(RoundedCornerShape(10.dp)),
+        .clip(RectangleShape),
       indication = LocalIndication.current,
     ) {
       Row(
@@ -93,9 +95,9 @@ fun ToggleSwitchDemo() {
           modifier = Modifier
             .width(58.dp)
             .height(32.dp)
-            .clip(RoundedCornerShape(100))
-            .background(backgroundColor, RoundedCornerShape(100))
-            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(100)),
+            .clip(pillShape)
+            .background(backgroundColor, pillShape)
+            .border(1.dp, Theme[colors][borderToken], pillShape),
         ) {
           Thumb(
             animationSpec = tween(),

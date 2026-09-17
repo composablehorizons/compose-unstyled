@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.SelectedIndicator
@@ -63,7 +63,6 @@ import com.composeunstyled.theme.Theme
 fun RadioGroupDemo() {
   val values = listOf("Light", "Dark", "System")
   var selectedValue by remember { mutableStateOf("Light") }
-
   Box(
     modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
@@ -88,12 +87,11 @@ fun RadioGroupDemo() {
         ) {
           values.forEach { value ->
             val selected = selectedValue == value
-            val itemShape = RoundedCornerShape(14.dp)
             UnstyledRadioButton(
               value = value,
               modifier = Modifier
                 .fillMaxWidth()
-                .clip(itemShape),
+                .clip(RectangleShape),
               indication = LocalIndication.current,
             ) {
               Row(

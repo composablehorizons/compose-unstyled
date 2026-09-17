@@ -50,7 +50,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -64,6 +63,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -186,9 +186,9 @@ fun ModalDemo() {
             },
             modifier = Modifier
               .size(110.dp, 72.dp)
-              .clip(RoundedCornerShape(8.dp))
+              .clip(RectangleShape)
               .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
+              .border(1.dp, Theme[colors][borderToken], RectangleShape),
             indication = LocalIndication.current,
           ) {
             Image(
@@ -280,7 +280,7 @@ fun ModalDemo() {
                   contentDescription = galleryItems[page].description,
                   modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RectangleShape)
                     .background(Theme[colors][mutedContentToken]),
                   contentScale = ContentScale.Crop,
                 )

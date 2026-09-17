@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -107,9 +107,9 @@ fun DropdownMenuDemo() {
         DropdownMenuPanel(
           modifier = Modifier
             .width(240.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RectangleShape)
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
+            .border(1.dp, Theme[colors][borderToken], RectangleShape),
           enter = scaleIn(
             animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
             initialScale = 0.8f,
@@ -133,7 +133,7 @@ fun DropdownMenuDemo() {
               modifier = Modifier
                 .padding(4.dp)
                 .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .clip(RectangleShape)
                 .fillMaxWidth(),
             ) {
               Row(
@@ -171,9 +171,9 @@ fun DropdownMenuDemo() {
           onClick = { expanded = true },
           modifier = Modifier
             .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
-            .clip(RoundedCornerShape(6.dp))
+            .clip(RectangleShape)
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(6.dp)),
+            .border(1.dp, Theme[colors][borderToken], RectangleShape),
           indication = LocalIndication.current,
         ) {
           Row(

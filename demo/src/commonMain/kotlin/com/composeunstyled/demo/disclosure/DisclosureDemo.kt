@@ -38,7 +38,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -71,7 +71,6 @@ import com.composeunstyled.theme.Theme
 @Composable
 fun DisclosureDemo() {
   var expanded by remember { mutableStateOf(false) }
-
   Box(
     modifier = Modifier.fillMaxSize().padding(top = 24.dp),
     contentAlignment = Alignment.TopCenter,
@@ -83,9 +82,9 @@ fun DisclosureDemo() {
       Column(
         modifier = Modifier
           .widthIn(max = 560.dp)
-          .clip(RoundedCornerShape(12.dp))
+          .clip(RectangleShape)
           .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(12.dp)),
+          .border(1.dp, Theme[colors][borderToken], RectangleShape),
       ) {
         DisclosureButton(
           modifier = Modifier.fillMaxWidth(),

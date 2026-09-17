@@ -74,7 +74,7 @@ private fun OutlineBasicDemo() {
     modifier = Modifier.outline(
       width = 2.dp,
       color = Theme[colors][focusRingToken],
-      shape = RoundedCornerShape(8.dp),
+      shape = RectangleShape,
       offset = 2.dp,
     ),
   )
@@ -87,7 +87,7 @@ private fun OutlineWidthDemo() {
       modifier = Modifier.outline(
         width = 1.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
@@ -95,7 +95,7 @@ private fun OutlineWidthDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
@@ -103,7 +103,7 @@ private fun OutlineWidthDemo() {
       modifier = Modifier.outline(
         width = 4.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
@@ -150,7 +150,7 @@ private fun OutlineOffsetDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 0.dp,
       ),
     )
@@ -158,7 +158,7 @@ private fun OutlineOffsetDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 4.dp,
       ),
     )
@@ -166,7 +166,7 @@ private fun OutlineOffsetDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][focusRingToken],
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 8.dp,
       ),
     )
@@ -180,7 +180,7 @@ private fun OutlineColorDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][errorToken], // red-500
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
@@ -188,7 +188,7 @@ private fun OutlineColorDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][successToken], // emerald-500
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
@@ -196,7 +196,7 @@ private fun OutlineColorDemo() {
       modifier = Modifier.outline(
         width = 2.dp,
         color = Theme[colors][highlightToken], // violet-500
-        shape = RoundedCornerShape(8.dp),
+        shape = RectangleShape,
         offset = 2.dp,
       ),
     )
