@@ -2812,7 +2812,7 @@ class BottomSheetCommonTest {
   }
 
   @Test
-  fun scrollable_column_expands_to_visible_sheet_height() = runComposeUiTest {
+  fun scrollable_column_can_extend_beyond_visible_sheet_height() = runComposeUiTest {
     val halfExpandedDetent = SheetDetent("half") { containerHeight, _ ->
       containerHeight * 0.5f
     }
@@ -2862,7 +2862,8 @@ class BottomSheetCommonTest {
     val visibleSheetHeight = rootBounds.bottom - panelBounds.top
 
     assertThat(visibleSheetHeight).isEqualTo(rootBounds.height / 2f)
-    assertThat(scrollableContentBounds.height).isEqualTo(visibleSheetHeight)
+    assertThat(scrollableContentBounds.height).isEqualTo(rootBounds.height)
+    assertThat(scrollableContentBounds.height).isGreaterThan(visibleSheetHeight)
   }
 
   @Test
