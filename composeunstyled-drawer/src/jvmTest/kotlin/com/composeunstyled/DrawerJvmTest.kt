@@ -37,6 +37,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performMouseInput
@@ -372,6 +373,40 @@ class DrawerJvmTest {
   }
 
   @Test
+  fun swipeAreaIsNotRenderedAboveAnOpenOverlayDrawer() = runComposeUiTest {
+    setContent {
+      val snapPoints = remember {
+        DrawerSnapPoints {
+          DrawerJvmValue.Closed at DrawerSnapPoint.Zero
+          DrawerJvmValue.Open at DrawerSnapPoint.ContentSize
+        }
+      }
+      val state = remember { UnstyledDrawerState(DrawerJvmValue.Open, snapPoints) }
+      DrawerHost(Modifier.requiredSize(100.dp)) {
+        UnstyledDrawer(
+          state = state,
+          placement = DrawerPlacement.Start,
+          presentation = DrawerPresentation.Overlay,
+        ) {
+          Viewport(Modifier.requiredSize(100.dp)) {
+            Panel(Modifier.width(60.dp).fillMaxHeight()) {
+              Box(Modifier.requiredSize(1.dp))
+            }
+          }
+          SwipeArea(
+            Modifier
+              .requiredSize(width = 24.dp, height = 100.dp)
+              .testTag("swipe-area"),
+          )
+        }
+      }
+    }
+    waitForIdle()
+
+    assertThat(onAllNodesWithTag("swipe-area").fetchSemanticsNodes().size).isEqualTo(0)
+  }
+
+  @Test
   fun panelPaddingDismissesModalDrawerWhenOutsideClicksAreDisabled() =
     runComposeUiTest {
       lateinit var state: UnstyledDrawerState<DrawerJvmValue>
@@ -418,6 +453,50 @@ class DrawerJvmTest {
 
       assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Closed)
     }
+
+  @Test
+  fun panelPaddingDragsAnInPlaceDrawer() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerJvmValue>
+
+    setContent {
+      val snapPoints = remember {
+        DrawerSnapPoints {
+          DrawerJvmValue.Closed at DrawerSnapPoint.Zero
+          DrawerJvmValue.Open at DrawerSnapPoint.ContentSize
+        }
+      }
+      state = remember { UnstyledDrawerState(DrawerJvmValue.Open, snapPoints) }
+      Box(Modifier.requiredSize(100.dp).testTag("root")) {
+        UnstyledDrawer(
+          state = state,
+          placement = DrawerPlacement.Start,
+          presentation = DrawerPresentation.InPlace,
+        ) {
+          Viewport(Modifier.requiredSize(100.dp)) {
+            Panel(
+              Modifier
+                .width(60.dp)
+                .fillMaxHeight()
+                .padding(12.dp),
+            ) {
+              Box(Modifier.requiredSize(1.dp))
+            }
+          }
+        }
+      }
+    }
+    waitForIdle()
+
+    onNodeWithTag("root").performMouseInput {
+      updatePointerTo(Offset(52f, centerY))
+      press()
+      moveTo(Offset(1f, centerY))
+      release()
+    }
+    waitUntil { state.currentValue == DrawerJvmValue.Closed && state.isIdle }
+
+    assertThat(state.currentValue).isEqualTo(DrawerJvmValue.Closed)
+  }
 
   @Test
   fun tappingPanelTrailingEdgeDoesNotDismissModalDrawer() =

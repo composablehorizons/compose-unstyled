@@ -76,7 +76,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.zIndex
 import kotlin.jvm.JvmInline
 import kotlin.math.roundToInt
 
@@ -455,6 +454,8 @@ fun DrawerHost(
 fun DrawerScope.SwipeArea(
   modifier: Modifier = Modifier,
 ) {
+  if (isEdgeSwipeSource.not()) return
+
   Box(
     modifier = modifier
       .then(
@@ -745,7 +746,7 @@ fun <T : Any> DrawerScope.Viewport(
             y = panelY,
             hidden = drawerState.isPanelHidden,
           )
-          else -> placeable.placeRelative(leftInset, topInset)
+          else -> Unit
         }
       }
     }
@@ -915,58 +916,43 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
   }
 
   Layout(
-    modifier = Modifier
-      .then(
-        buildModifier {
-          if (panelOverscrollVisualEffect != null) {
-            add(Modifier.overscroll(panelOverscrollVisualEffect))
-          }
-        },
-      )
-      .then(modifier)
-      .zIndex(1f)
-      .then(
-        buildModifier {
-          if (state.isPanelHidden) {
-            add(
-              Modifier
-                .semantics { hideFromAccessibility() }
-                .focusProperties { canFocus = false },
+    modifier = buildModifier {
+      if (panelOverscrollVisualEffect != null) {
+        add(Modifier.overscroll(panelOverscrollVisualEffect))
+      }
+      if (context.gesturesEnabled && state.hasMultipleValues()) {
+        add(
+          Modifier
+            .anchoredDraggable(
+              state = state.anchoredDraggableState,
+              orientation = orientation,
+              enabled = true,
+              interactionSource = context.interactionSource,
+              overscrollEffect = panelOverscrollEffect,
+              flingBehavior = remember(state) {
+                DrawerFlingBehavior(state)
+              },
             )
-          }
-        },
-      )
-      .then(
-        buildModifier {
-          if (
-            context.gesturesEnabled &&
-            state.hasMultipleValues()
-          ) {
-            add(
-              Modifier
-                .anchoredDraggable(
-                  state = state.anchoredDraggableState,
-                  orientation = orientation,
-                  enabled = true,
-                  interactionSource = context.interactionSource,
-                  overscrollEffect = panelOverscrollEffect,
-                  flingBehavior = remember(state) {
-                    DrawerFlingBehavior(state)
-                  },
+            .nestedScroll(
+              remember(state, resolvedPlacement) {
+                DrawerNestedScrollConnection(
+                  drawerState = state,
+                  resolvedPlacement = resolvedPlacement,
                 )
-                .nestedScroll(
-                  remember(state, resolvedPlacement) {
-                    DrawerNestedScrollConnection(
-                      drawerState = state,
-                      resolvedPlacement = resolvedPlacement,
-                    )
-                  },
-                ),
-            )
-          }
-        },
-      )
-      .drawerPanelParentData(panelParentData),
+              },
+            ),
+        )
+      }
+      add(modifier)
+      if (state.isPanelHidden) {
+        add(
+          Modifier
+            .semantics { hideFromAccessibility() }
+            .focusProperties { canFocus = false },
+        )
+      }
+      add(Modifier.drawerPanelParentData(panelParentData))
+    },
     content = {
       DrawerPanelScope(state).content()
     },

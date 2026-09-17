@@ -975,7 +975,6 @@ class DrawerTest {
     }
 
     waitForIdle()
-
     onNodeWithTag(SwipeAreaTag).performTouchInput {
       swipe(
         start = Offset(1f, centerY),
@@ -1053,6 +1052,7 @@ class DrawerTest {
     }
 
     waitForIdle()
+
     onNodeWithTag(SwipeAreaTag).performTouchInput {
       swipe(
         start = Offset(1f, centerY),
@@ -1066,7 +1066,7 @@ class DrawerTest {
   }
 
   @Test
-  fun swipeAreaDoesNotOpenAModalDrawer() = runComposeUiTest {
+  fun swipeAreaIsNotRenderedForAModalDrawer() = runComposeUiTest {
     lateinit var state: UnstyledDrawerState<DrawerValue>
 
     setContent {
@@ -1079,16 +1079,8 @@ class DrawerTest {
     }
 
     waitForIdle()
-    onNodeWithTag(SwipeAreaTag).performTouchInput {
-      swipe(
-        start = Offset(1f, centerY),
-        end = Offset(80f, centerY),
-        durationMillis = 500,
-      )
-    }
-    waitForIdle()
 
-    assertThat(state.currentValue).isEqualTo(DrawerValue.Closed)
+    assertThat(onAllNodesWithTag(SwipeAreaTag).fetchSemanticsNodes().size).isEqualTo(0)
   }
 
   @Test
@@ -1241,6 +1233,7 @@ class DrawerTest {
     setContent {
       StartDrawerLayout(
         initialValue = DrawerValue.Closed,
+        presentation = DrawerPresentation.Overlay,
         swipeArea = true,
         confirmValueChange = { change ->
           change.targetValue != DrawerValue.Open
