@@ -44,17 +44,26 @@ function renderApiDeclaration(declaration, title) {
   const declarationSources = publicApiSources().flatMap((source) => {
     if (!declaration.startsWith(`${source.packageName}.`)) return [];
     const [receiver, name] = splitDeclaration(declaration.slice(source.packageName.length + 1));
-    const rows = functionRows(source.kotlin, name, receiver);
-    const declarationRows = rows.length > 0 ? rows : classRows(source.kotlin, name);
+    const functionDeclarationRows = functionRows(source.kotlin, name, receiver);
+    const isFunction = functionDeclarationRows.length > 0;
+    const declarationRows = isFunction ? functionDeclarationRows : classRows(source.kotlin, name);
     return declarationRows.length > 0
-      ? [{ declarationRows, title: declaration.slice(source.packageName.length + 1) }]
+      ? [{
+        declarationRows,
+        description: isFunction ? undefined : classDescription(source.kotlin, name),
+        title: declaration.slice(source.packageName.length + 1),
+      }]
       : [];
   });
   const declarationRows = uniqueRows(declarationSources.flatMap((source) => source.declarationRows));
   if (declarationRows.length === 0) {
     throw new Error(`Could not generate public API reference '${declaration}'.`);
   }
-  return renderTable(title ?? declarationSources[0].title, declarationRows);
+  return renderTable(
+    title ?? declarationSources[0].title,
+    declarationRows,
+    declarationSources.map((source) => source.description).find(Boolean),
+  );
 }
 
 function publicApiSources() {
@@ -94,16 +103,27 @@ function splitDeclaration(declaration) {
     : [declaration.slice(0, separator), declaration.slice(separator + 1)];
 }
 
-function renderTable(title, rows) {
+function renderTable(title, rows, description) {
   return [
     `### ${title}`,
     '',
+    ...(description ? [description, ''] : []),
     '| Parameter | Type | Description |',
     '|-----------|------|-------------|',
     ...rows.map((row) => {
       return `| \`${escapePipes(row.name)}\` | \`${escapePipes(row.type)}\` | ${row.description ?? ''} |`;
     }),
   ].join('\n');
+}
+
+function classDescription(kotlin, name) {
+  const sources = Array.isArray(kotlin) ? kotlin : [kotlin];
+  for (const source of sources) {
+    const pattern = new RegExp(`(?:[A-Za-z]+\\s+)*(?:class|interface)\\s+${escapeRegex(name)}\\b`, 'g');
+    const match = pattern.exec(source);
+    if (match) return attachedKDoc(source, match.index).summary;
+  }
+  return undefined;
 }
 
 function functionRows(kotlin, name, receiver) {
@@ -313,7 +333,21 @@ function parseKDoc(kdoc) {
       summary.push(line);
     }
   }
-  return { summary: summary.filter(Boolean).join(' '), tags };
+  return {
+    summary: formatKDocMarkdown(summary.filter(Boolean).join(' ')),
+    tags: {
+      param: Object.fromEntries(
+        Object.entries(tags.param).map(([name, description]) => [name, formatKDocMarkdown(description)]),
+      ),
+      property: Object.fromEntries(
+        Object.entries(tags.property).map(([name, description]) => [name, formatKDocMarkdown(description)]),
+      ),
+    },
+  };
+}
+
+function formatKDocMarkdown(text) {
+  return text.replace(/\[([A-Za-z_][A-Za-z0-9_.]*)\]/g, '`$1`');
 }
 
 function cleanupType(type) {
