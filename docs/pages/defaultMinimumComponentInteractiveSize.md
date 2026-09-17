@@ -6,7 +6,7 @@ description: A modifier that sets the minimum interactive size of a composable b
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming")
+implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
 

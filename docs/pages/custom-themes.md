@@ -8,7 +8,7 @@ description: Learn how to create fully custom themes and how to use them to main
 Include the Theming module in your app's dependencies:
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming")
+implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
 ## Create a theme

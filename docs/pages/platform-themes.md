@@ -8,7 +8,7 @@ description: Native look and feel on every platform with one line of code. Platf
 Include the Platform Theme module in your app's dependencies:
 
 ```kotlin
-implementation("com.composables:composeunstyled-platformtheme")
+implementation("com.composables:composeunstyled-platformtheme:2.9.2")
 ```
 
 ## Basic usage

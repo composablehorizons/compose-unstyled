@@ -14,7 +14,7 @@ description: Window breakpoint utilities for building adaptive Compose layouts.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-breakpoints")
+implementation("com.composables:composeunstyled-breakpoints:2.9.2")
 ```
 
 ## Anatomy

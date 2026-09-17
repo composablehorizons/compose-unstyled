@@ -13,7 +13,7 @@ description: An avatar primitive with image, fallback content, and caller-define
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-avatar")
+implementation("com.composables:composeunstyled-avatar:2.9.2")
 ```
 
 ## Anatomy

@@ -8,7 +8,7 @@ description: An icon component for tinted painter, bitmap, and vector assets.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-icon")
+implementation("com.composables:composeunstyled-icon:2.9.2")
 ```
 
 ## Anatomy

@@ -14,7 +14,7 @@ description: A radio group component for single-choice selection.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-radio-group")
+implementation("com.composables:composeunstyled-radio-group:2.9.2")
 ```
 
 ## Anatomy

@@ -6,7 +6,7 @@ description: A themable component for displaying text with various styles and cu
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming")
+implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
 ## Basic Example
