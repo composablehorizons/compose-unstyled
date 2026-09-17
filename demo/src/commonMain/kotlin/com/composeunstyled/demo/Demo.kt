@@ -76,7 +76,11 @@ fun Demo(
 
 @Composable
 private fun DemoContent(startDestination: String) {
-  Box(Modifier.fillMaxSize()) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Theme[colors][backgroundToken]),
+  ) {
     DemoSelection(startDestination)
   }
 }
