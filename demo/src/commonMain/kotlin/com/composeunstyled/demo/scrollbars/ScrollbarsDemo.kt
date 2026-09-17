@@ -50,6 +50,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,8 +118,8 @@ fun VerticalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp))
+        .background(Theme[colors][surfaceToken], RectangleShape)
+        .border(1.dp, Theme[colors][borderToken], RectangleShape)
         .fillMaxSize(),
     ) {
       Column(
@@ -173,8 +174,8 @@ fun HorizontalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp))
+        .background(Theme[colors][surfaceToken], RectangleShape)
+        .border(1.dp, Theme[colors][borderToken], RectangleShape)
         .wrapContentHeight(),
     ) {
       Row(

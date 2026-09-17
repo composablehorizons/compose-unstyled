@@ -57,6 +57,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun ProgressIndicatorDemo() {
   var hasProgressed by remember { mutableStateOf(false) }
+  val pillShape = RoundedCornerShape(100)
 
   val progress by animateFloatAsState(
     targetValue = if (hasProgressed) 0.85f else 0.2f,
@@ -76,11 +77,11 @@ fun ProgressIndicatorDemo() {
       modifier = Modifier
         .width(400.dp)
         .height(12.dp)
-        .clip(RoundedCornerShape(100))
-        .background(Theme[colors][surfaceToken], RoundedCornerShape(100))
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(100)),
+        .clip(pillShape)
+        .background(Theme[colors][surfaceToken], pillShape)
+        .border(1.dp, Theme[colors][borderToken], pillShape),
     ) {
-      Indicator(Modifier.background(Theme[colors][contentToken], RoundedCornerShape(100)))
+      Indicator(Modifier.background(Theme[colors][contentToken], pillShape))
     }
   }
 }

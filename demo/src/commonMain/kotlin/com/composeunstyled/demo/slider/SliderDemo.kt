@@ -61,6 +61,7 @@ import com.composeunstyled.theme.Theme
 @UnstyledDemo("slider")
 @Composable
 fun SliderDemo() {
+  val pillShape = RoundedCornerShape(100)
   Box(
     modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
@@ -88,7 +89,7 @@ fun SliderDemo() {
               .fillMaxWidth()
               .height(8.dp)
               .padding(horizontal = 16.dp)
-              .clip(RoundedCornerShape(100.dp)),
+              .clip(pillShape),
           ) {
             // the 'not yet completed' part of the track
             Box(

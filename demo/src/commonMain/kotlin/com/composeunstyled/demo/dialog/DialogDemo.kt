@@ -40,7 +40,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,7 +71,6 @@ import com.composeunstyled.theme.Theme
 @Composable
 fun DialogDemo() {
   var dialogVisible by remember { mutableStateOf(true) }
-
   Box(
     modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
@@ -79,10 +78,10 @@ fun DialogDemo() {
     UnstyledButton(
       onClick = { dialogVisible = true },
       modifier = Modifier
-        .clip(RoundedCornerShape(10.dp))
+        .clip(RectangleShape)
         .heightIn(32.dp)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(10.dp)),
+        .border(1.dp, Theme[colors][borderToken], RectangleShape),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -112,9 +111,9 @@ fun DialogDemo() {
             .systemBarsPadding()
             .widthIn(max = 560.dp)
             .padding(20.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RectangleShape)
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(12.dp)),
+            .border(1.dp, Theme[colors][borderToken], RectangleShape),
           paneTitle = "Dialog",
           enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
           exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
@@ -141,7 +140,7 @@ fun DialogDemo() {
               modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.End)
-                .clip(RoundedCornerShape(6.dp)),
+                .clip(RectangleShape),
               indication = LocalIndication.current,
             ) {
               Text(

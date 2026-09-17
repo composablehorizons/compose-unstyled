@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -132,9 +132,9 @@ fun TabGroupDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RectangleShape)
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
+            .border(1.dp, Theme[colors][borderToken], RectangleShape),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -158,7 +158,7 @@ fun TabGroupDemo() {
                       modifier = Modifier
                         .background(
                           color = Theme[colors][contentToken],
-                          shape = RoundedCornerShape(2.dp),
+                          shape = RectangleShape,
                         )
                         .fillMaxWidth()
                         .height(3.dp)
@@ -179,15 +179,15 @@ fun TabGroupDemo() {
               .fillMaxWidth()
               .background(
                 color = Theme[colors][surfaceToken],
-                shape = RoundedCornerShape(8.dp),
+                shape = RectangleShape,
               )
-              .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
+              .border(1.dp, Theme[colors][borderToken], RectangleShape),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->
                 UnstyledButton(
                   onClick = { /* TODO */ },
-                  modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                  modifier = Modifier.clip(RectangleShape),
                   indication = LocalIndication.current,
                 ) {
                   Column(Modifier.padding(12.dp)) {

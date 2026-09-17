@@ -30,12 +30,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,8 +56,6 @@ import com.composeunstyled.theme.Theme
 @Composable
 fun TextFieldDemo() {
   val displayName = rememberTextFieldState()
-  val fieldShape = RoundedCornerShape(8.dp)
-
   Box(
     modifier = Modifier
       .fillMaxSize()
@@ -96,8 +94,8 @@ fun TextFieldDemo() {
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .background(Theme[colors][surfaceToken], fieldShape)
-                .border(1.dp, Theme[colors][borderToken], fieldShape)
+                .background(Theme[colors][surfaceToken], RectangleShape)
+                .border(1.dp, Theme[colors][borderToken], RectangleShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(
