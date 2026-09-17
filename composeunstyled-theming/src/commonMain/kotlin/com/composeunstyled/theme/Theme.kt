@@ -232,6 +232,8 @@ class MutableThemeProperties internal constructor() {
  *
  * Use [Light] and [Dark] for system color schemes, or create a custom scheme such as
  * `val Sepia = ColorScheme("sepia")`.
+ *
+ * @property name The name used to identify this color scheme.
  */
 data class ColorScheme(val name: String) {
   init {

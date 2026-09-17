@@ -83,6 +83,7 @@ for (const section of navigation.sections) {
     await writeFile(path.join(contentDir, `${page.slug}.md`), `---\n${stringify({
       layout: '../../layouts/DocsLayout.astro',
       title: metadata.title,
+      ...(metadata.seoTitle ? { seoTitle: metadata.seoTitle } : {}),
       description: metadata.description,
       markdownUrl: sitePath(`/docs/${page.slug}.md`),
     })}---\n${htmlBody}`);

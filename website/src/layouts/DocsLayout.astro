@@ -2,10 +2,10 @@
 import SiteLayout from './SiteLayout.astro';
 import DocsSidebar from '../components/DocsSidebar.astro';
 import DocsPagination from '../components/DocsPagination.astro';
-const { title, description, markdownUrl } = Astro.props.frontmatter;
+const { title, seoTitle, description, markdownUrl } = Astro.props.frontmatter;
 const headings = Astro.props.headings.filter(heading => heading.depth === 2 || heading.depth === 3);
 ---
-<SiteLayout title={title} description={description} markdownUrl={markdownUrl}>
+<SiteLayout title={seoTitle ?? title} description={description} markdownUrl={markdownUrl}>
   <div class:list={["docs-layout", { "docs-layout-with-toc": headings.length > 0 }]}>
     <DocsSidebar />
     <article class="docs-content">
