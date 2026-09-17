@@ -23,6 +23,7 @@ package com.composeunstyled.demo.breakpoints
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,16 +31,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.uripainter.rememberUriPainter
@@ -76,8 +72,6 @@ private val DemoWidthBreakpoints = WindowWidthBreakpoints {
 fun BreakpointsDemo() {
   ProvideWindowWidthBreakpoints(DemoWidthBreakpoints) {
     val widthBreakpoint = currentWindowWidthBreakpoint()
-    val cardShape = RoundedCornerShape(24.dp)
-    val imageShape = RoundedCornerShape(18.dp)
     val imagePainter = rememberUriPainter(
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" +
         "?auto=format&fit=crop&w=1200&q=80",
@@ -90,18 +84,8 @@ fun BreakpointsDemo() {
       Stack(
         modifier = Modifier
           .widthIn(max = if (widthBreakpoint isAtLeast Expanded) 860.dp else 360.dp)
-          .dropShadow(
-            shape = cardShape,
-            shadow = Shadow(
-              radius = 28.dp,
-              spread = 0.dp,
-              offset = DpOffset(x = 0.dp, y = 14.dp),
-              color = Theme[colors][contentToken],
-              alpha = 0.16f,
-            ),
-          )
-          .clip(cardShape)
           .background(Theme[colors][surfaceToken])
+          .border(1.dp, Theme[colors][contentToken])
           .padding(14.dp),
         orientation = if (widthBreakpoint isAtLeast Expanded) {
           StackOrientation.Horizontal
@@ -116,7 +100,6 @@ fun BreakpointsDemo() {
           contentDescription = null,
           contentScale = ContentScale.Crop,
           modifier = Modifier
-            .clip(imageShape)
             .background(Theme[colors][inputBackgroundToken]) then buildModifier {
             if (widthBreakpoint isAtLeast Expanded) {
               add(Modifier.size(width = 320.dp, height = 280.dp))
