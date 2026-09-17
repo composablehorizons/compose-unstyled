@@ -3,6 +3,9 @@ title: Platform Themes
 description: Native look and feel on every platform with one line of code. Platform Themes set beautiful styling defaults based on the platform your app is running on.
 ---
 
+Platform Themes are a prebuilt alternative to defining a theme yourself. They provide platform-oriented defaults;
+use [Custom Themes](custom-themes.md) when your design system owns its values.
+
 ## Installation
 
 Include the Platform Theme module in your app's dependencies:

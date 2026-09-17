@@ -39,13 +39,13 @@ import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.theme.Theme
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
 @Preview
 @UnstyledDemo("theme-extend")
 @Composable
 fun ThemeExtendDemo() {
-  val ExtendedTheme = buildTheme {
+  val ExtendedTheme = buildThemeV2 {
     defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
     defaultContentColor = Theme[colors][contentToken]
     extend { content ->

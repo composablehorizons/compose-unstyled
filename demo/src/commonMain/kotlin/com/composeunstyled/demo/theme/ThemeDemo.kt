@@ -48,7 +48,7 @@ import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
 private val exampleColors = ThemeProperty<Color>("colors")
 private val textStyles = ThemeProperty<TextStyle>("textStyles")
@@ -62,7 +62,7 @@ private val onPrimary = ThemeToken<Color>("onPrimary")
 private val title = ThemeToken<TextStyle>("title")
 private val body = ThemeToken<TextStyle>("body")
 
-private val AppTheme = buildTheme {
+private val AppTheme = buildThemeV2 {
   name = "AppTheme"
 
   properties[exampleColors] = mapOf(
@@ -115,7 +115,7 @@ fun ThemingDemo() {
         )
 
         Text(
-          text = "Define theme properties and tokens, assign values in buildTheme {}, " +
+          text = "Define theme properties and tokens, assign values in buildThemeV2 {}, " +
             "then read them with Theme[property][token].",
           style = LocalTextStyle.current.merge(
             Theme[textStyles][body].copy(color = Theme[exampleColors][onSurface]),
