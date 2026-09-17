@@ -57,9 +57,9 @@ import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -111,7 +111,7 @@ fun TriStateCheckboxDemo() {
               .clip(triStateShape)
               .size(24.dp)
               .background(Theme[colors][surfaceToken], triStateShape)
-              .border(1.dp, Theme[colors][outlineToken], triStateShape),
+              .border(1.dp, Theme[colors][borderToken], triStateShape),
             indication = LocalIndication.current,
           ) { state ->
             when (state) {
@@ -161,7 +161,7 @@ fun TriStateCheckboxDemo() {
                 .clip(checkboxShape)
                 .size(24.dp)
                 .background(Theme[colors][surfaceToken], checkboxShape)
-                .border(1.dp, Theme[colors][outlineToken], checkboxShape),
+                .border(1.dp, Theme[colors][borderToken], checkboxShape),
               indication = LocalIndication.current,
             ) {
               UnstyledIcon(

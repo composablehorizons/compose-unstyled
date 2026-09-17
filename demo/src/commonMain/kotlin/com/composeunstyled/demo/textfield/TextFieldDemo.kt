@@ -45,9 +45,9 @@ import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -97,7 +97,7 @@ fun TextFieldDemo() {
               Modifier
                 .fillMaxWidth()
                 .background(Theme[colors][surfaceToken], fieldShape)
-                .border(1.dp, Theme[colors][outlineToken], fieldShape)
+                .border(1.dp, Theme[colors][borderToken], fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(

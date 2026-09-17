@@ -60,9 +60,9 @@ import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberScrollbarState
 import com.composeunstyled.theme.Theme
@@ -118,7 +118,7 @@ fun VerticalScrollbarsDemo() {
       modifier = Modifier
         .widthIn(max = 400.dp)
         .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp))
+        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp))
         .fillMaxSize(),
     ) {
       Column(
@@ -174,7 +174,7 @@ fun HorizontalScrollbarsDemo() {
       modifier = Modifier
         .widthIn(max = 400.dp)
         .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp))
+        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp))
         .wrapContentHeight(),
     ) {
       Row(

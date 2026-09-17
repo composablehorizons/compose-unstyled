@@ -68,6 +68,7 @@ import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.surfaceToken
@@ -108,7 +109,7 @@ fun DrawerImeDemo() {
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
         modifier = Modifier.background(
           Theme[colors][surfaceToken],
-        ).border(1.dp, Theme[colors][contentToken]),
+        ).border(1.dp, Theme[colors][borderToken]),
         indication = LocalIndication.current,
       ) {
         Text("Open drawer")
@@ -135,7 +136,7 @@ fun DrawerImeDemo() {
               .widthIn(max = 640.dp)
               .fillMaxWidth()
               .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][contentToken]),
+              .border(1.dp, Theme[colors][borderToken]),
           ) {
             Box {
               Column(
@@ -169,7 +170,7 @@ fun DrawerImeDemo() {
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Theme[colors][contentToken])
+                        .border(1.dp, Theme[colors][borderToken])
                         .padding(horizontal = 12.dp, vertical = 10.dp),
                       placeholder = {
                         Text("Type here", style = fieldTextStyle)
@@ -191,7 +192,7 @@ fun DrawerImeDemo() {
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Theme[colors][contentToken])
+                        .border(1.dp, Theme[colors][borderToken])
                         .padding(horizontal = 12.dp, vertical = 10.dp),
                       placeholder = {
                         Text("Type here", style = fieldTextStyle)
@@ -206,7 +207,7 @@ fun DrawerImeDemo() {
                   modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme[colors][surfaceToken])
-                    .border(1.dp, Theme[colors][contentToken]),
+                    .border(1.dp, Theme[colors][borderToken]),
                   indication = LocalIndication.current,
                 ) {
                   Text("Close drawer")

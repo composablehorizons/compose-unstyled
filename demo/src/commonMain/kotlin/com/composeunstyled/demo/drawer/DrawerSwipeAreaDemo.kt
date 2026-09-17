@@ -51,8 +51,8 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.inputBackgroundToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
@@ -90,7 +90,7 @@ fun DrawerSwipeAreaDemo() {
           .fillMaxHeight()
 
         Box(
-          modifier = swipeAreaModifier.border(1.dp, Theme[colors][contentToken]),
+          modifier = swipeAreaModifier.border(1.dp, Theme[colors][borderToken]),
           contentAlignment = Alignment.Center,
         ) {
           Text(
@@ -105,7 +105,7 @@ fun DrawerSwipeAreaDemo() {
               .width(288.dp)
               .fillMaxHeight()
               .background(Theme[colors][inputBackgroundToken])
-              .border(1.dp, Theme[colors][contentToken])
+              .border(1.dp, Theme[colors][borderToken])
               .padding(start = 12.dp, top = 24.dp, end = 24.dp, bottom = 24.dp),
           ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -115,7 +115,7 @@ fun DrawerSwipeAreaDemo() {
                 contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
                   .background(Theme[colors][surfaceToken])
-                  .border(1.dp, Theme[colors][contentToken]),
+                  .border(1.dp, Theme[colors][borderToken]),
                 indication = LocalIndication.current,
               ) {
                 Text("Close")

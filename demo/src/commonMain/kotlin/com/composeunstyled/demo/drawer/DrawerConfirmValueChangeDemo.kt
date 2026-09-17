@@ -49,8 +49,8 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -84,7 +84,7 @@ fun DrawerConfirmValueChangeDemo() {
       modifier = Modifier
         .align(Alignment.Center)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][contentToken]),
+        .border(1.dp, Theme[colors][borderToken]),
       indication = LocalIndication.current,
     ) {
       Text("Open drawer")
@@ -99,7 +99,7 @@ fun DrawerConfirmValueChangeDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][contentToken])
+            .border(1.dp, Theme[colors][borderToken])
             .padding(24.dp),
         ) {
           Column(
@@ -114,7 +114,7 @@ fun DrawerConfirmValueChangeDemo() {
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][contentToken]),
+                .border(1.dp, Theme[colors][borderToken]),
               indication = LocalIndication.current,
             ) {
               Text(if (canClose) "Block closing" else "Allow closing")
@@ -124,7 +124,7 @@ fun DrawerConfirmValueChangeDemo() {
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][contentToken]),
+                .border(1.dp, Theme[colors][borderToken]),
               indication = LocalIndication.current,
             ) {
               Text("Try to close")

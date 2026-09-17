@@ -55,10 +55,10 @@ import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTabPanel
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.mutedContentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -134,7 +134,7 @@ fun TabGroupDemo() {
             .height(48.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
+            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -181,7 +181,7 @@ fun TabGroupDemo() {
                 color = Theme[colors][surfaceToken],
                 shape = RoundedCornerShape(8.dp),
               )
-              .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
+              .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->

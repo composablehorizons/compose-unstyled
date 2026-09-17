@@ -44,9 +44,9 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.inputBackgroundToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -63,7 +63,7 @@ fun SeparatorsDemo() {
       Modifier
         .clip(RoundedCornerShape(6.dp))
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(6.dp))
+        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(6.dp))
         .width(240.dp),
     ) {
       Text(

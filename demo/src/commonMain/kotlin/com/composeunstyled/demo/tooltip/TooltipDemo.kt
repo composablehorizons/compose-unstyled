@@ -64,9 +64,9 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.focusRing
 import com.composeunstyled.theme.Theme
@@ -104,7 +104,7 @@ fun TooltipDemo() {
           modifier = Modifier
             .clip(CircleShape)
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][outlineToken], CircleShape)
+            .border(1.dp, Theme[colors][borderToken], CircleShape)
             .focusRing(interactionSource, 1.dp, Theme[colors][contentToken], CircleShape),
           interactionSource = interactionSource,
           indication = LocalIndication.current,
@@ -153,7 +153,7 @@ private fun TooltipContainer() {
     modifier = Modifier
       .clip(RoundedCornerShape(100))
       .background(Theme[colors][surfaceToken])
-      .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(100))
+      .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(100))
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
     Text("Notifications", color = Theme[colors][contentToken])
@@ -179,7 +179,7 @@ private fun TooltipArrow(placement: TooltipPlacement) {
     AnchorSide.End -> 90f
   }
 
-  ArrowUp(modifier.rotate(degrees), Theme[colors][outlineToken])
+  ArrowUp(modifier.rotate(degrees), Theme[colors][borderToken])
 }
 
 @Composable

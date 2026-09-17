@@ -51,9 +51,9 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -111,7 +111,7 @@ fun RadioGroupDemo() {
                         Theme[colors][surfaceToken]
                       },
                     )
-                    .border(1.dp, Theme[colors][outlineToken], CircleShape),
+                    .border(1.dp, Theme[colors][borderToken], CircleShape),
                   contentAlignment = Alignment.Center,
                 ) {
                   SelectedIndicator(

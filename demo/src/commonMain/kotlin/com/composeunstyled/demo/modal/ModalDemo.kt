@@ -85,10 +85,10 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.mutedContentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberModalState
 import com.composeunstyled.theme.Theme
@@ -188,7 +188,7 @@ fun ModalDemo() {
               .size(110.dp, 72.dp)
               .clip(RoundedCornerShape(8.dp))
               .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
+              .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
             indication = LocalIndication.current,
           ) {
             Image(
@@ -299,7 +299,7 @@ fun ModalDemo() {
                   .padding(start = 16.dp)
                   .clip(CircleShape)
                   .background(Theme[colors][surfaceToken])
-                  .border(1.dp, Theme[colors][outlineToken], CircleShape)
+                  .border(1.dp, Theme[colors][borderToken], CircleShape)
                   .alpha(previousButtonAlpha),
                 indication = LocalIndication.current,
               ) {
@@ -324,7 +324,7 @@ fun ModalDemo() {
                   .padding(end = 16.dp)
                   .clip(CircleShape)
                   .background(Theme[colors][surfaceToken])
-                  .border(1.dp, Theme[colors][outlineToken], CircleShape)
+                  .border(1.dp, Theme[colors][borderToken], CircleShape)
                   .alpha(nextButtonAlpha),
                 indication = LocalIndication.current,
               ) {

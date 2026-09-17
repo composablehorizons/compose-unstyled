@@ -53,10 +53,10 @@ import com.composeunstyled.Thumb
 import com.composeunstyled.Track
 import com.composeunstyled.UnstyledSwitch
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.inputBackgroundToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -95,7 +95,7 @@ fun ToggleSwitchDemo() {
             .height(32.dp)
             .clip(RoundedCornerShape(100))
             .background(backgroundColor, RoundedCornerShape(100))
-            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(100)),
+            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(100)),
         ) {
           Thumb(
             animationSpec = tween(),
@@ -103,7 +103,7 @@ fun ToggleSwitchDemo() {
               .padding(4.dp)
               .clip(CircleShape)
               .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][outlineToken], CircleShape)
+              .border(1.dp, Theme[colors][borderToken], CircleShape)
               .size(24.dp),
           )
         }
