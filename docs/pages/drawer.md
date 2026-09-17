@@ -1,6 +1,6 @@
 ---
 title: Drawer
-description: A draggable, edge-attached panel primitive for drawers, side sheets, and sheets.
+description: An unstyled, draggable edge-attached panel for drawers, side sheets, and sheets.
 ---
 
 <UnstyledDemo id="drawer" />

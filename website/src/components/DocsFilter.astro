@@ -16,7 +16,6 @@ import filterIcon from '../assets/icons/filter.svg?raw';
       const navigation = panel.querySelector<HTMLElement>('.docs-navigation')!;
       const sections = Array.from(navigation.querySelectorAll('section'));
       const status = panel.querySelector<HTMLElement>('.docs-filter-status')!;
-      const footer = panel.querySelector<HTMLElement>('.docs-sidebar-footer')!;
       const scroll = panel.querySelector<HTMLElement>('.docs-sidebar-scroll')!;
       const storageKey = 'docs-navigation-filter';
       try { input.value = sessionStorage.getItem(storageKey) ?? ''; } catch {}
@@ -35,7 +34,6 @@ import filterIcon from '../assets/icons/filter.svg?raw';
           section.hidden = sectionCount === 0;
           count += sectionCount;
         }
-        footer.hidden = terms.length > 0;
         status.textContent = count ? '' : 'No results found.';
         if (resetScroll) scroll.scrollTop = 0;
         try {
