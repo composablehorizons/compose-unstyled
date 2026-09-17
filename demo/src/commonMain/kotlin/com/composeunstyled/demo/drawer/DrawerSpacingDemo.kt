@@ -76,11 +76,7 @@ fun DrawerSpacingDemo() {
   }
   val spacing = with(LocalDensity.current) { 24.dp.roundToPx() }
 
-  Box(
-    Modifier
-      .fillMaxSize()
-      .border(1.dp, Theme[colors][contentToken]),
-  ) {
+  Box(Modifier.fillMaxSize()) {
     UnstyledButton(
       onClick = { drawerState.targetValue = DrawerSpacingDemoValue.Open },
       contentPadding = PaddingValues(12.dp),
