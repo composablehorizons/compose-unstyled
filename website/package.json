@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.1",
+    "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.2",
     "github-slugger": "^2.0.0",
     "yaml": "^2.9.1"

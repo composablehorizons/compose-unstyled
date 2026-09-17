@@ -3,7 +3,7 @@ import Favicon from '../components/Favicon.astro';
 import Analytics from '../components/Analytics.astro';
 import '../styles/tokens.css';
 import '../styles/docs.css';
-import { site } from '../../site.config.js';
+import { site, sitePath } from '../../site.config.js';
 import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
 interface Props {
   title: string;
@@ -24,6 +24,7 @@ const { title, description, markdownUrl } = Astro.props;
     <title>{title} | Compose Unstyled</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={new URL(Astro.url.pathname, site)} />
+    <link rel="sitemap" href={sitePath('/sitemap-index.xml')} />
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
     <link rel="preconnect" href="https://cdn.composables.com" crossorigin />
     <link rel="preload" href={sharedSkikoUrl} as="fetch" type="application/wasm" crossorigin />

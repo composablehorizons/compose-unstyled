@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import { satteri } from '@astrojs/markdown-satteri';
+import sitemap from '@astrojs/sitemap';
 import { site, base } from './site.config.js';
 import externalLinks from './plugins/external-links.js';
 import codePanels, { codeTitleTransformer } from './plugins/code-blocks.js';
@@ -9,6 +10,7 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
+  integrations: [sitemap()],
   markdown: {
     processor: satteri({ hastPlugins: [externalLinks, headingLinks, codePanels] }),
     syntaxHighlight: 'shiki',
