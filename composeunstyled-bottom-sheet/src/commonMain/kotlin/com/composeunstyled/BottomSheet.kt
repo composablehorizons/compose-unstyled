@@ -64,7 +64,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -904,40 +903,38 @@ fun BottomSheetScope.Sheet(
   val coroutineScope = context.coroutineScope
   val dragInteractionSource = context.dragInteractionSource
   val flingBehavior = remember(state) { state?.flingBehavior() }
+  val sheetModifier = modifier.then(
+    buildModifier {
+      add(Modifier.pointerInput(Unit) { detectTapGestures { } })
+      if (state != null && coroutineScope != null && context.enabled && state.detents.size > 1) {
+        add(
+          Modifier
+            .anchoredDraggable(
+              state = state.anchoredDraggableState,
+              orientation = Orientation.Vertical,
+              enabled = context.enabled,
+              interactionSource = dragInteractionSource,
+              flingBehavior = flingBehavior,
+            )
+            .nestedScroll(
+              remember(state.anchoredDraggableState, Orientation.Vertical) {
+                ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+                  orientation = Orientation.Vertical,
+                  sheetState = state.anchoredDraggableState,
+                  onFling = {
+                    coroutineScope.launch { state.settle(it) }
+                  },
+                )
+              },
+            ),
+        )
+      }
+    },
+  )
 
   Layout(
-    modifier = Modifier
-      .then(
-        buildModifier {
-          add(Modifier.pointerInput(Unit) { detectTapGestures { } })
-          if (state != null && coroutineScope != null && context.enabled && state.detents.size > 1) {
-            add(
-              Modifier
-                .anchoredDraggable(
-                  state = state.anchoredDraggableState,
-                  orientation = Orientation.Vertical,
-                  enabled = context.enabled,
-                  interactionSource = dragInteractionSource,
-                  flingBehavior = flingBehavior,
-                )
-                .nestedScroll(
-                  remember(state.anchoredDraggableState, Orientation.Vertical) {
-                    ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                      orientation = Orientation.Vertical,
-                      sheetState = state.anchoredDraggableState,
-                      onFling = {
-                        coroutineScope.launch { state.settle(it) }
-                      },
-                    )
-                  },
-                ),
-            )
-          }
-        },
-      )
-      .clipToBounds(),
     content = {
-      Box(modifier) {
+      Box(sheetModifier) {
         content()
       }
     },
