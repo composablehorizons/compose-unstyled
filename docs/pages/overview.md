@@ -1,6 +1,6 @@
 ---
-title: Overview
-description: "Overview of the Compose Unstyled library"
+title: About
+description: Learn what Compose Unstyled is and why it exists.
 ---
 
 ## The problem with Material
@@ -32,7 +32,8 @@ If there is something you cannot style, that is considered a bug (kindly file an
 
 ### Fully themable
 
-Create themes from your own design system's tokens, that you can extend and customize at any point of development.
+Define your own [theme tokens](custom-themes.md), [defaults](theme-values.md), and [light or dark color
+schemes](color-schemes.md). Compose Unstyled provides the theming APIs; your design system decides the values.
 
 ### Fully accessible
 

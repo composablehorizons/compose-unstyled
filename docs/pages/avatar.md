@@ -1,6 +1,6 @@
 ---
 title: Avatar
-description: An avatar primitive with image, fallback content, and caller-defined shape.
+description: An unstyled avatar component with image, fallback content, and caller-defined shape.
 ---
 
 <UnstyledDemo id="avatar" />

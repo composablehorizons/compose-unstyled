@@ -12,8 +12,11 @@ const navigation = parse(docsYaml);
         {section.pages.map(page => (
           <li><a href={sitePath(`/docs/${page.slug}/`)} aria-current={Astro.url.pathname.replace(/\/$/, '') === sitePath(`/docs/${page.slug}`) ? 'page' : undefined}>{page.title}</a></li>
         ))}
-        {section.title === 'Getting Started' && (
-          <li><a href={sitePath('/llms.txt')}>llms.txt</a></li>
+        {section.title === 'Resources' && (
+          <>
+            <li><a href={sitePath('/llms.txt')}>llms.txt</a></li>
+            <li><a href={sitePath('/llms-full.txt')}>Full documentation for LLMs</a></li>
+          </>
         )}
       </ul>
     </section>

@@ -1,18 +1,32 @@
 sections:
   - title: Getting Started
     pages:
-      - title: Overview
+      - title: About
         slug: overview
       - title: Installation
         slug: installation
-      - title: Components
-        slug: components
-      - title: Migration to 2.0
-        slug: migration-to-2
-      - title: Community
-        slug: community
+  - title: Theming
+    pages:
+      - title: Custom Themes
+        slug: custom-themes
+      - title: Color Schemes
+        slug: color-schemes
+      - title: Theme Values
+        slug: theme-values
+      - title: Typography
+        slug: typography
+      - title: Android XML Themes
+        slug: android-xml-themes
+      - title: Dynamic Themes
+        slug: dynamic-themes
+      - title: Platform Themes
+        slug: platform-themes
+      - title: Minimum Interactive Size
+        slug: defaultMinimumComponentInteractiveSize
   - title: Primitives
     pages:
+      - title: Overview
+        slug: components
       - title: Avatar
         slug: avatar
       - title: Bottom Sheet
@@ -53,22 +67,6 @@ sections:
         slug: toggleswitch
       - title: Tooltip
         slug: tooltip
-  - title: Theming
-    pages:
-      - title: Create Custom Themes
-        slug: custom-themes
-      - title: Typography
-        slug: typography
-      - title: Android XML Themes
-        slug: android-xml-themes
-      - title: Dynamic Themes
-        slug: dynamic-themes
-      - title: Theme Overrides
-        slug: theme-overrides
-      - title: Platform Themes
-        slug: platform-themes
-      - title: Minimum Interactive Size
-        slug: defaultMinimumComponentInteractiveSize
   - title: Styling
     pages:
       - title: ColoredIndication
@@ -95,3 +93,7 @@ sections:
         slug: portal
       - title: Window Container Size
         slug: window-container-size
+  - title: Resources
+    pages:
+      - title: Migration to 2.0
+        slug: migration-to-2
