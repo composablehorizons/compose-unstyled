@@ -75,6 +75,7 @@ kotlin {
         implementation(projects.composeunstyledDropdownMenu)
         implementation(projects.composeunstyledSlider)
         implementation(projects.composeunstyledScrollbars)
+        implementation(projects.composeunstyledTheming)
       }
     }
   }
