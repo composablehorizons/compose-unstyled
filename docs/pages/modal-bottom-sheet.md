@@ -3,6 +3,8 @@ title: Modal Bottom Sheet
 description: A dismissible modal bottom sheet with custom detents.
 ---
 
+> **Recommendation:** For new interfaces, use [Drawer](drawer.md) instead. It is a more flexible abstraction and the recommended API moving forward.
+
 <UnstyledDemo id="modal-bottom-sheet" />
 
 ## Features
