@@ -68,10 +68,10 @@ import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.errorToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -109,7 +109,7 @@ fun DropdownMenuDemo() {
             .width(240.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
+            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(8.dp)),
           enter = scaleIn(
             animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
             initialScale = 0.8f,
@@ -124,7 +124,7 @@ fun DropdownMenuDemo() {
         ) {
           options.forEachIndexed { index, option ->
             if (index == 1 || index == options.lastIndex) {
-              UnstyledHorizontalSeparator(color = Theme[colors][outlineToken])
+              UnstyledHorizontalSeparator(color = Theme[colors][borderToken])
             }
             UnstyledDropdownMenuItem(
               onClick = {},
@@ -173,7 +173,7 @@ fun DropdownMenuDemo() {
             .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(6.dp)),
+            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(6.dp)),
           indication = LocalIndication.current,
         ) {
           Row(

@@ -42,7 +42,7 @@ internal val DemoTheme = buildThemeV2 {
     surfaceToken to Color(0xFFFFFFFF),
     contentToken to Color(0xFF1D1D1F),
     mutedContentToken to Color(0xFF52525B),
-    outlineToken to Color(0x29000000),
+    borderToken to Color(0x29000000),
     shadowToken to Color.Black,
     inputBackgroundToken to Color(0xFFEDEDED),
     scrimToken to Color(0x52000000),
@@ -59,7 +59,7 @@ internal val DemoTheme = buildThemeV2 {
       surfaceToken to Color(0xFF242424),
       contentToken to Color(0xFFE5E5E5),
       mutedContentToken to Color(0xFFA1A1AA),
-      outlineToken to Color(0x3DFFFFFF),
+      borderToken to Color(0x3DFFFFFF),
       inputBackgroundToken to Color(0xFF303030),
     )
   }
@@ -71,7 +71,7 @@ internal val backgroundToken = ThemeToken<Color>("background")
 internal val surfaceToken = ThemeToken<Color>("surface")
 internal val contentToken = ThemeToken<Color>("content")
 internal val mutedContentToken = ThemeToken<Color>("mutedContent")
-internal val outlineToken = ThemeToken<Color>("outline")
+internal val borderToken = ThemeToken<Color>("border")
 internal val shadowToken = ThemeToken<Color>("shadow")
 internal val inputBackgroundToken = ThemeToken<Color>("inputBackground")
 internal val scrimToken = ThemeToken<Color>("scrim")

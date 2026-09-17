@@ -60,9 +60,9 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
@@ -85,7 +85,7 @@ fun DisclosureDemo() {
           .widthIn(max = 560.dp)
           .clip(RoundedCornerShape(12.dp))
           .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(12.dp)),
+          .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(12.dp)),
       ) {
         DisclosureButton(
           modifier = Modifier.fillMaxWidth(),

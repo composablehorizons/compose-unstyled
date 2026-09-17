@@ -59,9 +59,9 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.scrimToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
@@ -82,7 +82,7 @@ fun DialogDemo() {
         .clip(RoundedCornerShape(10.dp))
         .heightIn(32.dp)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(10.dp)),
+        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(10.dp)),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -114,7 +114,7 @@ fun DialogDemo() {
             .padding(20.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(12.dp)),
+            .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(12.dp)),
           paneTitle = "Dialog",
           enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
           exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),

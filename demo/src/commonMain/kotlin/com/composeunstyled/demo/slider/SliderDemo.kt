@@ -52,9 +52,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -95,7 +95,7 @@ fun SliderDemo() {
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Theme[colors][outlineToken]),
+                .background(Theme[colors][borderToken]),
             )
             // the 'completed' part of the track
             Box(

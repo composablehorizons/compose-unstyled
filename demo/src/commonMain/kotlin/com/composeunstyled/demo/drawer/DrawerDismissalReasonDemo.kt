@@ -53,6 +53,7 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
 import com.composeunstyled.demo.surfaceToken
@@ -90,7 +91,7 @@ fun DrawerDismissalReasonDemo() {
         contentPadding = PaddingValues(12.dp),
         modifier = Modifier
           .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][contentToken]),
+          .border(1.dp, Theme[colors][borderToken]),
         indication = LocalIndication.current,
       ) {
         Text("Open drawer")
@@ -107,7 +108,7 @@ fun DrawerDismissalReasonDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][contentToken])
+            .border(1.dp, Theme[colors][borderToken])
             .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
         ) {
           Column(
@@ -130,7 +131,7 @@ fun DrawerDismissalReasonDemo() {
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
                 .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][contentToken]),
+                .border(1.dp, Theme[colors][borderToken]),
               indication = LocalIndication.current,
             ) {
               Text("Close")

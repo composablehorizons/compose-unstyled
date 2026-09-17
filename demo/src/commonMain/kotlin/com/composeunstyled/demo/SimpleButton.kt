@@ -44,7 +44,7 @@ internal fun SimpleButton(
     onClick = {},
     modifier = modifier
       .clip(shape)
-      .border(1.dp, Theme[colors][contentToken].copy(alpha = 0.2f), shape),
+      .border(1.dp, Theme[colors][borderToken].copy(alpha = 0.2f), shape),
     interactionSource = interactionSource,
     indication = LocalIndication.current,
   ) {

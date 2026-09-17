@@ -52,8 +52,8 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledBottomSheet
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.demo.UnstyledDemo
+import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.demo.shadowToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberBottomSheetState
@@ -81,7 +81,7 @@ fun BottomSheetDemo() {
         .clip(RoundedCornerShape(10.dp))
         .heightIn(32.dp)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(10.dp)),
+        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(10.dp)),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -113,7 +113,7 @@ fun BottomSheetDemo() {
               modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 22.dp)
-                .background(Theme[colors][outlineToken], RoundedCornerShape(100))
+                .background(Theme[colors][borderToken], RoundedCornerShape(100))
                 .size(32.dp, 4.dp),
               indication = LocalIndication.current,
             )
