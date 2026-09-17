@@ -1,6 +1,5 @@
 .landing-header img,
-.unstyled-page img,
-.landing-footer img {
+.unstyled-page img {
   filter: grayscale(1);
 }
 
@@ -8,6 +7,10 @@
   .landing-brand img,
   .unstyled-brand img {
     filter: grayscale(1) brightness(0) invert(1);
+  }
+
+  .landing-brand .landing-composables-logo {
+    filter: none;
   }
 }
 
@@ -164,6 +167,7 @@
   padding-block: var(--space-5);
 }
 .landing-brand { display: inline-flex; align-items: center; gap: var(--space-3); color: inherit; text-decoration: none; }
+.landing-composables-name { display: inline-flex; align-items: center; gap: var(--space-2); }
 .landing-footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .landing-footer { margin-top: 4rem; padding-block: var(--space-7); }
 .landing-footer a { color: inherit; }
