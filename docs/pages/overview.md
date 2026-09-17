@@ -32,8 +32,8 @@ If there is something you cannot style, that is considered a bug (kindly file an
 
 ### Fully themable
 
-Define your own [theme tokens](custom-themes.md), [defaults](theme-values.md), and [light or dark color
-schemes](color-schemes.md). Compose Unstyled provides the theming APIs; your design system decides the values.
+Define your own [theme tokens, defaults, and color schemes](custom-themes.md). Compose Unstyled provides the theming
+APIs; your design system decides the values.
 
 ### Fully accessible
 

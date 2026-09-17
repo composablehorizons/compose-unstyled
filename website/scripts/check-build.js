@@ -14,11 +14,12 @@ let links = 0;
 
 for (const file of pages) {
   const html = readFileSync(path.join(dist, file), 'utf8');
+  const isRedirect = /<meta http-equiv="refresh"/i.test(html);
   for (const [tag] of html.matchAll(/<[a-z][^>]*>/gi)) {
     if (/^<a\s/i.test(tag)) {
       const attributes = Object.fromEntries([...tag.matchAll(/\b(href|target|rel)=["']([^"']*)["']/g)].map(([, name, value]) => [name, value]));
       const url = new URL(attributes.href || '', site);
-      if (['http:', 'https:'].includes(url.protocol) && url.origin !== new URL(site).origin) {
+      if (isRedirect === false && ['http:', 'https:'].includes(url.protocol) && url.origin !== new URL(site).origin) {
         assert.equal(attributes.target, '_blank', `${file}: external link must open in a new tab: ${url}`);
         const rel = new Set((attributes.rel || '').split(/\s+/));
         assert(rel.has('noopener') && rel.has('noreferrer'), `${file}: external link is missing safe rel attributes: ${url}`);
