@@ -4,8 +4,8 @@ description: A step-by-step guide on using your Android XML themes in Jetpack Co
 social_image: /og_xml_themes.png
 ---
 
-This API is handy as you do not need to maintain two sources of truth (one being your XML themes and your Jetpack
-Compose themes) during the migration process.
+Use this guide when migrating an Android app that still gets design values from XML themes. It lets you avoid
+maintaining XML and Jetpack Compose theme values separately during the migration.
 
 This guide teaches you how to setup your Compose Unstyled theme using your Android XML theme, and use its values in your
 composables.
@@ -59,10 +59,10 @@ First off, let's create a Compose theme. It will be 'blank' for now. In the next
 between XML
 and Compose.
 
-Compose Unstyled comes with a theme builder function called `buildTheme {}`. It returns a `@Composable` theme
-function that you can use to wrap your application content.
+Compose Unstyled comes with a theme builder function called `buildThemeV2 {}`. It returns a theme that you can invoke
+as a composable to wrap your application content.
 
-If you are coming from Material Compose, the result of `buildTheme {}` works the same way as Material's [
+If you are coming from Material Compose, the result of `buildThemeV2 {}` works the same way as Material's [
 `MaterialTheme {}`](/docs/androidx.compose.material3/material3/components/MaterialTheme) function.
 
 Let's create a blank theme and use it to wrap the contents of our app:
@@ -70,9 +70,9 @@ Let's create a blank theme and use it to wrap the contents of our app:
 ```kotlin expandable
 import com.composeunstyled.UnstyledButton
 import androidx.compose.foundation.text.BasicText
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
-val AppTheme = buildTheme { }
+val AppTheme = buildThemeV2 { }
 
 @Composable
 fun App() {
@@ -98,9 +98,8 @@ fun App() {
 
 ![Android XML themed app before connecting colors](/composeunstyled-v2-assets/xml-theme-guide/step_0.png)
 
-Did you notice that we use the [`Text`](typography.md) and [`Button`](button.md) components? These components
-are automatically styled
-based off your current theme. You are not force to use them, but they make styling a breeze.
+This example applies the theme but has not connected any XML values yet. The following sections map XML values to theme
+tokens, which your components can then read with `Theme`.
 
 ## Use your XML colors in Compose
 
@@ -126,7 +125,7 @@ We can now use them in our theme function to read the values of our XML theme.
 Compose Unstyled comes with `resolveThemeX()` composable functions so that you can read your XML theme values:
 
 ```kotlin expandable
-val AppTheme = buildTheme {
+val AppTheme = buildThemeV2 {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
 
@@ -210,7 +209,7 @@ val large = ThemeToken<Dp>("large")
 and now let's map them to our theme:
 
 ```kotlin expandable
-val AppTheme = buildTheme {
+val AppTheme = buildThemeV2 {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
 
@@ -282,7 +281,7 @@ val body = ThemeToken<TextStyle>("body")
 Now we can map our XML text appearance to our theme tokens using `resolveThemeTextAppearance`:
 
 ```kotlin expandable
-val AppTheme = buildTheme {
+val AppTheme = buildThemeV2 {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
 
@@ -368,7 +367,7 @@ implementation("com.composables:ripple-indication:1.0.0")
 This introduces the `rememberRippleIndication()` function, that we can use in our compose theme:
 
 ```kotlin expandable
-val AppTheme = buildTheme {
+val AppTheme = buildThemeV2 {
     // get a reference to the calling (themed) context
     val context = LocalContext.current
 

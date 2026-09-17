@@ -9,6 +9,8 @@ description: A modifier that sets the minimum interactive size of a composable b
 implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
+> **Warning:** `ComponentInteractiveSize` and `defaultComponentInteractiveSize` are deprecated and will be removed in
+> 3.0. If your design system needs a minimum interactive size, implement that policy in your own components.
 
 ## Code Examples
 
@@ -16,7 +18,7 @@ implementation("com.composables:composeunstyled-theming:2.9.2")
 
 Use the `defaultComponentInteractiveSize` theme property to specify the minimum interaction size for your components.
 
-Use the `Modifier.defaultComponentInteractiveSize()` when creating your components to set the minimum size:
+Use `Modifier.minimumInteractiveComponentSize()` when creating your components to set the minimum size:
 
 ```kotlin expandable
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,11 +32,11 @@ import com.composeunstyled.UnstyledButton
 import androidx.compose.foundation.text.BasicText
 import com.composeunstyled.minimumInteractiveComponentSize
 import com.composeunstyled.theme.ComponentInteractiveSize
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
 @Composable
 fun MinimumInteractiveSizeBasicExample() {
-    val Theme = buildTheme {
+    val Theme = buildThemeV2 {
         defaultComponentInteractiveSize = ComponentInteractiveSize(
             size = 48.dp,
         )
@@ -56,12 +58,12 @@ fun MinimumInteractiveSizeBasicExample() {
 
 ```kotlin expandable
 import com.composeunstyled.minimumInteractiveComponentSize
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 import com.composeunstyled.theme.ComponentInteractiveSize
 ```
 
 ```kotlin expandable
-val Theme = buildTheme {
+val Theme = buildThemeV2 {
     defaultComponentInteractiveSize = ComponentInteractiveSize(
         size = 48.dp,
     )
@@ -93,11 +95,11 @@ import com.composeunstyled.UnstyledButton
 import androidx.compose.foundation.text.BasicText
 import com.composeunstyled.minimumInteractiveComponentSize
 import com.composeunstyled.theme.ComponentInteractiveSize
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
 @Composable
 fun MinimumInteractiveSizeResponsiveExample() {
-    val Theme = buildTheme {
+    val Theme = buildThemeV2 {
         defaultComponentInteractiveSize = ComponentInteractiveSize(
             touchInteractionSize = 48.dp,
             nonTouchInteractionSize = 32.dp
@@ -120,12 +122,12 @@ fun MinimumInteractiveSizeResponsiveExample() {
 
 ```kotlin expandable
 import com.composeunstyled.minimumInteractiveComponentSize
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 import com.composeunstyled.theme.ComponentInteractiveSize
 ```
 
 ```kotlin expandable
-val Theme = buildTheme {
+val Theme = buildThemeV2 {
     defaultComponentInteractiveSize = ComponentInteractiveSize(
         touchInteractionSize = 48.dp,
         nonTouchInteractionSize = 32.dp
