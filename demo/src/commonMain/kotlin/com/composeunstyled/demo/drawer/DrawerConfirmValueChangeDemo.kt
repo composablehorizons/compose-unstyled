@@ -28,9 +28,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,15 +42,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.composables.icons.lucide.Check
+import com.composables.icons.lucide.Lucide
+import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.DrawerSnapPoint
 import com.composeunstyled.DrawerSnapPoints
 import com.composeunstyled.Panel
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
+import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
+import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.borderToken
@@ -109,15 +120,27 @@ fun DrawerConfirmValueChangeDemo() {
           ) {
             Text("Here is the content of the drawer.")
             Text(if (canClose) "Closing is allowed." else "Closing is blocked.")
-            UnstyledButton(
-              onClick = { canClose = canClose.not() },
-              contentPadding = PaddingValues(12.dp),
-              modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+            UnstyledCheckbox(
+              checked = canClose,
+              onCheckedChange = { canClose = it },
+              modifier = Modifier.fillMaxWidth(),
+              accessibilityLabel = "Allow closing",
               indication = LocalIndication.current,
             ) {
-              Text(if (canClose) "Block closing" else "Allow closing")
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                CheckedIndicator(
+                  modifier = Modifier
+                    .clip(RectangleShape)
+                    .size(24.dp)
+                    .background(Theme[colors][surfaceToken], RectangleShape)
+                    .border(1.dp, Theme[colors][borderToken], RectangleShape),
+                  indication = LocalIndication.current,
+                ) {
+                  UnstyledIcon(Lucide.Check)
+                }
+                Spacer(Modifier.width(12.dp))
+                Text("Allow closing")
+              }
             }
             UnstyledButton(
               onClick = { drawerState.targetValue = DrawerConfirmValueChangeDemoValue.Closed },
@@ -127,7 +150,7 @@ fun DrawerConfirmValueChangeDemo() {
                 .border(1.dp, Theme[colors][borderToken]),
               indication = LocalIndication.current,
             ) {
-              Text("Try to close")
+              Text("Close")
             }
           }
         }
