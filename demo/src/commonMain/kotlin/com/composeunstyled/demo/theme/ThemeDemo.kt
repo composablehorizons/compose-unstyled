@@ -43,7 +43,7 @@ import com.composeunstyled.Text
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.focusToken
+import com.composeunstyled.demo.focusRingToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
@@ -68,7 +68,7 @@ private val AppTheme = buildTheme {
   properties[exampleColors] = mapOf(
     background to Theme[colors][surfaceToken],
     surface to Theme[colors][surfaceToken],
-    primary to Theme[colors][focusToken],
+    primary to Theme[colors][focusRingToken],
     onSurface to Theme[colors][contentToken],
     onPrimary to Theme[colors][surfaceToken],
   )
