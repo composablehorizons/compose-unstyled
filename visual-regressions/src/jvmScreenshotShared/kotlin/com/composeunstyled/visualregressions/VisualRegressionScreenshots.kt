@@ -46,6 +46,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isLessThanOrEqualTo
 import assertk.fail
 import com.composeunstyled.demo.Demo
+import com.composeunstyled.theme.ColorScheme
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
@@ -96,7 +97,7 @@ private fun demoScreenshot(
   startDestination: String,
 ) = VisualRegressionScreenshot(
   name = name,
-  content = { Demo(startDestination = startDestination) },
+  content = { Demo(startDestination = startDestination, colorScheme = ColorScheme.Light) },
 )
 
 @Composable
