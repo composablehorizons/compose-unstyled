@@ -1,6 +1,6 @@
 ---
-title: Unstyled Component Primitives
-description: Find all available component primitives in Compose Unstyled.
+title: Unstyled Components
+description: Find all available unstyled components in Compose Unstyled.
 ---
 
 ## Installation
@@ -13,11 +13,11 @@ implementation("com.composables:composeunstyled-checkbox:2.9.2")
 implementation("com.composables:composeunstyled-text-field:2.9.2")
 ```
 
-Each primitive is published as its own module in Compose Unstyled 2.0.0. Use the dependencies from the Installation page to keep each feature module focused on only the APIs it uses.
+Each component is published as its own module in Compose Unstyled 2.0.0. Use the dependencies from the Installation page to keep each feature module focused on only the APIs it uses.
 
 ---
 
-## Component Primitives
+## Components
 
 {{unstyled_component_grid}}
 

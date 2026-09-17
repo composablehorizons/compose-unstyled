@@ -4,14 +4,14 @@ description: How to migrate Compose Unstyled projects to 2.0.
 ---
 
 
-Compose Unstyled 2.0 removes the deprecated 1.x APIs and makes primitives more strictly unstyled.
+Compose Unstyled 2.0 removes the deprecated 1.x APIs and makes components more strictly unstyled.
 The last 1.x release is `1.49.9`, published on 2025-04-24. The first 2.0 release is `2.0.0`,
 published on 2026-05-11. Migrate to `1.49.9` first, apply the available IDE `ReplaceWith()` fixes,
 then upgrade to `2.0.0`.
 
 ## Need help?
 
-Check the [Compose Unstyled community](community.md) to ask questions about your migration.
+Ask migration questions in the [Compose Unstyled GitHub repository](https://github.com/composablehorizons/compose-unstyled).
 
 ## What changed
 
@@ -19,7 +19,7 @@ Check the [Compose Unstyled community](community.md) to ask questions about your
 
 - The old aggregate `composeunstyled` artifact was removed.
 - The old `com.composables.core` package was removed.
-- Primitives no longer apply styling, layout, or sizing opinions for you.
+- Components no longer apply styling, layout, or sizing opinions for you.
 
 Most migrations are either dependency changes or moving visual parameters into your own layout and
 modifiers.
@@ -42,7 +42,7 @@ implementation("com.composables:composeunstyled-text-field:2.9.2")
 implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
-Primitives and theming are now separate. Add `composeunstyled-theming` when you use `Text`,
+Components and theming are now separate. Add `composeunstyled-theming` when you use `Text`,
 `LocalContentColor`, `LocalTextStyle`, `ProvideContentColor`, `ProvideTextStyle`, themes, or minimum
 interactive size helpers.
 
@@ -70,7 +70,7 @@ import com.composeunstyled.theme.Text
 
 ## Move styling to your code
 
-2.0 primitives expose behavior and slots. Visual parameters such as `shape`, `backgroundColor`,
+2.0 components expose behavior and slots. Visual parameters such as `shape`, `backgroundColor`,
 `contentColor`, `borderColor`, layout arrangements, and many padding/layout parameters were removed
 from component APIs.
 
@@ -100,8 +100,8 @@ UnstyledButton(
 }
 ```
 
-This applies across primitives: arrange slots with `Row`, `Column`, `Box`, or your own component
-wrappers instead of relying on the primitive to create internal layout.
+This applies across components: arrange slots with `Row`, `Column`, `Box`, or your own component
+wrappers instead of relying on the component to create internal layout.
 
 ## Replace removed deprecated names
 
@@ -332,7 +332,7 @@ UnstyledSlider(
 
 ### Checkbox, TriState Checkbox, and Radio Group
 
-Indicators are scoped child APIs so they can receive the primitive interaction source:
+Indicators are scoped child APIs so they can receive the component interaction source:
 
 ```kotlin expandable
 var checked by remember { mutableStateOf(false) }
@@ -384,13 +384,13 @@ Box {
 
 ## Review behavior changes
 
-After the project compiles, review the screens that use migrated primitives:
+After the project compiles, review the screens that use migrated components:
 
-- Add your own size constraints if a primitive used to fill or align content for you.
+- Add your own size constraints if a component used to fill or align content for you.
 - Add your own background, clipping, border, text color, and content color propagation.
 - Check modal, dialog, sheet, tooltip, and menu dismissal paths.
 - Check keyboard navigation for dropdown menus, tab groups, radio groups, sliders, and sheets.
 - Check scrollable content with scrollbars and bottom sheets.
 
-2.0 keeps accessibility and behavior in the primitives, but your app now owns the visual and layout
+2.0 keeps accessibility and behavior in the components, but your app now owns the visual and layout
 contract around them.
