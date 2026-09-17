@@ -46,7 +46,7 @@ internal val DemoTheme = buildThemeV2 {
     shadowToken to Color.Black,
     inputBackgroundToken to Color(0xFFEDEDED),
     scrimToken to Color(0x52000000),
-    focusToken to Color(0xFF3B82F6),
+    focusRingToken to Color(0xFF3B82F6),
     errorToken to Color(0xFFEF4444),
     successToken to Color(0xFF10B981),
     highlightToken to Color(0xFF8B5CF6),
@@ -75,7 +75,7 @@ internal val borderToken = ThemeToken<Color>("border")
 internal val shadowToken = ThemeToken<Color>("shadow")
 internal val inputBackgroundToken = ThemeToken<Color>("inputBackground")
 internal val scrimToken = ThemeToken<Color>("scrim")
-internal val focusToken = ThemeToken<Color>("focus")
+internal val focusRingToken = ThemeToken<Color>("focusRing")
 internal val errorToken = ThemeToken<Color>("error")
 internal val successToken = ThemeToken<Color>("success")
 internal val highlightToken = ThemeToken<Color>("highlight")

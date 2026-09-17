@@ -36,7 +36,7 @@ import com.composeunstyled.FocusVisibilityProvider
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.focusToken
+import com.composeunstyled.demo.focusRingToken
 import com.composeunstyled.focusRing
 import com.composeunstyled.theme.Theme
 
@@ -70,7 +70,7 @@ private fun FocusRingVariant(visibility: FocusRingVisibility) {
       modifier = Modifier.focusRing(
         interactionSource = interactionSource,
         width = 2.dp,
-        color = Theme[colors][focusToken],
+        color = Theme[colors][focusRingToken],
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
         visibility = visibility,

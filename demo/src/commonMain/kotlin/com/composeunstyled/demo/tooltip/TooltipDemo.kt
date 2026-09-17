@@ -67,6 +67,7 @@ import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.focusRingToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.focusRing
 import com.composeunstyled.theme.Theme
@@ -105,7 +106,7 @@ fun TooltipDemo() {
             .clip(CircleShape)
             .background(Theme[colors][surfaceToken])
             .border(1.dp, Theme[colors][borderToken], CircleShape)
-            .focusRing(interactionSource, 1.dp, Theme[colors][contentToken], CircleShape),
+            .focusRing(interactionSource, 1.dp, Theme[colors][focusRingToken], CircleShape),
           interactionSource = interactionSource,
           indication = LocalIndication.current,
         ) {
