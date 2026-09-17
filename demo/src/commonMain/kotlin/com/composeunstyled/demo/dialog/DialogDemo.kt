@@ -59,10 +59,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDialog
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.scrimToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -80,8 +81,8 @@ fun DialogDemo() {
       modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .heightIn(32.dp)
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(10.dp)),
+        .background(Theme[colors][surfaceToken])
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(10.dp)),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -93,7 +94,7 @@ fun DialogDemo() {
       onDismissRequest = { dialogVisible = false },
       overlay = {
         Scrim(
-          scrimColor = Theme[demoColors][demoContent].copy(0.3f),
+          scrimColor = Theme[colors][scrimToken],
           enter = fadeIn(),
           exit = fadeOut(),
         )
@@ -112,8 +113,8 @@ fun DialogDemo() {
             .widthIn(max = 560.dp)
             .padding(20.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(12.dp)),
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(12.dp)),
           paneTitle = "Dialog",
           enter = scaleIn(initialScale = 0.8f) + fadeIn(tween(durationMillis = 250)),
           exit = scaleOut(targetScale = 0.6f) + fadeOut(tween(durationMillis = 150)),
@@ -122,7 +123,7 @@ fun DialogDemo() {
             Column(Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp)) {
               Text(
                 text = "Update Available",
-                color = Theme[demoColors][demoContent],
+                color = Theme[colors][contentToken],
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
                 fontWeight = FontWeight.Medium,
@@ -131,7 +132,7 @@ fun DialogDemo() {
               Text(
                 text = "A new version of the app is available. " +
                   "Please update to the latest version.",
-                color = Theme[demoColors][demoContent],
+                color = Theme[colors][contentToken],
               )
             }
             Spacer(Modifier.height(24.dp))
@@ -146,7 +147,7 @@ fun DialogDemo() {
               Text(
                 "Update",
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                color = Theme[demoColors][demoContent],
+                color = Theme[colors][contentToken],
               )
             }
           }

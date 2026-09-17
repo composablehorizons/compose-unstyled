@@ -44,10 +44,10 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledVerticalSeparator
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoInputBackground
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.inputBackgroundToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -62,35 +62,35 @@ fun SeparatorsDemo() {
     Column(
       Modifier
         .clip(RoundedCornerShape(6.dp))
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(6.dp))
+        .background(Theme[colors][surfaceToken])
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(6.dp))
         .width(240.dp),
     ) {
       Text(
         "New Window",
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
+      UnstyledHorizontalSeparator(Theme[colors][inputBackgroundToken])
       Text("New Tab", Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp))
-      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
+      UnstyledHorizontalSeparator(Theme[colors][inputBackgroundToken])
       Text(
         "New Incognito Tab",
         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
       )
-      UnstyledHorizontalSeparator(Theme[demoColors][demoInputBackground])
+      UnstyledHorizontalSeparator(Theme[colors][inputBackgroundToken])
       Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Text(
           "Copy",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Theme[demoColors][demoInputBackground])
+        UnstyledVerticalSeparator(Theme[colors][inputBackgroundToken])
         Text(
           "Cut",
           modifier = Modifier.padding(8.dp).weight(1f),
           textAlign = TextAlign.Center,
         )
-        UnstyledVerticalSeparator(Theme[demoColors][demoInputBackground])
+        UnstyledVerticalSeparator(Theme[colors][inputBackgroundToken])
         Text(
           "Paste",
           Modifier.padding(8.dp).weight(1f),

@@ -68,11 +68,11 @@ import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoError
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.errorToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -108,8 +108,8 @@ fun DropdownMenuDemo() {
           modifier = Modifier
             .width(240.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp)),
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
           enter = scaleIn(
             animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
             initialScale = 0.8f,
@@ -124,7 +124,7 @@ fun DropdownMenuDemo() {
         ) {
           options.forEachIndexed { index, option ->
             if (index == 1 || index == options.lastIndex) {
-              UnstyledHorizontalSeparator(color = Theme[demoColors][demoOutline])
+              UnstyledHorizontalSeparator(color = Theme[colors][outlineToken])
             }
             UnstyledDropdownMenuItem(
               onClick = {},
@@ -145,7 +145,7 @@ fun DropdownMenuDemo() {
               ) {
                 val contentColor = (
                   if (option.dangerous) {
-                    Theme[demoColors][demoError]
+                    Theme[colors][errorToken]
                   } else {
                     LocalContentColor.current
                   }
@@ -172,8 +172,8 @@ fun DropdownMenuDemo() {
           modifier = Modifier
             .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
             .clip(RoundedCornerShape(6.dp))
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(6.dp)),
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(6.dp)),
           indication = LocalIndication.current,
         ) {
           Row(
@@ -185,7 +185,7 @@ fun DropdownMenuDemo() {
             UnstyledIcon(
               imageVector = Lucide.ChevronDown,
               contentDescription = null,
-              tint = Theme[demoColors][demoContent],
+              tint = Theme[colors][contentToken],
             )
           }
         }

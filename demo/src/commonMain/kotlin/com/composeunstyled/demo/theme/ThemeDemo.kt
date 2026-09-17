@@ -41,10 +41,10 @@ import androidx.compose.ui.unit.sp
 import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoFocus
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.focusToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
@@ -66,11 +66,11 @@ private val AppTheme = buildTheme {
   name = "AppTheme"
 
   properties[exampleColors] = mapOf(
-    background to Theme[demoColors][demoSurface],
-    surface to Theme[demoColors][demoSurface],
-    primary to Theme[demoColors][demoFocus],
-    onSurface to Theme[demoColors][demoContent],
-    onPrimary to Theme[demoColors][demoSurface],
+    background to Theme[colors][surfaceToken],
+    surface to Theme[colors][surfaceToken],
+    primary to Theme[colors][focusToken],
+    onSurface to Theme[colors][contentToken],
+    onPrimary to Theme[colors][surfaceToken],
   )
 
   properties[textStyles] = mapOf(

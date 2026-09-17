@@ -60,10 +60,10 @@ import com.composeunstyled.ThumbVisibility
 import com.composeunstyled.UnstyledHorizontalScrollbar
 import com.composeunstyled.UnstyledVerticalScrollbar
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberScrollbarState
 import com.composeunstyled.theme.Theme
 import kotlin.time.Duration.Companion.seconds
@@ -117,8 +117,8 @@ fun VerticalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Theme[demoColors][demoSurface], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp))
+        .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp))
         .fillMaxSize(),
     ) {
       Column(
@@ -151,7 +151,7 @@ fun VerticalScrollbarsDemo() {
             .fillMaxWidth()
             .padding(2.dp)
             .height(12.dp)
-            .background(Theme[demoColors][demoContent].copy(0.33f), RoundedCornerShape(100)),
+            .background(Theme[colors][contentToken].copy(0.33f), RoundedCornerShape(100)),
           thumbVisibility = ThumbVisibility.AlwaysVisible,
         )
       }
@@ -173,8 +173,8 @@ fun HorizontalScrollbarsDemo() {
     Box(
       modifier = Modifier
         .widthIn(max = 400.dp)
-        .background(Theme[demoColors][demoSurface], RoundedCornerShape(8.dp))
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp))
+        .background(Theme[colors][surfaceToken], RoundedCornerShape(8.dp))
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp))
         .wrapContentHeight(),
     ) {
       Row(
@@ -187,7 +187,7 @@ fun HorizontalScrollbarsDemo() {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
       ) {
         (1..100).forEach { i ->
-          Box(Modifier.size(90.dp).clip(CircleShape).background(Theme[demoColors][demoContent]))
+          Box(Modifier.size(90.dp).clip(CircleShape).background(Theme[colors][contentToken]))
         }
       }
       UnstyledHorizontalScrollbar(
@@ -202,7 +202,7 @@ fun HorizontalScrollbarsDemo() {
             .fillMaxHeight()
             .padding(2.dp)
             .width(12.dp)
-            .background(Theme[demoColors][demoContent].copy(0.33f), RoundedCornerShape(100)),
+            .background(Theme[colors][contentToken].copy(0.33f), RoundedCornerShape(100)),
           thumbVisibility = ThumbVisibility.HideWhileIdle(
             enter = fadeIn(),
             exit = fadeOut(),

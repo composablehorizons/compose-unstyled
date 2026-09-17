@@ -56,14 +56,30 @@ import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.theme.ColorScheme
 import com.composeunstyled.theme.Theme
 
 @Composable
 fun Demo(startDestination: String = "home") {
   DemoTheme {
-    Box(Modifier.fillMaxSize().background(Theme[demoColors][demoBackground])) {
-      DemoSelection(startDestination)
-    }
+    DemoContent(startDestination)
+  }
+}
+
+@Composable
+fun Demo(
+  startDestination: String,
+  colorScheme: ColorScheme,
+) {
+  DemoTheme(colorScheme = colorScheme) {
+    DemoContent(startDestination)
+  }
+}
+
+@Composable
+private fun DemoContent(startDestination: String) {
+  Box(Modifier.fillMaxSize()) {
+    DemoSelection(startDestination)
   }
 }
 
@@ -140,7 +156,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Theme[demoColors][demoBackground])
+      .background(Theme[colors][backgroundToken])
       .padding(WindowInsets.statusBars.asPaddingValues())
       .padding(4.dp),
     verticalAlignment = Alignment.CenterVertically,

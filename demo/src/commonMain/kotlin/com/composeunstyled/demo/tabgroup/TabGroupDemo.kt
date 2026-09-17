@@ -55,11 +55,11 @@ import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTabPanel
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoMutedContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.mutedContentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -133,8 +133,8 @@ fun TabGroupDemo() {
             .fillMaxWidth()
             .height(48.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp)),
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -148,16 +148,16 @@ fun TabGroupDemo() {
                     text = key,
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                     color = if (selected) {
-                      Theme[demoColors][demoContent]
+                      Theme[colors][contentToken]
                     } else {
-                      Theme[demoColors][demoMutedContent]
+                      Theme[colors][mutedContentToken]
                     },
                   )
                   if (selected) {
                     Box(
                       modifier = Modifier
                         .background(
-                          color = Theme[demoColors][demoContent],
+                          color = Theme[colors][contentToken],
                           shape = RoundedCornerShape(2.dp),
                         )
                         .fillMaxWidth()
@@ -178,10 +178,10 @@ fun TabGroupDemo() {
             modifier = Modifier
               .fillMaxWidth()
               .background(
-                color = Theme[demoColors][demoSurface],
+                color = Theme[colors][surfaceToken],
                 shape = RoundedCornerShape(8.dp),
               )
-              .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp)),
+              .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->
