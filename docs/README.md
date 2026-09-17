@@ -34,3 +34,8 @@ bun run dev
 ```
 
 The website preparation scripts generate markdown pages, demo source snippets, static docs assets, and the demo web app.
+
+## Search discovery
+
+The website build generates `sitemap-index.xml` and `sitemap-0.xml` for the landing page and all
+documentation routes. `robots.txt` and every page link to the sitemap index so crawlers can find it.
