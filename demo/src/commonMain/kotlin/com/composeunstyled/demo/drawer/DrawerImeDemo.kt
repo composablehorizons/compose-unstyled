@@ -95,8 +95,7 @@ fun DrawerImeDemo() {
       snapPoints = snapPoints,
     )
   }
-  val name = rememberTextFieldState()
-  val email = rememberTextFieldState()
+  val input = rememberTextFieldState()
   val fieldTextStyle = TextStyle(fontSize = 16.sp, lineHeight = 24.sp)
 
   Box(Modifier.fillMaxSize()) {
@@ -158,7 +157,7 @@ fun DrawerImeDemo() {
                 )
 
                 UnstyledTextField(
-                  state = name,
+                  state = input,
                   modifier = Modifier.fillMaxWidth(),
                   accessibilityLabel = "First field",
                   lineLimits = TextFieldLineLimits.SingleLine,
@@ -166,29 +165,6 @@ fun DrawerImeDemo() {
                   textStyle = fieldTextStyle,
                 ) {
                   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("First field", style = fieldTextStyle)
-                    TextInput(
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, Theme[colors][borderToken])
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
-                      placeholder = {
-                        Text("Type here", style = fieldTextStyle)
-                      },
-                    )
-                  }
-                }
-
-                UnstyledTextField(
-                  state = email,
-                  modifier = Modifier.fillMaxWidth(),
-                  accessibilityLabel = "Second field",
-                  lineLimits = TextFieldLineLimits.SingleLine,
-                  cursorBrush = SolidColor(Theme[colors][contentToken]),
-                  textStyle = fieldTextStyle,
-                ) {
-                  Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Second field", style = fieldTextStyle)
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
