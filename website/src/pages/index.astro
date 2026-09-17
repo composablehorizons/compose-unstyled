@@ -6,6 +6,11 @@ import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
 const navigation = parse(docsYaml);
 const components = navigation.sections.find(section => section.title === 'Primitives').pages;
+const componentLinks = components.filter(component => component.slug !== 'components');
+const theming = navigation.sections
+  .find(section => section.title === 'Theming')
+  .pages
+  .filter(page => ['custom-themes', 'color-schemes', 'theme-values', 'dynamic-themes', 'platform-themes'].includes(page.slug));
 ---
 <LandingLayout>
   <div class="unstyled-page">
@@ -22,15 +27,6 @@ const components = navigation.sections.find(section => section.title === 'Primit
       </div>
     </header>
 
-    <section class="unstyled-components" aria-label="Components">
-      <h2 class="headerMedium"><a class="landing-link" href={sitePath('/docs/components/')}>Components →</a></h2>
-      <ul class="unstyled-component-links" role="list">
-        {components.map(component => (
-          <li><a class="landing-link" href={sitePath(`/docs/${component.slug}/`)}>{component.title} →</a></li>
-        ))}
-      </ul>
-    </section>
-
     <section class="unstyled-brands" aria-labelledby="teams-title">
       <div class="unstyled-section-header">
         <h2 id="teams-title" class="headerMedium">Used by exceptional teams</h2>
@@ -40,6 +36,27 @@ const components = navigation.sections.find(section => section.title === 'Primit
         {brands.map(brand => <div class="unstyled-brand"><img src={sitePath(brand.src)} alt={brand.alt} loading="lazy" /></div>)}
       </div>
       <p><a class="landing-link unstyled-feature-link" href="https://tally.so/r/jaWxRa" target="_blank" rel="noopener noreferrer nofollow">Apply to be featured →</a></p>
+    </section>
+
+    <section class="unstyled-components" aria-label="Components">
+      <h2 class="headerMedium"><a class="landing-link" href={sitePath('/docs/components/')}>Components →</a></h2>
+      <ul class="unstyled-component-links" role="list">
+        {componentLinks.map(component => (
+          <li><a class="landing-link" href={sitePath(`/docs/${component.slug}/`)}>{component.title} →</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="unstyled-theming" aria-labelledby="theming-title">
+      <div class="unstyled-section-header">
+        <h2 id="theming-title" class="headerMedium">Theming</h2>
+        <p>Define the values your design system needs, from light and dark schemes to defaults for your Compose UI.</p>
+      </div>
+      <ul class="unstyled-component-links" role="list">
+        {theming.map(page => (
+          <li><a class="landing-link" href={sitePath(`/docs/${page.slug}/`)}>{page.title} →</a></li>
+        ))}
+      </ul>
     </section>
 
     <section class="unstyled-faq" aria-labelledby="faq-title">

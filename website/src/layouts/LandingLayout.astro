@@ -33,7 +33,13 @@ import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
     </header>
     <main id="main"><slot /></main>
     <footer class="landing-footer">
-      <a class="landing-brand titleMedium" href="https://composables.com" target="_blank" rel="noopener noreferrer nofollow">Made by Composables</a>
+      <a class="landing-brand titleMedium" href="https://composables.com" target="_blank" rel="noopener noreferrer nofollow">
+        Made by
+        <span class="landing-composables-name">
+          <img class="landing-composables-logo" src={sitePath('/icons/composables-logo.svg')} width="22" height="22" alt="" />
+          Composables
+        </span>
+      </a>
       <nav aria-label="Footer navigation">
         <a class="landing-link" href={sitePath('/docs/')}>Documentation</a>
         <a class="landing-link" href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow">GitHub</a>
