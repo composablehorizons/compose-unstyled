@@ -8,7 +8,7 @@ description: A three-state checkbox component for checked, unchecked, and indete
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-tri-state-checkbox")
+implementation("com.composables:composeunstyled-tri-state-checkbox:2.9.2")
 ```
 
 ## Anatomy

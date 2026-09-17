@@ -41,14 +41,14 @@ android {
 
 dependencies {
     // adds theming APIs
-    implementation("com.composables:composeunstyled-theming")
+    implementation("com.composables:composeunstyled-theming:2.9.2")
 
     // add the component modules you use
-    implementation("com.composables:composeunstyled-button")
-    implementation("com.composables:composeunstyled-text-field")
+    implementation("com.composables:composeunstyled-button:2.9.2")
+    implementation("com.composables:composeunstyled-text-field:2.9.2")
 
     // adds themes for native look and feel
-    implementation("com.composables:composeunstyled-platformtheme")
+    implementation("com.composables:composeunstyled-platformtheme:2.9.2")
 }
 ```
 
@@ -66,14 +66,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // adds theming APIs
-            implementation("com.composables:composeunstyled-theming")
+            implementation("com.composables:composeunstyled-theming:2.9.2")
 
             // add the component modules you use
-            implementation("com.composables:composeunstyled-button")
-            implementation("com.composables:composeunstyled-text-field")
+            implementation("com.composables:composeunstyled-button:2.9.2")
+            implementation("com.composables:composeunstyled-text-field:2.9.2")
 
             // adds themes for native look and feel
-            implementation("com.composables:composeunstyled-platformtheme")
+            implementation("com.composables:composeunstyled-platformtheme:2.9.2")
         }
     }
 }

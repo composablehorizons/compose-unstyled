@@ -13,7 +13,7 @@ The function returns a single `Modifier` that is the result of chaining all the 
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-build-modifier")
+implementation("com.composables:composeunstyled-build-modifier:2.9.2")
 ```
 
 
