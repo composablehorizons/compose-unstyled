@@ -9,6 +9,10 @@ sections:
     pages:
       - title: Custom Themes
         slug: custom-themes
+      - title: Color Schemes
+        slug: color-schemes
+      - title: Theme Values
+        slug: theme-values
       - title: Typography
         slug: typography
       - title: Android XML Themes
