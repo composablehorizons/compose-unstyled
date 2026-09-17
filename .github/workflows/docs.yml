@@ -41,6 +41,6 @@ jobs:
       - name: Build and verify website
         working-directory: website
         env:
-          SITE_URL: https://${{ github.repository_owner }}.github.io
-          BASE_PATH: /${{ github.event.repository.name }}
+          SITE_URL: https://composeunstyled.com
+          BASE_PATH: /
         run: bun run build

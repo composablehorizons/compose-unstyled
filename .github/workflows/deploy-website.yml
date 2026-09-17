@@ -28,8 +28,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.0
-      - name: Read Pages URL
-        id: pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Install website dependencies
         working-directory: website
@@ -39,8 +38,8 @@ jobs:
       - name: Build website
         working-directory: website
         env:
-          SITE_URL: ${{ steps.pages.outputs.origin }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_URL: https://composeunstyled.com
+          BASE_PATH: /
         run: bun run build
       - uses: actions/upload-pages-artifact@v3
         with:
