@@ -35,15 +35,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.DragIndication
 import com.composeunstyled.Scrim
@@ -58,7 +53,6 @@ import com.composeunstyled.demo.UnstyledDemo
 import com.composeunstyled.demo.borderToken
 import com.composeunstyled.demo.colors
 import com.composeunstyled.demo.scrimToken
-import com.composeunstyled.demo.shadowToken
 import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberModalBottomSheetState
 import com.composeunstyled.theme.Theme
@@ -67,7 +61,6 @@ import com.composeunstyled.theme.Theme
 @UnstyledDemo("modal-bottom-sheet", name = "Bottom Sheet (Modal)")
 @Composable
 fun ModalBottomSheetDemo() {
-  val sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
   val Peek = SheetDetent("peek") { containerHeight, _ ->
     containerHeight * 0.6f
   }
@@ -83,10 +76,9 @@ fun ModalBottomSheetDemo() {
     UnstyledButton(
       onClick = { modalSheetState.targetDetent = Peek },
       modifier = Modifier
-        .clip(RoundedCornerShape(10.dp))
         .heightIn(32.dp)
         .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(10.dp)),
+        .border(1.dp, Theme[colors][borderToken]),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -112,17 +104,8 @@ fun ModalBottomSheetDemo() {
           modifier = Modifier
             .widthIn(max = 640.dp)
             .fillMaxWidth()
-            .dropShadow(
-              shape = sheetShape,
-              shadow = Shadow(
-                radius = 16.dp,
-                offset = DpOffset(0.dp, (-4).dp),
-                color = Theme[colors][shadowToken],
-                alpha = 0.24f,
-              ),
-            )
-            .clip(sheetShape)
-            .background(Theme[colors][surfaceToken], sheetShape),
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][borderToken]),
         ) {
           Box(
             modifier = Modifier.fillMaxWidth().height(1000.dp),
@@ -131,7 +114,7 @@ fun ModalBottomSheetDemo() {
             DragIndication(
               modifier = Modifier
                 .padding(top = 22.dp)
-                .background(Theme[colors][borderToken], RoundedCornerShape(100))
+                .background(Theme[colors][borderToken])
                 .size(32.dp, 4.dp),
               indication = LocalIndication.current,
             )

@@ -24,10 +24,10 @@ package com.composeunstyled.demo
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
@@ -37,14 +37,14 @@ import com.composeunstyled.theme.Theme
 internal fun SimpleButton(
   modifier: Modifier = Modifier,
   text: String = "Button",
-  shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp),
+  shape: androidx.compose.ui.graphics.Shape = RectangleShape,
   interactionSource: androidx.compose.foundation.interaction.MutableInteractionSource? = null,
 ) {
   UnstyledButton(
     onClick = {},
     modifier = modifier
       .clip(shape)
-      .border(1.dp, Theme[colors][borderToken].copy(alpha = 0.2f), shape),
+      .border(1.dp, Theme[colors][borderToken], shape),
     interactionSource = interactionSource,
     indication = LocalIndication.current,
   ) {

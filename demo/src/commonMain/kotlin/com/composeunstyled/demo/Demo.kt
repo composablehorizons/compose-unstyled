@@ -25,6 +25,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,13 +40,10 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -163,8 +161,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   ) {
     UnstyledButton(
       onClick = onUpClick,
-      modifier = Modifier
-        .clip(CircleShape),
+      modifier = Modifier,
       indication = LocalIndication.current,
     ) {
       Box(Modifier.padding(12.dp)) {
@@ -190,7 +187,8 @@ private fun DemoListButton(
     onClick = onClick,
     modifier = modifier
       .sizeIn(minWidth = 40.dp, minHeight = 48.dp)
-      .clip(RoundedCornerShape(8.dp)),
+      .background(Theme[colors][surfaceToken])
+      .border(1.dp, Theme[colors][borderToken]),
     indication = LocalIndication.current,
   ) {
     Box(
