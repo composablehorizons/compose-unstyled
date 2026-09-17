@@ -67,7 +67,7 @@ test('uses KDoc for state properties and functions', () => {
     writeFileSync(path.join(docs, 'example.md'), '<ApiReference declaration="com.example.ExampleState" />\n');
     writeFileSync(
       path.join(source, 'Example.kt'),
-      `package com.example\n\nclass ExampleState {\n  /** The current example value. */\n  val value: Int = 0\n\n  /** Resets the example value. */\n  fun reset() {}\n}\n`,
+      `package com.example\n\n/** Holds the [ExampleState]. */\nclass ExampleState {\n  /** The current example [value]. */\n  val value: Int = 0\n\n  /** Resets the example value. */\n  fun reset() {}\n}\n`,
     );
 
     execFileSync('bun', [generator], { cwd: fixture, stdio: 'pipe' });
@@ -76,7 +76,8 @@ test('uses KDoc for state properties and functions', () => {
       path.join(fixture, 'build/generated/compose-unstyled-docs/pages/example.md'),
       'utf8',
     );
-    expect(generated).toContain('| `value` | `Int` | The current example value. |');
+    expect(generated).toContain('### ExampleState\n\nHolds the `ExampleState`.');
+    expect(generated).toContain('| `value` | `Int` | The current example `value`. |');
     expect(generated).toContain('| `fun reset()` | `() -> Unit` | Resets the example value. |');
   } finally {
     rmSync(fixture, { recursive: true, force: true });
