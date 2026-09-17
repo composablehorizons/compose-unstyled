@@ -3,6 +3,8 @@ title: Bottom Sheet
 description: A draggable bottom sheet with custom detents.
 ---
 
+> **Recommendation:** For new interfaces, use [Drawer](drawer.md) instead. It is a more flexible abstraction and the recommended API moving forward.
+
 <UnstyledDemo id="bottom-sheet" />
 
 ## Features
