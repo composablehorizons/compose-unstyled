@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -56,8 +56,8 @@ fun ButtonDemo() {
       modifier = Modifier
         .clip(RoundedCornerShape(10.dp))
         .heightIn(32.dp)
-        .background(Theme[demoColors][demoSurface])
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(10.dp)),
+        .background(Theme[colors][surfaceToken])
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(10.dp)),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {

@@ -51,10 +51,10 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoInputBackground
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.inputBackgroundToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerSwipeAreaDemoValue {
@@ -83,14 +83,14 @@ fun DrawerSwipeAreaDemo() {
       placement = DrawerPlacement.Start,
       presentation = DrawerPresentation.Overlay,
     ) {
-      Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
+      Box(Modifier.fillMaxSize()) {
         val swipeAreaModifier = Modifier
           .align(Alignment.CenterStart)
           .width(200.dp)
           .fillMaxHeight()
 
         Box(
-          modifier = swipeAreaModifier.border(1.dp, Theme[demoColors][demoContent]),
+          modifier = swipeAreaModifier.border(1.dp, Theme[colors][contentToken]),
           contentAlignment = Alignment.Center,
         ) {
           Text(
@@ -104,8 +104,8 @@ fun DrawerSwipeAreaDemo() {
             modifier = Modifier
               .width(288.dp)
               .fillMaxHeight()
-              .background(Theme[demoColors][demoInputBackground])
-              .border(1.dp, Theme[demoColors][demoContent])
+              .background(Theme[colors][inputBackgroundToken])
+              .border(1.dp, Theme[colors][contentToken])
               .padding(start = 12.dp, top = 24.dp, end = 24.dp, bottom = 24.dp),
           ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -114,8 +114,8 @@ fun DrawerSwipeAreaDemo() {
                 onClick = { drawerState.targetValue = DrawerSwipeAreaDemoValue.Closed },
                 contentPadding = PaddingValues(12.dp),
                 modifier = Modifier
-                  .background(Theme[demoColors][demoSurface])
-                  .border(1.dp, Theme[demoColors][demoContent]),
+                  .background(Theme[colors][surfaceToken])
+                  .border(1.dp, Theme[colors][contentToken]),
                 indication = LocalIndication.current,
               ) {
                 Text("Close")

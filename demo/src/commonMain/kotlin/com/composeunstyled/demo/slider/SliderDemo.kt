@@ -47,14 +47,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledSlider
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoTransparent
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -95,14 +95,14 @@ fun SliderDemo() {
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Theme[demoColors][demoOutline]),
+                .background(Theme[colors][outlineToken]),
             )
             // the 'completed' part of the track
             Box(
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(state.fraction)
-                .background(Theme[demoColors][demoContent]),
+                .background(Theme[colors][contentToken]),
             )
           }
         },
@@ -113,9 +113,9 @@ fun SliderDemo() {
           val isHovered by thumbInteractionSource.collectIsHoveredAsState()
           val glowColor by animateColorAsState(
             if (isFocused || isHovered) {
-              Theme[demoColors][demoContent].copy(0.16f)
+              Theme[colors][contentToken].copy(0.16f)
             } else {
-              Theme[demoColors][demoTransparent]
+              Color.Transparent
             },
           )
           // keep the size fixed to ensure that the resizing animation is always centered
@@ -128,7 +128,7 @@ fun SliderDemo() {
                 .size(thumbSize)
                 .hoverable(thumbInteractionSource)
                 .clip(CircleShape)
-                .background(Theme[demoColors][demoContent]),
+                .background(Theme[colors][contentToken]),
             )
           }
         },

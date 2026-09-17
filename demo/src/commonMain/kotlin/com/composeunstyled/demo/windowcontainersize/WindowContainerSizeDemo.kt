@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.sp
 import com.composeunstyled.Text
 import com.composeunstyled.currentWindowContainerSize
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoMutedContent
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.mutedContentToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -54,21 +54,21 @@ fun WindowContainerSizeDemo() {
   ) {
     Text(
       text = "Window container size",
-      color = Theme[demoColors][demoContent],
+      color = Theme[colors][contentToken],
       fontSize = 22.sp,
       lineHeight = 28.sp,
       fontWeight = FontWeight.Medium,
     )
     Text(
       text = "${windowContainerSize.width} x ${windowContainerSize.height}",
-      color = Theme[demoColors][demoContent],
+      color = Theme[colors][contentToken],
       fontSize = 36.sp,
       lineHeight = 44.sp,
       modifier = Modifier.padding(top = 12.dp),
     )
     Text(
       text = "Resize the window to watch this value update.",
-      color = Theme[demoColors][demoMutedContent],
+      color = Theme[colors][mutedContentToken],
       fontSize = 14.sp,
       lineHeight = 20.sp,
       modifier = Modifier.padding(top = 8.dp),

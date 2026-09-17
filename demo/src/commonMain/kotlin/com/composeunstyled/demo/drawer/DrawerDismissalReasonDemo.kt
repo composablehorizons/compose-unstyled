@@ -53,9 +53,9 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerDismissalReasonDemoValue {
@@ -78,7 +78,7 @@ fun DrawerDismissalReasonDemo() {
   }
   var dismissalReason by remember { mutableStateOf("No dismissal yet") }
 
-  Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
+  Box(Modifier.fillMaxSize()) {
     Column(
       modifier = Modifier.align(Alignment.Center).padding(24.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
@@ -89,8 +89,8 @@ fun DrawerDismissalReasonDemo() {
         onClick = { drawerState.targetValue = DrawerDismissalReasonDemoValue.Open },
         contentPadding = PaddingValues(12.dp),
         modifier = Modifier
-          .background(Theme[demoColors][demoSurface])
-          .border(1.dp, Theme[demoColors][demoContent]),
+          .background(Theme[colors][surfaceToken])
+          .border(1.dp, Theme[colors][contentToken]),
         indication = LocalIndication.current,
       ) {
         Text("Open drawer")
@@ -106,8 +106,8 @@ fun DrawerDismissalReasonDemo() {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoContent])
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][contentToken])
             .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
         ) {
           Column(
@@ -120,7 +120,7 @@ fun DrawerDismissalReasonDemo() {
                 Modifier
                   .width(32.dp)
                   .height(4.dp)
-                  .background(Theme[demoColors][demoContent]),
+                  .background(Theme[colors][contentToken]),
               )
             }
             Text("Here is the content of the drawer.")
@@ -129,8 +129,8 @@ fun DrawerDismissalReasonDemo() {
               onClick = { drawerState.targetValue = DrawerDismissalReasonDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[demoColors][demoSurface])
-                .border(1.dp, Theme[demoColors][demoContent]),
+                .background(Theme[colors][surfaceToken])
+                .border(1.dp, Theme[colors][contentToken]),
               indication = LocalIndication.current,
             ) {
               Text("Close")

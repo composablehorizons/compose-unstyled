@@ -48,10 +48,10 @@ import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -74,8 +74,8 @@ fun CheckboxDemo() {
       CheckedIndicator(
         modifier = Modifier
           .size(24.dp)
-          .background(Theme[demoColors][demoSurface], checkboxShape)
-          .border(1.dp, Theme[demoColors][demoOutline], checkboxShape),
+          .background(Theme[colors][surfaceToken], checkboxShape)
+          .border(1.dp, Theme[colors][outlineToken], checkboxShape),
         indication = LocalIndication.current,
       ) {
         UnstyledIcon(checkIcon())
@@ -86,7 +86,7 @@ fun CheckboxDemo() {
 
 @Composable
 private fun checkIcon(): ImageVector {
-  val color = Theme[demoColors][demoContent]
+  val color = Theme[colors][contentToken]
   return remember(color) {
     ImageVector.Builder(
       name = "Check",

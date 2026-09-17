@@ -85,11 +85,11 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoMutedContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.mutedContentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberModalState
 import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.launch
@@ -168,7 +168,7 @@ fun ModalDemo() {
     ) {
       Text(
         "Select a photo to preview",
-        color = Theme[demoColors][demoContent],
+        color = Theme[colors][contentToken],
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
       )
@@ -187,8 +187,8 @@ fun ModalDemo() {
             modifier = Modifier
               .size(110.dp, 72.dp)
               .clip(RoundedCornerShape(8.dp))
-              .background(Theme[demoColors][demoSurface])
-              .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(8.dp)),
+              .background(Theme[colors][surfaceToken])
+              .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(8.dp)),
             indication = LocalIndication.current,
           ) {
             Image(
@@ -281,7 +281,7 @@ fun ModalDemo() {
                   modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Theme[demoColors][demoMutedContent]),
+                    .background(Theme[colors][mutedContentToken]),
                   contentScale = ContentScale.Crop,
                 )
               }
@@ -298,8 +298,8 @@ fun ModalDemo() {
                   .align(Alignment.CenterStart)
                   .padding(start = 16.dp)
                   .clip(CircleShape)
-                  .background(Theme[demoColors][demoSurface])
-                  .border(1.dp, Theme[demoColors][demoOutline], CircleShape)
+                  .background(Theme[colors][surfaceToken])
+                  .border(1.dp, Theme[colors][outlineToken], CircleShape)
                   .alpha(previousButtonAlpha),
                 indication = LocalIndication.current,
               ) {
@@ -323,8 +323,8 @@ fun ModalDemo() {
                   .align(Alignment.CenterEnd)
                   .padding(end = 16.dp)
                   .clip(CircleShape)
-                  .background(Theme[demoColors][demoSurface])
-                  .border(1.dp, Theme[demoColors][demoOutline], CircleShape)
+                  .background(Theme[colors][surfaceToken])
+                  .border(1.dp, Theme[colors][outlineToken], CircleShape)
                   .alpha(nextButtonAlpha),
                 indication = LocalIndication.current,
               ) {

@@ -33,8 +33,8 @@ import com.composables.icons.lucide.Heart
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -48,7 +48,7 @@ fun IconDemo() {
     UnstyledIcon(
       imageVector = Lucide.Heart,
       contentDescription = "Favorite",
-      tint = Theme[demoColors][demoContent],
+      tint = Theme[colors][contentToken],
       modifier = Modifier.size(90.dp),
     )
   }

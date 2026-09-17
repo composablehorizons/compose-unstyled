@@ -57,10 +57,10 @@ import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -110,21 +110,21 @@ fun TriStateCheckboxDemo() {
             modifier = Modifier
               .clip(triStateShape)
               .size(24.dp)
-              .background(Theme[demoColors][demoSurface], triStateShape)
-              .border(1.dp, Theme[demoColors][demoOutline], triStateShape),
+              .background(Theme[colors][surfaceToken], triStateShape)
+              .border(1.dp, Theme[colors][outlineToken], triStateShape),
             indication = LocalIndication.current,
           ) { state ->
             when (state) {
               ToggleableState.On -> UnstyledIcon(
                 Lucide.Check,
                 contentDescription = null,
-                tint = Theme[demoColors][demoContent],
+                tint = Theme[colors][contentToken],
               )
 
               ToggleableState.Indeterminate -> UnstyledIcon(
                 Lucide.Minus,
                 contentDescription = null,
-                tint = Theme[demoColors][demoContent],
+                tint = Theme[colors][contentToken],
               )
 
               ToggleableState.Off -> Unit
@@ -134,7 +134,7 @@ fun TriStateCheckboxDemo() {
           Spacer(Modifier.width(12.dp))
           Text(
             "Select All",
-            color = Theme[demoColors][demoContent],
+            color = Theme[colors][contentToken],
           )
         }
       }
@@ -160,19 +160,19 @@ fun TriStateCheckboxDemo() {
               modifier = Modifier
                 .clip(checkboxShape)
                 .size(24.dp)
-                .background(Theme[demoColors][demoSurface], checkboxShape)
-                .border(1.dp, Theme[demoColors][demoOutline], checkboxShape),
+                .background(Theme[colors][surfaceToken], checkboxShape)
+                .border(1.dp, Theme[colors][outlineToken], checkboxShape),
               indication = LocalIndication.current,
             ) {
               UnstyledIcon(
                 Lucide.Check,
                 contentDescription = null,
-                tint = Theme[demoColors][demoContent],
+                tint = Theme[colors][contentToken],
               )
             }
 
             Spacer(Modifier.width(12.dp))
-            Text(option, color = Theme[demoColors][demoContent])
+            Text(option, color = Theme[colors][contentToken])
           }
         }
       }

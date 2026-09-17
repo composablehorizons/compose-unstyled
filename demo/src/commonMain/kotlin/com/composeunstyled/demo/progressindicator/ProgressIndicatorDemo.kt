@@ -44,10 +44,10 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.Indicator
 import com.composeunstyled.UnstyledProgress
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -77,10 +77,10 @@ fun ProgressIndicatorDemo() {
         .width(400.dp)
         .height(12.dp)
         .clip(RoundedCornerShape(100))
-        .background(Theme[demoColors][demoSurface], RoundedCornerShape(100))
-        .border(1.dp, Theme[demoColors][demoOutline], RoundedCornerShape(100)),
+        .background(Theme[colors][surfaceToken], RoundedCornerShape(100))
+        .border(1.dp, Theme[colors][outlineToken], RoundedCornerShape(100)),
     ) {
-      Indicator(Modifier.background(Theme[demoColors][demoContent], RoundedCornerShape(100)))
+      Indicator(Modifier.background(Theme[colors][contentToken], RoundedCornerShape(100)))
     }
   }
 }

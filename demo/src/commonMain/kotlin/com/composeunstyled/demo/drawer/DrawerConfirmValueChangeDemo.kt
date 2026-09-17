@@ -49,9 +49,9 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerConfirmValueChangeDemoValue {
@@ -77,7 +77,7 @@ fun DrawerConfirmValueChangeDemo() {
     )
   }
 
-  Box(Modifier.fillMaxSize().background(Theme[demoColors][demoSurface])) {
+  Box(Modifier.fillMaxSize()) {
     UnstyledDrawer(
       state = drawerState,
       modifier = Modifier.fillMaxSize(),
@@ -86,8 +86,8 @@ fun DrawerConfirmValueChangeDemo() {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
-            .background(Theme[demoColors][demoSurface])
-            .border(1.dp, Theme[demoColors][demoContent])
+            .background(Theme[colors][surfaceToken])
+            .border(1.dp, Theme[colors][contentToken])
             .padding(24.dp),
         ) {
           Column(
@@ -101,8 +101,8 @@ fun DrawerConfirmValueChangeDemo() {
               onClick = { canClose = canClose.not() },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[demoColors][demoSurface])
-                .border(1.dp, Theme[demoColors][demoContent]),
+                .background(Theme[colors][surfaceToken])
+                .border(1.dp, Theme[colors][contentToken]),
               indication = LocalIndication.current,
             ) {
               Text(if (canClose) "Block closing" else "Allow closing")
@@ -111,8 +111,8 @@ fun DrawerConfirmValueChangeDemo() {
               onClick = { drawerState.targetValue = DrawerConfirmValueChangeDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[demoColors][demoSurface])
-                .border(1.dp, Theme[demoColors][demoContent]),
+                .background(Theme[colors][surfaceToken])
+                .border(1.dp, Theme[colors][contentToken]),
               indication = LocalIndication.current,
             ) {
               Text("Try to close")

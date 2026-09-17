@@ -21,60 +21,61 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import com.composables.compose.ripple.rememberRippleIndication
+import com.composeunstyled.theme.ColorScheme
 import com.composeunstyled.theme.ThemeProperty
 import com.composeunstyled.theme.ThemeToken
-import com.composeunstyled.theme.buildTheme
+import com.composeunstyled.theme.buildThemeV2
 
-internal val DemoTheme = buildTheme {
-  val isDarkTheme = isSystemInDarkTheme()
-  val backgroundColor = animateColorAsState(
-    targetValue = if (isDarkTheme) Color(0xFF121212) else Color(0xFFFFFFFF),
-  ).value
-  val contentColor = animateColorAsState(
-    targetValue = if (isDarkTheme) Color(0xFFE5E5E5) else Color(0xFF1D1D1F),
-  ).value
-
+internal val DemoTheme = buildThemeV2 {
   name = "DemoTheme"
   defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
-  defaultContentColor = contentColor
-  defaultIndication = rememberRippleIndication(
-    color = if (isDarkTheme) Color.White else Color.Black,
+  colorSchemeTransitionSpec = tween(durationMillis = 200)
+  defaultContentColor = Color(0xFF1D1D1F)
+  defaultIndication = rememberRippleIndication(color = Color.Black)
+  properties[colors] = mapOf(
+    backgroundToken to Color(0xFFFFFFFF),
+    surfaceToken to Color(0xFFFFFFFF),
+    contentToken to Color(0xFF1D1D1F),
+    mutedContentToken to Color(0xFF52525B),
+    outlineToken to Color(0x29000000),
+    shadowToken to Color.Black,
+    inputBackgroundToken to Color(0xFFEDEDED),
+    scrimToken to Color(0x52000000),
+    focusToken to Color(0xFF3B82F6),
+    errorToken to Color(0xFFEF4444),
+    successToken to Color(0xFF10B981),
+    highlightToken to Color(0xFF8B5CF6),
   )
-  properties[demoColors] = mapOf(
-    demoBackground to backgroundColor,
-    demoSurface to if (isDarkTheme) Color(0xFF242424) else backgroundColor,
-    demoContent to contentColor,
-    demoMutedContent to if (isDarkTheme) Color(0xFFA1A1AA) else Color(0xFF52525B),
-    demoOutline to if (isDarkTheme) Color(0x3DFFFFFF) else Color(0x29000000),
-    demoShadow to Color.Black,
-    demoInputBackground to if (isDarkTheme) Color(0xFF303030) else Color(0xFFEDEDED),
-    demoScrim to Color(0x52000000),
-    demoFocus to Color(0xFF3B82F6),
-    demoError to Color(0xFFEF4444),
-    demoSuccess to Color(0xFF10B981),
-    demoHighlight to Color(0xFF8B5CF6),
-    demoTransparent to Color.Transparent,
-  )
+  colorScheme(ColorScheme.Dark) {
+    defaultContentColor = Color(0xFFE5E5E5)
+    defaultIndication = rememberRippleIndication(color = Color.White)
+    properties[colors] = mapOf(
+      backgroundToken to Color(0xFF121212),
+      surfaceToken to Color(0xFF242424),
+      contentToken to Color(0xFFE5E5E5),
+      mutedContentToken to Color(0xFFA1A1AA),
+      outlineToken to Color(0x3DFFFFFF),
+      inputBackgroundToken to Color(0xFF303030),
+    )
+  }
 }
 
-internal val demoColors = ThemeProperty<Color>("colors")
+internal val colors = ThemeProperty<Color>("colors")
 
-internal val demoBackground = ThemeToken<Color>("background")
-internal val demoSurface = ThemeToken<Color>("surface")
-internal val demoContent = ThemeToken<Color>("content")
-internal val demoMutedContent = ThemeToken<Color>("mutedContent")
-internal val demoOutline = ThemeToken<Color>("outline")
-internal val demoShadow = ThemeToken<Color>("shadow")
-internal val demoInputBackground = ThemeToken<Color>("inputBackground")
-internal val demoScrim = ThemeToken<Color>("scrim")
-internal val demoFocus = ThemeToken<Color>("focus")
-internal val demoError = ThemeToken<Color>("error")
-internal val demoSuccess = ThemeToken<Color>("success")
-internal val demoHighlight = ThemeToken<Color>("highlight")
-internal val demoTransparent = ThemeToken<Color>("transparent")
+internal val backgroundToken = ThemeToken<Color>("background")
+internal val surfaceToken = ThemeToken<Color>("surface")
+internal val contentToken = ThemeToken<Color>("content")
+internal val mutedContentToken = ThemeToken<Color>("mutedContent")
+internal val outlineToken = ThemeToken<Color>("outline")
+internal val shadowToken = ThemeToken<Color>("shadow")
+internal val inputBackgroundToken = ThemeToken<Color>("inputBackground")
+internal val scrimToken = ThemeToken<Color>("scrim")
+internal val focusToken = ThemeToken<Color>("focus")
+internal val errorToken = ThemeToken<Color>("error")
+internal val successToken = ThemeToken<Color>("success")
+internal val highlightToken = ThemeToken<Color>("highlight")

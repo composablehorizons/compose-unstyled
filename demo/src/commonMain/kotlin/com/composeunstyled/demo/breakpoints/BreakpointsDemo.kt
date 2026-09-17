@@ -53,11 +53,11 @@ import com.composeunstyled.WindowWidthBreakpoints
 import com.composeunstyled.buildModifier
 import com.composeunstyled.currentWindowWidthBreakpoint
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoInputBackground
-import com.composeunstyled.demo.demoMutedContent
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.inputBackgroundToken
+import com.composeunstyled.demo.mutedContentToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private val Compact = WidthBreakpoint("compact")
@@ -96,12 +96,12 @@ fun BreakpointsDemo() {
               radius = 28.dp,
               spread = 0.dp,
               offset = DpOffset(x = 0.dp, y = 14.dp),
-              color = Theme[demoColors][demoContent],
+              color = Theme[colors][contentToken],
               alpha = 0.16f,
             ),
           )
           .clip(cardShape)
-          .background(Theme[demoColors][demoSurface])
+          .background(Theme[colors][surfaceToken])
           .padding(14.dp),
         orientation = if (widthBreakpoint isAtLeast Expanded) {
           StackOrientation.Horizontal
@@ -117,7 +117,7 @@ fun BreakpointsDemo() {
           contentScale = ContentScale.Crop,
           modifier = Modifier
             .clip(imageShape)
-            .background(Theme[demoColors][demoInputBackground]) then buildModifier {
+            .background(Theme[colors][inputBackgroundToken]) then buildModifier {
             if (widthBreakpoint isAtLeast Expanded) {
               add(Modifier.size(width = 320.dp, height = 280.dp))
             } else {
@@ -139,13 +139,13 @@ fun BreakpointsDemo() {
         ) {
           Text(
             text = "Adaptive layouts",
-            color = Theme[demoColors][demoContent],
+            color = Theme[colors][contentToken],
             fontSize = 24.sp,
             lineHeight = 30.sp,
           )
           Text(
             text = "This card switches from vertical to horizontal at ${Expanded.name}",
-            color = Theme[demoColors][demoMutedContent],
+            color = Theme[colors][mutedContentToken],
             fontSize = 15.sp,
             lineHeight = 22.sp,
           )

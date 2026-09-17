@@ -45,10 +45,10 @@ import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.demoColors
-import com.composeunstyled.demo.demoContent
-import com.composeunstyled.demo.demoOutline
-import com.composeunstyled.demo.demoSurface
+import com.composeunstyled.demo.colors
+import com.composeunstyled.demo.contentToken
+import com.composeunstyled.demo.outlineToken
+import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -78,9 +78,9 @@ fun TextFieldDemo() {
           state = displayName,
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
-          cursorBrush = SolidColor(Theme[demoColors][demoContent]),
+          cursorBrush = SolidColor(Theme[colors][contentToken]),
           textStyle = LocalTextStyle.current.copy(
-            color = Theme[demoColors][demoContent],
+            color = Theme[colors][contentToken],
             fontSize = 14.sp,
             lineHeight = 20.sp,
           ),
@@ -89,20 +89,20 @@ fun TextFieldDemo() {
             Text(
               "Display Name",
               modifier = Modifier.padding(bottom = 8.dp),
-              color = Theme[demoColors][demoContent],
+              color = Theme[colors][contentToken],
               fontSize = 16.sp,
               lineHeight = 24.sp,
             )
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .background(Theme[demoColors][demoSurface], fieldShape)
-                .border(1.dp, Theme[demoColors][demoOutline], fieldShape)
+                .background(Theme[colors][surfaceToken], fieldShape)
+                .border(1.dp, Theme[colors][outlineToken], fieldShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(
                   "Alex",
-                  color = Theme[demoColors][demoContent].copy(0.6f),
+                  color = Theme[colors][contentToken].copy(0.6f),
                   fontSize = 14.sp,
                   lineHeight = 20.sp,
                 )
