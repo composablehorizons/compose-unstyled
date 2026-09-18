@@ -1,6 +1,6 @@
 import unittest
 
-from select_pr_checks import needs_library_checks
+from select_pr_checks import has_valid_release_scope, needs_library_checks, needs_screenshot_checks
 
 
 class SelectChecksTest(unittest.TestCase):
@@ -54,8 +54,30 @@ class SelectChecksTest(unittest.TestCase):
             "website/package.json", "composeunstyled-button/src/commonTest/ButtonTest.kt",
         ]), True)
 
-    def test_releases_keep_library_checks(self):
-        self.assertEqual(needs_library_checks(["CHANGELOG.md"], "changeset-release/main"), True)
+    def test_releases_skip_library_checks(self):
+        self.assertEqual(needs_library_checks(["CHANGELOG.md"], "changeset-release/main"), False)
+
+    def test_ui_and_screenshot_inputs_run_screenshot_checks(self):
+        for path in [
+            "composeunstyled-button/src/commonMain/kotlin/Button.kt",
+            "composeunstyled-button/src/jvmMain/kotlin/Button.jvm.kt",
+            "composeunstyled-button/src/androidMain/kotlin/Button.android.kt",
+            "demo/src/commonMain/kotlin/Demo.kt",
+            "visual-regressions/src/jvmScreenshot/kotlin/Regression.kt",
+            "gradle/libs.versions.toml",
+        ]:
+            with self.subTest(path=path):
+                self.assertEqual(needs_screenshot_checks([path]), True)
+
+    def test_non_visual_inputs_skip_screenshot_checks(self):
+        self.assertEqual(needs_screenshot_checks(["CHANGELOG.md"]), False)
+
+    def test_releases_skip_screenshot_checks(self):
+        self.assertEqual(needs_screenshot_checks(["gradle/libs.versions.toml"], "changeset-release/main"), False)
+
+    def test_release_scope_only_allows_release_files(self):
+        self.assertEqual(has_valid_release_scope(["CHANGELOG.md", ".changeset/example.md"]), True)
+        self.assertEqual(has_valid_release_scope(["composeunstyled-button/src/commonMain/kotlin/Button.kt"]), False)
 
     def test_unknown_paths_keep_library_checks(self):
         self.assertEqual(needs_library_checks(["new-tool/config.json"]), True)
