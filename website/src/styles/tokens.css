@@ -84,6 +84,12 @@ html {
     --color-accent: #e5e5e5;
     --color-outline: rgba(255, 255, 255, 0.24);
   }
+
+  .docs-alert-note { --alert-color: #58a6ff; --alert-surface: #0d2741; }
+  .docs-alert-tip { --alert-color: #3fb950; --alert-surface: #11351d; }
+  .docs-alert-important { --alert-color: #bc8cff; --alert-surface: #2d1b4e; }
+  .docs-alert-warning { --alert-color: #d29922; --alert-surface: #3a2a0b; }
+  .docs-alert-caution { --alert-color: #ff7b72; --alert-surface: #401b1f; }
 }
 
 * {
