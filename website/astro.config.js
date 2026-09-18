@@ -11,7 +11,12 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  integrations: [sitemap({
+    filter: (page) => {
+      const pathname = new URL(page).pathname;
+      return pathname === '/docs/components/' || /^\/docs\/[^/]+\/$/.test(pathname) === false;
+    },
+  })],
   markdown: {
     processor: satteri({ hastPlugins: [externalLinks, headingLinks, githubAlerts, codePanels] }),
     syntaxHighlight: 'shiki',

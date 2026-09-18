@@ -2,24 +2,25 @@
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
 import { sitePath } from '../../site.config.js';
-const pages = parse(docsYaml).sections.flatMap(section => section.pages);
+import { docsPath } from '../../docs-routes.js';
+const pages = parse(docsYaml).sections.flatMap(section => section.pages.map(page => ({ section, page })));
 const pathname = Astro.url.pathname.replace(/\/$/, '');
-const index = pages.findIndex(page => sitePath(`/docs/${page.slug}`) === pathname);
+const index = pages.findIndex(entry => sitePath(docsPath(entry.section, entry.page)).replace(/\/$/, '') === pathname);
 const previous = index > 0 ? pages[index - 1] : undefined;
 const next = index >= 0 ? pages[index + 1] : undefined;
 ---
 {(previous || next) && (
   <nav class="docs-pagination" aria-label="Previous and next pages">
     {previous && (
-      <a rel="prev" href={sitePath(`/docs/${previous.slug}/`)}>
+      <a rel="prev" href={sitePath(docsPath(previous.section, previous.page))}>
         <span class="docs-pagination-direction">← Previous</span>
-        <span>{previous.title}</span>
+        <span>{previous.page.title}</span>
       </a>
     )}
     {next && (
-      <a rel="next" href={sitePath(`/docs/${next.slug}/`)}>
+      <a rel="next" href={sitePath(docsPath(next.section, next.page))}>
         <span class="docs-pagination-direction">Next →</span>
-        <span>{next.title}</span>
+        <span>{next.page.title}</span>
       </a>
     )}
   </nav>
