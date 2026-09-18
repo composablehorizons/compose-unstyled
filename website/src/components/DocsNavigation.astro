@@ -6,8 +6,8 @@ const navigation = parse(docsYaml);
 ---
 <nav id={Astro.props.id} class="docs-navigation" aria-label="Documentation">
   {navigation.sections.map(section => (
-    <section>
-      <h2>{section.title}</h2>
+    <section aria-label={section.title}>
+      <p class="docs-navigation-section-title">{section.title}</p>
       <ul>
         {section.pages.map(page => (
           <li><a href={sitePath(`/docs/${page.slug}/`)} aria-current={Astro.url.pathname.replace(/\/$/, '') === sitePath(`/docs/${page.slug}`) ? 'page' : undefined}>{page.title}</a></li>
