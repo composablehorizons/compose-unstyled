@@ -28,6 +28,32 @@ const { title, description, markdownUrl } = Astro.props;
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
     <link rel="preconnect" href="https://cdn.composables.com" crossorigin />
     <link rel="preload" href={sharedSkikoUrl} as="fetch" type="application/wasm" crossorigin />
+    <script is:inline>
+      try {
+        const prefix = `code-tabs:${location.pathname}:`;
+        const rules = [];
+        for (let index = 0; index < localStorage.length; index += 1) {
+          const key = localStorage.key(index);
+          if (!key?.startsWith(prefix)) continue;
+          const sourceId = key.slice(prefix.length).replace(/-tab-0$/, '');
+          const selectedIndex = Number(localStorage.getItem(key));
+          if (!/^code-source-\d+$/.test(sourceId) || !Number.isInteger(selectedIndex) || selectedIndex < 0) continue;
+          rules.push(`#${sourceId}-0:not([hidden]) { display: none !important; }`);
+          rules.push(`#${sourceId}-${selectedIndex}[hidden] { display: block !important; }`);
+          if (selectedIndex > 0) {
+            rules.push(`#${sourceId}-tab-0[aria-selected="true"] { position: static; z-index: auto; margin-bottom: 0; border-right-color: transparent; border-bottom-color: transparent; background: none; }`);
+            rules.push(`#${sourceId}-tab-${selectedIndex} { position: relative; z-index: 1; margin-bottom: -1px; border-right-color: var(--color-outline); border-bottom-color: var(--color-background); border-left: var(--stroke-thin) solid var(--color-outline); background: var(--color-background); }`);
+          }
+        }
+        if (rules.length > 0) {
+          const style = document.createElement('style');
+          style.textContent = rules.join('');
+          document.head.append(style);
+        }
+      } catch {
+        // Code panels fall back to their server-rendered default tab.
+      }
+    </script>
     <Analytics />
   </head>
   <body>

@@ -2,11 +2,57 @@ import checkIcon from '../assets/icons/check.svg?raw';
 
 for (const panel of document.querySelectorAll<HTMLElement>('[data-code-panel]')) {
   const source = panel.querySelector<HTMLElement>('.code-source')!;
-  const code = source.querySelector('code')!;
   const toggle = panel.querySelector<HTMLButtonElement>('[data-code-toggle]');
   const bottomToggle = panel.querySelector<HTMLButtonElement>('[data-code-bottom-toggle]');
   const copy = panel.querySelector<HTMLButtonElement>('[data-code-copy]')!;
   const status = panel.querySelector<HTMLElement>('.code-status')!;
+
+  const tabs = [...panel.querySelectorAll<HTMLButtonElement>('[data-code-tab]')];
+  const sources = [...panel.querySelectorAll<HTMLElement>('.code-source')];
+  const storageKey = tabs.length === 0 ? undefined : `code-tabs:${location.pathname}:${tabs[0].id}`;
+  const storedTab = () => {
+    try {
+      return storageKey ? Number(localStorage.getItem(storageKey)) : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+  const selectTab = (selectedIndex: number) => {
+    tabs.forEach((tab, index) => {
+      const selected = index === selectedIndex;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      sources[index].hidden = !selected;
+    });
+    try {
+      if (storageKey) localStorage.setItem(storageKey, String(selectedIndex));
+    } catch {
+      // The tabs remain usable when browser storage is unavailable.
+    }
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectTab(index));
+    tab.addEventListener('keydown', event => {
+      const offsets: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1 };
+      const targetIndex = event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? tabs.length - 1
+          : offsets[event.key] === undefined
+            ? undefined
+            : (index + offsets[event.key] + tabs.length) % tabs.length;
+      if (targetIndex === undefined) return;
+      event.preventDefault();
+      selectTab(targetIndex);
+      tabs[targetIndex].focus();
+    });
+  });
+  if (storageKey) {
+    const selectedIndex = storedTab();
+    if (selectedIndex !== undefined && Number.isInteger(selectedIndex) && selectedIndex >= 0 && selectedIndex < tabs.length) {
+      selectTab(selectedIndex);
+    }
+  }
 
   const setExpanded = (expanded: boolean) => {
     if (!toggle) return;
@@ -52,7 +98,8 @@ for (const panel of document.querySelectorAll<HTMLElement>('[data-code-panel]'))
     clearTimeout(confirmationTimer);
     resetCopy();
     try {
-      await navigator.clipboard.writeText(code.textContent || '');
+      const visibleCode = panel.querySelector<HTMLElement>('.code-source:not([hidden]) code')!;
+      await navigator.clipboard.writeText(visibleCode.textContent || '');
       copy.innerHTML = `<span aria-hidden="true">${checkIcon.replace(/<!--[\s\S]*?-->/g, '')}</span>`;
       copy.dataset.copied = 'true';
       copy.setAttribute('aria-label', 'Copied');

@@ -192,6 +192,14 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-demo { margin-block: var(--space-6); border: var(--stroke-thin) solid var(--color-outline); }
 .docs-content .docs-demo iframe { margin: 0; border: 0; border-radius: 0; }
 .code-toolbar { background: color-mix(in srgb, var(--color-on-background) 3%, var(--color-background)); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: var(--stroke-thin) solid var(--color-outline); }
+.code-panel[data-code-tabbed] .code-toolbar { gap: 0; padding: 0; }
+.code-panel[data-code-tabbed] .code-actions { padding: var(--space-2) var(--space-3); }
+.code-tab-list { display: flex; align-self: stretch; }
+.code-tab { padding: var(--space-3); border: 0; border-right: var(--stroke-thin) solid transparent; border-bottom: var(--stroke-thin) solid transparent; background: none; color: inherit; font-family: ui-monospace, monospace; font-size: 0.75rem; cursor: pointer; }
+.code-tab:hover:not([aria-selected="true"]) { background: color-mix(in srgb, var(--color-on-background) 5%, transparent); }
+.code-tab[aria-selected="true"] { position: relative; z-index: 1; margin-bottom: -1px; border-right-color: var(--color-outline); border-bottom-color: var(--color-background); background: var(--color-background); }
+.code-tab:not(:first-child)[aria-selected="true"] { border-left: var(--stroke-thin) solid var(--color-outline); }
+.code-tab:focus-visible { position: relative; z-index: 1; outline: 2px solid var(--color-on-background); outline-offset: -2px; }
 .code-filename { display: flex; align-items: center; gap: var(--space-2); min-width: 0; overflow-wrap: anywhere; font-family: ui-monospace, monospace; font-size: 0.75rem; }
 .code-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .code-actions button, .code-actions a { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: inherit; border: 0; border-radius: 50%; background: none; }
