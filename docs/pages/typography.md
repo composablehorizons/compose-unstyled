@@ -13,40 +13,62 @@ implementation("com.composables:composeunstyled-theming:2.9.2")
 
 Set `defaultTextStyle` when you create your theme. Every `Text()` inside the theme uses this style by default when you do not pass a `style`.
 
+<UnstyledDemo id="typography-default-text-style" />
+
+## Define and apply typography tokens
+
+Use named tokens for styles that appear in more than one place. Tokens give each role in your type scale one source of truth.
+
 ```kotlin
-import com.composeunstyled.Text
+val typography = ThemeProperty<TextStyle>("typography")
+val title = ThemeToken<TextStyle>("title")
+val body = ThemeToken<TextStyle>("body")
 
 val AppTheme = buildThemeV2 {
-    defaultTextStyle = TextStyle(
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Medium,
+    properties[typography] = mapOf(
+        title to TextStyle(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        body to TextStyle(
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+        ),
     )
 }
 
 @Composable
-fun App() {
+fun Article() {
     AppTheme {
         Column {
-            Text("This text uses the theme style")
-            Text("So does this text")
+            Text(
+                text = "Page title",
+                style = Theme[typography][title],
+            )
+            Text(
+                text = "The body text uses its own token.",
+                style = Theme[typography][body],
+            )
         }
     }
 }
 ```
 
-<UnstyledDemo id="typography-default-text-style" />
-
 ## Override typography locally
 
-Use `ProvideTextStyle` to replace the theme's `defaultTextStyle` for a part of your UI. `Text()` calls inside its content use the provided style. Content outside keeps the theme default.
+Pass styling properties to `Text()` when only one element changes. Use `ProvideTextStyle` to update the inherited style for a subtree. Text outside the subtree keeps its current style.
 
 ```kotlin
 Column {
     Text("Standard content")
 
+    Text(
+        text = "A bold status message",
+        fontWeight = FontWeight.Bold,
+    )
+
     ProvideTextStyle(
-        TextStyle(
-            fontSize = 14.sp,
+        LocalTextStyle.current.copy(
             fontWeight = FontWeight.Bold,
         ),
     ) {
@@ -57,36 +79,6 @@ Column {
 ```
 
 For other theme defaults and local overrides, see [Theme Values](theme-values.md).
-
-## Override one Text
-
-Pass a style or individual properties to change one `Text()` without changing nearby text.
-
-```kotlin
-Text(
-    text = "Section title",
-    fontSize = 24.sp,
-    fontWeight = FontWeight.Bold,
-    textDecoration = TextDecoration.Underline,
-)
-
-Text(
-    text = "Status message",
-    style = TextStyle(color = Color.Red),
-)
-```
-
-## Handle text overflow
-
-Set `maxLines` and `overflow` when text must fit in a limited space.
-
-```kotlin
-Text(
-    text = "This is a very long text that might overflow",
-    maxLines = 1,
-    overflow = TextOverflow.Ellipsis,
-)
-```
 
 ## API Reference
 
