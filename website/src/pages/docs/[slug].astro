@@ -1,0 +1,20 @@
+---
+import docsYaml from '../../../../docs/docs.yml?raw';
+import { parse } from 'yaml';
+import { sitePath } from '../../../site.config.js';
+import { docsPath } from '../../../docs-routes.js';
+
+export function getStaticPaths() {
+  const navigation = parse(docsYaml);
+
+  return navigation.sections
+    .flatMap(section => section.pages.map(page => ({ section, page })))
+    .filter(({ section, page }) => docsPath(section, page) !== `/docs/${page.slug}/`)
+    .map(({ section, page }) => ({
+      params: { slug: page.slug },
+      props: { target: docsPath(section, page) },
+    }));
+}
+
+return Astro.redirect(sitePath(Astro.props.target), 301);
+---
