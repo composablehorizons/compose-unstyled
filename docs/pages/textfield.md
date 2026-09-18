@@ -15,7 +15,7 @@ description: A text field component with placeholders, transformations, and text
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-text-field:2.9.2")
+implementation("com.composables:composeunstyled-text-field:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

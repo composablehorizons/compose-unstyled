@@ -13,7 +13,7 @@ description: An unstyled avatar component with image, fallback content, and call
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-avatar:2.9.2")
+implementation("com.composables:composeunstyled-avatar:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

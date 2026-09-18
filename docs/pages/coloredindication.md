@@ -11,7 +11,7 @@ description: A customizable indication effect that displays colored overlays bas
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-colored-indication:2.9.2")
+implementation("com.composables:composeunstyled-colored-indication:{{compose_unstyled_version}}")
 ```
 
 

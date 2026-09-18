@@ -17,7 +17,7 @@ description: A draggable bottom sheet with custom detents.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-bottom-sheet:2.9.2")
+implementation("com.composables:composeunstyled-bottom-sheet:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

@@ -12,7 +12,7 @@ Unlike Compose's built-in `border` modifier, `outline` does not affect layout or
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-outline:2.9.2")
+implementation("com.composables:composeunstyled-outline:{{compose_unstyled_version}}")
 ```
 
 

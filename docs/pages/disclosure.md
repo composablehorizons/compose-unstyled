@@ -8,7 +8,7 @@ description: An expandable content component with a dedicated trigger and conten
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-disclosure:2.9.2")
+implementation("com.composables:composeunstyled-disclosure:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

@@ -6,7 +6,7 @@ description: A multiplatform handler for dismissing UI from Escape or Back inter
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-escape-handler:2.9.2")
+implementation("com.composables:composeunstyled-escape-handler:{{compose_unstyled_version}}")
 ```
 
 ## Basic Example

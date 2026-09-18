@@ -15,7 +15,7 @@ description: A tab group component with generic tab keys and keyboard navigation
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-tab-group:2.9.2")
+implementation("com.composables:composeunstyled-tab-group:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

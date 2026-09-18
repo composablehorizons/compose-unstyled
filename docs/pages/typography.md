@@ -6,7 +6,7 @@ description: Set default text styles in your theme and override them where your 
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming:2.9.2")
+implementation("com.composables:composeunstyled-theming:{{compose_unstyled_version}}")
 ```
 
 ## Set default typography in your theme

@@ -8,9 +8,9 @@ description: Find all available unstyled components in Compose Unstyled.
 Add the component modules you use:
 
 ```kotlin
-implementation("com.composables:composeunstyled-button:2.9.2")
-implementation("com.composables:composeunstyled-checkbox:2.9.2")
-implementation("com.composables:composeunstyled-text-field:2.9.2")
+implementation("com.composables:composeunstyled-button:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-checkbox:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-text-field:{{compose_unstyled_version}}")
 ```
 
 Each component is published as its own module in Compose Unstyled 2.0.0. Use the dependencies from the Installation page to keep each feature module focused on only the APIs it uses.

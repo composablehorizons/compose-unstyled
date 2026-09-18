@@ -15,7 +15,7 @@ description: A slider component with custom track and thumb slots.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-slider:2.9.2")
+implementation("com.composables:composeunstyled-slider:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

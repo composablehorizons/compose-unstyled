@@ -6,7 +6,7 @@ description: A Composable function that returns the current window size and auto
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-window-container-size:2.9.2")
+implementation("com.composables:composeunstyled-window-container-size:{{compose_unstyled_version}}")
 ```
 
 

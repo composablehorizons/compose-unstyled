@@ -6,7 +6,7 @@ description: Set theme defaults and override values for a subtree of your Compos
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming:2.9.2")
+implementation("com.composables:composeunstyled-theming:{{compose_unstyled_version}}")
 ```
 
 ## Theme defaults

@@ -6,7 +6,7 @@ description: A single layout component for horizontal and vertical stacks.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-stack:2.9.2")
+implementation("com.composables:composeunstyled-stack:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy
