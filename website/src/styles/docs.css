@@ -253,6 +253,15 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-pagination a[rel="next"] { grid-column: 2; text-align: right; align-items: flex-end; }
 .docs-pagination-direction { font-size: 0.8125rem; opacity: 0.65; }
 
+.unstyled-platform-indications-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); margin-block: var(--space-7); }
+.unstyled-platform-indication-item { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); min-width: 0; }
+.unstyled-platform-indication-title { text-align: center; font-weight: var(--font-weight-semibold); }
+.unstyled-platform-indication-item video { display: block; width: 100%; height: auto; }
+
+@media (max-width: 760px) {
+  .unstyled-platform-indications-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 .docs-sheet-handle span { border-radius: 999px; }
 
 .code-actions button[data-copied] { color: #16803c; }
