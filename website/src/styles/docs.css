@@ -79,7 +79,7 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-sidebar-scroll { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: var(--space-2); margin-inline: calc(-1 * var(--space-2)); }
 .docs-navigation section:not([hidden]) ~ section:not([hidden]) { margin-top: var(--space-7); }
 
-.docs-navigation h2 {
+.docs-navigation-section-title {
   margin: 0 0 var(--space-2);
   font-family: var(--font-display);
   font-size: 0.875rem;
