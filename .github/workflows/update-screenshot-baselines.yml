@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: screenshot-baseline-update-${{ inputs.branch }}
@@ -43,6 +44,7 @@ jobs:
         run: ./gradlew --console=plain :visual-regressions:takeScreenshots
 
       - name: Commit screenshot baselines
+        id: baseline
         env:
           BRANCH: ${{ inputs.branch }}
         run: |
@@ -51,9 +53,35 @@ jobs:
           git add visual-regressions/src/jvmTest/resources/screenshots
           if git diff --cached --quiet; then
             echo "Screenshot baselines are already current."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          update_branch="automation/update-screenshot-baselines-$GITHUB_RUN_ID"
+          git switch -c "$update_branch"
           git commit -m "Update visual regression baselines"
-          git push origin "HEAD:$BRANCH"
+          git push origin "$update_branch"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "update_branch=$update_branch" >> "$GITHUB_OUTPUT"
+
+      - name: Open screenshot baseline pull request
+        if: steps.baseline.outputs.changed == 'true'
+        uses: actions/github-script@v8
+        env:
+          BASE_BRANCH: ${{ inputs.branch }}
+          UPDATE_BRANCH: ${{ steps.baseline.outputs.update_branch }}
+        with:
+          script: |
+            await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: process.env.BASE_BRANCH,
+              head: process.env.UPDATE_BRANCH,
+              title: 'Update visual regression baselines',
+              body: [
+                'Regenerated visual regression baselines from the current base branch.',
+                '',
+                `Workflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              ].join('\n'),
+            });
