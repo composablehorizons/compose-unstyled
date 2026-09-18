@@ -19,7 +19,7 @@ description: A dismissible modal bottom sheet with custom detents.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-modal-bottom-sheet:2.9.2")
+implementation("com.composables:composeunstyled-modal-bottom-sheet:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

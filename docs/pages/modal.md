@@ -8,7 +8,7 @@ description: A low-level modal layer for blocking background interaction.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-modal:2.9.2")
+implementation("com.composables:composeunstyled-modal:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

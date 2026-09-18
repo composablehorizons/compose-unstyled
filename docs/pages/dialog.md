@@ -15,7 +15,7 @@ description: A modal dialog component with dismiss behavior and panel transition
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-dialog:2.9.2")
+implementation("com.composables:composeunstyled-dialog:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

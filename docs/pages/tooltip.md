@@ -15,7 +15,7 @@ description: A tooltip component for contextual help on hover, focus, and long p
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-tooltip:2.9.2")
+implementation("com.composables:composeunstyled-tooltip:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

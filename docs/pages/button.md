@@ -8,7 +8,7 @@ description: A button component for custom button styles.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-button:2.9.2")
+implementation("com.composables:composeunstyled-button:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

@@ -8,7 +8,7 @@ description: A progress indicator component for determinate and indeterminate lo
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-progress:2.9.2")
+implementation("com.composables:composeunstyled-progress:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

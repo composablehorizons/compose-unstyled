@@ -8,7 +8,7 @@ description: A switch component with an animated thumb slot.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-toggle-switch:2.9.2")
+implementation("com.composables:composeunstyled-toggle-switch:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

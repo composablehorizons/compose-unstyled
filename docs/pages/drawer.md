@@ -18,7 +18,7 @@ The default demo shows a modal bottom drawer with a draggable handle.
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-drawer:2.9.2")
+implementation("com.composables:composeunstyled-drawer:{{compose_unstyled_version}}")
 ```
 
 ## Composition

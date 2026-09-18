@@ -30,16 +30,16 @@ If you want the same broad API surface as 1.x, replace the old aggregate artifac
 `composeunstyled-primitives`:
 
 ```kotlin
-implementation("com.composables:composeunstyled-primitives:2.9.2")
+implementation("com.composables:composeunstyled-primitives:{{compose_unstyled_version}}")
 ```
 
 For smaller dependency graphs, depend only on the modules you use:
 
 ```kotlin
-implementation("com.composables:composeunstyled-button:2.9.2")
-implementation("com.composables:composeunstyled-dropdown-menu:2.9.2")
-implementation("com.composables:composeunstyled-text-field:2.9.2")
-implementation("com.composables:composeunstyled-theming:2.9.2")
+implementation("com.composables:composeunstyled-button:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-dropdown-menu:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-text-field:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-theming:{{compose_unstyled_version}}")
 ```
 
 Components and theming are now separate. Add `composeunstyled-theming` when you use `Text`,

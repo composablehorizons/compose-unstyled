@@ -15,7 +15,7 @@ description: An anchored menu component with keyboard navigation and custom plac
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-dropdown-menu:2.9.2")
+implementation("com.composables:composeunstyled-dropdown-menu:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

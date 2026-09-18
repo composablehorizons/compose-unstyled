@@ -11,7 +11,7 @@ use [Custom Themes](custom-themes.md) when your design system owns its values.
 Include the Platform Theme module in your app's dependencies:
 
 ```kotlin
-implementation("com.composables:composeunstyled-platformtheme:2.9.2")
+implementation("com.composables:composeunstyled-platformtheme:{{compose_unstyled_version}}")
 ```
 
 ## Basic usage

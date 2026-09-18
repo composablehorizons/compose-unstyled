@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    implementation("com.composables:composeunstyled:2.9.2")
+    implementation("com.composables:composeunstyled:{{compose_unstyled_version}}")
 }
 
 // tab: Compose Multiplatform
@@ -40,7 +40,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation("com.composables:composeunstyled:2.9.2")
+            implementation("com.composables:composeunstyled:{{compose_unstyled_version}}")
         }
     }
 }
@@ -61,7 +61,7 @@ Compose Unstyled is modular. Add focused modules when you do not need the full d
 Replace `composeunstyled` in Quick Start with the dependencies that fit your app.
 
 ```kotlin
-implementation("com.composables:composeunstyled-button:2.9.2")
-implementation("com.composables:composeunstyled-text-field:2.9.2")
-implementation("com.composables:composeunstyled-theming:2.9.2")
+implementation("com.composables:composeunstyled-button:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-text-field:{{compose_unstyled_version}}")
+implementation("com.composables:composeunstyled-theming:{{compose_unstyled_version}}")
 ```

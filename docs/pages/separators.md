@@ -8,7 +8,7 @@ description: Horizontal and vertical separators with caller-defined color and th
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-separators:2.9.2")
+implementation("com.composables:composeunstyled-separators:{{compose_unstyled_version}}")
 ```
 
 ## Anatomy

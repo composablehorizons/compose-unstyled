@@ -6,7 +6,7 @@ description: Define light, dark, and custom theme variations for your Jetpack Co
 ## Installation
 
 ```kotlin
-implementation("com.composables:composeunstyled-theming:2.9.2")
+implementation("com.composables:composeunstyled-theming:{{compose_unstyled_version}}")
 ```
 
 ## Define light and dark schemes
