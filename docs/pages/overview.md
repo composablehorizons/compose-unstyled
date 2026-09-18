@@ -48,6 +48,8 @@ been tested using Android's TalkBack.
 Components have a simple API. They behave exactly the same on every platform and do not come with platform-specific
 limitations, such as Android's dialogs fixed sizing.
 
+Compose Unstyled is modular. Use focused modules for the APIs you need, or install the common component bundle.
+
 For every component, we provide detailed documentation along with detailed code samples for common use cases.
 
 There is no lock-in. If you need to modify a component, copy-paste the code into your project and do any modifications
