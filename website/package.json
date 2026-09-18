@@ -5,7 +5,7 @@
   "scripts": {
     "prepare:docs": "bun scripts/prepare-docs.js",
     "dev": "bun scripts/dev.js",
-    "build": "DEMO_DISTRIBUTION=production bun scripts/refresh-demo-assets.js && bun run prepare:docs && astro build && bun scripts/check-build.js",
+    "build": "DEMO_DISTRIBUTION=production bun scripts/refresh-demo-assets.js && bun run prepare:docs && astro build && bun scripts/create-sitemap-alias.js && bun scripts/check-build.js",
     "preview": "astro preview --host 127.0.0.1 --port 4321"
   },
   "dependencies": {

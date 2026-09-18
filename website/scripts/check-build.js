@@ -40,12 +40,14 @@ assert(readFileSync(path.join(dist, 'llms.txt'), 'utf8').includes(siteUrl('/docs
   'LLM links must use the deployment URL');
 const sitemapIndex = readFileSync(path.join(dist, 'sitemap-index.xml'), 'utf8');
 assert(sitemapIndex.includes(siteUrl('/sitemap-0.xml')), 'The sitemap index must reference the generated sitemap');
+const sitemapAlias = readFileSync(path.join(dist, 'sitemap.xml'), 'utf8');
+assert.equal(sitemapAlias, sitemapIndex, 'sitemap.xml must mirror the generated sitemap index');
 const sitemap = readFileSync(path.join(dist, 'sitemap-0.xml'), 'utf8');
 assert(sitemap.includes(siteUrl('/')), 'The sitemap must include the landing page');
 assert(sitemap.includes(siteUrl('/docs/components/button/')), 'The sitemap must include canonical documentation pages');
 assert(sitemap.includes(siteUrl('/docs/button/')) === false, 'The sitemap must not include legacy documentation redirects');
 const robots = readFileSync(path.join(dist, 'robots.txt'), 'utf8');
-assert(robots.includes(`Sitemap: ${siteUrl('/sitemap-index.xml')}`), 'robots.txt must reference the sitemap index');
+assert(robots.includes(`Sitemap: ${siteUrl('/sitemap.xml')}`), 'robots.txt must reference sitemap.xml');
 assert(files.some(file => file.startsWith('composeunstyled-v2-demos/') && file.endsWith('.wasm')),
   'The demo WebAssembly bundle is missing');
 const demo = readFileSync(path.join(dist, 'composeunstyled-v2-demos/index.html'), 'utf8');
