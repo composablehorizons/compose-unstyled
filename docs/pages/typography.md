@@ -1,6 +1,6 @@
 ---
 title: Typography
-description: A themable component for displaying text with various styles and customizations.
+description: Set default text styles in your theme and override them where your Compose UI needs them.
 ---
 
 ## Installation
@@ -9,63 +9,82 @@ description: A themable component for displaying text with various styles and cu
 implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
 
-## Basic Example
+## Set default typography in your theme
 
-The `Text` component is used to display text with various styles and properties.
+Set `defaultTextStyle` when you create your theme. Every `Text()` inside the theme uses this style by default when you do not pass a `style`.
 
-```kotlin expandable
-Text("Hello, World!", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-```
+```kotlin
+import com.composeunstyled.Text
 
-## Styling
+val AppTheme = buildThemeV2 {
+    defaultTextStyle = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+    )
+}
 
-Every component in Compose Unstyled is renderless. They handle all UX pattern logic, internal state, accessibility (according to ARIA standards), and keyboard interactions for you, but they do not render any UI to the screen.
-
-This is by design so that you can style your components exactly to your needs.
-
-Most of the time, styling is done using `Modifiers` of your choice. However, sometimes this is not enough due to the order of the `Modifier`s affecting the visual outcome.
-
-For such cases we provide specific styling parameters or optional components.
-
-
-## Code Examples
-
-### Consistent typography through your app
-
-It is recommended to use the provided `LocalTextStyle` in order to maintain consistent text styling across your app.
-
-If you need to override a text style for specific cases, you can either override a specific parameter via the `Text` modifier or pass an entire different style via the `style` parameter:
-
-```kotlin expandable
-CompositionLocalProvider(LocalTextStyle provides TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)) {
-    Column {
-        Text("This text will use the provided LocalTextStyle")
-        Text("So will this text")
-
-        Text("This text is also styled, but slightly modified", letterSpacing = 2.sp)
-
-        Text("This text is completely different", style = TextStyle())
+@Composable
+fun App() {
+    AppTheme {
+        Column {
+            Text("This text uses the theme style")
+            Text("So does this text")
+        }
     }
 }
 ```
 
-### Styling Text
+<UnstyledDemo id="typography-default-text-style" />
 
-```kotlin expandable
-Text("Bold Text", fontWeight = FontWeight.Bold)
-Text("Italic Text", fontStyle = FontStyle.Italic)
-Text("Underlined Text", textDecoration = TextDecoration.Underline)
-Text("Colored Text", color = Color.Red)
-Text("Large Text", fontSize = 24.sp)
+## Override typography locally
+
+Use `ProvideTextStyle` to replace the theme's `defaultTextStyle` for a part of your UI. `Text()` calls inside its content use the provided style. Content outside keeps the theme default.
+
+```kotlin
+Column {
+    Text("Standard content")
+
+    ProvideTextStyle(
+        TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+    ) {
+        Text("Important content")
+        Text("This also uses the local style")
+    }
+}
 ```
 
-### Handling Text Overflow
+For other theme defaults and local overrides, see [Theme Values](theme-values.md).
 
-```kotlin expandable
+## Override one Text
+
+Pass a style or individual properties to change one `Text()` without changing nearby text.
+
+```kotlin
 Text(
-    "This is a very long text that might overflow",
+    text = "Section title",
+    fontSize = 24.sp,
+    fontWeight = FontWeight.Bold,
+    textDecoration = TextDecoration.Underline,
+)
+
+Text(
+    text = "Status message",
+    style = TextStyle(color = Color.Red),
+)
+```
+
+## Handle text overflow
+
+Set `maxLines` and `overflow` when text must fit in a limited space.
+
+```kotlin
+Text(
+    text = "This is a very long text that might overflow",
     maxLines = 1,
-    overflow = TextOverflow.Ellipsis
+    overflow = TextOverflow.Ellipsis,
 )
 ```
 
