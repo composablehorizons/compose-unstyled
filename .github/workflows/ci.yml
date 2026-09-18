@@ -232,6 +232,14 @@ jobs:
       - name: Screenshot Tests
         run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
 
+      - name: Upload screenshot failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-failure-artifacts
+          path: visual-regressions/build/reports/screenshot-tests
+          if-no-files-found: warn
+
   android-tests-min-api:
     name: ${{ matrix.module }}-android-tests-min-api
     needs: [ discover-android-modules, fast-checks ]

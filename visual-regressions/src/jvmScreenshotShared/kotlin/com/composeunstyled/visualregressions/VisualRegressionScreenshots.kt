@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isLessThanOrEqualTo
 import assertk.fail
 import com.composeunstyled.demo.Demo
 import com.composeunstyled.theme.ColorScheme
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
+import kotlin.math.absoluteValue
 
 val CheckboxCustomCheckedIndicatorScreenshot = VisualRegressionScreenshot(
   name = "checkbox-custom-checked-indicator",
@@ -128,8 +128,12 @@ fun assertVisualRegressionScreenshotMatches(
   val diff = diff(expected, actual)
   if (diff.changedPixels > AllowedChangedPixels) {
     ImageIO.write(diff.image, "png", File(reportDir, "${screenshot.name}.diff.png"))
+    fail(
+      "${screenshot.name}: ${diff.changedPixels} changed pixels, " +
+        "max channel delta ${diff.maxChannelDelta}, " +
+        "mean channel delta ${diff.meanChannelDelta}",
+    )
   }
-  assertThat(diff.changedPixels).isLessThanOrEqualTo(AllowedChangedPixels)
 }
 
 @OptIn(ExperimentalTestApi::class)
@@ -191,9 +195,11 @@ internal fun ComposeUiTest.captureVisualRegressionImage(
   return onNodeWithTag(ScreenshotTargetTag).captureToImage().toAwtImage()
 }
 
-private fun diff(expected: BufferedImage, actual: BufferedImage): ScreenshotDiff {
+internal fun diff(expected: BufferedImage, actual: BufferedImage): ScreenshotDiff {
   val diff = BufferedImage(expected.width, expected.height, BufferedImage.TYPE_INT_ARGB)
   var changedPixels = 0
+  var maxChannelDelta = 0
+  var totalChannelDelta = 0L
 
   for (y in 0 until expected.height) {
     for (x in 0 until expected.width) {
@@ -203,17 +209,36 @@ private fun diff(expected: BufferedImage, actual: BufferedImage): ScreenshotDiff
         diff.setRGB(x, y, expectedRgb)
       } else {
         changedPixels++
+        val alphaDelta = channelDelta(expectedRgb, actualRgb, 24)
+        val redDelta = channelDelta(expectedRgb, actualRgb, 16)
+        val greenDelta = channelDelta(expectedRgb, actualRgb, 8)
+        val blueDelta = channelDelta(expectedRgb, actualRgb, 0)
+        maxChannelDelta = maxOf(maxChannelDelta, alphaDelta, redDelta, greenDelta, blueDelta)
+        totalChannelDelta += alphaDelta + redDelta + greenDelta + blueDelta
         diff.setRGB(x, y, DiffColor)
       }
     }
   }
 
-  return ScreenshotDiff(diff, changedPixels)
+  val meanChannelDelta = if (changedPixels == 0) {
+    0.0
+  } else {
+    totalChannelDelta.toDouble() / (changedPixels * 4)
+  }
+  return ScreenshotDiff(diff, changedPixels, maxChannelDelta, meanChannelDelta)
 }
 
-private data class ScreenshotDiff(
+private fun channelDelta(expectedRgb: Int, actualRgb: Int, shift: Int): Int {
+  val expected = expectedRgb shr shift and 0xFF
+  val actual = actualRgb shr shift and 0xFF
+  return (expected - actual).absoluteValue
+}
+
+internal data class ScreenshotDiff(
   val image: BufferedImage,
   val changedPixels: Int,
+  val maxChannelDelta: Int,
+  val meanChannelDelta: Double,
 )
 
 private const val ScreenshotTargetTag = "screenshot-target"
