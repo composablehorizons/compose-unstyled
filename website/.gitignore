@@ -2,6 +2,7 @@ node_modules/
 .astro/
 dist/
 src/pages/docs/*.md
+src/pages/docs/*/*.md
 public/docs/
 public/llms*.txt
 public/composeunstyled-v2-assets/

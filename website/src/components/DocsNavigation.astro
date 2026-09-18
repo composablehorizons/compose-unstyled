@@ -2,6 +2,7 @@
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
 import { sitePath } from '../../site.config.js';
+import { docsPath } from '../../docs-routes.js';
 const navigation = parse(docsYaml);
 ---
 <nav id={Astro.props.id} class="docs-navigation" aria-label="Documentation">
@@ -10,7 +11,7 @@ const navigation = parse(docsYaml);
       <p class="docs-navigation-section-title">{section.title}</p>
       <ul>
         {section.pages.map(page => (
-          <li><a href={sitePath(`/docs/${page.slug}/`)} aria-current={Astro.url.pathname.replace(/\/$/, '') === sitePath(`/docs/${page.slug}`) ? 'page' : undefined}>{page.title}</a></li>
+          <li><a href={sitePath(docsPath(section, page))} aria-current={Astro.url.pathname.replace(/\/$/, '') === sitePath(docsPath(section, page)).replace(/\/$/, '') ? 'page' : undefined}>{page.title}</a></li>
         ))}
         {section.title === 'Resources' && (
           <>

@@ -1,11 +1,14 @@
 sections:
   - title: Getting Started
+    slug: getting-started
     pages:
       - title: Installation
         slug: installation
       - title: About
         slug: overview
+        routeSlug: about
   - title: Theming
+    slug: theming
     pages:
       - title: Custom Themes
         slug: custom-themes
@@ -24,6 +27,7 @@ sections:
       - title: Minimum Interactive Size
         slug: defaultMinimumComponentInteractiveSize
   - title: Components
+    slug: components
     pages:
       - title: Overview
         slug: components
@@ -68,6 +72,7 @@ sections:
       - title: Tooltip
         slug: tooltip
   - title: Styling
+    slug: styling
     pages:
       - title: ColoredIndication
         slug: coloredindication
@@ -76,12 +81,14 @@ sections:
       - title: outline
         slug: outline
   - title: Responsive Design
+    slug: responsive-design
     pages:
       - title: Window Breakpoints
         slug: window-breakpoints
       - title: Stack
         slug: stack
   - title: Utilities
+    slug: utilities
     pages:
       - title: buildModifier
         slug: buildModifier
@@ -94,6 +101,7 @@ sections:
       - title: Window Container Size
         slug: window-container-size
   - title: Resources
+    slug: resources
     pages:
       - title: Migration to 2.0
         slug: migration-to-2

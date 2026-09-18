@@ -2,13 +2,15 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import { brands } from '../data/landing.json';
 import { sitePath } from '../../site.config.js';
+import { docsPath } from '../../docs-routes.js';
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
 const navigation = parse(docsYaml);
-const components = navigation.sections.find(section => section.title === 'Components').pages;
+const componentsSection = navigation.sections.find(section => section.title === 'Components');
+const components = componentsSection.pages;
 const componentLinks = components.filter(component => component.slug !== 'components');
-const theming = navigation.sections
-  .find(section => section.title === 'Theming')
+const themingSection = navigation.sections.find(section => section.title === 'Theming');
+const theming = themingSection
   .pages
   .filter(page => ['custom-themes', 'color-schemes', 'theme-values', 'dynamic-themes', 'platform-themes'].includes(page.slug));
 ---
@@ -22,7 +24,7 @@ const theming = navigation.sections
           <a href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow" class="landing-link">
             View on Github (1,227 stars) →
           </a>
-          <a href={sitePath('/docs/installation/')} class="landing-link">Get Started →</a>
+          <a href={sitePath('/docs/getting-started/installation/')} class="landing-link">Get Started →</a>
         </div>
       </div>
     </header>
@@ -39,10 +41,10 @@ const theming = navigation.sections
     </section>
 
     <section class="unstyled-components" aria-label="Components">
-      <h2 class="headerMedium"><a class="landing-link" href={sitePath('/docs/components/')}>Components →</a></h2>
+      <h2 class="headerMedium"><a class="landing-link" href={sitePath(docsPath(componentsSection, components[0]))}>Components →</a></h2>
       <ul class="unstyled-component-links" role="list">
         {componentLinks.map(component => (
-          <li><a class="landing-link" href={sitePath(`/docs/${component.slug}/`)}>{component.title} →</a></li>
+          <li><a class="landing-link" href={sitePath(docsPath(componentsSection, component))}>{component.title} →</a></li>
         ))}
       </ul>
     </section>
@@ -54,7 +56,7 @@ const theming = navigation.sections
       </div>
       <ul class="unstyled-component-links" role="list">
         {theming.map(page => (
-          <li><a class="landing-link" href={sitePath(`/docs/${page.slug}/`)}>{page.title} →</a></li>
+          <li><a class="landing-link" href={sitePath(docsPath(themingSection, page))}>{page.title} →</a></li>
         ))}
       </ul>
     </section>
@@ -72,7 +74,7 @@ const theming = navigation.sections
         </details>
         <details>
           <summary>Can I use this with Material Compose or other design systems?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>
-          <p>Yes. Many people use Unstyled because they prefer the simpler API and customization options of its <a class="landing-link" href={sitePath('/docs/modal-bottom-sheet/')}>Modal Bottom Sheet</a> over the Material one.</p>
+          <p>Yes. Many people use Unstyled because they prefer the simpler API and customization options of its <a class="landing-link" href={sitePath('/docs/components/modal-bottom-sheet/')}>Modal Bottom Sheet</a> over the Material one.</p>
         </details>
         <details>
           <summary>Can I use the new Styles API with this?<span class="unstyled-faq-icon" aria-hidden="true"></span></summary>

@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { sitePath, siteUrl } from '../site.config.js';
+import { docsMarkdownPath, docsPath, findDocsPage } from '../docs-routes.js';
 import { parse, stringify } from 'yaml';
 import { renderDemo } from './render-demo.js';
 
@@ -29,6 +30,14 @@ const demoRevision = await readFile(path.join(publicDir, 'composeunstyled-v2-dem
   .then(revision => revision.trim())
   .catch(() => undefined);
 await mkdir(contentDir, { recursive: true });
+const removeGeneratedPages = async (directory) => {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) await removeGeneratedPages(entryPath);
+    else if (entry.name.endsWith('.md')) await rm(entryPath);
+  }
+};
+await removeGeneratedPages(contentDir);
 await rm(path.join(publicDir, 'docs'), { recursive: true, force: true });
 await mkdir(path.join(publicDir, 'docs'), { recursive: true });
 
@@ -36,12 +45,17 @@ const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').rep
 const withoutDemoMetadata = source => source
   .replace(/^import com\.composeunstyled\.demo\.UnstyledDemo\s*\n/m, '')
   .replace(/^@UnstyledDemo\([\s\S]*?\)\s*\n/m, '');
-const components = navigation.sections.find(section => section.title === 'Components').pages;
-const componentLinks = components.map(page => `[${page.title}](/docs/${page.slug}/)`).join('\n\n');
-const componentList = `<ul>${components.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
+const componentsSection = navigation.sections.find(section => section.title === 'Components');
+const components = componentsSection.pages;
+const docsPages = navigation.sections.flatMap(section => section.pages.map(page => ({ section, page })));
+const docsPathForSlug = (slug) => {
+  const entry = findDocsPage(navigation, slug);
+  return entry ? docsPath(entry.section, entry.page) : `/docs/${slug}/`;
+};
+const componentLinks = components.map(page => `[${page.title}](${docsPath(componentsSection, page)})`).join('\n\n');
+const componentList = `<ul>${components.map(page => `<li><a href="${docsPath(componentsSection, page)}">${escape(page.title)}</a></li>`).join('')}</ul>`;
 const llms = [`# Compose Unstyled ${version}`, '', '> Renderless components for Jetpack Compose and Compose Multiplatform.', '', `These docs describe version ${version}. Examples use this version's APIs.`, ''];
 const full = [`# Compose Unstyled ${version}`, ''];
-const generatedPages = new Set();
 let count = 0;
 
 for (const section of navigation.sections) {
@@ -55,7 +69,8 @@ for (const section of navigation.sections) {
       .replaceAll('{{compose_unstyled_version}}', version)
       .replaceAll('/compose-unstyled/docs/', '/docs/')
       .replaceAll('](/docs/androidx.', '](https://composables.com/docs/androidx.')
-      .replace(/\]\(([A-Za-z0-9._-]+)\.md(#[^)]*)?\)/g, (_, slug, hash = '') => `](/docs/${slug}/${hash})`);
+      .replace(/\]\(([A-Za-z0-9._-]+)\.md(#[^)]*)?\)/g, (_, slug, hash = '') => `](${docsPathForSlug(slug)}${hash})`)
+      .replace(/\]\(\/docs\/([A-Za-z0-9._-]+)\/?(#[^)]*)?\)/g, (_, slug, hash = '') => `](${docsPathForSlug(slug)}${hash})`);
     let htmlBody = body.replaceAll('{{unstyled_component_grid}}', componentList);
     let markdownBody = body.replaceAll('{{unstyled_component_grid}}', componentLinks);
 
@@ -80,28 +95,35 @@ for (const section of navigation.sections) {
     htmlBody = htmlBody
       .replace(/\]\(\/(?!\/)/g, `](${sitePath('/')}`)
       .replace(/\b(src|href)="\/(?!\/)/g, (_, attr) => `${attr}="${sitePath('/')}`);
-    await writeFile(path.join(contentDir, `${page.slug}.md`), `---\n${stringify({
-      layout: '../../layouts/DocsLayout.astro',
+    const pageSlug = page.routeSlug ?? page.slug;
+    const pageFile = section.slug === pageSlug
+      ? path.join(section.slug, 'index.md')
+      : path.join(section.slug, `${pageSlug}.md`);
+    const markdownPath = docsMarkdownPath(section, page);
+    await mkdir(path.dirname(path.join(contentDir, pageFile)), { recursive: true });
+    await writeFile(path.join(contentDir, pageFile), `---\n${stringify({
+      layout: '../../../layouts/DocsLayout.astro',
       title: metadata.title,
       ...(metadata.seoTitle ? { seoTitle: metadata.seoTitle } : {}),
       description: metadata.description,
-      markdownUrl: sitePath(`/docs/${page.slug}.md`),
+      markdownUrl: sitePath(markdownPath),
     })}---\n${htmlBody}`);
-    generatedPages.add(`${page.slug}.md`);
-    markdownBody = markdownBody
-      .replace(/\]\(\/docs\/([^/)]+)\/(#[^)]*)?\)/g, (_, slug, hash = '') => `](${siteUrl(`/docs/${slug}.md`)}${hash})`)
-      .replace(/\b(src|href)="\//g, (_, attr) => `${attr}="${siteUrl('/')}`);
+    for (const entry of docsPages) {
+      markdownBody = markdownBody.replaceAll(
+        `](${docsPath(entry.section, entry.page)}`,
+        `](${siteUrl(docsMarkdownPath(entry.section, entry.page))}`,
+      );
+    }
+    markdownBody = markdownBody.replace(/\b(src|href)="\//g, (_, attr) => `${attr}="${siteUrl('/')}`);
     const markdown = `${match[0]}${markdownBody}`;
-    await writeFile(path.join(publicDir, 'docs', `${page.slug}.md`), markdown);
-    llms.push(`- [${metadata.title}](${siteUrl(`/docs/${page.slug}.md`)}): ${metadata.description || metadata.title}`);
+    const markdownFile = path.join(publicDir, markdownPath);
+    await mkdir(path.dirname(markdownFile), { recursive: true });
+    await writeFile(markdownFile, markdown);
+    llms.push(`- [${metadata.title}](${siteUrl(markdownPath)}): ${metadata.description || metadata.title}`);
     full.push(markdown);
     count++;
   }
   llms.push('');
-}
-
-for (const file of await readdir(contentDir)) {
-  if (file.endsWith('.md') && !generatedPages.has(file)) await rm(path.join(contentDir, file));
 }
 
 await writeFile(path.join(publicDir, 'llms.txt'), llms.join('\n'));
