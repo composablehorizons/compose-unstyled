@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import { site, base } from './site.config.js';
 import externalLinks from './plugins/external-links.js';
 import codePanels, { codeTitleTransformer } from './plugins/code-blocks.js';
+import githubAlerts from './plugins/github-alerts.js';
 import headingLinks from './plugins/heading-links.js';
 
 export default defineConfig({
@@ -12,7 +13,7 @@ export default defineConfig({
   trailingSlash: 'ignore',
   integrations: [sitemap()],
   markdown: {
-    processor: satteri({ hastPlugins: [externalLinks, headingLinks, codePanels] }),
+    processor: satteri({ hastPlugins: [externalLinks, headingLinks, githubAlerts, codePanels] }),
     syntaxHighlight: 'shiki',
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
