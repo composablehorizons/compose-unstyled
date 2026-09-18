@@ -17,6 +17,12 @@ not need a changeset.
 
 See [RELEASING.md](RELEASING.md) for the full release flow.
 
+## Visual Regressions
+
+Pull requests that can affect rendered output run screenshot tests automatically. See
+[Visual Regressions](visual-regressions/README.md) for when to add coverage, how to investigate a
+failure, and how to update baselines through the dedicated GitHub Actions workflow.
+
 ## Working with Android
 
 The recommended way to build and develop on Unstyled is using the JVM target. However, for your PRs

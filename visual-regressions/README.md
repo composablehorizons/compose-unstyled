@@ -21,13 +21,21 @@ Compare the checked-in baselines:
 ./gradlew :visual-regressions:jvmScreenshotTest
 ```
 
-Update the checked-in baselines after intentionally changing screenshots:
+Pull requests that can affect rendered output run this suite automatically on macOS 15. The
+workflow does not run on release-only pull requests; the tagged release workflow runs the full
+suite before publishing.
 
-```sh
-./gradlew :visual-regressions:takeScreenshots
-```
+Do not update checked-in baselines locally. After an intentional visual change, run the
+`Update Screenshot Baselines` GitHub Actions workflow for the branch that needs the update. It
+regenerates baselines on macOS 15 and opens a dedicated pull request.
 
-Do not update screenshot baselines from normal test tasks. Screenshot tests should only write failure artifacts under `build/`.
+Normal screenshot test tasks never update baselines; they only write failure artifacts under
+`build/`. On CI failure, download `screenshot-failure-artifacts` for the actual and diff images.
+The failure also reports the changed-pixel count, maximum channel delta, and mean channel delta.
+
+The suite permits at most 20 changed pixels for tiny renderer drift. Do not increase that limit to
+accept a mismatch: inspect the artifacts and update the baseline only when the rendered result is
+intentional.
 
 ## Adding A Case
 
