@@ -21,35 +21,6 @@ Use the `buildPlatformTheme` function to create your theme. Then wrap your app w
 <UnstyledDemo id="platform-theme" />
 
 ```kotlin expandable
-import androidx.compose.runtime.Composable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.composeunstyled.UnstyledButton
-import androidx.compose.foundation.text.BasicText
-import com.composeunstyled.platformtheme.buildPlatformTheme
-import com.composeunstyled.platformtheme.dimmed
-import com.composeunstyled.platformtheme.EmojiVariant
-import com.composeunstyled.platformtheme.heading5
-import com.composeunstyled.platformtheme.indications
-import com.composeunstyled.platformtheme.interactiveSizes
-import com.composeunstyled.platformtheme.interactiveSize
-import com.composeunstyled.platformtheme.roundedFull
-import com.composeunstyled.platformtheme.shapes
-import com.composeunstyled.platformtheme.sizeDefault
-import com.composeunstyled.platformtheme.text8
-import com.composeunstyled.platformtheme.textStyles
-import com.composeunstyled.platformtheme.WebFontOptions
-import com.composeunstyled.theme.Theme
-```
-
-```kotlin expandable
 val AppTheme = buildPlatformTheme(
     webFontOptions = WebFontOptions(
         emojiVariant = EmojiVariant.Colored
@@ -138,17 +109,6 @@ Use `webFontOptions` while building your Platform Theme to specify the scripts t
 <UnstyledDemo id="platform-theme" />
 
 ```kotlin expandable
-import androidx.compose.runtime.Composable
-import androidx.compose.foundation.text.BasicText
-import com.composeunstyled.platformtheme.buildPlatformTheme
-import com.composeunstyled.platformtheme.heading5
-import com.composeunstyled.platformtheme.SpokenLanguage
-import com.composeunstyled.platformtheme.textStyles
-import com.composeunstyled.platformtheme.WebFontOptions
-import com.composeunstyled.theme.Theme
-```
-
-```kotlin expandable
 val AppTheme = buildPlatformTheme(
     webFontOptions = WebFontOptions(
         supportedLanguages = listOf(SpokenLanguage.Japanese)
@@ -163,10 +123,8 @@ fun App() {
 }
 ```
 
-<p class="border-l-4 pl-4 border-orange-500 flex flex-col gap-2 unstyled-platform-warning unstyled-warning">
-<strong class="text-orange-800 unstyled-platform-warning-title unstyled-warning-title">⚠️ Use this API with caution</strong>
-<span>Compose Web will cause your app to freeze while big sized fonts are being loaded for the first time. They are then cached by the browser. Only use the scripts that you need to reduce unresponsiveness.</span>
-</p>
+> [!WARNING]
+> Use this API with caution. Compose Web will cause your app to freeze while big sized fonts are being loaded for the first time. They are then cached by the browser. Only use the scripts that you need to reduce unresponsiveness.
 
 We currently support Japanese, Korean, Chinese Traditional and Chinese Simplified. If there is a script you would like us to support, feel free to request it via a GitHub issue.
 
@@ -177,22 +135,6 @@ Use `webFontOptions` while building your Platform Theme to specify the emoji var
 By default, `Monochrome` is used as it is a good compromise between having emojis and speed:
 
 <UnstyledDemo id="platform-theme" />
-
-```kotlin expandable
-import androidx.compose.runtime.Composable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.BasicText
-import com.composeunstyled.platformtheme.buildPlatformTheme
-import com.composeunstyled.platformtheme.EmojiVariant
-import com.composeunstyled.platformtheme.heading8
-import com.composeunstyled.platformtheme.textStyles
-import com.composeunstyled.platformtheme.WebFontOptions
-import com.composeunstyled.theme.Theme
-```
 
 ```kotlin expandable
 val AppTheme = buildPlatformTheme(
@@ -220,11 +162,6 @@ We provide two Theme tokens: `bright` and `dimmed`. The default indication is `b
 Use `platformIndication` when a component should ask for platform-native interaction feedback directly:
 
 ```kotlin expandable
-import androidx.compose.ui.graphics.Color
-import com.composeunstyled.platformtheme.platformIndication
-```
-
-```kotlin expandable
 val brightIndication = platformIndication(Color.White.copy(alpha = 0.18f))
 val dimmedIndication = platformIndication(Color.Black.copy(alpha = 0.08f))
 ```
@@ -232,21 +169,21 @@ val dimmedIndication = platformIndication(Color.Black.copy(alpha = 0.08f))
 Compose Unstyled applies the provided color to the platform indication where the platform supports
 it.
 
-<div class="grid grid-cols-2 gap-8 my-8 unstyled-platform-indications-grid">
-  <div class="flex flex-col items-center gap-2 unstyled-platform-indication-item">
-    <h4 class="text-center font-semibold unstyled-platform-indication-title">Android</h4>
+<div class="unstyled-platform-indications-grid">
+  <div class="unstyled-platform-indication-item">
+    <h4 class="unstyled-platform-indication-title">Android</h4>
     <video src="/composeunstyled-v2-assets/android_touch.mp4" playsinline loop autoplay muted ></video>
   </div>
-  <div class="flex flex-col items-center gap-2 unstyled-platform-indication-item">
-    <h4 class="text-center font-semibold unstyled-platform-indication-title">iOS</h4>
+  <div class="unstyled-platform-indication-item">
+    <h4 class="unstyled-platform-indication-title">iOS</h4>
     <video src="/composeunstyled-v2-assets/ios_touch.mp4" playsinline loop autoplay muted ></video>
   </div>
-  <div class="flex flex-col items-center gap-2 unstyled-platform-indication-item">
-    <h4 class="text-center font-semibold unstyled-platform-indication-title">Desktop</h4>
+  <div class="unstyled-platform-indication-item">
+    <h4 class="unstyled-platform-indication-title">Desktop</h4>
     <video src="/composeunstyled-v2-assets/desktop_touch.mp4" playsinline loop autoplay muted ></video>
   </div>
-  <div class="flex flex-col items-center gap-2 unstyled-platform-indication-item">
-    <h4 class="text-center font-semibold unstyled-platform-indication-title">Web</h4>
+  <div class="unstyled-platform-indication-item">
+    <h4 class="unstyled-platform-indication-title">Web</h4>
     <video src="/composeunstyled-v2-assets/web_touch.mp4" playsinline loop autoplay muted ></video>
   </div>
 </div>
@@ -263,15 +200,6 @@ We provide two size tokens: `sizeDefault` and `sizeMinimum`.
 | `sizeMinimum` | 32dp    | 28dp | 20dp    | 20dp |
 
 Use the `interactiveSize` modifier to apply these sizes to your interactive elements:
-
-```kotlin expandable
-import com.composeunstyled.UnstyledButton
-import androidx.compose.foundation.text.BasicText
-import com.composeunstyled.platformtheme.interactiveSize
-import com.composeunstyled.platformtheme.interactiveSizes
-import com.composeunstyled.platformtheme.sizeDefault
-import com.composeunstyled.theme.Theme
-```
 
 ```kotlin expandable
 UnstyledButton(
