@@ -3,78 +3,65 @@ title: Installation
 description: Learn how to use Compose Unstyled in a new or existing projects.
 ---
 
-## Add to an existing project
+## Quick start
 
-### Add Maven Central
-
-We distribute Compose Unstyled via Maven Central. Maven Central is the most popular repository for Kotlin packages and
-it should be included in your list of repositories
-out of the box.
-
-To make sure you have it, check your `settings.gradle.kts`:
+Compose Unstyled is distributed via Maven Central, the most trusted source of sharing Kotlin packages. Ensure you have it enabled in your repository sources first:
 
 ```kotlin title="settings.gradle.kts"
 dependencyResolutionManagement {
     repositories {
-        mavenCentral() // <- Add this
+        mavenCentral()
     }
 }
-
 ```
 
-### Add to Jetpack Compose project
-
-Add the dependency in your project, and set JVM version to 17:
-
-```kotlin title="app/build.gradle.kts"
+```kotlin tabbed
+// tab: Jetpack Compose
 android {
     kotlinOptions {
-        jvmTarget = "17" // <- Update this
+        jvmTarget = "17"
     }
     compileOptions {
-        // make sure these are set to VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    // keep the rest the same
 }
 
 dependencies {
-    // adds theming APIs
-    implementation("com.composables:composeunstyled-theming:2.9.2")
-
-    // add the component modules you use
-    implementation("com.composables:composeunstyled-button:2.9.2")
-    implementation("com.composables:composeunstyled-text-field:2.9.2")
-
-    // adds themes for native look and feel
-    implementation("com.composables:composeunstyled-platformtheme:2.9.2")
+    implementation("com.composables:composeunstyled:2.9.2")
 }
-```
 
-### Add to Compose Multiplatform project
-
-For Compose Multiplatform apps:
-
-```kotlin title="composeApp/build.gradle.kts"
+// tab: Compose Multiplatform
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17) // <- Update this
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
     sourceSets {
         commonMain.dependencies {
-            // adds theming APIs
-            implementation("com.composables:composeunstyled-theming:2.9.2")
-
-            // add the component modules you use
-            implementation("com.composables:composeunstyled-button:2.9.2")
-            implementation("com.composables:composeunstyled-text-field:2.9.2")
-
-            // adds themes for native look and feel
-            implementation("com.composables:composeunstyled-platformtheme:2.9.2")
+            implementation("com.composables:composeunstyled:2.9.2")
         }
     }
 }
+```
+
+## Modules
+
+Compose Unstyled is modular. Add focused modules when you do not need the full dependency.
+
+| If you need | Add |
+| --- | --- |
+| All components and theming APIs | `composeunstyled` |
+| Every unstyled component | `composeunstyled-primitives` |
+| Theming APIs | `composeunstyled-theming` |
+| Specific components, such as Button | `composeunstyled-button` |
+| Opinionated themes per platform | `composeunstyled-platformtheme` |
+
+Replace `composeunstyled` in Quick Start with the dependencies that fit your app.
+
+```kotlin
+implementation("com.composables:composeunstyled-button:2.9.2")
+implementation("com.composables:composeunstyled-text-field:2.9.2")
+implementation("com.composables:composeunstyled-theming:2.9.2")
 ```

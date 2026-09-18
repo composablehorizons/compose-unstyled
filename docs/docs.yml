@@ -1,10 +1,10 @@
 sections:
   - title: Getting Started
     pages:
-      - title: About
-        slug: overview
       - title: Installation
         slug: installation
+      - title: About
+        slug: overview
   - title: Theming
     pages:
       - title: Custom Themes
