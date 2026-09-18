@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       library: ${{ steps.select.outputs.library }}
+      screenshots: ${{ steps.select.outputs.screenshots }}
+      release: ${{ steps.select.outputs.release }}
+      release_valid: ${{ steps.select.outputs.release_valid }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -206,9 +209,10 @@ jobs:
           printf '  %s\n' "${tasks[@]}"
           ./gradlew --console=plain "${tasks[@]}"
 
-  release-screenshot-tests:
-    runs-on: macos-latest
-    if: startsWith(github.head_ref, 'changeset-release/')
+  screenshot-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.screenshots == 'true'
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
 
@@ -255,27 +259,14 @@ jobs:
         ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
         -Pandroid.testInstrumentationRunnerArguments.annotation=androidx.test.filters.SdkSuppress
 
-  release-gate:
-    name: release-gate
-    if: always() && startsWith(github.head_ref, 'changeset-release/')
-    needs: [ fast-checks, release-screenshot-tests, android-tests-min-api, android-tests-api29 ]
+  validate-release-pr:
+    if: needs.detect-changes.outputs.release == 'true'
+    needs: detect-changes
     runs-on: ubuntu-latest
     steps:
-      - name: Verify release checks
+      - name: Verify release-only changes
         env:
-          FAST_CHECKS_RESULT: ${{ needs.fast-checks.result }}
-          SCREENSHOT_TESTS_RESULT: ${{ needs.release-screenshot-tests.result }}
-          ANDROID_TESTS_MIN_API_RESULT: ${{ needs.android-tests-min-api.result }}
-          ANDROID_TESTS_API29_RESULT: ${{ needs.android-tests-api29.result }}
+          RELEASE_VALID: ${{ needs.detect-changes.outputs.release_valid }}
         run: |
           set -euo pipefail
-
-          printf 'fast-checks: %s\n' "$FAST_CHECKS_RESULT"
-          printf 'release-screenshot-tests: %s\n' "$SCREENSHOT_TESTS_RESULT"
-          printf 'android-tests-min-api: %s\n' "$ANDROID_TESTS_MIN_API_RESULT"
-          printf 'android-tests-api29: %s\n' "$ANDROID_TESTS_API29_RESULT"
-
-          test "$FAST_CHECKS_RESULT" = success
-          test "$SCREENSHOT_TESTS_RESULT" = success
-          test "$ANDROID_TESTS_MIN_API_RESULT" = success
-          test "$ANDROID_TESTS_API29_RESULT" = success
+          test "$RELEASE_VALID" = true
