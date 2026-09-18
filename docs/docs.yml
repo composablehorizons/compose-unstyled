@@ -23,7 +23,7 @@ sections:
         slug: platform-themes
       - title: Minimum Interactive Size
         slug: defaultMinimumComponentInteractiveSize
-  - title: Primitives
+  - title: Components
     pages:
       - title: Overview
         slug: components
