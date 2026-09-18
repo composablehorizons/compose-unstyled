@@ -153,7 +153,8 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .docs-content details { margin-block: var(--space-6); padding: var(--space-4) var(--space-5); }
 .docs-content summary { cursor: pointer; font-size: 0.875rem; font-weight: var(--font-weight-semibold); }
 .docs-content blockquote { margin: var(--space-6) 0; padding: var(--space-4) var(--space-5); border: 0; border-radius: var(--radius-medium); background: var(--color-surface); color: var(--color-on-surface); }
-.docs-content .docs-theme-compatibility-note { margin-block: var(--space-5); padding: var(--space-4) var(--space-5); border: 0; border-radius: var(--radius-medium); background: var(--color-surface); color: var(--color-on-surface); }
+.docs-content .docs-alert-title { margin: 0 0 var(--space-2); font-size: 0.8125rem; font-weight: var(--font-weight-semibold); }
+.docs-content .docs-alert > :last-child { margin-bottom: 0; }
 .docs-content hr { margin-block: var(--space-7); border: 0; border-top: var(--stroke-thin) solid var(--color-outline); }
 
 

@@ -16,10 +16,8 @@ implementation("com.composables:composeunstyled-theming:2.9.2")
 
 To create a theme, use the `buildThemeV2 { }` function.
 
-<aside class="docs-theme-compatibility-note">
-  <code>buildTheme {}</code> also exists for compatibility with existing themes. <code>buildThemeV2 {}</code> adds color-scheme support and is
-  recommended for new themes.
-</aside>
+> [!NOTE]
+> `buildTheme {}` also exists for compatibility with existing themes. `buildThemeV2 {}` adds color-scheme support and is recommended for new themes.
 
 ```kotlin
 val MyTheme = buildThemeV2 {
