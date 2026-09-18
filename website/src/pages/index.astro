@@ -5,7 +5,7 @@ import { sitePath } from '../../site.config.js';
 import docsYaml from '../../../docs/docs.yml?raw';
 import { parse } from 'yaml';
 const navigation = parse(docsYaml);
-const components = navigation.sections.find(section => section.title === 'Primitives').pages;
+const components = navigation.sections.find(section => section.title === 'Components').pages;
 const componentLinks = components.filter(component => component.slug !== 'components');
 const theming = navigation.sections
   .find(section => section.title === 'Theming')

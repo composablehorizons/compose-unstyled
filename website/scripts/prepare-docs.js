@@ -36,9 +36,9 @@ const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').rep
 const withoutDemoMetadata = source => source
   .replace(/^import com\.composeunstyled\.demo\.UnstyledDemo\s*\n/m, '')
   .replace(/^@UnstyledDemo\([\s\S]*?\)\s*\n/m, '');
-const primitives = navigation.sections.find(section => section.title === 'Primitives').pages;
-const componentLinks = primitives.map(page => `[${page.title}](/docs/${page.slug}/)`).join('\n\n');
-const componentList = `<ul>${primitives.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
+const components = navigation.sections.find(section => section.title === 'Components').pages;
+const componentLinks = components.map(page => `[${page.title}](/docs/${page.slug}/)`).join('\n\n');
+const componentList = `<ul>${components.map(page => `<li><a href="/docs/${page.slug}/">${escape(page.title)}</a></li>`).join('')}</ul>`;
 const llms = [`# Compose Unstyled ${version}`, '', '> Renderless components for Jetpack Compose and Compose Multiplatform.', '', `These docs describe version ${version}. Examples use this version's APIs.`, ''];
 const full = [`# Compose Unstyled ${version}`, ''];
 const generatedPages = new Set();
