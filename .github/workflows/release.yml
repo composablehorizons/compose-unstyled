@@ -131,6 +131,14 @@ jobs:
       - name: Screenshot Tests
         run: ./gradlew --console=plain :visual-regressions:jvmScreenshotTest
 
+      - name: Upload screenshot failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-failure-artifacts
+          path: visual-regressions/build/reports/screenshot-tests
+          if-no-files-found: warn
+
   discover-android-modules:
     needs: validate-release
     runs-on: ubuntu-latest
