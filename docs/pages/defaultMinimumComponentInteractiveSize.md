@@ -3,14 +3,14 @@ title: defaultMinimumComponentInteractiveSize
 description: A modifier that sets the minimum interactive size of a composable based on the current device type and theme configuration.
 ---
 
+> [!WARNING]
+> `ComponentInteractiveSize` and `defaultComponentInteractiveSize` are deprecated and will be removed in 3.0. If your design system needs a minimum interactive size, implement that policy in your own components.
+
 ## Installation
 
 ```kotlin
 implementation("com.composables:composeunstyled-theming:2.9.2")
 ```
-
-> **Warning:** `ComponentInteractiveSize` and `defaultComponentInteractiveSize` are deprecated and will be removed in
-> 3.0. If your design system needs a minimum interactive size, implement that policy in your own components.
 
 ## Code Examples
 
