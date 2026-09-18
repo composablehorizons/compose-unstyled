@@ -5,6 +5,10 @@ import '../styles/tokens.css';
 import '../styles/landing.css';
 import { sitePath, siteUrl } from '../../site.config.js';
 import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
+const pageTitle = 'Compose Unstyled — The missing design system layer for Jetpack Compose';
+const description = 'Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Build your own design system for every platform.';
+const canonicalUrl = siteUrl('/');
+const socialImageUrl = siteUrl('/og_unstyled.png');
 ---
 <!doctype html>
 <html lang="en">
@@ -15,9 +19,20 @@ import { sharedSkikoUrl } from '../../scripts/skiko-runtime.js';
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
     <Favicon />
-    <title>Compose Unstyled — The missing design system layer for Jetpack Compose</title>
-    <meta name="description" content="Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Build your own design system for every platform." />
-    <link rel="canonical" href={siteUrl('/')} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
     <link rel="sitemap" href={sitePath('/sitemap.xml')} />
     <link rel="preconnect" href="https://cdn.composables.com" crossorigin />
     <link rel="preload" href={sharedSkikoUrl} as="fetch" type="application/wasm" crossorigin />
