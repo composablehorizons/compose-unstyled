@@ -29,6 +29,10 @@ jobs:
           java-version: 17
           token: ${{ github.token }}
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
 
@@ -46,6 +50,10 @@ jobs:
           distribution: temurin
           java-version: 17
           token: ${{ github.token }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
 
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
