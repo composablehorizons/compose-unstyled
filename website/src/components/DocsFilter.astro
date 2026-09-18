@@ -23,7 +23,7 @@ import filterIcon from '../assets/icons/filter.svg?raw';
         const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
         let count = 0;
         for (const section of sections) {
-          const heading = section.querySelector('h2')!.textContent || '';
+          const heading = section.querySelector('.docs-navigation-section-title')!.textContent || '';
           let sectionCount = 0;
           for (const item of section.querySelectorAll('li')) {
             const link = item.querySelector('a')!;
