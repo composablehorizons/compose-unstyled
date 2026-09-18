@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   screenshot-tests:
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
@@ -18,6 +18,10 @@ jobs:
           distribution: temurin
           java-version: 17
           token: ${{ github.token }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
 
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
