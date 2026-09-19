@@ -6,11 +6,9 @@ flexible theming system – so you can build any design system on every platform
 
 ## Documentation
 
-For full documentation, checkout: https://composables.com/compose-unstyled/docs
+For full documentation, checkout: https://composeunstyled.com/docs
 
 ## Community
-
-For help and discussions: [Join the community Discord](http://composables.com/discord)
 
 Got an idea you want to share? [Open a Github Issue](https://github.com/composablehorizons/compose-unstyled/issues)
 
