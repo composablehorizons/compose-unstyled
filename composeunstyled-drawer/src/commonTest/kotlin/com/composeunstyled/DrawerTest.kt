@@ -66,6 +66,7 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
@@ -567,8 +568,13 @@ class DrawerTest {
     }
     waitUntil { state.offset.roundToInt() == 80 && state.isIdle }
 
-    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
-    assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
+    // Drawer state is updated during measurement; wait for layout before finishing the test.
+    runOnIdle {
+      assertThat(state.offset.roundToInt()).isEqualTo(80)
+      assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+      assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
+    }
+    onNodeWithTag(PanelTag).assertHeightIsEqualTo(80.dp)
   }
 
   @Test
@@ -597,8 +603,13 @@ class DrawerTest {
     }
     waitUntil { state.offset.roundToInt() == 30 && state.isIdle }
 
-    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
-    assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
+    // Drawer state is updated during measurement; wait for layout before finishing the test.
+    runOnIdle {
+      assertThat(state.offset.roundToInt()).isEqualTo(30)
+      assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+      assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
+    }
+    onNodeWithTag(PanelTag).assertHeightIsEqualTo(30.dp)
   }
 
   @Test
