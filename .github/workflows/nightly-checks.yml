@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   issues: write
 
 env:
@@ -121,71 +122,13 @@ jobs:
     needs: [ jvm-and-assemble, screenshot-tests, discover-android-modules, android-tests ]
     if: ${{ always() && (needs.jvm-and-assemble.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure') }}
     runs-on: ubuntu-latest
+    concurrency:
+      group: nightly-failure-reporter
+      cancel-in-progress: false
     steps:
-      - name: Open GitHub issue
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const title = 'Nightly checks are failing';
-            const labels = ['nightly-failure'];
-            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-            const results = {
-              'jvm-and-assemble': '${{ needs.jvm-and-assemble.result }}',
-              'screenshot-tests': '${{ needs.screenshot-tests.result }}',
-              'discover-android-modules': '${{ needs.discover-android-modules.result }}',
-              'android-tests': '${{ needs.android-tests.result }}',
-            };
+      - uses: actions/checkout@v5
 
-            const body = [
-              'Nightly checks failed on `main`.',
-              '',
-              `Workflow run: ${runUrl}`,
-              '',
-              'Job results:',
-              ...Object.entries(results).map(([job, result]) => `- \`${job}\`: ${result}`),
-              '',
-              'Please inspect the failed job logs and fix `main` before cutting a release.',
-            ].join('\n');
-
-            const { data: existingIssues } = await github.rest.issues.listForRepo({
-              owner,
-              repo,
-              state: 'open',
-              labels: labels.join(','),
-              per_page: 10,
-            });
-            const existingIssue = existingIssues.find(issue => issue.title === title);
-
-            if (existingIssue) {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number: existingIssue.number,
-                body,
-              });
-              return;
-            }
-
-            try {
-              await github.rest.issues.createLabel({
-                owner,
-                repo,
-                name: labels[0],
-                color: 'd73a4a',
-                description: 'Main branch nightly validation is failing.',
-              });
-            } catch (error) {
-              if (error.status !== 422) {
-                throw error;
-              }
-            }
-
-            await github.rest.issues.create({
-              owner,
-              repo,
-              title,
-              body,
-              labels,
-            });
+      - name: Report specific failures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B .github/scripts/report_nightly_failures.py
