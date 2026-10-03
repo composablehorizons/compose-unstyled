@@ -12,8 +12,9 @@
         },
         {
             "name": "Expo",
-            "src": "/brands/expo-icon.png",
-            "sourceUrl": "https://github.com/expo/expo/blob/c0cac774ad42eaeddd0d8e26a3ef538bdad619ee/packages/expo-dev-menu/android/src/debug/java/expo/modules/devmenu/compose/ui/MenuButton.kt#L33"
+            "src": "/brands/expo-icon.svg",
+            "sourceUrl": "https://github.com/expo/expo/blob/c0cac774ad42eaeddd0d8e26a3ef538bdad619ee/packages/expo-dev-menu/android/src/debug/java/expo/modules/devmenu/compose/ui/MenuButton.kt#L33",
+            "monochrome": true
         },
         {
             "name": "Gravatar",
