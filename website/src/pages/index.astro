@@ -31,22 +31,13 @@ const theming = themingSection
 
     <section class="unstyled-brands" aria-labelledby="teams-title">
       <div class="unstyled-section-header">
-        <h2 id="teams-title" class="headerMedium">Used by</h2>
+        <h2 id="teams-title" class="headerMedium">Used by exceptional teams</h2>
+        <p class="landing-sponsors-lede">Used by exceptional product teams to deliver spectacular user experiences.</p>
       </div>
-      <ul class="unstyled-brands-row" role="list">
-        {brands.map(brand => (
-          <li>
-            <div class="unstyled-brand-tile">
-              <img class:list={{ 'unstyled-brand-monochrome': brand.monochrome }} src={sitePath(brand.src)} alt="" width="64" height="64" loading="lazy" />
-            </div>
-            {brand.sourceUrl ? (
-              <a class="landing-link unstyled-brand-name" href={brand.sourceUrl} target="_blank" rel="noopener noreferrer">{brand.name}</a>
-            ) : (
-              <span class="unstyled-brand-name">{brand.name}</span>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div class="unstyled-brands-grid">
+        {brands.map(brand => <div class="unstyled-brand"><img src={sitePath(brand.src)} alt={brand.alt} loading="lazy" /></div>)}
+      </div>
+      <p><a class="landing-link unstyled-feature-link" href="https://tally.so/r/jaWxRa" target="_blank" rel="noopener noreferrer nofollow">Apply to be featured →</a></p>
     </section>
 
     <section class="unstyled-components" aria-label="Components">

@@ -5,7 +5,7 @@
 
 @media (prefers-color-scheme: dark) {
   .landing-brand img,
-  .unstyled-brand-tile .unstyled-brand-monochrome {
+  .unstyled-brand img {
     filter: grayscale(1) brightness(0) invert(1);
   }
 
@@ -131,39 +131,29 @@
   font-size: var(--font-size-body);
 }
 
-.unstyled-brands-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 128px);
-  gap: var(--space-4);
-  margin: 0;
-  padding: var(--space-2);
-  list-style: none;
+.unstyled-brands-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
 }
 
-.unstyled-brands-row > li {
-  width: 128px;
-  display: grid;
-  align-content: start;
-  gap: var(--space-3);
-  text-align: left;
+.unstyled-brand {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.unstyled-brand-tile {
-  display: grid;
-  place-items: center;
-  width: 128px;
-  height: 128px;
-  border-radius: var(--radius-large);
-  background: var(--color-surface);
+.unstyled-feature-link {
+  font-size: 1.25rem;
 }
 
-.unstyled-brand-tile img {
+.unstyled-brand img {
   display: block;
-  object-fit: contain;
-}
-
-.unstyled-brands-row .unstyled-brand-name {
-  font-size: 0.875rem;
+  height: var(--product-logo-height);
+  width: auto;
+  max-width: 100%;
 }
 
 .landing-header, .landing-footer {
@@ -184,6 +174,10 @@
 .landing-skip-link { position: absolute; z-index: 10; top: var(--space-2); left: var(--space-4); padding: var(--space-3); background: var(--color-surface); color: inherit; transform: translateY(-150%); }
 .landing-skip-link:focus { transform: none; }
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+.landing-sponsors-lede { font-size: var(--font-size-body); }
+@media (max-width: 639px) {
+  .unstyled-brands-grid { gap: 2rem; }
+}
 
 .landing-link {
   display: inline-block;

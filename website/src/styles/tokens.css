@@ -66,6 +66,7 @@ html {
   --stroke-thin: 1px;
   --content-max-width: 1280px;
   --content-readable-max-width: 800px;
+  --product-logo-height: 64px;
   --link-underline-offset: 0.18em;
 
   min-height: 100%;

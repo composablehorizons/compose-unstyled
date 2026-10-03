@@ -1,35 +1,16 @@
 {
     "brands": [
         {
-            "name": "Perplexity",
-            "src": "/brands/perplexity-icon.svg",
-            "monochrome": true
+            "src": "/brands/perplexity-ai.svg",
+            "alt": "Perplexity"
         },
         {
-            "name": "Warner Music Group",
-            "src": "/brands/warner-music-group-icon.svg",
-            "monochrome": true
+            "src": "/brands/warner-music-group.svg",
+            "alt": "Warner Bros Music"
         },
         {
-            "name": "Expo",
-            "src": "/brands/expo-icon.png",
-            "sourceUrl": "https://github.com/expo/expo/blob/c0cac774ad42eaeddd0d8e26a3ef538bdad619ee/packages/expo-dev-menu/android/src/debug/java/expo/modules/devmenu/compose/ui/MenuButton.kt#L33"
-        },
-        {
-            "name": "Gravatar",
-            "src": "/brands/gravatar.svg",
-            "sourceUrl": "https://github.com/Automattic/Gravatar-SDK-Android/blob/adf5e9758bb714961b44ab9bef24ea021870614c/gravatar-quickeditor/src/main/java/com/gravatar/quickeditor/ui/editor/bottomsheet/GravatarQuickEditorBottomSheet.kt#L250-L257",
-            "monochrome": true
-        },
-        {
-            "name": "ReFra",
-            "src": "/brands/refra.png",
-            "sourceUrl": "https://github.com/IacobIonut01/ReFra/blob/ad98e8709aac943cd5836b41cadcfedee2c8eb72/app/src/main/kotlin/com/dot/gallery/feature_node/presentation/mediaview/MediaViewScreen.kt#L2815-L2817"
-        },
-        {
-            "name": "FeedFlow",
-            "src": "/brands/feedflow.svg",
-            "sourceUrl": "https://github.com/prof18/feed-flow/blob/f2bae7fdcf5592508c082bfebe93d5840e130c53/desktopApp/src/jvmMain/kotlin/com/prof18/feedflow/desktop/ui/components/ScrollbarStyle.kt#L50-L56"
+            "src": "/brands/webwag-mobile.svg",
+            "alt": "Webwag Mobile"
         }
     ]
 }
