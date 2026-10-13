@@ -1,6 +1,6 @@
 {
   "name": "compose-unstyled",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "private": true,
   "type": "module",
   "scripts": {

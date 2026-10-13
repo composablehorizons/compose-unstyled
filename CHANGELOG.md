@@ -1,5 +1,11 @@
 # compose-unstyled
 
+## 2.10.1
+
+### Patch Changes
+
+- 9658157: Support `dismissOnClickOutside` for `DrawerPresentation.InPlace`
+
 ## 2.10.0
 
 ### Minor Changes
