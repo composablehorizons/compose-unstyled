@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -2156,6 +2157,127 @@ class DrawerTest {
   }
 
   @Test
+  fun inPlaceDrawerDismissesAfterOutsideTapButNotPanelTap() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    var panelClicks = 0
+    val dismissals = mutableListOf<DrawerValueChange<DrawerValue>>()
+
+    setContent {
+      BottomDrawerLayout(
+        initialValue = DrawerValue.Open,
+        presentation = DrawerPresentation.InPlace,
+        panelModifier = Modifier.clickable { panelClicks += 1 },
+        overlay = { Overlay(Modifier.fillMaxSize().background(Color.Black)) },
+        onState = { state = it },
+        onDismissed = { dismissals += it },
+      )
+    }
+    waitForIdle()
+
+    onNodeWithTag(PanelTag).performTouchInput { click(Offset(centerX, centerY)) }
+    assertThat(panelClicks).isEqualTo(1)
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+    assertThat(dismissals).isEqualTo(emptyList<DrawerValueChange<DrawerValue>>())
+
+    onNodeWithTag(ViewportTag).performTouchInput { click(Offset(centerX, 4f)) }
+    waitUntil { state.currentValue == DrawerValue.Closed && state.isIdle }
+    waitUntil { dismissals.size == 1 }
+    assertThat(dismissals.single().reason).isEqualTo(DrawerValueChange.Reason.ClickOutside)
+  }
+
+  @Test
+  fun disablingInPlaceOutsideDismissalLeavesDrawerOpen() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    setContent {
+      BottomDrawerLayout(
+        initialValue = DrawerValue.Open,
+        presentation = DrawerPresentation.InPlace,
+        dismissOnClickOutside = false,
+        onState = { state = it },
+      )
+    }
+    waitForIdle()
+
+    onNodeWithTag(ViewportTag).performTouchInput { click(Offset(centerX, 4f)) }
+    waitForIdle()
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+    assertThat(state.targetValue).isEqualTo(DrawerValue.Open)
+  }
+
+  @Test
+  fun inPlaceDrawerDoesNotDismissWithinPanelOuterPadding() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    setContent {
+      BottomDrawerLayout(
+        initialValue = DrawerValue.Open,
+        presentation = DrawerPresentation.InPlace,
+        panelModifier = Modifier.padding(8.dp),
+        onState = { state = it },
+      )
+    }
+    waitForIdle()
+
+    onNodeWithTag(PanelTag).performTouchInput { click(Offset(centerX, 4f)) }
+    waitForIdle()
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+  }
+
+  @Test
+  fun inPlaceDrawerLeavesBackgroundInteractiveWhenDismissalIsDisabledOrClosed() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    var backgroundClicks = 0
+    var dismissOutside by mutableStateOf(false)
+    setContent {
+      Box(Modifier.requiredSize(100.dp)) {
+        Box(Modifier.fillMaxSize().clickable { backgroundClicks += 1 })
+        BottomDrawerLayout(
+          initialValue = DrawerValue.Open,
+          presentation = DrawerPresentation.InPlace,
+          dismissOnClickOutside = dismissOutside,
+          onState = { state = it },
+        )
+      }
+    }
+    waitForIdle()
+
+    onNodeWithTag(ViewportTag).performTouchInput { click(Offset(centerX, 4f)) }
+    assertThat(backgroundClicks).isEqualTo(1)
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+
+    dismissOutside = true
+    state.jumpTo(DrawerValue.Closed)
+    waitForIdle()
+    onNodeWithTag(ViewportTag).performTouchInput { click(Offset(centerX, 4f)) }
+    assertThat(backgroundClicks).isEqualTo(2)
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Closed)
+  }
+
+  @Test
+  fun inPlaceDrawerWithoutZeroSnapPointLeavesBackgroundInteractive() = runComposeUiTest {
+    lateinit var state: UnstyledDrawerState<DrawerValue>
+    var backgroundClicks = 0
+    setContent {
+      Box(Modifier.requiredSize(100.dp)) {
+        Box(Modifier.fillMaxSize().clickable { backgroundClicks += 1 })
+        BottomDrawerLayout(
+          initialValue = DrawerValue.Open,
+          presentation = DrawerPresentation.InPlace,
+          snapPoints = DrawerSnapPoints {
+            DrawerValue.Peek at DrawerSnapPoint { viewportSize, _ -> viewportSize / 2f }
+            DrawerValue.Open at DrawerSnapPoint.ContentSize
+          },
+          onState = { state = it },
+        )
+      }
+    }
+    waitForIdle()
+
+    onNodeWithTag(ViewportTag).performTouchInput { click(Offset(centerX, 4f)) }
+    assertThat(backgroundClicks).isEqualTo(1)
+    assertThat(state.currentValue).isEqualTo(DrawerValue.Open)
+  }
+
+  @Test
   fun interactiveModalOverlayCanConsumeOutsideTapWithoutDismissingTheDrawer() = runComposeUiTest {
     lateinit var state: UnstyledDrawerState<DrawerValue>
     var overlayClicks = 0
@@ -2443,7 +2565,7 @@ class DrawerTest {
   }
 
   @Test
-  fun inlineOverlayDoesNotBlockUnderlyingPointerInput() = runComposeUiTest {
+  fun inPlaceOverlayDoesNotBlockBackgroundWhenOutsideDismissalIsDisabled() = runComposeUiTest {
     var backgroundClicks = 0
 
     setContent {
@@ -2457,6 +2579,7 @@ class DrawerTest {
         BottomDrawerLayout(
           initialValue = DrawerValue.Open,
           presentation = DrawerPresentation.InPlace,
+          dismissOnClickOutside = false,
           overlay = {
             Overlay(Modifier.fillMaxSize().testTag(OverlayTag))
           },
