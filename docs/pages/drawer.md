@@ -66,7 +66,9 @@ the rest of the app interactive. It is the only presentation that supports `Swip
 
 Use `InPlace` when the drawer belongs to one bounded part of the UI, such as a preview pane,
 editor, or embedded workflow. It renders where you declare it without a modal layer or portal. Its
-panel overlays its `Viewport`; it does not push sibling content.
+panel overlays its `Viewport`; it does not push sibling content. Tapping within the viewport but
+outside the panel dismisses an open drawer when it has a `Zero` snap point and
+`dismissOnClickOutside` is enabled. This does not intercept interaction outside the viewport.
 
 ## Code Examples
 
@@ -166,7 +168,7 @@ UnstyledDrawer(
 
 ### Disable outside click dismissal
 
-Set `dismissOnClickOutside` to `false` when a click outside a modal drawer must not close it.
+Set `dismissOnClickOutside` to `false` when a click outside a modal or in-place drawer must not close it.
 
 ```kotlin expandable
 UnstyledDrawer(

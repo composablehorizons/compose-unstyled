@@ -88,7 +88,7 @@ import kotlin.math.roundToInt
  * @param presentation Whether the drawer is modal, overlaid through a portal, or rendered in place.
  * @param gesturesEnabled Whether users can drag the panel.
  * @param dismissOnNavigateBack Whether Back and Escape dismiss a visible drawer.
- * @param dismissOnClickOutside Whether outside interaction dismisses a modal drawer.
+ * @param dismissOnClickOutside Whether outside interaction dismisses a modal or in-place drawer.
  * @param onDismissed Called after the drawer settles at its zero snap point.
  * @param overlay Caller-owned content rendered behind the panel.
  * @param systemUi System UI behavior while the drawer is presented.
@@ -576,9 +576,17 @@ fun <T : Any> DrawerScope.Viewport(
       )
       .then(
         buildModifier {
-          if (presentation == DrawerPresentation.Modal && isInOverlayContent) {
+          if (
+            (presentation == DrawerPresentation.Modal && isInOverlayContent) ||
+            (
+              presentation == DrawerPresentation.InPlace &&
+                visible &&
+                dismissOnClickOutside &&
+                zeroValue != null
+              )
+          ) {
             add(
-              Modifier.consumeModalOutsideTap(
+              Modifier.consumeDrawerOutsideTap(
                 panelBounds = panelBounds,
                 onOutsideTap = if (context.dismissOnClickOutside && zeroValue != null) {
                   {
