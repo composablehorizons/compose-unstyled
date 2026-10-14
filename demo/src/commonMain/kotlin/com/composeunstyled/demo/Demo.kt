@@ -28,8 +28,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +36,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -53,6 +51,7 @@ import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.Text
+import com.composeunstyled.UnstyledAppBar
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.theme.ColorScheme
@@ -156,30 +155,28 @@ private fun DemoSelection(startDestination: String) {
 
 @Composable
 private fun AppBar(onUpClick: () -> Unit, title: String) {
-  Row(
+  UnstyledAppBar(
+    title = { Text(title) },
     modifier = Modifier
       .fillMaxWidth()
-      .background(Theme[colors][backgroundToken])
-      .padding(WindowInsets.statusBars.asPaddingValues())
-      .padding(4.dp),
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    UnstyledButton(
-      onClick = onUpClick,
-      modifier = Modifier,
-      indication = LocalIndication.current,
-    ) {
-      Box(Modifier.padding(12.dp)) {
-        UnstyledIcon(
-          imageVector = Lucide.ArrowLeft,
-          contentDescription = "Go back",
-          tint = LocalContentColor.current,
-        )
+      .background(Theme[colors][backgroundToken]),
+    windowInsets = WindowInsets.statusBars,
+    contentPadding = PaddingValues(4.dp),
+    navigation = {
+      UnstyledButton(
+        onClick = onUpClick,
+        indication = LocalIndication.current,
+      ) {
+        Box(Modifier.padding(12.dp)) {
+          UnstyledIcon(
+            imageVector = Lucide.ArrowLeft,
+            contentDescription = "Go back",
+            tint = LocalContentColor.current,
+          )
+        }
       }
-    }
-    Spacer(Modifier.width(8.dp))
-    Text(title)
-  }
+    },
+  )
 }
 
 @Composable

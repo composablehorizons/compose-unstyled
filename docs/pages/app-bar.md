@@ -20,9 +20,17 @@ implementation("com.composables:composeunstyled-app-bar:{{compose_unstyled_versi
 
 ```kotlin
 UnstyledAppBar(
-  title = { BasicText("Inbox") },
-  navigation = { BasicText("Back") },
-  actions = { BasicText("Search") },
+  title = { BasicText("Messages") },
+  navigation = {
+    UnstyledButton(onClick = onBack) {
+      UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Back")
+    }
+  },
+  actions = {
+    UnstyledButton(onClick = onFavorite) {
+      UnstyledIcon(Lucide.Heart, contentDescription = "Favorite")
+    }
+  },
 )
 ```
 
@@ -36,13 +44,21 @@ The bar is a layout container. Give interactive navigation and action content ac
 
 ```kotlin
 UnstyledAppBar(
-  title = { BasicText("Inbox") },
+  title = { BasicText("Messages") },
   modifier = Modifier
     .background(Color.White)
     .border(1.dp, Color.Black),
   contentPadding = PaddingValues(16.dp),
-  navigation = { BasicText("Back") },
-  actions = { BasicText("Search") },
+  navigation = {
+    UnstyledButton(onClick = onBack) {
+      UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Back")
+    }
+  },
+  actions = {
+    UnstyledButton(onClick = onFavorite) {
+      UnstyledIcon(Lucide.Heart, contentDescription = "Favorite")
+    }
+  },
 )
 ```
 
@@ -50,7 +66,7 @@ UnstyledAppBar(
 
 ```kotlin
 UnstyledAppBar(
-  title = { BasicText("Inbox") },
+  title = { BasicText("Messages") },
   modifier = Modifier
     .background(Color.White)
     .border(1.dp, Color.Black),
