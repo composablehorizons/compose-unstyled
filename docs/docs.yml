@@ -31,6 +31,8 @@ sections:
     pages:
       - title: Overview
         slug: components
+      - title: App Bar
+        slug: app-bar
       - title: Avatar
         slug: avatar
       - title: Bottom Sheet
