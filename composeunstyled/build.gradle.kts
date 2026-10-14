@@ -98,6 +98,7 @@ kotlin {
       api(projects.composeunstyledSeparators)
       api(projects.composeunstyledSlider)
       api(projects.composeunstyledStack)
+      api(projects.composeunstyledCenteredAppBar)
       api(projects.composeunstyledTabGroup)
       api(projects.composeunstyledTextField)
       api(projects.composeunstyledToggleSwitch)

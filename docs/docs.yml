@@ -39,6 +39,8 @@ sections:
         slug: modal-bottom-sheet
       - title: Button
         slug: button
+      - title: Centered App Bar
+        slug: centered-app-bar
       - title: Checkbox
         slug: checkbox
       - title: Checkbox (TriState)

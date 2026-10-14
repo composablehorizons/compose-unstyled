@@ -94,6 +94,7 @@ kotlin {
         api(projects.composeunstyledSlider)
         api(projects.composeunstyledSeparators)
         api(projects.composeunstyledStack)
+        api(projects.composeunstyledCenteredAppBar)
         api(projects.composeunstyledFocusRing)
 
         api(projects.composeunstyledBuildModifier)
