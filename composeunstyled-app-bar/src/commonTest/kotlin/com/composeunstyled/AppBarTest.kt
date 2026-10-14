@@ -30,10 +30,34 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThanOrEqualTo
 import kotlin.test.Test
 
 class AppBarTest {
+  @Test
+  fun itemSpacingSeparatesNavigationTitleAndActions() = runComposeUiTest {
+    setContent {
+      UnstyledAppBar(
+        title = { Box(Modifier.size(40.dp).testTag("title")) },
+        modifier = Modifier.size(240.dp, 56.dp),
+        itemSpacing = 12.dp,
+        navigation = { Box(Modifier.size(40.dp).testTag("navigation")) },
+        actions = {
+          Box(Modifier.size(24.dp).testTag("firstAction"))
+          Box(Modifier.size(24.dp).testTag("secondAction"))
+        },
+      )
+    }
+
+    val navigation = onNodeWithTag("navigation").getBoundsInRoot()
+    val title = onNodeWithTag("title").getBoundsInRoot()
+    val firstAction = onNodeWithTag("firstAction").getBoundsInRoot()
+    val secondAction = onNodeWithTag("secondAction").getBoundsInRoot()
+    assertThat(title.left - navigation.right).isEqualTo(12.dp)
+    assertThat(secondAction.left - firstAction.right).isEqualTo(12.dp)
+  }
+
   @Test
   fun placesSlotsAndPreservesChildSemantics() = runComposeUiTest {
     setContent {

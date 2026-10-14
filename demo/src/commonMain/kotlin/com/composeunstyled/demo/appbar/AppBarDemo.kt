@@ -56,6 +56,7 @@ fun AppBarDemo() {
       title = { BasicText("Messages") },
       modifier = Modifier.fillMaxWidth().background(Color.White).border(1.dp, Color.Black),
       contentPadding = PaddingValues(8.dp),
+      itemSpacing = 12.dp,
       navigation = { AppBarIconButton(Lucide.ArrowLeft, "Back") },
       actions = {
         AppBarIconButton(Lucide.Heart, "Favorite")

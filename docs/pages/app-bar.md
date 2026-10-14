@@ -9,6 +9,7 @@ description: A leading-aligned app bar with title, navigation, and action slots.
 
 - Compose a title, navigation control, and trailing actions without prescribed colors or dimensions.
 - Apply window insets and content padding at the bar boundary.
+- Set the gap between navigation, title, and actions with `itemSpacing`.
 
 ## Installation
 
@@ -49,6 +50,7 @@ UnstyledAppBar(
     .background(Color.White)
     .border(1.dp, Color.Black),
   contentPadding = PaddingValues(16.dp),
+  itemSpacing = 12.dp,
   navigation = {
     UnstyledButton(onClick = onBack) {
       UnstyledIcon(Lucide.ArrowLeft, contentDescription = "Back")

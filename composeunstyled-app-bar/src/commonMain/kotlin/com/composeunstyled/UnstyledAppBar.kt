@@ -21,6 +21,7 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,10 +33,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 /**
  * A layout for a title, navigation content, and trailing actions. The caller provides all visuals,
  * sizing, and accessible labels for interactive slot content.
+ *
+ * @param itemSpacing Space between navigation, title, and actions, including individual actions.
  */
 @Composable
 fun UnstyledAppBar(
@@ -43,6 +48,7 @@ fun UnstyledAppBar(
   modifier: Modifier = Modifier,
   windowInsets: WindowInsets = WindowInsets(0),
   contentPadding: PaddingValues = PaddingValues.Zero,
+  itemSpacing: Dp = 0.dp,
   navigation: @Composable () -> Unit = {},
   actions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -53,9 +59,14 @@ fun UnstyledAppBar(
       .windowInsetsPadding(windowInsets)
       .padding(contentPadding),
     verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(itemSpacing),
   ) {
     navigation()
     Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) { title() }
-    Row(verticalAlignment = Alignment.CenterVertically, content = actions)
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(itemSpacing),
+      verticalAlignment = Alignment.CenterVertically,
+      content = actions,
+    )
   }
 }

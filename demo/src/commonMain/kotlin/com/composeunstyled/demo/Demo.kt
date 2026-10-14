@@ -162,6 +162,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
       .background(Theme[colors][backgroundToken]),
     windowInsets = WindowInsets.statusBars,
     contentPadding = PaddingValues(4.dp),
+    itemSpacing = 8.dp,
     navigation = {
       UnstyledButton(
         onClick = onUpClick,
