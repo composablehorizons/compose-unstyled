@@ -27,6 +27,9 @@ jobs:
     name: ${{ inputs.module }}-android-tests
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      EMULATOR_PROFILE: ${{ inputs.emulator-profile }}
+      TEST_COMMAND: ${{ inputs.test-command }}
     steps:
       - name: Enable Hardware Acceleration
         run: |
@@ -35,7 +38,11 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - uses: actions/checkout@v5
-        if: inputs.checkout-ref == ''
+        with:
+          ref: ${{ github.workflow_sha }}
+
+      - name: Preserve Android setup tooling
+        run: cp .github/scripts/android_ci.py "$RUNNER_TEMP/android_ci.py"
 
       - uses: actions/checkout@v5
         if: inputs.checkout-ref != ''
@@ -51,129 +58,82 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Read emulator profile
-        id: emulator-profile
-        shell: bash
+      - name: Android SDK cache settings
+        id: sdk-settings
+        env:
+          MODULE: ${{ inputs.module }}
         run: |
-          set -euo pipefail
+          echo "root=$ANDROID_HOME" >> "$GITHUB_OUTPUT"
+          echo "image=$ImageVersion" >> "$GITHUB_OUTPUT"
+          echo "artifact-name=${MODULE//:/}" >> "$GITHUB_OUTPUT"
+          echo "tooling-hash=$(sha256sum "$RUNNER_TEMP/android_ci.py" | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+          api_level="$(sed -n 's/^apiLevel=//p' "$EMULATOR_PROFILE")"
+          target="$(sed -n 's/^target=//p' "$EMULATOR_PROFILE")"
+          arch="$(sed -n 's/^arch.default=//p' "$EMULATOR_PROFILE")"
+          echo "platform=platforms/android-$api_level" >> "$GITHUB_OUTPUT"
+          echo "system-image=system-images/android-$api_level/$target/$arch" >> "$GITHUB_OUTPUT"
 
-          profile="${{ inputs.emulator-profile }}"
-
-          property() {
-            awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; found = 1 } END { exit found ? 0 : 1 }' "$profile"
-          }
-
-          hardware_profile="$(property "hardwareProfile")"
-          if [ "$hardware_profile" = "none" ]; then
-            hardware_profile=""
-          fi
-
-          {
-            echo "avd-name=$(property "avdName")"
-            echo "api-level=$(property "apiLevel")"
-            echo "target=$(property "target")"
-            echo "arch=$(property "arch.default")"
-            echo "disk-size=$(property "diskSize")"
-            echo "display-width=$(property "displayWidth")"
-            echo "display-height=$(property "displayHeight")"
-            echo "display-density=$(property "displayDensity")"
-            echo "cores=$(property "cpuCores")"
-            echo "hardware-profile=$hardware_profile"
-            echo "launch-flags=$(property "launchFlags")"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Restore AVD
-        uses: actions/cache@v5
-        id: avd-cache
+      # Cache packages, not running-device snapshots. A fresh AVD avoids snapshots
+      # becoming incompatible when the hosted runner's emulator version changes.
+      - name: Restore Android SDK
+        id: sdk-cache
+        timeout-minutes: 3
+        continue-on-error: true
+        uses: actions/cache/restore@v5
         with:
           path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ steps.emulator-profile.outputs.avd-name }}-${{ steps.emulator-profile.outputs.api-level }}-${{ steps.emulator-profile.outputs.target }}-${{ steps.emulator-profile.outputs.arch }}-${{ steps.emulator-profile.outputs.disk-size }}-${{ steps.emulator-profile.outputs.display-width }}x${{ steps.emulator-profile.outputs.display-height }}-${{ steps.emulator-profile.outputs.display-density }}-${{ steps.emulator-profile.outputs.cores }}-${{ steps.emulator-profile.outputs.hardware-profile }}
+            ${{ steps.sdk-settings.outputs.root }}/build-tools/37.0.0
+            ${{ steps.sdk-settings.outputs.root }}/platform-tools
+            ${{ steps.sdk-settings.outputs.root }}/${{ steps.sdk-settings.outputs.platform }}
+            ${{ steps.sdk-settings.outputs.root }}/${{ steps.sdk-settings.outputs.system-image }}
+            ${{ steps.sdk-settings.outputs.root }}/emulator
+            ${{ steps.sdk-settings.outputs.root }}/licenses
+          key: android-sdk-v2-${{ runner.os }}-${{ runner.arch }}-${{ steps.sdk-settings.outputs.image }}-${{ inputs.emulator-profile }}-${{ hashFiles(inputs.emulator-profile) }}-${{ steps.sdk-settings.outputs.tooling-hash }}
 
-      - name: Create AVD
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 8
-        continue-on-error: true
-        id: create-avd-first-attempt
-        with:
-          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
-          api-level: ${{ steps.emulator-profile.outputs.api-level }}
-          target: ${{ steps.emulator-profile.outputs.target }}
-          arch: ${{ steps.emulator-profile.outputs.arch }}
-          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
-          cores: ${{ steps.emulator-profile.outputs.cores }}
-          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
-          force-avd-creation: false
-          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
-          disable-animations: false
-          pre-emulator-launch-script: |
-            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-          script: echo "Generated AVD snapshot for caching."
+      - name: Install Android SDK
+        id: sdk-install
+        timeout-minutes: 15
+        run: python3 -B "$RUNNER_TEMP/android_ci.py" install "$EMULATOR_PROFILE"
 
-      - name: Create AVD retry 1
-        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.create-avd-first-attempt.outcome == 'failure'
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 8
-        continue-on-error: true
-        id: create-avd-second-attempt
-        with:
-          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
-          api-level: ${{ steps.emulator-profile.outputs.api-level }}
-          target: ${{ steps.emulator-profile.outputs.target }}
-          arch: ${{ steps.emulator-profile.outputs.arch }}
-          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
-          cores: ${{ steps.emulator-profile.outputs.cores }}
-          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
-          force-avd-creation: false
-          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
-          disable-animations: false
-          pre-emulator-launch-script: |
-            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-          script: echo "Generated AVD snapshot for caching."
+      - name: Prepare Android test dependencies
+        timeout-minutes: 20
+        run: python3 -B "$RUNNER_TEMP/android_ci.py" prepare-tests "$EMULATOR_PROFILE" "$TEST_COMMAND"
 
-      - name: Create AVD retry 2
-        if: steps.avd-cache.outputs.cache-hit != 'true' && steps.create-avd-second-attempt.outcome == 'failure'
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 8
-        id: create-avd-third-attempt
-        with:
-          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
-          api-level: ${{ steps.emulator-profile.outputs.api-level }}
-          target: ${{ steps.emulator-profile.outputs.target }}
-          arch: ${{ steps.emulator-profile.outputs.arch }}
-          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
-          cores: ${{ steps.emulator-profile.outputs.cores }}
-          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
-          force-avd-creation: false
-          emulator-options: ${{ steps.emulator-profile.outputs.launch-flags }}
-          disable-animations: false
-          pre-emulator-launch-script: |
-            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-          script: echo "Generated AVD snapshot for caching."
+      - name: Start Android emulator
+        timeout-minutes: 12
+        run: python3 -B "$RUNNER_TEMP/android_ci.py" start "$EMULATOR_PROFILE"
 
+      # Run exactly once. No setup retry can swallow a failing instrumentation test.
       - name: Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
+        run: ${{ inputs.test-command }}
+
+      - name: Stop Android emulator
+        if: always()
+        continue-on-error: true
+        run: '"$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill'
+
+      - name: Save Android SDK
+        if: always() && steps.sdk-install.outcome == 'success' && steps.sdk-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 3
+        continue-on-error: true
+        uses: actions/cache/save@v5
         with:
-          avd-name: ${{ steps.emulator-profile.outputs.avd-name }}
-          api-level: ${{ steps.emulator-profile.outputs.api-level }}
-          target: ${{ steps.emulator-profile.outputs.target }}
-          arch: ${{ steps.emulator-profile.outputs.arch }}
-          profile: ${{ steps.emulator-profile.outputs.hardware-profile }}
-          cores: ${{ steps.emulator-profile.outputs.cores }}
-          disk-size: ${{ steps.emulator-profile.outputs.disk-size }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save ${{ steps.emulator-profile.outputs.launch-flags }}
-          disable-animations: true
-          pre-emulator-launch-script: |
-            sed -i "s/^hw.lcd.width=.*/hw.lcd.width=${{ steps.emulator-profile.outputs.display-width }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.height=.*/hw.lcd.height=${{ steps.emulator-profile.outputs.display-height }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-            sed -i "s/^hw.lcd.density=.*/hw.lcd.density=${{ steps.emulator-profile.outputs.display-density }}/" "$HOME/.android/avd/${{ steps.emulator-profile.outputs.avd-name }}.avd/config.ini"
-          script: ${{ inputs.test-command }}
+          path: |
+            ${{ steps.sdk-settings.outputs.root }}/build-tools/37.0.0
+            ${{ steps.sdk-settings.outputs.root }}/platform-tools
+            ${{ steps.sdk-settings.outputs.root }}/${{ steps.sdk-settings.outputs.platform }}
+            ${{ steps.sdk-settings.outputs.root }}/${{ steps.sdk-settings.outputs.system-image }}
+            ${{ steps.sdk-settings.outputs.root }}/emulator
+            ${{ steps.sdk-settings.outputs.root }}/licenses
+          key: ${{ steps.sdk-cache.outputs.cache-primary-key }}
+
+      - name: Upload Android failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-failure-${{ steps.sdk-settings.outputs.artifact-name }}
+          path: |
+            build/reports/android-emulator
+            **/build/reports/androidTests
+            **/build/outputs/androidTest-results
+          if-no-files-found: ignore

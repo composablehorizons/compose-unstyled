@@ -76,6 +76,12 @@ jobs:
                 <(printf '%s\n' "$test_modules" | sort -u) \
                 <(printf '%s\n' "$android_changed_modules" | sort -u)
             )"
+
+            # Exercise SDK setup and emulator boot on both API profiles when their
+            # infrastructure changes, even if no Kotlin source changed.
+            if grep -Eq '^(\.github/workflows/android-emulator-tests\.yml|\.github/scripts/(android_ci|test_android_ci)\.py|android-emulator(-api29)?\.properties)$' <<< "$changed_files"; then
+              android_modules="$(printf '%s\n' "$android_modules" ':composeunstyled-focus-ring' | sed '/^$/d' | sort -u)"
+            fi
           else
             android_modules="$test_modules"
           fi
@@ -265,7 +271,7 @@ jobs:
       emulator-profile: android-emulator-api29.properties
       test-command: >-
         ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
-        -Pandroid.testInstrumentationRunnerArguments.annotation=androidx.test.filters.SdkSuppress
+        ${{ matrix.module != ':composeunstyled-focus-ring' && '-Pandroid.testInstrumentationRunnerArguments.annotation=androidx.test.filters.SdkSuppress' || '' }}
 
   validate-release-pr:
     if: needs.detect-changes.outputs.release == 'true'
