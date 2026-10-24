@@ -2,4 +2,4 @@
 "compose-unstyled": patch
 ---
 
-Fix dialogs inside `DialogHost` allowing background hover, clicks, and scrolling when `dismissOnClickOutside` is disabled. Hosted modals now block background pointer input even without a scrim.
+Make dialogs behave inside of a Host the same as without. Background hover, clicks, and scrolling are now blocked when `dismissOnClickOutside` is disabled, even without a scrim.
