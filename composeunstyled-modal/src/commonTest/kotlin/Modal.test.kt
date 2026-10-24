@@ -21,8 +21,10 @@
  */
 package com.composeunstyled
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,21 +33,156 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.pressKey
+import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import kotlin.test.Test
 
 class ModalTest {
+
+  @Test
+  fun hostedModalStopsKeyboardInputReachingBackground() = runComposeUiTest {
+    val state = ModalState()
+    var backgroundKeyEvents = 0
+    setContent {
+      ModalHost(Modifier.size(200.dp)) {
+        Box(
+          Modifier.size(40.dp).onKeyEvent {
+            backgroundKeyEvents++
+            true
+          }
+            .focusable().testTag("background"),
+        )
+        Modal(state = state) {
+          if (state.transitionState.targetState) {
+            Box(Modifier.size(40.dp).modalFragment().testTag("modal"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("background").requestFocus()
+    state.transitionState.targetState = true
+    onNode(isDialog()).performKeyInput { pressKey(Key.A) }
+    runOnIdle { assertThat(backgroundKeyEvents).isEqualTo(0) }
+    state.transitionState.targetState = false
+    onNodeWithTag("modal").assertDoesNotExist()
+    onNodeWithTag("background").assertIsFocused()
+    onNodeWithTag("background").performKeyInput { pressKey(Key.A) }
+    runOnIdle { assertThat(backgroundKeyEvents).isEqualTo(2) }
+  }
+
+  @Test
+  fun hostedModalKeepsTabFocusInsideItsContent() = runComposeUiTest {
+    setContent {
+      ModalHost(Modifier.size(200.dp)) {
+        Box(Modifier.size(40.dp).focusable().testTag("background"))
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          Box(Modifier.size(80.dp).modalFragment()) {
+            Box(Modifier.size(20.dp).focusable().testTag("first"))
+            Box(Modifier.size(40.dp).focusable().testTag("last"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("last").requestFocus()
+    onNode(isDialog()).performKeyInput { pressKey(Key.Tab) }
+    onNodeWithTag("first").assertIsFocused()
+    onNode(isDialog()).performKeyInput {
+      keyDown(Key.ShiftLeft)
+      pressKey(Key.Tab)
+      keyUp(Key.ShiftLeft)
+    }
+    onNodeWithTag("last").assertIsFocused()
+  }
+
+  @Test
+  fun hostedModalWrapsTabInTraversalOrderWhenControlsHaveOffsets() = runComposeUiTest {
+    setContent {
+      ModalHost(Modifier.size(200.dp)) {
+        Box(Modifier.size(40.dp).focusable().testTag("background"))
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          Box(Modifier.size(100.dp).modalFragment()) {
+            Box(Modifier.offset(y = 60.dp).size(20.dp).focusable().testTag("first"))
+            Box(Modifier.size(20.dp).focusable().testTag("last"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("last").requestFocus()
+    onNode(isDialog()).performKeyInput { pressKey(Key.Tab) }
+    onNodeWithTag("first").assertIsFocused()
+    onNode(isDialog()).performKeyInput {
+      keyDown(Key.ShiftLeft)
+      pressKey(Key.Tab)
+      keyUp(Key.ShiftLeft)
+    }
+    onNodeWithTag("last").assertIsFocused()
+  }
+
+  @Test
+  fun hostedModalRestoresFocusToTheModalUnderneathIt() = runComposeUiTest {
+    var showTopModal by mutableStateOf(false)
+    setContent {
+      ModalHost(Modifier.size(200.dp)) {
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          Box(Modifier.size(40.dp).focusable().testTag("lower"))
+        }
+        if (showTopModal) {
+          Modal(state = rememberModalState(initiallyVisible = true)) {
+            Box(Modifier.size(40.dp).focusable().testTag("upper"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("lower").requestFocus()
+    showTopModal = true
+    waitForIdle()
+    onNodeWithTag("upper").assertIsFocused()
+    onNodeWithTag("lower").requestFocus()
+    onNodeWithTag("upper").assertIsFocused()
+    showTopModal = false
+    onNodeWithTag("upper").assertDoesNotExist()
+    onNodeWithTag("lower").assertIsFocused()
+  }
+
+  @Test
+  fun removingModalHostWithAnOpenModalReleasesFocus() = runComposeUiTest {
+    var showHost by mutableStateOf(true)
+    setContent {
+      if (showHost) {
+        ModalHost(Modifier.size(200.dp).testTag("host")) {
+          Box(Modifier.size(40.dp).focusable().testTag("background"))
+          Modal(state = rememberModalState(initiallyVisible = true)) {
+            Box(Modifier.size(40.dp).focusable())
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("host").assertExists()
+    showHost = false
+    onNodeWithTag("host").assertDoesNotExist()
+  }
 
   @Test
   fun nestedGenericHostDoesNotInterceptModalContent() = runComposeUiTest {

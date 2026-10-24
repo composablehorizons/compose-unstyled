@@ -25,6 +25,7 @@ package com.composeunstyled
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,16 +42,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.pressKey
+import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.LayoutDirection
@@ -70,6 +76,31 @@ import kotlin.time.Duration.Companion.seconds
 
 class ModalBottomSheetTest {
   private val DensityTolerance = 0.1.dp
+
+  @Test
+  fun hostedSheetKeepsKeyboardFocusInsideTheSheet() = runComposeUiTest {
+    setContent {
+      ModalBottomSheetHost(Modifier.size(240.dp)) {
+        Box(Modifier.size(40.dp).focusable().testTag("background"))
+        UnstyledModalBottomSheet(
+          state = rememberModalBottomSheetState(initialDetent = SheetDetent.FullyExpanded),
+        ) {
+          Sheet {
+            Column {
+              Box(Modifier.size(40.dp).focusable().testTag("first"))
+              Box(Modifier.size(40.dp).focusable().testTag("last"))
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("last").requestFocus()
+    onNode(isDialog()).performKeyInput { pressKey(Key.Tab) }
+    onNodeWithTag("first").assertIsFocused()
+    onNodeWithTag("background").requestFocus()
+    onNodeWithTag("first").assertIsFocused()
+  }
 
   @Test
   fun sheet_is_visible_when_initial_detent_is_fully_expanded() = runComposeUiTest {

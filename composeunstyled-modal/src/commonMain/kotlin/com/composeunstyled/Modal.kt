@@ -22,15 +22,20 @@
 package com.composeunstyled
 
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,11 +43,19 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.dialog
+import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
 import kotlinx.coroutines.flow.first
 
@@ -80,17 +93,43 @@ val LocalModalState = staticCompositionLocalOf<ModalState> {
   ModalState()
 }
 
-internal val LocalIsInModalHost = staticCompositionLocalOf { false }
-
 private val ModalPortalTarget = PortalTarget()
+
+private class HostedModalEntry {
+  val focusRequester = FocusRequester()
+  val boundaryFocusRequester = FocusRequester()
+  var wrappingFocus = false
+  var hasFocus by mutableStateOf(false)
+  var fallbackFocused by mutableStateOf(false)
+}
+
+private class ModalHostState {
+  val entries = mutableStateListOf<HostedModalEntry>()
+  val backgroundFocusRequester = FocusRequester()
+
+  fun register(entry: HostedModalEntry) {
+    (entries.lastOrNull()?.focusRequester ?: backgroundFocusRequester).saveFocusedChild()
+    entries.add(entry)
+  }
+}
+
+private val LocalModalHostState = staticCompositionLocalOf<ModalHostState?> { null }
 
 @Composable
 fun ModalHost(
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit,
 ) {
-  CompositionLocalProvider(LocalIsInModalHost provides true) {
-    PortalHost(modifier = modifier, key = ModalPortalTarget, content = content)
+  val hostState = remember { ModalHostState() }
+  LaunchedEffect(hostState.entries.isEmpty()) {
+    if (hostState.entries.isEmpty()) hostState.backgroundFocusRequester.restoreFocusedChild()
+  }
+  CompositionLocalProvider(LocalModalHostState provides hostState) {
+    PortalHost(
+      modifier = modifier.focusRequester(hostState.backgroundFocusRequester).focusGroup(),
+      key = ModalPortalTarget,
+      content = content,
+    )
   }
 }
 
@@ -111,7 +150,7 @@ fun Modal(
     return
   }
 
-  if (LocalIsInModalHost.current) {
+  if (LocalModalHostState.current != null) {
     PortalModal(
       state = state,
       onKeyEvent = onKeyEvent,
@@ -150,11 +189,66 @@ internal fun ModalContent(
   onKeyEvent: (KeyEvent) -> Boolean,
   content: @Composable ModalScope.() -> Unit,
 ) {
+  val hostState = requireNotNull(LocalModalHostState.current)
+  val entry = remember { HostedModalEntry() }
+  val focusManager = LocalFocusManager.current
+  val isTopmost = hostState.entries.lastOrNull() === entry
+
+  fun focusContent(direction: FocusDirection = FocusDirection.Next) {
+    entry.wrappingFocus = true
+    try {
+      if (entry.boundaryFocusRequester.requestFocus()) focusManager.moveFocus(direction)
+    } finally {
+      entry.wrappingFocus = false
+    }
+  }
+
+  DisposableEffect(hostState, entry) {
+    hostState.register(entry)
+    onDispose { hostState.entries.remove(entry) }
+  }
+  LaunchedEffect(isTopmost, entry.hasFocus) {
+    if (isTopmost && entry.hasFocus.not()) {
+      state.awaitAttachedToWindow()
+      if (
+        (entry.hasFocus.not() || entry.fallbackFocused) &&
+        entry.focusRequester.restoreFocusedChild().not()
+      ) {
+        focusContent()
+      }
+    }
+  }
+
   Box(
     Modifier
       .fillMaxSize()
+      .focusRequester(entry.boundaryFocusRequester)
+      .focusProperties { canFocus = entry.wrappingFocus }
+      .focusTarget()
+      .focusRequester(entry.focusRequester)
+      .onFocusChanged { entry.hasFocus = it.hasFocus }
+      .focusProperties {
+        onEnter = {
+          if (hostState.entries.lastOrNull() !== entry) cancelFocusChange()
+        }
+        onExit = {
+          if (hostState.entries.lastOrNull() === entry && entry.wrappingFocus.not()) {
+            if (
+              requestedFocusDirection == FocusDirection.Next ||
+              requestedFocusDirection == FocusDirection.Previous
+            ) {
+              focusContent(requestedFocusDirection)
+            }
+            cancelFocusChange()
+          }
+        }
+      }
+      .focusGroup()
       .onKeyEvent(onKeyEvent)
-      .semantics { dialog() },
+      .semantics {
+        dialog()
+        if (isTopmost.not()) hideFromAccessibility()
+      },
   ) {
     Box(
       Modifier.matchParentSize().pointerInput(Unit) {
@@ -168,6 +262,11 @@ internal fun ModalContent(
     CompositionLocalProvider(LocalModalState provides state) {
       ModalScopeContent(state = state, content = content)
     }
+    Box(
+      Modifier
+        .onFocusChanged { entry.fallbackFocused = it.isFocused }
+        .focusable(enabled = isTopmost && (entry.hasFocus.not() || entry.fallbackFocused)),
+    )
   }
 }
 
