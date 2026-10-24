@@ -30,6 +30,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.key
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -121,7 +122,7 @@ fun Portal(
   val id = remember { Any() }
   val compositionLocalContext = currentCompositionLocalContext
   val latestContent = rememberUpdatedState(content)
-  val portalContent = remember { @Composable { latestContent.value() } }
+  val portalContent = remember { movableContentOf { latestContent.value() } }
 
   if (state == null) {
     return

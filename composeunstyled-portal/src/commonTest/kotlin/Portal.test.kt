@@ -27,17 +27,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
@@ -46,6 +51,74 @@ import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
 class PortalTest {
+
+  @Test
+  fun changingTargetPreservesContentStateAndEffects() = runComposeUiTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    var target by mutableStateOf(outer)
+    var effectStarts = 0
+    var effectDisposals = 0
+
+    setContent {
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
+          Portal(target = target) {
+            var count by remember { mutableIntStateOf(0) }
+            DisposableEffect(Unit) {
+              effectStarts++
+              onDispose { effectDisposals++ }
+            }
+            BasicText("$count", Modifier.clickable { count++ }.testTag("counter"))
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("counter").performClick()
+    onNodeWithTag("counter").assertTextEquals("1")
+    target = inner
+    onNodeWithTag("counter").assertTextEquals("1")
+    target = outer
+    onNodeWithTag("counter").assertTextEquals("1")
+    runOnIdle {
+      assertThat(effectStarts).isEqualTo(1)
+      assertThat(effectDisposals).isEqualTo(0)
+    }
+
+    target = PortalTarget()
+    onNodeWithTag("counter").assertDoesNotExist()
+    runOnIdle { assertThat(effectDisposals).isEqualTo(1) }
+    target = outer
+    onNodeWithTag("counter").assertTextEquals("0")
+    runOnIdle { assertThat(effectStarts).isEqualTo(2) }
+  }
+
+  @Test
+  fun movedContentStillReceivesUpdatedCallerCompositionLocals() = runComposeUiTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    var target by mutableStateOf(outer)
+    var callerValue by mutableStateOf("before")
+
+    setContent {
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
+          CompositionLocalProvider(LocalPortalTestValue provides callerValue) {
+            Portal(target = target) {
+              BasicText(LocalPortalTestValue.current, Modifier.testTag("context"))
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("context").assertTextEquals("before")
+    target = inner
+    onNodeWithTag("context").assertTextEquals("before")
+    callerValue = "after"
+    onNodeWithTag("context").assertTextEquals("after")
+  }
 
   @Test
   fun routesEachTargetToItsNearestMatchingHost() = runComposeUiTest {

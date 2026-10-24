@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,35 @@ import com.composeunstyled.test.runComposeRecompositionTest
 import kotlin.test.Test
 
 class PortalRecompositionTest {
+
+  @Test
+  fun parentRecompositionRecomposesMovedContentOnce() = runComposeRecompositionTest {
+    val outer = PortalTarget()
+    val inner = PortalTarget()
+    var target by mutableStateOf(outer)
+    var parentState by mutableIntStateOf(0)
+
+    setContent {
+      parentState
+      PortalHost(Modifier.size(100.dp), key = outer) {
+        PortalHost(Modifier.size(60.dp), key = inner) {
+          Portal(target = target) {
+            RecompositionCount("portal-content")
+            Box(Modifier.size(40.dp))
+          }
+        }
+      }
+    }
+
+    waitUntil { recompositionCount("portal-content") > 0 }
+    target = inner
+    waitForIdle()
+    resetRecompositionCounts("portal-content")
+    parentState++
+    waitForIdle()
+
+    assertThat(recompositionCount("portal-content")).isEqualTo(1)
+  }
 
   @Test
   fun parentRecompositionRecomposesTargetedContentOnce() = runComposeRecompositionTest {
