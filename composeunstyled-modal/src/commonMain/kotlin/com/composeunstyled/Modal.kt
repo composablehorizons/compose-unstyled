@@ -156,7 +156,6 @@ internal fun ModalContent(
       .onKeyEvent(onKeyEvent)
       .semantics { dialog() },
   ) {
-    // Block background input independently of the content's scrim and dismiss handlers.
     Box(
       Modifier.matchParentSize().pointerInput(Unit) {
         awaitPointerEventScope {
