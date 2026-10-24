@@ -40,6 +40,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
@@ -155,6 +156,16 @@ internal fun ModalContent(
       .onKeyEvent(onKeyEvent)
       .semantics { dialog() },
   ) {
+    // Block background input independently of the content's scrim and dismiss handlers.
+    Box(
+      Modifier.matchParentSize().pointerInput(Unit) {
+        awaitPointerEventScope {
+          while (true) {
+            awaitPointerEvent().changes.forEach { it.consume() }
+          }
+        }
+      },
+    )
     CompositionLocalProvider(LocalModalState provides state) {
       ModalScopeContent(state = state, content = content)
     }
