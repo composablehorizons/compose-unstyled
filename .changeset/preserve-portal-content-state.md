@@ -2,4 +2,4 @@
 "compose-unstyled": patch
 ---
 
-Preserve remembered state and running effects when moving a `Portal` between matching host targets.
+Make portal content behave the same when rendered in a different Host. Moving a `Portal` between matching host targets now preserves remembered state and running effects.
