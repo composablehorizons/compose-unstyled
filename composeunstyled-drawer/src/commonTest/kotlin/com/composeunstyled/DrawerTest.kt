@@ -29,7 +29,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,6 +55,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.layout.IntrinsicMeasurable
 import androidx.compose.ui.layout.IntrinsicMeasureScope
 import androidx.compose.ui.layout.Layout
@@ -68,6 +71,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
@@ -75,7 +79,10 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.pressKey
+import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.test.waitUntilExactlyOneExists
@@ -95,6 +102,40 @@ import kotlin.math.roundToInt
 import kotlin.test.Test
 
 class DrawerTest {
+  @Test
+  fun hostedModalDrawerKeepsKeyboardFocusInsideThePanel() = runComposeUiTest {
+    setContent {
+      val state = remember {
+        UnstyledDrawerState(
+          DrawerValue.Open,
+          DrawerSnapPoints {
+            DrawerValue.Closed at DrawerSnapPoint.Zero
+            DrawerValue.Open at DrawerSnapPoint.ContentSize
+          },
+        )
+      }
+      ModalHost(Modifier.requiredSize(240.dp)) {
+        Box(Modifier.requiredSize(40.dp).focusable().testTag("background"))
+        UnstyledDrawer(state = state) {
+          Viewport(Modifier.requiredSize(240.dp)) {
+            Panel {
+              Column {
+                Box(Modifier.requiredSize(40.dp).focusable().testTag("first"))
+                Box(Modifier.requiredSize(40.dp).focusable().testTag("last"))
+              }
+            }
+          }
+        }
+      }
+    }
+
+    onNodeWithTag("last").requestFocus()
+    onNodeWithTag("last").performKeyInput { pressKey(Key.Tab) }
+    onNodeWithTag("first").assertIsFocused()
+    onNodeWithTag("background").requestFocus()
+    onNodeWithTag("first").assertIsFocused()
+  }
+
   @Test
   @Suppress("DEPRECATION")
   fun inlinePresentationRemainsAnAliasForInPlace() {
