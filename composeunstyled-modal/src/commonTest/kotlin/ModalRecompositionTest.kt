@@ -36,6 +36,29 @@ import kotlin.test.Test
 class ModalRecompositionTest {
 
   @Test
+  fun parentRecompositionRecomposesHostedModalContentOnce() = runComposeRecompositionTest {
+    var parentState by mutableIntStateOf(0)
+
+    setContent {
+      parentState
+      ModalHost(Modifier.size(100.dp)) {
+        Modal(state = rememberModalState(initiallyVisible = true)) {
+          RecompositionCount("modal-content")
+          Box(Modifier.size(40.dp))
+        }
+      }
+    }
+
+    waitUntil { recompositionCount("modal-content") > 0 }
+    resetRecompositionCounts("modal-content")
+
+    parentState++
+    waitForIdle()
+
+    assertThat(recompositionCount("modal-content")).isEqualTo(1)
+  }
+
+  @Test
   fun parentRecompositionRecomposesVisibleModalContentOnce() = runComposeRecompositionTest {
     var parentState by mutableIntStateOf(0)
 
