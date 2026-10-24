@@ -2,4 +2,4 @@
 "compose-unstyled": patch
 ---
 
-Fix hosted modals allowing keyboard focus and keystrokes to reach background controls. Tab and Shift+Tab now stay inside the topmost modal, and closing it restores the previous focus. This also fixes dialogs, modal bottom sheets, and modal drawers rendered through a modal host.
+Make dialogs, modal bottom sheets, and modal drawers behave inside of a Host the same as without. Tab and Shift+Tab now stay inside the topmost modal, background controls receive no keystrokes, and closing the modal restores the previous focus.
