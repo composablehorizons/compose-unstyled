@@ -8,7 +8,6 @@ on:
 permissions:
   contents: read
   actions: read
-  issues: write
 
 env:
   API_LEVEL: 23
@@ -117,18 +116,3 @@ jobs:
     with:
       module: ${{ matrix.module }}
       test-command: ./gradlew --console=plain ${{ matrix.module }}:connectedDebugAndroidTest
-
-  report-failure:
-    needs: [ jvm-and-assemble, screenshot-tests, discover-android-modules, android-tests ]
-    if: ${{ always() && (needs.jvm-and-assemble.result == 'failure' || needs.screenshot-tests.result == 'failure' || needs.discover-android-modules.result == 'failure' || needs.android-tests.result == 'failure') }}
-    runs-on: ubuntu-latest
-    concurrency:
-      group: nightly-failure-reporter
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Report specific failures
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 -B .github/scripts/report_nightly_failures.py

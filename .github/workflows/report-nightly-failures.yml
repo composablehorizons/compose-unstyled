@@ -1,0 +1,31 @@
+name: Report Nightly Failures
+
+on:
+  workflow_run:
+    workflows: [Nightly Checks]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  report:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: nightly-failure-reporter
+      cancel-in-progress: false
+    steps:
+      # Use trusted default-branch code and fetch logs only after the run finishes.
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Report specific failures
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NIGHTLY_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: python3 -B .github/scripts/report_nightly_failures.py

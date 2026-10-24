@@ -41,6 +41,48 @@ class NightlyFailureTests(unittest.TestCase):
         result = reporter.failures(self.job, "")
         self.assertIn("drawer / drawer:Android Tests", result[0][1])
 
+    def test_dependency_timeout_reports_underlying_infrastructure_cause(self):
+        result = reporter.failures(self.job,
+            "Execution failed for task ':example:mergeDebugAndroidTestAssets'.\n"
+            "> Could not download ui-test.aar\n"
+            "> Could not get resource 'https://dl.google.com/test.aar'.\n"
+            "> Read timed out\n"
+            "##[error]The process '/usr/bin/sh' failed with exit code 1")
+        self.assertIn("Infrastructure failure:", result[0][0])
+        self.assertIn("Read timed out", result[0][2])
+
+    def test_missing_system_image_reports_cause_instead_of_boot_timeout(self):
+        result = reporter.failures(self.job,
+            "FATAL | Broken AVD system path. Check your ANDROID_SDK_ROOT value!\n"
+            "##[error]Timeout waiting for emulator to boot.")
+        self.assertIn("Infrastructure failure:", result[0][0])
+        self.assertIn("Broken AVD system path", result[0][0])
+
+    def test_recovered_timeout_does_not_hide_final_compile_failure(self):
+        result = reporter.failures(self.job,
+            "Read timed out\nRetrying Android test dependency preparation (2/3).\n"
+            "Execution failed for task ':example:compileDebugKotlin'.\nUnresolved reference: missing")
+        self.assertTrue(result[0][0].startswith("Build/job failure:"))
+        self.assertIn("compileDebugKotlin", result[0][0])
+
+    def test_test_failure_takes_priority_over_infrastructure_errors(self):
+        result = reporter.failures(self.job, "Read timed out\nexample.Test > broken FAILED\nAssertionError: wrong size")
+        self.assertEqual(result[0][0], "Test failure: example.Test.broken")
+
+    @patch("time.sleep")
+    def test_log_fetch_retries_temporary_unavailability(self, sleep):
+        with patch.object(reporter.subprocess, "run", side_effect=[
+            SimpleNamespace(returncode=1, stdout="", stderr="not ready"),
+            SimpleNamespace(returncode=0, stdout="actual failure", stderr="")]):
+            self.assertEqual(reporter.job_log("repos/owner/repo", 42), "actual failure")
+
+    @patch("time.sleep")
+    def test_missing_logs_fail_reporter_instead_of_opening_generic_issue(self, sleep):
+        with patch.object(reporter.subprocess, "run", return_value=SimpleNamespace(
+                returncode=1, stdout="", stderr="not ready")):
+            with self.assertRaises(RuntimeError):
+                reporter.job_log("repos/owner/repo", 42)
+
     def run_report(self, issues):
         with patch.dict(os.environ, {"GITHUB_REPOSITORY": "owner/repo", "GITHUB_RUN_ID": "100"}), \
              patch.object(reporter, "pages", side_effect=[
@@ -69,6 +111,11 @@ class NightlyFailureTests(unittest.TestCase):
             "test:example.Test.fails", "old error", 2,
             "https://github.com/owner/repo/actions/runs/100", "job")}])
         self.assertIn("Occurrences: 2", calls[0].kwargs["body"])
+
+    def test_completed_workflow_run_id_overrides_reporter_run_id(self):
+        with patch.dict(os.environ, {"NIGHTLY_RUN_ID": "200"}):
+            calls = self.run_report([])
+        self.assertIn("Latest run: https://github.com/owner/repo/actions/runs/200\n", calls[0].kwargs["body"])
 
 
 if __name__ == "__main__":
