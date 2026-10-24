@@ -907,6 +907,10 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
   val layoutDirection = LocalLayoutDirection.current
   val resolvedPlacement = context.placement.resolve(layoutDirection)
   val orientation = resolvedPlacement.orientation
+  val scrollScope = androidx.compose.runtime.rememberCoroutineScope()
+  val nestedScrollConnection = remember(state, resolvedPlacement, scrollScope) {
+    DrawerNestedScrollConnection(state, resolvedPlacement, scrollScope)
+  }
   val panelOverscrollEffect = remember(overscrollEffect) {
     overscrollEffect?.withoutVisualEffect()
   }
@@ -931,6 +935,7 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
       if (context.gesturesEnabled && state.hasMultipleValues()) {
         add(
           Modifier
+            .observeDrawerScrollGesture(nestedScrollConnection)
             .anchoredDraggable(
               state = state.anchoredDraggableState,
               orientation = orientation,
@@ -941,14 +946,7 @@ fun <T : Any> DrawerViewportScope<T>.Panel(
                 DrawerFlingBehavior(state)
               },
             )
-            .nestedScroll(
-              remember(state, resolvedPlacement) {
-                DrawerNestedScrollConnection(
-                  drawerState = state,
-                  resolvedPlacement = resolvedPlacement,
-                )
-              },
-            ),
+            .nestedScroll(nestedScrollConnection),
         )
       }
       add(modifier)

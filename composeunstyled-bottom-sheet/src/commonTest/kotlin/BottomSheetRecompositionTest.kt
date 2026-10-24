@@ -21,6 +21,7 @@
  */
 package com.composeunstyled
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -43,6 +49,44 @@ import kotlinx.coroutines.launch
 import kotlin.test.Test
 
 class BottomSheetRecompositionTest {
+  @Test
+  fun settlingNestedScrollWithoutAFlingDoesNotRecomposeSheetContent() =
+    assertNestedScrollSettlement()
+
+  @Test
+  fun pendingScrollSettlementDoesNotOverrideProgrammaticSheetAnimation() =
+    assertNestedScrollSettlement(animate = true)
+
+  private fun assertNestedScrollSettlement(animate: Boolean = false) = runComposeRecompositionTest {
+    lateinit var state: BottomSheetState
+    lateinit var scope: CoroutineScope
+    val partial = SheetDetent("partial") { _, _ -> 30.dp }
+    val dispatcher = NestedScrollDispatcher()
+    val connection = object : NestedScrollConnection {}
+    setContent {
+      scope = rememberCoroutineScope()
+      state = rememberBottomSheetState(partial, listOf(partial, SheetDetent.FullyExpanded))
+      UnstyledBottomSheet(state, Modifier.requiredSize(100.dp)) {
+        Sheet(Modifier.fillMaxWidth().height(60.dp)) {
+          RecompositionCount("sheet-content")
+          Box(Modifier.requiredSize(60.dp).nestedScroll(connection, dispatcher))
+        }
+      }
+    }
+    waitForIdle()
+    resetRecompositionCounts("sheet-content")
+
+    val consumed = dispatcher.dispatchPreScroll(Offset(0f, -10f), NestedScrollSource.UserInput)
+    assertThat(consumed.y).isEqualTo(-10f)
+    if (animate) {
+      scope.launch { state.animateTo(SheetDetent.FullyExpanded, tween(1_000)) }
+    }
+    waitUntil("sheet settled without a fling", timeoutMillis = 5_000) { state.isIdle }
+
+    assertThat(state.currentDetent).isEqualTo(if (animate) SheetDetent.FullyExpanded else partial)
+    assertThat(recompositionCount("sheet-content")).isEqualTo(0)
+  }
+
   @Test
   fun expanding_from_hidden_does_not_recompose_content() = runComposeRecompositionTest {
     lateinit var state: BottomSheetState

@@ -38,13 +38,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.unit.Velocity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.jvm.JvmName
 
@@ -290,7 +294,50 @@ internal class DrawerFlingBehavior<T : Any>(
 internal class DrawerNestedScrollConnection<T : Any>(
   private val drawerState: UnstyledDrawerState<T>,
   private val resolvedPlacement: ResolvedDrawerPlacement,
+  private val coroutineScope: CoroutineScope,
 ) : NestedScrollConnection {
+  private var scrollStopJob: Job? = null
+  private var hasPendingScroll = false
+  private var pointerPressed = false
+  private var panInProgress = false
+
+  fun onPointerEvent(event: PointerEvent) {
+    val wasGestureInProgress = pointerPressed || panInProgress
+    pointerPressed = event.changes.any { it.pressed }
+    when (event.type) {
+      PointerEventType.PanStart, PointerEventType.PanMove -> panInProgress = true
+      PointerEventType.PanEnd -> panInProgress = false
+    }
+    if (wasGestureInProgress != (pointerPressed || panInProgress)) {
+      settleAfterScrollStops()
+    }
+  }
+
+  fun cancelPendingSettlement() {
+    scrollStopJob?.cancel()
+    hasPendingScroll = false
+  }
+
+  private fun dispatchScrollDelta(delta: Float): Offset {
+    val consumed = anchoredDraggableState.dispatchRawDelta(delta)
+    if (consumed != 0f) hasPendingScroll = true
+    settleAfterScrollStops()
+    return consumed.toOffset(orientation)
+  }
+
+  private fun settleAfterScrollStops() {
+    scrollStopJob?.cancel()
+    if (hasPendingScroll.not() || pointerPressed || panInProgress) return
+    scrollStopJob = coroutineScope.launch {
+      // Wheel scrolling may finish without ever dispatching a nested fling.
+      delay(150)
+      hasPendingScroll = false
+      if (anchoredDraggableState.isAnimationRunning.not() && drawerState.isIdle.not()) {
+        drawerState.settleFromFling(0f)
+      }
+    }
+  }
+
   private val orientation: Orientation
     get() = resolvedPlacement.orientation
 
@@ -300,7 +347,7 @@ internal class DrawerNestedScrollConnection<T : Any>(
   override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
     val delta = available.toFloat(orientation)
     return if (source == NestedScrollSource.UserInput && resolvedPlacement.isOpeningDelta(delta)) {
-      anchoredDraggableState.dispatchRawDelta(delta).toOffset(orientation)
+      dispatchScrollDelta(delta)
     } else {
       Offset.Zero
     }
@@ -312,13 +359,14 @@ internal class DrawerNestedScrollConnection<T : Any>(
     source: NestedScrollSource,
   ): Offset {
     return if (source == NestedScrollSource.UserInput) {
-      anchoredDraggableState.dispatchRawDelta(available.toFloat(orientation)).toOffset(orientation)
+      dispatchScrollDelta(available.toFloat(orientation))
     } else {
       Offset.Zero
     }
   }
 
   override suspend fun onPreFling(available: Velocity): Velocity {
+    cancelPendingSettlement()
     val velocity = available.toFloat(orientation)
     val currentOffset = anchoredDraggableState.requireOffset()
     val minAnchor = anchoredDraggableState.anchors.minPosition()
@@ -337,7 +385,23 @@ internal class DrawerNestedScrollConnection<T : Any>(
   }
 
   override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+    cancelPendingSettlement()
     drawerState.settleFromFling(available.toFloat(orientation))
     return available
   }
 }
+
+internal fun Modifier.observeDrawerScrollGesture(
+  connection: DrawerNestedScrollConnection<*>,
+): Modifier =
+  pointerInput(connection) {
+    try {
+      awaitPointerEventScope {
+        while (true) {
+          connection.onPointerEvent(awaitPointerEvent(PointerEventPass.Initial))
+        }
+      }
+    } finally {
+      connection.cancelPendingSettlement()
+    }
+  }

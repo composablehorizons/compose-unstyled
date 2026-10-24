@@ -28,15 +28,70 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isLessThanOrEqualTo
 import com.composeunstyled.test.runComposeRecompositionTest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.test.Test
 
 class DrawerRecompositionTest {
+  @Test
+  fun settlingNestedScrollWithoutAFlingDoesNotRecomposePanelContent() =
+    assertNestedScrollSettlement()
+
+  @Test
+  fun pendingScrollSettlementDoesNotOverrideProgrammaticDrawerAnimation() =
+    assertNestedScrollSettlement(animate = true)
+
+  private fun assertNestedScrollSettlement(animate: Boolean = false) = runComposeRecompositionTest {
+    lateinit var state: UnstyledDrawerState<String>
+    lateinit var scope: CoroutineScope
+    val dispatcher = NestedScrollDispatcher()
+    val connection = object : NestedScrollConnection {}
+    setContent {
+      scope = rememberCoroutineScope()
+      state = remember {
+        UnstyledDrawerState(
+          "partial",
+          DrawerSnapPoints {
+            "partial" at DrawerSnapPoint { _, _ -> 30.dp }
+            "open" at DrawerSnapPoint.ContentSize
+          },
+        )
+      }
+      UnstyledDrawer(state, presentation = DrawerPresentation.InPlace) {
+        Viewport(Modifier.requiredSize(100.dp)) {
+          Panel(Modifier.fillMaxWidth().height(60.dp)) {
+            RecompositionCount("drawer-panel-content")
+            Box(Modifier.requiredSize(60.dp).nestedScroll(connection, dispatcher))
+          }
+        }
+      }
+    }
+    waitForIdle()
+    resetRecompositionCounts("drawer-panel-content")
+
+    val consumed = dispatcher.dispatchPreScroll(Offset(0f, -10f), NestedScrollSource.UserInput)
+    assertThat(consumed.y).isEqualTo(-10f)
+    if (animate) {
+      scope.launch { state.animateTo("open", tween(1_000)) }
+    }
+    waitUntil("drawer settled without a fling", timeoutMillis = 5_000) { state.isIdle }
+
+    assertThat(state.currentValue).isEqualTo(if (animate) "open" else "partial")
+    assertThat(recompositionCount("drawer-panel-content")).isEqualTo(0)
+  }
+
   @Test
   fun updatingAnimationSpecsDoesNotRecomposePanelContent() =
     runComposeRecompositionTest {

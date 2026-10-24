@@ -68,6 +68,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
@@ -85,6 +88,8 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -907,8 +912,27 @@ fun BottomSheetScope.Sheet(
     buildModifier {
       add(Modifier.pointerInput(Unit) { detectTapGestures { } })
       if (state != null && coroutineScope != null && context.enabled && state.detents.size > 1) {
+        val connection = remember(state.anchoredDraggableState, coroutineScope) {
+          ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+            orientation = Orientation.Vertical,
+            sheetState = state.anchoredDraggableState,
+            coroutineScope = coroutineScope,
+            onFling = { coroutineScope.launch { state.settle(it) } },
+          )
+        }
         add(
           Modifier
+            .pointerInput(connection) {
+              try {
+                awaitPointerEventScope {
+                  while (true) {
+                    connection.onPointerEvent(awaitPointerEvent(PointerEventPass.Initial))
+                  }
+                }
+              } finally {
+                connection.cancelPendingSettlement()
+              }
+            }
             .anchoredDraggable(
               state = state.anchoredDraggableState,
               orientation = Orientation.Vertical,
@@ -916,17 +940,7 @@ fun BottomSheetScope.Sheet(
               interactionSource = dragInteractionSource,
               flingBehavior = flingBehavior,
             )
-            .nestedScroll(
-              remember(state.anchoredDraggableState, Orientation.Vertical) {
-                ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-                  orientation = Orientation.Vertical,
-                  sheetState = state.anchoredDraggableState,
-                  onFling = {
-                    coroutineScope.launch { state.settle(it) }
-                  },
-                )
-              },
-            ),
+            .nestedScroll(connection),
         )
       }
     },
@@ -1095,15 +1109,58 @@ private fun AnchoredDraggableState<SheetDetent>.visualOffset(): Float {
   return offset.coerceIn(minPosition, maxPosition)
 }
 
-private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
-  sheetState: AnchoredDraggableState<SheetDetent>,
-  orientation: Orientation,
-  onFling: (velocity: Float) -> Unit,
-): NestedScrollConnection = object : NestedScrollConnection {
+private class ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
+  private val sheetState: AnchoredDraggableState<SheetDetent>,
+  private val orientation: Orientation,
+  private val coroutineScope: CoroutineScope,
+  private val onFling: (velocity: Float) -> Unit,
+) : NestedScrollConnection {
+  private var scrollStopJob: Job? = null
+  private var hasPendingScroll = false
+  private var pointerPressed = false
+  private var panInProgress = false
+
+  fun onPointerEvent(event: PointerEvent) {
+    val wasGestureInProgress = pointerPressed || panInProgress
+    pointerPressed = event.changes.any { it.pressed }
+    when (event.type) {
+      PointerEventType.PanStart, PointerEventType.PanMove -> panInProgress = true
+      PointerEventType.PanEnd -> panInProgress = false
+    }
+    if (wasGestureInProgress != (pointerPressed || panInProgress)) {
+      settleAfterScrollStops()
+    }
+  }
+
+  fun cancelPendingSettlement() {
+    scrollStopJob?.cancel()
+    hasPendingScroll = false
+  }
+
+  private fun dispatchScrollDelta(delta: Float): Offset {
+    val consumed = sheetState.dispatchRawDelta(delta)
+    if (consumed != 0f) hasPendingScroll = true
+    settleAfterScrollStops()
+    return consumed.toOffset()
+  }
+
+  private fun settleAfterScrollStops() {
+    scrollStopJob?.cancel()
+    if (hasPendingScroll.not() || pointerPressed || panInProgress) return
+    scrollStopJob = coroutineScope.launch {
+      // Wheel scrolling may finish without ever dispatching a nested fling.
+      delay(150)
+      hasPendingScroll = false
+      if (sheetState.isAnimationRunning.not()) {
+        onFling(0f)
+      }
+    }
+  }
+
   override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
     val delta = available.toFloat()
     return if (delta < 0 && source == NestedScrollSource.UserInput) {
-      sheetState.dispatchRawDelta(delta).toOffset()
+      dispatchScrollDelta(delta)
     } else {
       Offset.Zero
     }
@@ -1115,13 +1172,14 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     source: NestedScrollSource,
   ): Offset {
     return if (source == NestedScrollSource.UserInput) {
-      sheetState.dispatchRawDelta(available.toFloat()).toOffset()
+      dispatchScrollDelta(available.toFloat())
     } else {
       Offset.Zero
     }
   }
 
   override suspend fun onPreFling(available: Velocity): Velocity {
+    cancelPendingSettlement()
     val toFling = available.toFloat()
     val currentOffset = sheetState.requireOffset()
     val minAnchor = sheetState.anchors.minPosition()
@@ -1135,6 +1193,7 @@ private fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
   }
 
   override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+    cancelPendingSettlement()
     onFling(available.toFloat())
     return available
   }
