@@ -1,5 +1,14 @@
 # compose-unstyled
 
+## 2.10.2
+
+### Patch Changes
+
+- 649c471: Make dialogs, modal bottom sheets, and modal drawers behave inside of a Host the same as without. Tab and Shift+Tab now stay inside the topmost modal, background controls receive no keystrokes, and closing the modal restores the previous focus.
+- b59481b: Make dialogs behave inside of a Host the same as without. Background hover, clicks, and scrolling are now blocked when `dismissOnClickOutside` is disabled, even without a scrim.
+- c2ee43f: Make portal content behave the same when rendered in a different Host. Moving a `Portal` between matching host targets now preserves remembered state and running effects.
+- f32815a: Fixed mouse-wheel scrolling leaving BottomSheet and Drawer between snap points.
+
 ## 2.10.1
 
 ### Patch Changes
