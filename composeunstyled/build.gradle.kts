@@ -90,7 +90,7 @@ kotlin {
       api(projects.composeunstyledModal)
       api(projects.composeunstyledModalBottomSheet)
       api(projects.composeunstyledOutline)
-      api(projects.composeunstyledPlatformtheme)
+      api(libs.compose.platformtheme)
       api(projects.composeunstyledPortal)
       api(projects.composeunstyledProgress)
       api(projects.composeunstyledRadioGroup)
