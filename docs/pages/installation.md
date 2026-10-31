@@ -56,7 +56,6 @@ Compose Unstyled is modular. Add focused modules when you do not need the full d
 | Every unstyled component | `composeunstyled-primitives` |
 | Theming APIs | `composeunstyled-theming` |
 | Specific components, such as Button | `composeunstyled-button` |
-| Opinionated themes per platform | `composeunstyled-platformtheme` |
 
 Replace `composeunstyled` in Quick Start with the dependencies that fit your app.
 

@@ -22,8 +22,6 @@ sections:
         slug: android-xml-themes
       - title: Dynamic Themes
         slug: dynamic-themes
-      - title: Platform Themes
-        slug: platform-themes
       - title: Minimum Interactive Size
         slug: defaultMinimumComponentInteractiveSize
   - title: Components
