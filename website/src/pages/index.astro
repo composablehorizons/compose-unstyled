@@ -12,7 +12,7 @@ const componentLinks = components.filter(component => component.slug !== 'compon
 const themingSection = navigation.sections.find(section => section.title === 'Theming');
 const theming = themingSection
   .pages
-  .filter(page => ['custom-themes', 'color-schemes', 'theme-values', 'dynamic-themes', 'platform-themes'].includes(page.slug));
+  .filter(page => ['custom-themes', 'color-schemes', 'theme-values', 'dynamic-themes'].includes(page.slug));
 ---
 <LandingLayout>
   <div class="unstyled-page">
