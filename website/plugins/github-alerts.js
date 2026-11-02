@@ -4,6 +4,7 @@ const alertTypes = new Map([
   ['IMPORTANT', 'Important'],
   ['WARNING', 'Warning'],
   ['CAUTION', 'Caution'],
+  ['DEPRECATED', 'Deprecated'],
 ]);
 
 export default {
