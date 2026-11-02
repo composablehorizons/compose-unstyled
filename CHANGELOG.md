@@ -1,5 +1,15 @@
 # compose-unstyled
 
+## 2.11.0
+
+### Minor Changes
+
+- 32faeab: Deprecate Bottom Sheet and Modal Bottom Sheet in favor of Drawer. Both will be removed in 3.0. Their documentation pages include a migration guide to Drawer.
+
+### Patch Changes
+
+- 4eac9c0: Move platform themes to https://github.com/composablehorizons/compose-platform-themes. The umbrella dependency continues to include the published artifact, with the same Maven coordinates and Kotlin packages.
+
 ## 2.10.2
 
 ### Patch Changes
