@@ -3,7 +3,8 @@ title: Modal Bottom Sheet
 description: A dismissible modal bottom sheet with custom detents.
 ---
 
-> **Deprecated:** Modal Bottom Sheet will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) instead. See [Migrating to Drawer](#migrating-to-drawer).
+> [!WARNING]
+> Modal Bottom Sheet is deprecated and will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) instead. See [Migrating to Drawer](#migrating-to-drawer).
 
 <UnstyledDemo id="modal-bottom-sheet" />
 

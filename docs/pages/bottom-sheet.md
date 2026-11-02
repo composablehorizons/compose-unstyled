@@ -3,7 +3,8 @@ title: Bottom Sheet
 description: A draggable bottom sheet with custom detents.
 ---
 
-> **Deprecated:** Bottom Sheet will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) with `DrawerPresentation.InPlace` instead. See [Migrating to Drawer](#migrating-to-drawer).
+> [!WARNING]
+> Bottom Sheet is deprecated and will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) with `DrawerPresentation.InPlace` instead. See [Migrating to Drawer](#migrating-to-drawer).
 
 <UnstyledDemo id="bottom-sheet" />
 
