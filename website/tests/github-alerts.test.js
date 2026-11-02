@@ -20,6 +20,14 @@ test('renders a GitHub note alert without its source marker', () => {
   expect(alert.children[1].children[0].value).toBe('Use the current theme builder.');
 });
 
+test('renders a deprecated alert', () => {
+  const alert = render('[!DEPRECATED] This will be removed in 3.0.');
+
+  expect(alert.properties.className).toEqual(['docs-alert', 'docs-alert-deprecated']);
+  expect(alert.properties['aria-label']).toBe('Deprecated');
+  expect(alert.children[0].children[0].value).toBe('Deprecated');
+});
+
 test('leaves ordinary blockquotes unchanged', () => {
   expect(render('Regular quote.')).toBeUndefined();
 });
