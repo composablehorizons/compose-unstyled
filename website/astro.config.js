@@ -11,6 +11,9 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
+  redirects: {
+    '/modal-bottom-sheet': '/docs/components/modal-bottom-sheet/',
+  },
   integrations: [sitemap({
     filter: (page) => {
       const pathname = new URL(page).pathname;
