@@ -19,7 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length", "ktlint:standard:no-wildcard-imports")
+@file:Suppress(
+  "ktlint:standard:max-line-length",
+  "ktlint:standard:no-wildcard-imports",
+  "DEPRECATION",
+)
 
 package com.composeunstyled
 
@@ -99,6 +103,10 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToInt
 
+private const val BottomSheetDeprecation =
+  "This will go away in 3.0. Use UnstyledDrawer with DrawerPresentation.InPlace instead. " +
+    "See https://composeunstyled.com/docs/components/bottom-sheet/#migrating-to-drawer"
+
 private fun Saver(
   animationSpec: AnimationSpec<Float>,
   coroutineScope: CoroutineScope,
@@ -136,6 +144,7 @@ private fun Saver(
  * @param initialDetent A `SheetDetent` which controls the height in which the sheet will be introduced within its container.
  * @param animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
  */
+@Deprecated(BottomSheetDeprecation)
 @Composable
 fun rememberBottomSheetState(
   initialDetent: SheetDetent,
@@ -182,6 +191,7 @@ fun rememberBottomSheetState(
   }
 }
 
+@Deprecated(BottomSheetDeprecation)
 @Immutable
 class SheetDetent(
   val identifier: String,
@@ -215,6 +225,7 @@ class SheetDetent(
 /**
  * @property animationSpec An `AnimationSpec` used when animating the sheet across the different *sheetDetents*.
  */
+@Deprecated(BottomSheetDeprecation)
 class BottomSheetState internal constructor(
   initialDetent: SheetDetent,
   detents: List<SheetDetent>,
@@ -828,6 +839,7 @@ private class BottomSheetContext(
 private val LocalBottomSheetContext: ProvidableCompositionLocal<BottomSheetContext> =
   compositionLocalOf { BottomSheetContext() }
 
+@Deprecated(BottomSheetDeprecation)
 interface BottomSheetScope
 
 private object BottomSheetScopeInstance : BottomSheetScope
@@ -838,6 +850,7 @@ private object BottomSheetScopeInstance : BottomSheetScope
  * @param enabled Enables or disables dragging.
  * @param content The contents of the sheet.
  */
+@Deprecated(BottomSheetDeprecation)
 @Composable
 fun UnstyledBottomSheet(
   state: BottomSheetState,
@@ -898,6 +911,7 @@ fun UnstyledBottomSheet(
  * @param modifier The `Modifier` for the component
  * @param content The contents of the sheet.
  */
+@Deprecated(BottomSheetDeprecation)
 @Composable
 fun BottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
@@ -1286,6 +1300,7 @@ private fun DraggableAnchors<SheetDetent>.firstAnchor(): SheetDetent {
 /**
  * @param modifier The `Modifier` for the component
  */
+@Deprecated(BottomSheetDeprecation)
 @Composable
 fun BottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,
