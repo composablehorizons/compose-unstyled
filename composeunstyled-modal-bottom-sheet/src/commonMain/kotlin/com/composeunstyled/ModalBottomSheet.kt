@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@file:Suppress("ktlint:standard:max-line-length")
+@file:Suppress("ktlint:standard:max-line-length", "DEPRECATION")
 
 package com.composeunstyled
 
@@ -56,8 +56,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+private const val ModalBottomSheetDeprecation =
+  "This will go away in 3.0. Use UnstyledDrawer instead. " +
+    "See https://composeunstyled.com/docs/components/modal-bottom-sheet/#migrating-to-drawer"
+
 private val DoNothing: () -> Unit = {}
 
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun ModalBottomSheetHost(
   modifier: Modifier = Modifier,
@@ -66,10 +71,12 @@ fun ModalBottomSheetHost(
   ModalHost(modifier = modifier, content = content)
 }
 
+@Deprecated(ModalBottomSheetDeprecation)
 class ModalBottomSheetScope internal constructor(
   internal val bottomSheetScope: BottomSheetScope,
 )
 
+@Deprecated(ModalBottomSheetDeprecation)
 interface ModalBottomSheetOverlayScope
 
 private object ModalBottomSheetOverlayScopeInstance : ModalBottomSheetOverlayScope
@@ -77,6 +84,7 @@ private object ModalBottomSheetOverlayScopeInstance : ModalBottomSheetOverlaySco
 /**
  * @param modifier The `Modifier` for the component
  */
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun ModalBottomSheetOverlayScope.Scrim(
   modifier: Modifier = Modifier,
@@ -94,6 +102,7 @@ fun ModalBottomSheetOverlayScope.Scrim(
   }
 }
 
+@Deprecated(ModalBottomSheetDeprecation)
 data class ModalBottomSheetProperties(
   val dismissOnBackPress: Boolean = true,
   val dismissOnClickOutside: Boolean = true,
@@ -114,6 +123,7 @@ data class ModalBottomSheetProperties(
  * @param velocityThreshold The velocity threshold (in px per second) that the end velocity has to exceed in order to animate to the next state, even if the [positionalThreshold] has not been reached.
  * @param positionalThreshold The positional threshold, in px, to be used when calculating the target state while a drag is in progress and when settling after the drag ends. This is the distance from the start of a transition. It will be, depending on the direction of the interaction, added or subtracted from/to the origin offset. It should always be a positive value.
  */
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun rememberModalBottomSheetState(
   initialDetent: SheetDetent,
@@ -150,6 +160,7 @@ fun rememberModalBottomSheetState(
   return state
 }
 
+@Deprecated(ModalBottomSheetDeprecation)
 class ModalBottomSheetState(
   val bottomSheetState: BottomSheetState,
   val modalState: ModalState,
@@ -302,6 +313,7 @@ class ModalBottomSheetState(
  * @param onDismiss Called when the sheet is being dismissed either by tapping outside or by pressing `Esc` or `Back`.
  * @param content The contents of the Modal Bottom Sheet.
  */
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun UnstyledModalBottomSheet(
   state: ModalBottomSheetState,
@@ -410,6 +422,7 @@ fun UnstyledModalBottomSheet(
  * @param modifier The `Modifier` for the component
  * @param content The contents of the sheet.
  */
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun ModalBottomSheetScope.Sheet(
   modifier: Modifier = Modifier,
@@ -437,6 +450,7 @@ private fun Modifier.keepModalMountedWhileSheetExits(state: ModalBottomSheetStat
   }
 }
 
+@Deprecated(ModalBottomSheetDeprecation)
 @Composable
 fun ModalBottomSheetScope.DragIndication(
   modifier: Modifier = Modifier,

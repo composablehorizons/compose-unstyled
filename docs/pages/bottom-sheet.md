@@ -3,7 +3,7 @@ title: Bottom Sheet
 description: A draggable bottom sheet with custom detents.
 ---
 
-> **Recommendation:** For new interfaces, use [Drawer](drawer.md) instead. It is a more flexible abstraction and the recommended API moving forward.
+> **Deprecated:** Bottom Sheet will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) with `DrawerPresentation.InPlace` instead. See [Migrating to Drawer](#migrating-to-drawer).
 
 <UnstyledDemo id="bottom-sheet" />
 
@@ -190,6 +190,84 @@ val sheetState = rememberBottomSheetState(
     stiffness = Spring.StiffnessLow,
   ),
 )
+```
+
+## Migrating to Drawer
+
+An in-place `UnstyledDrawer` placed at the bottom replaces `UnstyledBottomSheet`. Replace the
+dependency with `composeunstyled-drawer`:
+
+```kotlin
+implementation("com.composables:composeunstyled-drawer:{{compose_unstyled_version}}")
+```
+
+| Bottom Sheet | Drawer |
+| --- | --- |
+| `UnstyledBottomSheet(state)` | `UnstyledDrawer(state, presentation = DrawerPresentation.InPlace)` |
+| `rememberBottomSheetState(initialDetent, detents)` | `remember { UnstyledDrawerState(initialValue, snapPoints) }` |
+| `SheetDetent` | Your own value type, mapped in `DrawerSnapPoints { }` |
+| `SheetDetent.Hidden` | `DrawerSnapPoint.Zero` |
+| `SheetDetent.FullyExpanded` | `DrawerSnapPoint.ContentSize` |
+| `SheetDetent("id") { containerHeight, sheetHeight -> }` | `DrawerSnapPoint { viewportSize, contentSize -> }` |
+| `Sheet { }` | `Viewport { Panel { } }` |
+| `DragIndication()` | `DragHandle()` inside `Panel` |
+| `enabled` | `gesturesEnabled` |
+| `offsetForIme = true` | `Viewport(windowInsets = WindowInsets.ime)` |
+| `currentDetent` / `targetDetent` | `currentValue` / `targetValue` |
+| `animateTo()` / `jumpTo()` | `animateTo()` / `jumpTo()` |
+| `invalidateDetents()` | `invalidateSnapPoints()` |
+| `confirmDetentChange: (SheetDetent) -> Boolean` | `confirmValueChange: (DrawerValueChange<T>) -> Boolean` |
+| `velocityThreshold`, `positionalThreshold`, `decayAnimationSpec` | No equivalent |
+
+An in-place drawer also closes on Back, Escape, and taps inside its `Viewport` but outside the
+`Panel`. Set `dismissOnNavigateBack` and `dismissOnClickOutside` to `false` to keep the bottom sheet's
+behavior.
+
+Before:
+
+```kotlin expandable
+val Peek = SheetDetent("peek") { containerHeight, _ -> containerHeight * 0.6f }
+
+val sheetState = rememberBottomSheetState(
+  initialDetent = Peek,
+  detents = listOf(SheetDetent.Hidden, Peek, SheetDetent.FullyExpanded),
+)
+
+UnstyledBottomSheet(state = sheetState) {
+  Sheet {
+    DragIndication()
+  }
+}
+```
+
+After:
+
+```kotlin expandable
+enum class SheetValue { Hidden, Peek, Expanded }
+
+val drawerState = remember {
+  UnstyledDrawerState(
+    initialValue = SheetValue.Peek,
+    snapPoints = DrawerSnapPoints {
+      SheetValue.Hidden at DrawerSnapPoint.Zero
+      SheetValue.Peek at DrawerSnapPoint { viewportSize, _ -> viewportSize * 0.6f }
+      SheetValue.Expanded at DrawerSnapPoint.ContentSize
+    },
+  )
+}
+
+UnstyledDrawer(
+  state = drawerState,
+  presentation = DrawerPresentation.InPlace,
+  dismissOnNavigateBack = false,
+  dismissOnClickOutside = false,
+) {
+  Viewport {
+    Panel {
+      DragHandle()
+    }
+  }
+}
 ```
 
 ## API Reference

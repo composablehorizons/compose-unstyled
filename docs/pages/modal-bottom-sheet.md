@@ -3,7 +3,7 @@ title: Modal Bottom Sheet
 description: A dismissible modal bottom sheet with custom detents.
 ---
 
-> **Recommendation:** For new interfaces, use [Drawer](drawer.md) instead. It is a more flexible abstraction and the recommended API moving forward.
+> **Deprecated:** Modal Bottom Sheet will be removed in Compose Unstyled 3.0. Use [Drawer](drawer.md) instead. See [Migrating to Drawer](#migrating-to-drawer).
 
 <UnstyledDemo id="modal-bottom-sheet" />
 
@@ -229,6 +229,91 @@ val sheetState = rememberModalBottomSheetState(
   animationSpec = tween(durationMillis = 300),
   dismissAnimationSpec = tween(durationMillis = 180),
 )
+```
+
+## Migrating to Drawer
+
+A modal `UnstyledDrawer` placed at the bottom replaces `UnstyledModalBottomSheet`. These are the
+drawer's default placement and presentation. Replace the dependency with `composeunstyled-drawer`:
+
+```kotlin
+implementation("com.composables:composeunstyled-drawer:{{compose_unstyled_version}}")
+```
+
+| Modal Bottom Sheet | Drawer |
+| --- | --- |
+| `UnstyledModalBottomSheet(state)` | `UnstyledDrawer(state)` |
+| `ModalBottomSheetHost { }` | Not needed. Modal drawers do not need a host |
+| `rememberModalBottomSheetState(initialDetent, detents)` | `remember { UnstyledDrawerState(initialValue, snapPoints) }` |
+| `SheetDetent` | Your own value type, mapped in `DrawerSnapPoints { }` |
+| `SheetDetent.Hidden` | `DrawerSnapPoint.Zero` |
+| `SheetDetent.FullyExpanded` | `DrawerSnapPoint.ContentSize` |
+| `SheetDetent("id") { containerHeight, sheetHeight -> }` | `DrawerSnapPoint { viewportSize, contentSize -> }` |
+| `Sheet { }` | `Viewport { Panel { } }` |
+| `DragIndication()` | `DragHandle()` inside `Panel` |
+| `overlay = { Scrim() }` | `overlay = { Overlay(Modifier.fillMaxSize().background(scrimColor)) }` |
+| `enabled` | `gesturesEnabled` |
+| `ModalBottomSheetProperties(dismissOnBackPress)` | `dismissOnNavigateBack` |
+| `ModalBottomSheetProperties(dismissOnClickOutside)` | `dismissOnClickOutside` |
+| `ModalBottomSheetProperties(offsetForIme = true)` | `Viewport(windowInsets = WindowInsets.ime)` |
+| `onDismiss: () -> Unit` | `onDismissed: (DrawerValueChange<T>) -> Unit` |
+| `currentDetent` / `targetDetent` | `currentValue` / `targetValue` |
+| `animateTo()` / `jumpTo()` | `animateTo()` / `jumpTo()` |
+| `invalidateDetents()` | `invalidateSnapPoints()` |
+| `animationSpec` / `dismissAnimationSpec` | `animationSpec` / `dismissAnimationSpec` on `UnstyledDrawerState` |
+| `confirmDetentChange: (SheetDetent) -> Boolean` | `confirmValueChange: (DrawerValueChange<T>) -> Boolean` |
+| `velocityThreshold`, `positionalThreshold`, `decayAnimationSpec` | No equivalent |
+
+Before:
+
+```kotlin expandable
+val sheetState = rememberModalBottomSheetState(
+  initialDetent = SheetDetent.Hidden,
+)
+
+UnstyledModalBottomSheet(
+  state = sheetState,
+  overlay = { Scrim(enter = fadeIn(), exit = fadeOut()) },
+  onDismiss = { selectedItem = null },
+) {
+  Sheet {
+    DragIndication()
+  }
+}
+```
+
+After:
+
+```kotlin expandable
+enum class SheetValue { Hidden, Expanded }
+
+val drawerState = remember {
+  UnstyledDrawerState(
+    initialValue = SheetValue.Hidden,
+    snapPoints = DrawerSnapPoints {
+      SheetValue.Hidden at DrawerSnapPoint.Zero
+      SheetValue.Expanded at DrawerSnapPoint.ContentSize
+    },
+  )
+}
+
+UnstyledDrawer(
+  state = drawerState,
+  overlay = {
+    Overlay(
+      modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.6f)),
+      enter = fadeIn(),
+      exit = fadeOut(),
+    )
+  },
+  onDismissed = { selectedItem = null },
+) {
+  Viewport(windowInsets = WindowInsets.ime) {
+    Panel {
+      DragHandle()
+    }
+  }
+}
 ```
 
 ## API Reference

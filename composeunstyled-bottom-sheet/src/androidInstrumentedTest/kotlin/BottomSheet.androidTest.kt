@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 @file:JvmName("BottomSheetAndroidTest")
+@file:Suppress("DEPRECATION")
 
 package com.composeunstyled
 
