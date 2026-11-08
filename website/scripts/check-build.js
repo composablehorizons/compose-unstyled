@@ -5,6 +5,7 @@ import path from 'node:path';
 import { site, sitePath, siteUrl } from '../site.config.js';
 import { sharedSkikoUrl } from './skiko-runtime.js';
 
+const withoutDemos = process.env.WITHOUT_DEMOS === 'true';
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const files = readdirSync(dist, { recursive: true });
 const pages = files.filter(file => file.endsWith('.html') &&
@@ -29,6 +30,7 @@ for (const file of pages) {
       if (!value.startsWith('/') || value.startsWith('//')) continue;
       const pathname = new URL(value, 'https://build.invalid').pathname;
       assert(pathname.startsWith(sitePath('/')), `${file}: wrong base path: ${value}`);
+      if (withoutDemos && pathname.startsWith(sitePath('/composeunstyled-v2-demos/'))) continue;
       const target = path.join(dist, decodeURIComponent(pathname.slice(sitePath('/').length)));
       assert(existsSync(target), `${file}: missing target: ${value}`);
       links++;
@@ -48,12 +50,16 @@ assert(sitemap.includes(siteUrl('/docs/components/button/')), 'The sitemap must 
 assert(sitemap.includes(siteUrl('/docs/button/')) === false, 'The sitemap must not include legacy documentation redirects');
 const robots = readFileSync(path.join(dist, 'robots.txt'), 'utf8');
 assert(robots.includes(`Sitemap: ${siteUrl('/sitemap.xml')}`), 'robots.txt must reference sitemap.xml');
-assert(files.some(file => file.startsWith('composeunstyled-v2-demos/') && file.endsWith('.wasm')),
-  'The demo WebAssembly bundle is missing');
-const demo = readFileSync(path.join(dist, 'composeunstyled-v2-demos/index.html'), 'utf8');
-for (const [, value] of demo.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
-  if (new URL(value, 'https://build.invalid').origin !== 'https://build.invalid') continue;
-  assert(existsSync(path.join(dist, 'composeunstyled-v2-demos', value)), `Missing demo asset: ${value}`);
+if (withoutDemos) {
+  console.log(`Verified ${pages.length} pages, ${links} local links, and LLM URLs without demo assets.`);
+} else {
+  assert(files.some(file => file.startsWith('composeunstyled-v2-demos/') && file.endsWith('.wasm')),
+    'The demo WebAssembly bundle is missing');
+  const demo = readFileSync(path.join(dist, 'composeunstyled-v2-demos/index.html'), 'utf8');
+  for (const [, value] of demo.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {
+    if (new URL(value, 'https://build.invalid').origin !== 'https://build.invalid') continue;
+    assert(existsSync(path.join(dist, 'composeunstyled-v2-demos', value)), `Missing demo asset: ${value}`);
+  }
+  assert(demo.includes(sharedSkikoUrl), 'The demo must use the shared Skiko runtime');
+  console.log(`Verified ${pages.length} pages, ${links} local links, LLM URLs, and demo assets.`);
 }
-assert(demo.includes(sharedSkikoUrl), 'The demo must use the shared Skiko runtime');
-console.log(`Verified ${pages.length} pages, ${links} local links, LLM URLs, and demo assets.`);

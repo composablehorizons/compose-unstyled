@@ -18,6 +18,14 @@ SCREENSHOT_PATHS = {
     ".github/workflows/update-screenshot-baselines.yml",
     ".github/workflows/visual-regressions.yml",
 }
+WEBSITE_DEMO_INPUTS = {
+    "website/package.json",
+    "website/scripts/check-build.js",
+    "website/scripts/refresh-demo-assets.js",
+    "website/scripts/render-demo.js",
+    "website/scripts/share-skiko-runtime.js",
+    "website/scripts/skiko-runtime.js",
+}
 
 
 def is_release_pr(branch):
@@ -62,6 +70,18 @@ def needs_screenshot_checks(paths, branch=""):
     return False
 
 
+def needs_demo_build(paths):
+    for path in paths:
+        if path in WEBSITE_DEMO_INPUTS:
+            return True
+        if path.startswith(("website/", "docs/")) or path == "scripts/generate-compose-unstyled-api.js":
+            continue
+
+        # Keep building demos for all paths not explicitly exempted.
+        return True
+    return False
+
+
 if __name__ == "__main__":
     base = os.environ["BASE_SHA"]
     head = os.environ["HEAD_SHA"]
@@ -79,5 +99,6 @@ if __name__ == "__main__":
     screenshots = needs_screenshot_checks(changed, branch)
     print(f"library={str(library).lower()}")
     print(f"screenshots={str(screenshots).lower()}")
+    print(f"demos={str(needs_demo_build(changed)).lower()}")
     print(f"release={str(release).lower()}")
     print(f"release_valid={str(not release or has_valid_release_scope(changed)).lower()}")

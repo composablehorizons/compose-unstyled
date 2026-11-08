@@ -9,6 +9,7 @@ on:
       - 'gradle/libs.versions.toml'
       - 'scripts/generate-compose-unstyled-api.js'
       - 'scripts/generate-demo-registry.js'
+      - '.github/scripts/select_pr_checks.py'
       - '.github/workflows/docs.yml'
       - '.github/workflows/deploy-website.yml'
       - '.github/workflows/redeploy-docs.yml'
@@ -22,11 +23,22 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Select checks from changed paths
+        id: select
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: python3 -B .github/scripts/select_pr_checks.py >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v5
+        if: steps.select.outputs.demos == 'true'
         with:
           distribution: temurin
           java-version: 17
       - uses: gradle/actions/setup-gradle@v5
+        if: steps.select.outputs.demos == 'true'
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -37,10 +49,20 @@ jobs:
         working-directory: website
         run: bun install --frozen-lockfile
       - name: Build interactive demos
+        if: steps.select.outputs.demos == 'true'
         run: ./gradlew :demo:wasmJsBrowserDistribution
       - name: Build and verify website
+        if: steps.select.outputs.demos == 'true'
         working-directory: website
         env:
           SITE_URL: https://composeunstyled.com
           BASE_PATH: /
         run: bun run build
+      - name: Build and verify website without demos
+        if: steps.select.outputs.demos == 'false'
+        working-directory: website
+        env:
+          SITE_URL: https://composeunstyled.com
+          BASE_PATH: /
+          WITHOUT_DEMOS: 'true'
+        run: bun run build:site
