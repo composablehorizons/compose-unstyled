@@ -1,9 +1,37 @@
 import unittest
 
-from select_pr_checks import has_valid_release_scope, needs_library_checks, needs_screenshot_checks
+from select_pr_checks import has_valid_release_scope, needs_demo_build, needs_library_checks, needs_screenshot_checks
 
 
 class SelectChecksTest(unittest.TestCase):
+    def test_website_and_docs_content_skip_demo_build(self):
+        self.assertEqual(needs_demo_build([
+            "website/src/pages/index.astro",
+            "website/scripts/prepare-docs.js",
+            "docs/pages/button.md",
+            "docs/docs.yml",
+            "scripts/generate-compose-unstyled-api.js",
+        ]), False)
+
+    def test_demo_inputs_run_demo_build(self):
+        for path in [
+            "demo/src/commonMain/kotlin/Demo.kt",
+            "composeunstyled-button/src/commonMain/kotlin/Button.kt",
+            "gradle/libs.versions.toml",
+            "scripts/generate-demo-registry.js",
+            "website/package.json",
+            "website/scripts/check-build.js",
+            "website/scripts/refresh-demo-assets.js",
+            "website/scripts/render-demo.js",
+            "website/scripts/share-skiko-runtime.js",
+            "website/scripts/skiko-runtime.js",
+            ".github/workflows/docs.yml",
+            ".github/workflows/deploy-website.yml",
+            ".github/scripts/select_pr_checks.py",
+        ]:
+            with self.subTest(path=path):
+                self.assertEqual(needs_demo_build(["docs/pages/button.md", path]), True)
+
     def test_website_only_skips_library_checks(self):
         self.assertEqual(needs_library_checks([
             "website/src/layouts/SiteLayout.astro",
