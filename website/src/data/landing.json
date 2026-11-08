@@ -31,6 +31,11 @@
             "name": "FeedFlow",
             "src": "/brands/feedflow.svg",
             "sourceUrl": "https://github.com/prof18/feed-flow/blob/f2bae7fdcf5592508c082bfebe93d5840e130c53/desktopApp/src/jvmMain/kotlin/com/prof18/feedflow/desktop/ui/components/ScrollbarStyle.kt#L50-L56"
+        },
+        {
+            "name": "Robomori",
+            "src": "/brands/robomori.png",
+            "sourceUrl": "https://robomori.com"
         }
     ]
 }
