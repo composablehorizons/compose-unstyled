@@ -1,3 +1,5 @@
 ---
-return Astro.redirect('https://github.com/composablehorizons/compose-unstyled', 301);
+import { withRef } from '../../../external-links.js';
+
+return Astro.redirect(withRef('https://github.com/composablehorizons/compose-unstyled'), 301);
 ---

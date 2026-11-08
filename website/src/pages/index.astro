@@ -1,4 +1,5 @@
 ---
+import ExternalLink from '../components/ExternalLink.astro';
 import LandingLayout from '../layouts/LandingLayout.astro';
 import { brands } from '../data/landing.json';
 import { sitePath } from '../../site.config.js';
@@ -21,9 +22,9 @@ const theming = themingSection
         <h1 class="headerLarge">The missing design system layer for Jetpack Compose</h1>
         <p class="bodyMedium">Accessible, renderless components and a flexible theming system for Jetpack Compose and Compose Multiplatform. Add only the modules you need to build high quality apps and design systems for every platform.</p>
         <div class="unstyled-hero-actions">
-          <a href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow" class="landing-link">
+          <ExternalLink href="https://github.com/composablehorizons/compose-unstyled" rel="nofollow" class="landing-link">
             View on Github (1,227 stars) →
-          </a>
+          </ExternalLink>
           <a href={sitePath('/docs/getting-started/installation/')} class="landing-link">Get Started →</a>
         </div>
       </div>
@@ -40,7 +41,7 @@ const theming = themingSection
               <img class:list={{ 'unstyled-brand-monochrome': brand.monochrome }} src={sitePath(brand.src)} alt="" width="64" height="64" loading="lazy" />
             </div>
             {brand.sourceUrl ? (
-              <a class="landing-link unstyled-brand-name" href={brand.sourceUrl} target="_blank" rel="noopener noreferrer">{brand.name}</a>
+              <ExternalLink class="landing-link unstyled-brand-name" href={brand.sourceUrl}>{brand.name}</ExternalLink>
             ) : (
               <span class="unstyled-brand-name">{brand.name}</span>
             )}

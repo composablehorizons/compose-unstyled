@@ -1,0 +1,6 @@
+---
+import { withRef } from '../../external-links.js';
+
+const { href, rel = '', ...attributes } = Astro.props;
+---
+<a {...attributes} href={withRef(href)} target="_blank" rel={`noopener noreferrer ${rel}`.trim()}><slot /></a>

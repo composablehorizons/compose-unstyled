@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { withRef } from '../external-links.js';
 
 export const escapeHtml = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 export const readCodeAttribute = (meta, name) => {
@@ -21,7 +22,7 @@ ${tabs.map((tab, index) => `<button type="button" class="code-tab" role="tab" id
   return `<div class="code-toolbar">
 ${tabList || `<span class="code-filename"${language ? ` data-filetype="${language}"` : ''}>${escapeHtml(title)}</span>`}
 <div class="code-actions">
-${githubUrl ? `<a href="${escapeHtml(githubUrl)}" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub" title="View source on GitHub">${icons.github}</a>` : ''}
+${githubUrl ? `<a href="${escapeHtml(withRef(githubUrl))}" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub" title="View source on GitHub">${icons.github}</a>` : ''}
 ${expandable ? `<button type="button" data-code-toggle aria-label="Expand code" title="Expand code" aria-expanded="false" aria-controls="${codeId}" disabled><span class="code-expand-icon">${icons.maximize}</span><span class="code-collapse-icon">${icons.minimize}</span></button>` : ''}
 <button type="button" data-code-copy aria-label="Copy code" title="Copy code" disabled>${icons.copy}</button>
 </div>
