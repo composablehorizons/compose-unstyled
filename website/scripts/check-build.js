@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { refDomain } from '../external-links.js';
 import { site, sitePath, siteUrl } from '../site.config.js';
 import { sharedSkikoUrl } from './skiko-runtime.js';
 
@@ -23,6 +24,8 @@ for (const file of pages) {
         assert.equal(attributes.target, '_blank', `${file}: external link must open in a new tab: ${url}`);
         const rel = new Set((attributes.rel || '').split(/\s+/));
         assert(rel.has('noopener') && rel.has('noreferrer'), `${file}: external link is missing safe rel attributes: ${url}`);
+        const { searchParams } = new URL(attributes.href.replaceAll('&amp;', '&'), site);
+        assert.equal(searchParams.get('ref'), refDomain, `${file}: external link must use ExternalLink or withRef: ${url}`);
       }
     }
     for (const [, value] of tag.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) {

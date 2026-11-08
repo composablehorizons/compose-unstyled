@@ -1,3 +1,4 @@
+import { withRef } from '../external-links.js';
 import { site } from '../site.config.js';
 
 const siteOrigin = new URL(site).origin;
@@ -11,6 +12,7 @@ export default {
       if (!href || !URL.canParse(href, site)) return;
       const url = new URL(href, site);
       if (!['http:', 'https:'].includes(url.protocol) || url.origin === siteOrigin) return;
+      ctx.setProperty(node, 'href', withRef(url.href));
       ctx.setProperty(node, 'target', '_blank');
       const rel = node.properties.rel || [];
       ctx.setProperty(node, 'rel', [...new Set([

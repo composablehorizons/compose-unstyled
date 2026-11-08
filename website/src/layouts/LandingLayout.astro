@@ -1,4 +1,5 @@
 ---
+import ExternalLink from '../components/ExternalLink.astro';
 import Favicon from '../components/Favicon.astro';
 import Analytics from '../components/Analytics.astro';
 import '../styles/tokens.css';
@@ -48,16 +49,16 @@ const socialImageUrl = siteUrl('/og_unstyled.png');
     </header>
     <main id="main"><slot /></main>
     <footer class="landing-footer">
-      <a class="landing-brand titleMedium" href="https://composables.com" target="_blank" rel="noopener noreferrer nofollow">
+      <ExternalLink class="landing-brand titleMedium" href="https://composables.com" rel="nofollow">
         Made by
         <span class="landing-composables-name">
           <img class="landing-composables-logo" src={sitePath('/icons/composables-logo.svg')} width="22" height="22" alt="" />
           Composables
         </span>
-      </a>
+      </ExternalLink>
       <nav aria-label="Footer navigation">
         <a class="landing-link" href={sitePath('/docs/')}>Documentation</a>
-        <a class="landing-link" href="https://github.com/composablehorizons/compose-unstyled" target="_blank" rel="noopener noreferrer nofollow">GitHub</a>
+        <ExternalLink class="landing-link" href="https://github.com/composablehorizons/compose-unstyled" rel="nofollow">GitHub</ExternalLink>
         <a class="landing-link" href={sitePath('/llms.txt')}>llms.txt</a>
       </nav>
     </footer>
