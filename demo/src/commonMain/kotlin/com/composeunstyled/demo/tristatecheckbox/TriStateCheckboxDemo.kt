@@ -56,11 +56,8 @@ import com.composeunstyled.Text
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTriStateCheckbox
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -108,21 +105,21 @@ fun TriStateCheckboxDemo() {
             modifier = Modifier
               .clip(RectangleShape)
               .size(24.dp)
-              .background(Theme[colors][surfaceToken], RectangleShape)
-              .border(1.dp, Theme[colors][borderToken], RectangleShape),
+              .background(Theme.get<DemoColors>().surface, RectangleShape)
+              .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
             indication = LocalIndication.current,
           ) { state ->
             when (state) {
               ToggleableState.On -> UnstyledIcon(
                 Lucide.Check,
                 contentDescription = null,
-                tint = Theme[colors][contentToken],
+                tint = Theme.get<DemoColors>().content,
               )
 
               ToggleableState.Indeterminate -> UnstyledIcon(
                 Lucide.Minus,
                 contentDescription = null,
-                tint = Theme[colors][contentToken],
+                tint = Theme.get<DemoColors>().content,
               )
 
               ToggleableState.Off -> Unit
@@ -132,7 +129,7 @@ fun TriStateCheckboxDemo() {
           Spacer(Modifier.width(12.dp))
           Text(
             "Select All",
-            color = Theme[colors][contentToken],
+            color = Theme.get<DemoColors>().content,
           )
         }
       }
@@ -157,19 +154,19 @@ fun TriStateCheckboxDemo() {
               modifier = Modifier
                 .clip(RectangleShape)
                 .size(24.dp)
-                .background(Theme[colors][surfaceToken], RectangleShape)
-                .border(1.dp, Theme[colors][borderToken], RectangleShape),
+                .background(Theme.get<DemoColors>().surface, RectangleShape)
+                .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
               indication = LocalIndication.current,
             ) {
               UnstyledIcon(
                 Lucide.Check,
                 contentDescription = null,
-                tint = Theme[colors][contentToken],
+                tint = Theme.get<DemoColors>().content,
               )
             }
 
             Spacer(Modifier.width(12.dp))
-            Text(option, color = Theme[colors][contentToken])
+            Text(option, color = Theme.get<DemoColors>().content)
           }
         }
       }

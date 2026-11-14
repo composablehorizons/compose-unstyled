@@ -80,7 +80,7 @@ private fun DemoContent(startDestination: String) {
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(Theme[colors][backgroundToken]),
+      .background(Theme.get<DemoColors>().background),
   ) {
     DemoSelection(startDestination)
   }
@@ -159,7 +159,7 @@ private fun AppBar(onUpClick: () -> Unit, title: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .background(Theme[colors][backgroundToken])
+      .background(Theme.get<DemoColors>().background)
       .padding(WindowInsets.statusBars.asPaddingValues())
       .padding(4.dp),
     verticalAlignment = Alignment.CenterVertically,

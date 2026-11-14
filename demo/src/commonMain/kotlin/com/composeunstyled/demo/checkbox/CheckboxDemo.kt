@@ -47,11 +47,8 @@ import androidx.compose.ui.unit.dp
 import com.composeunstyled.CheckedIndicator
 import com.composeunstyled.UnstyledCheckbox
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -73,8 +70,8 @@ fun CheckboxDemo() {
       CheckedIndicator(
         modifier = Modifier
           .size(24.dp)
-          .background(Theme[colors][surfaceToken], RectangleShape)
-          .border(1.dp, Theme[colors][borderToken], RectangleShape),
+          .background(Theme.get<DemoColors>().surface, RectangleShape)
+          .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
         indication = LocalIndication.current,
       ) {
         UnstyledIcon(checkIcon())
@@ -85,7 +82,7 @@ fun CheckboxDemo() {
 
 @Composable
 private fun checkIcon(): ImageVector {
-  val color = Theme[colors][contentToken]
+  val color = Theme.get<DemoColors>().content
   return remember(color) {
     ImageVector.Builder(
       name = "Check",

@@ -67,11 +67,8 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledTextField
 import com.composeunstyled.Viewport
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerImeDemoValue {
@@ -107,8 +104,8 @@ fun DrawerImeDemo() {
         onClick = { drawerState.targetValue = DrawerImeDemoValue.Open },
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
         modifier = Modifier.background(
-          Theme[colors][surfaceToken],
-        ).border(1.dp, Theme[colors][borderToken]),
+          Theme.get<DemoColors>().surface,
+        ).border(1.dp, Theme.get<DemoColors>().border),
         indication = LocalIndication.current,
       ) {
         Text("Open drawer")
@@ -134,8 +131,8 @@ fun DrawerImeDemo() {
             modifier = Modifier
               .widthIn(max = 640.dp)
               .fillMaxWidth()
-              .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][borderToken]),
+              .background(Theme.get<DemoColors>().surface)
+              .border(1.dp, Theme.get<DemoColors>().border),
           ) {
             Box {
               Column(
@@ -161,14 +158,14 @@ fun DrawerImeDemo() {
                   modifier = Modifier.fillMaxWidth(),
                   accessibilityLabel = "First field",
                   lineLimits = TextFieldLineLimits.SingleLine,
-                  cursorBrush = SolidColor(Theme[colors][contentToken]),
+                  cursorBrush = SolidColor(Theme.get<DemoColors>().content),
                   textStyle = fieldTextStyle,
                 ) {
                   Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextInput(
                       modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, Theme[colors][borderToken])
+                        .border(1.dp, Theme.get<DemoColors>().border)
                         .padding(horizontal = 12.dp, vertical = 10.dp),
                       placeholder = {
                         Text("Type here", style = fieldTextStyle)
@@ -182,8 +179,8 @@ fun DrawerImeDemo() {
                   contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                   modifier = Modifier
                     .fillMaxWidth()
-                    .background(Theme[colors][surfaceToken])
-                    .border(1.dp, Theme[colors][borderToken]),
+                    .background(Theme.get<DemoColors>().surface)
+                    .border(1.dp, Theme.get<DemoColors>().border),
                   indication = LocalIndication.current,
                 ) {
                   Text("Close drawer")
@@ -199,7 +196,9 @@ fun DrawerImeDemo() {
                 contentAlignment = Alignment.TopCenter,
               ) {
                 DragHandle {
-                  Box(Modifier.width(32.dp).height(4.dp).background(Theme[colors][contentToken]))
+                  Box(
+                    Modifier.width(32.dp).height(4.dp).background(Theme.get<DemoColors>().content),
+                  )
                 }
               }
             }

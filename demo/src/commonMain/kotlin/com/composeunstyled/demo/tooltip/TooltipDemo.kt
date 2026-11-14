@@ -63,12 +63,8 @@ import com.composeunstyled.TooltipPlacement
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.UnstyledTooltip
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.focusRingToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.focusRing
 import com.composeunstyled.theme.Theme
 
@@ -104,9 +100,9 @@ fun TooltipDemo() {
           onClick = { },
           modifier = Modifier
             .clip(CircleShape)
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], CircleShape)
-            .focusRing(interactionSource, 1.dp, Theme[colors][focusRingToken], CircleShape),
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border, CircleShape)
+            .focusRing(interactionSource, 1.dp, Theme.get<DemoColors>().focusRing, CircleShape),
           interactionSource = interactionSource,
           indication = LocalIndication.current,
         ) {
@@ -114,7 +110,7 @@ fun TooltipDemo() {
             UnstyledIcon(
               imageVector = Lucide.BellDot,
               contentDescription = null,
-              tint = Theme[colors][contentToken],
+              tint = Theme.get<DemoColors>().content,
             )
           }
         }
@@ -153,11 +149,11 @@ private fun TooltipContainer() {
   Box(
     modifier = Modifier
       .clip(RoundedCornerShape(100))
-      .background(Theme[colors][surfaceToken])
-      .border(1.dp, Theme[colors][borderToken], RoundedCornerShape(100))
+      .background(Theme.get<DemoColors>().surface)
+      .border(1.dp, Theme.get<DemoColors>().border, RoundedCornerShape(100))
       .padding(vertical = 8.dp, horizontal = 12.dp),
   ) {
-    Text("Notifications", color = Theme[colors][contentToken])
+    Text("Notifications", color = Theme.get<DemoColors>().content)
   }
 }
 
@@ -180,7 +176,7 @@ private fun TooltipArrow(placement: TooltipPlacement) {
     AnchorSide.End -> 90f
   }
 
-  ArrowUp(modifier.rotate(degrees), Theme[colors][borderToken])
+  ArrowUp(modifier.rotate(degrees), Theme.get<DemoColors>().border)
 }
 
 @Composable

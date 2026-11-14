@@ -59,11 +59,8 @@ import com.composeunstyled.DisclosureButton
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledDisclosure
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -83,8 +80,8 @@ fun DisclosureDemo() {
         modifier = Modifier
           .widthIn(max = 560.dp)
           .clip(RectangleShape)
-          .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][borderToken], RectangleShape),
+          .background(Theme.get<DemoColors>().surface)
+          .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
       ) {
         DisclosureButton(
           modifier = Modifier.fillMaxWidth(),
@@ -101,7 +98,7 @@ fun DisclosureDemo() {
               imageVector = Lucide.ChevronDown,
               contentDescription = null,
               modifier = Modifier.rotate(degrees),
-              tint = Theme[colors][contentToken],
+              tint = Theme.get<DemoColors>().content,
             )
           }
         }

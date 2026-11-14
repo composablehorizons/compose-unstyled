@@ -48,11 +48,8 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerPeekDemoValue {
@@ -82,8 +79,8 @@ fun DrawerPeekDemo() {
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
-        .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken]),
+        .background(Theme.get<DemoColors>().surface)
+        .border(1.dp, Theme.get<DemoColors>().border),
       indication = LocalIndication.current,
     ) {
       Text("Show drawer")
@@ -97,8 +94,8 @@ fun DrawerPeekDemo() {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken])
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border)
             .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
         ) {
           Column(
@@ -111,7 +108,7 @@ fun DrawerPeekDemo() {
                 Modifier
                   .width(32.dp)
                   .height(4.dp)
-                  .background(Theme[colors][contentToken]),
+                  .background(Theme.get<DemoColors>().content),
               )
             }
             Text("Here is the content of the drawer.")
@@ -119,8 +116,8 @@ fun DrawerPeekDemo() {
               onClick = { drawerState.targetValue = DrawerPeekDemoValue.Expanded },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Expand")
@@ -129,8 +126,8 @@ fun DrawerPeekDemo() {
               onClick = { drawerState.targetValue = DrawerPeekDemoValue.Peek },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Peek")

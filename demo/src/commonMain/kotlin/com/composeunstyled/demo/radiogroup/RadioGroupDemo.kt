@@ -50,11 +50,8 @@ import com.composeunstyled.SelectedIndicator
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledRadioButton
 import com.composeunstyled.UnstyledRadioGroup
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -104,12 +101,12 @@ fun RadioGroupDemo() {
                     .clip(CircleShape)
                     .background(
                       if (selected) {
-                        Theme[colors][contentToken]
+                        Theme.get<DemoColors>().content
                       } else {
-                        Theme[colors][surfaceToken]
+                        Theme.get<DemoColors>().surface
                       },
                     )
-                    .border(1.dp, Theme[colors][borderToken], CircleShape),
+                    .border(1.dp, Theme.get<DemoColors>().border, CircleShape),
                   contentAlignment = Alignment.Center,
                 ) {
                   SelectedIndicator(
@@ -119,7 +116,7 @@ fun RadioGroupDemo() {
                       Modifier
                         .size(8.dp)
                         .clip(CircleShape)
-                        .background(Theme[colors][surfaceToken]),
+                        .background(Theme.get<DemoColors>().surface),
                     )
                   }
                 }

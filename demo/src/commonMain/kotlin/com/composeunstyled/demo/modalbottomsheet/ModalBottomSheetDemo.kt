@@ -51,11 +51,8 @@ import com.composeunstyled.SheetDetent.Companion.Hidden
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledModalBottomSheet
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.scrimToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.rememberModalBottomSheetState
 import com.composeunstyled.theme.Theme
 
@@ -79,8 +76,8 @@ fun ModalBottomSheetDemo() {
       onClick = { modalSheetState.targetDetent = Peek },
       modifier = Modifier
         .heightIn(32.dp)
-        .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken]),
+        .background(Theme.get<DemoColors>().surface)
+        .border(1.dp, Theme.get<DemoColors>().border),
       contentPadding = PaddingValues(horizontal = 10.dp),
       indication = LocalIndication.current,
     ) {
@@ -91,7 +88,7 @@ fun ModalBottomSheetDemo() {
       state = modalSheetState,
       overlay = {
         Scrim(
-          scrimColor = Theme[colors][scrimToken],
+          scrimColor = Theme.get<DemoColors>().scrim,
           enter = fadeIn(),
           exit = fadeOut(),
         )
@@ -106,8 +103,8 @@ fun ModalBottomSheetDemo() {
           modifier = Modifier
             .widthIn(max = 640.dp)
             .fillMaxWidth()
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken]),
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border),
         ) {
           Box(
             modifier = Modifier.fillMaxWidth().height(1000.dp),
@@ -116,7 +113,7 @@ fun ModalBottomSheetDemo() {
             DragIndication(
               modifier = Modifier
                 .padding(top = 22.dp)
-                .background(Theme[colors][borderToken])
+                .background(Theme.get<DemoColors>().border)
                 .size(32.dp, 4.dp),
               indication = LocalIndication.current,
             )

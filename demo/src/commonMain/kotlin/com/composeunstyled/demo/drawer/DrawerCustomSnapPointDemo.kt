@@ -46,10 +46,8 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerCustomSnapPointDemoValue {
@@ -86,8 +84,8 @@ fun DrawerCustomSnapPointDemo() {
         onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Half },
         contentPadding = PaddingValues(12.dp),
         modifier = Modifier
-          .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][borderToken]),
+          .background(Theme.get<DemoColors>().surface)
+          .border(1.dp, Theme.get<DemoColors>().border),
         indication = LocalIndication.current,
       ) {
         Text("Show half")
@@ -103,8 +101,8 @@ fun DrawerCustomSnapPointDemo() {
           modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken])
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border)
             .padding(24.dp),
         ) {
           Column(
@@ -117,8 +115,8 @@ fun DrawerCustomSnapPointDemo() {
               onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Open },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Open fully")
@@ -127,8 +125,8 @@ fun DrawerCustomSnapPointDemo() {
               onClick = { drawerState.targetValue = DrawerCustomSnapPointDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Close")

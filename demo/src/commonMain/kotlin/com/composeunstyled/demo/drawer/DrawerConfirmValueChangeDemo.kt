@@ -59,10 +59,8 @@ import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.UnstyledIcon
 import com.composeunstyled.Viewport
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerConfirmValueChangeDemoValue {
@@ -94,8 +92,8 @@ fun DrawerConfirmValueChangeDemo() {
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
-        .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken]),
+        .background(Theme.get<DemoColors>().surface)
+        .border(1.dp, Theme.get<DemoColors>().border),
       indication = LocalIndication.current,
     ) {
       Text("Open drawer")
@@ -109,8 +107,8 @@ fun DrawerConfirmValueChangeDemo() {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken])
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border)
             .padding(24.dp),
         ) {
           Column(
@@ -132,8 +130,8 @@ fun DrawerConfirmValueChangeDemo() {
                   modifier = Modifier
                     .clip(RectangleShape)
                     .size(24.dp)
-                    .background(Theme[colors][surfaceToken], RectangleShape)
-                    .border(1.dp, Theme[colors][borderToken], RectangleShape),
+                    .background(Theme.get<DemoColors>().surface, RectangleShape)
+                    .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
                   indication = LocalIndication.current,
                 ) {
                   UnstyledIcon(Lucide.Check)
@@ -146,8 +144,8 @@ fun DrawerConfirmValueChangeDemo() {
               onClick = { drawerState.targetValue = DrawerConfirmValueChangeDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Close")

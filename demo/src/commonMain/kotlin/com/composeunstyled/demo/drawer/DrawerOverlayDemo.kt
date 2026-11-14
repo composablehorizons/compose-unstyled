@@ -51,12 +51,8 @@ import com.composeunstyled.UnstyledButton
 import com.composeunstyled.UnstyledDrawer
 import com.composeunstyled.UnstyledDrawerState
 import com.composeunstyled.Viewport
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.scrimToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private enum class DrawerOverlayDemoValue {
@@ -84,8 +80,8 @@ fun DrawerOverlayDemo() {
       contentPadding = PaddingValues(12.dp),
       modifier = Modifier
         .align(Alignment.Center)
-        .background(Theme[colors][surfaceToken])
-        .border(1.dp, Theme[colors][borderToken]),
+        .background(Theme.get<DemoColors>().surface)
+        .border(1.dp, Theme.get<DemoColors>().border),
       indication = LocalIndication.current,
     ) {
       Text("Open drawer")
@@ -97,7 +93,7 @@ fun DrawerOverlayDemo() {
       overlay = {
         Overlay(
           modifier = Modifier.fillMaxSize().background(
-            Theme[colors][scrimToken],
+            Theme.get<DemoColors>().scrim,
           ),
           enter = fadeIn(),
           exit = fadeOut(),
@@ -108,8 +104,8 @@ fun DrawerOverlayDemo() {
         Panel(
           modifier = Modifier
             .fillMaxWidth()
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken])
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border)
             .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
         ) {
           Column(
@@ -122,7 +118,7 @@ fun DrawerOverlayDemo() {
                 Modifier
                   .width(32.dp)
                   .height(4.dp)
-                  .background(Theme[colors][contentToken]),
+                  .background(Theme.get<DemoColors>().content),
               )
             }
             Text("Here is the content of the drawer.")
@@ -130,8 +126,8 @@ fun DrawerOverlayDemo() {
               onClick = { drawerState.targetValue = DrawerOverlayDemoValue.Closed },
               contentPadding = PaddingValues(12.dp),
               modifier = Modifier
-                .background(Theme[colors][surfaceToken])
-                .border(1.dp, Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().surface)
+                .border(1.dp, Theme.get<DemoColors>().border),
               indication = LocalIndication.current,
             ) {
               Text("Close")

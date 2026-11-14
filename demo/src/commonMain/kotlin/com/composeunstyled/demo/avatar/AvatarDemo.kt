@@ -38,10 +38,8 @@ import androidx.compose.ui.unit.dp
 import com.composables.uripainter.rememberUriPainter
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledAvatar
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.inputBackgroundToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -63,8 +61,8 @@ fun AvatarDemo() {
       modifier = Modifier
         .size(32.dp)
         .clip(CircleShape)
-        .border(1.dp, Theme[colors][surfaceToken], CircleShape)
-        .background(Theme[colors][inputBackgroundToken]),
+        .border(1.dp, Theme.get<DemoColors>().surface, CircleShape)
+        .background(Theme.get<DemoColors>().inputBackground),
       contentScale = ContentScale.Crop,
     )
     val painter = rememberUriPainter(
@@ -81,8 +79,8 @@ fun AvatarDemo() {
       modifier = Modifier
         .size(48.dp)
         .clip(CircleShape)
-        .border(1.dp, Theme[colors][surfaceToken], CircleShape)
-        .background(Theme[colors][inputBackgroundToken]),
+        .border(1.dp, Theme.get<DemoColors>().surface, CircleShape)
+        .background(Theme.get<DemoColors>().inputBackground),
       contentScale = ContentScale.Crop,
     )
     UnstyledAvatar(
@@ -94,8 +92,8 @@ fun AvatarDemo() {
       modifier = Modifier
         .size(56.dp)
         .clip(CircleShape)
-        .border(1.dp, Theme[colors][surfaceToken], CircleShape)
-        .background(Theme[colors][inputBackgroundToken]),
+        .border(1.dp, Theme.get<DemoColors>().surface, CircleShape)
+        .background(Theme.get<DemoColors>().inputBackground),
       contentScale = ContentScale.Crop,
     )
   }

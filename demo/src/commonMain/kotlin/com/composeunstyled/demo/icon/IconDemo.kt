@@ -32,9 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Heart
 import com.composables.icons.lucide.Lucide
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -48,7 +47,7 @@ fun IconDemo() {
     UnstyledIcon(
       imageVector = Lucide.Heart,
       contentDescription = "Favorite",
-      tint = Theme[colors][contentToken],
+      tint = Theme.get<DemoColors>().content,
       modifier = Modifier.size(90.dp),
     )
   }
