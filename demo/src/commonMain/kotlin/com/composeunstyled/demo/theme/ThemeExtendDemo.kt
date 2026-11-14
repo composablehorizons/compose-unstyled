@@ -35,9 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.Text
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
 import com.composeunstyled.theme.Theme
 import com.composeunstyled.theme.buildThemeV2
 
@@ -47,7 +46,7 @@ import com.composeunstyled.theme.buildThemeV2
 fun ThemeExtendDemo() {
   val ExtendedTheme = buildThemeV2 {
     defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
-    defaultContentColor = Theme[colors][contentToken]
+    defaultContentColor = Theme.get<DemoColors>().content
     extend { content ->
       CompositionLocalProvider(LocalDensity provides Density(4.0f)) {
         content()

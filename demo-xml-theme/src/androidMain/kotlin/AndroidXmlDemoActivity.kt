@@ -50,8 +50,6 @@ import com.composeunstyled.ProvideTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.UnstyledButton
 import com.composeunstyled.theme.Theme
-import com.composeunstyled.theme.ThemeProperty
-import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildTheme
 import com.composeunstyled.theme.resolveThemeColor
 import com.composeunstyled.theme.resolveThemeDp
@@ -78,20 +76,22 @@ class AndroidXmlDemoActivity : ComponentActivity() {
   }
 }
 
-val colors = ThemeProperty<Color>("colors")
+data class AppColors(
+  val background: Color,
+  val onBackground: Color,
+  val primary: Color,
+  val onPrimary: Color,
+)
 
-val background = ThemeToken<Color>("background")
-val onBackground = ThemeToken<Color>("onBackground")
-val primary = ThemeToken<Color>("primary")
-val onPrimary = ThemeToken<Color>("onPrimary")
+data class AppSpacing(
+  val small: Dp,
+  val medium: Dp,
+  val large: Dp,
+)
 
-val spacing = ThemeProperty<Dp>("spacing")
-val small = ThemeToken<Dp>("small")
-val medium = ThemeToken<Dp>("medium")
-val large = ThemeToken<Dp>("large")
-
-val textStyles = ThemeProperty<TextStyle>("textStyles")
-val body = ThemeToken<TextStyle>("body")
+data class AppTextStyles(
+  val body: TextStyle,
+)
 
 val AppTheme = buildTheme {
   // get a reference to the calling (themed) context
@@ -101,23 +101,29 @@ val AppTheme = buildTheme {
   defaultIndication = ripple()
 
   // map your XML colors to Compose
-  properties[colors] = mapOf(
-    background to resolveThemeColor(context, R.attr.color_background),
-    onBackground to resolveThemeColor(context, R.attr.color_onBackground),
-    primary to resolveThemeColor(context, R.attr.color_primary),
-    onPrimary to resolveThemeColor(context, R.attr.color_onPrimary),
+  provide(
+    AppColors(
+      background = resolveThemeColor(context, R.attr.color_background),
+      onBackground = resolveThemeColor(context, R.attr.color_onBackground),
+      primary = resolveThemeColor(context, R.attr.color_primary),
+      onPrimary = resolveThemeColor(context, R.attr.color_onPrimary),
+    ),
   )
 
   // map your XML dimens to Compose
-  properties[spacing] = mapOf(
-    small to resolveThemeDp(context, R.attr.spacing_small),
-    medium to resolveThemeDp(context, R.attr.spacing_medium),
-    large to resolveThemeDp(context, R.attr.spacing_large),
+  provide(
+    AppSpacing(
+      small = resolveThemeDp(context, R.attr.spacing_small),
+      medium = resolveThemeDp(context, R.attr.spacing_medium),
+      large = resolveThemeDp(context, R.attr.spacing_large),
+    ),
   )
 
   // map your XML typography to Compose
-  properties[textStyles] = mapOf(
-    body to resolveThemeTextAppearance(context, R.attr.textStyle_body),
+  provide(
+    AppTextStyles(
+      body = resolveThemeTextAppearance(context, R.attr.textStyle_body),
+    ),
   )
 }
 
@@ -127,21 +133,21 @@ fun App() {
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .background(Theme[colors][background]),
+        .background(Theme.get<AppColors>().background),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      ProvideTextStyle(Theme[textStyles][body]) {
-        ProvideContentColor(Theme[colors][onBackground]) {
+      ProvideTextStyle(Theme.get<AppTextStyles>().body) {
+        ProvideContentColor(Theme.get<AppColors>().onBackground) {
           Text("Hello Styled World!")
 
-          Spacer(Modifier.height(Theme[spacing][large]))
+          Spacer(Modifier.height(Theme.get<AppSpacing>().large))
 
           UnstyledButton(
             onClick = {},
             modifier = Modifier
               .clip(RoundedCornerShape(100))
-              .background(Theme[colors][primary]),
+              .background(Theme.get<AppColors>().primary),
           ) {
             Text("Click Me", modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
           }

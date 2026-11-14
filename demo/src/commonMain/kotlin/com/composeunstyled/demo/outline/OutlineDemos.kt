@@ -35,13 +35,9 @@ import com.composeunstyled.CrossAxisAlignment
 import com.composeunstyled.MainAxisArrangement
 import com.composeunstyled.Stack
 import com.composeunstyled.StackOrientation
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.SimpleButton
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.errorToken
-import com.composeunstyled.demo.focusRingToken
-import com.composeunstyled.demo.highlightToken
-import com.composeunstyled.demo.successToken
 import com.composeunstyled.outline
 import com.composeunstyled.theme.Theme
 
@@ -73,7 +69,7 @@ private fun OutlineBasicDemo() {
   SimpleButton(
     modifier = Modifier.outline(
       width = 2.dp,
-      color = Theme[colors][focusRingToken],
+      color = Theme.get<DemoColors>().focusRing,
       shape = RectangleShape,
       offset = 2.dp,
     ),
@@ -86,7 +82,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 1.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -94,7 +90,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -102,7 +98,7 @@ private fun OutlineWidthDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 4.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -117,7 +113,7 @@ private fun OutlineShapeDemo() {
       shape = RectangleShape,
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -126,7 +122,7 @@ private fun OutlineShapeDemo() {
       shape = RoundedCornerShape(8.dp),
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RoundedCornerShape(8.dp),
         offset = 2.dp,
       ),
@@ -135,7 +131,7 @@ private fun OutlineShapeDemo() {
       shape = CircleShape,
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = CircleShape,
         offset = 2.dp,
       ),
@@ -149,7 +145,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 0.dp,
       ),
@@ -157,7 +153,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 4.dp,
       ),
@@ -165,7 +161,7 @@ private fun OutlineOffsetDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][focusRingToken],
+        color = Theme.get<DemoColors>().focusRing,
         shape = RectangleShape,
         offset = 8.dp,
       ),
@@ -179,7 +175,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][errorToken], // red-500
+        color = Theme.get<DemoColors>().error, // red-500
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -187,7 +183,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][successToken], // emerald-500
+        color = Theme.get<DemoColors>().success, // emerald-500
         shape = RectangleShape,
         offset = 2.dp,
       ),
@@ -195,7 +191,7 @@ private fun OutlineColorDemo() {
     SimpleButton(
       modifier = Modifier.outline(
         width = 2.dp,
-        color = Theme[colors][highlightToken], // violet-500
+        color = Theme.get<DemoColors>().highlight, // violet-500
         shape = RectangleShape,
         offset = 2.dp,
       ),

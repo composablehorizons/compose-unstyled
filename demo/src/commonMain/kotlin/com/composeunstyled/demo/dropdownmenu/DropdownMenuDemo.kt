@@ -67,12 +67,8 @@ import com.composeunstyled.UnstyledDropdownMenu
 import com.composeunstyled.UnstyledDropdownMenuItem
 import com.composeunstyled.UnstyledHorizontalSeparator
 import com.composeunstyled.UnstyledIcon
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.errorToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -108,8 +104,8 @@ fun DropdownMenuDemo() {
           modifier = Modifier
             .width(240.dp)
             .clip(RectangleShape)
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RectangleShape),
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
           enter = scaleIn(
             animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
             initialScale = 0.8f,
@@ -124,7 +120,7 @@ fun DropdownMenuDemo() {
         ) {
           options.forEachIndexed { index, option ->
             if (index == 1 || index == options.lastIndex) {
-              UnstyledHorizontalSeparator(color = Theme[colors][borderToken])
+              UnstyledHorizontalSeparator(color = Theme.get<DemoColors>().border)
             }
             UnstyledDropdownMenuItem(
               onClick = {},
@@ -145,7 +141,7 @@ fun DropdownMenuDemo() {
               ) {
                 val contentColor = (
                   if (option.dangerous) {
-                    Theme[colors][errorToken]
+                    Theme.get<DemoColors>().error
                   } else {
                     LocalContentColor.current
                   }
@@ -172,8 +168,8 @@ fun DropdownMenuDemo() {
           modifier = Modifier
             .sizeIn(minWidth = 40.dp, minHeight = 40.dp)
             .clip(RectangleShape)
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RectangleShape),
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
           indication = LocalIndication.current,
         ) {
           Row(
@@ -185,7 +181,7 @@ fun DropdownMenuDemo() {
             UnstyledIcon(
               imageVector = Lucide.ChevronDown,
               contentDescription = null,
-              tint = Theme[colors][contentToken],
+              tint = Theme.get<DemoColors>().content,
             )
           }
         }

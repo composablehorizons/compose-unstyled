@@ -51,10 +51,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composeunstyled.UnstyledSlider
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -96,14 +94,14 @@ fun SliderDemo() {
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(Theme[colors][borderToken]),
+                .background(Theme.get<DemoColors>().border),
             )
             // the 'completed' part of the track
             Box(
               Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(state.fraction)
-                .background(Theme[colors][contentToken]),
+                .background(Theme.get<DemoColors>().content),
             )
           }
         },
@@ -114,7 +112,7 @@ fun SliderDemo() {
           val isHovered by thumbInteractionSource.collectIsHoveredAsState()
           val glowColor by animateColorAsState(
             if (isFocused || isHovered) {
-              Theme[colors][contentToken].copy(0.16f)
+              Theme.get<DemoColors>().content.copy(0.16f)
             } else {
               Color.Transparent
             },
@@ -129,7 +127,7 @@ fun SliderDemo() {
                 .size(thumbSize)
                 .hoverable(thumbInteractionSource)
                 .clip(CircleShape)
-                .background(Theme[colors][contentToken]),
+                .background(Theme.get<DemoColors>().content),
             )
           }
         },

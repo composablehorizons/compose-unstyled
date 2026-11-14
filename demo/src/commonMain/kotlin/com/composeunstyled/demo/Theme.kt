@@ -21,59 +21,59 @@
  */
 package com.composeunstyled.demo
 
-import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import com.composables.compose.ripple.rememberRippleIndication
 import com.composeunstyled.theme.ColorScheme
-import com.composeunstyled.theme.ThemeProperty
-import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildThemeV2
+
+internal data class DemoColors(
+  val background: Color,
+  val surface: Color,
+  val content: Color,
+  val mutedContent: Color,
+  val border: Color,
+  val inputBackground: Color,
+  val scrim: Color,
+  val focusRing: Color,
+  val error: Color,
+  val success: Color,
+  val highlight: Color,
+)
+
+private val LightDemoColors = DemoColors(
+  background = Color(0xFFFFFFFF),
+  surface = Color(0xFFFFFFFF),
+  content = Color(0xFF1D1D1F),
+  mutedContent = Color(0xFF52525B),
+  border = Color.Black,
+  inputBackground = Color(0xFFEDEDED),
+  scrim = Color(0x52000000),
+  focusRing = Color.Black,
+  error = Color(0xFFEF4444),
+  success = Color(0xFF10B981),
+  highlight = Color(0xFF8B5CF6),
+)
+
+private val DarkDemoColors = LightDemoColors.copy(
+  background = Color(0xFF121212),
+  surface = Color(0xFF242424),
+  content = Color(0xFFE5E5E5),
+  mutedContent = Color(0xFFA1A1AA),
+  border = Color.White,
+  inputBackground = Color(0xFF303030),
+)
 
 internal val DemoTheme = buildThemeV2 {
   name = "DemoTheme"
   defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
-  colorSchemeTransitionSpec = tween(durationMillis = 200)
-  defaultContentColor = Color(0xFF1D1D1F)
+  defaultContentColor = LightDemoColors.content
   defaultIndication = rememberRippleIndication(color = Color.Black)
-  properties[colors] = mapOf(
-    backgroundToken to Color(0xFFFFFFFF),
-    surfaceToken to Color(0xFFFFFFFF),
-    contentToken to Color(0xFF1D1D1F),
-    mutedContentToken to Color(0xFF52525B),
-    borderToken to Color.Black,
-    inputBackgroundToken to Color(0xFFEDEDED),
-    scrimToken to Color(0x52000000),
-    focusRingToken to Color.Black,
-    errorToken to Color(0xFFEF4444),
-    successToken to Color(0xFF10B981),
-    highlightToken to Color(0xFF8B5CF6),
-  )
+  provide(LightDemoColors)
   colorScheme(ColorScheme.Dark) {
-    defaultContentColor = Color(0xFFE5E5E5)
+    defaultContentColor = DarkDemoColors.content
     defaultIndication = rememberRippleIndication(color = Color.White)
-    properties[colors] = mapOf(
-      backgroundToken to Color(0xFF121212),
-      surfaceToken to Color(0xFF242424),
-      contentToken to Color(0xFFE5E5E5),
-      mutedContentToken to Color(0xFFA1A1AA),
-      borderToken to Color.White,
-      inputBackgroundToken to Color(0xFF303030),
-    )
+    provide(DarkDemoColors)
   }
 }
-
-internal val colors = ThemeProperty<Color>("colors")
-
-internal val backgroundToken = ThemeToken<Color>("background")
-internal val surfaceToken = ThemeToken<Color>("surface")
-internal val contentToken = ThemeToken<Color>("content")
-internal val mutedContentToken = ThemeToken<Color>("mutedContent")
-internal val borderToken = ThemeToken<Color>("border")
-internal val inputBackgroundToken = ThemeToken<Color>("inputBackground")
-internal val scrimToken = ThemeToken<Color>("scrim")
-internal val focusRingToken = ThemeToken<Color>("focusRing")
-internal val errorToken = ThemeToken<Color>("error")
-internal val successToken = ThemeToken<Color>("success")
-internal val highlightToken = ThemeToken<Color>("highlight")

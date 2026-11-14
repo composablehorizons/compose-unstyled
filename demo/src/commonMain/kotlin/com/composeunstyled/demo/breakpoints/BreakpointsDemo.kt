@@ -48,12 +48,8 @@ import com.composeunstyled.WidthBreakpoint
 import com.composeunstyled.WindowWidthBreakpoints
 import com.composeunstyled.buildModifier
 import com.composeunstyled.currentWindowWidthBreakpoint
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.inputBackgroundToken
-import com.composeunstyled.demo.mutedContentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 private val Compact = WidthBreakpoint("compact")
@@ -84,8 +80,8 @@ fun BreakpointsDemo() {
       Stack(
         modifier = Modifier
           .widthIn(max = if (widthBreakpoint isAtLeast Expanded) 860.dp else 360.dp)
-          .background(Theme[colors][surfaceToken])
-          .border(1.dp, Theme[colors][contentToken])
+          .background(Theme.get<DemoColors>().surface)
+          .border(1.dp, Theme.get<DemoColors>().content)
           .padding(14.dp),
         orientation = if (widthBreakpoint isAtLeast Expanded) {
           StackOrientation.Horizontal
@@ -100,7 +96,7 @@ fun BreakpointsDemo() {
           contentDescription = null,
           contentScale = ContentScale.Crop,
           modifier = Modifier
-            .background(Theme[colors][inputBackgroundToken]) then buildModifier {
+            .background(Theme.get<DemoColors>().inputBackground) then buildModifier {
             if (widthBreakpoint isAtLeast Expanded) {
               add(Modifier.size(width = 320.dp, height = 280.dp))
             } else {
@@ -122,13 +118,13 @@ fun BreakpointsDemo() {
         ) {
           Text(
             text = "Adaptive layouts",
-            color = Theme[colors][contentToken],
+            color = Theme.get<DemoColors>().content,
             fontSize = 24.sp,
             lineHeight = 30.sp,
           )
           Text(
             text = "This card switches from vertical to horizontal at ${Expanded.name}",
-            color = Theme[colors][mutedContentToken],
+            color = Theme.get<DemoColors>().mutedContent,
             fontSize = 15.sp,
             lineHeight = 22.sp,
           )

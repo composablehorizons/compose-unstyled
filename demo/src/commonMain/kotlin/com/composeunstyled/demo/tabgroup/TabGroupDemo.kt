@@ -54,12 +54,8 @@ import com.composeunstyled.UnstyledTab
 import com.composeunstyled.UnstyledTabGroup
 import com.composeunstyled.UnstyledTabList
 import com.composeunstyled.UnstyledTabPanel
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.mutedContentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -133,8 +129,8 @@ fun TabGroupDemo() {
             .fillMaxWidth()
             .height(48.dp)
             .clip(RectangleShape)
-            .background(Theme[colors][surfaceToken])
-            .border(1.dp, Theme[colors][borderToken], RectangleShape),
+            .background(Theme.get<DemoColors>().surface)
+            .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
         ) {
           Row(Modifier.fillMaxSize()) {
             categories.forEach { (key, _) ->
@@ -148,16 +144,16 @@ fun TabGroupDemo() {
                     text = key,
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                     color = if (selected) {
-                      Theme[colors][contentToken]
+                      Theme.get<DemoColors>().content
                     } else {
-                      Theme[colors][mutedContentToken]
+                      Theme.get<DemoColors>().mutedContent
                     },
                   )
                   if (selected) {
                     Box(
                       modifier = Modifier
                         .background(
-                          color = Theme[colors][contentToken],
+                          color = Theme.get<DemoColors>().content,
                           shape = RectangleShape,
                         )
                         .fillMaxWidth()
@@ -178,10 +174,10 @@ fun TabGroupDemo() {
             modifier = Modifier
               .fillMaxWidth()
               .background(
-                color = Theme[colors][surfaceToken],
+                color = Theme.get<DemoColors>().surface,
                 shape = RectangleShape,
               )
-              .border(1.dp, Theme[colors][borderToken], RectangleShape),
+              .border(1.dp, Theme.get<DemoColors>().border, RectangleShape),
           ) {
             Column(Modifier.padding(16.dp)) {
               items.forEach { item ->

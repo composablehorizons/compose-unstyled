@@ -40,47 +40,47 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.focusRingToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
-import com.composeunstyled.theme.ThemeProperty
-import com.composeunstyled.theme.ThemeToken
 import com.composeunstyled.theme.buildThemeV2
 
-private val exampleColors = ThemeProperty<Color>("colors")
-private val textStyles = ThemeProperty<TextStyle>("textStyles")
+private data class ExampleColors(
+  val background: Color,
+  val surface: Color,
+  val primary: Color,
+  val onSurface: Color,
+  val onPrimary: Color,
+)
 
-private val background = ThemeToken<Color>("background")
-private val surface = ThemeToken<Color>("surface")
-private val primary = ThemeToken<Color>("primary")
-private val onSurface = ThemeToken<Color>("onSurface")
-private val onPrimary = ThemeToken<Color>("onPrimary")
-
-private val title = ThemeToken<TextStyle>("title")
-private val body = ThemeToken<TextStyle>("body")
+private data class ExampleTextStyles(
+  val title: TextStyle,
+  val body: TextStyle,
+)
 
 private val AppTheme = buildThemeV2 {
   name = "AppTheme"
 
-  properties[exampleColors] = mapOf(
-    background to Theme[colors][surfaceToken],
-    surface to Theme[colors][surfaceToken],
-    primary to Theme[colors][focusRingToken],
-    onSurface to Theme[colors][contentToken],
-    onPrimary to Theme[colors][surfaceToken],
+  provide(
+    ExampleColors(
+      background = Theme.get<DemoColors>().surface,
+      surface = Theme.get<DemoColors>().surface,
+      primary = Theme.get<DemoColors>().focusRing,
+      onSurface = Theme.get<DemoColors>().content,
+      onPrimary = Theme.get<DemoColors>().surface,
+    ),
   )
 
-  properties[textStyles] = mapOf(
-    title to TextStyle(
-      fontSize = 22.sp,
-      fontWeight = FontWeight.SemiBold,
-    ),
-    body to TextStyle(
-      fontSize = 15.sp,
-      lineHeight = 22.sp,
+  provide(
+    ExampleTextStyles(
+      title = TextStyle(
+        fontSize = 22.sp,
+        fontWeight = FontWeight.SemiBold,
+      ),
+      body = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 22.sp,
+      ),
     ),
   )
   defaultTextStyle = TextStyle(fontFamily = FontFamily.Monospace)
@@ -94,14 +94,14 @@ fun ThemingDemo() {
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(Theme[exampleColors][background])
+        .background(Theme.get<ExampleColors>().background)
         .padding(24.dp),
       contentAlignment = Alignment.Center,
     ) {
       Column(
         modifier = Modifier
           .background(
-            color = Theme[exampleColors][surface],
+            color = Theme.get<ExampleColors>().surface,
             shape = RectangleShape,
           )
           .padding(24.dp),
@@ -110,22 +110,22 @@ fun ThemingDemo() {
         Text(
           text = "Create a theme",
           style = LocalTextStyle.current.merge(
-            Theme[textStyles][title].copy(color = Theme[exampleColors][onSurface]),
+            Theme.get<ExampleTextStyles>().title.copy(color = Theme.get<ExampleColors>().onSurface),
           ),
         )
 
         Text(
-          text = "Define theme properties and tokens, assign values in buildThemeV2 {}, " +
-            "then read them with Theme[property][token].",
+          text = "Provide your own theme objects in buildThemeV2 {}, " +
+            "then read them with Theme.get<T>().",
           style = LocalTextStyle.current.merge(
-            Theme[textStyles][body].copy(color = Theme[exampleColors][onSurface]),
+            Theme.get<ExampleTextStyles>().body.copy(color = Theme.get<ExampleColors>().onSurface),
           ),
         )
 
         Box(
           modifier = Modifier
             .background(
-              color = Theme[exampleColors][primary],
+              color = Theme.get<ExampleColors>().primary,
               shape = RectangleShape,
             )
             .padding(horizontal = 16.dp, vertical = 10.dp),
@@ -133,8 +133,8 @@ fun ThemingDemo() {
           Text(
             text = "Themed action",
             style = LocalTextStyle.current.merge(
-              Theme[textStyles][body].copy(
-                color = Theme[exampleColors][onPrimary],
+              Theme.get<ExampleTextStyles>().body.copy(
+                color = Theme.get<ExampleColors>().onPrimary,
                 fontWeight = FontWeight.Medium,
               ),
             ),

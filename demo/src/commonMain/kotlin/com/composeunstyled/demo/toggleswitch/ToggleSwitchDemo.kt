@@ -53,12 +53,8 @@ import com.composeunstyled.Text
 import com.composeunstyled.Thumb
 import com.composeunstyled.Track
 import com.composeunstyled.UnstyledSwitch
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.inputBackgroundToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -67,7 +63,7 @@ import com.composeunstyled.theme.Theme
 fun ToggleSwitchDemo() {
   var toggled by remember { mutableStateOf(true) }
   val backgroundColor by animateColorAsState(
-    if (toggled) Theme[colors][contentToken] else Theme[colors][inputBackgroundToken],
+    if (toggled) Theme.get<DemoColors>().content else Theme.get<DemoColors>().inputBackground,
   )
   val pillShape = RoundedCornerShape(100)
 
@@ -97,15 +93,15 @@ fun ToggleSwitchDemo() {
             .height(32.dp)
             .clip(pillShape)
             .background(backgroundColor, pillShape)
-            .border(1.dp, Theme[colors][borderToken], pillShape),
+            .border(1.dp, Theme.get<DemoColors>().border, pillShape),
         ) {
           Thumb(
             animationSpec = tween(),
             modifier = Modifier
               .padding(4.dp)
               .clip(CircleShape)
-              .background(Theme[colors][surfaceToken])
-              .border(1.dp, Theme[colors][borderToken], CircleShape)
+              .background(Theme.get<DemoColors>().surface)
+              .border(1.dp, Theme.get<DemoColors>().border, CircleShape)
               .size(24.dp),
           )
         }

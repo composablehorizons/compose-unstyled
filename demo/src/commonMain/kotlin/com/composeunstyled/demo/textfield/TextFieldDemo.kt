@@ -44,11 +44,8 @@ import com.composeunstyled.LocalTextStyle
 import com.composeunstyled.Text
 import com.composeunstyled.TextInput
 import com.composeunstyled.UnstyledTextField
+import com.composeunstyled.demo.DemoColors
 import com.composeunstyled.demo.UnstyledDemo
-import com.composeunstyled.demo.borderToken
-import com.composeunstyled.demo.colors
-import com.composeunstyled.demo.contentToken
-import com.composeunstyled.demo.surfaceToken
 import com.composeunstyled.theme.Theme
 
 @Preview
@@ -76,9 +73,9 @@ fun TextFieldDemo() {
           state = displayName,
           modifier = Modifier.fillMaxWidth(),
           lineLimits = TextFieldLineLimits.SingleLine,
-          cursorBrush = SolidColor(Theme[colors][contentToken]),
+          cursorBrush = SolidColor(Theme.get<DemoColors>().content),
           textStyle = LocalTextStyle.current.copy(
-            color = Theme[colors][contentToken],
+            color = Theme.get<DemoColors>().content,
             fontSize = 14.sp,
             lineHeight = 20.sp,
           ),
@@ -87,20 +84,20 @@ fun TextFieldDemo() {
             Text(
               "Display Name",
               modifier = Modifier.padding(bottom = 8.dp),
-              color = Theme[colors][contentToken],
+              color = Theme.get<DemoColors>().content,
               fontSize = 16.sp,
               lineHeight = 24.sp,
             )
             TextInput(
               Modifier
                 .fillMaxWidth()
-                .background(Theme[colors][surfaceToken], RectangleShape)
-                .border(1.dp, Theme[colors][borderToken], RectangleShape)
+                .background(Theme.get<DemoColors>().surface, RectangleShape)
+                .border(1.dp, Theme.get<DemoColors>().border, RectangleShape)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
               placeholder = {
                 Text(
                   "Alex",
-                  color = Theme[colors][contentToken].copy(0.6f),
+                  color = Theme.get<DemoColors>().content.copy(0.6f),
                   fontSize = 14.sp,
                   lineHeight = 20.sp,
                 )
