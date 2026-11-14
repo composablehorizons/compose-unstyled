@@ -50,8 +50,44 @@ import androidx.compose.ui.unit.Dp
 import com.composeunstyled.LocalContentColor
 import com.composeunstyled.LocalMinimumComponentInteractiveSize
 import com.composeunstyled.LocalTextStyle
+import kotlin.reflect.KClass
 
 object Theme {
+  /**
+   * Returns the value of type [T] that the current theme provides with `provide()`.
+   *
+   * @throws IllegalStateException if the theme does not provide a value of type [T].
+   */
+  @Composable
+  inline fun <reified T : Any> get(): T {
+    return providedValue(T::class)
+  }
+
+  /**
+   * Returns the value of type [T] that the current theme provides with `provide()`, or `null`
+   * if it does not provide one.
+   */
+  @Composable
+  inline fun <reified T : Any> getOrNull(): T? {
+    return providedValueOrNull(T::class)
+  }
+
+  @PublishedApi
+  @Composable
+  internal fun <T : Any> providedValueOrNull(type: KClass<T>): T? {
+    @Suppress("UNCHECKED_CAST")
+    return LocalTheme.current.values[type] as T?
+  }
+
+  @PublishedApi
+  @Composable
+  internal fun <T : Any> providedValue(type: KClass<T>): T {
+    return providedValueOrNull(type) ?: error(
+      "There is no ${type.simpleName} value in the ${LocalTheme.current.name} theme. " +
+        "To fix this, call provide(${type.simpleName}(...)) in your theme definition.",
+    )
+  }
+
   @Composable
   operator fun <T> get(property: ThemeProperty<T>): ThemeValues<T> {
     val theme = LocalTheme.current
@@ -116,6 +152,7 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
 internal class ResolvedTheme(
   internal val name: String,
   internal val properties: Map<ThemeProperty<*>, ThemeValues<*>>,
+  internal val values: Map<KClass<*>, Any>,
 )
 
 internal class CompositionCallTracker {
@@ -194,6 +231,18 @@ open class ThemeBuilder internal constructor() {
   )
 
   val properties = MutableThemeProperties()
+
+  internal val providedValues = mutableStateMapOf<KClass<*>, Any>()
+
+  /**
+   * Provides [value] to the theme's content, which reads it with `Theme.get<T>()`.
+   *
+   * Values are keyed by their class: `provide(AppColors(...))` is read with
+   * `Theme.get<AppColors>()`. Providing another value of the same class replaces the previous one.
+   */
+  fun provide(value: Any) {
+    providedValues[value::class] = value
+  }
 
   internal var extendedTheme: ThemeExtension? = null
     private set
@@ -335,7 +384,10 @@ internal fun ThemeBuilderV2.render(
     touchInteractionSize = minInteractiveSize.touchInteractionSize,
     nonTouchInteractionSize = minInteractiveSize.nonTouchInteractionSize,
   )
-  val theme = ResolvedTheme(this.name, finalProperties)
+  val values = colorSchemeOverrides?.providedValues?.takeIf { it.isNotEmpty() }
+    ?.let { overrides -> providedValues + overrides }
+    ?: providedValues
+  val theme = ResolvedTheme(this.name, finalProperties, values)
 
   CompositionLocalProvider(
     LocalTheme provides theme,
@@ -404,6 +456,18 @@ class ColorSchemedThemeBuilder internal constructor() {
   var defaultComponentInteractiveSize: ComponentInteractiveSize? by mutableStateOf(null)
 
   val properties = MutableThemeProperties()
+
+  internal val providedValues = mutableStateMapOf<KClass<*>, Any>()
+
+  /**
+   * Provides [value] while this color scheme is selected, replacing any value of the same type
+   * provided outside the color scheme.
+   *
+   * @see ThemeBuilder.provide
+   */
+  fun provide(value: Any) {
+    providedValues[value::class] = value
+  }
 }
 
 @Suppress("UNCHECKED_CAST")
