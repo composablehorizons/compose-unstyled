@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.isSpecified
  * @param minLines Minimum number of lines to display.
  * @param maxLines Maximum number of lines to display.
  * @param overflow How visual overflow should be handled.
+ * @param softWrap Whether text should wrap at soft line breaks.
  */
 @Composable
 fun Text(
@@ -75,6 +76,7 @@ fun Text(
   onTextLayout: ((TextLayoutResult) -> Unit)? = null,
   overflow: TextOverflow = TextOverflow.Clip,
   autoSize: TextAutoSize? = null,
+  softWrap: Boolean = true,
 ) {
   val currentStyle = style.mergeThemed(
     textAlign = textAlign,
@@ -96,6 +98,7 @@ fun Text(
     overflow = overflow,
     autoSize = autoSize,
     onTextLayout = onTextLayout,
+    softWrap = softWrap,
   )
 }
 
@@ -118,6 +121,7 @@ fun Text(
   onTextLayout: ((TextLayoutResult) -> Unit)? = null,
   overflow: TextOverflow = TextOverflow.Clip,
   autoSize: TextAutoSize? = null,
+  softWrap: Boolean = true,
 ) {
   val currentStyle = style.mergeThemed(
     textAlign = textAlign,
@@ -139,6 +143,7 @@ fun Text(
     overflow = overflow,
     autoSize = autoSize,
     onTextLayout = onTextLayout,
+    softWrap = softWrap,
   )
 }
 
