@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositeKeyHashCode
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.currentCompositeKeyHashCode
 import androidx.compose.runtime.getValue
@@ -76,7 +77,7 @@ object Theme {
   @Composable
   internal fun <T : Any> providedValueOrNull(type: KClass<T>): T? {
     @Suppress("UNCHECKED_CAST")
-    return LocalTheme.current.values[type] as T?
+    return LocalTheme.current.value(type) as T?
   }
 
   @PublishedApi
@@ -93,7 +94,7 @@ object Theme {
     val theme = LocalTheme.current
 
     @Suppress("UNCHECKED_CAST")
-    val resolvedValue = theme.properties[property] as? ThemeValues<T>
+    val resolvedValue = theme.property(property) as? ThemeValues<T>
 
     return resolvedValue ?: error(
       "There is no ${property.name} property in the ${theme.name} theme. To fix this: " +
@@ -149,11 +150,52 @@ fun buildTheme(themeAction: @Composable ThemeBuilder.() -> Unit = {}): ThemeComp
   }
 }
 
-internal class ResolvedTheme(
-  internal val name: String,
-  internal val properties: Map<ThemeProperty<*>, ThemeValues<*>>,
-  internal val values: Map<KClass<*>, Any>,
-)
+/**
+ * Holds the resolved theme for its content.
+ *
+ * The same instance is provided for the lifetime of a theme, and every property and provided value
+ * is backed by its own state. Content only recomposes when a value it reads changes, instead of
+ * whenever anything in the theme changes.
+ */
+internal class ResolvedTheme {
+  var name: String by mutableStateOf("")
+    private set
+
+  private val properties = HashMap<ThemeProperty<*>, MutableState<ThemeValues<*>?>>()
+  private val values = HashMap<KClass<*>, MutableState<Any?>>()
+
+  fun property(property: ThemeProperty<*>): ThemeValues<*>? {
+    return properties.getOrPut(property) { mutableStateOf(null) }.value
+  }
+
+  fun value(type: KClass<*>): Any? {
+    return values.getOrPut(type) { mutableStateOf(null) }.value
+  }
+
+  fun update(
+    name: String,
+    properties: Map<ThemeProperty<*>, ThemeValues<*>>,
+    values: Map<KClass<*>, Any>,
+  ) {
+    this.name = name
+    this.properties.update(properties)
+    this.values.update(values)
+  }
+
+  private fun <K, V> HashMap<K, MutableState<V?>>.update(newValues: Map<K, V>) {
+    for ((key, state) in this) {
+      if (key !in newValues) state.value = null
+    }
+    for ((key, value) in newValues) {
+      val state = this[key]
+      if (state == null) {
+        this[key] = mutableStateOf(value)
+      } else {
+        state.value = value
+      }
+    }
+  }
+}
 
 internal class CompositionCallTracker {
   private var activeContentKey: CompositeKeyHashCode? = null
@@ -387,7 +429,8 @@ internal fun ThemeBuilderV2.render(
   val values = colorSchemeOverrides?.providedValues?.takeIf { it.isNotEmpty() }
     ?.let { overrides -> providedValues + overrides }
     ?: providedValues
-  val theme = ResolvedTheme(this.name, finalProperties, values)
+  val theme = remember { ResolvedTheme() }
+  theme.update(this.name, finalProperties, values)
 
   CompositionLocalProvider(
     LocalTheme provides theme,
